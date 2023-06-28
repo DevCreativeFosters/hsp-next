@@ -1,0 +1,34 @@
+default:
+  image: node:18.16.0
+
+deploy_preview:
+  stage: deploy
+  except:
+    - main
+  script:
+    - npm install --location=global vercel
+    - npm install --location=global slugify-cli
+    - vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+    - vercel build --token=$VERCEL_TOKEN
+    - SLUG=$(slugify $CI_COMMIT_BRANCH)
+    - FULL_SLUG=$(slugify "hsp-${SLUG:0:53}")
+    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
+    - echo $SLUG
+    - echo $FULL_SLUG
+    - echo $DEPLOYMENT_URL
+    - vercel alias $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN --scope xfive
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - .next/cache/
+
+deploy_production:
+  stage: deploy
+  only:
+    - main
+  script:
+    - npm install --location=global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel build --prod --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
