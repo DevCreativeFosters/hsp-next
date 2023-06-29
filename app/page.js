@@ -7,7 +7,7 @@ export default async function Home() {
             <h1>Posts</h1>
             <ul>
                 {posts.edges.map((post) => (
-                    <li>{post.node.title}</li>
+                    <li key={post.node.id}>{post.node.title}</li>
                 ))}
             </ul>
         </main>
