@@ -13,9 +13,6 @@ deploy_preview:
     - SLUG=$(slugify $CI_COMMIT_BRANCH)
     - FULL_SLUG=$(slugify "hsp-${SLUG:0:53}")
     - DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
-    - echo $SLUG
-    - echo $FULL_SLUG
-    - echo $DEPLOYMENT_URL
     - vercel alias $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN --scope xfive
   cache:
     key: ${CI_COMMIT_REF_SLUG}
