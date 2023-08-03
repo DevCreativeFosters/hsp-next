@@ -23,22 +23,8 @@
     "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
-    "prettier": "3.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "prettier --write",
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{html,css,less,ejs}": [
-      "prettier --write",
-      "git add"
-    ]
+    "prettier": "3.0.0",
+    "stylelint": "^15.10.2",
+    "stylelint-config-standard-scss": "^10.0.0"
   }
 }
