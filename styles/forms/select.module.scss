@@ -1,4 +1,4 @@
-@import '/styles/globals/_typography.scss';
+@import '/styles/globals/typography';
 
 .wrapper {
   position: relative;
@@ -32,6 +32,34 @@
   padding-right: var(--inline-padding);
   transition: var(--transition);
   pointer-events: none;
+}
+
+.lightBackground {
+  --font-color: var(--color-black-60);
+  --border-color: var(--color-black-20);
+  --focus-color: var(--color-black-100);
+  --focus-border-color: var(--color-black-40);
+  --hover-bg-color: var(--color-black-5);
+  --placeholder-color: var(--color-black-60);
+  --filled-color: var(--color-black-100);
+
+  & + .label {
+    --label-color: var(--color-black-60);
+  }
+}
+
+.darkBackground {
+  --font-color: var(--color-white-60);
+  --border-color: var(--color-white-20);
+  --focus-color: var(--color-white-100);
+  --focus-border-color: var(--color-white-40);
+  --hover-bg-color: var(--color-white-5);
+  --placeholder-color: var(--color-white-60);
+  --filled-color: var(--color-white-100);
+
+  & + .label {
+    --label-color: var(--color-white-60);
+  }
 }
 
 .trigger {
@@ -95,34 +123,6 @@
   --max-height: 56px;
   --vertical-padding: 10px;
   --label-line-height: 2.8;
-}
-
-.lightBackground {
-  --font-color: var(--color-black-60);
-  --border-color: var(--color-black-20);
-  --focus-color: var(--color-black-100);
-  --focus-border-color: var(--color-black-40);
-  --hover-bg-color: var(--color-black-5);
-  --placeholder-color: var(--color-black-60);
-  --filled-color: var(--color-black-100);
-
-  & + .label {
-    --label-color: var(--color-black-60);
-  }
-}
-
-.darkBackground {
-  --font-color: var(--color-white-60);
-  --border-color: var(--color-white-20);
-  --focus-color: var(--color-white-100);
-  --focus-border-color: var(--color-white-40);
-  --hover-bg-color: var(--color-white-5);
-  --placeholder-color: var(--color-white-60);
-  --filled-color: var(--color-white-100);
-
-  & + .label {
-    --label-color: var(--color-white-60);
-  }
 }
 
 .error {

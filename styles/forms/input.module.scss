@@ -1,4 +1,4 @@
-@import '/styles/globals/_typography.scss';
+@import '/styles/globals/typography';
 
 .wrapper {
   position: relative;
@@ -10,6 +10,7 @@
   --label-font-size: 20px;
   --filled-label-font-size: 16px;
   --filled-label-line-height: 1.5;
+
   position: relative;
   display: inline-flex;
   width: 100%;

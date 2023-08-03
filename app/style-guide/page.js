@@ -141,7 +141,6 @@ const buttonHalfBackground = ({ size, label, background }) => {
       })}
       {buttonList({
         groupName: 'Icon on the right',
-        label: '',
         size: size,
         label: label,
         background: background,

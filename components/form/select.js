@@ -21,14 +21,15 @@ export default function Select({
   const [isOpen, setOpen] = useState(false);
   const selectedOption = useMemo(
     () => options.find(option => option.value === selectedValue),
-    [selectedValue],
+    [options, selectedValue],
   );
 
   const handleClickOutside = () => {
     setOpen(false);
   };
 
-  const triggerRef = useClickOutside(handleClickOutside);
+  const triggerRef = useRef();
+  useClickOutside(handleClickOutside, [triggerRef]);
 
   const toggleDropdown = ev => {
     ev.stopPropagation();

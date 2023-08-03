@@ -1,11 +1,13 @@
-@import './_breakpoints.scss';
+@import './breakpoints';
 
 @mixin paragraph {
   --current-font-size: var(--mobile-font-size);
+
   font-size: var(--mobile-font-size);
 
   @include bp(medium) {
     --current-font-size: var(--desktop-font-size);
+
     font-size: var(--desktop-font-size);
   }
 }

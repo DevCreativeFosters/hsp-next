@@ -1,0 +1,157 @@
+@import '/styles/globals/breakpoints';
+@import '/styles/globals/helpers';
+
+.header {
+  @include center;
+
+  position: fixed;
+  top: 0;
+  height: 80px;
+  width: 100%;
+  background: var(--color-black-100);
+
+  @include bp(large) {
+    height: 124px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-areas: 'hamburger logo spacer call';
+  grid-template-columns: 0fr 0fr 1fr 0fr;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+
+  @include bp(large) {
+    grid-template-areas:
+      'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu socialMenu'
+      'logo primaryMenu primaryMenu primaryMenu vehicle vehicle';
+    grid-template-columns: 1fr 10fr 10fr 10fr 10fr 1fr;
+    gap: 0 24px;
+  }
+}
+
+.logo {
+  @include center;
+
+  grid-area: logo;
+}
+
+.hamburgerContainer {
+  @include center;
+
+  position: relative;
+  margin-left: -24px;
+  z-index: var(--z-index-hamburger);
+
+  @include bp(large) {
+    display: none;
+  }
+}
+
+.primaryMenu,
+.secondaryMenu,
+.socialMenu {
+  display: none;
+
+  @include bp(large) {
+    display: block;
+  }
+}
+
+.primaryMenu {
+  grid-area: primaryMenu;
+  justify-self: flex-start;
+}
+
+.secondaryMenu {
+  grid-area: secondaryMenu;
+  justify-self: flex-end;
+}
+
+.socialMenu {
+  grid-area: socialMenu;
+  justify-self: flex-end;
+}
+
+.primaryMenuList,
+.secondaryMenuList,
+.socialMenuList {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.primaryMenuList {
+  white-space: nowrap;
+}
+
+.secondaryMenuList {
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.socialMenuList {
+  position: relative;
+  margin-left: 17px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -17px;
+    width: 1px;
+    height: 16px;
+    background: var(--color-white-20);
+    transform: translateY(-50%);
+  }
+}
+
+.secondaryMenuItem {
+  @include center;
+
+  font-size: 16px;
+}
+
+.socialMenuItem {
+  @include center;
+
+  width: 36px;
+  height: 36px;
+}
+
+.menuLink {
+  color: var(--color-white-100);
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.callButton {
+  @include center;
+
+  grid-area: call;
+
+  @include bp(large) {
+    display: none;
+  }
+}
+
+.vehicleSelection {
+  display: none;
+
+  @include bp(large) {
+    @include center;
+
+    grid-area: vehicle;
+    justify-self: flex-end;
+    gap: 16px;
+    white-space: nowrap;
+    color: white;
+  }
+}

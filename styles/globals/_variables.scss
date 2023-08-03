@@ -1,39 +1,39 @@
 :root {
   --font-primary: var(--font-hind), sans-serif;
   --font-secondary: var(--font-khand), sans-serif;
-
   --color-primary-rgb: 237, 41, 53;
-  --color-primary-100: rgba(var(--color-primary-rgb), 1);
-  --color-primary-80: rgba(var(--color-primary-rgb), 0.8);
-  --color-primary-60: rgba(var(--color-primary-rgb), 0.6);
-  --color-primary-40: rgba(var(--color-primary-rgb), 0.4);
-  --color-primary-20: rgba(var(--color-primary-rgb), 0.2);
-  --color-primary-10: rgba(var(--color-primary-rgb), 0.1);
-
   --color-black-rgb: 0, 0, 0;
-  --color-black-100: rgba(var(--color-black-rgb), 1);
-  --color-black-80: rgba(var(--color-black-rgb), 0.8);
-  --color-black-60: rgba(var(--color-black-rgb), 0.6);
-  --color-black-40: rgba(var(--color-black-rgb), 0.4);
-  --color-black-20: rgba(var(--color-black-rgb), 0.2);
-  --color-black-10: rgba(var(--color-black-rgb), 0.1);
-  --color-black-5: rgba(var(--color-black-rgb), 0.05);
-
   --color-white-rgb: 255, 255, 255;
-  --color-white-100: rgba(var(--color-white-rgb), 1);
-  --color-white-80: rgba(var(--color-white-rgb), 0.8);
-  --color-white-60: rgba(var(--color-white-rgb), 0.6);
-  --color-white-40: rgba(var(--color-white-rgb), 0.4);
-  --color-white-20: rgba(var(--color-white-rgb), 0.2);
-  --color-white-10: rgba(var(--color-white-rgb), 0.1);
-  --color-white-5: rgba(var(--color-white-rgb), 0.05);
-
   --color-error: var(--color-primary-100);
 
-  --transition: all 150ms linear;//color 150ms linear, background-color 150ms linear;
+  /* Primary */
+  --color-primary-100: rgb(237 41 53 / 100%);
+  --color-primary-80: rgb(237 41 53 / 80%);
+  --color-primary-60: rgb(237 41 53 / 60%);
+  --color-primary-40: rgb(237 41 53 / 40%);
+  --color-primary-20: rgb(237 41 53 / 20%);
+  --color-primary-10: rgb(237 41 53 / 10%);
+
+  /* Black */
+  --color-black-100: rgb(0 0 0 / 100%);
+  --color-black-80: rgb(0 0 0 / 80%);
+  --color-black-60: rgb(0 0 0 / 60%);
+  --color-black-40: rgb(0 0 0 / 40%);
+  --color-black-20: rgb(0 0 0 / 20%);
+  --color-black-10: rgb(0 0 0 / 10%);
+  --color-black-5: rgb(0 0 0 / 5%);
+
+  /* White */
+  --color-white-100: rgb(255 255 255 / 100%);
+  --color-white-80: rgb(255 255 255 / 80%);
+  --color-white-60: rgb(255 255 255 / 60%);
+  --color-white-40: rgb(255 255 255 / 40%);
+  --color-white-20: rgb(255 255 255 / 20%);
+  --color-white-10: rgb(255 255 255 / 10%);
+  --color-white-5: rgb(255 255 255 / 5%);
+
+  /* Misc */
+  --transition: all 150ms linear; // color 150ms linear, background-color 150ms linear;
   --border-radius: 8px;
   --border-size: 2px;
-
-  --z-index-label: 1;
-  --z-index-dropdown: 100;
 }

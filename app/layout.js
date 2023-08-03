@@ -1,26 +1,41 @@
-import { Khand, Hind } from 'next/font/google';
 import localFont from 'next/font/local';
 import clsx from 'clsx';
 import '@styles/main.scss';
 
-const khand = Khand({
-  weight: ['400', '600'],
-  subsets: ['latin'],
-  variable: '--font-khand',
-});
-
-const hind = Hind({
-  weight: ['400', '600'],
-  subsets: ['latin'],
+const hind = localFont({
   variable: '--font-hind',
+  subsets: ['latin'],
+  style: 'normal',
+  src: [
+    {
+      path: '../assets/fonts/Hind-400-Regular.woff2',
+      weight: '400',
+    },
+    {
+      path: '../assets/fonts/Hind-600-SemiBold.woff2',
+      weight: '600',
+    },
+  ],
+  display: 'block',
+  weight: '400 600',
 });
 
-const materialIcons = localFont({
-  variable: '--font-material-icons',
+const khand = localFont({
+  variable: '--font-khand',
+  subsets: ['latin'],
   style: 'normal',
-  src: '../node_modules/material-symbols/material-symbols-rounded.woff2',
+  src: [
+    {
+      path: '../assets/fonts/Khand-400-Regular.woff2',
+      weight: '400',
+    },
+    {
+      path: '../assets/fonts/Khand-600-SemiBold.woff2',
+      weight: '600',
+    },
+  ],
   display: 'block',
-  weight: '100 700',
+  weight: '400 600',
 });
 
 export const metadata = {
@@ -30,7 +45,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en" className={clsx(khand.variable, hind.variable, materialIcons.variable)}>
+    <html lang="en" className={clsx(hind.variable, khand.variable)}>
       <body>{children}</body>
     </html>
   );
