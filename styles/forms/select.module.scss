@@ -1,0 +1,172 @@
+@import '/styles/globals/typography.scss';
+
+.wrapper {
+  position: relative;
+}
+
+.inputWrapper {
+  --inline-padding: 24px;
+  --input-font-size: 20px;
+  --label-font-size: 20px;
+  --filled-label-font-size: 16px;
+  --filled-label-line-height: 1.5;
+
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
+.hasLabel {
+  padding-top: calc(
+    var(--filled-label-font-size) * var(--filled-label-line-height)
+  );
+}
+
+.label {
+  font-size: var(--label-font-size);
+  line-height: var(--label-line-height);
+  position: absolute;
+  left: var(--inline-padding);
+  overflow: hidden;
+  width: 100%;
+  padding-right: var(--inline-padding);
+  transition: var(--transition);
+  pointer-events: none;
+}
+
+.trigger {
+  font-size: var(--input-font-size);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-height: var(--max-height);
+  padding: var(--vertical-padding) 16px var(--vertical-padding)
+    var(--inline-padding);
+  transition: var(--transition);
+  text-align: left;
+  color: var(--font-color);
+  border: var(--border-size) solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: transparent;
+
+  & + .label {
+    color: var(--label-color);
+  }
+
+  &:hover {
+    background: var(--hover-bg-color);
+  }
+
+  &:focus,
+  &:active {
+    color: var(--focus-color);
+    border-color: var(--focus-border-color);
+    outline: none;
+  }
+
+  &:focus,
+  &:active,
+  &.filled {
+    & + .label {
+      font-size: var(--filled-label-font-size);
+      line-height: var(--filled-label-line-height);
+      left: 10px;
+      transform: translateY(-100%);
+    }
+  }
+
+  &.filled {
+    color: var(--filled-color);
+  }
+
+  &::placeholder {
+    color: var(--placeholder-color);
+  }
+}
+
+.small {
+  --vertical-padding: 2px;
+  --max-height: 39px;
+  --label-line-height: 1.95;
+}
+
+.large {
+  --max-height: 56px;
+  --vertical-padding: 10px;
+  --label-line-height: 2.8;
+}
+
+.lightBackground {
+  --font-color: var(--color-black-60);
+  --border-color: var(--color-black-20);
+  --focus-color: var(--color-black-100);
+  --focus-border-color: var(--color-black-40);
+  --hover-bg-color: var(--color-black-5);
+  --placeholder-color: var(--color-black-60);
+  --filled-color: var(--color-black-100);
+
+  & + .label {
+    --label-color: var(--color-black-60);
+  }
+}
+
+.darkBackground {
+  --font-color: var(--color-white-60);
+  --border-color: var(--color-white-20);
+  --focus-color: var(--color-white-100);
+  --focus-border-color: var(--color-white-40);
+  --hover-bg-color: var(--color-white-5);
+  --placeholder-color: var(--color-white-60);
+  --filled-color: var(--color-white-100);
+
+  & + .label {
+    --label-color: var(--color-white-60);
+  }
+}
+
+.error {
+  border-color: var(--color-error);
+}
+
+.errorMessage {
+  font-size: 16px;
+  color: var(--color-error);
+}
+
+.dropdown {
+  position: absolute;
+  z-index: var(--z-index-dropdown);
+  top: 100%;
+  display: none;
+  width: 100%;
+  margin-top: 2px;
+  padding: 12px 8px;
+  color: var(--color-white-100);
+  border-radius: var(--border-radius);
+  background: var(--color-black-100);
+
+  &.isOpen {
+    display: block;
+  }
+}
+
+.option {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 24px;
+  width: 100%;
+  padding: 12px 24px;
+  transition: var(--transition);
+  text-align: left;
+  color: var(--color-white-100);
+
+  &:hover,
+  &:focus {
+    background: var(--color-white-10);
+  }
+
+  .suffixPrefix {
+    color: var(--color-white-80);
+  }
+}

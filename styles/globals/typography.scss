@@ -1,0 +1,32 @@
+@import './breakpoints.scss';
+
+@mixin paragraph {
+  --current-font-size: var(--mobile-font-size);
+  font-size: var(--mobile-font-size);
+
+  @include bp(medium) {
+    --current-font-size: var(--desktop-font-size);
+    font-size: var(--desktop-font-size);
+  }
+}
+
+@mixin paragraph-lg {
+  --mobile-font-size: 20px;
+  --desktop-font-size: 24px;
+
+  @include paragraph;
+}
+
+@mixin paragraph-md {
+  --mobile-font-size: 16px;
+  --desktop-font-size: 20px;
+
+  @include paragraph;
+}
+
+@mixin paragraph-sm {
+  --mobile-font-size: 14px;
+  --desktop-font-size: 16px;
+
+  @include paragraph;
+}
