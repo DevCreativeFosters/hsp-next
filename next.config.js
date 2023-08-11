@@ -1,3 +1,6 @@
+const path = require('path');
+const globImporter = require('node-sass-glob-importer');
+
 if (!process.env.WORDPRESS_API_URL) {
   throw new Error(`
     Please provide a valid WordPress instance URL.
@@ -17,5 +20,18 @@ module.exports = {
       'hsp-wp.x5view.co',
       'hsp-wp.test',
     ],
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+    prependData: `@import "_common.scss";`,
+    importer: globImporter()
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
+    return config;
   },
 };

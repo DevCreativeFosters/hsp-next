@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import styles from '@/styles/forms/select.module.scss';
-import { useClickOutside } from '@/hooks/useClickOutside';
+import styles from '@styles/forms/select.module.scss';
+import { useClickOutside } from '@hooks/useClickOutside';
 
 export default function Select({
   size = 'small',
@@ -86,7 +86,7 @@ export default function Select({
         <div
           className={clsx(styles.dropdown, { [styles.isOpen]: isOpen })}
           role="listbox"
-          tabindex="0"
+          tabIndex="0"
         >
           {options.map((option, index) => (
             <button
