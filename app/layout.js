@@ -1,10 +1,7 @@
 import { Khand, Hind } from 'next/font/google';
 import localFont from 'next/font/local';
 import clsx from 'clsx';
-import '/styles/globals/variables.scss';
-import '/styles/globals/defaults.scss';
-import '/styles/globals/typography.scss';
-import '/styles/globals/icons.scss';
+import '@styles/main.scss';
 
 const khand = Khand({
   weight: ['400', '600'],

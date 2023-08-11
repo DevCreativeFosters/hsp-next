@@ -1,4 +1,4 @@
-@import './breakpoints.scss';
+@import './_breakpoints.scss';
 
 @mixin paragraph {
   --current-font-size: var(--mobile-font-size);

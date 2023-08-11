@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import styles from '@/styles/forms/input.module.scss';
+import styles from '@styles/forms/input.module.scss';
 
 export default function Input({
   size = 'small',

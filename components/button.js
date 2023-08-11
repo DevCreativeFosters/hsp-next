@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import clsx from 'clsx';
-import styles from '@/styles/button.module.scss';
+import styles from '@styles/button.module.scss';
 
 export default function Button({
   size = 'small',

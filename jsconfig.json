@@ -1,7 +1,20 @@
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./*"]
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": ["components/*"],
+            "@styles/*": ["styles/*"],
+            "@assets/*": ["assets/*"],
+            "@images/*": ["assets/images/*"],
+            "@lib/*": ["lib/*"],
+            "@contexts/*": ["contexts/*"],
+            "@hooks/*": ["hooks/*"]
+        },
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ]
     }
-  }
 }

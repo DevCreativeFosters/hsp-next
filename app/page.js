@@ -1,15 +1,22 @@
-import { getAllPosts } from '@/lib/api';
+import Layout from '@components/layout/layout';
+import Hero from '@components/hero/hero';
+import { getHomepageFlexibleContent } from '@lib/api';
 
 export default async function Home() {
-  const posts = await getAllPosts();
+  const content = await getHomepageFlexibleContent();
+  const blockNamePrefix = 'Page_Flexiblecontent_Blocks';
+
+  const renderBlocks = (block) => {
+    if(block?.fieldGroupName === `${blockNamePrefix}_HeroBlock`) {
+      return <Hero slides={block.heroSlides} />
+    }
+  }
+
   return (
-    <main>
-      <h1>Posts</h1>
-      <ul>
-        {posts.edges.map(post => (
-          <li key={post.node.id}>{post.node.title}</li>
-        ))}
-      </ul>
-    </main>
+    <Layout>
+      {content?.map((block) => {
+        return renderBlocks(block);
+      })}
+    </Layout>
   );
 }

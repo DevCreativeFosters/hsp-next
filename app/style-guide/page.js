@@ -1,7 +1,7 @@
-import Button from '@/components/button';
-import Input from '@/components/form/input';
-import Select from '@/components/form/select';
-import styles from '@/styles/style-guide.module.scss';
+import Button from '@components/button';
+import Input from '@components/form/input';
+import Select from '@components/form/select';
+import styles from '@styles/style-guide.module.scss';
 
 const SELECT_OPTIONS = [
   {
