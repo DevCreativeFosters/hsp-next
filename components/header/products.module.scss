@@ -1,0 +1,100 @@
+@import '/styles/globals/typography';
+
+.container {
+  position: fixed;
+  left: 50%;
+  top: 124px + 2px;
+  display: flex;
+  gap: 24px;
+  width: 1024px;
+  padding: 48px;
+  border-radius: 24px;
+  color: var(--color-white-100);
+  background: var(--color-black-100);
+  transform: translateX(-50%);
+  transition: opacity 150ms;
+  opacity: 0;
+  pointer-events: none;
+
+  @include bp-below(large) {
+    display: none;
+  }
+
+  &.isActive {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.filterList {
+  padding: 0;
+  margin: -12px 0 0 -24px;
+  list-style: none;
+}
+
+.filterItem {
+  opacity: 0;
+  transition: opacity 150ms;
+
+  @for $i from 1 through 5 {
+    .container.isActive &:nth-of-type(#{$i}) {
+      transition-delay: #{100 + $i * 50}ms;
+    }
+  }
+
+  .container.isActive & {
+    opacity: 1;
+  }
+}
+
+.productList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  flex-grow: 1;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 48px;
+}
+
+.productItem {
+  opacity: 0;
+  transition: opacity 150ms;
+
+  @for $i from 1 through 20 {
+    .container.isActive &:nth-of-type(#{$i}) {
+      transition-delay: #{100 + $i * 25}ms;
+    }
+  }
+
+  .container.isActive & {
+    opacity: 1;
+  }
+}
+
+.productLink {
+  display: block;
+  transition: transform 200ms;
+
+  @media (hover: hover) {
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.productImage {
+  width: 144px;
+  height: 96px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.productTitle {
+  @include paragraph-sm;
+
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  text-align: center;
+  margin-top: 12px;
+}

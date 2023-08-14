@@ -1,11 +1,13 @@
 import { useRef, useEffect } from 'react';
 
-export const useClickOutside = cb => {
-  const ref = useRef();
+export const useClickOutside = (cb, refs = []) => {
+  const singleRef = useRef();
+  const allRefs = refs.length ? refs : [singleRef];
 
   useEffect(() => {
     const handleClick = ev => {
-      if (ref.current && !ref.current.contains(ev.target)) {
+      const container = allRefs.find(ref => ref.current?.contains(ev.target));
+      if (!container && typeof cb === 'function') {
         cb();
       }
     };
@@ -15,7 +17,5 @@ export const useClickOutside = cb => {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, [cb, ref]);
-
-  return ref;
+  }, [cb]);
 };

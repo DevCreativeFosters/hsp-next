@@ -1,7 +1,7 @@
 import Button from '@components/button';
 import Input from '@components/form/input';
 import Select from '@components/form/select';
-import styles from '@styles/style-guide.module.scss';
+import styles from './style-guide.module.scss';
 
 const SELECT_OPTIONS = [
   {
@@ -141,7 +141,6 @@ const buttonHalfBackground = ({ size, label, background }) => {
       })}
       {buttonList({
         groupName: 'Icon on the right',
-        label: '',
         size: size,
         label: label,
         background: background,

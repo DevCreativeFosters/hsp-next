@@ -1,0 +1,9 @@
+.isLightTheme {
+  background: $color-white;
+  color: $color-text;
+  margin: 0;
+}
+
+.filters {
+  @include hidden-visually;
+}

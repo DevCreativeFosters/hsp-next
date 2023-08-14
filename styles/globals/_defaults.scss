@@ -1,4 +1,4 @@
-@import './_breakpoints.scss';
+@import './breakpoints';
 
 html,
 body {
@@ -18,6 +18,10 @@ body {
     @include bp($breakpoint) {
       --current-breakpoint: #{$breakpoint};
     }
+  }
+
+  &.lock-scroll {
+    overflow: hidden;
   }
 }
 

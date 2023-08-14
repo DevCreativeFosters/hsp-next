@@ -1,0 +1,14 @@
+@use 'sass:list';
+
+/* Z-index layers */
+$layers: ('hamburger', 'mobile-menu', 'dropdown', 'header', 'label');
+
+:root {
+  $length: list.length($layers);
+
+  @each $key, $val in $layers {
+    $i: list.index($layers, $key);
+
+    --z-index-#{$key}: #{$length - $i + 1};
+  }
+}

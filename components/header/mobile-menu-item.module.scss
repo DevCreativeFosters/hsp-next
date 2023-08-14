@@ -1,0 +1,35 @@
+.mobileMenuItem {
+  list-style: none;
+  color: var(--color-white-100);
+  opacity: 0;
+  transition: opacity 100ms 0ms linear;
+  display: flex;
+  flex-direction: column;
+
+  @for $i from 1 through 20 {
+    [class*='mobileMenu'][class*='isActive'] &:nth-of-type(#{$i}) {
+      transition: opacity 200ms #{100 + $i * 50}ms linear;
+    }
+  }
+
+  [class*='mobileMenu'][class*='isActive'] & {
+    opacity: 1;
+  }
+
+  &.withSubItems {
+    padding-bottom: 0;
+  }
+}
+
+.mobileMenuSubList {
+  list-style: none;
+  padding: 0 0 0 24px;
+}
+
+.groupLabel {
+  margin: 12px 0 12px 24px;
+  color: var(--color-white-40);
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 600;
+}

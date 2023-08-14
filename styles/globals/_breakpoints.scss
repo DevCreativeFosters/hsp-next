@@ -1,8 +1,8 @@
 $breakpoints: (
   small: 420px,
   medium: 768px,
-  large: 1024px,
-  full: 1320px,
+  large: 1280px,
+  full: 1536px,
 );
 
 @mixin bp($breakpoint) {
@@ -10,11 +10,8 @@ $breakpoints: (
     @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
       @content;
     }
-  }
-
-  @else {
-    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
-        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. " + "Available breakpoints are: #{map-keys($breakpoints)}.";
   }
 }
 
@@ -23,10 +20,7 @@ $breakpoints: (
     @media (max-width: #{map-get($breakpoints, $breakpoint) - 1px}) {
       @content;
     }
-  }
-
-  @else {
-    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
-        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. " + "Available breakpoints are: #{map-keys($breakpoints)}.";
   }
 }
