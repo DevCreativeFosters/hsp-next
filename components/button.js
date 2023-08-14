@@ -1,8 +1,7 @@
+import { getIcon } from '@lib/icons';
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { getIcon } from '@lib/icons';
 import styles from '@styles/button.module.scss';
 
 export default function Button({
@@ -36,22 +35,21 @@ export default function Button({
     [styles.noText]: !children,
   });
 
-  const leftIconProps = getIcon(leftIcon);
-  const rightIconProps = getIcon(rightIcon);
-
-  const toggleableNeutralIconProps = getIcon('expand-more-neutral');
-  const toggleablePrimaryIconProps = getIcon('expand-more-primary');
+  const LeftIconSvg = getIcon(leftIcon);
+  const RightIconSvg = getIcon(rightIcon);
+  const ToggleableNeutralIconSvg = getIcon('expand-more-neutral');
+  const ToggleablePrimaryIconSvg = getIcon('expand-more-primary');
 
   const buttonBody = (
     <>
-      {leftIconProps && <Image {...leftIconProps} alt={leftIconProps.alt} />}
+      {LeftIconSvg && <LeftIconSvg />}
       {children}
-      {rightIconProps && <Image {...rightIconProps} alt={rightIconProps.alt} />}
+      {RightIconSvg && <RightIconSvg />}
     </>
   );
 
   const OptionalToggleWrapperEl = toggleable ? 'div' : React.Fragment;
-  const OptionalToggleWrapperElProps = {
+  const optionalToggleWrapperElProps = {
     ...(toggleable && { className: styles.optionalToggleWrapper }),
   };
 
@@ -77,7 +75,7 @@ export default function Button({
   }
 
   return (
-    <OptionalToggleWrapperEl {...OptionalToggleWrapperElProps}>
+    <OptionalToggleWrapperEl {...optionalToggleWrapperElProps}>
       {toggleable && (
         <ToggleContainer
           className={clsx(
@@ -86,20 +84,8 @@ export default function Button({
           )}
           {...ToggleContainerProps}
         >
-          {toggleable.includes('neutral') && (
-            <Image
-              className={styles.toggleIcon}
-              {...toggleableNeutralIconProps}
-              alt={toggleableNeutralIconProps.alt}
-            />
-          )}
-          {toggleable.includes('primary') && (
-            <Image
-              className={styles.toggleIcon}
-              {...toggleablePrimaryIconProps}
-              alt={toggleablePrimaryIconProps.alt}
-            />
-          )}
+          {toggleable.includes('neutral') && <ToggleableNeutralIconSvg />}
+          {toggleable.includes('primary') && <ToggleablePrimaryIconSvg />}
         </ToggleContainer>
       )}
 

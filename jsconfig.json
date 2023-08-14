@@ -9,7 +9,8 @@
             "@images/*": ["assets/images/*"],
             "@lib/*": ["lib/*"],
             "@contexts/*": ["contexts/*"],
-            "@hooks/*": ["hooks/*"]
+            "@hooks/*": ["hooks/*"],
+            "@mockup/*": ["mockup/*"]
         },
         "plugins": [
             {

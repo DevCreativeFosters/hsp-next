@@ -1,4 +1,4 @@
-import { primaryMenu } from '@/mockup/primary-menu';
+import { primaryMenu } from '@mockup/primary-menu';
 
 export const mobileMenu = [
   {

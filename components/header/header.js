@@ -1,19 +1,18 @@
-import { useClickOutside } from '@/hooks/useClickOutside';
-import { useCallback, useEffect, useRef, useState } from 'react';
-
+import { useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Image from 'next/image';
 import Link from 'next/link';
-import MobileMenu from '@/components/header/mobile-menu';
-import Products from '@/components/header/products';
-import Button from '@/components/button';
-import Container from '@/components/container/container';
-import HamburgerButton from '@/components/hamburger-button/hamburger-button';
-import { primaryMenu } from '@/mockup/primary-menu';
-import { secondaryMenu } from '@/mockup/secondary-menu';
-import { socialMenu } from '@/mockup/social-menu';
-import { mobileMenu } from '@/mockup/mobile-menu';
-import logo from '/assets/images/logo.svg';
+import { useClickOutside } from '@hooks/useClickOutside';
+import MobileMenu from '@components/header/mobile-menu';
+import Products from '@components/header/products';
+import Button from '@components/button';
+import Container from '@components/container/container';
+import HamburgerButton from '@components/hamburger-button/hamburger-button';
+import { primaryMenu } from '@mockup/primary-menu';
+import { secondaryMenu } from '@mockup/secondary-menu';
+import { socialMenu } from '@mockup/social-menu';
+import { mobileMenu } from '@mockup/mobile-menu';
+import Logo from '@assets/images/logo.svg';
 import styles from './header.module.scss';
 
 export default function Header() {
@@ -50,7 +49,7 @@ export default function Header() {
             </div>
 
             <Link className={styles.logo} href="/">
-              <Image src={logo} alt="HSP" />
+              <Logo />
             </Link>
 
             <div className={styles.callButton}>

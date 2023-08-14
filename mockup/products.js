@@ -1,4 +1,4 @@
-import PlaceholderImage from '@/assets/images/placeholder-product.jpg';
+import PlaceholderImage from '@assets/images/placeholder-product.jpg';
 
 export const products = [
   {

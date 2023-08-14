@@ -1,10 +1,10 @@
-import { forwardRef, useRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
-import Button from '@/components/button';
-import { productCategories } from '@/mockup/product-categories';
-import { products } from '@/mockup/products';
+import Button from '@components/button';
+import { productCategories } from '@mockup/product-categories';
+import { products } from '@mockup/products';
 import styles from './products.module.scss';
 
 function Products({ isActive }, ref) {
