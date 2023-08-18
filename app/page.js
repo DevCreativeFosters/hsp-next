@@ -1,7 +1,8 @@
+import { getHomepageFlexibleContent } from '@lib/api';
 import Hero from '@components/hero/hero';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import { getHomepageFlexibleContent } from '@lib/api';
+import Lifestyle from '@components/lifestyle/lifestyle';
 
 export default async function HomePage() {
   const content = await getHomepageFlexibleContent();
@@ -17,7 +18,9 @@ export default async function HomePage() {
       {content?.map(block => {
         return renderBlocks(block);
       })}
-      <Container></Container>
+      <Container>
+        <Lifestyle />
+      </Container>
     </Layout>
   );
 }
