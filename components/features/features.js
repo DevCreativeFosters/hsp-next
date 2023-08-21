@@ -62,10 +62,10 @@ export default function Features() {
         <div className={styles.videoTile}>
           <video
             className={styles.video}
-            title={video?.title ? video.title : null}
+            title={video.title || null}
+            poster={video.poster?.src || null}
             ref={videoRef}
             loop
-            autoPlay
             muted
           >
             <source src={video.src} type={video.type} />
