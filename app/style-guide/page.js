@@ -123,6 +123,32 @@ const buttonList = ({
               {label}
             </Button>
           </div>
+
+          <div className={styles.buttonItem}>
+            <div className={styles.header}>Quaternary</div>
+            <Button
+              size={size}
+              background={background}
+              variant="quaternary"
+              rightIcon={rightIcon}
+              leftIcon={leftIcon}
+            >
+              {label}
+            </Button>
+          </div>
+
+          <div className={styles.buttonItem}>
+            <div className={styles.header}>Quinary</div>
+            <Button
+              size={size}
+              background={background}
+              variant="quinary"
+              rightIcon={rightIcon}
+              leftIcon={leftIcon}
+            >
+              {label}
+            </Button>
+          </div>
         </div>
       </div>
     </>

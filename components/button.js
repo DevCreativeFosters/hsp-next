@@ -27,6 +27,7 @@ export default function Button({
     [styles.secondary]: variant === 'secondary',
     [styles.tertiary]: variant === 'tertiary',
     [styles.quaternary]: variant === 'quaternary',
+    [styles.quinary]: variant === 'quinary',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
     [styles.leftIcon]: leftIcon,

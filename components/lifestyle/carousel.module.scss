@@ -1,0 +1,42 @@
+.carousel {
+  --padding: 24px;
+
+
+  width: 100vw;
+  padding-inline: var(--padding);
+  margin-top: 55px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  overflow-x: hidden;
+
+  @include bp(medium) {
+    --padding: 48px;
+
+    margin-left: 0;
+    transform: none;
+    padding: 0;
+    width: 100%;
+    max-width: calc(1320px + var(--padding) * 2);
+  }
+
+  @include bp(large) {
+    gap: 48px;
+  }
+}
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  transition: transform 300ms;
+  transform: translateX(var(--offset));
+
+  @include bp(medium) {
+    transform: none !important;
+  }
+
+  @include bp(large) {
+    gap: 48px;
+  }
+}
