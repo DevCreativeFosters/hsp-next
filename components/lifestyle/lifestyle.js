@@ -34,6 +34,7 @@ export default function Lifestyle() {
           title={featured.title}
           content={featured.content}
           createdAt={featured.createdAt}
+          url={featured.url}
           tags={featured.tags}
           image={featured.image}
         />

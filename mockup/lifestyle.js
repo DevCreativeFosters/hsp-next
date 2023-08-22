@@ -19,6 +19,7 @@ export const lifestyle = {
     `,
     tags: ['Cooking', 'HSP TV'],
     createdAt: '2023-08-17T11:34:49.733Z',
+    url: '#',
     image: {
       obj: frame36,
       alt: 'Some title',
@@ -29,6 +30,7 @@ export const lifestyle = {
       title: 'The Roll R Cover S3: Designing for the Future of 4×4 Accessories',
       content: `<p>Versatility in Design, Why it’s Time to Consider a Roll Cover.</p>`,
       createdAt: '2023-08-17T11:34:49.733Z',
+      url: '#',
       tags: ['Accessories'],
       image: {
         obj: frame38,
@@ -39,6 +41,7 @@ export const lifestyle = {
       title: 'The All-New 2022 Ford Ranger Accessories',
       content: `<p>You know that feeling you get when you’re in line for a roller coaster?</p>`,
       createdAt: '2023-08-17T11:34:49.733Z',
+      url: '#',
       tags: ['Fitting'],
       image: {
         obj: frame38,
@@ -49,6 +52,7 @@ export const lifestyle = {
       title: 'The NAVARA NP300, MY21+ ‘Roll R Cover’',
       content: `<p>The Nissan Navara NP300 MY21+ remodel is out with its new take on the Navara look.</p>`,
       createdAt: '2023-08-17T11:34:49.733Z',
+      url: '#',
       tags: ['Cooking'],
       image: {
         obj: frame38,
@@ -59,6 +63,7 @@ export const lifestyle = {
       title: 'The NAVARA NP300, MY21+ ‘Roll R Cover’',
       content: `<p>The Nissan Navara NP300 MY21+ remodel is out with its new take on the Navara look.</p>`,
       createdAt: '2023-08-17T11:34:49.733Z',
+      url: '#',
       tags: ['Cooking'],
       image: {
         obj: frame38,

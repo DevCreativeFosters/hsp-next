@@ -31,6 +31,10 @@
 
 .image {
   object-fit: cover;
+
+  .link:hover & {
+    filter: brightness(1.1);
+  }
 }
 
 .info {
@@ -59,7 +63,11 @@
   font-family: var(--font-secondary);
   font-size: 16px;
   line-height: 1.5;
-  background: var(--color-black-40)
+  background: var(--color-black-40);
+
+  &:hover {
+    background: var(--color-black-20);
+  }
 }
 
 .date {
@@ -73,6 +81,11 @@
   font-family: var(--font-secondary);
   font-size: 20px;
   line-height: 1.4;
+  color: var(--color-white-80);
+
+  .link:hover & {
+    color: var(--color-white-100);
+  }
 }
 
 .content {

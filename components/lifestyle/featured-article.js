@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import styles from '@components/lifestyle/featured-article.module.scss';
+import Link from 'next/link';
 
 export default function FeaturedArticle({
   title,
   content,
   createdAt,
+  url,
   tags,
   image,
 }) {
@@ -33,7 +35,9 @@ export default function FeaturedArticle({
           {createdAtHuman}
         </time>
 
-        <h2 className={styles.title}>{title}</h2>
+        <Link className={styles.link} href={url}>
+          <h2 className={styles.title}>{title}</h2>
+        </Link>
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: content }}
@@ -43,12 +47,14 @@ export default function FeaturedArticle({
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        <Image
-          className={styles.image}
-          src={image.obj.src}
-          alt={image.alt}
-          fill={true}
-        />
+        <Link className={styles.link} href={url}>
+          <Image
+            className={styles.image}
+            src={image.obj.src}
+            alt={image.alt}
+            fill={true}
+          />
+        </Link>
       </div>
     </article>
   );

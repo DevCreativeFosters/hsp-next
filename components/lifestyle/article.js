@@ -1,9 +1,17 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './article.module.scss';
 
-export default function Article({ title, content, createdAt, tags, image }) {
+export default function Article({
+  title,
+  content,
+  createdAt,
+  url,
+  tags,
+  image,
+}) {
   const createdAtHuman = new Date(createdAt).toLocaleString('en-US', {
     dateStyle: 'medium',
   });
@@ -16,12 +24,14 @@ export default function Article({ title, content, createdAt, tags, image }) {
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        <Image
-          className={styles.image}
-          src={image.obj.src}
-          alt={image.alt}
-          fill={true}
-        />
+        <Link className={styles.link} href={url}>
+          <Image
+            className={styles.image}
+            src={image.obj.src}
+            alt={image.alt}
+            fill={true}
+          />
+        </Link>
         {tags.length > 0 && (
           <ul className={styles.tagList}>
             {tags.map((tag, index) => (
@@ -38,8 +48,9 @@ export default function Article({ title, content, createdAt, tags, image }) {
         <time className={styles.date} dateTime={createdAt}>
           {createdAtHuman}
         </time>
-
-        <h2 className={styles.title}>{title}</h2>
+        <Link className={styles.link} href={url}>
+          <h2 className={styles.title}>{title}</h2>
+        </Link>
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: content }}
