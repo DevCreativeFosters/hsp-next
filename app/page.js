@@ -2,6 +2,7 @@ import { getHomepageFlexibleContent } from '@lib/api';
 import Hero from '@components/hero/hero';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
+import Features from '@components/features/features';
 import Lifestyle from '@components/lifestyle/lifestyle';
 
 export default async function HomePage() {
@@ -19,6 +20,7 @@ export default async function HomePage() {
         return renderBlocks(block);
       })}
       <Container>
+        <Features />
         <Lifestyle />
       </Container>
     </Layout>

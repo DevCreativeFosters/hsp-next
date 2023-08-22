@@ -34,7 +34,7 @@
   }
 
   svg path {
-    fill: currentColor;
+    fill: currentcolor;
   }
 }
 
@@ -73,6 +73,11 @@
   --gap: 12px;
   --vertical-padding: 16px;
   --only-icon-padding: 16px;
+
+  @include bp(medium) {
+    --vertical-padding: 20px;
+    --only-icon-padding: 20px;
+  }
 
   &.leftIcon {
     padding-left: var(--icon-side-padding);

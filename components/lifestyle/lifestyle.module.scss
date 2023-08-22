@@ -1,7 +1,6 @@
 .container {
   position: relative;
-  padding-block: 0.1px;
-  background: #181818; // temp
+  margin-block: 72px;
 
   &::before {
     content: '';
@@ -16,7 +15,6 @@
 }
 
 .sectionIntro {
-  margin-top: 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -33,7 +31,7 @@
 
 .componentTitle {
   font-family: var(--font-secondary);
-  line-height: 1;
+  line-height: 1.3;
 
   @include bp(medium) {
     grid-area: title;
