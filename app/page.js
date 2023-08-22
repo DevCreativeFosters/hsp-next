@@ -4,6 +4,8 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
 import Lifestyle from '@components/lifestyle/lifestyle';
+import Tiles from '@components/tiles/tiles';
+import { help } from '@mockup/help';
 
 export default async function HomePage() {
   const content = await getHomepageFlexibleContent();
@@ -22,6 +24,12 @@ export default async function HomePage() {
       <Container>
         <Features />
         <Lifestyle />
+        <Tiles
+          title={help.title}
+          description={help.description}
+          buttons={help.buttons}
+          tiles={help.tiles}
+        />
       </Container>
     </Layout>
   );

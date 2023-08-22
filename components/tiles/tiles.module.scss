@@ -1,0 +1,38 @@
+.container {
+  position: relative;
+  margin-block: 72px;
+}
+
+.sectionIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 24px;
+
+  @include bp(medium) {
+    display: grid;
+    grid-template-areas:
+      'title buttons'
+      'description description';
+    padding-left: 0;
+  }
+}
+
+.componentTitle {
+  font-family: var(--font-secondary);
+  line-height: 1.3;
+
+  @include bp(medium) {
+    grid-area: title;
+  }
+}
+
+.description {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--color-white-80);
+
+  @include bp(medium) {
+    grid-area: description;
+  }
+}

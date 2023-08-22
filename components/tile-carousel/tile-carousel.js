@@ -2,11 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
-import styles from './carousel.module.scss';
+import styles from './tile-carousel.module.scss';
 
 const MIN_SWIPE_THRESHOLD = 20;
 
-export default function Carousel({ items, itemTemplate: ItemTemplate }) {
+const DEFAULT_ID = 'carousel';
+
+export default function TileCarousel({
+  items,
+  itemTemplate: ItemTemplate,
+  id = '',
+}) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -15,6 +21,8 @@ export default function Carousel({ items, itemTemplate: ItemTemplate }) {
   const [currentN, setCurrentN] = useState(0);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [maxOffset, setMaxOffset] = useState(0);
+
+  const carouselId = `${DEFAULT_ID}${id ? '-' + id : ''}`;
 
   const currentOffsetNormalized = Math.min(maxOffset, currentOffset);
 
@@ -58,14 +66,12 @@ export default function Carousel({ items, itemTemplate: ItemTemplate }) {
     const container = containerRef.current;
     if (container) {
       const containerWidth = container.offsetWidth;
-      const lastItem = container.querySelector(
-        `#carousel-container > :last-child`,
-      );
+      const lastItem = container.querySelector(`#${carouselId} > :last-child`);
       const contentWidth = lastItem.offsetLeft + lastItem.offsetWidth;
       const maxOffset = Math.max(contentWidth - containerWidth, 0);
       setMaxOffset(maxOffset);
     }
-  }, []);
+  }, [carouselId]);
   const onTouchEnd = useCallback(() => {
     setTouchStartX(null);
   }, []);
@@ -91,12 +97,12 @@ export default function Carousel({ items, itemTemplate: ItemTemplate }) {
   useEffect(
     function syncCurrentOffset() {
       const itemEl = containerRef.current.querySelector(
-        `#carousel-container > :nth-child(${currentN + 1})`,
+        `#${carouselId} > :nth-child(${currentN + 1})`,
       );
       const newOffset = itemEl.offsetLeft;
       setCurrentOffset(newOffset);
     },
-    [currentN],
+    [carouselId, currentN],
   );
 
   useEffect(
@@ -125,7 +131,7 @@ export default function Carousel({ items, itemTemplate: ItemTemplate }) {
             <div
               className={styles.container}
               ref={containerRef}
-              id="carousel-container"
+              id={carouselId}
               style={{ '--offset': `-${currentOffsetNormalized}px` }}
             >
               {items.map((props, index) => (
