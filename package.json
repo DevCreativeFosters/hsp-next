@@ -14,7 +14,7 @@
     "clsx": "^2.0.0",
     "lodash": "^4.17.21",
     "material-symbols": "^0.10.1",
-    "next": "^13.4.12",
+    "next": "^13.4.19",
     "react": "^18.2.0",
     "react-animate-height": "^3.2.2",
     "react-dom": "^18.2.0",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "eslint": "8.43.0",
-    "eslint-config-next": "^13.4.12",
+    "eslint-config-next": "^13.4.19",
     "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",

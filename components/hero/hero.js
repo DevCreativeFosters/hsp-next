@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { clsx } from 'clsx';
 
 import ArrowLeft from '@assets/images/arrow-left.svg';
@@ -11,6 +11,7 @@ import styles from './hero.module.scss';
 const MIN_SWIPE_THRESHOLD = 50;
 
 export default function Hero({ slides }) {
+  const heroRef = useRef(null);
   const [isMobile, setIsMobile] = useState(null)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
@@ -66,14 +67,17 @@ export default function Hero({ slides }) {
   };
 
   useEffect(() => {
-    window.addEventListener('touchstart', handleSwipeStart);
-    window.addEventListener('touchmove', handleSwipeMove);
-    window.addEventListener('touchend', handleSwipeEnd);
+    const heroRefCurrent = heroRef.current;
+    if (!heroRefCurrent) return;
+
+    heroRefCurrent.addEventListener('touchstart', handleSwipeStart);
+    heroRefCurrent.addEventListener('touchmove', handleSwipeMove);
+    heroRefCurrent.addEventListener('touchend', handleSwipeEnd);
 
     return () => {
-      window.removeEventListener('touchstart', handleSwipeStart);
-      window.removeEventListener('touchmove', handleSwipeMove);
-      window.removeEventListener('touchend', handleSwipeEnd);
+      heroRefCurrent.removeEventListener('touchstart', handleSwipeStart);
+      heroRefCurrent.removeEventListener('touchmove', handleSwipeMove);
+      heroRefCurrent.removeEventListener('touchend', handleSwipeEnd);
     };
   }, [handleSwipeMove]);
 
@@ -100,7 +104,10 @@ export default function Hero({ slides }) {
   );
 
   return (
-    <div className={styles.hero} style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }}>
+    <div
+      ref={heroRef}
+      className={styles.hero}
+      style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }}>
       <div className={styles.content}>
         <h3 className={styles.title}>{currentSlide.title}</h3>
         <div className={styles.description} dangerouslySetInnerHTML={{ __html: currentSlide.description }} />

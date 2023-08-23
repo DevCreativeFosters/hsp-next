@@ -1,11 +1,13 @@
-import { getHomepageFlexibleContent } from '@lib/api';
-import Hero from '@components/hero/hero';
-import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
+import Hero from '@components/hero/hero';
+import HeroProductRow from '@components/hero-product-row/hero-product-row';
+import Container from '@components/container/container';
 import Lifestyle from '@components/lifestyle/lifestyle';
 import Tiles from '@components/tiles/tiles';
 import { help } from '@mockup/help';
+
+import { getHomepageFlexibleContent } from '@lib/api';
 
 export default async function HomePage() {
   const content = await getHomepageFlexibleContent();
@@ -14,7 +16,13 @@ export default async function HomePage() {
     if (block?.fieldGroupName === `${blockNamePrefix}_HeroBlock`) {
       return <Hero slides={block.heroSlides} />;
     }
-  };
+    if(block?.fieldGroupName === `${blockNamePrefix}_AustralianMadeProductRow`) {
+      return <HeroProductRow
+        title={block.title}
+        products={block.products}
+        link={block.allProductsLink}/>
+    }
+  }
 
   return (
     <Layout title="HSP 4x4 - Homepage">
