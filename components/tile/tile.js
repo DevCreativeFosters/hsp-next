@@ -1,14 +1,42 @@
 'use client';
 
+import React, { useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import styles from './article.module.scss';
+import Link from 'next/link';
+import styles from './tile.module.scss';
 
-export default function Article({ title, content, createdAt, tags, image }) {
+export default function Tile({ title, content, createdAt, url, tags, image }) {
   const createdAtHuman = new Date(createdAt).toLocaleString('en-US', {
     dateStyle: 'medium',
   });
 
   const imageAspectRatio = image.obj.width / image.obj.height;
+
+  const renderLink = useCallback(
+    children => (
+      <Link href={url} className={styles.link}>
+        {children}
+      </Link>
+    ),
+    [url],
+  );
+
+  const TheImage = useMemo(
+    () => (
+      <Image
+        className={styles.image}
+        src={image.obj.src}
+        alt={image.alt}
+        fill={true}
+      />
+    ),
+    [image],
+  );
+
+  const Title = useMemo(
+    () => <h2 className={styles.title}>{title}</h2>,
+    [title],
+  );
 
   return (
     <article className={styles.container}>
@@ -16,12 +44,8 @@ export default function Article({ title, content, createdAt, tags, image }) {
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        <Image
-          className={styles.image}
-          src={image.obj.src}
-          alt={image.alt}
-          fill={true}
-        />
+        {url ? renderLink(TheImage) : TheImage}
+
         {tags.length > 0 && (
           <ul className={styles.tagList}>
             {tags.map((tag, index) => (
@@ -35,11 +59,13 @@ export default function Article({ title, content, createdAt, tags, image }) {
         )}
       </div>
       <div className={styles.info}>
-        <time className={styles.date} dateTime={createdAt}>
-          {createdAtHuman}
-        </time>
+        {createdAt && (
+          <time className={styles.date} dateTime={createdAt}>
+            {createdAtHuman}
+          </time>
+        )}
 
-        <h2 className={styles.title}>{title}</h2>
+        {url ? renderLink(Title) : Title}
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: content }}

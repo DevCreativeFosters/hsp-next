@@ -40,7 +40,11 @@
   font-family: var(--font-secondary);
   font-size: 16px;
   line-height: 1.5;
-  background: var(--color-primary-20)
+  background: var(--color-primary-20);
+
+  &:hover {
+    background: var(--color-primary-40);
+  }
 }
 
 .date {
@@ -48,9 +52,14 @@
 }
 
 .title {
+  color: var(--color-white-80);
   margin: 16px 0;
   font-family: var(--font-secondary);
   font-size: 24px;
+
+  .link:hover & {
+    color: var(--color-white-100);
+  }
 
   @include bp(large) {
     font-size: 36px;
@@ -84,4 +93,8 @@
 
 .image {
   object-fit: cover;
+
+  .link:hover & {
+    filter: brightness(1.1);
+  }
 }

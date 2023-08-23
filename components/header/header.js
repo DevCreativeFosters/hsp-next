@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
