@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@components/lifestyle/featured-article.module.scss';
-import Link from 'next/link';
 
 export default function FeaturedArticle({
   title,
