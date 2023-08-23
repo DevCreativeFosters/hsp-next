@@ -1,0 +1,76 @@
+.container {
+  position: relative;
+  display: flex;
+  padding: 24px 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+  height: auto;
+  transform: translateY(-100%);
+  z-index: 1;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include bp(medium) {
+    padding: 48px 0 48px 0;
+  }
+
+  @include bp(large) {
+    padding: 48px 96px;
+    width: fit-content;
+  }
+}
+
+.title {
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.33;
+  width: 100%;
+  text-align: left;
+  padding-left: 24px;
+
+  @include bp(medium) {
+    padding-left: 48px;
+  }
+
+  @include bp(large) {
+    font-size: 36px;
+    text-align: center;
+    padding-left: 0;
+  }
+}
+
+.row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  overflow-x: scroll;
+  padding-right: 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  padding-left: 24px;
+  padding-right: 24px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include bp(medium) {
+    padding-right: 48px;
+    padding-left: 48px;
+  }
+
+  @include bp(large) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  @include bp(full) {
+    width: auto;
+    overflow-x: visible;
+  }
+}
