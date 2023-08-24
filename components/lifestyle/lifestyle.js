@@ -3,12 +3,9 @@ import SectionButtons from '@components/section-buttons/section-buttons';
 import FeaturedArticle from './featured-article';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Tile from '@components/tile/tile';
-import { lifestyle } from '@mockup/lifestyle';
 import styles from './lifestyle.module.scss';
 
-export default function Lifestyle() {
-  const { title, description, featured, articles } = lifestyle;
-
+export default function Lifestyle({ title, description, featured, articles }) {
   const buttons = [
     {
       label: 'HSP TV',

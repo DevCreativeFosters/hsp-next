@@ -3,18 +3,15 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Button from '@components/button';
-import { features as featuresMockup } from '@mockup/features';
 import styles from './features.module.scss';
 
-export default function Features() {
-  const {
-    title: leadingTitle,
-    description: leadingDescription,
-    cta,
-    video,
-    features,
-  } = featuresMockup;
-
+export default function Features({
+  title: leadingTitle,
+  description: leadingDescription,
+  cta,
+  video,
+  features,
+}) {
   const videoRef = useRef(null);
 
   useEffect(() => {
