@@ -1,4 +1,4 @@
-import { getPageData } from '@lib/api';
+import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
 import Hero from '@components/hero/hero';
@@ -10,6 +10,8 @@ import { help } from '@mockup/help';
 
 export default async function HomePage() {
   const content = await getPageData('');
+  const globalOptions = await getGlobalOptions();
+  const menus = await getMenus();
   const blockNamePrefix = 'Page_Flexiblecontent_Blocks';
   const renderBlocks = block => {
     if (block?.fieldGroupName === `${blockNamePrefix}_Hero`) {
@@ -27,7 +29,11 @@ export default async function HomePage() {
   };
 
   return (
-    <Layout title="HSP 4x4 - Homepage">
+    <Layout
+      title="HSP 4x4 - Homepage"
+      menus={menus}
+      globalOptions={globalOptions}
+    >
       {content?.map(block => {
         return renderBlocks(block);
       })}

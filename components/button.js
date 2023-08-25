@@ -17,6 +17,7 @@ export default function Button({
   href = '',
   type = 'button',
   children,
+  footer,
   ...props
 }) {
   const buttonClassNames = clsx(styles.button, {
@@ -28,12 +29,14 @@ export default function Button({
     [styles.tertiary]: variant === 'tertiary',
     [styles.quaternary]: variant === 'quaternary',
     [styles.quinary]: variant === 'quinary',
+    [styles.footerItem]: variant === 'footer-item',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
     [styles.leftIcon]: leftIcon,
     [styles.rightIcon]: rightIcon,
     [styles.toggleable]: toggleable,
     [styles.noText]: !children,
+    [styles.footer]: footer
   });
 
   const LeftIconSvg = getIcon(leftIcon);
