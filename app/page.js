@@ -1,3 +1,4 @@
+import { getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
 import Hero from '@components/hero/hero';
@@ -7,22 +8,23 @@ import Lifestyle from '@components/lifestyle/lifestyle';
 import Tiles from '@components/tiles/tiles';
 import { help } from '@mockup/help';
 
-import { getHomepageFlexibleContent } from '@lib/api';
-
 export default async function HomePage() {
-  const content = await getHomepageFlexibleContent();
+  const content = await getPageData('');
   const blockNamePrefix = 'Page_Flexiblecontent_Blocks';
   const renderBlocks = block => {
-    if (block?.fieldGroupName === `${blockNamePrefix}_HeroBlock`) {
+    if (block?.fieldGroupName === `${blockNamePrefix}_Hero`) {
       return <Hero slides={block.heroSlides} />;
     }
-    if(block?.fieldGroupName === `${blockNamePrefix}_AustralianMadeProductRow`) {
-      return <HeroProductRow
-        title={block.title}
-        products={block.products}
-        link={block.allProductsLink}/>
+    if (block?.fieldGroupName === `${blockNamePrefix}_ProductTiles`) {
+      return (
+        <HeroProductRow
+          title={block.title}
+          products={block.products}
+          link={block.allProductsLink}
+        />
+      );
     }
-  }
+  };
 
   return (
     <Layout title="HSP 4x4 - Homepage">
