@@ -221,3 +221,32 @@
 .toggleIcon {
   pointer-events: none;
 }
+
+.footer {
+  text-transform: capitalize;
+
+  svg path {
+    color: var(--color-primary-100);
+    fill: var(--color-primary-100);
+  }
+}
+
+.footerItem {
+  --vertical-padding: 12px;
+  --inline-padding: 24px;
+  --font-size: 16px;
+  --font-color: var(--color-white-100);
+  --bg-color: var(--color-black-0);
+  --hover-font-color: var(--color-primary-100);
+
+  color: var(--font-color);
+  font-family: var(--font-primary);
+  font-size: var(--font-size);
+  font-weight: 400;
+  padding: var(--vertical-padding) var(--inline-padding) var(--vertical-padding);
+
+  &:hover {
+    color: var(--hover-font-color);
+    text-decoration: underline;
+  }
+}

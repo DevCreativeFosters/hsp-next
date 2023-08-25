@@ -129,6 +129,19 @@
   padding-left: 0;
 }
 
+.dotContainer {
+  padding: 10px;
+  cursor: pointer;
+
+  &:first-child {
+    padding-right: 0;
+  }
+
+  &:last-child {
+    padding-left: 0;
+  }
+}
+
 .slideDot {
   display: block;
   background-color: var(--color-white-10);
