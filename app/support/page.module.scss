@@ -1,0 +1,30 @@
+.groups {
+  display: flex;
+  flex-direction: column;
+  margin-top: 48px;
+  gap: 48px;
+}
+
+.group {
+  padding: 32px 0;
+  border: 2px solid var(--color-white-20);
+  border-radius: 16px;
+  flex-grow: 1;
+}
+
+.title {
+  margin-left: 24px;
+  font-family: var(--font-secondary);
+}
+
+.list {
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.listItem {
+  padding: 0;
+  margin: 8px 0 0;
+}

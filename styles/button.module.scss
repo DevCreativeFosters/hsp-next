@@ -182,6 +182,16 @@
   }
 }
 
+.senary {
+  --font-color: var(--color-white-100);
+  --bg-color: transparent;
+  --hover-bg-color: var(--color-white-5);
+
+  svg path {
+    fill: var(--color-primary-100);
+  }
+}
+
 .optionalToggleWrapper {
   display: flex;
   flex-direction: row-reverse;

@@ -29,6 +29,7 @@ export default function Button({
     [styles.tertiary]: variant === 'tertiary',
     [styles.quaternary]: variant === 'quaternary',
     [styles.quinary]: variant === 'quinary',
+    [styles.senary]: variant === 'senary',
     [styles.footerItem]: variant === 'footer-item',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
@@ -36,7 +37,7 @@ export default function Button({
     [styles.rightIcon]: rightIcon,
     [styles.toggleable]: toggleable,
     [styles.noText]: !children,
-    [styles.footer]: footer
+    [styles.footer]: footer,
   });
 
   const LeftIconSvg = getIcon(leftIcon);
