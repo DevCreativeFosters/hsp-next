@@ -1,0 +1,106 @@
+import Button from '@components/button';
+import { createRef } from 'react';
+import Link from 'next/link';
+import clsx from 'clsx';
+import Container from '@components/container/container';
+import CustomSelect from '@components/custom-select/custom-select';
+import styles from './breadcrumbs.module.scss';
+
+const SEPARATOR = '/';
+
+function addSeparators(items) {
+  const results = [];
+  items.forEach((item, index) => {
+    if (index && index < items.length && !item.skipPrecedingSeparator) {
+      results.push(SEPARATOR);
+    }
+    results.push(item);
+  });
+  return results;
+}
+
+function Breadcrumbs({ items }) {
+  const itemsNormalized = items
+    .map(item => ({
+      ...item,
+      ref: item.type === 'select' ? createRef() : null,
+    }))
+    .map((item, index, itemsWithRefs) => ({
+      ...item,
+      onSelectCallbackAndActivateNext: val => {
+        if (typeof item?.onSelect === 'function') {
+          item.onSelect(val);
+        }
+        const nextRef = itemsWithRefs[index + 1]?.ref;
+        if (item.onSelectOpenNext && nextRef) {
+          nextRef.current.dispatchEvent(new Event('open-custom-select'));
+        }
+      },
+    }));
+
+  const itemsWithSeparators = addSeparators(itemsNormalized);
+
+  return (
+    <div className={styles.container}>
+      {itemsWithSeparators.map((item, index) => {
+        if (item === SEPARATOR) {
+          return (
+            <div className={styles.separator} key={index}>
+              {SEPARATOR}
+            </div>
+          );
+        } else if (item?.type === 'button') {
+          return (
+            <Button
+              href={item.url || null}
+              size="xsmall"
+              variant="secondary"
+              disabled={item.disabled}
+              onClick={item.onClick || null}
+              key={index}
+            >
+              {item.label}
+            </Button>
+          );
+        } else if (item?.label) {
+          return (
+            <Link
+              href={item.url}
+              className={clsx(styles.itemLink, {
+                [styles.current]: item.current,
+              })}
+              key={index}
+            >
+              {item.label}
+            </Link>
+          );
+        } else if (item?.type === 'select') {
+          return (
+            <CustomSelect
+              options={item.options}
+              selectedValue={item.selectedValue}
+              placeholder={item.placeholder}
+              disabled={item.disabled}
+              onSelect={item.onSelectCallbackAndActivateNext}
+              key={index}
+              fRef={item.ref}
+            />
+          );
+        }
+      })}
+    </div>
+  );
+}
+
+export default function BreadcrumbsWithOptionalContainer({
+  withContainer = false,
+  ...props
+}) {
+  return withContainer ? (
+    <Container>
+      <Breadcrumbs {...props} />
+    </Container>
+  ) : (
+    <Breadcrumbs {...props} />
+  );
+}

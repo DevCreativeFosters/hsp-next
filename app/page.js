@@ -1,3 +1,4 @@
+import BreadcrumbsExample from '@components/breadcrumbs-example/breadcrumbs-example';
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
@@ -41,7 +42,9 @@ export default async function HomePage() {
       {content?.map(block => {
         return renderBlocks(block);
       })}
+
       <Container>
+        <BreadcrumbsExample />
         <Features
           title={features.title}
           description={features.description}
