@@ -44,7 +44,6 @@ export default async function HomePage() {
       })}
 
       <Container>
-        <BreadcrumbsExample />
         <Features
           title={features.title}
           description={features.description}
