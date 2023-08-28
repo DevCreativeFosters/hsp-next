@@ -6,6 +6,10 @@ import HeroProductRow from '@components/hero-product-row/hero-product-row';
 import Container from '@components/container/container';
 import Lifestyle from '@components/lifestyle/lifestyle';
 import Tiles from '@components/tiles/tiles';
+import FAQ from '@components/faq/faq';
+import { features } from '@mockup/features';
+import { lifestyle } from '@mockup/lifestyle';
+import { faq } from '@mockup/faq';
 import { help } from '@mockup/help';
 
 export default async function HomePage() {
@@ -38,13 +42,30 @@ export default async function HomePage() {
         return renderBlocks(block);
       })}
       <Container>
-        <Features />
-        <Lifestyle />
+        <Features
+          title={features.title}
+          description={features.description}
+          cta={features.cta}
+          video={features.video}
+          features={features.features}
+        />
+        <Lifestyle
+          title={lifestyle.title}
+          description={lifestyle.description}
+          featured={lifestyle.featured}
+          articles={lifestyle.articles}
+        />
         <Tiles
           title={help.title}
           description={help.description}
           buttons={help.buttons}
           tiles={help.tiles}
+        />
+        <FAQ
+          title={faq.title}
+          description={faq.description}
+          buttons={faq.buttons}
+          questions={faq.questions}
         />
       </Container>
     </Layout>

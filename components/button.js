@@ -8,7 +8,7 @@ export default function Button({
   size = 'small',
   variant = 'primary',
   background = 'dark',
-  fontStyle = {},
+  fontStyle = null,
   leftIcon = null,
   rightIcon = null,
   toggleable = null,

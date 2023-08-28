@@ -12,4 +12,17 @@
     justify-self: flex-end;
     align-self: center;
   }
+
+  &.alternatingLayout {
+    @include bp-only(medium) {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(var(--alternating-layout-break-row), 1fr);
+    }
+
+    & > * {
+      justify-content: space-between;
+    }
+  }
 }
