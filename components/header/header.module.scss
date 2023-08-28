@@ -29,7 +29,7 @@
     grid-template-areas:
       'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu socialMenu'
       'logo primaryMenu primaryMenu primaryMenu vehicle vehicle';
-    grid-template-columns: 1fr 10fr 10fr 10fr 10fr 1fr;
+    grid-template-columns: 130px 10fr 10fr 10fr 10fr 1fr;
     gap: 0 24px;
   }
 }

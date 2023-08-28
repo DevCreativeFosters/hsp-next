@@ -1,19 +1,22 @@
-import Footer from "@components/footer/footer";
+import Footer from '@components/footer/footer';
+import Header from '@components/header/header';
 
-export default function Layout({menus, children, globalOptions}) {
+import styles from './layout.module.scss';
+
+export default function Layout({ menus, children, globalOptions }) {
   const footerMenus = {
     hsp: [],
     legal: [],
     lifestyle: [],
     products: [],
     resources: [],
-    services: []
-  }
+    services: [],
+  };
   const footerText = globalOptions?.footerText;
 
   menus?.forEach(menu => {
     const menuLocation = menu?.node?.locations[0];
-    const menuNodes = menu?.node?.menuItems.nodes
+    const menuNodes = menu?.node?.menuItems.nodes;
 
     switch (menuLocation) {
       case 'HSP_NAVIGATION':
@@ -40,9 +43,10 @@ export default function Layout({menus, children, globalOptions}) {
   });
 
   return (
-    <main>
-      {children}
-      <Footer menus={footerMenus} text={footerText}/>
-    </main>
-  )
+    <>
+      <Header />
+      <main className={styles.main}>{children}</main>
+      <Footer menus={footerMenus} text={footerText} />
+    </>
+  );
 }

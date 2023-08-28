@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';

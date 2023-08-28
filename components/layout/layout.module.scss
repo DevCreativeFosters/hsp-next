@@ -1,9 +1,8 @@
-.isLightTheme {
-  background: $color-white;
-  color: $color-text;
-  margin: 0;
-}
+.main {
+  margin-top: 80px;
+  padding-top: 0.02px;
 
-.filters {
-  @include hidden-visually;
+  @include bp(large) {
+    margin-top: 124px;
+  }
 }
