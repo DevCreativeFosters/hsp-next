@@ -1,0 +1,69 @@
+.videoCard {
+  background-color: var(--color-black-40);
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 249/355;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.videoCardA {
+  @include bp(medium) {
+    width: 62.5%;
+    aspect-ratio: 443/355;
+  }
+
+  @include bp(large) {
+    width: 50%;
+  }
+}
+
+.videoCardB {
+  @include bp(medium) {
+    width: 37.5%;
+  }
+
+  @include bp(large) {
+    width: 50%;
+  }
+}
+
+.video {
+  object-fit: cover;
+  width: 100%;
+}
+
+.information {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 36px;
+}
+
+.productName {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  @include bp(large) {
+    font-size: 24px;
+    line-height: 1.33;
+  }
+}
+
+.productPrice {
+  color: var(--color-white-80);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 400;
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+}

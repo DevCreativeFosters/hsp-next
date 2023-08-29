@@ -12,6 +12,7 @@
   "dependencies": {
     "@svgr/webpack": "^8.0.1",
     "clsx": "^2.0.0",
+    "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",
     "material-symbols": "^0.10.1",
     "next": "^13.4.19",

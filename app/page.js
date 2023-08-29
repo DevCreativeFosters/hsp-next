@@ -7,6 +7,7 @@ import Container from '@components/container/container';
 import Lifestyle from '@components/lifestyle/lifestyle';
 import Tiles from '@components/tiles/tiles';
 import FAQ from '@components/faq/faq';
+import PromoWithTwoVideos from '@components/promos-with-two-videos/promos-with-two-videos';
 import { features } from '@mockup/features';
 import { lifestyle } from '@mockup/lifestyle';
 import { faq } from '@mockup/faq';
@@ -29,6 +30,9 @@ export default async function HomePage() {
           link={block.allProductsLink}
         />
       );
+    }
+    if (block?.fieldGroupName === `${blockNamePrefix}_PromoWith2Videos`) {
+      return <PromoWithTwoVideos data={block} />;
     }
   };
 
