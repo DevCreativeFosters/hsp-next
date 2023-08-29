@@ -150,7 +150,6 @@ export default function BreadcrumbsExample() {
           setCurrentModelList(CAR_EXAMPLE_MODELS);
           break;
       }
-      console.log('set model to null');
       setModel(null);
     },
     [maker],
