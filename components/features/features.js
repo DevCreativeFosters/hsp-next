@@ -60,7 +60,7 @@ export default function Features({
           <video
             className={styles.video}
             title={video.title || null}
-            poster={video.poster?.src || null}
+            poster={video.poster || null}
             ref={videoRef}
             loop
             muted
