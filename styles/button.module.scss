@@ -33,6 +33,11 @@
     background: var(--hover-bg-color);
   }
 
+  &[disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   svg path {
     fill: currentcolor;
   }
