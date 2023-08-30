@@ -1,0 +1,27 @@
+.review {
+  border-radius: 16px;
+  background: var(--color-white-100);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  width: calc(100% - 24px);
+  height: min-content;
+  max-width: 100%;
+
+  @include bp(large) {
+    max-width: 25%;
+  }
+}
+
+.text {
+  color: rgb(0 0 0 / 70%);
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.name {
+  color: var(--color-primary-100);
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: 400;
+}
