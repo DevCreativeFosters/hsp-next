@@ -1,4 +1,3 @@
-import BreadcrumbsExample from '@components/breadcrumbs-example/breadcrumbs-example';
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Features from '@components/features/features';
@@ -12,7 +11,6 @@ import PromoWithTwoVideos from '@components/promos-with-two-videos/promos-with-t
 import CategoriesAndProducts from '@components/categories-and-products/categories-and-products';
 import Reviews from '@components/reviews/reviews';
 import TextAndImagePromo from '@components/text-and-image-promo/text-and-image-promo';
-import { features } from '@mockup/features';
 import { lifestyle } from '@mockup/lifestyle';
 import { faq } from '@mockup/faq';
 import { help } from '@mockup/help';
@@ -35,15 +33,40 @@ export default async function HomePage() {
         />
       );
     }
+
     if (block?.fieldGroupName === `${blockNamePrefix}_PromoWith2Videos`) {
       return <PromoWithTwoVideos data={block} />;
     }
+
     if (block?.fieldGroupName === `${blockNamePrefix}_CategoriesAndProducts`) {
       return <CategoriesAndProducts data={block.links} />;
     }
-    if(block?.fieldGroupName === `${blockNamePrefix}_Reviews`) {
+
+    if (block?.fieldGroupName === `${blockNamePrefix}_FeaturesValues`) {
+      return (
+        <Container>
+          <Features
+            title={block.sectionTitle}
+            description={block.description}
+            cta={{
+              label: block.buttonLink.title,
+              url: block.buttonLink.url,
+            }}
+            video={{
+              src: block.videoUrl,
+              title: block.sectionTitle,
+              poster: block.videoThumbnailImage.sourceUrl,
+            }}
+            features={block.attributes}
+          />
+        </Container>
+      );
+    }
+
+    if (block?.fieldGroupName === `${blockNamePrefix}_Reviews`) {
       return <Reviews data={block} />;
     }
+
     if (block?.fieldGroupName === `${blockNamePrefix}_PromoTextAndVideo`) {
       return (
         <TextAndImagePromo
@@ -68,13 +91,6 @@ export default async function HomePage() {
       })}
 
       <Container>
-        <Features
-          title={features.title}
-          description={features.description}
-          cta={features.cta}
-          video={features.video}
-          features={features.features}
-        />
         <Lifestyle
           title={lifestyle.title}
           description={lifestyle.description}
