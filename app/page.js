@@ -11,6 +11,7 @@ import FAQ from '@components/faq/faq';
 import PromoWithTwoVideos from '@components/promos-with-two-videos/promos-with-two-videos';
 import CategoriesAndProducts from '@components/categories-and-products/categories-and-products';
 import Reviews from '@components/reviews/reviews';
+import TextAndImagePromo from '@components/text-and-image-promo/text-and-image-promo';
 import { features } from '@mockup/features';
 import { lifestyle } from '@mockup/lifestyle';
 import { faq } from '@mockup/faq';
@@ -42,6 +43,17 @@ export default async function HomePage() {
     }
     if(block?.fieldGroupName === `${blockNamePrefix}_Reviews`) {
       return <Reviews data={block} />;
+    }
+    if (block?.fieldGroupName === `${blockNamePrefix}_PromoTextAndVideo`) {
+      return (
+        <TextAndImagePromo
+          title={block?.title}
+          description={block?.description}
+          videoUrl={block?.videoUrl}
+          linkText={block?.learnMoreButton?.title}
+          linkUrl={block?.learnMoreButton?.url}
+        />
+      );
     }
   };
 
