@@ -10,6 +10,7 @@
   max-width: calc(1320px + var(--padding) * 2);
   padding-left: var(--padding);
   padding-right: var(--padding);
+  overflow: hidden;
 
   @include bp(medium) {
     --padding: 48px;
