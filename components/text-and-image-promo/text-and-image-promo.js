@@ -29,7 +29,7 @@ export default function TextAndImagePromo({
           </Button>
         </div>
         <div className={styles.video}>
-          <VideoCard variant="square" url={videoUrl} />
+          <VideoCard variant="rectangle" url={videoUrl} />
         </div>
       </div>
     </Container>
