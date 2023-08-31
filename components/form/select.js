@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import styles from '@styles/forms/select.module.scss';
 import { useClickOutside } from '@hooks/useClickOutside';
+import styles from './select.module.scss';
 
 export default function Select({
   size = 'small',

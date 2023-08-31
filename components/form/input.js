@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import styles from '@styles/forms/input.module.scss';
+import styles from './input.module.scss';
 
 export default function Input({
-  size = 'small',
+  type = 'input', // or textarea
+  size = 'large',
   background = 'dark',
   errorMessage = '',
   placeholder = '',
   label = '',
+  required,
   ...props
 }) {
   // Internal values are used for demos purposes to make component work with basic props
@@ -18,6 +20,8 @@ export default function Input({
   const handleInternalChange = ev => {
     setInternalValue(ev.target.value);
   };
+  const InputTag = props =>
+    type === 'textarea' ? <textarea {...props} /> : <input {...props} />;
 
   return (
     <div className={styles.wrapper}>
@@ -28,8 +32,9 @@ export default function Input({
           [styles.hasLabel]: label,
         })}
       >
-        <input
+        <InputTag
           className={clsx(styles.input, {
+            [styles.textarea]: type === 'textarea',
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
@@ -40,7 +45,12 @@ export default function Input({
           value={props.value || internalValue}
           {...props}
         />
-        {label && <label className={styles.label}>{label}</label>}
+        {label && (
+          <label className={styles.label}>
+            {label}
+            {required && <span className={styles.required}>*</span>}
+          </label>
+        )}
       </div>
       {errorMessage && (
         <div className={styles.errorMessage}>{errorMessage}</div>

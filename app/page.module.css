@@ -31,7 +31,7 @@
   padding: 1rem;
   background-color: rgba(var(--callout-rgb), 0.5);
   border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
 }
 
 .code {
@@ -48,7 +48,7 @@
 
 .card {
   padding: 1rem 1.2rem;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: rgba(var(--card-rgb), 0);
   border: 1px solid rgba(var(--card-border-rgb), 0);
   transition:

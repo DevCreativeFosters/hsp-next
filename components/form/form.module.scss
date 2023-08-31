@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.withPadding {
+  @include bp(medium) {
+    padding: 48px;
+  }
+}
+
+.withBackground {
+  @include bp(medium) {
+    background: var(--color-black-100);
+    border-radius: var(--border-radius-lg);
+  }
+}

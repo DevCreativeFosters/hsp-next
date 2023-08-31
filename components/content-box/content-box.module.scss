@@ -1,0 +1,14 @@
+.contentBox {
+  font-weight: 400;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+  border: var(--border-size) solid var(--color-white-20);
+  border-radius: var(--border-radius-md);
+  gap: 48px;
+
+  p {
+    margin: 0;
+  }
+}

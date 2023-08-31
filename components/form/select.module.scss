@@ -74,7 +74,7 @@
   text-align: left;
   color: var(--font-color);
   border: var(--border-size) solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: transparent;
 
   & + .label {
@@ -142,7 +142,7 @@
   margin-top: 2px;
   padding: 12px 8px;
   color: var(--color-white-100);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: var(--color-black-100);
 
   &.isOpen {
