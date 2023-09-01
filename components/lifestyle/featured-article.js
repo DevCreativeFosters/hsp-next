@@ -14,17 +14,26 @@ export default function FeaturedArticle({
     dateStyle: 'medium',
   });
 
-  const imageAspectRatio = image.obj.width / image.obj.height;
+  const tagsNormalized = tags.map(({ name, link }) => ({
+    name,
+    link: {
+      url: link?.url || link,
+    },
+  }));
+
+  const imageWidth = image?.mediaDetails.width;
+  const imageHeight = image?.mediaDetails.height;
+  const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
 
   return (
     <article className={styles.container}>
       <div className={styles.info}>
-        {tags.length > 0 && (
+        {tagsNormalized?.length > 0 && (
           <ul className={styles.tagList}>
-            {tags.map((tag, index) => (
+            {tagsNormalized.map(({ name, link }, index) => (
               <li key={index}>
-                <a className={styles.tag} href="#">
-                  {tag}
+                <a className={styles.tag} href={link?.url || ''}>
+                  {name}
                 </a>
               </li>
             ))}
@@ -35,23 +44,23 @@ export default function FeaturedArticle({
           {createdAtHuman}
         </time>
 
-        <Link className={styles.link} href={url}>
+        <Link className={styles.link} href={url || ''}>
           <h2 className={styles.title}>{title}</h2>
         </Link>
         <div
           className={styles.content}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: content || '' }}
         />
       </div>
       <div
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        <Link className={styles.link} href={url}>
+        <Link className={styles.link} href={url || ''}>
           <Image
             className={styles.image}
-            src={image.obj.src}
-            alt={image.alt}
+            src={image?.sourceUrl}
+            alt={image?.altText}
             fill={true}
           />
         </Link>
