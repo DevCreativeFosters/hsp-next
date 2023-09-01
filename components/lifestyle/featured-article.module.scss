@@ -79,6 +79,7 @@
   height: 342px;
   overflow: hidden;
   border-radius: 0 0 16px 16px;
+  background: var(--color-white-10);
 
   @include bp(medium) {
     width: 50%;

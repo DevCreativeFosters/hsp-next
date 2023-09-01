@@ -38,7 +38,7 @@ export default function Lifestyle({
         createdAt={featured.date}
         url={featured.uri}
         tags={featured.tags.nodes}
-        image={featured.featuredImage.node}
+        image={featured.featuredImage?.node}
       />
       {posts.length > 0 && (
         <TileCarousel items={postsNormalized} itemTemplate={Tile} />

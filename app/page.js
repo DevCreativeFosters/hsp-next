@@ -117,7 +117,7 @@ export default async function HomePage() {
             title={block.title}
             description={block.description}
             buttons={block.buttons}
-            questions={block.questions}
+            questions={block.questions || []}
           />
         </Container>
       );

@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@components/lifestyle/featured-article.module.scss';
@@ -24,6 +25,21 @@ export default function FeaturedArticle({
   const imageWidth = image?.mediaDetails.width;
   const imageHeight = image?.mediaDetails.height;
   const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
+
+  const TheImage = useMemo(
+    () =>
+      image ? (
+        <Image
+          className={styles.image}
+          src={image?.sourceUrl}
+          alt={image?.altText}
+          fill={true}
+        />
+      ) : (
+        <span className={styles.imagePlaceholder} />
+      ),
+    [image],
+  );
 
   return (
     <article className={styles.container}>
@@ -57,12 +73,7 @@ export default function FeaturedArticle({
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
         <Link className={styles.link} href={url || ''}>
-          <Image
-            className={styles.image}
-            src={image?.sourceUrl}
-            alt={image?.altText}
-            fill={true}
-          />
+          {TheImage}
         </Link>
       </div>
     </article>
