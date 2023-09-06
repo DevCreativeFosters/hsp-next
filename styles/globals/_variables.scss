@@ -37,4 +37,11 @@
   --border-radius: 8px;
   --border-size: 2px;
   --color-text: var(--color-white-100);
+
+  /* Header */
+  --header-height: 80px;
+
+  @include bp(large) {
+    --header-height: 124px;
+  }
 }

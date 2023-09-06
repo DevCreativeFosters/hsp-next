@@ -5,12 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './tile.module.scss';
 
-export default function Tile({ title, content, createdAt, url, tags, image }) {
+export default function Tile({ title, content, createdAt, link, tags, image }) {
+  const url = link?.url || link;
   const createdAtHuman = new Date(createdAt).toLocaleString('en-US', {
     dateStyle: 'medium',
   });
 
-  const imageAspectRatio = image.obj.width / image.obj.height;
+  const imageWidth = image?.mediaDetails.width;
+  const imageHeight = image?.mediaDetails.height;
+  const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
 
   const renderLink = useCallback(
     children => (
@@ -22,14 +25,17 @@ export default function Tile({ title, content, createdAt, url, tags, image }) {
   );
 
   const TheImage = useMemo(
-    () => (
-      <Image
-        className={styles.image}
-        src={image.obj.src}
-        alt={image.alt}
-        fill={true}
-      />
-    ),
+    () =>
+      image ? (
+        <Image
+          className={styles.image}
+          src={image?.sourceUrl}
+          alt={image?.altText}
+          fill={true}
+        />
+      ) : (
+        <span className={styles.imagePlaceholder} />
+      ),
     [image],
   );
 
@@ -37,6 +43,13 @@ export default function Tile({ title, content, createdAt, url, tags, image }) {
     () => <h2 className={styles.title}>{title}</h2>,
     [title],
   );
+
+  const tagsNormalized = tags.map(({ name, link }) => ({
+    name,
+    link: {
+      url: link?.url || link,
+    },
+  }));
 
   return (
     <article className={styles.container}>
@@ -46,15 +59,17 @@ export default function Tile({ title, content, createdAt, url, tags, image }) {
       >
         {url ? renderLink(TheImage) : TheImage}
 
-        {tags.length > 0 && (
+        {tagsNormalized.length > 0 && (
           <ul className={styles.tagList}>
-            {tags.map((tag, index) => (
-              <li key={index}>
-                <a className={styles.tag} href="#">
-                  {tag}
-                </a>
-              </li>
-            ))}
+            {tagsNormalized.map(({ name, link }, index) => {
+              return (
+                <li key={index}>
+                  <a className={styles.tag} href={link.url}>
+                    {name}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

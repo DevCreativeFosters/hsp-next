@@ -11,20 +11,20 @@ import PromoWithTwoVideos from '@components/promos-with-two-videos/promos-with-t
 import CategoriesAndProducts from '@components/categories-and-products/categories-and-products';
 import Reviews from '@components/reviews/reviews';
 import TextAndImagePromo from '@components/text-and-image-promo/text-and-image-promo';
-import { lifestyle } from '@mockup/lifestyle';
-import { faq } from '@mockup/faq';
-import { help } from '@mockup/help';
 
 export default async function HomePage() {
   const content = await getPageData('');
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
-  const blockNamePrefix = 'Page_Flexiblecontent_Blocks';
+  const blockNamePrefix = 'Page_Flexiblecontent_Blocks_';
   const renderBlocks = block => {
-    if (block?.fieldGroupName === `${blockNamePrefix}_Hero`) {
+    const blockName = block?.fieldGroupName.slice(blockNamePrefix.length);
+
+    if ('Hero' === blockName) {
       return <Hero slides={block.heroSlides} />;
     }
-    if (block?.fieldGroupName === `${blockNamePrefix}_ProductTiles`) {
+
+    if ('ProductTiles' === blockName) {
       return (
         <HeroProductRow
           title={block.title}
@@ -34,15 +34,15 @@ export default async function HomePage() {
       );
     }
 
-    if (block?.fieldGroupName === `${blockNamePrefix}_PromoWith2Videos`) {
+    if ('PromoWith2Videos' === blockName) {
       return <PromoWithTwoVideos data={block} />;
     }
 
-    if (block?.fieldGroupName === `${blockNamePrefix}_CategoriesAndProducts`) {
+    if ('CategoriesAndProducts' === blockName) {
       return <CategoriesAndProducts data={block.links} />;
     }
 
-    if (block?.fieldGroupName === `${blockNamePrefix}_FeaturesValues`) {
+    if ('FeaturesValues' === blockName) {
       return (
         <Container>
           <Features
@@ -63,19 +63,63 @@ export default async function HomePage() {
       );
     }
 
-    if (block?.fieldGroupName === `${blockNamePrefix}_Reviews`) {
+    if ('Reviews' === blockName) {
       return <Reviews data={block} />;
     }
 
-    if (block?.fieldGroupName === `${blockNamePrefix}_PromoTextAndVideo`) {
+    if ('Lifestyle' === blockName) {
+      return (
+        <Container>
+          <Lifestyle
+            title={block.title}
+            description={block.description}
+            buttons={block.buttons}
+            featured={block.featuredPost}
+            posts={block.posts || []}
+          />
+        </Container>
+      );
+    }
+
+    if ('Reviews' === blockName) {
+      return <Reviews data={block} />;
+    }
+
+    if ('PromoTextAndVideo' === blockName) {
       return (
         <TextAndImagePromo
-          title={block?.title}
-          description={block?.description}
-          videoUrl={block?.videoUrl}
-          linkText={block?.learnMoreButton?.title}
-          linkUrl={block?.learnMoreButton?.url}
+          title={block.title}
+          description={block.description}
+          videoUrl={block.videoUrl}
+          linkText={block.learnMoreButton?.title}
+          linkUrl={block.learnMoreButton?.url}
         />
+      );
+    }
+
+    if ('Tiles' === blockName) {
+      return (
+        <Container>
+          <Tiles
+            title={block.title}
+            description={block.description}
+            buttons={block.buttons}
+            tiles={block.tiles}
+          />
+        </Container>
+      );
+    }
+
+    if ('Faq' === blockName) {
+      return (
+        <Container>
+          <FAQ
+            title={block.title}
+            description={block.description}
+            buttons={block.buttons}
+            questions={block.questions || []}
+          />
+        </Container>
       );
     }
   };
@@ -89,27 +133,6 @@ export default async function HomePage() {
       {content?.map(block => {
         return renderBlocks(block);
       })}
-
-      <Container>
-        <Lifestyle
-          title={lifestyle.title}
-          description={lifestyle.description}
-          featured={lifestyle.featured}
-          articles={lifestyle.articles}
-        />
-        <Tiles
-          title={help.title}
-          description={help.description}
-          buttons={help.buttons}
-          tiles={help.tiles}
-        />
-        <FAQ
-          title={faq.title}
-          description={faq.description}
-          buttons={faq.buttons}
-          questions={faq.questions}
-        />
-      </Container>
     </Layout>
   );
 }

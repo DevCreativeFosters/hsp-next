@@ -1,6 +1,5 @@
 import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
-
 import styles from './layout.module.scss';
 
 export default function Layout({ menus, children, globalOptions }) {

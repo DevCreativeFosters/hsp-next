@@ -21,6 +21,11 @@
       grid-template-rows: repeat(var(--alternating-layout-break-row), 1fr);
     }
 
+    @include bp(large) {
+      display: flex;
+      flex-direction: column;
+    }
+
     & > * {
       justify-content: space-between;
     }

@@ -1,8 +1,4 @@
 .main {
-  margin-top: 80px;
   padding-top: 0.02px;
-
-  @include bp(large) {
-    margin-top: 124px;
-  }
+  margin-top: var(--header-height);
 }
