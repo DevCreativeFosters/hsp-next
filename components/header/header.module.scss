@@ -7,13 +7,9 @@
   position: fixed;
   z-index: var(--z-index-header);
   top: 0;
-  height: 80px;
+  height: var(--header-height);
   width: 100%;
   background: var(--color-black-100);
-
-  @include bp(large) {
-    height: 124px;
-  }
 }
 
 .grid {

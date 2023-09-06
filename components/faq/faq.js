@@ -33,8 +33,10 @@ export default function FAQ({ title, description, buttons, questions }) {
   );
 
   return (
-    <>
-      <SectionIntro title={title} description={description} />
+    <div className={styles.layout}>
+      <div className={styles.intro}>
+        <SectionIntro title={title} description={description} />
+      </div>
 
       <div className={styles.buttonsContainer}>
         <SectionButtons buttons={buttons} alternatingLayout />
@@ -75,6 +77,6 @@ export default function FAQ({ title, description, buttons, questions }) {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }
