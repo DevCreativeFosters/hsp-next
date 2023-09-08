@@ -3,12 +3,12 @@
   font-weight: 600;
   font-size: 48px;
   line-height: 1.33;
-  padding: 48px 0 19px;
+  padding: 48px 24px 16px;
 
-  @include bp(medium) {
+  @include bp(large) {
     font-size: 64px;
     line-height: 1.25;
-    padding: 64px 0 17px;
+    padding: 64px 0 16px;
   }
 }
 
@@ -49,6 +49,7 @@
   font-family: var(--font-primary);
   font-size: 20px;
   font-weight: 400;
+  line-height: 1.5;
   opacity: 0.9;
   margin: 0;
 
