@@ -7,12 +7,13 @@ import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
 
 import styles from './hero.module.scss';
+import Container from '@components/container/container';
 
 const MIN_SWIPE_THRESHOLD = 50;
 
 export default function Hero({ slides }) {
   const heroRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(null)
+  const [isMobile, setIsMobile] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
 
@@ -34,33 +35,36 @@ export default function Hero({ slides }) {
   );
 
   const handleNextSlide = useCallback(() => {
-    setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    setCurrentSlideIndex(prevIndex => (prevIndex + 1) % slides.length);
   }, [slides.length]);
 
   const handlePreviousSlide = useCallback(() => {
-    setCurrentSlideIndex((prevIndex) =>
-      prevIndex === 0 ? slides.length - 1 : prevIndex - 1
+    setCurrentSlideIndex(prevIndex =>
+      prevIndex === 0 ? slides.length - 1 : prevIndex - 1,
     );
   }, [slides.length]);
 
-  const handleSwipeStart = (e) => {
+  const handleSwipeStart = e => {
     setTouchStartX(e.touches[0].clientX);
   };
 
-  const handleSwipeMove = useCallback((e) => {
-    if (touchStartX !== null) {
-      const touchEndX = e.touches[0].clientX;
-      const deltaX = touchEndX - touchStartX;
+  const handleSwipeMove = useCallback(
+    e => {
+      if (touchStartX !== null) {
+        const touchEndX = e.touches[0].clientX;
+        const deltaX = touchEndX - touchStartX;
 
-      if (deltaX > MIN_SWIPE_THRESHOLD) {
-        handlePreviousSlide();
-        setTouchStartX(null);
-      } else if (deltaX < -MIN_SWIPE_THRESHOLD) {
-        handleNextSlide();
-        setTouchStartX(null);
+        if (deltaX > MIN_SWIPE_THRESHOLD) {
+          handlePreviousSlide();
+          setTouchStartX(null);
+        } else if (deltaX < -MIN_SWIPE_THRESHOLD) {
+          handleNextSlide();
+          setTouchStartX(null);
+        }
       }
-    }
-  }, [handleNextSlide, handlePreviousSlide, touchStartX]);
+    },
+    [handleNextSlide, handlePreviousSlide, touchStartX],
+  );
 
   const handleSwipeEnd = () => {
     setTouchStartX(null);
@@ -81,7 +85,7 @@ export default function Hero({ slides }) {
     };
   }, [handleSwipeMove]);
 
-  const handleSlideChange = (index) => {
+  const handleSlideChange = index => {
     setCurrentSlideIndex(index);
   };
 
@@ -94,9 +98,13 @@ export default function Hero({ slides }) {
         <div
           key={index}
           className={styles.dotContainer}
-          onClick={() => handleSlideChange(index)}>
+          onClick={() => handleSlideChange(index)}
+        >
           <span
-            className={clsx(styles.slideDot, currentSlideIndex === index && styles.active)}
+            className={clsx(
+              styles.slideDot,
+              currentSlideIndex === index && styles.active,
+            )}
           />
         </div>
       ))}
@@ -107,28 +115,46 @@ export default function Hero({ slides }) {
     <div
       ref={heroRef}
       className={styles.hero}
-      style={{ backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }}>
-      <div className={styles.content}>
-        <h3 className={styles.title}>{currentSlide.title}</h3>
-        <div className={styles.description} dangerouslySetInnerHTML={{ __html: currentSlide.description }} />
-        <div className={styles.buttonContainer}>
-          <a className={styles.learnMoreButton} href={currentSlide.buttonLink?.link}>
-            {currentSlide.buttonLink?.title}
-          </a>
-          <div className={styles.buttons}>
-            {isMobile === true && renderSlideDots()}
-            {isMobile === false &&
-              <>
-                <button className={styles.leftButton} onClick={handlePreviousSlide}>
-                  <ArrowLeft />
-                </button>
-                <button className={styles.rightButton} onClick={handleNextSlide}>
-                  <ArrowRight />
-                </button>
-              </>}
+      style={{
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+      }}
+    >
+      <Container>
+        <div className={styles.content}>
+          <h3 className={styles.title}>{currentSlide.title}</h3>
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: currentSlide.description }}
+          />
+          <div className={styles.buttonContainer}>
+            <a
+              className={styles.learnMoreButton}
+              href={currentSlide.buttonLink?.url}
+            >
+              {currentSlide.buttonLink?.title}
+            </a>
+            <div className={styles.buttons}>
+              {isMobile === true && renderSlideDots()}
+              {isMobile === false && (
+                <>
+                  <button
+                    className={styles.prevButton}
+                    onClick={handlePreviousSlide}
+                  >
+                    <ArrowLeft />
+                  </button>
+                  <button
+                    className={styles.nextButton}
+                    onClick={handleNextSlide}
+                  >
+                    <ArrowRight />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }
