@@ -1,7 +1,15 @@
 @use 'sass:list';
 
 /* Z-index layers */
-$layers: ('dropdown', 'hamburger', 'mobile-menu', 'header', 'label', 'footer');
+$layers: (
+  'hamburger',
+  'mobile-menu',
+  'dropdown',
+  'header',
+  'label',
+  'footer',
+  'component'
+);
 
 :root {
   $length: list.length($layers);

@@ -1,0 +1,65 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: var(--z-index-component);
+  max-width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 24px;
+
+  @include bp(medium) {
+    justify-content: center;
+    padding: 0;
+    max-width: 50%;
+  }
+}
+
+.title {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 48px;
+  line-height: 1.33;
+  margin-bottom: 16px;
+
+  @include bp(large) {
+    font-size: 64px;
+    line-height: 1.25;
+    margin-bottom: 48px;
+  }
+}
+
+.description {
+  margin: 0 0 24px;
+  color: var(--color-white-80);
+  font-family: var(--font-primary);
+  font-size: 20px;
+  text-shadow: 0 0 6px rgb(0 0 0 / 90%);
+
+  @include bp(large) {
+    margin: 0 0 48px;
+    font-size: 24px;
+  }
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  @include bp(large) {
+    top: 124px;
+  }
+}
+
+.backgroundGradient {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, --color-dark-gray-100);
+}
