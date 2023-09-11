@@ -1,19 +1,17 @@
+.gradientContainer {
+  position: relative;
+}
+
 .footer {
   display: flex;
   flex-direction: column;
   gap: 6rem;
-  max-width: 82.5rem;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 48px 0;
   position: relative;
   z-index: var(--z-index-footer);
 
-  @include bp(medium) {
-    padding: 3rem;
-  }
-
   @include bp(large) {
-    padding: 6rem;
+    padding: 96px 0;
   }
 }
 
@@ -39,13 +37,12 @@
 
 .backgroundGradient {
   background: linear-gradient(
-    180deg,
+    to bottom,
     var(--color-black-5),
     var(--color-black-60),
     var(--color-black-100),
     var(--color-black-100)
   );
-  content: '';
   display: block;
   position: absolute;
   margin-left: 50%;
@@ -82,6 +79,7 @@
       grid-column: 1 / span 3;
       display: flex;
       flex-direction: row;
+      padding-left: 24px;
     }
 
     &:last-child {
@@ -133,7 +131,7 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    padding: 0 0 4px;
+    padding: 0 0 24px;
   }
 }
 
