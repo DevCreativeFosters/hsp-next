@@ -1,6 +1,5 @@
 .section {
   padding-block: 88px 48px;
-  background: linear-gradient(to bottom, var(--color-black-100), transparent);
 
   @include bp(large) {
     padding-block: 120px;
