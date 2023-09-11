@@ -1,5 +1,5 @@
 default:
-  image: node:18.16.0
+  image: node:18.17.1
 
 deploy_preview:
   stage: deploy
@@ -12,8 +12,8 @@ deploy_preview:
     - vercel build --token=$VERCEL_TOKEN
     - SLUG=$(slugify $CI_COMMIT_BRANCH)
     - FULL_SLUG=$(slugify "hsp-${SLUG:0:53}")
-    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
-    - vercel alias $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN --scope xfive
+    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
+    - vercel alias set $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN --scope xfive
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
