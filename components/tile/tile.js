@@ -5,9 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './tile.module.scss';
 
-export default function Tile({ title, content, createdAt, link, tags, image }) {
-  const url = link?.url || link;
-  const createdAtHuman = new Date(createdAt).toLocaleString('en-US', {
+export default function Tile({ title, content, createdAt, url, tags, image }) {
+  const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
     dateStyle: 'medium',
   });
 
