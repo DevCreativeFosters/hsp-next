@@ -1,6 +1,7 @@
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import VideoBackgroundHero from '@components/video-background-hero/video-background-hero';
+import PromoImageText from '@components/promo-image-text/promo-image-text';
 
 export default async function AustralianMadePage() {
   const content = await getPageData('australian-made');
@@ -16,6 +17,15 @@ export default async function AustralianMadePage() {
           description={block?.description}
           linkLabel={block?.link?.title}
           videoUrl={block?.backgroundUrl}
+        />
+      );
+    }
+    if (block?.fieldGroupName === `${blockNamePrefix}_PromoImageAndText`) {
+      return (
+        <PromoImageText
+          title={block?.title}
+          description={block?.description}
+          image={block?.image}
         />
       );
     }
