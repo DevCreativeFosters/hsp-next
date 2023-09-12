@@ -40,17 +40,20 @@
     grid-column: 2;
     grid-row: auto;
     max-width: 515px;
+    display: flex;
+    align-items: center;
   }
 
   p {
     color: var(--color-white-80);
     font-family: var(--font-primary);
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 400;
     margin: 24px 0 48px;
 
     @include bp(medium) {
-      margin: 0;
+      margin: 24px 0 0;
+      font-size: 24px;
     }
   }
 }
@@ -65,7 +68,7 @@
   }
 
   @include bp(large) {
-    grid-template-columns: 33% 33% auto;
+    grid-template-columns: 30% 33% auto;
   }
 }
 
