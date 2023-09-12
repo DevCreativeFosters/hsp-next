@@ -11,7 +11,7 @@ export default function FeaturedArticle({
   tags,
   image,
 }) {
-  const createdAtHuman = new Date(createdAt).toLocaleString('en-US', {
+  const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
     dateStyle: 'medium',
   });
 

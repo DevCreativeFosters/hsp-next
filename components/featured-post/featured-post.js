@@ -1,0 +1,111 @@
+'use client';
+
+import { useRef, useEffect } from 'react';
+
+import Tag from '@components/tag/tag';
+import Button from '@components/button';
+import Container from '@components/container/container';
+import { useIsMobile } from '@hooks/useIsMobile';
+import styles from './featured-post.module.scss';
+
+export default function FeaturedPost({
+  title,
+  excerpt,
+  uri,
+  videoUrl,
+  tags,
+  date,
+  postType,
+}) {
+  const isMobile = useIsMobile();
+  const videoRef = useRef(null);
+
+  const tagList = tags?.nodes;
+  const sortedTagList = [...tagList].sort((a, b) => {
+    if (a.name === postType) {
+      return -1;
+    } else if (b.name === postType) {
+      return 1;
+    }
+    return 0;
+  });
+
+  const formattedDate = new Date(date).toLocaleString('en-AU', {
+    dateStyle: 'short',
+  });
+
+  useEffect(function playPauseBasedOnScroll() {
+    const videoElement = videoRef.current;
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.2,
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        videoElement.play();
+      } else {
+        videoElement.pause();
+      }
+    }, options);
+
+    observer.observe(videoElement);
+
+    return () => observer.unobserve(videoElement);
+  }, []);
+
+  return (
+    <div className={styles.featuredPost}>
+      <video className={styles.video} ref={videoRef} loop muted>
+        <source src={videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className={styles.backgroundGradient} />
+      <Container>
+        <div className={styles.information}>
+          {sortedTagList && (
+            <div className={styles.tags}>
+              {sortedTagList.map((tag, idx) => {
+                return (
+                  <Tag
+                    key={tag?.name + idx}
+                    name={tag.name}
+                    variant={tag?.name === postType && !isMobile && 'primary'}
+                  />
+                );
+              })}
+            </div>
+          )}
+          {isMobile && <span className={styles.date}>{formattedDate}</span>}
+          {title && <h1 className={styles.title}>{title}</h1>}
+          {excerpt && (
+            <div
+              className={styles.excerpt}
+              dangerouslySetInnerHTML={{ __html: excerpt }}
+            />
+          )}
+          {(videoUrl || uri) && (
+            <div className={styles.buttons}>
+              {videoUrl && (
+                <Button
+                  onToggleIconClick={() => null} // WIP - add video modal popup functionality
+                  variant="primary"
+                  size="large"
+                  rightIcon="play-button"
+                >
+                  Watch video
+                </Button>
+              )}
+              {uri && (
+                <Button href={uri} variant="secondary" size="large">
+                  Read more
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </Container>
+    </div>
+  );
+}
