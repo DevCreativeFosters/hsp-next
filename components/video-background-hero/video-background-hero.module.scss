@@ -66,4 +66,8 @@
     transparent,
     var(--color-dark-gray-100)
   );
+
+  @include bp(large) {
+    top: var(--header-height);
+  }
 }
