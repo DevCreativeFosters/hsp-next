@@ -1,6 +1,5 @@
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
-import { renderBlocks } from '@lib/block';
-import Background from '@components/background/background';
+import { renderBlock } from '@lib/block';
 import Layout from '@components/layout/layout';
 
 export const metadata = {
@@ -14,15 +13,7 @@ export default async function HomePage() {
   const menus = await getMenus();
   return (
     <Layout menus={menus} globalOptions={globalOptions} withMap>
-      {content?.map(block => {
-        const { background } = block;
-        const content = renderBlocks(block);
-        return background ? (
-          <Background colorStops={background}>{content}</Background>
-        ) : (
-          content
-        );
-      })}
+      {content?.map(renderBlock)}
     </Layout>
   );
 }
