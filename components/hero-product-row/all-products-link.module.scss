@@ -1,6 +1,6 @@
 .link {
   min-width: 168px;
-  width: 100%;
+  width: calc(100% - 2 * 24px);
   height: 72px;
   padding: 24px;
   display: flex;
