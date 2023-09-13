@@ -1,0 +1,118 @@
+.cards {
+  display: flex;
+  flex-direction: column;
+  margin-block: 48px;
+  gap: 48px;
+
+  @include bp(large) {
+    flex-direction: row;
+    margin-block: 96px;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  border: 2px solid var(--color-white-20);
+  border-radius: 16px;
+  overflow: hidden;
+  width: 100%;
+
+  @include bp(large) {
+    width: 50%;
+    padding: 48px;
+  }
+
+  &.minor {
+    @include bp(large) {
+      width: calc((100% - 48px) * 0.25);
+    }
+  }
+
+  &.major {
+    @include bp(large) {
+      width: calc((100% - 48px) * 0.75);
+    }
+  }
+}
+
+.backgroundContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.backgroundImage {
+  object-fit: cover;
+}
+
+.backgroundGradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--color-black-80),
+    var(--color-black-20),
+    var(--color-black-80)
+  );
+}
+
+.iconContainer {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 24px;
+
+  @include bp(large) {
+    margin-bottom: 48px;
+  }
+}
+
+.title {
+  font-family: var(--font-secondary);
+  font-size: 36px;
+  line-height: 1.33;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px;
+
+  @include bp(large) {
+    margin-bottom: 48px;
+    font-size: 48px;
+  }
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.gap {
+  width: 100%;
+  font-size: 16px;
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+}
+
+.description {
+  position: relative;
+  margin: 0;
+  color: var(--color-white-80);
+  font-size: 16px;
+  line-height: 1.35;
+
+  @include bp(large) {
+    font-size: 20px;
+    line-height: 1.35;
+  }
+}

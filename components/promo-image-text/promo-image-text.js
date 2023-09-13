@@ -9,7 +9,6 @@ import styles from './promo-image-text.module.scss';
 export default function PromoImageText({ title, description, image }) {
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
-
   return (
     <Container>
       <div className={styles.promo}>
