@@ -1,8 +1,10 @@
 import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
+import BgContinent from '@assets/images/bg-continent.png';
+import Image from 'next/image';
 import styles from './layout.module.scss';
 
-export default function Layout({ menus, children, globalOptions }) {
+export default function Layout({ menus, globalOptions, withMap, children }) {
   const footerMenus = {
     hsp: [],
     legal: [],
@@ -44,7 +46,20 @@ export default function Layout({ menus, children, globalOptions }) {
   return (
     <>
       <Header />
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        {withMap && (
+          <div className={styles.background}>
+            <Image
+              src={BgContinent}
+              layout="fill"
+              objectFit="cover"
+              objectPosition="center 33%"
+              quality={80}
+            />
+          </div>
+        )}
+        <div className={styles.content}>{children}</div>
+      </main>
       <Footer menus={footerMenus} text={footerText} />
     </>
   );
