@@ -1,0 +1,51 @@
+.section {
+  padding-block: 88px 48px;
+
+  @include bp(large) {
+    padding-block: 120px;
+  }
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  margin-top: 48px;
+  gap: 48px;
+
+  @include bp(large) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.group {
+  padding: 32px 0;
+  border: 2px solid var(--color-white-20);
+  border-radius: 16px;
+  width: 100%;
+
+  @include bp(large) {
+    padding: 48px 24px;
+  }
+}
+
+.title {
+  margin-left: 24px;
+  font-family: var(--font-secondary);
+}
+
+.list {
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include bp(large) {
+    margin-top: 44px;
+  }
+}
+
+.listItem {
+  padding: 0;
+  margin: 8px 0 0;
+}
