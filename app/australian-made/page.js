@@ -2,6 +2,7 @@ import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import VideoBackgroundHero from '@components/video-background-hero/video-background-hero';
 import PromoImageText from '@components/promo-image-text/promo-image-text';
+import InformationCards from '@components/information-cards/information-cards';
 
 export default async function AustralianMadePage() {
   const content = await getPageData('australian-made');
@@ -28,6 +29,9 @@ export default async function AustralianMadePage() {
           image={block?.image}
         />
       );
+    }
+    if (block?.fieldGroupName === `${blockNamePrefix}_InformationCards`) {
+      return <InformationCards cards={block?.cards} />;
     }
   };
 
