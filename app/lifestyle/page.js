@@ -1,18 +1,13 @@
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import FeaturedPost from '@components/featured-post/featured-post';
+import { renderBlock } from '@lib/block';
 
 export default async function LifestylePage() {
-  const content = await getPageData('');
+  const content = await getPageData('lifestyle');
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const featuredPost = globalOptions?.featuredPost;
-  const blockNamePrefix = 'Page_Flexiblecontent_Blocks';
-  const renderBlocks = block => {
-    if (block?.fieldGroupName === `${blockNamePrefix}_`) {
-      //
-    }
-  };
 
   return (
     <Layout
@@ -29,9 +24,7 @@ export default async function LifestylePage() {
         date={featuredPost?.date}
         postType="HSP TV"
       />
-      {content?.map(block => {
-        return renderBlocks(block);
-      })}
+      {content?.map(renderBlock)}
     </Layout>
   );
 }

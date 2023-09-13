@@ -3,7 +3,7 @@ import Button from '@components/button';
 import styles from './section-buttons.module.scss';
 
 export default function SectionButtons({ buttons = [], alternatingLayout }) {
-  if (!buttons.length) return;
+  if (!buttons?.length) return;
 
   const breakRow = Math.ceil(buttons.length / 2);
 

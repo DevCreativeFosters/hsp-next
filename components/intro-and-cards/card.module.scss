@@ -1,0 +1,72 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  background-color: var(--color-black-100);
+  border-radius: 16px;
+
+  @include bp(large) {
+    padding-top: 48px;
+  }
+}
+
+.icon {
+  margin-left: 48px;
+  margin-bottom: 24px;
+}
+
+.title {
+  padding: 0 48px 24px;
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 36px;
+  line-height: 1.33;
+
+  @include bp(large) {
+    padding: 0 48px 24px;
+    font-size: 48px;
+    line-height: 1.25;
+  }
+}
+
+.description {
+  margin: 0 48px 48px;
+  color: var(--color-white-80);
+  font-family: var(--font-primary);
+  font-size: 16px;
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+
+  * {
+    margin: 0;
+  }
+}
+
+.imageContainer {
+  margin-top: auto;
+  align-self: flex-end;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 345/228;
+  overflow: hidden;
+  border-radius: 0 0 16px 16px;
+
+  @include bp(large) {
+    aspect-ratio: 636/169;
+  }
+}
+
+.image {
+  object-position: center;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  margin-top: 6px;
+
+  @include bp(medium) {
+    margin-top: 0;
+    margin-bottom: -5px;
+  }
+}

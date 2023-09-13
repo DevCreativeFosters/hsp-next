@@ -1,0 +1,59 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 48px;
+  margin: 48px 0;
+  position: relative;
+
+  @include bp(medium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp(large) {
+    margin: 96px 0;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+
+  @include bp(large) {
+    padding: 0;
+  }
+}
+
+.title {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 48px;
+  line-height: 1.33;
+  margin-bottom: 24px;
+
+  @include bp(large) {
+    font-size: 64px;
+    line-height: 1.25;
+    margin-bottom: 48px;
+  }
+}
+
+.description {
+  color: var(--color-white-80);
+  font-family: var(--font-primary);
+  font-size: 20px;
+
+  @include bp(large) {
+    font-size: 24px;
+  }
+
+  p {
+    margin: 0 0 32px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}

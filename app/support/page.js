@@ -1,6 +1,6 @@
 import { getGlobalOptions, getMenus, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
-import { renderBlocks } from '@lib/block';
+import { renderBlock } from '@lib/block';
 
 export const metadata = {
   title: 'HSP 4x4 - Support',
@@ -14,9 +14,7 @@ export default async function SupportPage() {
 
   return (
     <Layout menus={menus} globalOptions={globalOptions}>
-      {content?.map(block => {
-        return renderBlocks(block);
-      })}
+      {content?.map(renderBlock)}
     </Layout>
   );
 }
