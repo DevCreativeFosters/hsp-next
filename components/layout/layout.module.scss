@@ -11,6 +11,11 @@
   height: 100%;
 }
 
+.backgroundImage {
+  object-fit: cover;
+  object-position: center 33%;
+}
+
 .content {
   position: relative;
 }

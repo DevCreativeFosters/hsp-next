@@ -1,16 +1,41 @@
-.hero {
-  position: relative;
+.wrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  z-index: var(--z-index-component);
-  max-width: 100%;
-  min-height: calc(100vh - 120px);
-  padding: 24px;
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
+  transform: translateX(-50%);
+}
+
+.backgroundGradient {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  min-height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-dark-gray-100)
+  );
+  transform: translateX(-50%);
+}
+
+.content {
+  position: relative;
+  padding: 48px 24px;
 
   @include bp(medium) {
     justify-content: center;
-    padding: 0;
     max-width: 50%;
   }
 }
@@ -39,35 +64,5 @@
   @include bp(large) {
     margin: 0 0 48px;
     font-size: 24px;
-  }
-}
-
-.video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  @include bp(large) {
-    top: 124px;
-  }
-}
-
-.backgroundGradient {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--color-dark-gray-100)
-  );
-
-  @include bp(large) {
-    top: var(--header-height);
   }
 }
