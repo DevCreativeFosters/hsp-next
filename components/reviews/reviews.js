@@ -95,7 +95,6 @@ export default function Reviews({ data }) {
           onSwiper={swiper => (swiperRef.current = swiper)}
           loop={false}
           slidesPerGroup={1}
-          watchSlidesVisibility
           watchSlidesProgress
         >
           {groupedReviews.map((group, groupIndex) => (
