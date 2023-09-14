@@ -1,4 +1,10 @@
-import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
+import {
+  getPageData,
+  getMenus,
+  getGlobalOptions,
+  getLatestNumberOfBlogPosts,
+  getLatestNumberOfHSPTVPosts,
+} from '@lib/api';
 import Layout from '@components/layout/layout';
 import FeaturedPost from '@components/featured-post/featured-post';
 import { renderBlock } from '@lib/block';

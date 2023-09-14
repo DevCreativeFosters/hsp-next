@@ -6,7 +6,7 @@
   margin-top: 55px;
   margin-left: 50%;
   transform: translateX(-50%);
-  overflow-x: hidden;
+  overflow-x: visible;
 
   @include bp(medium) {
     --padding: 48px;
