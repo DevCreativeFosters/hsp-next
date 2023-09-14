@@ -50,10 +50,10 @@ export default function Layout({ menus, globalOptions, withMap, children }) {
         {withMap && (
           <div className={styles.background}>
             <Image
+              className={styles.backgroundImage}
               src={BgContinent}
-              layout="fill"
-              objectFit="cover"
-              objectPosition="center 33%"
+              alt="Shape of Australia continent"
+              fill={true}
               quality={80}
             />
           </div>

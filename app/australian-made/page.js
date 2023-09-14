@@ -1,6 +1,6 @@
 import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
-import Layout from '@components/layout/layout';
 import { renderBlock } from '@lib/block';
+import Layout from '@components/layout/layout';
 
 export const metadata = {
   title: 'HSP 4x4 - Australian made',

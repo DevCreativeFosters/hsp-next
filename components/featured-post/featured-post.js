@@ -1,5 +1,6 @@
 'use client';
 
+import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useRef, useEffect } from 'react';
 
 import Tag from '@components/tag/tag';
@@ -34,26 +35,7 @@ export default function FeaturedPost({
     dateStyle: 'short',
   });
 
-  useEffect(function playPauseBasedOnScroll() {
-    const videoElement = videoRef.current;
-    const options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.2,
-    };
-
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        videoElement.play();
-      } else {
-        videoElement.pause();
-      }
-    }, options);
-
-    observer.observe(videoElement);
-
-    return () => observer.unobserve(videoElement);
-  }, []);
+  usePlaybackOnScroll(videoRef);
 
   return (
     <div className={styles.featuredPost}>
