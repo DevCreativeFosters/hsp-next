@@ -11,9 +11,9 @@
   line-height: 1;
   display: inline-flex;
   align-items: center;
-  padding: var(--vertical-padding)
+  padding: var(--block-padding)
     calc(var(--inline-padding) + var(--toggler-padding, 0px))
-    var(--vertical-padding) var(--inline-padding);
+    var(--block-padding) var(--inline-padding);
   transition: var(--transition);
   color: var(--font-color);
   border-radius: var(--border-radius);
@@ -45,7 +45,7 @@
 
 .xsmall {
   --gap: 8px;
-  --vertical-padding: 8px;
+  --block-padding: 8px;
   --only-icon-padding: 8px;
   --inline-padding: 12px;
 
@@ -54,7 +54,7 @@
 
 .small {
   --gap: 8px;
-  --vertical-padding: 8px;
+  --block-padding: 8px;
   --only-icon-padding: 8px;
 
   &.leftIcon {
@@ -76,11 +76,11 @@
 
 .large {
   --gap: 12px;
-  --vertical-padding: 16px;
+  --block-padding: 16px;
   --only-icon-padding: 16px;
 
   @include bp(medium) {
-    --vertical-padding: 20px;
+    --block-padding: 20px;
     --only-icon-padding: 20px;
   }
 
@@ -98,6 +98,22 @@
 
   &.toggleable {
     --toggler-padding: 20px;
+  }
+}
+
+.mixed {
+  --gap: 0;
+  --block-padding: 0;
+  --inline-padding: 0;
+  --font-size: 16px;
+
+  min-width: 48px;
+  aspect-ratio: 1;
+
+  @include bp(large) {
+    --font-size: 24px;
+
+    min-width: 56px;
   }
 }
 
@@ -247,7 +263,7 @@
 }
 
 .footerItem {
-  --vertical-padding: 12px;
+  --block-padding: 12px;
   --inline-padding: 24px;
   --font-size: 16px;
   --font-color: var(--color-white-100);
@@ -258,7 +274,7 @@
   font-family: var(--font-primary);
   font-size: var(--font-size);
   font-weight: 400;
-  padding: var(--vertical-padding) var(--inline-padding) var(--vertical-padding);
+  padding: var(--block-padding) var(--inline-padding) var(--block-padding);
 
   &:hover {
     color: var(--hover-font-color);

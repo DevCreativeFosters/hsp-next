@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
