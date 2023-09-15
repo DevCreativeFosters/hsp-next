@@ -24,6 +24,7 @@ export default function Button({
     [styles.xsmall]: size === 'xsmall',
     [styles.small]: size === 'small',
     [styles.large]: size === 'large',
+    [styles.mixed]: size === 'mixed',
     [styles.primary]: variant === 'primary',
     [styles.secondary]: variant === 'secondary',
     [styles.tertiary]: variant === 'tertiary',

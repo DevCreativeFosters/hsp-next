@@ -1,0 +1,10 @@
+.posts {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 48px;
+
+  @include bp(medium) {
+    grid-template-columns: repeat(3, 4fr);
+  }
+}

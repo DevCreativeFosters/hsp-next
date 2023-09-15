@@ -85,6 +85,15 @@
   line-height: 1.6;
 }
 
+.blog {
+  width: 100%;
+  max-width: 100%;
+
+  &.title {
+    color: var(--color-white-100);
+  }
+}
+
 .title {
   margin: 0;
   font-family: var(--font-secondary);

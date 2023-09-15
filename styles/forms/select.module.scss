@@ -69,8 +69,7 @@
   justify-content: space-between;
   width: 100%;
   max-height: var(--max-height);
-  padding: var(--vertical-padding) 16px var(--vertical-padding)
-    var(--inline-padding);
+  padding: var(--block-padding) 16px var(--block-padding) var(--inline-padding);
   transition: var(--transition);
   text-align: left;
   color: var(--font-color);
@@ -114,14 +113,14 @@
 }
 
 .small {
-  --vertical-padding: 2px;
+  --block-padding: 2px;
   --max-height: 39px;
   --label-line-height: 1.95;
 }
 
 .large {
   --max-height: 56px;
-  --vertical-padding: 10px;
+  --block-padding: 10px;
   --label-line-height: 2.8;
 }
 

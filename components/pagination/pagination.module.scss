@@ -1,0 +1,29 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 8px;
+  margin: 48px 0;
+
+  @include bp(large) {
+    gap: 16px;
+  }
+
+  > * {
+    display: flex;
+    justify-content: center;
+    border-radius: 0;
+
+    &:first-of-type {
+      border-radius: 8px 0 0 8px;
+    }
+
+    &:last-of-type {
+      border-radius: 0 8px 8px 0;
+    }
+
+    &[disabled] {
+      opacity: 1;
+    }
+  }
+}
