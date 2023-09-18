@@ -5,26 +5,43 @@ import { useRouter } from 'next/navigation';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import routes, { lifestyleRoutes } from '@lib/routes';
 
-export default function BreadcrumbsLifestyle({ initialRoute }) {
-  const [currentRoute, setCurrentRoute] = useState(initialRoute);
+export default function BreadcrumbsLifestyle({
+  initialContentTypeRoute,
+  exactBreadcrumb,
+}) {
+  const [contentTypeRoute, setContentTypeRoute] = useState(
+    initialContentTypeRoute,
+  );
 
   const router = useRouter();
 
+  const lifestyleBreadcrumb = {
+    label: 'Lifestyle',
+    url: routes.lifestyle,
+  };
+
+  const contentTypeBreadcrumb = exactBreadcrumb
+    ? {
+        label: lifestyleRoutes.find(({ value }) => value === contentTypeRoute)
+          ?.label,
+        url: contentTypeRoute,
+      }
+    : {
+        type: 'select',
+        name: 'lifestyle',
+        strong: true,
+        selectedValue: contentTypeRoute,
+        onSelect: value => {
+          setContentTypeRoute(value);
+          router.push(value);
+        },
+        options: lifestyleRoutes,
+      };
+  console.log('exactBreadcrumb', exactBreadcrumb);
   const breadcrumbs = [
-    {
-      label: 'Lifestyle',
-      url: routes.lifestyle,
-    },
-    {
-      type: 'select',
-      name: 'lifestyle',
-      selectedValue: currentRoute,
-      onSelect: value => {
-        setCurrentRoute(value);
-        router.push(value);
-      },
-      options: lifestyleRoutes,
-    },
-  ];
+    lifestyleBreadcrumb,
+    contentTypeBreadcrumb,
+    exactBreadcrumb,
+  ].filter(Boolean);
   return <Breadcrumbs items={breadcrumbs} />;
 }

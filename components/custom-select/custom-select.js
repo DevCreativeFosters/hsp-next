@@ -15,6 +15,7 @@ export default function CustomSelect({
   selectedValue,
   placeholder,
   disabled,
+  strong,
   onSelect,
   fRef,
 }) {
@@ -68,6 +69,7 @@ export default function CustomSelect({
       <div
         className={clsx(styles.currentValue, {
           [styles.isPlaceholder]: !selectedValue,
+          [styles.isStrong]: strong,
         })}
         onClick={() => setIsOpen(true)}
       >

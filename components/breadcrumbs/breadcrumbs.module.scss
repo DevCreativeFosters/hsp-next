@@ -1,14 +1,28 @@
 .container {
   display: none;
   gap: 8px;
-  margin: 20px 0;
+  margin-block: 24px;
   color: var(--color-white-60);
   font-size: 14px;
   line-height: 1.5;
   align-items: center;
 
-  @include bp(medium) {
+  @include bp(large) {
+    margin-block: 48px;
+  }
+
+  &.short {
     display: flex;
+
+    @include bp(medium) {
+      display: none;
+    }
+  }
+
+  &.full {
+    @include bp(medium) {
+      display: flex;
+    }
   }
 }
 
@@ -19,8 +33,22 @@
 .itemLink {
   white-space: nowrap;
 
-  &.current {
+  &:hover {
+    color: var(--color-white-100);
+  }
+
+  &.strong {
     font-weight: 600;
     color: var(--color-white-80);
   }
+}
+
+.prevSymbol {
+  display: inline-block;
+  width: 8px;
+  aspect-ratio: 1;
+  border-left: 2px solid var(--color-primary-100);
+  border-bottom: 2px solid var(--color-primary-100);
+  transform: translateY(-1px) rotate(45deg);
+  margin: 0 12px 0 0;
 }

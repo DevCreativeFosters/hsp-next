@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@components/button';
 import { createRef } from 'react';
 import Link from 'next/link';
@@ -39,56 +41,73 @@ function Breadcrumbs({ items }) {
     }));
 
   const itemsWithSeparators = addSeparators(itemsNormalized);
+  const itemsLength = itemsNormalized.length;
+  const singleBreadcrumb =
+    itemsLength > 1 ? itemsNormalized[itemsLength - 2] : null;
 
   return (
-    <div className={styles.container}>
-      {itemsWithSeparators.map((item, index) => {
-        if (item === SEPARATOR) {
-          return (
-            <div className={styles.separator} key={index}>
-              {SEPARATOR}
-            </div>
-          );
-        } else if (item?.type === 'button') {
-          return (
-            <Button
-              href={item.url || null}
-              size="xsmall"
-              variant="secondary"
-              disabled={item.disabled}
-              onClick={item.onClick || null}
-              key={index}
-            >
-              {item.label}
-            </Button>
-          );
-        } else if (item?.label) {
-          return (
-            <Link
-              href={item.url}
-              className={clsx(styles.itemLink, {
-                [styles.current]: item.current,
-              })}
-              key={index}
-            >
-              {item.label}
-            </Link>
-          );
-        } else if (item?.type === 'select') {
-          return (
-            <CustomSelect
-              options={item.options}
-              selectedValue={item.selectedValue}
-              placeholder={item.placeholder}
-              disabled={item.disabled}
-              onSelect={item.onSelectCallbackAndActivateNext}
-              key={index}
-              fRef={item.ref}
-            />
-          );
-        }
-      })}
-    </div>
+    <>
+      <div className={clsx(styles.container, styles.short)}>
+        {singleBreadcrumb && (
+          <Link
+            href={singleBreadcrumb.url}
+            className={clsx(styles.itemLink, styles.strong)}
+          >
+            <span className={styles.prevSymbol} />
+            {singleBreadcrumb.label}
+          </Link>
+        )}
+      </div>
+      <div className={clsx(styles.container, styles.full)}>
+        {itemsWithSeparators.map((item, index) => {
+          if (item === SEPARATOR) {
+            return (
+              <div className={styles.separator} key={index}>
+                {SEPARATOR}
+              </div>
+            );
+          } else if (item?.type === 'button') {
+            return (
+              <Button
+                href={item.url || null}
+                size="xsmall"
+                variant="secondary"
+                disabled={item.disabled}
+                onClick={item.onClick || null}
+                key={index}
+              >
+                {item.label}
+              </Button>
+            );
+          } else if (item?.label) {
+            return (
+              <Link
+                href={item.url}
+                className={clsx(styles.itemLink, {
+                  [styles.strong]: item.strong,
+                })}
+                key={index}
+              >
+                {item.label}
+              </Link>
+            );
+          } else if (item?.type === 'select') {
+            return (
+              <CustomSelect
+                options={item.options}
+                selectedValue={item.selectedValue}
+                placeholder={item.placeholder}
+                disabled={item.disabled}
+                onSelect={item.onSelectCallbackAndActivateNext}
+                strong={item.strong}
+                key={index}
+                fRef={item.ref}
+              />
+            );
+          }
+        })}
+      </div>
+    </>
   );
 }
 

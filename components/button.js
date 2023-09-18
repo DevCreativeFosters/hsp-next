@@ -18,9 +18,10 @@ export default function Button({
   type = 'button',
   children,
   footer,
+  className,
   ...props
 }) {
-  const buttonClassNames = clsx(styles.button, {
+  const buttonClassNames = clsx(styles.button, className, {
     [styles.xsmall]: size === 'xsmall',
     [styles.small]: size === 'small',
     [styles.large]: size === 'large',
@@ -32,6 +33,7 @@ export default function Button({
     [styles.quinary]: variant === 'quinary',
     [styles.senary]: variant === 'senary',
     [styles.footerItem]: variant === 'footer-item',
+    [styles.relatedPost]: variant === 'related-post',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
     [styles.leftIcon]: leftIcon,
