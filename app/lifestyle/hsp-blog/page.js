@@ -36,7 +36,7 @@ export default async function BlogPage() {
     <PaginationContextProvider>
       <Layout title="" menus={menus} globalOptions={globalOptions}>
         <Container>
-          <BreadcrumbsLifestyle initialRoute={routes.blog()} />
+          <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
           {contentResolved}
           <PostsList
             variant="blog"

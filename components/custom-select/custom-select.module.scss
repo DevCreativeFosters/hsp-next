@@ -27,15 +27,19 @@ $max-items-in-one-col-layout: 5; // keep in sync with JS
   height: 100%;
   padding-left: 16px;
   padding-right: 4px;
-  color: var(--color-white-100);
+  color: var(--color-white-80);
   line-height: 1;
   font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
 
   &.isPlaceholder {
     color: var(--color-white-60);
+  }
+
+  &.isStrong {
+    font-weight: 600;
+    color: var(--color-white-100);
   }
 }
 
