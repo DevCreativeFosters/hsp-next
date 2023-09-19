@@ -14,6 +14,7 @@ export default async function LifestylePage() {
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const featuredPost = globalOptions?.featuredPost;
+  const contentResolved = await Promise.all(content?.map(renderBlock));
 
   return (
     <Layout
@@ -30,7 +31,7 @@ export default async function LifestylePage() {
         date={featuredPost?.date}
         postType="HSP TV"
       />
-      {content?.map(renderBlock)}
+      {contentResolved}
     </Layout>
   );
 }
