@@ -37,7 +37,6 @@ export default function BreadcrumbsLifestyle({
         },
         options: lifestyleRoutes,
       };
-  console.log('exactBreadcrumb', exactBreadcrumb);
   const breadcrumbs = [
     lifestyleBreadcrumb,
     contentTypeBreadcrumb,
