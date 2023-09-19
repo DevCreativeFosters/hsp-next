@@ -2,7 +2,7 @@ import { forwardRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import { productCategories } from '@mockup/product-categories';
 import { products } from '@mockup/products';
 import styles from './products.module.scss';

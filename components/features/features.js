@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import styles from './features.module.scss';
 
 export default function Features({

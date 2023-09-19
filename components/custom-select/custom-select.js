@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import { getIcon } from '@lib/icons';
 import styles from './custom-select.module.scss';
 

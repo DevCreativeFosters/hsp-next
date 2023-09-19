@@ -1,5 +1,5 @@
 import VideoCard from './video-card';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import styles from './promos-with-two-videos.module.scss';
 

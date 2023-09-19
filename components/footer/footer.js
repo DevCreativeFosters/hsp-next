@@ -1,4 +1,4 @@
-import Button from '@components/button';
+import Button from '@components/button/button';
 import Logo from '@images/logo.svg';
 import styles from './footer.module.scss';
 import Container from '@components/container/container';

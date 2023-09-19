@@ -4,7 +4,7 @@ import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useRef, useEffect } from 'react';
 
 import Container from '@components/container/container';
-import Button from '@components/button';
+import Button from '@components/button/button';
 
 import styles from './video-background-hero.module.scss';
 

@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { clsx } from 'clsx';
+import Container from '@components/container/container';
+import Button from '@components/button/button';
 
 import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
 
 import styles from './hero.module.scss';
-import Container from '@components/container/container';
 
 const MIN_SWIPE_THRESHOLD = 50;
 
@@ -127,13 +128,14 @@ export default function Hero({ slides }) {
             dangerouslySetInnerHTML={{ __html: currentSlide.description }}
           />
           <div className={styles.buttonContainer}>
-            <a
-              className={styles.learnMoreButton}
+            <Button
+              className={styles.actionButton}
+              size="large"
               href={currentSlide.buttonLink?.url}
             >
               {currentSlide.buttonLink?.title}
-            </a>
-            <div className={styles.buttons}>
+            </Button>
+            <div className={styles.navButtons}>
               {isMobile === true && renderSlideDots()}
               {isMobile === false && (
                 <>

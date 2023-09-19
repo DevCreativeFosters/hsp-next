@@ -4,7 +4,7 @@ import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useRef, useEffect } from 'react';
 
 import Tag from '@components/tag/tag';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import { useIsMobile } from '@hooks/useIsMobile';
 import styles from './featured-post.module.scss';

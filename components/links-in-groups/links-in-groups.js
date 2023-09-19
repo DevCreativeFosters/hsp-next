@@ -1,5 +1,5 @@
 import SectionIntro from '@components/section-intro/section-intro';
-import Button from '@components/button';
+import Button from '@components/button/button';
 
 import styles from './links-in-groups.module.scss';
 

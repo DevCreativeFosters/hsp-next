@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import { usePaginationContext } from '@contexts/pagination';
 
 import styles from './pagination.module.scss';

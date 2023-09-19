@@ -6,7 +6,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 import 'swiper/css';
 
 import Container from '@components/container/container';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import Review from './review';
 import styles from './reviews.module.scss';
 

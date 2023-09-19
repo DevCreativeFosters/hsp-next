@@ -2,7 +2,7 @@ import { getIcon } from '@lib/icons';
 import React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import styles from '@styles/button.module.scss';
+import styles from './button.module.scss';
 
 export default function Button({
   size = 'small',
