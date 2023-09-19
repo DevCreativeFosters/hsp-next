@@ -1,12 +1,14 @@
+import Container from '@components/container/container';
 import styles from './title-and-description.module.scss';
 
 export default function TitleAndDescription({ title, description }) {
-  if (title) {
+  if (title || description) {
     return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>{title}</h1>
+      <section className={styles.section}>
+        {title && <h1 className={styles.title}>{title}</h1>}
         {description && <p className={styles.description}>{description}</p>}
-      </div>
+      </section>
     );
   }
+  return null;
 }

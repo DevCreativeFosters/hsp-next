@@ -2,7 +2,7 @@
 
 .container {
   position: fixed;
-  left: 50%;
+  left: var(--container-inline-padding);
   top: 124px + 2px;
   display: flex;
   gap: 24px;
@@ -11,7 +11,6 @@
   border-radius: 24px;
   color: var(--color-white-100);
   background: var(--color-black-100);
-  transform: translateX(-50%);
   transition: opacity 150ms;
   opacity: 0;
   pointer-events: none;
@@ -83,11 +82,16 @@
   }
 }
 
-.productImage {
+.productImageWrapper {
+  position: relative;
   width: 144px;
   height: 96px;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.productImage {
+  object-fit: cover;
 }
 
 .productTitle {

@@ -44,7 +44,7 @@ function Products({ isActive }, ref) {
           .map(({ title, url, image }, index) => (
             <li className={styles.productItem} key={index}>
               <Link className={styles.productLink} href={url}>
-                <div className={styles.productImage}>
+                <div className={styles.productImageWrapper}>
                   <Image src={image} width={144} height={96} alt={title} />
                 </div>
                 <div className={styles.productTitle}>{title}</div>
