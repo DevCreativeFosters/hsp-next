@@ -53,10 +53,10 @@
   padding-inline: 24px;
   mask-image: linear-gradient(
     to right,
-    rgb(white 0.4),
+    var(--color-white-40),
     black var(--container-inline-padding),
     black calc(100% - var(--container-inline-padding)),
-    rgb(white 0.4)
+    var(--color-white-40)
   );
 
   &::-webkit-scrollbar {
