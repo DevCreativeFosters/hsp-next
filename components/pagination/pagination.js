@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import { usePaginationContext } from '@contexts/pagination';
 
 import styles from './pagination.module.scss';
@@ -22,7 +22,7 @@ export default function Pagination({
       scopeObj[scope] = currentPage;
       return { ...currentValue, ...scopeObj };
     });
-  }, [currentPage, setPaginationValue]);
+  }, [scope, currentPage, setPaginationValue]);
 
   const handlePrevious = () => {
     if (currentPage > 1) {

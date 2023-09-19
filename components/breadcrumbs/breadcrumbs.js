@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@components/button';
+import Button from '@components/button/button';
 import { createRef } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';

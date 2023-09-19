@@ -11,10 +11,11 @@ export default async function SupportPage() {
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const content = await getPageData('support');
+  const contentResolved = await Promise.all(content?.map(renderBlock));
 
   return (
     <Layout menus={menus} globalOptions={globalOptions}>
-      {content?.map(renderBlock)}
+      {contentResolved}
     </Layout>
   );
 }

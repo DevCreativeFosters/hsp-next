@@ -51,6 +51,13 @@
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;
   padding-inline: 24px;
+  mask-image: linear-gradient(
+    to right,
+    var(--color-white-40),
+    black var(--container-inline-padding),
+    black calc(100% - var(--container-inline-padding)),
+    var(--color-white-40)
+  );
 
   &::-webkit-scrollbar {
     display: none;

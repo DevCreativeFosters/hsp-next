@@ -1,5 +1,5 @@
 import Container from '@components/container/container';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import VideoCard from '@components/video-card/video-card';
 
 import styles from './text-and-image-promo.module.scss';

@@ -46,6 +46,11 @@
   --border-radius: 8px;
   --border-size: 2px;
   --color-text: var(--color-white-100);
+  --container-inline-padding: 24px;
+
+  @include bp(medium) {
+    --container-inline-padding: 48px;
+  }
 
   /* Header */
   --header-height: 80px;

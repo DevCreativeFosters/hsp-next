@@ -11,10 +11,11 @@ export default async function AustralianMadePage() {
   const content = await getPageData('australian-made');
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
+  const contentResolved = await Promise.all(content?.map(renderBlock));
 
   return (
     <Layout menus={menus} globalOptions={globalOptions} withMap>
-      {content?.map(renderBlock)}
+      {contentResolved}
     </Layout>
   );
 }

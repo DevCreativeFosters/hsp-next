@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import styles from './mobile-menu-item.module.scss';
 export default function MobileMenuItem({
   label,

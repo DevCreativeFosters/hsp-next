@@ -1,21 +1,17 @@
 .carousel {
-  --padding: 24px;
-
   width: 100vw;
-  padding-inline: var(--padding);
+  padding-inline: var(--container-inline-padding);
   margin-top: 55px;
   margin-left: 50%;
   transform: translateX(-50%);
   overflow-x: visible;
 
   @include bp(medium) {
-    --padding: 48px;
-
     margin-left: 0;
     transform: none;
     padding: 0;
     width: 100%;
-    max-width: calc(1320px + var(--padding) * 2);
+    max-width: calc(1320px + var(--container-inline-padding) * 2);
   }
 
   @include bp(large) {

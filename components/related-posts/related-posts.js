@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Button from '@components/button';
+import Button from '@components/button/button';
 import styles from './related-posts.module.scss';
 
 export default function RelatedPosts({ type = 'hsp_tv', posts, url }) {
