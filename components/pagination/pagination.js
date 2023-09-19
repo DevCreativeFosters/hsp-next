@@ -22,7 +22,7 @@ export default function Pagination({
       scopeObj[scope] = currentPage;
       return { ...currentValue, ...scopeObj };
     });
-  }, [currentPage, setPaginationValue]);
+  }, [scope, currentPage, setPaginationValue]);
 
   const handlePrevious = () => {
     if (currentPage > 1) {
