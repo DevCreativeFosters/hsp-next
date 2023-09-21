@@ -4,7 +4,7 @@ import styles from './section-intro.module.scss';
 
 export default function SectionIntro({
   title,
-  description,
+  description = null,
   fitInline,
   children,
 }) {

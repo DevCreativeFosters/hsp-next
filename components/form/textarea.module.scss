@@ -1,6 +1,13 @@
 @import '/styles/globals/typography';
 
 .wrapper {
+  position: relative;
+  flex: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
+.inputWrapper {
   --inline-padding: 24px;
   --input-font-size: 20px;
   --label-font-size: 20px;
@@ -8,20 +15,8 @@
   --filled-label-line-height: 1.5;
 
   position: relative;
-  flex: 100%;
-  max-width: 100%;
-}
-
-.inputWrapper {
-  position: relative;
   display: inline-flex;
   width: 100%;
-}
-
-.halfWidth {
-  @include bp(medium) {
-    flex: calc(50% - 12px);
-  }
 }
 
 .hasLabel {
@@ -47,7 +42,7 @@
   font-size: var(--input-font-size);
   width: 100%;
   max-height: var(--max-height);
-  padding: var(--block-padding) var(--inline-padding);
+  padding: var(--vertical-padding) var(--inline-padding);
   resize: vertical;
   transition: var(--transition);
   text-align: left;
@@ -105,14 +100,14 @@
 }
 
 .small {
-  --block-padding: 8px;
+  --vertical-padding: 8px;
   --max-height: 39px;
   --label-line-height: 1.95;
 }
 
 .large {
   --max-height: 56px;
-  --block-padding: 12px;
+  --vertical-padding: 12px;
   --label-line-height: 2.4;
 }
 

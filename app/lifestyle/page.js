@@ -15,7 +15,7 @@ export default async function LifestylePage() {
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const featuredPost = globalOptions?.featuredPost;
-  const contentBlocks = await Promise.all(content?.map(renderBlock));
+  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
     <Layout

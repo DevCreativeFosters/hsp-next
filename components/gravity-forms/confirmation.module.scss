@@ -1,0 +1,11 @@
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  & > div > div {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}

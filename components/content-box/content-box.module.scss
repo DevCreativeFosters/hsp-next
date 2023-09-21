@@ -9,6 +9,19 @@
   gap: 48px;
 
   p {
+    line-height: 1.6;
     margin: 0;
+  }
+
+  a {
+    display: inline-flex;
+    margin-left: -24px;
+    text-transform: uppercase;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 }

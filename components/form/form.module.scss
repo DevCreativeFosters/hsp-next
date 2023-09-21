@@ -1,10 +1,15 @@
 .form {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 24px;
 
   p {
+    flex: 100%;
     margin: 0;
+  }
+
+  h3 {
+    flex: 100%;
   }
 }
 
@@ -16,7 +21,7 @@
 
 .withBackground {
   @include bp(medium) {
-    background: var(--color-black-100);
     border-radius: var(--border-radius-lg);
+    background: var(--color-black-100);
   }
 }

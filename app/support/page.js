@@ -12,7 +12,7 @@ export default async function SupportPage() {
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const content = await getPageData('support');
-  const contentBlocks = await Promise.all(content?.map(renderBlock));
+  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
     <Layout menus={menus} globalOptions={globalOptions}>

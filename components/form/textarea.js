@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import styles from './input.module.scss';
+import styles from './textarea.module.scss';
 
-export default function Input({
-  type = 'text',
+export default function Textarea({
   size = 'large',
   background = 'dark',
   errorMessage = '',
   placeholder = '',
   label = '',
-  halfWidth = false,
   required,
+  halfWidth = false,
   ...props
 }) {
   // Internal values are used for demos purposes to make component work with basic props
@@ -35,10 +34,8 @@ export default function Input({
           [styles.hasLabel]: label,
         })}
       >
-        <input
-          type={type}
-          className={clsx(styles.input, {
-            [styles.textarea]: type === 'textarea',
+        <textarea
+          className={clsx(styles.input, styles.textarea, {
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
