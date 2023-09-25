@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { clsx } from 'clsx';
 import Container from '@components/container/container';
@@ -91,7 +92,8 @@ export default function Hero({ slides }) {
   };
 
   const currentSlide = slides[currentSlideIndex];
-  const backgroundImage = currentSlide.backgroundImage?.sourceUrl;
+  const backgroundImage = currentSlide.backgroundImage;
+  const backgroundImagePosition = currentSlide.backgroundImagePosition;
 
   const renderSlideDots = () => (
     <div className={styles.slideDots}>
@@ -112,14 +114,31 @@ export default function Hero({ slides }) {
     </div>
   );
 
+  const aspectRatio =
+    backgroundImage?.mediaDetails?.width &&
+    backgroundImage?.mediaDetails?.height
+      ? backgroundImage.mediaDetails.width / backgroundImage.mediaDetails.height
+      : 1;
+
+  const HERO_MAX_HEIGHT = 820; // should match CSS styles.hero max-height
+
   return (
-    <div
-      ref={heroRef}
-      className={styles.hero}
-      style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-      }}
-    >
+    <div ref={heroRef} className={styles.hero}>
+      {backgroundImage?.sourceUrl && (
+        <div className={styles.backgroundImageWrapper}>
+          <Image
+            className={styles.backgroundImage}
+            src={backgroundImage.sourceUrl}
+            alt={backgroundImage.altText || ''}
+            fill={true}
+            sizes={`(min-width: ${HERO_MAX_HEIGHT * aspectRatio}px) 100vw, ${
+              HERO_MAX_HEIGHT * aspectRatio
+            }px`}
+            objectPosition={backgroundImagePosition}
+          />
+        </div>
+      )}
+
       <Container>
         <div className={styles.content}>
           <h3 className={styles.title}>{currentSlide.title}</h3>
