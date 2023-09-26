@@ -21,7 +21,7 @@ export default function SectionButtons({ buttons = [], alternatingLayout }) {
       {buttons.map(({ label, link, withArrowForwardIcon, ...props }, index) => (
         <Button
           key={index}
-          href={link.url}
+          href={link?.url}
           {...props}
           rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
         >
