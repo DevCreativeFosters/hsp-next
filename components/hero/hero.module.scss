@@ -113,6 +113,8 @@
 
   @include bp(medium) {
     display: block;
+
+    --block-padding: 16px;
   }
 }
 
