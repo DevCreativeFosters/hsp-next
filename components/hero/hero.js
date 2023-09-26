@@ -147,13 +147,19 @@ export default function Hero({ slides }) {
             dangerouslySetInnerHTML={{ __html: currentSlide.description }}
           />
           <div className={styles.buttonContainer}>
-            <Button
-              className={styles.actionButton}
-              size="large"
-              href={currentSlide.buttonLink?.url}
-            >
-              {currentSlide.buttonLink?.title}
-            </Button>
+            {currentSlide.buttonLink?.url && currentSlide.buttonLink?.title ? (
+              <Button
+                className={styles.actionButton}
+                size="large"
+                href={currentSlide.buttonLink.url}
+                target={currentSlide.buttonLink?.target || null}
+              >
+                {currentSlide.buttonLink.title}
+              </Button>
+            ) : (
+              <div />
+            )}
+
             <div className={styles.navButtons}>
               {isMobile === true && renderSlideDots()}
               {isMobile === false && (
