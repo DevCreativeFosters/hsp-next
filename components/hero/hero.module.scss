@@ -123,6 +123,11 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  min-height: 28px;
+
+  @include bp(medium) {
+    min-height: 56px;
+  }
 }
 
 .arrowButtons {

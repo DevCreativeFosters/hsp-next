@@ -1,24 +1,55 @@
-.container {
+.wrapper {
+  --product-card-width: 134px;
+
   position: relative;
+
+  @media (width >= 300px) and (width <= 350px) {
+    --product-card-width: 156px;
+  }
+
+  @media (width >= 460px) and (width <= 510px) {
+    --product-card-width: 148px;
+  }
+
+  @media (width >= 620px) and (width <= 670px) {
+    --product-card-width: 148px;
+  }
+
+  @include bp(medium) {
+    --product-card-width: 168px;
+  }
+
+  @media (width >= 780px) and (width <= 830px) {
+    --product-card-width: 156px;
+  }
+
+  @media (width >= 960px) and (width <= 1010px) {
+    --product-card-width: 156px;
+  }
+}
+
+.container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
   display: flex;
-  padding: 24px 0;
+  padding: 0;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 24px;
   height: auto;
-  transform: translateY(-100%);
   z-index: 1;
   margin-left: auto;
   margin-right: auto;
 
-  @include bp(medium) {
-    padding: 48px 0;
-  }
-
   @include bp(large) {
-    padding: 48px 96px;
+    padding: 0 96px;
     width: fit-content;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
   }
 }
 
@@ -42,7 +73,7 @@
   }
 }
 
-.row {
+.productsContainer {
   display: flex;
   gap: 24px;
   width: 100%;
@@ -51,6 +82,7 @@
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;
   padding-inline: 24px;
+  margin-bottom: 112px;
 
   &::-webkit-scrollbar {
     display: none;

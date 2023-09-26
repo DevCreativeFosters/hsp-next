@@ -7,38 +7,12 @@
 }
 
 .imageContainer {
-  --width: 134px;
-
   position: relative;
   border-radius: 8px;
-  width: var(--width);
+  width: var(--product-card-width);
   height: auto;
   aspect-ratio: 1.4;
   transition: width 0.2s;
-
-  @media (width >= 300px) and (width <= 350px) {
-    --width: 156px;
-  }
-
-  @media (width >= 460px) and (width <= 510px) {
-    --width: 148px;
-  }
-
-  @media (width >= 620px) and (width <= 670px) {
-    --width: 148px;
-  }
-
-  @include bp(medium) {
-    --width: 168px;
-  }
-
-  @media (width >= 780px) and (width <= 830px) {
-    --width: 156px;
-  }
-
-  @media (width >= 960px) and (width <= 1010px) {
-    --width: 156px;
-  }
 }
 
 .productImage {
