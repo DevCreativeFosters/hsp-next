@@ -1,13 +1,17 @@
 .certification {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   border-radius: 16px;
   background-color: var(--color-white-100);
   padding: 32px;
   width: 100%;
-  height: min-content;
+  height: 100%;
+
+  @include bp(medium) {
+    justify-content: space-between;
+    height: min-content;
+  }
 
   @include bp(large) {
     justify-content: center;
