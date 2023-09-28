@@ -7,10 +7,12 @@
 }
 
 .imageContainer {
+  position: relative;
   border-radius: 8px;
-  width: 168px;
-  height: 120px;
-  aspect-ratio: 168/120;
+  width: var(--product-card-width);
+  height: auto;
+  aspect-ratio: 1.4;
+  transition: width 0.2s;
 }
 
 .productImage {

@@ -1,4 +1,6 @@
 .link {
+  position: absolute;
+  bottom: 0;
   min-width: 168px;
   width: calc(100% - 2 * 24px);
   height: 72px;
@@ -17,9 +19,17 @@
   font-weight: 600;
 
   @include bp(medium) {
-    width: 168px;
-    height: 120px;
+    position: relative;
+    bottom: auto;
+    padding: 0;
+    min-width: unset;
+    width: var(--product-card-width);
+    height: unset;
+    aspect-ratio: 1.4;
     flex-direction: column;
     justify-content: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+    transition: width 0.2s;
   }
 }

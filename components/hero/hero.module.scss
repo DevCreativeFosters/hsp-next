@@ -7,10 +7,9 @@
 
 .hero {
   width: 100%;
-  height: 59.75rem;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 100vh;
+  min-height: 680px;
+  max-height: 820px;
   position: relative;
   overflow: hidden;
 
@@ -31,6 +30,16 @@
       var(--color-black-100)
     );
   }
+}
+
+.backgroundImageWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.backgroundImage {
+  object-fit: cover;
 }
 
 .content {
@@ -104,6 +113,8 @@
 
   @include bp(medium) {
     display: block;
+
+    --block-padding: 16px;
   }
 }
 
@@ -112,6 +123,11 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  min-height: 28px;
+
+  @include bp(medium) {
+    min-height: 56px;
+  }
 }
 
 .arrowButtons {

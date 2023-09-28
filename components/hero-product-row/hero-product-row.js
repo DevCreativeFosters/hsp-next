@@ -6,38 +6,22 @@ import AllProductsLink from './all-products-link';
 import { useIsMobile } from '@hooks/useIsMobile';
 import styles from './hero-product-row.module.scss';
 
+const MAX_PRODUCTS = 5;
 export default function HeroProductRow({ title, products, link }) {
   const isMobile = useIsMobile();
   const containerRef = useRef(null);
 
-  const updateMargin = () => {
-    const container = containerRef.current;
-    if (container) {
-      const height = container.clientHeight;
-      container.style.marginBottom = `-${height + 1}px`;
-    }
-  };
-
-  useEffect(() => {
-    updateMargin();
-    window.addEventListener('resize', updateMargin);
-
-    return () => {
-      window.removeEventListener('resize', updateMargin);
-    };
-  }, []);
-
   return (
-    <div className={styles.container} ref={containerRef}>
-      {title && <h4 className={styles.title}>{title}</h4>}
-      <div className={styles.row}>
-        {products?.map((product, idx) => (
-          <ProductCard key={idx} product={product} />
-        ))}
-        {link && !isMobile && <AllProductsLink data={link} />}
+    <div className={styles.wrapper}>
+      <div className={styles.container} ref={containerRef}>
+        {title && <h4 className={styles.title}>{title}</h4>}
+        <div className={styles.productsContainer}>
+          {products.slice(0, MAX_PRODUCTS)?.map((product, idx) => (
+            <ProductCard key={idx} product={product} />
+          ))}
+          {link && <AllProductsLink data={link} />}
+        </div>
       </div>
-      {link && isMobile && <AllProductsLink data={link} />}
     </div>
   );
-
 }
