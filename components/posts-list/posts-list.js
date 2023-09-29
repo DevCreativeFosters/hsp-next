@@ -2,36 +2,29 @@
 
 import Tile from '@components/tile/tile';
 import styles from './posts-list.module.scss';
-import { getAllBlogPosts } from '@lib/api';
 import { usePaginationContext } from '@contexts/pagination';
 import { useEffect, useState } from 'react';
 
 export default function PostsList({
-  initialPosts,
+  posts,
   variant,
   perPage,
   paginationScope,
 }) {
-  const [posts, setPosts] = useState(initialPosts);
+  const [postsDisplayed, setPostsDisplayed] = useState(posts);
   const [loading, setLoading] = useState(true);
   const context = usePaginationContext(paginationScope);
   const currentPage = context.value[paginationScope];
 
   useEffect(
     function fetchPostsPerPage() {
-      setLoading(true);
-      async function fetchData() {
-        try {
-          const data = await getAllBlogPosts(currentPage, perPage);
-          setPosts(data?.posts?.nodes);
-          setLoading(false);
-        } catch (error) {
-          setLoading(false);
-        }
-      }
-      fetchData();
+      const startIndex = (currentPage - 1) * perPage;
+      const endIndex = startIndex + perPage;
+      const postsToDisplay = posts?.slice(startIndex, endIndex);
+      setPostsDisplayed(postsToDisplay);
+      setLoading(false);
     },
-    [currentPage, perPage],
+    [currentPage, perPage, posts],
   );
 
   useEffect(
@@ -47,7 +40,7 @@ export default function PostsList({
 
   return (
     <div className={styles.posts}>
-      {posts?.map((post, idx) => {
+      {postsDisplayed?.map((post, idx) => {
         const tags = post?.tags?.nodes?.map(tag => tag.name) || [];
 
         return (
