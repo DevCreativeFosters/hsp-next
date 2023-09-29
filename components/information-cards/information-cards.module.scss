@@ -84,6 +84,7 @@
   position: relative;
   z-index: 1;
   margin-bottom: 24px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
 
   @include bp(large) {
     margin-bottom: 48px;
@@ -110,9 +111,11 @@
   color: var(--color-white-80);
   font-size: 16px;
   line-height: 1.35;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
 
   @include bp(large) {
     font-size: 20px;
     line-height: 1.35;
   }
 }
+
