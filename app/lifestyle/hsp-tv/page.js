@@ -1,5 +1,5 @@
 import {
-  getAllBlogPosts,
+  getAllHspTvPosts,
   getMenus,
   getGlobalOptions,
   getPageData,
@@ -16,13 +16,13 @@ import routes from '@lib/routes';
 const POSTS_PER_PAGE = 12;
 
 export const metadata = {
-  title: 'HSP 4x4 - HSP Blog',
+  title: 'HSP 4x4 - HSP TV',
   // description: ''
 };
 
-export default async function BlogPage() {
-  const posts = await getAllBlogPosts(1000);
-  const allPosts = posts?.posts?.nodes;
+export default async function HspTVPage() {
+  const posts = await getAllHspTvPosts(1000);
+  const allPosts = posts?.hspTvPosts?.nodes;
   const totalPosts = allPosts?.length;
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
@@ -35,7 +35,7 @@ export default async function BlogPage() {
     <PaginationContextProvider>
       <Layout title="" menus={menus} globalOptions={globalOptions}>
         <Container>
-          <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
+          <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
           {contentResolved}
           <PostsList
             variant="blog"
