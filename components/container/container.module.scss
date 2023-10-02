@@ -11,4 +11,8 @@
   &.isRelative {
     position: relative;
   }
+
+  &.collapseMargin {
+    padding-block: 0;
+  }
 }

@@ -94,6 +94,7 @@
 
   @include bp(large) {
     padding-inline: 0;
+    mask-image: none;
   }
 
   @include bp(full) {

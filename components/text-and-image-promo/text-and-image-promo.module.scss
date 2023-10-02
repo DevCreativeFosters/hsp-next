@@ -1,7 +1,7 @@
 .promo {
   display: flex;
   flex-flow: column-reverse nowrap;
-  margin-top: 64px;
+  margin: 64px 0 46px;
   gap: 48px;
 
   @include bp(medium) {
@@ -17,8 +17,8 @@
 .text {
   display: flex;
   flex-direction: column;
-  gap: 48px;
-  padding: 0 24px;
+  gap: 24px;
+  padding-inline: 24px;
   width: 100%;
 
   @include bp(medium) {
@@ -26,28 +26,55 @@
   }
 
   @include bp(large) {
-    padding: 48px;
-    width: 41.66%;
+    justify-content: center;
+    gap: 48px;
+    width: 522px;
+    padding-inline: 48px;
   }
 }
 
 .video {
   display: flex;
   justify-content: center;
-  align-items: center;
   width: auto;
+
+  @include bp(medium) {
+    width: 50%;
+  }
+
+  @include bp(full) {
+    width: 750px;
+  }
 }
 
 .title {
   font-family: var(--font-secondary);
-  font-size: 64px;
+  font-size: 48px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.33;
+
+  @include bp(large) {
+    font-size: 64px;
+    line-height: 1.25;
+  }
+
+  br {
+    display: none;
+
+    @include bp(medium) {
+      display: block;
+    }
+  }
 }
 
 .description {
   color: var(--color-white-80);
-  font-size: 24px;
+  font-size: 20px;
+  line-height: 1.35;
+
+  @include bp(large) {
+    font-size: 24px;
+  }
 
   p {
     &:first-of-type {
@@ -57,5 +84,13 @@
     &:last-of-type {
       margin-bottom: 0;
     }
+  }
+}
+
+.moreButton {
+  margin-top: 8px;
+
+  @include bp(large) {
+    margin-top: 0;
   }
 }

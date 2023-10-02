@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { getGlobalOptions, getMenus, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
 import { renderBlock } from '@lib/block';
@@ -11,11 +12,13 @@ export default async function SupportPage() {
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
   const content = await getPageData('support');
-  const contentResolved = await Promise.all(content?.map(renderBlock));
+  const contentBlocks = await Promise.all(content?.map(renderBlock));
 
   return (
     <Layout menus={menus} globalOptions={globalOptions}>
-      {contentResolved}
+      {contentBlocks.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }
