@@ -15,6 +15,7 @@ export default function Button({
   isToggled = false,
   onToggleIconClick = null,
   href = '',
+  target = null,
   type = 'button',
   children,
   footer,
@@ -75,6 +76,7 @@ export default function Button({
         href={href}
         className={buttonClassNames}
         style={fontStyle}
+        target={target}
         {...props}
       >
         {buttonBody}
