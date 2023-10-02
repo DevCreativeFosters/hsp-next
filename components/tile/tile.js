@@ -12,10 +12,12 @@ export default function Tile({
   content,
   createdAt,
   url,
+  link,
   tags,
   image,
   variant,
 }) {
+  const urlNormalized = url || link?.url;
   const tileClassNames = clsx(styles.container, {
     [styles.blog]: variant === 'blog',
   });
@@ -30,11 +32,15 @@ export default function Tile({
 
   const renderLink = useCallback(
     children => (
-      <Link href={url} className={styles.link}>
+      <Link
+        href={urlNormalized}
+        className={styles.link}
+        target={link?.target || null}
+      >
         {children}
       </Link>
     ),
-    [url],
+    [urlNormalized],
   );
 
   const TheImage = useMemo(
@@ -65,7 +71,7 @@ export default function Tile({
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        {url ? renderLink(TheImage) : TheImage}
+        {urlNormalized ? renderLink(TheImage) : TheImage}
 
         {tagsNormalized.length > 0 && (
           <ul className={styles.tagList}>
@@ -86,7 +92,7 @@ export default function Tile({
           </time>
         )}
 
-        {url ? renderLink(Title) : Title}
+        {urlNormalized ? renderLink(Title) : Title}
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: content }}
