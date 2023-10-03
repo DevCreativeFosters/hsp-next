@@ -1,0 +1,133 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 48px 24px;
+
+  @include bp(medium) {
+    padding: 48px 0;
+  }
+
+  @include bp(large) {
+    padding: 96px 0;
+  }
+}
+
+.title {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.33;
+
+  @include bp(large) {
+    font-size: 64px;
+    line-height: 1.25;
+  }
+}
+
+.text {
+  grid-row: auto;
+  grid-column: auto;
+
+  @include bp(medium) {
+    grid-row: 2;
+    grid-column: 1 / span 2;
+  }
+
+  @include bp(large) {
+    grid-column: 2;
+    grid-row: auto;
+    max-width: 515px;
+    display: flex;
+    align-items: center;
+  }
+
+  p {
+    color: var(--color-white-80);
+    font-family: var(--font-primary);
+    font-size: 20px;
+    font-weight: 400;
+    margin: 24px 0 48px;
+
+    @include bp(medium) {
+      margin: 24px 0 0;
+      font-size: 24px;
+    }
+  }
+}
+
+.sectionInformation {
+  display: grid;
+  grid-template-columns: 100%;
+
+  @include bp(medium) {
+    grid-template-columns: 50% auto;
+    gap: 0 48px;
+  }
+
+  @include bp(large) {
+    grid-template-columns: 30% 33% auto;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+
+  @include bp(medium) {
+    justify-content: flex-end;
+  }
+}
+
+.postContainer {
+  display: flex;
+  gap: 48px;
+  width: calc(100% - 48px);
+
+  @include bp(medium) {
+    width: 100%;
+  }
+}
+
+.swiperButtons {
+  display: none;
+  gap: 8px;
+
+  @include bp(medium) {
+    display: flex;
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+
+    &:first-child {
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    &:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.swiper {
+  overflow-x: visible;
+
+  @include bp(medium) {
+    overflow-x: clip;
+  }
+}
+
+.overflowHidden {
+  overflow: hidden;
+}
