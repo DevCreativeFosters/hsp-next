@@ -20,6 +20,7 @@ export default function Tile({
   const urlNormalized = url || link?.url;
   const tileClassNames = clsx(styles.container, {
     [styles.blog]: variant === 'blog',
+    [styles.carousel]: variant === 'carousel',
   });
 
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
