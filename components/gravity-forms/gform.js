@@ -3,11 +3,11 @@
 import { useCallback, useState } from 'react';
 import Button from '@components/button/button';
 import Form from '@components/form/form';
-import useGravityForm from '@hooks/useGravityForm';
-import { sendGravityForm } from '@lib/api';
+import Loading from '@components/loading/loading';
 import GravityFormsField from './fields';
 import Confirmation from './confirmation';
-import Loading from '@components/loading/loading';
+import useGravityForm from '@hooks/useGravityForm';
+import { sendGravityForm } from '@lib/api';
 
 export default function GForm({ form }) {
   const [isLoading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function GForm({ form }) {
     setSubmitted(false);
     setFieldErrors([]);
     setConfirmation(null);
-  }, []);
+  }, [dispatch]);
 
   const handleSubmit = async ev => {
     ev.preventDefault();

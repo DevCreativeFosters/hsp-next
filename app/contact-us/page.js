@@ -11,10 +11,10 @@ import ContentBox from '@components/content-box/content-box';
 import SectionIntro from '@components/section-intro/section-intro';
 import PageGrid from '@components/page-grid/page-grid';
 import Sidebar from '@components/sidebar/sidebar';
-import Logo from '@assets/images/logo.svg';
 import PageContainer from '@components/page-container/page-container';
 import GravityForm from '@components/gravity-forms/gravity-form-provider';
 import Button from '@components/button/button';
+import Logo from '@assets/images/logo.svg';
 
 export default async function ContactUs() {
   const content = await getPageData('contact-us');

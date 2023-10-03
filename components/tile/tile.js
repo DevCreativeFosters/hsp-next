@@ -41,7 +41,7 @@ export default function Tile({
         {children}
       </Link>
     ),
-    [urlNormalized],
+    [urlNormalized, link],
   );
 
   const TheImage = useMemo(
