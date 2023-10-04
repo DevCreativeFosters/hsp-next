@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  p {
+    flex: 100%;
+    margin: 0;
+  }
+
+  h3 {
+    flex: 100%;
+  }
+}
+
+.withPadding {
+  @include bp(medium) {
+    padding: 48px;
+  }
+}
+
+.withBackground {
+  @include bp(medium) {
+    border-radius: var(--border-radius-lg);
+    background: var(--color-black-100);
+  }
+}

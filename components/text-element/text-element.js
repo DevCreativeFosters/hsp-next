@@ -9,11 +9,12 @@ export default function TextElement({ className, text }) {
     </Fragment>
   ));
 
-  const textNormalized = text.includes('</p>') ? (
-    <div className={className} dangerouslySetInnerHTML={{ __html: text }} />
-  ) : (
-    <div className={className}>{TextBrokenLines}</div>
-  );
+  const textNormalized =
+    text.includes('</p>') || text.includes('<br>') ? (
+      <div className={className} dangerouslySetInnerHTML={{ __html: text }} />
+    ) : (
+      <div className={className}>{TextBrokenLines}</div>
+    );
 
   return textNormalized;
 }

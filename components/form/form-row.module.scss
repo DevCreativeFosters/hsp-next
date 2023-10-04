@@ -1,0 +1,6 @@
+.formRow {
+  @include bp(medium) {
+    display: flex;
+    gap: 24px;
+  }
+}

@@ -2,6 +2,9 @@
 
 .wrapper {
   position: relative;
+  flex: 100%;
+  width: 100%;
+  max-width: 100%;
 }
 
 .inputWrapper {
@@ -39,12 +42,13 @@
   font-size: var(--input-font-size);
   width: 100%;
   max-height: var(--max-height);
-  padding: var(--block-padding) var(--inline-padding);
+  padding: var(--vertical-padding) var(--inline-padding);
+  resize: vertical;
   transition: var(--transition);
   text-align: left;
   color: var(--font-color);
   border: var(--border-size) solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: transparent;
 
   & + .label {
@@ -86,16 +90,25 @@
   @include input;
 }
 
+.textarea {
+  min-height: 194px;
+  max-height: none;
+}
+
+.required {
+  color: var(--color-primary-60);
+}
+
 .small {
-  --block-padding: 2px;
+  --vertical-padding: 8px;
   --max-height: 39px;
   --label-line-height: 1.95;
 }
 
 .large {
   --max-height: 56px;
-  --block-padding: 10px;
-  --label-line-height: 2.8;
+  --vertical-padding: 12px;
+  --label-line-height: 2.4;
 }
 
 .lightBackground {
@@ -131,6 +144,8 @@
 }
 
 .errorMessage {
-  font-size: 16px;
+  font-size: 14px;
+  padding-top: 7px;
+  padding-left: 10px;
   color: var(--color-error);
 }

@@ -11,12 +11,13 @@
   line-height: 1;
   display: inline-flex;
   align-items: center;
+  width: max-content;
   padding: var(--block-padding)
     calc(var(--inline-padding) + var(--toggler-padding, 0px))
     var(--block-padding) var(--inline-padding);
   transition: var(--transition);
   color: var(--font-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: var(--bg-color);
   gap: var(--gap);
 
@@ -34,8 +35,8 @@
   }
 
   &[disabled] {
-    opacity: 0.3;
     pointer-events: none;
+    opacity: 0.3;
   }
 
   svg path {
@@ -210,9 +211,9 @@
 
 .optionalToggleWrapper {
   display: flex;
-  flex-direction: row-reverse;
-  align-self: flex-start;
   align-items: center;
+  align-self: flex-start;
+  flex-direction: row-reverse;
 }
 
 .toggleContainer {
@@ -220,11 +221,11 @@
 
   display: flex;
   height: 28px;
-  padding: 0 8px;
-  border-radius: 4px;
   margin-left: -36px;
-  transform-origin: center center;
+  padding: 0 8px;
   transition: transform 400ms;
+  transform-origin: center center;
+  border-radius: 4px;
 
   @media (hover: hover) {
     background: var(--color-black-100);
@@ -270,14 +271,14 @@
   --bg-color: var(--color-black-0);
   --hover-font-color: var(--color-primary-100);
 
-  color: var(--font-color);
   font-family: var(--font-primary);
-  font-size: var(--font-size);
   font-weight: 400;
+  font-size: var(--font-size);
   padding: var(--block-padding) var(--inline-padding) var(--block-padding);
+  color: var(--font-color);
 
   &:hover {
-    color: var(--hover-font-color);
     text-decoration: underline;
+    color: var(--hover-font-color);
   }
 }

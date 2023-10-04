@@ -1,0 +1,11 @@
+.pageGrid {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 48px;
+
+  @include bp(large) {
+    display: grid;
+    column-gap: 48px;
+    grid-template-columns: minmax(auto, 408px) auto;
+  }
+}

@@ -74,7 +74,7 @@
   text-align: left;
   color: var(--font-color);
   border: var(--border-size) solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: transparent;
 
   & + .label {
@@ -129,7 +129,9 @@
 }
 
 .errorMessage {
-  font-size: 16px;
+  font-size: 14px;
+  padding-top: 7px;
+  padding-left: 10px;
   color: var(--color-error);
 }
 
@@ -142,7 +144,7 @@
   margin-top: 2px;
   padding: 12px 8px;
   color: var(--color-white-100);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background: var(--color-black-100);
 
   &.isOpen {

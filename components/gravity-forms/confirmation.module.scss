@@ -1,0 +1,12 @@
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  :global(.gform_confirmation_message) {
+    /* stylelint-disable-line selector-pseudo-class-no-unknown, selector-class-pattern */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}

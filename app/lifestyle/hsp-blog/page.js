@@ -29,8 +29,9 @@ export default async function BlogPage() {
   const totalPosts = allPosts?.length;
   const globalOptions = await getGlobalOptions();
   const menus = await getMenus();
-  const content = await getPageData('lifestyle-hsp-blog');
-  const contentBlocks = await Promise.all(content?.map(renderBlock));
+  const content = await getPageData('lifestyle/hsp-blog');
+  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+
   const paginationScope = 'posts-list';
 
   const colorStops = [
@@ -45,7 +46,7 @@ export default async function BlogPage() {
           <Container collapseMargin>
             <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
           </Container>
-          {contentBlocks.map((contentBlock, index) => (
+          {contentBlocks?.map((contentBlock, index) => (
             <Fragment key={index}>{contentBlock}</Fragment>
           ))}
           <Container collapseMargin>

@@ -43,7 +43,9 @@
 
   /* Misc */
   --transition: all 150ms linear; // color 150ms linear, background-color 150ms linear;
-  --border-radius: 8px;
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 32px;
   --border-size: 2px;
   --color-text: var(--color-white-100);
   --container-inline-padding: 24px;
