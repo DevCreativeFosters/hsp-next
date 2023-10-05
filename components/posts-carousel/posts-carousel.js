@@ -2,13 +2,11 @@
 
 import { useCallback, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-
-import { useIsMobile } from '@hooks/useIsMobile';
-
 import Tile from '@components/tile/tile';
 import Container from '@components/container/container';
 import Button from '@components/button/button';
+import { useIsMobile } from '@hooks/useIsMobile';
+import 'swiper/css';
 import styles from './posts-carousel.module.scss';
 
 export default function PostsCarousel({ title, description, button, posts }) {
