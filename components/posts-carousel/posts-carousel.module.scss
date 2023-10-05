@@ -86,7 +86,7 @@
 .postContainer {
   display: flex;
   gap: 48px;
-  width: calc(100% - 48px);
+  width: calc(100% - 24px);
 
   @include bp(medium) {
     width: 100%;
