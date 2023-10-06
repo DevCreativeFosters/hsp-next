@@ -57,6 +57,9 @@
   /* Header */
   --header-height: 80px;
 
+  /* Store Locator form */
+  --store-locator-form-height: 360px;
+
   @include bp(large) {
     --header-height: 124px;
   }

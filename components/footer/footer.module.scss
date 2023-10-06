@@ -1,8 +1,14 @@
-.gradientContainer {
-  position: relative;
+.footerA {
+  position: sticky;
+  top: 100vh;
 }
 
-.footer {
+.footerContainerA {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.footerContainerB {
   display: flex;
   flex-direction: column;
   gap: 6rem;
@@ -12,6 +18,21 @@
 
   @include bp(large) {
     padding: 96px 0;
+  }
+}
+
+.footerContainerC {
+  display: none;
+  gap: 3rem;
+
+  @include bp(medium) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include bp(large) {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -28,11 +49,6 @@
       height: 36px;
     }
   }
-}
-
-.footerWrapper {
-  position: relative;
-  overflow-x: hidden;
 }
 
 .backgroundGradient {
@@ -52,21 +68,6 @@
   width: 100vw;
   height: 100%;
   z-index: 0;
-}
-
-.footerContainer {
-  display: none;
-  gap: 3rem;
-
-  @include bp(medium) {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include bp(large) {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-  }
 }
 
 .column {

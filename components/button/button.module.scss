@@ -12,6 +12,7 @@
   display: inline-flex;
   align-items: center;
   width: max-content;
+  justify-content: center;
   padding: var(--block-padding)
     calc(var(--inline-padding) + var(--toggler-padding, 0px))
     var(--block-padding) var(--inline-padding);

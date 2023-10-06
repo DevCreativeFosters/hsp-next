@@ -1,14 +1,19 @@
 .main {
   padding-top: 0.02px;
   margin-top: var(--header-height);
+  transition: margin-top 0.3s ease-in-out;
+
+  [class*='store-locator-fullscreen'] & {
+    margin-top: 0;
+  }
 }
 
 .background {
   position: fixed;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
 }
 
 .backgroundImage {
