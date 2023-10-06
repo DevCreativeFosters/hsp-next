@@ -1,0 +1,37 @@
+.productCategory {
+  padding: 48px 0;
+}
+
+.subCategories {
+  display: flex;
+  align-content: stretch;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 48px;
+}
+
+.ctaLink {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 240px;
+  padding: 24px;
+  transition: var(--transition);
+  border: 2px solid var(--color-primary-40);
+  border-radius: var(--border-radius-sm);
+  gap: 8px;
+
+  &:focus,
+  &:hover {
+    background: var(--color-white-5);
+  }
+
+  path {
+    fill: var(--color-primary-100);
+  }
+}
