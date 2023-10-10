@@ -52,23 +52,35 @@
     margin: 24px 0 48px;
 
     @include bp(medium) {
-      margin: 24px 0 0;
+      margin: 0;
       font-size: 24px;
+    }
+
+    @include bp(large) {
+      margin: 0;
     }
   }
 }
 
 .sectionInformation {
-  display: grid;
-  grid-template-columns: 100%;
+  display: flex;
+  flex-direction: column;
 
   @include bp(medium) {
-    grid-template-columns: 50% auto;
-    gap: 0 48px;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 48px;
   }
+}
 
-  @include bp(large) {
-    grid-template-columns: 30% 33% auto;
+.header {
+  display: flex;
+  flex-direction: column;
+
+  @include bp(medium) {
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
   }
 }
 
@@ -87,6 +99,7 @@
   display: flex;
   gap: 48px;
   width: calc(100% - 24px);
+  height: 100%;
 
   @include bp(medium) {
     width: 100%;
