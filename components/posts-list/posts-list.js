@@ -51,7 +51,7 @@ export default function PostsList({
             createdAt={post.date}
             url={post.uri}
             tags={tags}
-            image={post.featuredImage.node}
+            image={post.featuredImage?.node}
             variant={variant}
           />
         );
