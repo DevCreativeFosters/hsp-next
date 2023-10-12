@@ -1,14 +1,16 @@
 'use client';
 
-import useHasClass from '@hooks/useHasClass';
-import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import useHasClass from '@hooks/useHasClass';
+import { useIsMobile } from '@hooks/useIsMobile';
+import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { getIcon } from '@lib/icons';
 import styles from '@components/store-locator-search/input.module.scss';
 
 export default function Input({
   type,
+  className,
   value = '',
   placeholder,
   name,
@@ -21,6 +23,7 @@ export default function Input({
   const [localValue, setLocalValue] = useState(value);
   const mainInputRef = useRef(null);
   const isFullScreen = useHasClass(STORE_LOCATOR_FULLSCREEN);
+  const isMobile = useIsMobile();
 
   useEffect(
     function syncValue() {
@@ -30,13 +33,13 @@ export default function Input({
   );
 
   return (
-    <div className={styles.wrapper}>
+    <div className={clsx(styles.wrapper, className)}>
       <input
         type="text"
         id={`fake-input-${name}`}
         className={styles.highInput}
         onFocus={() => {
-          if (isFullScreen) {
+          if (isFullScreen || !isMobile) {
             mainInputRef.current.focus();
           } else {
             setTimeout(() => {

@@ -21,6 +21,11 @@
   line-height: 1;
   outline: none;
   transition: var(--transition);
+  text-overflow: ellipsis;
+
+  &.withIcon {
+    padding-right: 40px;
+  }
 
   &::placeholder {
     color: currentcolor;

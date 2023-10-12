@@ -7,7 +7,7 @@ export default function Footer({ menus, text }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.footerA}>
+    <footer className={styles.footer}>
       <Container>
         <div className={styles.footerContainerA}>
           <div className={styles.footerContainerB}>

@@ -4,9 +4,10 @@ import { useState, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/material-icons/expand-more-neutral.svg';
-import styles from '@styles/forms/select.module.scss';
+import styles from './select.module.scss';
 
 export default function Select({
+  className,
   size = 'small',
   background = 'dark',
   errorMessage = '',
@@ -15,7 +16,7 @@ export default function Select({
   prefix = '',
   suffix = '',
   selected,
-  onChange = () => null,
+  onChange = value => null,
   onClick = () => null,
   ...props
 }) {
@@ -49,7 +50,7 @@ export default function Select({
   );
 
   return (
-    <div className={styles.wrapperOuter}>
+    <div className={clsx(styles.wrapperOuter, className)}>
       <div
         className={clsx(styles.wrapperInner, {
           [styles.small]: size === 'small',

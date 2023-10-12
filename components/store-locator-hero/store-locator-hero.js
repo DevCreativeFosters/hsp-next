@@ -6,23 +6,26 @@ import styles from './store-locator-hero.module.scss';
 
 export default function StoreLocatorHero() {
   return (
-    <div className={styles.wrapper}>
-      <Container>
-        <h1 className={styles.title}>ILocate your store</h1>
-        <div className={styles.description}>
-          <p>
-            IWe have first class fitters located all around Australia for your
-            peace of mind.
-          </p>
-        </div>
+    <Container>
+      <section className={styles.wrapper}>
+        <main className={styles.main}>
+          <h1 className={styles.title}>ILocate your store</h1>
+          <div className={styles.description}>
+            <p>
+              IWe have first class fitters located all around Australia for your
+              peace of mind.
+            </p>
+          </div>
 
-        <Button
-          className={styles.button}
-          rightIcon="search"
-          href="#store-locator-form"
-        >
-          ISearch
-        </Button>
+          <Button
+            className={styles.button}
+            size="large"
+            rightIcon="search"
+            href="#store-search"
+          >
+            ISearch
+          </Button>
+        </main>
 
         <aside className={styles.aside}>
           <h3 className={styles.asideTitle}>IBecome a Distributor</h3>
@@ -35,7 +38,7 @@ export default function StoreLocatorHero() {
             </p>
           </div>
         </aside>
-      </Container>
-    </div>
+      </section>
+    </Container>
   );
 }

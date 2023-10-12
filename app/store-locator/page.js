@@ -1,9 +1,11 @@
+import { StoreLocatorProvider } from '@contexts/store-locator';
 import routes from '@lib/routes';
 import { getGlobalOptions, getMenus } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
 import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
+import StoreLocatorResultsAndMap from '@components/store-locator-search/store-locator-results-and-map';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './page.module.scss';
 
@@ -38,15 +40,13 @@ export default async function StoreLocatorPage() {
             ]}
           />
         </div>
-      </FullscreenCollapse>
-
-      <FullscreenCollapse>
         <StoreLocatorHero />
       </FullscreenCollapse>
 
-      <StoreLocatorSearch />
-
-      {/*<div className={styles.searchResults} id="store-locator-search-results" />*/}
+      <StoreLocatorProvider>
+        <StoreLocatorSearch />
+        <StoreLocatorResultsAndMap />
+      </StoreLocatorProvider>
     </Layout>
   );
 }

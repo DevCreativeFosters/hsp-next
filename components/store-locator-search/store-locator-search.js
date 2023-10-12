@@ -1,81 +1,134 @@
 'use client';
 
-import Select from '@components/form/select';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { v4 as uuidv4 } from 'uuid';
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import useMobileVh from '@hooks/useMobileVh';
+import { useIsMobile } from '@hooks/useIsMobile';
+import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
+import Select from '@components/form/select';
 import Button from '@components/button/button';
 import Input from '@components/store-locator-search/input';
 import Container from '@components/container/container';
 import ArrowForwardIcon from '@assets/material-icons/arrow-forward.svg';
+
 import styles from './store-locator-search.module.scss';
 
-// @TODO: implement google places
-const HINTS_TEMP = [
-  {
-    line1: 'Melbourne1',
-    line2: 'VIC, Australia',
-  },
-  {
-    line1: 'Melbourne2',
-    line2: 'VIC, Australia',
-  },
-  {
-    line1: 'Melbourne3',
-    line2: 'VIC, Australia',
-  },
-];
+const MAX_SUGGESTIONS = 5;
 
-const RADIUS_OPTIONS = [
-  { value: 10 },
-  { value: 25 },
-  { value: 50 },
-  { value: 100 },
-  { value: 500 },
-  { value: 1500 },
-  { value: 3000 },
-];
-
-function stringifyLocation(location) {
-  return [location?.line1, location?.line2].join(' ');
+function stringifySuggestion(suggestion) {
+  return suggestion.structured_formatting?.main_text;
 }
 
+const FETCH_CONFIG = {
+  method: 'GET',
+  credentials: 'same-origin',
+  headers: { 'Content-Type': 'application/json' },
+};
+
 export default function StoreLocatorSearch() {
+  const [sessionToken, setSessionToken] = useState(uuidv4());
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [locationInput, setLocationInput] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
   const [location, setLocation] = useState(undefined);
-  const [hints, setHints] = useState([]);
   const wrapperOuterRef = useRef(null);
+  const isMobile = useIsMobile();
   const formRef = useRef(null);
+
   useMobileVh();
 
-  const onInputClick = useCallback(ev => {
-    setIsFullScreen(true);
-  }, []);
+  const { setSearchGeolocation, radius, setRadius } =
+    useContext(StoreLocatorContext);
+
+  const onFormInteraction = useCallback(
+    ev => {
+      if (isMobile) {
+        setIsFullScreen(true);
+      }
+    },
+    [isMobile],
+  );
 
   const onAnyInputChange = useCallback(ev => {
     setIsFormValid(formRef.current?.checkValidity());
   }, []);
 
-  const selectLocation = useCallback(location => {
-    setLocationInput(stringifyLocation(location));
-    setLocation(location);
-    setHints([]);
+  const getSuggestions = useCallback(
+    async searchString => {
+      const url = '/api/place-autocomplete';
+      const params = [`q=${searchString}`, `sessiontoken=${sessionToken}`]
+        .filter(Boolean)
+        .join('&');
+      try {
+        const response = await fetch(`${url}?${params}`, FETCH_CONFIG);
+        const responseResolved = await response.json();
+        return responseResolved?.predictions;
+      } catch (err) {
+        console.log('err', err);
+      }
+    },
+    [sessionToken],
+  );
+
+  const getDetails = useCallback(
+    async placeId => {
+      const url = '/api/place-details';
+      const params = [`place_id=${placeId}`, `sessiontoken=${sessionToken}`]
+        .filter(Boolean)
+        .join('&');
+      try {
+        const response = await fetch(`${url}?${params}`, FETCH_CONFIG);
+        return await response.json();
+      } catch (err) {
+        console.log('err', err);
+      }
+    },
+    [sessionToken],
+  );
+
+  const selectLocation = useCallback(
+    async suggestion => {
+      setLocation(suggestion);
+      setLocationInput(suggestion.structured_formatting.main_text);
+      const placeId = suggestion.place_id;
+      setSuggestions([]);
+      const placeDetails = await getDetails(placeId);
+      const geolocation = placeDetails?.result?.geometry?.location;
+      setSessionToken(uuidv4());
+      setSearchGeolocation(geolocation);
+    },
+    [getDetails, setSearchGeolocation],
+  );
+
+  const onRadiusChange = useCallback(value => {
+    setRadius(value);
   }, []);
 
   useEffect(
-    function toggleHints() {
+    function toggleSuggestions() {
+      let isMounted = true;
       if (locationInput) {
-        if (!location || locationInput !== stringifyLocation(location)) {
-          setHints(HINTS_TEMP);
+        if (!location || stringifySuggestion(location) !== locationInput) {
+          const fetchSuggestions = async () => {
+            const predictions = await getSuggestions(locationInput);
+            if (isMounted) {
+              setSuggestions(predictions);
+            }
+          };
+          fetchSuggestions().catch(console.error);
         }
       } else {
-        setHints([]);
+        setSuggestions([]);
       }
+
+      return () => {
+        isMounted = false;
+      };
     },
-    [locationInput, location],
+    [locationInput, location, getSuggestions],
   );
 
   useEffect(
@@ -120,46 +173,56 @@ export default function StoreLocatorSearch() {
           ref={formRef}
           autoComplete="off"
         >
-          <Input
-            type="text"
-            name="location"
-            placeholder="ISearch location"
-            icon="search"
-            onClick={onInputClick}
-            onChange={ev => setLocationInput(ev.target.value)}
-            value={locationInput}
-            required
-          />
-          {hints.length > 0 && isFullScreen && (
-            <div className={styles.hints}>
-              <ul className={styles.hintList}>
-                {hints.map((hint, index) => (
-                  <li
-                    className={styles.hint}
-                    key={index}
-                    onClick={() => selectLocation(hint)}
-                  >
-                    {hint.line1 && (
-                      <div className={styles.line1}>{hint.line1}</div>
-                    )}
-                    {hint.line2 && (
-                      <div className={styles.line2}>{hint.line2}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div className={styles.searchPhraseWrapper}>
+            <Input
+              type="text"
+              name="location"
+              placeholder="ISearch location"
+              icon="search"
+              value={locationInput}
+              onClick={onFormInteraction}
+              onChange={ev => setLocationInput(ev.target.value)}
+              required
+            />
+            {suggestions.length > 0 && (
+              <div className={styles.suggestions}>
+                <ul className={styles.suggestionList}>
+                  {suggestions
+                    .slice(0, MAX_SUGGESTIONS)
+                    .map((suggestion, index) => {
+                      const primaryText =
+                        suggestion.structured_formatting?.main_text;
+                      const secondaryText =
+                        suggestion.structured_formatting?.secondary_text;
+                      return (
+                        <li
+                          className={styles.suggestion}
+                          key={index}
+                          onClick={() => selectLocation(suggestion)}
+                        >
+                          {primaryText && (
+                            <div className={styles.line1}>{primaryText}</div>
+                          )}
+                          {secondaryText && (
+                            <div className={styles.line2}>{secondaryText}</div>
+                          )}
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            )}
+          </div>
           <Select
+            className={styles.radius}
             size="large"
             placeholder="Select radius"
             background="dark"
             suffix="km"
-            onClick={() => {
-              setIsFullScreen(true);
-            }}
+            onClick={onFormInteraction}
+            onChange={onRadiusChange}
             options={RADIUS_OPTIONS}
-            selected={RADIUS_OPTIONS[RADIUS_OPTIONS.length - 1].value}
+            selected={radius}
           />
           <Button
             className={styles.button}

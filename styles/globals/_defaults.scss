@@ -2,20 +2,43 @@
 
 html,
 body {
-  height: 100%;
   padding: 0;
   margin: 0;
   font-family: var(--font-primary);
   font-size: 16px;
-  overflow-x: hidden;
   color: var(--color-text);
   background: var(--color-dark-gray-100);
   background: #181616;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #464646 #0e0e0e;
+
+  &::-webkit-scrollbar {
+    overflow: hidden;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #262626;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 4px solid #262626;
+    background-color: #464646;
+  }
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
+  height: 100%;
+
   --current-breakpoint: small;
 
   @each $breakpoint, $size in $breakpoints {

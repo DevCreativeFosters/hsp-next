@@ -3,10 +3,3 @@
     display: none;
   }
 }
-
-.searchResults {
-  background: blue;
-  min-height: calc(
-    100vh - var(--header-height) - var(--store-locator-form-height)
-  );
-}

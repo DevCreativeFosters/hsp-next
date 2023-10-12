@@ -4,6 +4,7 @@
 .header {
   position: fixed;
   z-index: var(--z-index-header);
+  width: 100%;
 }
 
 .headerInner {

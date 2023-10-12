@@ -10,7 +10,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.2",
     "@svgr/webpack": "^8.0.1",
+    "axios": "^1.5.1",
     "clsx": "^2.0.0",
     "html-react-parser": "^4.2.2",
     "intersection-observer": "^0.12.2",
@@ -21,8 +23,10 @@
     "react-animate-height": "^3.2.2",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "spherical-geometry-js": "^3.0.0",
     "swiper": "^10.2.0",
-    "usehooks-ts": "^2.9.1"
+    "usehooks-ts": "^2.9.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
