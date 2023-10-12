@@ -9,8 +9,10 @@ import StoreLocatorResultItem from '@components/store-locator-search/store-locat
 import ALL_LOCATIONS from '@mockup/store-locations.json';
 import styles from './store-locator-results-and-map.module.scss';
 
-const { NEXT_PUBLIC_GOOGLE_MAPS_API_KEY } = process.env;
-const { NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID } = process.env;
+const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const allLocationsNormalized = Object.values(ALL_LOCATIONS).map(record => {
   let type, icon;
