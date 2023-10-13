@@ -39,13 +39,12 @@
   @include bp(large) {
     grid-column: 2;
     grid-row: auto;
-    max-width: 515px;
     display: flex;
     align-items: center;
   }
 
   p {
-    color: var(--color-white-80);
+    color: var(--color-white-100);
     font-family: var(--font-primary);
     font-size: 20px;
     font-weight: 400;
