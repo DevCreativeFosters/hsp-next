@@ -1,6 +1,9 @@
 .wrapper {
   @include bp(medium) {
-    min-height: calc(80vh - var(--header-height));
+    min-height: calc(
+      100vh - var(--header-height) - var(--store-locator-desktop-form-height) -
+        var(--store-locator-desktop-form-header-height)
+    );
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,12 +11,9 @@
   }
 
   @include bp(large) {
-    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 48px;
-    min-height: calc(100vh - var(--header-height));
   }
 }
 

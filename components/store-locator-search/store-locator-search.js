@@ -228,6 +228,7 @@ export default function StoreLocatorSearch() {
             className={styles.button}
             rightIcon="search"
             disabled={!isFormValid}
+            href="#store-search"
           >
             ISearch
           </Button>
