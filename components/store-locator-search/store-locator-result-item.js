@@ -1,4 +1,6 @@
+import clsx from 'clsx';
 import Button from '@components/button/button';
+import { getHash } from './store-locator-results-and-map';
 import { getIcon } from '@lib/icons';
 import styles from '@components/store-locator-search/store-locator-result-item.module.scss';
 
@@ -11,11 +13,17 @@ export default function StoreLocatorResultItem({
     location: { street, city, stateAbbr, postalCode, country },
     address,
     tel,
+    geolocation,
     directions_url,
   },
+  selected,
 }) {
+  const geoHash = getHash(geolocation);
   return (
-    <li className={styles.resultItem}>
+    <li
+      className={clsx(styles.resultItem, { [styles.isSelected]: selected })}
+      id={geoHash}
+    >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
 
       <div className={styles.location}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { computeDistanceBetween } from 'spherical-geometry-js';
 import { MarkerClusterer, MarkerUtils } from '@googlemaps/markerclusterer';
@@ -14,6 +14,14 @@ const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+
+export const getHash = location => {
+  if (location) {
+    const lat = String(location.lat).replace('.', '');
+    const lng = String(location.lng).replace('.', '');
+    return `geo_${lat}_${lng}`;
+  }
+};
 
 const allLocationsNormalized = Object.values(ALL_LOCATIONS).map(record => {
   let type, icon;
@@ -59,16 +67,20 @@ const allLocationsNormalized = Object.values(ALL_LOCATIONS).map(record => {
       lng: record.field_cpt_locations_google_map.lng,
     },
     tel: record.field_cpt_locations_phone,
+    url: record.url,
     directions_url: '#',
   };
 });
 
 export default function StoreLocatorResultsAndMap() {
+  const resultsRef = useRef(null);
   const { searchGeolocation, radius } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
   const [filteredLocations, setFilteredLocations] = useState(
     allLocationsNormalized,
   );
+  const [selectedStoreGeolocation, setSelectedStoreGeolocation] =
+    useState(null);
 
   useEffect(function loadGoogleMap() {
     const loader = new Loader({
@@ -86,7 +98,7 @@ export default function StoreLocatorResultsAndMap() {
         minZoom: 2,
         maxZoom: 17,
         mapTypeControl: false,
-        // streetViewControl: false,
+        streetViewControl: true,
       });
 
       setGoogleMap(map);
@@ -94,7 +106,7 @@ export default function StoreLocatorResultsAndMap() {
   }, []);
 
   useEffect(
-    function syncMapMarkers() {
+    function renderMapClustersAndMarkers() {
       let markers = [];
       if (googleMap) {
         const bounds = new google.maps.LatLngBounds();
@@ -102,10 +114,12 @@ export default function StoreLocatorResultsAndMap() {
           const marker = new google.maps.Marker({
             position: geolocation,
             title: name,
-            // map: googleMap,
             icon,
           });
           bounds.extend(geolocation);
+          marker.addListener('click', () =>
+            setSelectedStoreGeolocation(geolocation),
+          );
           return marker;
         });
         googleMap.fitBounds(bounds);
@@ -123,7 +137,9 @@ export default function StoreLocatorResultsAndMap() {
                 <text x="50%" y="50%" style="fill:#fff" text-anchor="middle" font-size="50" dominant-baseline="middle" font-family="roboto,arial,sans-serif">${count}</text>
               </svg>`;
               const title = `Cluster of ${count} markers`;
-              const zIndex = Number(google.maps.Marker.MAX_ZINDEX) + count;
+              const zIndex =
+                Number(window.google.maps.Marker.MAX_ZINDEX) + count;
+
               if (MarkerUtils.isAdvancedMarkerAvailable(map)) {
                 const parser = new DOMParser();
                 const svgEl = parser.parseFromString(
@@ -131,7 +147,7 @@ export default function StoreLocatorResultsAndMap() {
                   'image/svg+xml',
                 ).documentElement;
                 svgEl.setAttribute('transform', 'translate(0 25)');
-                return new google.maps.marker.AdvancedMarkerElement({
+                return new window.google.maps.marker.AdvancedMarkerElement({
                   map,
                   position,
                   zIndex,
@@ -139,13 +155,13 @@ export default function StoreLocatorResultsAndMap() {
                   content: svgEl,
                 });
               } else {
-                return new google.maps.Marker({
+                return new window.google.maps.Marker({
                   position,
                   zIndex,
                   title,
                   icon: {
                     url: `data:image/svg+xml;base64,${btoa(svg)}`,
-                    anchor: new google.maps.Point(25, 25),
+                    anchor: new window.google.maps.Point(25, 25),
                   },
                 });
               }
@@ -192,16 +208,41 @@ export default function StoreLocatorResultsAndMap() {
     [googleMap, searchGeolocation, radius],
   );
 
+  useEffect(
+    function scrollToSelectedResultItem() {
+      if (selectedStoreGeolocation) {
+        const geoHash = getHash(selectedStoreGeolocation);
+        const item = resultsRef.current.querySelector(`#${geoHash}`);
+        if (item) {
+          resultsRef.current?.scrollTo({
+            top: item.offsetTop,
+            behavior: 'smooth',
+          });
+        }
+      }
+    },
+    [selectedStoreGeolocation],
+  );
+
   return (
     <div className={styles.wrapper} id="store-search">
       <Container className={styles.container}>
         <div className={styles.visualContainer}>
-          <div className={styles.results}>
+          <div className={styles.results} ref={resultsRef}>
             {filteredLocations.length > 0 ? (
               <ul className={styles.resultList}>
-                {filteredLocations.map((result, index) => (
-                  <StoreLocatorResultItem item={result} key={index} />
-                ))}
+                {filteredLocations.map((result, index) => {
+                  const isSelected =
+                    selectedStoreGeolocation?.lat === result.geolocation.lat &&
+                    selectedStoreGeolocation?.lng === result.geolocation.lng;
+                  return (
+                    <StoreLocatorResultItem
+                      item={result}
+                      key={index}
+                      selected={isSelected}
+                    />
+                  );
+                })}
               </ul>
             ) : (
               'No results'

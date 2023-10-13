@@ -9,6 +9,11 @@
   margin: 0;
   background: var(--color-black-60);
   min-height: 302px;
+  transition: var(--transition);
+
+  &.isSelected {
+    border-color: var(--color-primary-100);
+  }
 }
 
 .name {
