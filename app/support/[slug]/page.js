@@ -6,11 +6,18 @@ import {
   getPageGutenbergContent,
 } from '@lib/api';
 import { renderBlock } from '@lib/block';
+import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
+import Container from '@components/container/container';
+import Wysiwyg from '@components/wysiwig/wysiwig';
+import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
+import styles from './page.module.scss';
+import PageGrid from '@components/page-grid/page-grid';
+import PageContainer from '@components/page-container/page-container';
+import Sidebar from '@components/sidebar/sidebar';
 
 export const metadata = {
   title: 'HSP 4x4 - Support',
-  // description: ''
 };
 
 export default async function SupportSubpage({ params }) {
@@ -24,10 +31,37 @@ export default async function SupportSubpage({ params }) {
 
   return (
     <Layout menus={menus} globalOptions={globalOptions}>
-      {/* Display WordPress Editor Content */}
-      {contentBlocks?.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
-      ))}
+      <Container>
+        <div className={styles.page}>
+          <PageContainer>
+            <PageGrid variant="post">
+              <Sidebar>
+                <BreadcrumbsSupport
+                  exactBreadcrumb={{
+                    label: content.title,
+                    url: routes.support(params.slug),
+                    strong: true,
+                  }}
+                />
+                {contentBlocks?.map((contentBlock, index) => (
+                  <Fragment key={index}>{contentBlock}</Fragment>
+                ))}
+              </Sidebar>
+              <div>
+                {content?.title && (
+                  <h1 className={styles.title}>{content?.title}</h1>
+                )}
+                {content && (
+                  <Wysiwyg
+                    className={styles.content}
+                    content={gutenbergContent}
+                  />
+                )}
+              </div>
+            </PageGrid>
+          </PageContainer>
+        </div>
+      </Container>
     </Layout>
   );
 }

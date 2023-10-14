@@ -9,3 +9,7 @@
     grid-template-columns: minmax(auto, 408px) auto;
   }
 }
+
+.postGrid {
+  flex-direction: column;
+}

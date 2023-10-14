@@ -49,3 +49,21 @@
   padding: 0;
   margin: 8px 0 0;
 }
+
+.sidebar {
+  display: none;
+  padding: 0;
+
+  @include bp(large) {
+    display: block;
+  }
+}
+
+.link {
+  width: 100%;
+
+  &:hover {
+    display: flex;
+    justify-content: space-between;
+  }
+}
