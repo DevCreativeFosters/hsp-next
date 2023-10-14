@@ -3,7 +3,7 @@
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import routes from '@lib/routes';
 
-export default function BreadcrumbsLifestyle({ exactBreadcrumb }) {
+export default function BreadcrumbsSupport({ exactBreadcrumb }) {
   const supportBreadcrumb = {
     label: 'Support',
     url: routes.support(''),
