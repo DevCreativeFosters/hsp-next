@@ -1,12 +1,18 @@
+import clsx from 'clsx';
 import SectionIntro from '@components/section-intro/section-intro';
 import Button from '@components/button/button';
-
 import styles from './links-in-groups.module.scss';
 
-export default function LinksInGroups({ title, description, groups }) {
+export default function LinksInGroups({ title, description, groups, variant }) {
+  const sectionClassNames = clsx(styles.section, {
+    [styles.sidebar]: variant === 'sidebar',
+  });
+
   return (
-    <section className={styles.section}>
-      <SectionIntro title={title} description={description} fitInline />
+    <section className={sectionClassNames}>
+      {title && description && (
+        <SectionIntro title={title} description={description} fitInline />
+      )}
       <div className={styles.groups}>
         {groups.map(({ title, links }, index) => (
           <div className={styles.group} key={index}>
@@ -19,6 +25,7 @@ export default function LinksInGroups({ title, description, groups }) {
                       href={url}
                       variant="senary"
                       rightIcon="arrow-forward"
+                      className={styles.link}
                     >
                       <span dangerouslySetInnerHTML={{ __html: label }} />
                     </Button>

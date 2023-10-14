@@ -11,7 +11,7 @@ export default function CategoryCard({ category }) {
       <div className={styles.imageContainer}>
         <Image
           className={styles.categoryImage}
-          src={featuredImage.sourceUrl}
+          src={featuredImage?.sourceUrl}
           alt={category.name}
           fill
         />
