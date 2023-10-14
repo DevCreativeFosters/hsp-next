@@ -9,7 +9,6 @@
 .groups {
   display: flex;
   flex-direction: column;
-  margin-top: 48px;
   gap: 48px;
 
   @include bp(large) {

@@ -36,13 +36,15 @@ export default async function SupportSubpage({ params }) {
           <PageContainer>
             <PageGrid variant="post">
               <Sidebar>
-                <BreadcrumbsSupport
-                  exactBreadcrumb={{
-                    label: content.title,
-                    url: routes.support(params.slug),
-                    strong: true,
-                  }}
-                />
+                <div className={styles.breadcrumbs}>
+                  <BreadcrumbsSupport
+                    exactBreadcrumb={{
+                      label: content.title,
+                      url: routes.support(params.slug),
+                      strong: true,
+                    }}
+                  />
+                </div>
                 {contentBlocks?.map((contentBlock, index) => (
                   <Fragment key={index}>{contentBlock}</Fragment>
                 ))}
