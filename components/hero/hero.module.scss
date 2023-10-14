@@ -89,6 +89,7 @@
     font-weight: 400;
     margin: 0;
     pointer-events: none;
+    line-height: 1.2;
 
     @include bp(large) {
       font-size: 1.5rem;
