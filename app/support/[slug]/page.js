@@ -49,7 +49,7 @@ export default async function SupportSubpage({ params }) {
                   <Fragment key={index}>{contentBlock}</Fragment>
                 ))}
               </Sidebar>
-              <div>
+              <div className={styles.contentContainer}>
                 {content?.title && (
                   <h1 className={styles.title}>{content?.title}</h1>
                 )}
