@@ -16,7 +16,9 @@ export default function Input({
   name,
   required,
   icon,
+  withResetButton,
   onClick,
+  onChange = () => null,
   ...props
 }) {
   const Icon = getIcon(icon);
@@ -53,12 +55,15 @@ export default function Input({
       />
       <input
         ref={mainInputRef}
-        className={clsx(styles.input, { [styles.withIcon]: Icon })}
+        className={clsx(styles.input, {
+          [styles.withIcon]: Icon,
+          [styles.withReset]: withResetButton,
+        })}
         type={type || 'text'}
         name={name}
         placeholder={placeholder}
         value={localValue}
-        onChange={ev => setLocalValue(ev.target.value)}
+        onChange={ev => onChange(ev.target.value)}
         required={required}
         {...props}
       />
@@ -67,6 +72,16 @@ export default function Input({
         <div className={styles.iconWrapper}>
           <Icon />
         </div>
+      )}
+      {withResetButton && localValue && (
+        <button
+          className={styles.resetButton}
+          onClick={ev => {
+            ev.preventDefault();
+            onChange('');
+            mainInputRef.current.focus();
+          }}
+        ></button>
       )}
     </div>
   );

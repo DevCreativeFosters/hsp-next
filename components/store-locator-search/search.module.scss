@@ -8,9 +8,7 @@
 
   @include bp(medium) {
     position: sticky;
-    top: calc(
-      var(--header-height) - var(--store-locator-desktop-form-header-height)
-    );
+    top: calc(var(--header-height) - var(--store-locator-form-header-height));
     height: var(--store-locator-desktop-form-height);
     padding-block: 24px;
   }
@@ -33,7 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: var(--store-locator-desktop-form-header-height);
+  height: var(--store-locator-form-header-height);
   overflow: hidden;
 
   @include bp(medium) {
@@ -103,17 +101,6 @@
   }
 }
 
-.suggestions {
-  position: relative;
-
-  @include bp(medium) {
-    position: absolute;
-    z-index: var(--z-index-dropdown);
-    left: 24px;
-    right: 24px;
-  }
-}
-
 .radius {
   @include bp(medium) {
     flex-grow: 1;
@@ -124,60 +111,55 @@
   margin-top: 12px;
   height: 48px;
   text-align: center;
+  width: 100%;
 
   @include bp(medium) {
     margin-top: 0;
+    width: auto;
   }
 }
 
-.suggestionList {
-  position: absolute;
-  left: -24px;
-  right: -24px;
-  padding: 0 0 24px;
-  border-radius: 0 0 8px 8px;
-  list-style-type: none;
-  margin: 0;
+.mobileOnly {
+  @include bp(medium) {
+    display: none;
+  }
+}
+
+.viewContainer {
+  display: flex;
+  transition: transform 0.3s;
+
+  &.listMode {
+    transform: translateX(0);
+  }
+
+  &.resultMode {
+    transform: translateX(-100%);
+
+    @include bp(medium) {
+      transform: translateX(0);
+    }
+  }
+}
+
+.viewContent {
+  flex-shrink: 0;
+  width: 100%;
+  padding-inline: var(--container-inline-padding);
+}
+
+.singleResult {
+  padding: 24px;
   background: var(--color-black-100);
-  z-index: var(--z-index-dropdown);
-}
+  border-radius: 16px;
 
-.suggestion {
-  position: relative;
-  padding: 8px 36px;
-  cursor: pointer;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 24px;
-  }
-
-  &:hover::before {
-    background: var(--color-white-10);
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 24px;
-    right: 24px;
-    height: 1px;
-    bottom: 0;
-    background-color: var(--color-white-40);
+  @include bp(medium) {
+    display: none;
   }
 }
 
-.line1 {
-  font-family: var(--font-secondary);
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-white-100);
-}
-
-.line2 {
-  font-family: var(--font-secondary);
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--color-white-60);
+.buttonWrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
 }

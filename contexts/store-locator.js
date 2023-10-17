@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, createContext, useRef } from 'react';
+import { useState, createContext } from 'react';
 
 const StoreLocatorContext = createContext({});
 

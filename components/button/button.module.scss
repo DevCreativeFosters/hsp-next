@@ -30,7 +30,7 @@
     }
   }
 
-  &:focus {
+  &:focus-visible {
     color: var(--hover-font-color);
     background: var(--hover-bg-color);
   }

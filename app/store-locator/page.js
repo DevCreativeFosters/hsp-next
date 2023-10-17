@@ -4,8 +4,8 @@ import { getGlobalOptions, getMenus } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
-import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
-import StoreLocatorResultsAndMap from '@components/store-locator-search/store-locator-results-and-map';
+import Search from '@components/store-locator-search/search';
+import ResultsAndMap from '@components/store-locator-search/results-and-map';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './page.module.scss';
 
@@ -44,8 +44,8 @@ export default async function StoreLocatorPage() {
       </FullscreenCollapse>
 
       <StoreLocatorProvider>
-        <StoreLocatorSearch />
-        <StoreLocatorResultsAndMap />
+        <Search />
+        <ResultsAndMap />
       </StoreLocatorProvider>
     </Layout>
   );

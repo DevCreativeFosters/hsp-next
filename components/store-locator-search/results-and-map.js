@@ -1,14 +1,15 @@
 'use client';
 
 import { useContext, useEffect, useRef, useState } from 'react';
+import { googleMapsMarkerClusterRenderer } from '@lib/google-maps-marker-cluster-renderer';
 import { Loader } from '@googlemaps/js-api-loader';
-import { computeDistanceBetween } from 'spherical-geometry-js';
-import { MarkerClusterer, MarkerUtils } from '@googlemaps/markerclusterer';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import StoreLocatorContext from '@contexts/store-locator';
+import { findLocationsInRadius } from '@lib/store-locations';
 import Container from '@components/container/container';
-import StoreLocatorResultItem from '@components/store-locator-search/store-locator-result-item';
-import ALL_LOCATIONS from '@mockup/store-locations.json';
-import styles from './store-locator-results-and-map.module.scss';
+import ResultItem from '@components/store-locator-search/result-item';
+import { allLocations } from '@mockup/store-locations';
+import styles from './results-and-map.module.scss';
 
 const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -23,62 +24,11 @@ export const getHash = location => {
   }
 };
 
-const allLocationsNormalized = Object.values(ALL_LOCATIONS).map(record => {
-  let type, icon;
-  const title = record.field_location_logo?.title?.toLowerCase();
-  if (title?.includes('agent')) {
-    type = 'AGENT';
-    icon = '/location-pin-agent.svg';
-  } else if (title?.includes('store')) {
-    type = 'STORE';
-    icon = '/location-pin-store.svg';
-  } else if (title?.includes('distrbutor')) {
-    // ^ typo in the "distrbutor" (missing "i")
-    type = 'DISTRIBUTOR';
-    icon = '/location-pin-distributor.svg';
-  } else if (title?.includes('hsp')) {
-    type = 'HSP';
-    icon = '/location-pin-hsp.svg';
-  } else {
-    icon = '/location-pin.svg';
-  }
-
-  const street = record.field_cpt_locations_google_map.name;
-  const city = record.field_cpt_locations_google_map.city;
-  const stateAbbr = record.field_cpt_locations_google_map.state_short;
-  const postalCode = record.field_cpt_locations_google_map.post_code;
-  const country = record.field_cpt_locations_google_map.country;
-
-  return {
-    name: record.title,
-    type,
-    icon,
-    location: {
-      street,
-      city,
-      stateAbbr,
-      postalCode,
-      country,
-    },
-    address: record.field_cpt_locations_address.replaceAll('\r\n', ''),
-    email: record.field_cpt_locations_email,
-    geolocation: {
-      lat: record.field_cpt_locations_google_map.lat,
-      lng: record.field_cpt_locations_google_map.lng,
-    },
-    tel: record.field_cpt_locations_phone,
-    url: record.url,
-    directions_url: '#',
-  };
-});
-
-export default function StoreLocatorResultsAndMap() {
+export default function ResultsAndMap() {
   const resultsRef = useRef(null);
   const { searchGeolocation, radius } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
-  const [filteredLocations, setFilteredLocations] = useState(
-    allLocationsNormalized,
-  );
+  const [filteredLocations, setFilteredLocations] = useState(allLocations);
   const [selectedStoreGeolocation, setSelectedStoreGeolocation] =
     useState(null);
 
@@ -128,44 +78,7 @@ export default function StoreLocatorResultsAndMap() {
           map: googleMap,
           markers,
           renderer: {
-            render: ({ count, position }, stats, map) => {
-              const svg = `
-              <svg fill="#ed2935" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="50" height="50">
-                <circle cx="120" cy="120" opacity=".8" r="70" />
-                <circle cx="120" cy="120" opacity=".4" r="90" />
-                <circle cx="120" cy="120" opacity=".2" r="110" />
-                <text x="50%" y="50%" style="fill:#fff" text-anchor="middle" font-size="50" dominant-baseline="middle" font-family="roboto,arial,sans-serif">${count}</text>
-              </svg>`;
-              const title = `Cluster of ${count} markers`;
-              const zIndex =
-                Number(window.google.maps.Marker.MAX_ZINDEX) + count;
-
-              if (MarkerUtils.isAdvancedMarkerAvailable(map)) {
-                const parser = new DOMParser();
-                const svgEl = parser.parseFromString(
-                  svg,
-                  'image/svg+xml',
-                ).documentElement;
-                svgEl.setAttribute('transform', 'translate(0 25)');
-                return new window.google.maps.marker.AdvancedMarkerElement({
-                  map,
-                  position,
-                  zIndex,
-                  title,
-                  content: svgEl,
-                });
-              } else {
-                return new window.google.maps.Marker({
-                  position,
-                  zIndex,
-                  title,
-                  icon: {
-                    url: `data:image/svg+xml;base64,${btoa(svg)}`,
-                    anchor: new window.google.maps.Point(25, 25),
-                  },
-                });
-              }
-            },
+            render: googleMapsMarkerClusterRenderer,
           },
         });
       }
@@ -192,16 +105,9 @@ export default function StoreLocatorResultsAndMap() {
   useEffect(
     function syncMapBoundaries() {
       if (googleMap && searchGeolocation && radius) {
-        const locationsWithinRadius = allLocationsNormalized.filter(
-          ({ geolocation }) => {
-            const distance = computeDistanceBetween(
-              searchGeolocation,
-              geolocation,
-            ); // [meters]
-            return distance <= radius * 1000;
-          },
-        );
-        setFilteredLocations(locationsWithinRadius);
+        setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
+      } else {
+        setFilteredLocations(allLocations);
       }
       return () => {};
     },
@@ -236,7 +142,7 @@ export default function StoreLocatorResultsAndMap() {
                     selectedStoreGeolocation?.lat === result.geolocation.lat &&
                     selectedStoreGeolocation?.lng === result.geolocation.lng;
                   return (
-                    <StoreLocatorResultItem
+                    <ResultItem
                       item={result}
                       key={index}
                       selected={isSelected}

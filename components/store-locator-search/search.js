@@ -1,5 +1,6 @@
 'use client';
 
+import { findLocationsInRadius } from '@lib/store-locations';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,13 +10,13 @@ import { useIsMobile } from '@hooks/useIsMobile';
 import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
-import Input from '@components/store-locator-search/input';
-import Container from '@components/container/container';
+import Input from './input';
+import Suggestions from './suggestions';
+import ResultsInline from './results-inline';
+import ResultItem from './result-item';
 import ArrowForwardIcon from '@assets/material-icons/arrow-forward.svg';
 
-import styles from './store-locator-search.module.scss';
-
-const MAX_SUGGESTIONS = 5;
+import styles from './search.module.scss';
 
 function stringifySuggestion(suggestion) {
   return suggestion.structured_formatting?.main_text;
@@ -27,20 +28,23 @@ const FETCH_CONFIG = {
   headers: { 'Content-Type': 'application/json' },
 };
 
-export default function StoreLocatorSearch() {
+export default function Search() {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [location, setLocation] = useState(undefined);
+  const [filteredLocations, setFilteredLocations] = useState(null);
+  const [currentResult, setCurrentResult] = useState(null);
+  const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'RESULT'
   const wrapperOuterRef = useRef(null);
   const isMobile = useIsMobile();
   const formRef = useRef(null);
 
   useMobileVh();
 
-  const { setSearchGeolocation, radius, setRadius } =
+  const { searchGeolocation, setSearchGeolocation, radius, setRadius } =
     useContext(StoreLocatorContext);
 
   const onFormInteraction = useCallback(
@@ -107,6 +111,18 @@ export default function StoreLocatorSearch() {
     setRadius(value);
   }, []);
 
+  const goBack = useCallback(() => {
+    if (viewMode === 'RESULT') {
+      setViewMode('LIST');
+    } else if (isFullScreen) {
+      setIsFullScreen(false);
+    }
+  }, [viewMode, isFullScreen]);
+
+  const isInlineResultListVisible = Boolean(
+    location && searchGeolocation && radius && isFullScreen,
+  );
+
   useEffect(
     function toggleSuggestions() {
       let isMounted = true;
@@ -146,6 +162,16 @@ export default function StoreLocatorSearch() {
     [isFullScreen],
   );
 
+  useEffect(
+    function syncStoreLocationResultList() {
+      if (searchGeolocation && radius) {
+        setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
+      }
+      return () => {};
+    },
+    [searchGeolocation, radius],
+  );
+
   return (
     <section
       className={clsx(styles.wrapper, {
@@ -158,82 +184,111 @@ export default function StoreLocatorSearch() {
           className={clsx(styles.goBack, {
             [styles.isVisible]: isFullScreen,
           })}
-          onClick={() => setIsFullScreen(false)}
+          onClick={goBack}
         >
           <ArrowForwardIcon />
         </button>
 
         <h3 className={styles.heading}>ILocate a store</h3>
       </header>
-      <Container>
-        <form
-          action="#"
-          className={styles.form}
-          onChange={onAnyInputChange}
-          ref={formRef}
-          autoComplete="off"
-        >
-          <div className={styles.searchPhraseWrapper}>
-            <Input
-              type="text"
-              name="location"
-              placeholder="ISearch location"
-              icon="search"
-              value={locationInput}
-              onClick={onFormInteraction}
-              onChange={ev => setLocationInput(ev.target.value)}
-              required
-            />
-            {suggestions.length > 0 && (
-              <div className={styles.suggestions}>
-                <ul className={styles.suggestionList}>
-                  {suggestions
-                    .slice(0, MAX_SUGGESTIONS)
-                    .map((suggestion, index) => {
-                      const primaryText =
-                        suggestion.structured_formatting?.main_text;
-                      const secondaryText =
-                        suggestion.structured_formatting?.secondary_text;
-                      return (
-                        <li
-                          className={styles.suggestion}
-                          key={index}
-                          onClick={() => selectLocation(suggestion)}
-                        >
-                          {primaryText && (
-                            <div className={styles.line1}>{primaryText}</div>
-                          )}
-                          {secondaryText && (
-                            <div className={styles.line2}>{secondaryText}</div>
-                          )}
-                        </li>
-                      );
-                    })}
-                </ul>
-              </div>
-            )}
-          </div>
-          <Select
-            className={styles.radius}
-            size="large"
-            placeholder="Select radius"
-            background="dark"
-            suffix="km"
-            onClick={onFormInteraction}
-            onChange={onRadiusChange}
-            options={RADIUS_OPTIONS}
-            selected={radius}
-          />
-          <Button
-            className={styles.button}
-            rightIcon="search"
-            disabled={!isFormValid}
-            href="#store-search"
+
+      <div
+        className={clsx(styles.viewContainer, {
+          [styles.listMode]: viewMode === 'LIST',
+          [styles.resultMode]: viewMode === 'RESULT',
+        })}
+      >
+        <div className={styles.viewContent}>
+          <form
+            action="#"
+            className={styles.form}
+            onChange={onAnyInputChange}
+            ref={formRef}
+            autoComplete="off"
           >
-            ISearch
-          </Button>
-        </form>
-      </Container>
+            <div className={styles.searchPhraseWrapper}>
+              <Input
+                type="text"
+                name="location"
+                placeholder="ISearch location"
+                icon="search"
+                withResetButton
+                value={locationInput}
+                onClick={onFormInteraction}
+                onChange={value => {
+                  setLocationInput(value);
+                  if (!value) {
+                    setLocation(null);
+                    setSearchGeolocation(null);
+                  }
+                }}
+                required
+              />
+
+              <Suggestions
+                items={suggestions}
+                selectLocation={selectLocation}
+              />
+            </div>
+
+            <Select
+              className={styles.radius}
+              size="large"
+              placeholder="Select radius"
+              background="dark"
+              suffix="km"
+              onClick={onFormInteraction}
+              onChange={onRadiusChange}
+              options={RADIUS_OPTIONS}
+              selected={radius}
+            />
+
+            <div className={styles.mobileOnly}>
+              <ResultsInline
+                items={filteredLocations}
+                show={isInlineResultListVisible}
+                onSelect={item => {
+                  setCurrentResult(item);
+                  setViewMode('RESULT');
+                }}
+              />
+            </div>
+
+            {!isInlineResultListVisible && (
+              <Button
+                type="button"
+                className={styles.button}
+                rightIcon="search"
+                href="#store-search"
+                onClick={() => {
+                  if (!isFullScreen) {
+                    setIsFullScreen(true);
+                  } else {
+                    formRef.current.reportValidity();
+                  }
+                }}
+              >
+                ISearch
+              </Button>
+            )}
+          </form>
+        </div>
+
+        <div className={styles.viewContent}>
+          <div className={styles.singleResult}>
+            {currentResult && <ResultItem item={currentResult} />}
+            <div className={styles.buttonWrapper}>
+              <Button
+                variant="quaternary"
+                onClick={goBack}
+                leftIcon="arrow-backward"
+              >
+                Back to search
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
