@@ -2,7 +2,7 @@ import styles from './suggestions.module.scss';
 
 const MAX_SUGGESTIONS = 5;
 
-export default function Suggestions({ items, selectLocation }) {
+export default function Suggestions({ items = [], selectLocation }) {
   if (!items.length > 0) {
     return null;
   }

@@ -16,6 +16,8 @@ const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
 const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
+const DEFAULT_MAP_ZOOM = 4;
+
 export const getHash = location => {
   if (location) {
     const lat = String(location.lat).replace('.', '');
@@ -58,6 +60,7 @@ export default function ResultsAndMap() {
   useEffect(
     function renderMapClustersAndMarkers() {
       let markers = [];
+      let markerCluster;
       if (googleMap) {
         const bounds = new google.maps.LatLngBounds();
         markers = filteredLocations.map(({ name, geolocation, icon }) => {
@@ -72,21 +75,28 @@ export default function ResultsAndMap() {
           );
           return marker;
         });
-        googleMap.fitBounds(bounds);
 
-        new MarkerClusterer({
+        markerCluster = new MarkerClusterer({
           map: googleMap,
           markers,
           renderer: {
             render: googleMapsMarkerClusterRenderer,
           },
         });
+
+        if (markers.length) {
+          googleMap.fitBounds(bounds);
+        } else {
+          googleMap.setCenter(searchGeolocation);
+          googleMap.setZoom(DEFAULT_MAP_ZOOM);
+        }
       }
 
       return () => {
         markers.map(marker => {
           marker.setMap(null);
         });
+        markerCluster?.clearMarkers();
       };
     },
     [googleMap, filteredLocations],

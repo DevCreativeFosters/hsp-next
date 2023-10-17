@@ -1,5 +1,4 @@
 import ALL_LOCATIONS from '@mockup/store-locations.json';
-import { computeDistanceBetween } from 'spherical-geometry-js';
 
 export const allLocations = Object.values(ALL_LOCATIONS).map(record => {
   let type, icon;
