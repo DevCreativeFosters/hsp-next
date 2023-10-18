@@ -2,12 +2,14 @@
 @import '/styles/globals/helpers';
 
 .header {
-  @include center;
-
   position: fixed;
   z-index: var(--z-index-header);
-  top: 0;
   width: 100%;
+}
+
+.headerInner {
+  @include center;
+
   height: var(--header-height);
   padding-inline: var(--container-inline-padding);
   background: var(--color-black-100);

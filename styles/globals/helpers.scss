@@ -3,3 +3,23 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #464646 #0e0e0e;
+
+  &::-webkit-scrollbar {
+    overflow: hidden;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #262626;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 4px solid #262626;
+    background-color: #464646;
+  }
+}

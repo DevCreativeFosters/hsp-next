@@ -7,11 +7,11 @@ export default function Footer({ menus, text }) {
   const year = new Date().getFullYear();
 
   return (
-    <div className={styles.gradientContainer}>
+    <footer className={styles.footer}>
       <Container>
-        <div className={styles.footerWrapper}>
-          <footer className={styles.footer}>
-            <div className={styles.footerContainer}>
+        <div className={styles.footerContainerA}>
+          <div className={styles.footerContainerB}>
+            <div className={styles.footerContainerC}>
               <div className={styles.column}>
                 <div className={styles.logo}>
                   <Logo />
@@ -177,10 +177,10 @@ export default function Footer({ menus, text }) {
               </p>
               <p className={styles.copyrightText}>Made by Xfive</p>
             </div>
-          </footer>
+          </div>
         </div>
       </Container>
       <div className={styles.backgroundGradient} />
-    </div>
+    </footer>
   );
 }

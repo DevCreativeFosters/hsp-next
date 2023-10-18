@@ -2,9 +2,16 @@ import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
 import BgContinent from '@assets/images/bg-continent.png';
 import Image from 'next/image';
+import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './layout.module.scss';
 
-export default function Layout({ menus, globalOptions, withMap, children }) {
+export default function Layout({
+  menus,
+  globalOptions,
+  withMap,
+  withFooter = true,
+  children,
+}) {
   const footerMenus = {
     hsp: [],
     legal: [],
@@ -60,7 +67,13 @@ export default function Layout({ menus, globalOptions, withMap, children }) {
         )}
         <div className={styles.content}>{children}</div>
       </main>
-      <Footer menus={footerMenus} text={footerText} />
+      {withFooter && (
+        <div className={styles.bottomSticky}>
+          <FullscreenCollapse>
+            <Footer menus={footerMenus} text={footerText} />
+          </FullscreenCollapse>
+        </div>
+      )}
     </>
   );
 }

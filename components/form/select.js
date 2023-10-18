@@ -3,18 +3,21 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
+import ExpandMoreNeutral from '@assets/material-icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
 
 export default function Select({
+  className,
   size = 'small',
   background = 'dark',
   errorMessage = '',
   placeholder = '',
   options = [],
-  suffix = 'km',
   prefix = '',
+  suffix = '',
   selected,
-  onChange = () => null,
+  onChange = value => null,
+  onClick = () => null,
   ...props
 }) {
   const [selectedValue, setSelectedValue] = useState(selected);
@@ -41,14 +44,15 @@ export default function Select({
     value => () => {
       setSelectedValue(value);
       onChange(value);
+      setOpen(false);
     },
     [onChange],
   );
 
   return (
-    <div className={styles.wrapper}>
+    <div className={clsx(styles.wrapperOuter, className)}>
       <div
-        className={clsx(styles.inputWrapper, {
+        className={clsx(styles.wrapperInner, {
           [styles.small]: size === 'small',
           [styles.large]: size === 'large',
           [styles.isOpen]: isOpen,
@@ -56,52 +60,52 @@ export default function Select({
       >
         <button
           ref={triggerRef}
+          type="button"
           className={clsx(styles.trigger, {
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
             [styles.filled]: selectedValue,
           })}
-          onClick={toggleDropdown}
           {...props}
+          onClick={ev => {
+            onClick();
+            toggleDropdown(ev);
+          }}
         >
-          <div>
-            {prefix && selectedValue && (
-              <span className={styles.suffixPrefix}>{prefix}</span>
-            )}{' '}
-            {selectedOption?.title || placeholder}{' '}
-            {suffix && selectedValue && (
-              <span className={styles.suffixPrefix}>{suffix}</span>
-            )}
-          </div>
-          {isOpen ? (
-            <i className={clsx('material-icon', styles.triggerIcon)}>
-              expand_less
-            </i>
+          {selectedOption?.label || selectedOption?.value !== undefined ? (
+            <div>
+              {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
+              {selectedOption.label || selectedOption.value}
+              {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
+            </div>
           ) : (
-            <i className={clsx('material-icon', styles.triggerIcon)}>
-              expand_more
-            </i>
+            placeholder
           )}
+
+          <div className={clsx(styles.pivot, { [styles.reversed]: isOpen })}>
+            <ExpandMoreNeutral />
+          </div>
         </button>
         <div
           className={clsx(styles.dropdown, { [styles.isOpen]: isOpen })}
           role="listbox"
           tabIndex="0"
         >
-          {options.map((option, index) => (
+          {options.map(({ label, value }, index) => (
             <button
               key={index}
               className={styles.option}
+              type="button"
               role="option"
-              aria-selected={selectedOption}
-              onClick={handleSelectOption(option.value)}
+              aria-selected={Boolean(selectedOption)}
+              onClick={handleSelectOption(value)}
               tabIndex={0}
-              data-value={option.value ? option.value : option.title}
+              data-value={value !== undefined ? value : label}
             >
-              {prefix && <span className={styles.suffixPrefix}>{prefix}</span>}{' '}
-              {option.title}{' '}
-              {suffix && <span className={styles.suffixPrefix}>{suffix}</span>}
+              {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
+              {value}
+              {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
             </button>
           ))}
         </div>

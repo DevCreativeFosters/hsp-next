@@ -1,38 +1,5 @@
 @import '/styles/globals/typography';
-
-.wrapper {
-  position: relative;
-}
-
-.inputWrapper {
-  --inline-padding: 24px;
-  --input-font-size: 20px;
-  --label-font-size: 20px;
-  --filled-label-font-size: 16px;
-  --filled-label-line-height: 1.5;
-
-  position: relative;
-  display: inline-flex;
-  width: 100%;
-}
-
-.hasLabel {
-  padding-top: calc(
-    var(--filled-label-font-size) * var(--filled-label-line-height)
-  );
-}
-
-.label {
-  font-size: var(--label-font-size);
-  line-height: var(--label-line-height);
-  position: absolute;
-  left: var(--inline-padding);
-  overflow: hidden;
-  width: 100%;
-  padding-right: var(--inline-padding);
-  transition: var(--transition);
-  pointer-events: none;
-}
+@import '/styles/globals/helpers';
 
 .lightBackground {
   --font-color: var(--color-black-60);
@@ -62,20 +29,44 @@
   }
 }
 
+.small {
+  --block-padding: 2px;
+  --max-height: 39px;
+  --label-line-height: 1.95;
+}
+
+.large {
+  --max-height: 56px;
+  --block-padding: 7px;
+  --label-line-height: 2.8;
+}
+
+.wrapperOuter {
+  position: relative;
+}
+
+.wrapperInner {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+}
+
 .trigger {
-  font-size: var(--input-font-size);
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   max-height: var(--max-height);
-  padding: var(--block-padding) 16px var(--block-padding) var(--inline-padding);
-  transition: var(--transition);
-  text-align: left;
-  color: var(--font-color);
+  padding: var(--block-padding) 16px var(--block-padding) 24px;
   border: var(--border-size) solid var(--border-color);
   border-radius: var(--border-radius-sm);
+  color: var(--font-color);
+  text-align: left;
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-weight: 600;
   background: transparent;
+  transition: var(--transition);
 
   & + .label {
     color: var(--label-color);
@@ -96,8 +87,8 @@
   &:active,
   &.filled {
     & + .label {
-      font-size: var(--filled-label-font-size);
-      line-height: var(--filled-label-line-height);
+      font-size: 16px;
+      line-height: 1.5;
       left: 10px;
       transform: translateY(-100%);
     }
@@ -107,21 +98,26 @@
     color: var(--filled-color);
   }
 
+  .isOpen & {
+    background: var(--color-white-20);
+  }
+
   &::placeholder {
     color: var(--placeholder-color);
   }
 }
 
-.small {
-  --block-padding: 2px;
-  --max-height: 39px;
-  --label-line-height: 1.95;
-}
+.pivot {
+  @include center;
 
-.large {
-  --max-height: 56px;
-  --block-padding: 10px;
-  --label-line-height: 2.8;
+  transition: transform 0.2s;
+  transform-origin: center center;
+  width: 20px;
+  height: 20px;
+
+  &.reversed {
+    transform: rotate(180deg);
+  }
 }
 
 .error {
@@ -142,7 +138,7 @@
   display: none;
   width: 100%;
   margin-top: 2px;
-  padding: 12px 8px;
+  padding: 12px 2px;
   color: var(--color-white-100);
   border-radius: var(--border-radius-sm);
   background: var(--color-black-100);
@@ -167,7 +163,7 @@
     background: var(--color-white-10);
   }
 
-  .suffixPrefix {
+  .prefixSuffix {
     color: var(--color-white-80);
   }
 }
