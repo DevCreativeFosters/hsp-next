@@ -9,7 +9,9 @@ export default function Confirmation({
   return (
     <div className={styles.confirmation}>
       {parse(content)}
-      <Button onClick={resetForm}>Back to the form</Button>
+      <Button onClick={resetForm} leftIcon="arrow-backward">
+        Back to the form
+      </Button>
     </div>
   );
 }
