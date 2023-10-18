@@ -18,8 +18,13 @@
 }
 
 .backgroundImage {
-  object-fit: cover;
-  object-position: center 33%;
+  object-fit: contain;
+  object-position: center center;
+
+  @include bp(medium) {
+    object-fit: cover;
+    object-position: center 33%;
+  }
 }
 
 .content {
