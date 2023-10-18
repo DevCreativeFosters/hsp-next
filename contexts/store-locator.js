@@ -12,7 +12,7 @@ export const RADIUS_OPTIONS = [
   { value: 500 },
   { value: 1500 },
   { value: 3000 },
-];
+]; // [km]
 
 export const DEFAULT_RADIUS = RADIUS_OPTIONS[RADIUS_OPTIONS.length - 1].value;
 

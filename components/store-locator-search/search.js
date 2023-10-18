@@ -189,7 +189,7 @@ export default function Search() {
           <ArrowForwardIcon />
         </button>
 
-        <h3 className={styles.heading}>ILocate a store</h3>
+        <h3 className={styles.heading}>[ Locate a store ]</h3>
       </header>
 
       <div
@@ -210,7 +210,7 @@ export default function Search() {
               <Input
                 type="text"
                 name="location"
-                placeholder="ISearch location"
+                placeholder="[ Search location ]"
                 icon="search"
                 withResetButton
                 value={locationInput}
@@ -234,7 +234,7 @@ export default function Search() {
             <Select
               className={styles.radius}
               size="large"
-              placeholder="Select radius"
+              placeholder="[ Select radius ]"
               background="dark"
               suffix="km"
               onClick={onFormInteraction}
@@ -268,7 +268,7 @@ export default function Search() {
                   }
                 }}
               >
-                ISearch
+                [Search]
               </Button>
             )}
           </form>
@@ -283,7 +283,7 @@ export default function Search() {
                 onClick={goBack}
                 leftIcon="arrow-backward"
               >
-                Back to search
+                [ Back to search ]
               </Button>
             </div>
           </div>

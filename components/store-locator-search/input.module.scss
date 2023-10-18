@@ -48,10 +48,9 @@
 }
 
 .eventLabel {
+  display: block;
   position: absolute;
   top: 0;
-  display: block;
-  background: red;
   width: 100%;
   height: 100%;
   opacity: 0;
