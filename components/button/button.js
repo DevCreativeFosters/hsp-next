@@ -51,9 +51,17 @@ export default function Button({
 
   const buttonBody = (
     <>
-      {LeftIconSvg && <LeftIconSvg />}
+      {LeftIconSvg && (
+        <span>
+          <LeftIconSvg />
+        </span>
+      )}
       {children}
-      {RightIconSvg && <RightIconSvg />}
+      {RightIconSvg && (
+        <span>
+          <RightIconSvg />
+        </span>
+      )}
     </>
   );
 

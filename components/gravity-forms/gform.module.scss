@@ -1,0 +1,10 @@
+.formDescription {
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+  gap: 24px;
+
+  @include bp(medium) {
+    padding: 0;
+  }
+}

@@ -4,8 +4,10 @@
   gap: 24px;
 
   p {
+    line-height: 1.6;
     flex: 100%;
     margin: 0;
+    color: var(--color-white-80);
   }
 
   h3 {

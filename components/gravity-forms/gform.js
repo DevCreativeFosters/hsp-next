@@ -8,6 +8,7 @@ import GravityFormsField from './fields';
 import Confirmation from './confirmation';
 import useGravityForm from '@hooks/useGravityForm';
 import { sendGravityForm } from '@lib/api';
+import styles from './gform.module.scss';
 
 export default function GForm({ form }) {
   const [isLoading, setLoading] = useState(false);
@@ -60,8 +61,10 @@ export default function GForm({ form }) {
         <Confirmation resetForm={resetForm} content={confirmation.message} />
       ) : (
         <>
-          {form.title && <h3>{form.title}</h3>}
-          {form.description && <p>{form.description}</p>}
+          <div className={styles.formDescription}>
+            {form.title && <h3>{form.title}</h3>}
+            {form.description && <p>{form.description}</p>}
+          </div>
           {formFields.map(field => (
             <GravityFormsField
               key={field?.id}
