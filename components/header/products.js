@@ -3,11 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Button from '@components/button/button';
-import { productCategories } from '@mockup/product-categories';
-import { products } from '@mockup/products';
 import styles from './products.module.scss';
 
-function Products({ isActive }, ref) {
+function Products({ isActive, categories, products }, ref) {
   const [currentCategoryId, setCurrentCategoryId] = useState(null);
 
   return (
@@ -24,7 +22,7 @@ function Products({ isActive }, ref) {
             All
           </Button>
         </li>
-        {productCategories.map(({ name, id }) => (
+        {categories.map(({ name, id }) => (
           <li className={styles.filterItem} key={id}>
             <Button
               variant={currentCategoryId === id ? 'quaternary' : 'tertiary'}

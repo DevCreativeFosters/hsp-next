@@ -1,11 +1,6 @@
 import { Fragment } from 'react';
 
-import {
-  getAllBlogPosts,
-  getMenus,
-  getGlobalOptions,
-  getPageData,
-} from '@lib/api';
+import { getAllBlogPosts, getPageData } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 import { PaginationContextProvider } from '@contexts/pagination';
@@ -27,8 +22,6 @@ export default async function BlogPage() {
   const posts = await getAllBlogPosts(1000);
   const allPosts = posts?.posts?.nodes;
   const totalPosts = allPosts?.length;
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const content = await getPageData('lifestyle/hsp-blog');
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
@@ -41,7 +34,7 @@ export default async function BlogPage() {
 
   return (
     <PaginationContextProvider>
-      <Layout title="" menus={menus} globalOptions={globalOptions}>
+      <Layout title="">
         <Background colorStops={colorStops} containMargins>
           <Container collapseMargin>
             <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />

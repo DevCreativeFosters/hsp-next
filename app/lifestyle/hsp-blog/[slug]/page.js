@@ -4,14 +4,8 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Wysiwyg from '@components/wysiwig/wysiwig';
 import RelatedPosts from '@components/related-posts/related-posts';
-import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
-import {
-  getGlobalOptions,
-  getBlogPost,
-  getMenus,
-  getBlogPosts,
-} from '@lib/api';
+import { getBlogPost, getBlogPosts } from '@lib/api';
 
 import styles from './page.module.scss';
 
@@ -25,15 +19,10 @@ export default async function BlogPost({ params }) {
   const image = post?.featuredImage?.node;
   const slug = post?.uri?.replaceAll('/', '');
 
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const relatedPosts = await getBlogPosts(NUMBER_OF_RELATED_POSTS);
+
   return (
-    <Layout
-      title={`HSP 4x4 - ${title}`}
-      menus={menus}
-      globalOptions={globalOptions}
-    >
+    <Layout title={`HSP 4x4 - ${title}`}>
       <Container>
         <div className={styles.post}>
           <BreadcrumbsLifestyle

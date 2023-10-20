@@ -2,6 +2,7 @@ import { getIcon } from '@lib/icons';
 import React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
+import Image from 'next/image';
 import styles from './button.module.scss';
 
 export default function Button({
@@ -11,6 +12,8 @@ export default function Button({
   fontStyle = null,
   leftIcon = null,
   rightIcon = null,
+  leftIconUrl = null,
+  rightIconUrl = null,
   toggleable = null,
   isToggled = false,
   onToggleIconClick = null,
@@ -37,8 +40,8 @@ export default function Button({
     [styles.relatedPost]: variant === 'related-post',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
-    [styles.leftIcon]: leftIcon,
-    [styles.rightIcon]: rightIcon,
+    [styles.leftIcon]: leftIcon || leftIconUrl,
+    [styles.rightIcon]: rightIcon || rightIconUrl,
     [styles.toggleable]: toggleable,
     [styles.noText]: !children,
     [styles.footer]: footer,
@@ -51,17 +54,15 @@ export default function Button({
 
   const buttonBody = (
     <>
-      {LeftIconSvg && (
-        <span>
-          <LeftIconSvg />
-        </span>
+      {LeftIconSvg && <span><LeftIconSvg /></span>}
+      {leftIconUrl && (
+        <Image src={leftIconUrl} alt={''} width={20} height={20} />
       )}
       {children}
-      {RightIconSvg && (
-        <span>
-          <RightIconSvg />
-        </span>
+      {rightIconUrl && (
+        <Image src={rightIconUrl} alt={''} width={20} height={20} />
       )}
+      {RightIconSvg && <span><RightIconSvg /></span>}
     </>
   );
 

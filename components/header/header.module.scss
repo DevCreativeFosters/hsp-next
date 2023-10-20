@@ -27,7 +27,7 @@
   @include bp(large) {
     grid-template-areas:
       'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu socialMenu'
-      'logo primaryMenu primaryMenu primaryMenu vehicle vehicle';
+      'logo mainMenu mainMenu mainMenu vehicle vehicle';
     grid-template-columns: 130px 10fr 10fr 10fr 10fr 1fr;
     gap: 0 24px;
   }
@@ -51,7 +51,7 @@
   }
 }
 
-.primaryMenu,
+.mainMenu,
 .secondaryMenu,
 .socialMenu {
   display: none;
@@ -61,8 +61,8 @@
   }
 }
 
-.primaryMenu {
-  grid-area: primaryMenu;
+.mainMenu {
+  grid-area: mainMenu;
   justify-self: flex-start;
 }
 
@@ -76,7 +76,7 @@
   justify-self: flex-end;
 }
 
-.primaryMenuList,
+.mainMenuList,
 .secondaryMenuList,
 .socialMenuList {
   display: flex;
@@ -86,7 +86,7 @@
   list-style: none;
 }
 
-.primaryMenuList {
+.mainMenuList {
   white-space: nowrap;
 }
 
