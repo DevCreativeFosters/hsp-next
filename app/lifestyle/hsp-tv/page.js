@@ -1,9 +1,4 @@
-import {
-  getAllHspTvPosts,
-  getMenus,
-  getGlobalOptions,
-  getPageData,
-} from '@lib/api';
+import { getAllHspTvPosts, getPageData } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
@@ -24,8 +19,6 @@ export default async function HspTVPage() {
   const posts = await getAllHspTvPosts(1000);
   const allPosts = posts?.hspTvPosts?.nodes;
   const totalPosts = allPosts?.length;
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const content = await getPageData('lifestyle/hsp-blog');
   const contentResolved = content?.flexibleContent.blocks.map(renderBlock);
 
@@ -33,7 +26,7 @@ export default async function HspTVPage() {
 
   return (
     <PaginationContextProvider>
-      <Layout title="" menus={menus} globalOptions={globalOptions}>
+      <Layout title="">
         <Container>
           <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
           {contentResolved}

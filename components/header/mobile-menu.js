@@ -8,7 +8,7 @@ export default function MobileMenu({ items, isMenuActive }) {
       className={clsx(styles.mobileMenu, { [styles.isActive]: isMenuActive })}
     >
       <ul className={styles.mobileMenuList}>
-        {items.map(({ label, url, subItems, subItemGroups }, i) => (
+        {items?.map(({ label, url, subItems, subItemGroups }, i) => (
           <MobileMenuItem
             key={i}
             label={label}

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { getPageData, getMenus, getGlobalOptions } from '@lib/api';
+import { getPageData } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import Layout from '@components/layout/layout';
 
@@ -10,12 +10,10 @@ export const metadata = {
 
 export default async function HomePage() {
   const content = await getPageData('');
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
-    <Layout menus={menus} globalOptions={globalOptions} withMap>
+    <Layout withMap>
       {contentBlocks.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}

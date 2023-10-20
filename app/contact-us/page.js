@@ -1,10 +1,5 @@
 import parse from 'html-react-parser';
-import {
-  getMenus,
-  getGlobalOptions,
-  getGravityForm,
-  getPageData,
-} from '@lib/api';
+import { getGlobalOptions, getGravityForm, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import ContentBox from '@components/content-box/content-box';
@@ -19,13 +14,12 @@ import Logo from '@assets/images/logo.svg';
 export default async function ContactUs() {
   const content = await getPageData('contact-us');
   const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const contactUsForm = await getGravityForm(1);
   const contactUsInfo = globalOptions?.contactUsInfo;
   const servicesBox = globalOptions?.servicesBox || [];
 
   return (
-    <Layout title="Contact Us" menus={menus} globalOptions={globalOptions}>
+    <Layout title="Contact Us">
       <Container>
         <PageContainer>
           <SectionIntro

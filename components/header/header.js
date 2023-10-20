@@ -7,17 +7,19 @@ import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
 import Button from '@components/button/button';
-import Container from '@components/container/container';
 import HamburgerButton from '@components/hamburger-button/hamburger-button';
-import { primaryMenu } from '@mockup/primary-menu';
-import { secondaryMenu } from '@mockup/secondary-menu';
-import { socialMenu } from '@mockup/social-menu';
-import { mobileMenu } from '@mockup/mobile-menu';
 import Logo from '@assets/images/logo.svg';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './header.module.scss';
 
-export default function Header() {
+export default function Header({
+  mainMenu,
+  secondaryMenu,
+  socialMenu,
+  mobileMenu,
+  productCategories,
+  products,
+}) {
   const headerRef = useRef(null);
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
   const [currentSubmenu, setCurrentSubmenu] = useState(null);
@@ -29,10 +31,10 @@ export default function Header() {
     setCurrentSubmenu(null);
   }, []);
 
-  const primaryMenuRef = useRef(null);
+  const mainMenuRef = useRef(null);
   const productsRef = useRef(null);
 
-  useClickOutside(onElsewhereClick, [primaryMenuRef, productsRef]);
+  useClickOutside(onElsewhereClick, [mainMenuRef, productsRef]);
 
   return (
     <>
@@ -64,9 +66,9 @@ export default function Header() {
               />
             </div>
 
-            <nav className={styles.primaryMenu} ref={primaryMenuRef}>
-              <ul className={styles.primaryMenuList}>
-                {primaryMenu.map(
+            <nav className={styles.mainMenu} ref={mainMenuRef}>
+              <ul className={styles.mainMenuList}>
+                {mainMenu?.map(
                   ({ label, url, subItems, subItemGroups, name }, index) => (
                     <li key={index}>
                       <Button
@@ -96,7 +98,7 @@ export default function Header() {
 
             <nav className={styles.secondaryMenu}>
               <ul className={styles.secondaryMenuList}>
-                {secondaryMenu.map(({ label, url, icon, variant }, index) => (
+                {secondaryMenu?.map(({ label, url, icon, variant }, index) => (
                   <li key={index} className={styles.secondaryMenuItem}>
                     <Button
                       href={url}
@@ -114,17 +116,15 @@ export default function Header() {
 
             <nav className={styles.socialMenu}>
               <ul className={styles.socialMenuList}>
-                {socialMenu.map(({ label, url, icon }, index) => (
+                {socialMenu?.map(({ url, icon }, index) => (
                   <li key={index} className={styles.socialMenuItem}>
                     <Button
                       href={url}
                       size="small"
                       variant="tertiary"
                       background="dark"
-                      leftIcon={icon}
-                    >
-                      {label}
-                    </Button>
+                      leftIconUrl={icon}
+                    />
                   </li>
                 ))}
               </ul>
@@ -140,6 +140,8 @@ export default function Header() {
 
           <Products
             isActive={currentSubmenu === 'products'}
+            categories={productCategories}
+            products={products}
             ref={productsRef}
           />
         </FullscreenCollapse>

@@ -1,6 +1,5 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import routes from '@lib/routes';
-import { getGlobalOptions, getMenus } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
@@ -17,16 +16,8 @@ export const metadata = {
 };
 
 export default async function StoreLocatorPage() {
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
-
   return (
-    <Layout
-      menus={menus}
-      globalOptions={globalOptions}
-      withMap
-      withFooter={false}
-    >
+    <Layout withMap withFooter={false}>
       <FullscreenCollapse>
         <div className={styles.breadcrumbs}>
           <Breadcrumbs

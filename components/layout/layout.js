@@ -1,3 +1,16 @@
+import {
+  getFooterMenus,
+  getGlobalOptions,
+  getMenu,
+  getMenuDropdownProducts,
+  getProductCategories,
+} from '@lib/api';
+import normalizeMainMenu from '@lib/normalize-main-menu';
+import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
+import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
+import normalizeMobileMenu from '@lib/normalize-mobile-menu';
+import normalizeMenuData from '@lib/normalize-mobile-menu-data';
+import normalizeProductData from '@lib/normalize-product-data';
 import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
 import BgContinent from '@assets/images/bg-continent.png';
@@ -5,14 +18,28 @@ import Image from 'next/image';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './layout.module.scss';
 
-export default function Layout({
-  menus,
-  globalOptions,
-  withMap,
-  withFooter = true,
-  children,
-}) {
-  const footerMenus = {
+async function getLayoutData() {
+  const globalOptions = await getGlobalOptions();
+  const footerMenus = await getFooterMenus();
+  const mainMenu = await getMenu('main-menu');
+  const mobileMenu = await getMenu('mobile-navigation');
+  const productCategories = await getProductCategories();
+  const products = await getMenuDropdownProducts();
+
+  return {
+    globalOptions,
+    footerMenus,
+    mainMenu,
+    mobileMenu,
+    productCategories,
+    products,
+  };
+}
+
+const data = await getLayoutData();
+
+export default function Layout({ withMap, withFooter = true, children }) {
+  const normalizedFooterMenus = {
     hsp: [],
     legal: [],
     lifestyle: [],
@@ -20,30 +47,37 @@ export default function Layout({
     resources: [],
     services: [],
   };
-  const footerText = globalOptions?.footerText;
+  const footerText = data.globalOptions?.footerText;
+  const socialMenu = normalizeSocialMediaMenu(data.globalOptions);
+  const topNavigationMenu = normalizeTopNavigationMenu(data.globalOptions);
+  const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
+  const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
+  const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
+  const normalizedProductData = normalizeProductData(data.products);
+  normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
 
-  menus?.forEach(menu => {
+  data.footerMenus?.forEach(menu => {
     const menuLocation = menu?.node?.locations[0];
-    const menuNodes = menu?.node?.menuItems.nodes;
+    const menuNodes = menu?.node?.menuItems?.nodes;
 
     switch (menuLocation) {
       case 'HSP_NAVIGATION':
-        footerMenus.hsp.push(...menuNodes);
+        normalizedFooterMenus.hsp.push(...menuNodes);
         break;
       case 'LEGAL_NAVIGATION':
-        footerMenus.legal.push(...menuNodes);
+        normalizedFooterMenus.legal.push(...menuNodes);
         break;
       case 'LIFESTYLE_NAVIGATION':
-        footerMenus.lifestyle.push(...menuNodes);
+        normalizedFooterMenus.lifestyle.push(...menuNodes);
         break;
       case 'PRODUCTS_NAVIGATION':
-        footerMenus.products.push(...menuNodes);
+        normalizedFooterMenus.products.push(...menuNodes);
         break;
       case 'RESOURCES_NAVIGATION':
-        footerMenus.resources.push(...menuNodes);
+        normalizedFooterMenus.resources.push(...menuNodes);
         break;
       case 'SERVICES_NAVIGATION':
-        footerMenus.services.push(...menuNodes);
+        normalizedFooterMenus.services.push(...menuNodes);
         break;
       default:
         break;
@@ -52,7 +86,14 @@ export default function Layout({
 
   return (
     <>
-      <Header />
+      <Header
+        mainMenu={normalizedMainMenu}
+        secondaryMenu={topNavigationMenu}
+        socialMenu={socialMenu}
+        mobileMenu={normalizedMobileMenu}
+        productCategories={data.productCategories}
+        products={normalizedProductData}
+      />
       <main className={styles.main}>
         {withMap && (
           <div className={styles.background}>
@@ -70,7 +111,7 @@ export default function Layout({
       {withFooter && (
         <div className={styles.bottomSticky}>
           <FullscreenCollapse>
-            <Footer menus={footerMenus} text={footerText} />
+            <Footer menus={normalizedFooterMenus} text={footerText} />
           </FullscreenCollapse>
         </div>
       )}

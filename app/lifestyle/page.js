@@ -1,11 +1,5 @@
 import { Fragment } from 'react';
-import {
-  getPageData,
-  getMenus,
-  getGlobalOptions,
-  getLatestNumberOfBlogPosts,
-  getLatestNumberOfHSPTVPosts,
-} from '@lib/api';
+import { getPageData, getGlobalOptions } from '@lib/api';
 import Layout from '@components/layout/layout';
 import FeaturedPost from '@components/featured-post/featured-post';
 import { renderBlock } from '@lib/block';
@@ -13,16 +7,11 @@ import { renderBlock } from '@lib/block';
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
   const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const featuredPost = globalOptions?.featuredPost;
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
-    <Layout
-      title="HSP 4x4 - Lifestyle"
-      menus={menus}
-      globalOptions={globalOptions}
-    >
+    <Layout title="HSP 4x4 - Lifestyle">
       <FeaturedPost
         title={featuredPost?.title}
         excerpt={featuredPost?.excerpt}

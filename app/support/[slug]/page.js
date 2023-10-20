@@ -1,10 +1,5 @@
 import { Fragment } from 'react';
-import {
-  getGlobalOptions,
-  getMenus,
-  getPageData,
-  getPageGutenbergContent,
-} from '@lib/api';
+import { getPageData, getPageGutenbergContent } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
@@ -21,8 +16,6 @@ export const metadata = {
 };
 
 export default async function SupportSubpage({ params }) {
-  const globalOptions = await getGlobalOptions();
-  const menus = await getMenus();
   const gutenbergContent = await getPageGutenbergContent(
     `support/${params.slug}`,
   );
@@ -30,7 +23,7 @@ export default async function SupportSubpage({ params }) {
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
-    <Layout menus={menus} globalOptions={globalOptions}>
+    <Layout>
       <Container>
         <div className={styles.page}>
           <PageContainer>

@@ -16,7 +16,7 @@ export default function MobileMenuItem({
 
     return (
       <ul className={styles.mobileMenuSubList}>
-        {subItems.map(({ url, label, special }, j) => (
+        {subItems?.map(({ url, label, special }, j) => (
           <li key={j}>
             <Button
               href={url}
