@@ -4,7 +4,6 @@
   margin-top: -60px;
 
   &::before {
-    display: none;
     content: '';
     position: absolute;
     top: 0;
@@ -14,13 +13,18 @@
     height: 100%;
     background: linear-gradient(
       0deg,
-      transparent 80%,
+      transparent 30%,
       var(--color-black-100) 100%
     );
     z-index: -1;
 
     @include bp(large) {
       display: block;
+      background: linear-gradient(
+        0deg,
+        transparent 80%,
+        var(--color-black-100) 100%
+      );
     }
   }
 }
@@ -28,7 +32,11 @@
 .contentContainer {
   border-radius: 16px;
   padding-top: 48px;
-  background-color: var(--color-black-100);
+  background-color: none;
+
+  @include bp(large) {
+    background-color: var(--color-black-100);
+  }
 }
 
 .title {
