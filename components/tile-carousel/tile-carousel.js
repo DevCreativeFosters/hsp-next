@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import styles from './tile-carousel.module.scss';
@@ -12,6 +13,7 @@ export default function TileCarousel({
   items,
   itemTemplate: ItemTemplate,
   id = '',
+  variant,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
@@ -25,6 +27,10 @@ export default function TileCarousel({
   const carouselId = `${DEFAULT_ID}${id ? '-' + id : ''}`;
 
   const currentOffsetNormalized = Math.min(maxOffset, currentOffset);
+
+  const carouselClassNames = clsx(styles.carousel, {
+    [styles.videos]: variant === 'videos',
+  });
 
   const goTo = useCallback(n => {
     setCurrentN(n);
@@ -126,7 +132,7 @@ export default function TileCarousel({
   return (
     <>
       {items.length > 0 && (
-        <div className={styles.carousel} ref={carouselRef}>
+        <div className={carouselClassNames} ref={carouselRef}>
           <div>
             <div
               className={styles.container}

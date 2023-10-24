@@ -1,0 +1,46 @@
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 0;
+  width: 86%;
+  max-width: 290px;
+
+  @include bp(medium) {
+    max-width: none;
+    width: calc(100% / 3 - (2 / 3 * 24px));
+    flex-grow: 1;
+  }
+
+  @include bp(large) {
+    width: calc(100% / 4 - (2 / 3 * 48px));
+  }
+}
+
+.video {
+  aspect-ratio: 294/546;
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 16px;
+}
+
+.celebrity {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.thumbnail {
+  position: absolute;
+  aspect-ratio: 294/546;
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 16px;
+}
