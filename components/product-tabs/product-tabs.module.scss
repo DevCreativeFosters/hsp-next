@@ -1,0 +1,259 @@
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 48px 0;
+
+  @include bp(large) {
+    margin: 120px 0;
+    gap: 48px;
+  }
+}
+
+.headers {
+  width: 100%;
+  display: flex;
+  gap: 48px;
+}
+
+.tab {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.33;
+  cursor: pointer;
+
+  @include bp(large) {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1;
+  }
+}
+
+.activeTab {
+  border-bottom: 2px solid var(--color-white-100);
+  padding-bottom: 8px;
+
+  @include bp(large) {
+    padding-bottom: 16px;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include bp(large) {
+    gap: 96px;
+  }
+}
+
+.description {
+  color: var(--color-white-80);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
+}
+
+.featuresContainer {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 24px;
+
+  @include bp(large) {
+    flex-direction: row;
+    gap: 48px;
+  }
+}
+
+.featureItem {
+  border-radius: 16px;
+  background-color: var(--color-black-100);
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  width: 100%;
+
+  @include bp(large) {
+    width: calc(50% - 24px);
+  }
+}
+
+.icon {
+  margin: 24px;
+}
+
+.featureContent {
+  padding: 24px;
+}
+
+.videoFeature {
+  flex-direction: column;
+
+  @include bp(large) {
+    flex-direction: row;
+  }
+}
+
+.video {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 342/358;
+  border-radius: 16px;
+
+  @include bp(large) {
+    width: 230px;
+    height: auto;
+  }
+}
+
+.imageFeature {
+  flex-direction: column;
+}
+
+.image {
+  width: auto;
+  height: 154px;
+  object-fit: cover;
+  object-position: center;
+
+  @include bp(large) {
+    height: 166px;
+  }
+}
+
+.wysiwyg {
+  --border: 1px solid var(--color-white-40) !important;
+
+  padding: 0 20px;
+
+  ul li {
+    font-size: 16px;
+    line-height: 2;
+    margin-bottom: 0;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  table {
+    border-radius: 16px;
+    overflow: hidden;
+
+    tbody {
+      border-radius: 16px;
+      overflow: hidden;
+
+      tr {
+        background-color: transparent;
+
+        td,
+        th {
+          border-left: var(--border);
+          border-bottom: var(--border);
+          border-top: 0;
+          border-radius: 0;
+
+          @include bp-below(large) {
+            display: block;
+            width: 100%;
+            border-right: var(--border);
+            border-top: var(--border);
+            border-left: var(--border);
+          }
+
+          &:first-child {
+            background-color: var(--color-black-5);
+
+            @include bp(large) {
+              background-color: transparent;
+            }
+          }
+
+          &:last-child {
+            background-color: var(--color-white-10);
+            border-bottom: var(--border);
+
+            @include bp(large) {
+              background-color: transparent;
+              border: 0;
+              border-left: var(--border);
+              border-right: var(--border);
+              border-bottom: var(--border);
+            }
+          }
+
+          strong {
+            font-family: var(--font-secondary);
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+          }
+        }
+
+        &:first-child {
+          border-radius: 16px;
+
+          td:first-child {
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            border: var(--border);
+
+            @include bp(large) {
+              border-top-right-radius: 0;
+              border-right: 0;
+            }
+          }
+
+          td:last-child {
+            border-top-right-radius: 0;
+            border: var(--border);
+
+            @include bp(large) {
+              border-top-right-radius: 16px;
+            }
+          }
+        }
+
+        &:last-child {
+          td:first-child {
+            border-bottom-left-radius: 0;
+            border-left: var(--border);
+            border-right: var(--border);
+
+            @include bp(large) {
+              border-radius: 0;
+              border-bottom-left-radius: 16px;
+            }
+          }
+
+          td:last-child {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+
+            @include bp(large) {
+              border-radius: 0;
+              border-bottom-right-radius: 16px;
+              border-bottom: var(--border);
+              border-right: var(--border);
+            }
+          }
+        }
+
+        &:nth-child(odd) {
+          background-color: transparent;
+
+          @include bp(large) {
+            background-color: var(--color-white-10);
+          }
+        }
+      }
+    }
+  }
+}
