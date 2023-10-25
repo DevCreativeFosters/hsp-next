@@ -4,24 +4,28 @@ import clsx from 'clsx';
 import styles from './category-card.module.scss';
 
 export default function CategoryCard({ category }) {
-  const featuredImage = category?.categoryDetails?.featuredImage;
+  const featuredImage = category?.mainCategoryDetails?.featuredImage;
 
   return (
     <Link href={`/products/${category.slug}`} className={styles.categoryCard}>
-      <div className={styles.imageContainer}>
-        <Image
-          className={styles.categoryImage}
-          src={featuredImage?.sourceUrl}
-          alt={category.name}
-          fill
-        />
-      </div>
+      {featuredImage?.mediaItemUrl && (
+        <div className={styles.imageContainer}>
+          <Image
+            className={styles.categoryImage}
+            src={featuredImage?.mediaItemUrl}
+            alt={category.name}
+            fill
+          />
+        </div>
+      )}
       {category.name && (
         <h2 className={styles.categoryName}>{category.name}</h2>
       )}
-      <div className={styles.fromPrice}>
-        from ${category.categoryDetails.fromPrice}
-      </div>
+      {category.mainCategoryDetails.fromPrice && (
+        <div className={styles.fromPrice}>
+          from ${category.mainCategoryDetails.fromPrice}
+        </div>
+      )}
     </Link>
   );
 }
