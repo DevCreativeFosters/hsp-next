@@ -173,14 +173,19 @@
           }
 
           a {
-            display: inline-block;
-            width: min-content;
+            display: block;
+            width: 100%;
             padding: 12px 24px;
             color: var(--color-white-100);
             font-family: var(--font-secondary);
             font-size: 24px;
             font-weight: 600;
             line-height: normal;
+
+            @include bp(medium) {
+              width: min-content;
+              display: inline-block;
+            }
 
             &:hover {
               border-radius: 8px;
