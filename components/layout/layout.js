@@ -3,7 +3,7 @@ import {
   getGlobalOptions,
   getMenu,
   getMenuDropdownProducts,
-  getProductCategories,
+  getMainProductCategories,
 } from '@lib/api';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
@@ -23,7 +23,7 @@ async function getLayoutData() {
   const footerMenus = await getFooterMenus();
   const mainMenu = await getMenu('main-menu');
   const mobileMenu = await getMenu('mobile-navigation');
-  const productCategories = await getProductCategories();
+  const productCategories = await getMainProductCategories();
   const products = await getMenuDropdownProducts();
 
   return {
