@@ -10,7 +10,7 @@ export default async function MainCategoryPage({ params }) {
   const categoryData = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = categoryData.mainCategoryDetails;
   const featuredImage = mainCategoryDetails.featuredImage;
-  const availableMakes = categoryData.categoryRelations.availableMakes;
+  const availableMakes = categoryData.categoryRelations?.availableMakes || [];
   const allMakes = await getAllMakes();
 
   return (
