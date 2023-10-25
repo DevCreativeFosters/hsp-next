@@ -18,7 +18,7 @@ export default async function CategoryPage({ params }) {
     modelSlug,
   );
   const firstMatchedProduct = products.length ? products[0] : null;
-
+  console.log(params);
   if (!firstMatchedProduct) {
     return (
       <Layout title="Product">
