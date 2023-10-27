@@ -1,6 +1,13 @@
 @import '/styles/globals/typography';
 @import '/styles/globals/helpers';
 
+.label {
+  display: block;
+  margin: 8px 0 8px 12px;
+  color: var(--color-white-60);
+  font-size: 14px;
+}
+
 .lightBackground {
   --font-color: var(--color-black-60);
   --border-color: var(--color-black-20);
@@ -48,6 +55,7 @@
 .wrapperInner {
   position: relative;
   display: inline-flex;
+  flex-direction: column;
   width: 100%;
 }
 
@@ -57,7 +65,7 @@
   justify-content: space-between;
   width: 100%;
   max-height: var(--max-height);
-  padding: var(--block-padding) 16px var(--block-padding) 24px;
+  padding: var(--block-padding) 32px var(--block-padding) 16px;
   border: var(--border-size) solid var(--border-color);
   border-radius: var(--border-radius-sm);
   color: var(--font-color);
@@ -65,8 +73,14 @@
   font-family: var(--font-secondary);
   font-size: 24px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
   background: transparent;
   transition: var(--transition);
+
+  @include bp(small) {
+    padding: var(--block-padding) 40px var(--block-padding) 24px;
+  }
 
   & + .label {
     color: var(--label-color);
@@ -107,13 +121,26 @@
   }
 }
 
+.value {
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .pivot {
   @include center;
 
+  position: absolute;
+  right: 12px;
   transition: transform 0.2s;
   transform-origin: center center;
   width: 20px;
   height: 20px;
+
+  @include bp(small) {
+    right: 16px;
+  }
 
   &.reversed {
     transform: rotate(180deg);

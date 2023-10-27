@@ -10,6 +10,7 @@ export default function Select({
   className,
   size = 'small',
   background = 'dark',
+  label = '',
   errorMessage = '',
   placeholder = '',
   options = [],
@@ -58,6 +59,12 @@ export default function Select({
           [styles.isOpen]: isOpen,
         })}
       >
+        {label && (
+          <label htmlFor="" className={styles.label}>
+            {label}
+          </label>
+        )}
+
         <button
           ref={triggerRef}
           type="button"
@@ -74,7 +81,7 @@ export default function Select({
           }}
         >
           {selectedOption?.label || selectedOption?.value !== undefined ? (
-            <div>
+            <div className={styles.value}>
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
               {selectedOption.label || selectedOption.value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
@@ -104,7 +111,7 @@ export default function Select({
               data-value={value !== undefined ? value : label}
             >
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
-              {value}
+              {label || value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
             </button>
           ))}

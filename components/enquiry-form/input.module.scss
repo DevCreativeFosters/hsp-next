@@ -13,7 +13,7 @@
   border: 2px solid var(--color-white-20);
   border-radius: 8px;
   width: 100%;
-  padding: 7px 24px;
+  padding: 7px 16px;
   color: var(--color-white-100);
   font-family: var(--font-secondary);
   font-size: 24px;
@@ -22,6 +22,10 @@
   outline: none;
   transition: var(--transition);
   text-overflow: ellipsis;
+
+  @include bp(small) {
+    padding: 7px 24px;
+  }
 
   &.withIcon {
     padding-right: 40px;
@@ -58,7 +62,7 @@
   font-size: 14px;
 }
 
-.fakeInput {
+.eventLabel {
   display: block;
   position: absolute;
   top: 0;

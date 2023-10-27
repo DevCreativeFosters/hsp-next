@@ -10,9 +10,9 @@ import { useIsMobile } from '@hooks/useIsMobile';
 import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
+import StoreList from '@components/store-list/store-list';
 import Input from './input';
 import Suggestions from './suggestions';
-import ResultsInline from './results-inline';
 import ResultItem from './result-item';
 import ArrowForwardIcon from '@assets/material-icons/arrow-forward.svg';
 
@@ -244,7 +244,7 @@ export default function Search() {
             />
 
             <div className={styles.mobileOnly}>
-              <ResultsInline
+              <StoreList
                 items={filteredLocations}
                 show={isInlineResultListVisible}
                 onSelect={item => {

@@ -1,8 +1,10 @@
+import { StoreLocatorProvider } from '@contexts/store-locator';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
+import EnquiryForm from '@components/enquiry-form';
 import {
   getMainProductCategory,
   getMake,
@@ -70,6 +72,11 @@ export default async function CategoryPage({ params }) {
             )}
           </div>
         </div>
+
+        <StoreLocatorProvider>
+          <EnquiryForm />
+        </StoreLocatorProvider>
+
         <ProductTabs
           featuresDescription={
             firstMatchedProduct?.productFields.featuresDescription

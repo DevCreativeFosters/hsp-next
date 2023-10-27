@@ -1,6 +1,15 @@
-import styles from './results-inline.module.scss';
+import clsx from 'clsx';
+import Button from '@components/button/button';
+import styles from './store-list.module.scss';
 
-export default function ResultsInline({ items, show, onSelect }) {
+export default function StoreList({
+  className,
+  items,
+  limit,
+  show,
+  onSelect,
+  onMore = () => null,
+}) {
   if (show && items?.length === 0) {
     return <div>Sorry, there are no results for given location and radius</div>;
   }
@@ -8,9 +17,9 @@ export default function ResultsInline({ items, show, onSelect }) {
   if (!items?.length > 0 || !show) return null;
 
   return (
-    <div className={styles.listWrapper}>
+    <div className={clsx(styles.listWrapper, className)}>
       <ul className={styles.list}>
-        {items.map((item, index) => {
+        {items.slice(0, limit).map((item, index) => {
           const { name, location, address } = item;
           const { street, city, stateAbbr, postalCode, country } = location;
           let printedAddress = address
@@ -43,6 +52,16 @@ export default function ResultsInline({ items, show, onSelect }) {
           );
         })}
       </ul>
+      {items.length > limit && (
+        <Button
+          className={styles.more}
+          variant="quaternary"
+          size="xsmall"
+          onClick={onMore}
+        >
+          Load more results
+        </Button>
+      )}
     </div>
   );
 }
