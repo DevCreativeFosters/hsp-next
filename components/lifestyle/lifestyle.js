@@ -6,6 +6,7 @@ import FeaturedArticle from './featured-article';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Tile from '@components/tile/tile';
 import styles from './lifestyle.module.scss';
+import routes from '@lib/routes';
 
 export default function Lifestyle({
   title,
@@ -15,12 +16,18 @@ export default function Lifestyle({
   posts,
 }) {
   const postsNormalized = posts.map(
-    ({ date, excerpt, tags, featuredImage, ...props }) => {
+    ({ date, excerpt, tags, featuredImage, link, ...props }) => {
+      const slug = link
+        .split('/')
+        .filter(slug => slug)
+        .pop();
+
       return {
         createdAt: date,
         tags: tags?.nodes || [],
         image: featuredImage?.node,
         content: excerpt,
+        url: routes.tv(slug),
         ...props,
       };
     },
