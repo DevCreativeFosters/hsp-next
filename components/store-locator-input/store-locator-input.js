@@ -6,7 +6,7 @@ import useHasClass from '@hooks/useHasClass';
 import { useIsMobile } from '@hooks/useIsMobile';
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { getIcon } from '@lib/icons';
-import styles from './input.module.scss';
+import styles from './store-locator-input.module.scss';
 
 export default function Input({
   type,
@@ -18,6 +18,7 @@ export default function Input({
   required,
   icon,
   withResetButton,
+  disabled,
   onClick,
   onChange = () => null,
   ...props
@@ -73,6 +74,7 @@ export default function Input({
           value={localValue}
           onChange={ev => onChange(ev.target.value)}
           required={required}
+          disabled={disabled}
           {...props}
         />
         <label
@@ -87,12 +89,13 @@ export default function Input({
         {withResetButton && localValue && (
           <button
             className={styles.resetButton}
+            disabled={disabled}
             onClick={ev => {
               ev.preventDefault();
               onChange('');
               mainInputRef.current.focus();
             }}
-          ></button>
+          />
         )}
       </div>
     </>

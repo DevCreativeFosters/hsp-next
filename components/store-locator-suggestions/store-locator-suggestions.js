@@ -1,8 +1,11 @@
-import styles from './suggestions.module.scss';
+import styles from './store-locator-suggestions.module.scss';
 
 const MAX_SUGGESTIONS = 5;
 
-export default function Suggestions({ items = [], selectLocation }) {
+export default function StoreLocatorSuggestions({
+  items = [],
+  selectLocation,
+}) {
   if (!items.length > 0) {
     return null;
   }

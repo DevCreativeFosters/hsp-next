@@ -1,15 +1,10 @@
 import clsx from 'clsx';
-import Button from '@components/button/button';
+import useMobileVh from '@hooks/useMobileVh';
 import styles from './store-list.module.scss';
 
-export default function StoreList({
-  className,
-  items,
-  limit,
-  show,
-  onSelect,
-  onMore = () => null,
-}) {
+export default function StoreList({ className, items, show, onSelect }) {
+  useMobileVh();
+
   if (show && items?.length === 0) {
     return <div>Sorry, there are no results for given location and radius</div>;
   }
@@ -19,7 +14,7 @@ export default function StoreList({
   return (
     <div className={clsx(styles.listWrapper, className)}>
       <ul className={styles.list}>
-        {items.slice(0, limit).map((item, index) => {
+        {items.map((item, index) => {
           const { name, location, address } = item;
           const { street, city, stateAbbr, postalCode, country } = location;
           let printedAddress = address
@@ -52,16 +47,6 @@ export default function StoreList({
           );
         })}
       </ul>
-      {items.length > limit && (
-        <Button
-          className={styles.more}
-          variant="quaternary"
-          size="xsmall"
-          onClick={onMore}
-        >
-          Load more results
-        </Button>
-      )}
     </div>
   );
 }

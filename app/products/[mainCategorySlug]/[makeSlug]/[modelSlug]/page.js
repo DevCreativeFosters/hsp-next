@@ -4,7 +4,7 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
-import EnquiryForm from '@components/enquiry-form';
+import EnquiryForm from 'components/enquiry-form/enquiry-form';
 import {
   getMainProductCategory,
   getMake,

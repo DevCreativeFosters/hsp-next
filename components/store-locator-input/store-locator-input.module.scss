@@ -9,19 +9,19 @@
 }
 
 .input {
-  background: var(--color-black-100);
-  border: 2px solid var(--color-white-20);
-  border-radius: 8px;
   width: 100%;
   padding: 7px 16px;
+  border: 2px solid var(--color-white-20);
+  border-radius: 8px;
   color: var(--color-white-100);
   font-family: var(--font-secondary);
   font-size: 24px;
   font-weight: 600;
   line-height: 1;
-  outline: none;
-  transition: var(--transition);
   text-overflow: ellipsis;
+  outline: none;
+  background: transparent;
+  transition: var(--transition);
 
   @include bp(small) {
     padding: 7px 24px;
@@ -105,6 +105,10 @@
   height: 44px;
   color: white;
   transform: translateY(-50%);
+
+  &[disabled] {
+    display: none;
+  }
 
   &::before {
     content: '';

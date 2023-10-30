@@ -33,7 +33,7 @@ export default function StoreLocatorHero() {
             <p>
               [ For more information on becoming a HSP Distributor or Fitter,
               please contact us on <a href="tel:1300441498">1300 441 498</a> or
-              send an email to
+              send an email to{' '}
               <a href="mailto:info@hsputelids.com">info@hsputelids.com</a>. ]
             </p>
           </div>

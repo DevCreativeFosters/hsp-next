@@ -1,14 +1,13 @@
 .wrapper {
   border: 2px solid var(--color-white-20);
   border-radius: 16px;
-  background: var(--color-black-100);
 }
 
 .form {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   padding: 24px;
   border-radius: 8px;
 }
@@ -26,6 +25,10 @@
       'location radius'
       'mapToggler mapToggler';
     align-items: end;
+  }
+
+  &.isDisabled {
+    opacity: 0.25;
   }
 }
 
@@ -49,6 +52,69 @@
 .results {
   height: auto;
   max-height: 600px;
+}
+
+.resultUI {
+  display: flex;
+}
+
+.resultContainer {
+  flex-grow: 1;
+}
+
+.resultClearButton {
+  margin-top: 8px;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+
+  span {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-primary-80);
+    transition: background-color 150ms;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      right: 5px;
+      height: 2px;
+      background-color: var(--color-black-100);
+      transform: translateY(-50%) rotate(-45deg);
+    }
+
+    &::after {
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  &:hover span {
+    background: var(--color-primary-100);
+  }
+
+  &.isHighlighted span {
+    background: blue;
+    animation: blink 100ms infinite alternate;
+  }
+}
+
+@keyframes blink {
+  0%,
+  25% {
+    background: var(--color-primary-80);
+  }
+
+  75%,
+  100% {
+    background: white;
+  }
 }
 
 .price {
