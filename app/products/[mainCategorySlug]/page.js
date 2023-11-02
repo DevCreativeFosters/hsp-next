@@ -1,7 +1,9 @@
 import Image from 'next/image';
+import { getAllMakes, getMainProductCategory } from '@lib/api';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import { getAllMakes, getMainProductCategory } from '@lib/api';
+import PageContainer from '@components/page-container/page-container';
+import ProductHero from '@components/product-hero';
 import ChooseVehicleGlobal from '@components/choose-vehicle-global';
 import ChooseVehicleLocal from '@components/choose-vehicle-local';
 
@@ -16,6 +18,20 @@ export default async function MainCategoryPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
+        <PageContainer>
+          <ProductHero
+            title={categoryData?.name}
+            description={categoryData?.description}
+            image={featuredImage}
+            features={{
+              content: mainCategoryDetails?.features,
+            }}
+            warranty={{
+              content: mainCategoryDetails?.warranty.warrantyDescription,
+              years: mainCategoryDetails?.warranty.warrantyTimePeriod,
+            }}
+          />
+        </PageContainer>
         <h1>Global choose vehicle</h1>
         <ChooseVehicleGlobal makes={allMakes} />
         <br />
