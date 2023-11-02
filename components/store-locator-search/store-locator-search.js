@@ -200,6 +200,7 @@ export default function StoreLocatorSearch() {
             </div>
 
             <Select
+              id="search-radius"
               className={styles.radius}
               size="large"
               placeholder="[ Select radius ]"

@@ -2,12 +2,14 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
+import { v4 as uuidv4 } from 'uuid';
 import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/material-icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
 
 export default function Select({
   className,
+  id = '',
   size = 'small',
   background = 'dark',
   label = '',
@@ -27,6 +29,8 @@ export default function Select({
     () => options.find(option => option.value === selectedValue),
     [options, selectedValue],
   );
+
+  const [elementId] = useState(id || uuidv4());
 
   const handleClickOutside = () => {
     setOpen(false);
@@ -60,12 +64,13 @@ export default function Select({
         })}
       >
         {label && (
-          <label htmlFor="" className={styles.label}>
+          <label htmlFor={elementId} className={styles.label}>
             {label}
           </label>
         )}
 
         <button
+          id={elementId}
           ref={triggerRef}
           type="button"
           className={clsx(styles.trigger, {

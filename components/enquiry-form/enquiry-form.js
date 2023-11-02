@@ -158,6 +158,7 @@ export default function EnquiryForm() {
         autoComplete="off"
       >
         <Select
+          id="product-variant"
           size="large"
           placeholder="Variant"
           label="Variant"
@@ -198,6 +199,7 @@ export default function EnquiryForm() {
           </div>
           <div className={styles.radius}>
             <Select
+              id="search-radius"
               size="large"
               placeholder="[Select radius]"
               background="dark"
