@@ -10,12 +10,14 @@ export const metadata = {
 
 export default async function HomePage() {
   const content = await getPageData('');
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = await content?.flexibleContent?.blocks?.map(
+    renderBlock,
+  );
 
   return (
     <Layout withMap>
       {contentBlocks.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
+        <>{contentBlock}</>
       ))}
     </Layout>
   );

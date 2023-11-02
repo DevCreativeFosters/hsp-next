@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
 import 'swiper/css';
@@ -13,9 +13,9 @@ import styles from './reviews.module.scss';
 export default function Reviews({ data }) {
   const [windowWidth, setWindowWidth] = useState(0);
   const isMobile = useIsMobile();
-  let swiperRef = useRef(null);
+  const swiperRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -41,17 +41,17 @@ export default function Reviews({ data }) {
       }, [])
     : [];
 
-  const handlePrevClick = () => {
+  const handlePrevClick = useCallback(() => {
     if (swiperRef.current) {
       swiperRef.current.slidePrev();
     }
-  };
+  }, []);
 
-  const handleNextClick = () => {
+  const handleNextClick = useCallback(() => {
     if (swiperRef.current) {
       swiperRef.current.slideNext();
     }
-  };
+  }, []);
 
   return (
     <Container>

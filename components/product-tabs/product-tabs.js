@@ -1,18 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import clsx from 'clsx';
 import data from './mock-data';
-import Wysiwyg from '@components/wysiwig/wysiwig';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './product-tabs.module.scss';
 
 export default function ProductTabs() {
   const [activeTab, setActiveTab] = useState('features');
 
-  const handleTabClick = tab => {
+  const handleTabClick = useCallback(tab => {
     setActiveTab(tab);
-  };
+  }, []);
 
   return (
     <div className={styles.tabs}>

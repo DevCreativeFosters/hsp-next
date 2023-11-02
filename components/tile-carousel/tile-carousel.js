@@ -85,7 +85,7 @@ export default function TileCarousel({
   useEffect(
     function addTouchListeners() {
       const el = carouselRef.current;
-      if (isEnabled && carouselRef.current) {
+      if (isEnabled && el) {
         el.addEventListener('touchstart', onTouchStart);
         el.addEventListener('touchmove', onTouchMove, { passive: true });
         el.addEventListener('touchend', onTouchEnd);

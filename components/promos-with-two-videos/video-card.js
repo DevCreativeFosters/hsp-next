@@ -27,7 +27,7 @@ export default function VideoCard({ idx, url, name, price, productUrl }) {
     observer.observe(videoElement);
 
     return () => observer.unobserve(videoElement);
-  }, []);
+  }, [videoRef]);
 
   return (
     <Link

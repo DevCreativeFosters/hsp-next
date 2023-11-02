@@ -2,7 +2,7 @@ import routes from '@lib/routes';
 import Image from 'next/image';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import Wysiwyg from '@components/wysiwig/wysiwig';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import RelatedPosts from '@components/related-posts/related-posts';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
 import { getBlogPost, getBlogPosts } from '@lib/api';

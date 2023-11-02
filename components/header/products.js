@@ -22,7 +22,7 @@ function Products({ isActive, categories, products }, ref) {
             All
           </Button>
         </li>
-        {categories.map(({ databaseId, name }) => (
+        {categories?.map(({ databaseId, name }) => (
           <li className={styles.filterItem} key={databaseId}>
             <Button
               variant={
@@ -38,7 +38,7 @@ function Products({ isActive, categories, products }, ref) {
 
       <ul className={styles.productList}>
         {products
-          .filter(({ categoryId }) =>
+          ?.filter(({ categoryId }) =>
             currentCategoryId ? categoryId === currentCategoryId : true,
           )
           .map(({ title, url, image }, index) => (

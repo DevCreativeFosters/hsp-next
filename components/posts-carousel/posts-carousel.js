@@ -11,7 +11,7 @@ import styles from './posts-carousel.module.scss';
 
 export default function PostsCarousel({ title, description, button, posts }) {
   const isMobile = useIsMobile();
-  let swiperRef = useRef(null);
+  const swiperRef = useRef(null);
 
   const groupSize = isMobile ? 1 : 3;
   const groupedPosts = useMemo(() => {

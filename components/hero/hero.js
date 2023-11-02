@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { clsx } from 'clsx';
+import { useIsMobile } from '@hooks/useIsMobile';
 import Container from '@components/container/container';
 import Button from '@components/button/button';
 
@@ -15,26 +16,9 @@ const MIN_SWIPE_THRESHOLD = 50;
 
 export default function Hero({ slides }) {
   const heroRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(null);
+  const isMobile = useIsMobile();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
-
-  const handleResize = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
-  useEffect(handleResize);
-
-  useEffect(
-    function syncIsMobile() {
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    },
-    [handleResize],
-  );
 
   const handleNextSlide = useCallback(() => {
     setCurrentSlideIndex(prevIndex => (prevIndex + 1) % slides.length);
@@ -46,9 +30,9 @@ export default function Hero({ slides }) {
     );
   }, [slides.length]);
 
-  const handleSwipeStart = e => {
+  const handleSwipeStart = useCallback(e => {
     setTouchStartX(e.touches[0].clientX);
-  };
+  }, []);
 
   const handleSwipeMove = useCallback(
     e => {
@@ -68,28 +52,13 @@ export default function Hero({ slides }) {
     [handleNextSlide, handlePreviousSlide, touchStartX],
   );
 
-  const handleSwipeEnd = () => {
+  const handleSwipeEnd = useCallback(() => {
     setTouchStartX(null);
-  };
+  }, []);
 
-  useEffect(() => {
-    const heroRefCurrent = heroRef.current;
-    if (!heroRefCurrent) return;
-
-    heroRefCurrent.addEventListener('touchstart', handleSwipeStart);
-    heroRefCurrent.addEventListener('touchmove', handleSwipeMove);
-    heroRefCurrent.addEventListener('touchend', handleSwipeEnd);
-
-    return () => {
-      heroRefCurrent.removeEventListener('touchstart', handleSwipeStart);
-      heroRefCurrent.removeEventListener('touchmove', handleSwipeMove);
-      heroRefCurrent.removeEventListener('touchend', handleSwipeEnd);
-    };
-  }, [handleSwipeMove]);
-
-  const handleSlideChange = index => {
+  const handleSlideChange = useCallback(index => {
     setCurrentSlideIndex(index);
-  };
+  }, []);
 
   const currentSlide = slides[currentSlideIndex];
   const backgroundImage = currentSlide.backgroundImage;
@@ -123,7 +92,13 @@ export default function Hero({ slides }) {
   const HERO_MAX_HEIGHT = 820; // should match CSS styles.hero max-height
 
   return (
-    <div ref={heroRef} className={styles.hero}>
+    <div
+      ref={heroRef}
+      className={styles.hero}
+      onTouchStart={handleSwipeStart}
+      onTouchMove={handleSwipeMove}
+      onTouchEnd={handleSwipeEnd}
+    >
       {backgroundImage?.sourceUrl && (
         <div className={styles.backgroundImageWrapper}>
           <Image
