@@ -4,7 +4,7 @@ import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
-import Wysiwyg from '@components/wysiwig/wysiwig';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
 import styles from './page.module.scss';
 import PageGrid from '@components/page-grid/page-grid';

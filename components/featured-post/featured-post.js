@@ -1,12 +1,11 @@
 'use client';
 
+import { useRef } from 'react';
 import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
-import { useRef, useEffect } from 'react';
-
+import { useIsMobile } from '@hooks/useIsMobile';
 import Tag from '@components/tag/tag';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
-import { useIsMobile } from '@hooks/useIsMobile';
 import styles from './featured-post.module.scss';
 
 export default function FeaturedPost({

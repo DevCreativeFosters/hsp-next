@@ -1,7 +1,7 @@
 'use client';
 
 import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 
 import Container from '@components/container/container';
 import Button from '@components/button/button';

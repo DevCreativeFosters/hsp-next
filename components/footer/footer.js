@@ -1,7 +1,7 @@
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 import Logo from '@images/logo.svg';
 import styles from './footer.module.scss';
-import Container from '@components/container/container';
 
 export default function Footer({ menus, text }) {
   const year = new Date().getFullYear();

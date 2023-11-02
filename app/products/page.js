@@ -12,7 +12,7 @@ export const metadata = {
 export default async function ProductsPage() {
   const content = await getPageData('products');
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
-  const mainProductCategories = await getMainProductCategories();
+  const mainProductCategories = (await getMainProductCategories()) || [];
 
   return (
     <Layout>
