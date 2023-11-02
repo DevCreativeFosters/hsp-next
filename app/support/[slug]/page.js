@@ -6,10 +6,10 @@ import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
-import styles from './page.module.scss';
 import PageGrid from '@components/page-grid/page-grid';
 import PageContainer from '@components/page-container/page-container';
 import Sidebar from '@components/sidebar/sidebar';
+import styles from './page.module.scss';
 
 export const metadata = {
   title: 'HSP 4x4 - Support',
