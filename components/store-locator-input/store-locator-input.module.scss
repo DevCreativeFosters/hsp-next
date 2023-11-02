@@ -9,19 +9,23 @@
 }
 
 .input {
-  background: var(--color-black-100);
+  width: 100%;
+  padding: 7px 16px;
   border: 2px solid var(--color-white-20);
   border-radius: 8px;
-  width: 100%;
-  padding: 7px 24px;
   color: var(--color-white-100);
   font-family: var(--font-secondary);
   font-size: 24px;
   font-weight: 600;
   line-height: 1;
-  outline: none;
-  transition: var(--transition);
   text-overflow: ellipsis;
+  outline: none;
+  background: transparent;
+  transition: var(--transition);
+
+  @include bp(small) {
+    padding: 7px 24px;
+  }
 
   &.withIcon {
     padding-right: 40px;
@@ -29,6 +33,10 @@
 
   &.withIcon.withReset {
     padding-right: 95px;
+  }
+
+  &.withIcon.withReset[value=''] {
+    padding-right: 44px;
   }
 
   &::placeholder {
@@ -45,6 +53,13 @@
   &:not([value='']):focus {
     background: var(--color-white-20);
   }
+}
+
+.label {
+  display: block;
+  margin: 8px 0 8px 12px;
+  color: var(--color-white-60);
+  font-size: 14px;
 }
 
 .eventLabel {
@@ -90,6 +105,10 @@
   height: 44px;
   color: white;
   transform: translateY(-50%);
+
+  &[disabled] {
+    display: none;
+  }
 
   &::before {
     content: '';

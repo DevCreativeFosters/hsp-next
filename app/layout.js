@@ -46,7 +46,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   return (
     <html lang="en" className={clsx(hind.variable, khand.variable)}>
-      <body className="" data-react-helmet="class">
+      <body className="" data-rh="class">
         {children}
       </body>
     </html>

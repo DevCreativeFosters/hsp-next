@@ -3,8 +3,8 @@ import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
-import Search from '@components/store-locator-search/search';
-import ResultsAndMap from '@components/store-locator-search/results-and-map';
+import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
+import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './page.module.scss';
 
@@ -35,8 +35,8 @@ export default async function StoreLocatorPage() {
       </FullscreenCollapse>
 
       <StoreLocatorProvider>
-        <Search />
-        <ResultsAndMap />
+        <StoreLocatorSearch />
+        <StoreLocatorResultsAndMap />
       </StoreLocatorProvider>
     </Layout>
   );

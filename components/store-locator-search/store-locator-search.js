@@ -1,34 +1,29 @@
 'use client';
 
-import { findLocationsInRadius } from '@lib/store-locations';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
+import { findLocationsInRadius } from '@lib/store-locations';
+import {
+  getPlaceDetails,
+  getPlaceSuggestions,
+  stringifySuggestion,
+} from '@lib/google-place';
 import useMobileVh from '@hooks/useMobileVh';
 import { useIsMobile } from '@hooks/useIsMobile';
 import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
-import Input from './input';
-import Suggestions from './suggestions';
-import ResultsInline from './results-inline';
-import ResultItem from './result-item';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
+import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
+import StoreTile from '@components/store-tile/store-tile';
 import ArrowForwardIcon from '@assets/material-icons/arrow-forward.svg';
 
-import styles from './search.module.scss';
+import styles from './store-locator-search.module.scss';
 
-function stringifySuggestion(suggestion) {
-  return suggestion.structured_formatting?.main_text;
-}
-
-const FETCH_CONFIG = {
-  method: 'GET',
-  credentials: 'same-origin',
-  headers: { 'Content-Type': 'application/json' },
-};
-
-export default function Search() {
+export default function StoreLocatorSearch() {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -60,56 +55,26 @@ export default function Search() {
     setIsFormValid(formRef.current?.checkValidity());
   }, []);
 
-  const getSuggestions = useCallback(
-    async searchString => {
-      const url = '/api/place-autocomplete';
-      const params = [`q=${searchString}`, `sessiontoken=${sessionToken}`]
-        .filter(Boolean)
-        .join('&');
-      try {
-        const response = await fetch(`${url}?${params}`, FETCH_CONFIG);
-        const responseResolved = await response.json();
-        return responseResolved?.predictions;
-      } catch (err) {
-        console.log('err', err);
-      }
-    },
-    [sessionToken],
-  );
-
-  const getDetails = useCallback(
-    async placeId => {
-      const url = '/api/place-details';
-      const params = [`place_id=${placeId}`, `sessiontoken=${sessionToken}`]
-        .filter(Boolean)
-        .join('&');
-      try {
-        const response = await fetch(`${url}?${params}`, FETCH_CONFIG);
-        return await response.json();
-      } catch (err) {
-        console.log('err', err);
-      }
-    },
-    [sessionToken],
-  );
-
   const selectLocation = useCallback(
     async suggestion => {
       setLocation(suggestion);
       setLocationInput(suggestion.structured_formatting.main_text);
       const placeId = suggestion.place_id;
       setSuggestions([]);
-      const placeDetails = await getDetails(placeId);
+      const placeDetails = await getPlaceDetails(placeId, sessionToken);
       const geolocation = placeDetails?.result?.geometry?.location;
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
     },
-    [getDetails, setSearchGeolocation],
+    [setSearchGeolocation, sessionToken],
   );
 
-  const onRadiusChange = useCallback(value => {
-    setRadius(value);
-  }, []);
+  const onRadiusChange = useCallback(
+    value => {
+      setRadius(value);
+    },
+    [setRadius],
+  );
 
   const goBack = useCallback(() => {
     if (viewMode === 'RESULT') {
@@ -129,7 +94,10 @@ export default function Search() {
       if (locationInput) {
         if (!location || stringifySuggestion(location) !== locationInput) {
           const fetchSuggestions = async () => {
-            const predictions = await getSuggestions(locationInput);
+            const predictions = await getPlaceSuggestions(
+              locationInput,
+              sessionToken,
+            );
             if (isMounted) {
               setSuggestions(predictions);
             }
@@ -144,7 +112,7 @@ export default function Search() {
         isMounted = false;
       };
     },
-    [locationInput, location, getSuggestions],
+    [locationInput, location, sessionToken],
   );
 
   useEffect(
@@ -207,7 +175,7 @@ export default function Search() {
             autoComplete="off"
           >
             <div className={styles.searchPhraseWrapper}>
-              <Input
+              <StoreLocatorInput
                 type="text"
                 name="location"
                 placeholder="[ Search location ]"
@@ -225,13 +193,14 @@ export default function Search() {
                 required
               />
 
-              <Suggestions
+              <StoreLocatorSuggestions
                 items={suggestions}
                 selectLocation={selectLocation}
               />
             </div>
 
             <Select
+              id="search-radius"
               className={styles.radius}
               size="large"
               placeholder="[ Select radius ]"
@@ -244,7 +213,7 @@ export default function Search() {
             />
 
             <div className={styles.mobileOnly}>
-              <ResultsInline
+              <StoreList
                 items={filteredLocations}
                 show={isInlineResultListVisible}
                 onSelect={item => {
@@ -276,7 +245,7 @@ export default function Search() {
 
         <div className={styles.viewContent}>
           <div className={styles.singleResult}>
-            {currentResult && <ResultItem item={currentResult} />}
+            {currentResult && <StoreTile item={currentResult} />}
             <div className={styles.buttonWrapper}>
               <Button
                 variant="quaternary"

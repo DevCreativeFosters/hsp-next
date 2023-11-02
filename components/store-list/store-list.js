@@ -1,6 +1,10 @@
-import styles from './results-inline.module.scss';
+import clsx from 'clsx';
+import useMobileVh from '@hooks/useMobileVh';
+import styles from './store-list.module.scss';
 
-export default function ResultsInline({ items, show, onSelect }) {
+export default function StoreList({ className, items, show, onSelect }) {
+  useMobileVh();
+
   if (show && items?.length === 0) {
     return <div>Sorry, there are no results for given location and radius</div>;
   }
@@ -8,7 +12,7 @@ export default function ResultsInline({ items, show, onSelect }) {
   if (!items?.length > 0 || !show) return null;
 
   return (
-    <div className={styles.listWrapper}>
+    <div className={clsx(styles.listWrapper, className)}>
       <ul className={styles.list}>
         {items.map((item, index) => {
           const { name, location, address } = item;

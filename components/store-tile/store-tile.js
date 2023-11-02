@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
-import { getHash } from './results-and-map';
 import { getIcon } from '@lib/icons';
+import { getGeoHash } from '@lib/get-geo-hash';
 import Button from '@components/button/button';
 
 import TypeAgentImage from '@assets/images/type-agent.webp';
@@ -11,12 +11,12 @@ import TypeStoreImage from '@assets/images/type-store.webp';
 import TypeDistributorImage from '@assets/images/type-distributor.webp';
 import TypeHSPImage from '@assets/images/type-hsp.webp';
 
-import styles from './result-item.module.scss';
+import styles from './store-tile.module.scss';
 
 const LocationIcon = getIcon('location');
 const PhoneIcon = getIcon('phone');
 
-export default function ResultItem({
+export default function StoreTile({
   item: {
     name,
     location: { street, city, stateAbbr, postalCode, country },
@@ -44,7 +44,7 @@ export default function ResultItem({
       break;
   }
 
-  const geoHash = getHash(geolocation);
+  const geoHash = getGeoHash(geolocation);
   const telNormalized = tel.replaceAll(/([^0-9+])/gi, '');
 
   const { lat, lng } = geolocation;
@@ -68,7 +68,7 @@ export default function ResultItem({
 
   return (
     <li
-      className={clsx(styles.resultItem, { [styles.isSelected]: selected })}
+      className={clsx(styles.tile, { [styles.isSelected]: selected })}
       id={geoHash}
     >
       <div className={styles.nameContainer}>

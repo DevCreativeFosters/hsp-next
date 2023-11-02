@@ -94,30 +94,3 @@
   padding: 0;
   margin: 0;
 }
-
-.mapWrapper {
-  position: relative;
-  flex-grow: 1;
-  border-radius: 16px;
-  border: 4px solid #3a3a3a;
-  z-index: var(--z-index-component);
-  background: black;
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    inset: -2px;
-    border: 2px solid black;
-    border-radius: inherit;
-    pointer-events: none;
-  }
-}
-
-.map {
-  position: absolute;
-  z-index: -1;
-  inset: -1px;
-  border-radius: inherit;
-  overflow: hidden;
-}

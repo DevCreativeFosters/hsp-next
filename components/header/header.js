@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Link from 'next/link';
 import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
@@ -38,9 +38,11 @@ export default function Header({
 
   return (
     <>
-      <Helmet>
-        <body className={isMobileMenuActive ? 'lock-scroll' : null} />
-      </Helmet>
+      <HelmetProvider>
+        <Helmet>
+          <body className={isMobileMenuActive ? 'lock-scroll' : null} />
+        </Helmet>
+      </HelmetProvider>
 
       <header className={styles.header} ref={headerRef}>
         <FullscreenCollapse className={styles.headerInner}>

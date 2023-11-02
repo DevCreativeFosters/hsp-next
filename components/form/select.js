@@ -2,14 +2,17 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import clsx from 'clsx';
+import { v4 as uuidv4 } from 'uuid';
 import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/material-icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
 
 export default function Select({
   className,
+  id = '',
   size = 'small',
   background = 'dark',
+  label = '',
   errorMessage = '',
   placeholder = '',
   options = [],
@@ -26,6 +29,8 @@ export default function Select({
     () => options.find(option => option.value === selectedValue),
     [options, selectedValue],
   );
+
+  const [elementId] = useState(id || uuidv4());
 
   const handleClickOutside = () => {
     setOpen(false);
@@ -58,7 +63,14 @@ export default function Select({
           [styles.isOpen]: isOpen,
         })}
       >
+        {label && (
+          <label htmlFor={elementId} className={styles.label}>
+            {label}
+          </label>
+        )}
+
         <button
+          id={elementId}
           ref={triggerRef}
           type="button"
           className={clsx(styles.trigger, {
@@ -74,7 +86,7 @@ export default function Select({
           }}
         >
           {selectedOption?.label || selectedOption?.value !== undefined ? (
-            <div>
+            <div className={styles.value}>
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
               {selectedOption.label || selectedOption.value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
@@ -104,7 +116,7 @@ export default function Select({
               data-value={value !== undefined ? value : label}
             >
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
-              {value}
+              {label || value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
             </button>
           ))}
