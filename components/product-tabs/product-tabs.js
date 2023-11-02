@@ -49,8 +49,8 @@ export default function ProductTabs({
                 featuresBoxes.map(feature => (
                   <div
                     className={clsx(styles.featureItem, {
-                      [styles.videoFeature]: feature.videoRight,
-                      [styles.imageFeature]: feature.imageBottom,
+                      [styles.videoFeature]: feature.video,
+                      [styles.imageFeature]: feature.image,
                     })}
                     key={feature.title}
                   >
@@ -70,7 +70,7 @@ export default function ProductTabs({
                         />
                       </div>
                     </div>
-                    {feature.videoRight && (
+                    {feature.video && (
                       <video
                         className={styles.video}
                         width="230"
@@ -79,16 +79,16 @@ export default function ProductTabs({
                         muted
                       >
                         <source
-                          src={feature.videoRight.mediaItemUrl || ''}
+                          src={feature.video.mediaItemUrl || ''}
                           type="video/mp4"
                         />
                         Your browser does not support the video tag.
                       </video>
                     )}
-                    {feature.imageBottom && (
+                    {feature.image && (
                       <Image
                         className={styles.image}
-                        src={feature.imageBottom.mediaItemUrl || ''}
+                        src={feature.image.mediaItemUrl || ''}
                         width={636}
                         height={166}
                         alt=""
