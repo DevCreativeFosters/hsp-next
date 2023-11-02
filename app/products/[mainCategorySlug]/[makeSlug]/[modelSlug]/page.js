@@ -1,10 +1,14 @@
+import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
+import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
+import ProductTabs from '@components/product-tabs/product-tabs';
 import {
   getMainProductCategory,
   getMake,
   getProductsByCategoriesSlugs,
 } from '@lib/api';
+import styles from './page.module.scss';
 
 export default async function CategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
@@ -18,7 +22,7 @@ export default async function CategoryPage({ params }) {
     modelSlug,
   );
   const firstMatchedProduct = products.length ? products[0] : null;
-  console.log(params);
+
   if (!firstMatchedProduct) {
     return (
       <Layout title="Product">
@@ -27,13 +31,57 @@ export default async function CategoryPage({ params }) {
     );
   }
 
+  const images = firstMatchedProduct?.productFields.images.map(
+    (item, index) => {
+      return {
+        sourceUrl: item.image.mediaItemUrl,
+        alt: index === 0 ? 'mainImage' : '',
+        mainImage: index === 0,
+      };
+    },
+  );
+
   return (
     <Layout title="Product">
       <Container>
-        <h1>{mainCategory.name}</h1>
-        <h2>
-          {make.name} {firstMatchedProduct?.title}
-        </h2>
+        <Breadcrumbs
+          withContainer={true}
+          items={[
+            {
+              label: 'Product',
+              url: '/',
+            },
+            {},
+          ]}
+        />
+        <div className={styles.header}>
+          <ProductImageCarousel images={images} />
+          <div className={styles.details}>
+            <h1 className={styles.name}>
+              {mainCategory.name} <br />
+              <span className={styles.variant}>
+                {make.name} {firstMatchedProduct?.title}
+              </span>
+            </h1>
+            {firstMatchedProduct?.productFields.description && (
+              <p className={styles.description}>
+                {firstMatchedProduct?.productFields.description}
+              </p>
+            )}
+          </div>
+        </div>
+        <ProductTabs
+          featuresDescription={
+            firstMatchedProduct?.productFields.featuresDescription
+          }
+          featuresBoxes={firstMatchedProduct?.productFields.featuresBoxes}
+          specificationDescription={
+            firstMatchedProduct?.productFields.specificationDescription
+          }
+          specificationContent={
+            firstMatchedProduct?.productFields.specification
+          }
+        />
       </Container>
     </Layout>
   );
