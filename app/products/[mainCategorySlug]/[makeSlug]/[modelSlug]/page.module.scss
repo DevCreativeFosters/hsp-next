@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include bp(large) {
+    flex-direction: row;
+  }
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include bp(large) {
+    gap: 48px;
+  }
+}
+
+.name {
+  line-height: 1.25;
+}
+
+.variant {
+  color: var(--color-primary-100);
+}
+
+.description {
+  color: var(--color-white-80);
+  font-size: 24px;
+}

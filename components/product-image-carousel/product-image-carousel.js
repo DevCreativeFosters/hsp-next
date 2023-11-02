@@ -6,11 +6,11 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Button from '@components/button/button';
-import images from './mock-data';
+// import images from './mock-data';
 import 'swiper/css';
 import styles from './product-image-carousel.module.scss';
 
-export default function ProductImageCarousel() {
+export default function ProductImageCarousel({ images }) {
   const isMobile = useIsMobile();
   const swiperRef = useRef(null);
   const swiperHeightRef = useRef(null);
@@ -25,6 +25,7 @@ export default function ProductImageCarousel() {
     backgroundImage: `url(${selectedImage.sourceUrl})`,
     backgroundSize: zoomed ? '250%' : 'cover',
     backgroundPosition: backgroundPosition,
+    backgroundRepeat: 'no-repeat',
   };
 
   const handleZoomEnter = useCallback(() => {
