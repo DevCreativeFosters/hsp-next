@@ -14,7 +14,9 @@ export default function ProductImageCarousel({ images }) {
   const isMobile = useIsMobile();
   const swiperRef = useRef(null);
   const swiperHeightRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(
+    images?.length ? images[0] : null,
+  );
   const [swiperSlides, setSwiperSlides] = useState(null);
   const [navigationPosition, setNavigationPosition] = useState(0);
   const [backgroundPosition, setBackgroundPosition] = useState('50% 50%');
@@ -22,7 +24,7 @@ export default function ProductImageCarousel({ images }) {
   const mainImageContainerRef = useRef(null);
 
   const containerStyle = {
-    backgroundImage: `url(${selectedImage.sourceUrl})`,
+    backgroundImage: selectedImage ? `url(${selectedImage.sourceUrl})` : 'none',
     backgroundSize: zoomed ? '250%' : 'cover',
     backgroundPosition: backgroundPosition,
     backgroundRepeat: 'no-repeat',

@@ -50,7 +50,7 @@ function Breadcrumbs({ items }) {
       <div className={clsx(styles.container, styles.short)}>
         {singleBreadcrumb && (
           <Link
-            href={singleBreadcrumb.url}
+            href={singleBreadcrumb.url || '#'}
             className={clsx(styles.itemLink, styles.strong)}
           >
             <span className={styles.prevSymbol} />
@@ -69,7 +69,7 @@ function Breadcrumbs({ items }) {
           } else if (item?.type === 'button') {
             return (
               <Button
-                href={item.url || null}
+                href={item.url || '#'}
                 size="xsmall"
                 variant="secondary"
                 disabled={item.disabled}
@@ -82,7 +82,7 @@ function Breadcrumbs({ items }) {
           } else if (item?.label) {
             return (
               <Link
-                href={item.url}
+                href={item.url || '#'}
                 className={clsx(styles.itemLink, {
                   [styles.strong]: item.strong,
                 })}
