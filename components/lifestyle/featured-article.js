@@ -32,7 +32,7 @@ export default function FeaturedArticle({
         <Image
           className={styles.image}
           src={image?.sourceUrl}
-          alt={image?.altText}
+          alt={image?.altText || ''}
           fill={true}
         />
       ) : (

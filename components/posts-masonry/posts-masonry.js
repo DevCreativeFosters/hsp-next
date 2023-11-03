@@ -28,7 +28,7 @@ export default function PostsMasonry({ title, description, button, posts }) {
         )}
       </div>
       {isMobile ? (
-        <div class={styles.carousel}>
+        <div className={styles.carousel}>
           <TileCarousel items={posts} itemTemplate={Tile} />
         </div>
       ) : (

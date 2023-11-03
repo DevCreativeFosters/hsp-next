@@ -46,7 +46,7 @@ export default function CategoriesAndProducts({ data }) {
                     product.imageCoverContain === 'contain',
                 })}
                 src={product.productImage?.sourceUrl}
-                alt={product.productImage?.altText}
+                alt={product.productImage?.altText || ''}
                 width={570}
                 height={162}
               />

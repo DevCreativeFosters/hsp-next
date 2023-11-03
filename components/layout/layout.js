@@ -1,9 +1,11 @@
+import Image from 'next/image';
 import {
   getFooterMenus,
   getGlobalOptions,
   getMenu,
   getMenuDropdownProducts,
   getMainProductCategories,
+  getAllMakes,
 } from '@lib/api';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
@@ -14,7 +16,6 @@ import normalizeProductData from '@lib/normalize-product-data';
 import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
 import BgContinent from '@assets/images/bg-continent.png';
-import Image from 'next/image';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './layout.module.scss';
 
@@ -25,6 +26,7 @@ async function getLayoutData() {
   const mobileMenu = await getMenu('mobile-navigation');
   const productCategories = await getMainProductCategories();
   const products = await getMenuDropdownProducts();
+  const makes = await getAllMakes();
 
   return {
     globalOptions,
@@ -33,6 +35,7 @@ async function getLayoutData() {
     mobileMenu,
     productCategories,
     products,
+    makes,
   };
 }
 
@@ -93,6 +96,7 @@ export default function Layout({ withMap, withFooter = true, children }) {
         mobileMenu={normalizedMobileMenu}
         productCategories={data.productCategories}
         products={normalizedProductData}
+        makes={data.makes}
       />
       <main className={styles.main}>
         {withMap && (

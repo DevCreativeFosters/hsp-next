@@ -16,6 +16,7 @@
 }
 
 .grid {
+  position: relative;
   display: grid;
   grid-template-areas: 'hamburger logo spacer call';
   grid-template-columns: 0fr 108px 10fr 40px;
@@ -150,15 +151,30 @@
 }
 
 .vehicleSelection {
-  display: none;
+  position: absolute;
+  bottom: -40px;
+  margin-left: 50%;
+  transform: translateX(-50%);
 
   @include bp(large) {
     @include center;
 
+    position: relative;
+    transform: initial;
+    margin-left: 0;
+    bottom: 0;
     grid-area: vehicle;
     justify-self: flex-end;
     gap: 16px;
     white-space: nowrap;
     color: white;
+  }
+}
+
+.vehicleText {
+  display: none;
+
+  @include bp(large) {
+    display: block;
   }
 }

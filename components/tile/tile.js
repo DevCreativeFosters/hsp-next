@@ -46,11 +46,11 @@ export default function Tile({
 
   const TheImage = useMemo(
     () =>
-      image ? (
+      image?.sourceUrl ? (
         <Image
           className={styles.image}
-          src={image?.sourceUrl}
-          alt={image?.altText}
+          src={image.sourceUrl}
+          alt={image.altText || ''}
           fill={true}
         />
       ) : (

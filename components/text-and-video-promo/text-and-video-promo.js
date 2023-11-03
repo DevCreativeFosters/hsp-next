@@ -3,7 +3,7 @@ import Button from '@components/button/button';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
-import styles from './text-and-image-promo.module.scss';
+import styles from './text-and-video-promo.module.scss';
 
 export default function TextAndImagePromo({
   title,
