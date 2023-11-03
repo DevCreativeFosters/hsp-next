@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import styles from './product-card.module.scss';
 import Link from 'next/link';
+import styles from './product-card.module.scss';
 
 export default function ProductCard({ product }) {
   const productLink = product.link?.url;

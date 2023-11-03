@@ -11,6 +11,7 @@ import HamburgerButton from '@components/hamburger-button/hamburger-button';
 import Logo from '@assets/images/logo.svg';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './header.module.scss';
+import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
 
 export default function Header({
   mainMenu,
@@ -19,6 +20,7 @@ export default function Header({
   mobileMenu,
   productCategories,
   products,
+  makes,
 }) {
   const headerRef = useRef(null);
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
@@ -79,7 +81,8 @@ export default function Header({
                         variant="tertiary"
                         background="dark"
                         toggleable={
-                          subItems?.length > 0 || subItemGroups?.length > 0
+                          (subItems?.length > 0 || subItemGroups?.length > 0) &&
+                          url === ''
                             ? 'neutral'
                             : null
                         }
@@ -135,8 +138,8 @@ export default function Header({
             <MobileMenu items={mobileMenu} isMenuActive={isMobileMenuActive} />
 
             <div className={styles.vehicleSelection}>
-              My vehicle
-              <Button variant="primary">Choose</Button>
+              <span className={styles.vehicleText}>My vehicle:</span>
+              <ChooseYourVehicle makes={makes} />
             </div>
           </div>
 

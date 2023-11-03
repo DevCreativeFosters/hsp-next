@@ -1,13 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 
-export function useIsMobile() {
+export function useIsMobile(breakpointWidth) {
   const [isMobile, setIsMobile] = useState(false);
+  const screenWidth = breakpointWidth || 768;
 
   const handleResize = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
+    setIsMobile(window.innerWidth < screenWidth);
+  }, [screenWidth]);
 
-  useEffect(handleResize);
+  useEffect(() => {
+    handleResize();
+  }, []);
 
   useEffect(
     function syncIsMobile() {

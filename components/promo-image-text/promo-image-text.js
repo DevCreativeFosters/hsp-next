@@ -16,7 +16,7 @@ export default function PromoImageText({ title, description, image }) {
           <Image
             className={styles.image}
             src={image?.sourceUrl}
-            alt={image?.altText}
+            alt={image?.altText || ''}
             width={isMobile ? 342 : isMediumWidth ? 342 : 634}
             height={isMobile ? 293 : isMediumWidth ? 435 : 750}
           />

@@ -39,7 +39,7 @@ export default async function BlogPost({ params }) {
                 className={styles.featuredImage}
                 src={image?.sourceUrl}
                 fill={true}
-                alt={image?.altText}
+                alt={image?.altText || ''}
               />
             </div>
           )}
