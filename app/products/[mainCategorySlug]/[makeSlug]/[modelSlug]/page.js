@@ -1,11 +1,13 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
-import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
 import EnquiryForm from 'components/enquiry-form/enquiry-form';
+import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
 import {
+  getCategoriesAndMakesAndModels,
   getMainProductCategory,
   getMake,
   getProductsByCategoriesSlugs,
@@ -25,6 +27,24 @@ export default async function CategoryPage({ params }) {
   );
   const firstMatchedProduct = products.length ? products[0] : null;
 
+  const currentProduct = {
+    mainCategory: {
+      label: mainCategory.name,
+      value: mainCategorySlug,
+    },
+    make: {
+      label: make.name,
+      value: makeSlug,
+    },
+    model: {
+      label: firstMatchedProduct?.title,
+      value: modelSlug,
+    },
+  };
+
+  const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
   if (!firstMatchedProduct) {
     return (
       <Layout title="Product">
@@ -33,7 +53,7 @@ export default async function CategoryPage({ params }) {
     );
   }
 
-  const images = firstMatchedProduct?.productFields.images.map(
+  const images = firstMatchedProduct?.productFields?.images?.map(
     (item, index) => {
       return {
         sourceUrl: item.image.mediaItemUrl,
@@ -46,15 +66,9 @@ export default async function CategoryPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
-        <Breadcrumbs
-          withContainer={true}
-          items={[
-            {
-              label: 'Product',
-              url: '/',
-            },
-            {},
-          ]}
+        <BreadcrumbsProduct
+          currentProduct={currentProduct}
+          categories={categories}
         />
         <div className={styles.header}>
           <ProductImageCarousel images={images} />

@@ -45,7 +45,7 @@ export default function ProductTabs({
               <p className={styles.description}>{featuresDescription}</p>
             )}
             <div className={styles.featuresContainer}>
-              {featuresBoxes.length > 0 &&
+              {featuresBoxes?.length > 0 &&
                 featuresBoxes.map(feature => (
                   <div
                     className={clsx(styles.featureItem, {

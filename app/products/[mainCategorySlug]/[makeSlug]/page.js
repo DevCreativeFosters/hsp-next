@@ -1,9 +1,12 @@
-import Image from 'next/image';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import PageContainer from '@components/page-container/page-container';
 import ProductHero from '@components/product-hero';
-import { getMake, getMainProductCategory } from '@lib/api';
+import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import {
+  getMainProductCategory,
+  getCategoriesAndMakesAndModels,
+  getMake } from '@lib/api';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 export default async function CategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
@@ -12,6 +15,7 @@ export default async function CategoryPage({ params }) {
   const featuredImage = mainCategoryDetails.featuredImage;
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);
+  const mainCategory = await getMainProductCategory(mainCategorySlug);
   const details = makeData.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory.slug === mainCategorySlug,
@@ -33,46 +37,44 @@ export default async function CategoryPage({ params }) {
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
   };
 
+  const currentProduct = {
+    mainCategory: {
+      label: mainCategory.name,
+      value: mainCategorySlug,
+    },
+    make: {
+      label: makeData.name,
+      value: makeSlug,
+    },
+    model: {
+      label: '',
+      value: '',
+    },
+  };
+
+  const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
   return (
     <Layout title="Product">
       <Container>
-        <PageContainer>
-          <ProductHero
-            make={makeData.name}
-            title={categoryData?.name}
-            description={makeData?.description || categoryData?.description}
-            image={productHeroData.image}
-            features={{
-              content: productHeroData.features,
-            }}
-            warranty={{
-              content: productHeroData.warrantyDescription,
-              years: productHeroData.warrantyTimePeriod,
-            }}
-          />
-        </PageContainer>
-        <h2>{makeData.name}</h2>
-        {filteredData?.featuredImage && (
-          <Image
-            src={filteredData.featuredImage.mediaItemUrl}
-            width={filteredData.featuredImage.mediaDetails.width}
-            height={filteredData.featuredImage.mediaDetails.height}
-            alt=""
-          />
-        )}
-        <div>
-          Features:{' '}
-          {filteredData?.features && (
-            <div dangerouslySetInnerHTML={{ __html: filteredData?.features }} />
-          )}
-        </div>
-        <div>From Price: {filteredData?.fromPrice}</div>
-        <div>
-          Warranty Time Period: {filteredData?.warranty?.warrantyTimePeriod}
-        </div>
-        <div>
-          Warranty Description: {filteredData?.warranty?.warrantyDescription}
-        </div>
+        <BreadcrumbsProduct
+          currentProduct={currentProduct}
+          categories={categories}
+        />
+        <ProductHero
+          make={makeData.name}
+          title={categoryData?.name}
+          description={makeData?.description || categoryData?.description}
+          image={productHeroData.image}
+          features={{
+            content: productHeroData.features,
+          }}
+          warranty={{
+            content: productHeroData.warrantyDescription,
+            years: productHeroData.warrantyTimePeriod,
+          }}
+        />
       </Container>
     </Layout>
   );
