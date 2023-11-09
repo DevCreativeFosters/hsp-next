@@ -1,12 +1,30 @@
 .post {
+  position: relative;
+
   @include bp(large) {
     display: grid;
     grid-gap: 0 48px;
     grid-template-columns: 4fr 8fr;
     grid-template-areas:
-      'breadcrumbArea featuredImage'
-      'infoArea featuredImage'
+      'infoArea contentArea'
       'infoArea contentArea';
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column-reverse;
+
+  @include bp(medium) {
+    flex-direction: column;
+  }
+}
+
+.headerIntroduction {
+  padding: 0 20px;
+
+  @include bp(large) {
+    padding: 0;
   }
 }
 
@@ -37,39 +55,30 @@
   object-position: center center;
 }
 
-.information {
-  grid-area: infoArea;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
-  @include bp(large) {
-    padding: 0;
-    gap: 48px;
-  }
-}
-
 .title {
   font-family: var(--font-secondary);
   font-size: 48px;
   line-height: 1.33;
+  margin: 0 0 24px;
 
   @include bp(large) {
     font-size: 64px;
     line-height: 1.25;
+    margin: 0 0 48px;
   }
 }
 
-.excerpt {
+.description {
   color: var(--color-white-80);
   font-family: var(--font-primary);
   font-size: 20px;
   font-weight: 400;
+  margin: 0 0 48px;
 
   @include bp(large) {
     font-size: 24px;
     line-height: 1.41;
+    margin: 0;
   }
 
   > :first-of-type {
@@ -78,15 +87,6 @@
 
   > :last-of-type {
     margin-bottom: 0;
-  }
-}
-
-.relatedPostsContainer {
-  display: none;
-
-  @include bp(large) {
-    display: block;
-    margin-top: 24px;
   }
 }
 
@@ -101,8 +101,41 @@
 
   @include bp(large) {
     padding: (48px + 16px) 48px 48px;
-    border-radius: 0 0 16px 16px;
+    border-radius: 16px;
     margin-top: -16px;
     background-color: var(--color-black-100);
   }
+}
+
+.information {
+  grid-area: infoArea;
+  padding: 24px;
+  display: none;
+  flex-direction: column;
+  gap: 24px;
+
+  @include bp(large) {
+    position: sticky;
+    top: 120px;
+    display: flex;
+    padding: 0;
+    gap: 48px;
+  }
+}
+
+.relatedPostsContainer {
+  display: none;
+
+  @include bp(large) {
+    display: block;
+    margin-top: 24px;
+  }
+}
+
+.stickyTitle {
+  font-size: 48px;
+}
+
+.relatedPostsContainerSticky {
+  margin: 0;
 }
