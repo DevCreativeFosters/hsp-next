@@ -13,11 +13,7 @@
 
 .header {
   display: flex;
-  flex-direction: column-reverse;
-
-  @include bp(medium) {
-    flex-direction: column;
-  }
+  flex-direction: column;
 }
 
 .headerIntroduction {
@@ -30,6 +26,14 @@
 
 .breadcrumbsContainer {
   grid-area: breadcrumbArea;
+}
+
+.breadcrumbs {
+  margin-top: 60px;
+
+  @include bp(medium) {
+    margin-top: 0;
+  }
 }
 
 .featuredImageContainer {
@@ -73,12 +77,11 @@
   font-family: var(--font-primary);
   font-size: 20px;
   font-weight: 400;
-  margin: 0 0 48px;
+  margin: 0;
 
   @include bp(large) {
     font-size: 24px;
     line-height: 1.41;
-    margin: 0;
   }
 
   > :first-of-type {
@@ -103,7 +106,11 @@
     padding: (48px + 16px) 48px 48px;
     border-radius: 16px;
     margin-top: -16px;
-    background-color: var(--color-black-100);
+    background: linear-gradient(
+      0deg,
+      var(--color-black-100) 70%,
+      rgb(24 22 22 / 100%) 100%
+    );
   }
 }
 
@@ -128,7 +135,6 @@
 
   @include bp(large) {
     display: block;
-    margin-top: 24px;
   }
 }
 
