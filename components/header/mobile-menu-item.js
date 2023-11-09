@@ -16,22 +16,43 @@ export default function MobileMenuItem({
 
     return (
       <ul className={styles.mobileMenuSubList}>
-        {subItems?.map(({ url, label, special }, j) => (
-          <li key={j}>
+        {subItems?.map((subItem, j) => (
+          <li key={subItem.url + j}>
             <Button
-              href={url}
-              size="large"
+              href={subItem.url}
+              size="small"
               variant="tertiary"
               background="dark"
               fontStyle={{
-                fontFamily: 'var(--font-primary)',
-                fontSize: '20px',
-                fontWeight: 400,
-                ...(special && { color: 'var(--color-primary-100)' }),
+                ...((subItem.special || !subItem.subItems) && {
+                  fontFamily: 'var(--font-primary)',
+                  fontSize: '20px',
+                  fontWeight: 400,
+                  marginLeft: 0,
+                }),
               }}
+              className={subItem.subItems ? styles.menuItemLabel : ''}
             >
-              {label}
+              {subItem.label}
             </Button>
+            {subItem.subItems?.map((item, index) => (
+              <div className={styles.submenuItemsMobile} key={item.url + index}>
+                <Button
+                  href={item.fontFamilyurl}
+                  size="small"
+                  variant="senary"
+                  background="dark"
+                  style={{
+                    fontFamily: 'var(--font-primary)',
+                    fontSize: '20px',
+                    fontWeight: 400,
+                    color: 'var(--color-white-100)',
+                  }}
+                >
+                  {item.label}
+                </Button>
+              </div>
+            ))}
           </li>
         ))}
       </ul>
@@ -67,7 +88,7 @@ export default function MobileMenuItem({
           <div ref={containerRef}>
             {renderSubItems(subItems)}
             {subItemGroups?.map(({ label, subItems }, index) => (
-              <div key={index}>
+              <div key={label + index}>
                 <div className={styles.groupLabel}>{label}</div>
                 {renderSubItems(subItems)}
               </div>

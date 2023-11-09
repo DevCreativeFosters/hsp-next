@@ -56,7 +56,7 @@ export default function Layout({ withMap, withFooter = true, children }) {
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
   const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
-  const normalizedProductData = normalizeProductData(data.products);
+  const normalizedProductData = normalizeProductData(data.productCategories);
   normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
 
   data.footerMenus?.forEach(menu => {

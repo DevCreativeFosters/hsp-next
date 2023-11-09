@@ -24,6 +24,15 @@
 .mobileMenuSubList {
   list-style: none;
   padding: 0 0 0 24px;
+
+  li {
+    &:first-child a {
+      color: var(--color-primary-100);
+    }
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 .groupLabel {
@@ -32,4 +41,16 @@
   font-family: var(--font-secondary);
   font-size: 16px;
   font-weight: 600;
+}
+
+.menuItemLabel {
+  color: var(--color-white-40);
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: -24px;
+}
+
+.submenuItemsMobile {
+  padding: 8px 0;
 }
