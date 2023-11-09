@@ -38,4 +38,8 @@
 
 .videos {
   padding: 0 30px;
+
+  @include bp(medium) {
+    padding: 0 15px 0 0;
+  }
 }
