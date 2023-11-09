@@ -24,6 +24,11 @@
 
 .contentArea {
   grid-area: contentArea;
+  margin-top: 60px;
+
+  @include bp(large) {
+    margin-top: 0;
+  }
 }
 
 .featuredImageContainer {
@@ -39,7 +44,7 @@
 
   @include bp(large) {
     aspect-ratio: 861/498;
-    border-radius: 0 0 0 16px;
+    border-radius: 16px 16px 0 0;
   }
 }
 
