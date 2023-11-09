@@ -22,12 +22,10 @@ function Products({ isActive, categories, products }, ref) {
             All
           </Button>
         </li>
-        {categories?.map(({ databaseId, name }) => (
-          <li className={styles.filterItem} key={databaseId}>
+        {categories?.map(({ id, name }) => (
+          <li className={styles.filterItem} key={id}>
             <Button
-              variant={
-                currentCategoryId === databaseId ? 'quaternary' : 'tertiary'
-              }
+              variant={currentCategoryId === id ? 'quaternary' : 'tertiary'}
               onClick={() => setCurrentCategoryId(id)}
             >
               {name}

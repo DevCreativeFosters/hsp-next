@@ -74,7 +74,7 @@ export default function Header({
               <ul className={styles.mainMenuList}>
                 {mainMenu?.map(
                   ({ label, url, subItems, subItemGroups, name }, index) => (
-                    <li key={index}>
+                    <li key={label + index}>
                       <Button
                         href={url}
                         size="small"
@@ -104,7 +104,7 @@ export default function Header({
             <nav className={styles.secondaryMenu}>
               <ul className={styles.secondaryMenuList}>
                 {secondaryMenu?.map(({ label, url, icon, variant }, index) => (
-                  <li key={index} className={styles.secondaryMenuItem}>
+                  <li key={label + index} className={styles.secondaryMenuItem}>
                     <Button
                       href={url}
                       size="xsmall"
@@ -122,7 +122,7 @@ export default function Header({
             <nav className={styles.socialMenu}>
               <ul className={styles.socialMenuList}>
                 {socialMenu?.map(({ url, icon }, index) => (
-                  <li key={index} className={styles.socialMenuItem}>
+                  <li key={url + index} className={styles.socialMenuItem}>
                     <Button
                       href={url}
                       size="small"
