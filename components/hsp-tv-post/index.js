@@ -30,6 +30,7 @@ export function HspTvPost({
           url: routes.tv(slug),
           strong: true,
         }}
+        className={styles.breadcrumbs}
       />
       <div className={styles.header}>
         {title && (

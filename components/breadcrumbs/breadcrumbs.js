@@ -21,7 +21,7 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items }) {
+function Breadcrumbs({ items, className }) {
   const itemsNormalized = items
     .map(item => ({
       ...item,
@@ -47,7 +47,7 @@ function Breadcrumbs({ items }) {
 
   return (
     <>
-      <div className={clsx(styles.container, styles.short)}>
+      <div className={clsx(styles.container, styles.short, className)}>
         {singleBreadcrumb && (
           <Link
             href={singleBreadcrumb.url || '#'}

@@ -8,6 +8,7 @@ import routes, { lifestyleRoutes } from '@lib/routes';
 export default function BreadcrumbsLifestyle({
   initialContentTypeRoute,
   exactBreadcrumb,
+  className,
 }) {
   const [contentTypeRoute, setContentTypeRoute] = useState(
     initialContentTypeRoute,
@@ -42,5 +43,5 @@ export default function BreadcrumbsLifestyle({
     contentTypeBreadcrumb,
     exactBreadcrumb,
   ].filter(Boolean);
-  return <Breadcrumbs items={breadcrumbs} />;
+  return <Breadcrumbs items={breadcrumbs} className={className} />;
 }
