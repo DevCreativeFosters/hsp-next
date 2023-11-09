@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from './video-tile.module.scss';
 
-export default function VideoTile({ celebrityPostsCustomFields }) {
+export default function VideoTile({ title, celebrityPostsCustomFields }) {
   const thumbnail = celebrityPostsCustomFields?.thumbnail;
   const video = celebrityPostsCustomFields?.video;
   const videoUrl = video?.mediaItemUrl;
@@ -57,7 +57,7 @@ export default function VideoTile({ celebrityPostsCustomFields }) {
         <source src={videoUrl} type={`video/${videoFormat}`} />
         Your browser does not support the video tag.
       </video>
-      <h5 className={styles.celebrity}>{video.title}</h5>
+      <h5 className={styles.celebrity}>{title}</h5>
     </div>
   );
 }
