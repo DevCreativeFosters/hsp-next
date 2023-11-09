@@ -4,7 +4,8 @@ import styles from './related-posts.module.scss';
 
 export default function RelatedPosts({ type = 'hsp_tv', posts, url }) {
   const title = type === 'blog' ? 'HSP Blog' : type === 'hsp-tv' && 'HSP TV';
-  const parentSlug = type === 'blog' ? '/blog' : type === 'hsp-tv' && '/hsp_tv';
+  const parentSlug =
+    type === 'blog' ? '/hsp-blog' : type === 'hsp-tv' && '/hsp-tv';
 
   return (
     <div className={styles.relatedPosts}>
