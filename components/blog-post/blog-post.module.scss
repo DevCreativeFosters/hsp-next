@@ -25,10 +25,6 @@
 .contentArea {
   grid-area: contentArea;
   margin-top: 60px;
-
-  @include bp(large) {
-    margin-top: 0;
-  }
 }
 
 .featuredImageContainer {
@@ -128,4 +124,10 @@
 .stickySidebar {
   grid-area: unset;
   height: min-content;
+}
+
+.breadcrumbsMobile {
+  @include bp(medium) {
+    display: none !important;
+  }
 }
