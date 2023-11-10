@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import routes from '@lib/routes';
@@ -8,8 +8,8 @@ import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-
 import Container from '@components/container/container';
 import RelatedPosts from '@components/related-posts/related-posts';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
-import styles from './blog-post.module.scss';
 import PostSidebar from '@components/post-sidebar';
+import styles from './blog-post.module.scss';
 
 export function BlogPost({
   title,

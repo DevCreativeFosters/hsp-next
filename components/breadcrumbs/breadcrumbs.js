@@ -58,7 +58,7 @@ function Breadcrumbs({ items, className }) {
           </Link>
         )}
       </div>
-      <div className={clsx(styles.container, styles.full)}>
+      <div className={clsx(styles.container, styles.full, className)}>
         {itemsWithSeparators.map((item, index) => {
           if (item === SEPARATOR) {
             return (
