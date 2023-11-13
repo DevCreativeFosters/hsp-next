@@ -82,7 +82,7 @@ export default function ProductImageCarousel({ images }) {
 
       setSwiperSlides(slides);
     },
-    [handleThumbnailClick],
+    [handleThumbnailClick, images],
   );
 
   useEffect(

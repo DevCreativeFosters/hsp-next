@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 
 export function useIsMobile(breakpointWidth) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(undefined);
   const screenWidth = breakpointWidth || 768;
 
   const handleResize = useCallback(() => {

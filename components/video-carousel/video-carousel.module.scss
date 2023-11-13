@@ -1,8 +1,4 @@
-.button {
-  height: min-content;
-  place-self: flex-start flex-end;
-
-  @include bp(medium) {
-    align-self: center;
-  }
+.container {
+  position: relative;
+  margin-block: 72px;
 }

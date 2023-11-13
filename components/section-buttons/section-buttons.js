@@ -2,14 +2,17 @@ import clsx from 'clsx';
 import Button from '@components/button/button';
 import styles from './section-buttons.module.scss';
 
-export default function SectionButtons({ buttons = [], alternatingLayout }) {
-  if (!buttons?.length) return;
-
-  const breakRow = Math.ceil(buttons.length / 2);
+export default function SectionButtons({
+  buttons = [],
+  alternatingLayout,
+  className,
+  children,
+}) {
+  const breakRow = Math.ceil(buttons?.length / 2);
 
   return (
     <div
-      className={clsx(styles.buttons, {
+      className={clsx(styles.buttons, className, {
         [styles.alternatingLayout]: alternatingLayout,
       })}
       style={
@@ -29,6 +32,7 @@ export default function SectionButtons({ buttons = [], alternatingLayout }) {
           {label}
         </Button>
       ))}
+      {children}
     </div>
   );
 }

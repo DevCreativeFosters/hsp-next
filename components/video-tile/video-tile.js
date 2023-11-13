@@ -1,17 +1,20 @@
 'use client';
 
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
+import routes from '@lib/routes';
 import styles from './video-tile.module.scss';
 
-export default function VideoTile({ title, celebrityPostsCustomFields }) {
+export default function VideoTile({ title, slug, celebrityPostsCustomFields }) {
   const thumbnail = celebrityPostsCustomFields?.thumbnail;
   const video = celebrityPostsCustomFields?.video;
   const videoUrl = video?.mediaItemUrl;
-  const videoFormat = videoUrl?.split('.')[videoUrl?.split('.').length - 1];
+  const videoExtension = videoUrl?.split('.').slice(-1)?.[0];
 
   const videoRef = useRef(null);
-  const [videoThumbnail, setVideoThumbnail] = useState(true);
+  const [isThumbnailVisible, setIsThumbnailVisible] = useState(true);
 
   const handleMouseEnter = () => {
     videoRef.current.play();
@@ -22,29 +25,25 @@ export default function VideoTile({ title, celebrityPostsCustomFields }) {
   };
 
   const handleVideoPlay = () => {
-    setVideoThumbnail(false);
+    setIsThumbnailVisible(false);
   };
 
   const handleVideoPause = () => {
-    setVideoThumbnail(true);
+    setIsThumbnailVisible(true);
   };
 
   return (
-    <div
-      className={styles.tile}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {videoThumbnail ? (
-        thumbnail.sourceUrl ? (
-          <Image
-            className={styles.thumbnail}
-            src={thumbnail.sourceUrl}
-            height={546}
-            width={294}
-            alt=""
-          />
-        ) : null
+    <Link className={styles.tile} href={routes.celebrities(slug)}>
+      {thumbnail?.sourceUrl ? (
+        <Image
+          className={clsx(styles.thumbnail, {
+            [styles.isVisible]: isThumbnailVisible,
+          })}
+          src={thumbnail.sourceUrl}
+          height={546}
+          width={294}
+          alt={thumbnail.altText || title}
+        />
       ) : null}
       <video
         ref={videoRef}
@@ -54,10 +53,20 @@ export default function VideoTile({ title, celebrityPostsCustomFields }) {
         onPlay={handleVideoPlay}
         onPause={handleVideoPause}
       >
-        <source src={videoUrl} type={`video/${videoFormat}`} />
+        <source
+          src={videoUrl}
+          type={videoExtension ? `video/${videoExtension}` : null}
+        />
         Your browser does not support the video tag.
       </video>
-      <h5 className={styles.celebrity}>{title}</h5>
-    </div>
+
+      <div
+        className={styles.cursorOnly}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      ></div>
+
+      <h5 className={styles.title}>{title}</h5>
+    </Link>
   );
 }
