@@ -47,7 +47,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
   const onPlayButtonClick = useCallback(() => {
     setIsPlayButtonVisible(false);
-    videoRef.current.play();
+    videoRef.current.play().catch(() => null);
   }, []);
 
   const onVideoClick = useCallback(() => {
@@ -63,7 +63,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
   const onSoundButtonClick = useCallback(() => {
     setCanAutoplayWithSound(true);
-    videoRef.current?.play(); // failsafe
+    videoRef.current?.play().catch(() => null); // failsafe
   }, []);
 
   const onBackButtonClick = useCallback(() => {
@@ -111,7 +111,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
   useEffect(
     function syncPlayback() {
       if (isActive && isVideoReady) {
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().catch(() => null);
       }
     },
     [isActive, isVideoReady],

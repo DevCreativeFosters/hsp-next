@@ -41,11 +41,11 @@ export default function VideoTile({
 
     if (reqFullscreenPromise) {
       reqFullscreenPromise.then(() => {
-        video.play();
+        video.play().catch(() => null);
       });
     } else if (video.webkitEnterFullScreen) {
       video.webkitEnterFullScreen();
-      video.play();
+      video.play().catch(() => null);
     } else {
       isFullscreenRef.current = false;
     }
@@ -62,7 +62,7 @@ export default function VideoTile({
 
   const handleMouseEnter = () => {
     if (!isFullscreenRef.current) {
-      videoRef.current.play();
+      videoRef.current.play().catch(() => null);
     }
   };
 

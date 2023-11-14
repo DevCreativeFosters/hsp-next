@@ -15,7 +15,7 @@ export default function usePlaybackOnScroll(videoRef) {
       if (videoElement) {
         observer = new IntersectionObserver(entries => {
           if (entries[0].isIntersecting) {
-            videoElement.play();
+            videoElement.play().catch(() => null);
           } else if (isVideoPlaying(videoElement)) {
             videoElement.pause();
           }
