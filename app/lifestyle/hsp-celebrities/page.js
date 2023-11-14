@@ -23,7 +23,6 @@ export default async function HSPCelebritiesPage() {
           />
         </Container>
         <PageClient posts={posts?.celebrities?.nodes} />
-
         {/*<Newsletter />*/}
       </Background>
     </Layout>
