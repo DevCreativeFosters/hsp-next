@@ -8,7 +8,7 @@ export default function VideoReel({ items, currentIndex, setCurrentIndex }) {
       <span className={styles.placeholderFrontTile} />
       <span className={styles.placeholderFrontTile} />
       <span className={styles.placeholderFrontTile} />
-      {items.map(({ title, slug, celebrityPostsCustomFields }, index) => (
+      {items.map(({ title, celebrityPostsCustomFields }, index) => (
         <div
           className={styles.tileContainer}
           key={index}

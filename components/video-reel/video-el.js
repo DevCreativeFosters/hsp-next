@@ -1,6 +1,5 @@
 'use client';
 
-import routes from '@lib/routes';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -8,6 +7,7 @@ import clsx from 'clsx';
 import canAutoplay from 'can-autoplay';
 import { isVideoPlaying } from '@lib/media';
 import { getIcon } from '@lib/icons';
+import routes from '@lib/routes';
 import Button from '@components/button/button';
 import styles from '@components/video-reel/video-el.module.scss';
 
