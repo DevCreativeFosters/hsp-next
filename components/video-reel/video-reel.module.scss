@@ -105,6 +105,8 @@
   aspect-ratio: var(--aspect-ratio);
   flex-shrink: 0;
   width: var(--width);
+  border-radius: 16px;
+  background: var(--color-black-100);
   transition:
     width 400ms,
     opacity 400ms;

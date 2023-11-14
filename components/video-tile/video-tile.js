@@ -1,13 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import routes from '@lib/routes';
 import styles from './video-tile.module.scss';
 
-export default function VideoTile({ title, slug, celebrityPostsCustomFields }) {
+export default function VideoTile({
+  title,
+  slug,
+  celebrityPostsCustomFields,
+  context,
+}) {
+  const isFullscreenRef = useRef(false);
   const thumbnail = celebrityPostsCustomFields?.thumbnail;
   const video = celebrityPostsCustomFields?.video;
   const videoUrl = video?.mediaItemUrl;
@@ -15,25 +21,98 @@ export default function VideoTile({ title, slug, celebrityPostsCustomFields }) {
 
   const videoRef = useRef(null);
   const [isThumbnailVisible, setIsThumbnailVisible] = useState(true);
+  let href = slug;
+
+  if (context === 'hsp-celebrities') {
+    href = routes.celebrities(slug);
+  }
+
+  const goFullscreenAndPlay = useCallback(ev => {
+    ev.preventDefault();
+    const video = videoRef.current;
+    if (!video) return;
+
+    isFullscreenRef.current = true;
+    video.muted = false;
+    const reqFullscreenPromise =
+      video.requestFullscreen?.() ||
+      video.webkitRequestFullscreen?.() ||
+      video.msRequestFullscreen?.();
+
+    if (reqFullscreenPromise) {
+      reqFullscreenPromise.then(() => {
+        video.play();
+      });
+    } else if (video.webkitEnterFullScreen) {
+      video.webkitEnterFullScreen();
+      video.play();
+    } else {
+      isFullscreenRef.current = false;
+    }
+  }, []);
+
+  const exitFullscreen = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.exitFullscreen?.() ||
+      video.webkitExitFullscreen?.() ||
+      video.msExitFullscreen?.();
+  }, []);
 
   const handleMouseEnter = () => {
-    videoRef.current.play();
+    if (!isFullscreenRef.current) {
+      videoRef.current.play();
+    }
   };
 
   const handleMouseLeave = () => {
-    videoRef.current.pause();
+    if (!isFullscreenRef.current) {
+      videoRef.current.pause();
+    }
   };
 
-  const handleVideoPlay = () => {
+  const handleVideoPlay = useCallback(() => {
     setIsThumbnailVisible(false);
-  };
+  }, []);
 
-  const handleVideoPause = () => {
+  const handleVideoPause = useCallback(() => {
     setIsThumbnailVisible(true);
-  };
+  }, []);
+
+  const handleOnEnded = useCallback(() => {
+    videoRef.current.currentTime = 0;
+    exitFullscreen();
+  }, [exitFullscreen]);
+
+  const onFullscreenExit = useCallback(() => {
+    isFullscreenRef.current = false;
+    videoRef.current.muted = true;
+    videoRef.current.pause();
+  }, []);
+
+  const handleFullscreenChange = useCallback(() => {
+    if (document.fullscreenElement === videoRef.current) {
+      // enter fullscreen
+    } else if (document.fullscreenElement === null) {
+      onFullscreenExit();
+    }
+  }, [onFullscreenExit]);
+
+  useEffect(
+    function attachFullscreenEvent() {
+      const video = videoRef.current;
+      video?.addEventListener('fullscreenchange', handleFullscreenChange);
+
+      return () => {
+        video?.removeEventListener('fullscreenchange', handleFullscreenChange);
+      };
+    },
+    [handleFullscreenChange],
+  );
 
   return (
-    <Link className={styles.tile} href={routes.celebrities(slug)}>
+    <Link className={styles.tile} href={href}>
       {thumbnail?.sourceUrl ? (
         <Image
           className={clsx(styles.thumbnail, {
@@ -48,10 +127,11 @@ export default function VideoTile({ title, slug, celebrityPostsCustomFields }) {
       <video
         ref={videoRef}
         className={styles.video}
-        loop
         muted
         onPlay={handleVideoPlay}
         onPause={handleVideoPause}
+        onEnded={handleOnEnded}
+        poster={thumbnail?.sourceUrl}
       >
         <source
           src={videoUrl}
@@ -61,10 +141,15 @@ export default function VideoTile({ title, slug, celebrityPostsCustomFields }) {
       </video>
 
       <div
-        className={styles.cursorOnly}
+        className={clsx(styles.eventsCaptureArea, styles.cursorOnly)}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-      ></div>
+      />
+
+      <div
+        className={clsx(styles.eventsCaptureArea, styles.touchOnly)}
+        onClick={goFullscreenAndPlay}
+      />
 
       <h5 className={styles.title}>{title}</h5>
     </Link>

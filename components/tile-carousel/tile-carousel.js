@@ -12,6 +12,7 @@ export default function TileCarousel({
   items,
   itemTemplate: ItemTemplate,
   id = '',
+  context,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
@@ -135,7 +136,7 @@ export default function TileCarousel({
               style={{ '--offset': `-${currentOffsetNormalized}px` }}
             >
               {items.map((props, index) => (
-                <ItemTemplate key={index} {...props} />
+                <ItemTemplate key={index} context={context} {...props} />
               ))}
             </div>
           </div>

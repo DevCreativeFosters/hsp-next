@@ -18,7 +18,6 @@ export default function VideoEl({ isActive, thumbnail, video }) {
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
   const [canAutoplayWithSound, setCanAutoplayWithSound] = useState(undefined);
   const areEventsAttached = useRef(false);
-  const isSeekingRef = useRef(false);
   const videoRef = useRef(null);
   const videoUrl = video?.mediaItemUrl;
   const videoExtension = videoUrl?.split('.').slice(-1)?.[0];
@@ -52,13 +51,15 @@ export default function VideoEl({ isActive, thumbnail, video }) {
   }, []);
 
   const onVideoClick = useCallback(() => {
-    if (isActive && !isSeekingRef.current) {
-      setCanAutoplayWithSound(true);
+    if (isActive) {
       const el = videoRef.current;
       const actionType = isVideoPlaying(el) ? 'pause' : 'play';
-      el[actionType]();
+      if (canAutoplayWithSound) {
+        el[actionType]();
+      }
+      setCanAutoplayWithSound(true);
     }
-  }, [isActive]);
+  }, [isActive, canAutoplayWithSound]);
 
   const onSoundButtonClick = useCallback(() => {
     setCanAutoplayWithSound(true);
@@ -110,7 +111,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
   useEffect(
     function syncPlayback() {
       if (isActive && isVideoReady) {
-        videoRef.current.play();
+        videoRef.current.play().catch(() => {});
       }
     },
     [isActive, isVideoReady],
@@ -124,6 +125,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
           ref={videoRef}
           className={styles.video}
           controls
+          disablePictureInPicture
           playsInline
           autoPlay
         >

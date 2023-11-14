@@ -25,6 +25,7 @@
   object-fit: cover;
   object-position: center center;
   border-radius: 16px;
+  background-color: var(--color-black-60);
 }
 
 .thumbnail {
@@ -43,16 +44,27 @@
   }
 }
 
-.cursorOnly {
-  display: none;
+.eventsCaptureArea {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+}
+
+.cursorOnly {
+  display: none;
 
   @media (hover: hover) {
     display: block;
+  }
+}
+
+.touchOnly {
+  display: block;
+
+  @media (hover: hover) {
+    display: none;
   }
 }
 
