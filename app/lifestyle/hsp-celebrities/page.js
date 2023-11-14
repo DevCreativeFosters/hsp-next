@@ -1,5 +1,8 @@
 import routes from '@lib/routes';
-import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api';
+import {
+  getLatestNumberOfHSPCelebritiesPosts,
+  getPageGutenbergContent,
+} from '@lib/api';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
@@ -11,9 +14,11 @@ export const metadata = {
   // description: ''
 };
 
-const posts = await getLatestNumberOfHSPCelebritiesPosts();
-
 export default async function HSPCelebritiesPage() {
+  const posts = await getLatestNumberOfHSPCelebritiesPosts();
+  const gutenbergContent = await getPageGutenbergContent(
+    'lifestyle/hsp-celebrities',
+  );
   return (
     <Layout>
       <Background colorStops={[]} containMargins>
@@ -22,7 +27,11 @@ export default async function HSPCelebritiesPage() {
             initialContentTypeRoute={routes.celebrities()}
           />
         </Container>
-        <PageClient posts={posts?.celebrities?.nodes} />
+        <PageClient
+          title={gutenbergContent.title}
+          description={gutenbergContent.content}
+          posts={posts?.celebrities?.nodes}
+        />
         {/*<Newsletter />*/}
       </Background>
     </Layout>

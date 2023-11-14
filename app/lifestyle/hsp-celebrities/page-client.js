@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Container from '@components/container/container';
@@ -11,7 +11,7 @@ import VideoReel from '@components/video-reel/video-reel';
 import VideoEl from '@components/video-reel/video-el';
 import styles from './page-client.module.scss';
 
-export default function PageClient({ posts = [] }) {
+export default function PageClient({ title, description, posts = [] }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
 
@@ -81,11 +81,7 @@ export default function PageClient({ posts = [] }) {
 
   return (
     <Container>
-      <SectionIntro
-        title="HSP Celebrities"
-        description="HSP products are designed, sourced and manufactured in Australia."
-        fitInline
-      >
+      <SectionIntro title={title} description={description} fitInline>
         <SectionButtons className={styles.buttons}>
           <Button
             className={styles.buttonPrev}
