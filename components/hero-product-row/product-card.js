@@ -14,7 +14,8 @@ export default function ProductCard({ product }) {
           className={styles.productImage}
           src={productImage}
           alt={productTitle}
-          fill={true}
+          width={168}
+          height={Math.round(168 / 1.4)}
         />
       </div>
       {productTitle && <p className={styles.productName}>{productTitle}</p>}

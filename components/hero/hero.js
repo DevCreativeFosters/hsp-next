@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { clsx } from 'clsx';
-import { useIsMobile } from '@hooks/useIsMobile';
 import Container from '@components/container/container';
 import Button from '@components/button/button';
 
@@ -15,12 +14,14 @@ import styles from './hero.module.scss';
 const MIN_SWIPE_THRESHOLD = 50;
 const HERO_MAX_HEIGHT = 820; // should match CSS styles.hero max-height
 
-export default function Hero({ slides }) {
+export default function Hero({ slides, transition = 'fade' }) {
+  const initialAssets = [0, 1, slides.length - 1];
   const heroRef = useRef(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
+  const [preloadedAssets, setPreloadedAssets] = useState(initialAssets);
 
-  const isMobile = useIsMobile();
+  const currentSlide = slides[currentSlideIndex];
 
   const handlePrev = useCallback(() => {
     setCurrentSlideIndex(prevIndex =>
@@ -62,12 +63,28 @@ export default function Hero({ slides }) {
     setCurrentSlideIndex(index);
   }, []);
 
-  const currentSlide = slides[currentSlideIndex];
+  useEffect(
+    function preloadAssetsForPrevAndNextSlides() {
+      const prevSlideIndex =
+        currentSlideIndex === 0 ? slides.length - 1 : currentSlideIndex - 1;
+      const nextSlideIndex = (currentSlideIndex + 1) % slides.length;
+      const uniquePreloadedAssets = new Set(preloadedAssets);
+      uniquePreloadedAssets.add(prevSlideIndex).add(nextSlideIndex);
+      const arr = Array.from(uniquePreloadedAssets);
+      if (arr.length > preloadedAssets.length) {
+        setPreloadedAssets(arr);
+      }
+    },
+    [preloadedAssets, currentSlideIndex, slides],
+  );
 
   return (
     <div
       ref={heroRef}
-      className={styles.hero}
+      className={clsx(styles.hero, {
+        [styles.swipeTransition]: transition === 'swipe',
+        [styles.fadeTransition]: transition === 'fade',
+      })}
       onTouchStart={handleSwipeStart}
       onTouchMove={handleSwipeMove}
       onTouchEnd={handleSwipeEnd}
@@ -81,18 +98,24 @@ export default function Hero({ slides }) {
                 backgroundImage.mediaDetails.height
               : 1;
           return (
-            <div className={styles.slide} key={index}>
-              {backgroundImage?.sourceUrl && (
+            <div
+              className={clsx(styles.slide, {
+                [styles.active]: index === currentSlideIndex,
+              })}
+              key={index}
+            >
+              {Boolean(
+                preloadedAssets.includes(index) && backgroundImage?.sourceUrl,
+              ) ? (
                 <Image
                   className={styles.backgroundImage}
                   src={backgroundImage?.sourceUrl}
                   alt={backgroundImage?.altText || ''}
                   fill={true}
-                  sizes={`(min-width: ${
-                    HERO_MAX_HEIGHT * aspectRatio
-                  }px) 100vw, ${HERO_MAX_HEIGHT * aspectRatio}px`}
-                  objectPosition={backgroundImagePosition}
+                  style={{ objectPosition: backgroundImagePosition }}
                 />
+              ) : (
+                <div />
               )}
             </div>
           );
