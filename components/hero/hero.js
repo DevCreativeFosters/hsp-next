@@ -13,21 +13,23 @@ import ArrowRight from '@assets/images/arrow-right.svg';
 import styles from './hero.module.scss';
 
 const MIN_SWIPE_THRESHOLD = 50;
+const HERO_MAX_HEIGHT = 820; // should match CSS styles.hero max-height
 
 export default function Hero({ slides }) {
   const heroRef = useRef(null);
-  const isMobile = useIsMobile();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
 
-  const handleNextSlide = useCallback(() => {
-    setCurrentSlideIndex(prevIndex => (prevIndex + 1) % slides.length);
-  }, [slides.length]);
+  const isMobile = useIsMobile();
 
-  const handlePreviousSlide = useCallback(() => {
+  const handlePrev = useCallback(() => {
     setCurrentSlideIndex(prevIndex =>
       prevIndex === 0 ? slides.length - 1 : prevIndex - 1,
     );
+  }, [slides.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentSlideIndex(prevIndex => (prevIndex + 1) % slides.length);
   }, [slides.length]);
 
   const handleSwipeStart = useCallback(e => {
@@ -41,15 +43,15 @@ export default function Hero({ slides }) {
         const deltaX = touchEndX - touchStartX;
 
         if (deltaX > MIN_SWIPE_THRESHOLD) {
-          handlePreviousSlide();
+          handlePrev();
           setTouchStartX(null);
         } else if (deltaX < -MIN_SWIPE_THRESHOLD) {
-          handleNextSlide();
+          handleNext();
           setTouchStartX(null);
         }
       }
     },
-    [handleNextSlide, handlePreviousSlide, touchStartX],
+    [handleNext, handlePrev, touchStartX],
   );
 
   const handleSwipeEnd = useCallback(() => {
@@ -61,35 +63,6 @@ export default function Hero({ slides }) {
   }, []);
 
   const currentSlide = slides[currentSlideIndex];
-  const backgroundImage = currentSlide.backgroundImage;
-  const backgroundImagePosition = currentSlide.backgroundImagePosition;
-
-  const renderSlideDots = () => (
-    <div className={styles.slideDots}>
-      {slides.map((_, index) => (
-        <div
-          key={index}
-          className={styles.dotContainer}
-          onClick={() => handleSlideChange(index)}
-        >
-          <span
-            className={clsx(
-              styles.slideDot,
-              currentSlideIndex === index && styles.active,
-            )}
-          />
-        </div>
-      ))}
-    </div>
-  );
-
-  const aspectRatio =
-    backgroundImage?.mediaDetails?.width &&
-    backgroundImage?.mediaDetails?.height
-      ? backgroundImage.mediaDetails.width / backgroundImage.mediaDetails.height
-      : 1;
-
-  const HERO_MAX_HEIGHT = 820; // should match CSS styles.hero max-height
 
   return (
     <div
@@ -99,20 +72,32 @@ export default function Hero({ slides }) {
       onTouchMove={handleSwipeMove}
       onTouchEnd={handleSwipeEnd}
     >
-      {backgroundImage?.sourceUrl && (
-        <div className={styles.backgroundImageWrapper}>
-          <Image
-            className={styles.backgroundImage}
-            src={backgroundImage.sourceUrl}
-            alt={backgroundImage.altText || ''}
-            fill={true}
-            sizes={`(min-width: ${HERO_MAX_HEIGHT * aspectRatio}px) 100vw, ${
-              HERO_MAX_HEIGHT * aspectRatio
-            }px`}
-            objectPosition={backgroundImagePosition}
-          />
-        </div>
-      )}
+      <div className={styles.track} data-index={currentSlideIndex}>
+        {slides.map(({ backgroundImage, backgroundImagePosition }, index) => {
+          const aspectRatio =
+            backgroundImage?.mediaDetails?.width &&
+            backgroundImage?.mediaDetails?.height
+              ? backgroundImage.mediaDetails.width /
+                backgroundImage.mediaDetails.height
+              : 1;
+          return (
+            <div className={styles.slide} key={index}>
+              {backgroundImage?.sourceUrl && (
+                <Image
+                  className={styles.backgroundImage}
+                  src={backgroundImage?.sourceUrl}
+                  alt={backgroundImage?.altText || ''}
+                  fill={true}
+                  sizes={`(min-width: ${
+                    HERO_MAX_HEIGHT * aspectRatio
+                  }px) 100vw, ${HERO_MAX_HEIGHT * aspectRatio}px`}
+                  objectPosition={backgroundImagePosition}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <Container>
         <div className={styles.content}>
@@ -135,24 +120,30 @@ export default function Hero({ slides }) {
               <div />
             )}
 
-            <div className={styles.navButtons}>
-              {isMobile === true && renderSlideDots()}
-              {isMobile === false && (
-                <>
-                  <button
-                    className={styles.prevButton}
-                    onClick={handlePreviousSlide}
-                  >
-                    <ArrowLeft />
-                  </button>
-                  <button
-                    className={styles.nextButton}
-                    onClick={handleNextSlide}
-                  >
-                    <ArrowRight />
-                  </button>
-                </>
-              )}
+            <div className={styles.slideDots}>
+              {slides.map((_, index) => (
+                <div
+                  key={index}
+                  className={styles.dotContainer}
+                  onClick={() => handleSlideChange(index)}
+                >
+                  <span
+                    className={clsx(
+                      styles.slideDot,
+                      currentSlideIndex === index && styles.active,
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.navArrows}>
+              <button className={styles.prevButton} onClick={handlePrev}>
+                <ArrowLeft />
+              </button>
+              <button className={styles.nextButton} onClick={handleNext}>
+                <ArrowRight />
+              </button>
             </div>
           </div>
         </div>
