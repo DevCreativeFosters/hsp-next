@@ -129,14 +129,17 @@ export default function Header({
 
             <nav className={styles.socialMenu}>
               <ul className={styles.socialMenuList}>
-                {socialMenu?.map(({ url, icon }, index) => (
+                {socialMenu?.map(({ url, iconPredefined, icon }, index) => (
                   <li key={url + index} className={styles.socialMenuItem}>
                     <Button
                       href={url}
                       size="small"
                       variant="tertiary"
                       background="dark"
-                      leftIconUrl={icon}
+                      leftIcon={
+                        iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                      }
+                      leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
                     />
                   </li>
                 ))}
