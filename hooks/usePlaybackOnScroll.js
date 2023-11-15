@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { isVideoPlaying } from '@lib/media';
 
 const options = {
   root: null,
@@ -10,19 +11,26 @@ export default function usePlaybackOnScroll(videoRef) {
   useEffect(
     function controlVideoPlayOnScroll() {
       const videoElement = videoRef.current;
-      const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          videoElement.play();
-        } else {
-          videoElement.pause();
-        }
-      }, options);
-
+      let observer;
       if (videoElement) {
-        observer.observe(videoElement);
+        observer = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            videoElement.play().catch(() => null);
+          } else if (isVideoPlaying(videoElement)) {
+            videoElement.pause();
+          }
+        }, options);
+
+        if (videoElement) {
+          observer.observe(videoElement);
+        }
       }
 
-      return () => observer.unobserve(videoElement);
+      return () => {
+        if (observer && videoElement) {
+          observer.unobserve(videoElement);
+        }
+      };
     },
     [videoRef],
   );

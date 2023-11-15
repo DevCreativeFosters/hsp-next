@@ -54,7 +54,7 @@ export default function Button({
 
   const buttonBody = (
     <>
-      {LeftIconSvg && <span><LeftIconSvg /></span>}
+      {LeftIconSvg && <LeftIconSvg />}
       {leftIconUrl && (
         <Image src={leftIconUrl} alt={''} width={20} height={20} />
       )}
@@ -62,7 +62,7 @@ export default function Button({
       {rightIconUrl && (
         <Image src={rightIconUrl} alt={''} width={20} height={20} />
       )}
-      {RightIconSvg && <span><RightIconSvg /></span>}
+      {RightIconSvg && <RightIconSvg />}
     </>
   );
 

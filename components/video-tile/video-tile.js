@@ -1,63 +1,157 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
+import routes from '@lib/routes';
 import styles from './video-tile.module.scss';
 
-export default function VideoTile({ title, celebrityPostsCustomFields }) {
+export default function VideoTile({
+  title,
+  slug,
+  celebrityPostsCustomFields,
+  context,
+}) {
+  const isFullscreenRef = useRef(false);
   const thumbnail = celebrityPostsCustomFields?.thumbnail;
   const video = celebrityPostsCustomFields?.video;
   const videoUrl = video?.mediaItemUrl;
-  const videoFormat = videoUrl?.split('.')[videoUrl?.split('.').length - 1];
+  const videoExtension = videoUrl?.split('.').slice(-1)?.[0];
 
   const videoRef = useRef(null);
-  const [videoThumbnail, setVideoThumbnail] = useState(true);
+  const [isThumbnailVisible, setIsThumbnailVisible] = useState(true);
+  let href = slug;
+
+  if (context === 'hsp-celebrities') {
+    href = routes.celebrities(slug);
+  }
+
+  const goFullscreenAndPlay = useCallback(ev => {
+    ev.preventDefault();
+    const video = videoRef.current;
+    if (!video) return;
+
+    isFullscreenRef.current = true;
+    video.muted = false;
+    const reqFullscreenPromise =
+      video.requestFullscreen?.() ||
+      video.webkitRequestFullscreen?.() ||
+      video.msRequestFullscreen?.();
+
+    if (reqFullscreenPromise) {
+      reqFullscreenPromise.then(() => {
+        video.play().catch(() => null);
+      });
+    } else if (video.webkitEnterFullScreen) {
+      video.webkitEnterFullScreen();
+      video.play().catch(() => null);
+    } else {
+      isFullscreenRef.current = false;
+    }
+  }, []);
+
+  const exitFullscreen = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.exitFullscreen?.() ||
+      video.webkitExitFullscreen?.() ||
+      video.msExitFullscreen?.();
+  }, []);
 
   const handleMouseEnter = () => {
-    videoRef.current.play();
+    if (!isFullscreenRef.current) {
+      videoRef.current.play().catch(() => null);
+    }
   };
 
   const handleMouseLeave = () => {
+    if (!isFullscreenRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  const handleVideoPlay = useCallback(() => {
+    setIsThumbnailVisible(false);
+  }, []);
+
+  const handleVideoPause = useCallback(() => {
+    setIsThumbnailVisible(true);
+  }, []);
+
+  const handleOnEnded = useCallback(() => {
+    videoRef.current.currentTime = 0;
+    exitFullscreen();
+  }, [exitFullscreen]);
+
+  const onFullscreenExit = useCallback(() => {
+    isFullscreenRef.current = false;
+    videoRef.current.muted = true;
     videoRef.current.pause();
-  };
+  }, []);
 
-  const handleVideoPlay = () => {
-    setVideoThumbnail(false);
-  };
+  const handleFullscreenChange = useCallback(() => {
+    if (document.fullscreenElement === videoRef.current) {
+      // enter fullscreen
+    } else if (document.fullscreenElement === null) {
+      onFullscreenExit();
+    }
+  }, [onFullscreenExit]);
 
-  const handleVideoPause = () => {
-    setVideoThumbnail(true);
-  };
+  useEffect(
+    function attachFullscreenEvent() {
+      const video = videoRef.current;
+      video?.addEventListener('fullscreenchange', handleFullscreenChange);
+
+      return () => {
+        video?.removeEventListener('fullscreenchange', handleFullscreenChange);
+      };
+    },
+    [handleFullscreenChange],
+  );
 
   return (
-    <div
-      className={styles.tile}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {videoThumbnail ? (
-        thumbnail.sourceUrl ? (
-          <Image
-            className={styles.thumbnail}
-            src={thumbnail.sourceUrl}
-            height={546}
-            width={294}
-            alt=""
-          />
-        ) : null
+    <Link className={styles.tile} href={href}>
+      {thumbnail?.sourceUrl ? (
+        <Image
+          className={clsx(styles.thumbnail, {
+            [styles.isVisible]: isThumbnailVisible,
+          })}
+          src={thumbnail.sourceUrl}
+          height={546}
+          width={294}
+          alt={thumbnail.altText || title}
+        />
       ) : null}
       <video
         ref={videoRef}
         className={styles.video}
-        loop
         muted
         onPlay={handleVideoPlay}
         onPause={handleVideoPause}
+        onEnded={handleOnEnded}
+        poster={thumbnail?.sourceUrl}
       >
-        <source src={videoUrl} type={`video/${videoFormat}`} />
+        <source
+          src={videoUrl}
+          type={videoExtension ? `video/${videoExtension}` : null}
+        />
         Your browser does not support the video tag.
       </video>
-      <h5 className={styles.celebrity}>{title}</h5>
-    </div>
+
+      <div
+        className={clsx(styles.eventsCaptureArea, styles.cursorOnly)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      />
+
+      <div
+        className={clsx(styles.eventsCaptureArea, styles.touchOnly)}
+        onClick={goFullscreenAndPlay}
+      />
+
+      <h5 className={styles.title}>{title}</h5>
+    </Link>
   );
 }

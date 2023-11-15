@@ -24,7 +24,7 @@ export default function Tile({
   });
 
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    dateStyle: 'medium',
+    dateStyle: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
   });
 
   const imageWidth = image?.mediaDetails?.width;
@@ -50,7 +50,7 @@ export default function Tile({
         <Image
           className={styles.image}
           src={image.sourceUrl}
-          alt={image.altText || ''}
+          alt={image?.altText || ''}
           fill={true}
         />
       ) : (

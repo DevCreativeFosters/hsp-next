@@ -49,7 +49,7 @@ export default async function SupportSubpage({ params }) {
                 {content && (
                   <Wysiwyg
                     className={styles.content}
-                    content={gutenbergContent}
+                    content={gutenbergContent?.content}
                   />
                 )}
               </div>

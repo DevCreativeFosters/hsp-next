@@ -38,10 +38,13 @@ export default function FeaturedPost({
 
   return (
     <div className={styles.featuredPost}>
-      <video className={styles.video} ref={videoRef} loop muted>
-        <source src={videoUrl} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {videoUrl && (
+        <video className={styles.video} ref={videoRef} loop muted>
+          <source src={videoUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
+
       <div className={styles.backgroundGradient} />
       <Container>
         <div className={styles.information}>

@@ -12,7 +12,7 @@ export default function FeaturedArticle({
   image,
 }) {
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    dateStyle: 'medium',
+    dateStyle: 'long',
   });
 
   const tagsNormalized = tags.map(({ name, link }) => ({

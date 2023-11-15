@@ -4,7 +4,6 @@
   margin-top: 55px;
   margin-left: 50%;
   transform: translateX(-50%);
-  overflow-x: visible;
 
   @include bp(medium) {
     margin-left: 0;
@@ -12,6 +11,7 @@
     padding: 0;
     width: 100%;
     max-width: calc(1320px + var(--container-inline-padding) * 2);
+    overflow-x: hidden;
   }
 
   @include bp(large) {
@@ -33,13 +33,5 @@
 
   @include bp(large) {
     gap: 48px;
-  }
-}
-
-.videos {
-  padding: 0 30px;
-
-  @include bp(medium) {
-    padding: 0 15px 0 0;
   }
 }

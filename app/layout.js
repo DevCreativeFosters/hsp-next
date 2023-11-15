@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import clsx from 'clsx';
+import LayoutClient from './layout-client';
 import '@styles/main.scss';
 
 const hind = localFont({
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={clsx(hind.variable, khand.variable)}>
       <body className="" data-rh="class">
         {children}
+        <LayoutClient />
       </body>
     </html>
   );
