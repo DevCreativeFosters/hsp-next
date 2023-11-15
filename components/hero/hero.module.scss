@@ -136,15 +136,22 @@
 }
 
 .prevButton {
-  @include arrow-button-styling;
-
-  border-radius: 0.5rem 0 0 0.5rem;
+  border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
 }
 
 .nextButton {
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+}
+
+.prevButton,
+.nextButton {
   @include arrow-button-styling;
 
-  border-radius: 0 0.5rem 0.5rem 0;
+  transition: background-color 200ms;
+
+  &:hover {
+    background-color: var(--color-primary-100);
+  }
 }
 
 .slideDots {

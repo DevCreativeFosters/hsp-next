@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { clsx } from 'clsx';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Container from '@components/container/container';
