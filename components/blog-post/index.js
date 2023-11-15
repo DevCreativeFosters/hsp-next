@@ -26,15 +26,16 @@ export function BlogPost({
     <Container>
       <div className={styles.post}>
         <div className={styles.contentArea}>
-          <BreadcrumbsLifestyle
-            className={styles.breadcrumbsMobile}
-            initialContentTypeRoute={routes.blog()}
-            exactBreadcrumb={{
-              label: title,
-              url: routes.blog(slug),
-              strong: true,
-            }}
-          />
+          <div className={styles.breadcrumbsMobile}>
+            <BreadcrumbsLifestyle
+              initialContentTypeRoute={routes.blog()}
+              exactBreadcrumb={{
+                label: title,
+                url: routes.blog(slug),
+                strong: true,
+              }}
+            />
+          </div>
           {image && (
             <div className={styles.featuredImageContainer}>
               <Image

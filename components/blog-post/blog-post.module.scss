@@ -127,7 +127,7 @@
 }
 
 .breadcrumbsMobile {
-  @include bp(medium) {
-    display: none !important;
+  @include bp(large) {
+    display: none;
   }
 }

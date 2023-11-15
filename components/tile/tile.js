@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import normalizeTag from '@lib/normalize-tag';
 import styles from './tile.module.scss';
+import routes from '@lib/routes';
 
 export default function Tile({
   title,
@@ -17,9 +18,19 @@ export default function Tile({
   image,
   variant,
 }) {
-  const urlNormalized = url || link?.url;
+  const postUrl = url || link?.url;
+  const segments = postUrl.split('/').filter(Boolean);
+  const slug = segments.pop();
+
+  const urlNormalized =
+    variant === 'blog'
+      ? routes.blog(slug)
+      : variant === 'hsp-tv'
+      ? routes.tv(slug)
+      : postUrl;
+
   const tileClassNames = clsx(styles.container, {
-    [styles.blog]: variant === 'blog',
+    [styles.blog]: variant === 'blog' || variant === 'hsp-tv',
     [styles.carousel]: variant === 'carousel',
   });
 

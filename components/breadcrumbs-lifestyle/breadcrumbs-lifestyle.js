@@ -43,5 +43,5 @@ export default function BreadcrumbsLifestyle({
     contentTypeBreadcrumb,
     exactBreadcrumb,
   ].filter(Boolean);
-  return <Breadcrumbs items={breadcrumbs} className={className} />;
+  return <Breadcrumbs items={breadcrumbs} />;
 }
