@@ -47,7 +47,7 @@ function Breadcrumbs({ items, className }) {
 
   return (
     <>
-      <div className={clsx(styles.container, styles.short, className)}>
+      <div className={clsx(styles.container, styles.short)}>
         {singleBreadcrumb && (
           <Link
             href={singleBreadcrumb.url || '#'}
@@ -58,7 +58,7 @@ function Breadcrumbs({ items, className }) {
           </Link>
         )}
       </div>
-      <div className={clsx(styles.container, styles.full, className)}>
+      <div className={clsx(styles.container, styles.full)}>
         {itemsWithSeparators.map((item, index) => {
           if (item === SEPARATOR) {
             return (

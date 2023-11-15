@@ -23,15 +23,16 @@ export function HspTvPost({
 
   return (
     <Container>
-      <BreadcrumbsLifestyle
-        initialContentTypeRoute={routes.tv()}
-        exactBreadcrumb={{
-          label: title,
-          url: routes.tv(slug),
-          strong: true,
-        }}
-        className={styles.breadcrumbs}
-      />
+      <div className={styles.breadcrumbs}>
+        <BreadcrumbsLifestyle
+          initialContentTypeRoute={routes.tv()}
+          exactBreadcrumb={{
+            label: title,
+            url: routes.tv(slug),
+            strong: true,
+          }}
+        />
+      </div>
       <div className={styles.header}>
         {title && (
           <div className={styles.headerIntroduction}>

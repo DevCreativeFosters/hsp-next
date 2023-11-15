@@ -10,6 +10,7 @@ import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-
 import PostsList from '@components/posts-list/posts-list';
 import Pagination from '@components/pagination/pagination';
 import Background from '@components/background/background';
+import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
@@ -37,7 +38,9 @@ export default async function BlogPage() {
       <Layout title="">
         <Background colorStops={colorStops} containMargins>
           <Container collapseMargin>
-            <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
+            <div className={styles.breadcrumbs}>
+              <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
+            </div>
           </Container>
           {contentBlocks?.map((contentBlock, index) => (
             <Fragment key={index}>{contentBlock}</Fragment>

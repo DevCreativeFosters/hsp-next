@@ -7,6 +7,7 @@ import PostsList from '@components/posts-list/posts-list';
 import Pagination from '@components/pagination/pagination';
 import { PaginationContextProvider } from '@contexts/pagination';
 import routes from '@lib/routes';
+import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
@@ -28,10 +29,12 @@ export default async function HspTVPage() {
     <PaginationContextProvider>
       <Layout title="">
         <Container>
-          <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
+          </div>
           {contentResolved}
           <PostsList
-            variant="blog"
+            variant="hsp-tv"
             posts={allPosts}
             perPage={POSTS_PER_PAGE}
             paginationScope={paginationScope}
