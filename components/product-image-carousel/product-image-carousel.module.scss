@@ -46,6 +46,14 @@
   aspect-ratio: 1;
 }
 
+.swiperSlide {
+  width: 18% !important;
+
+  @include bp(large) {
+    width: initial;
+  }
+}
+
 .navigationContainer {
   position: relative;
 }
