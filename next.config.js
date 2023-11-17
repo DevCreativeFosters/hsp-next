@@ -21,6 +21,9 @@ module.exports = {
       'secure.gravatar.com',
       'hsp-wp.x5view.co',
       'hsp-wp.test',
+      'prodhsp.wpenginepowered.com',
+      'stghsp.wpenginepowered.com',
+      'devhsp.wpenginepowered.com',
     ],
   },
   sassOptions: {
