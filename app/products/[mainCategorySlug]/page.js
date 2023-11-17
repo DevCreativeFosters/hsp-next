@@ -7,6 +7,7 @@ import {
   getCategoriesAndMakesAndModels,
   getMainProductCategory,
 } from '@lib/api';
+import styles from './page.module.scss';
 
 export default async function MainCategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
@@ -34,10 +35,12 @@ export default async function MainCategoryPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
-        <BreadcrumbsProduct
-          currentProduct={currentProduct}
-          categories={categories}
-        />
+        <div className={styles.breadcrumbs}>
+          <BreadcrumbsProduct
+            currentProduct={currentProduct}
+            categories={categories}
+          />
+        </div>
         <ProductHero
           title={categoryData?.name}
           description={categoryData?.description}
