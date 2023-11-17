@@ -1,10 +1,13 @@
 default:
-  image: node:18.17.1
+  image: node:18.18.2
 
 deploy_preview:
   stage: deploy
   except:
     - main
+    - master
+    - staging
+    - develop
   script:
     - npm install --location=global vercel
     - npm install --location=global slugify-cli
@@ -13,7 +16,7 @@ deploy_preview:
     - SLUG=$(slugify $CI_COMMIT_BRANCH)
     - FULL_SLUG=$(slugify "hsp-${SLUG:0:53}")
     - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
-    - vercel alias set $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN --scope xfive
+    - vercel alias set $DEPLOYMENT_URL $FULL_SLUG --token=$VERCEL_TOKEN
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -29,3 +32,26 @@ deploy_production:
     - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
     - vercel build --prod --token=$VERCEL_TOKEN
     - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+deploy_staging:
+  stage: deploy
+  only:
+    - staging
+  script:
+    - npm install --location=global vercel
+    - vercel pull --yes --environment=preview --git-branch=staging --token=$VERCEL_TOKEN
+    - vercel build --token=$VERCEL_TOKEN
+    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
+    - vercel alias set $DEPLOYMENT_URL $VERCEL_STG_DOMAIN --token=$VERCEL_TOKEN
+
+deploy_develop:
+  stage: deploy
+  only:
+    - develop
+  script:
+    - npm install --location=global vercel
+    - vercel pull --yes --environment=preview --git-branch=develop --token=$VERCEL_TOKEN
+    - vercel build --token=$VERCEL_TOKEN
+    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
+    - vercel alias set $DEPLOYMENT_URL $VERCEL_DEV_DOMAIN --token=$VERCEL_TOKEN
+
