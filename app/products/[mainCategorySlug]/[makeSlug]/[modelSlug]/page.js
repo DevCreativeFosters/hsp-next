@@ -66,10 +66,12 @@ export default async function CategoryPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
-        <BreadcrumbsProduct
-          currentProduct={currentProduct}
-          categories={categories}
-        />
+        <div className={styles.breadcrumbs}>
+          <BreadcrumbsProduct
+            currentProduct={currentProduct}
+            categories={categories}
+          />
+        </div>
         <div className={styles.header}>
           <ProductImageCarousel images={images} />
           <div className={styles.details}>

@@ -5,8 +5,10 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import {
   getMainProductCategory,
   getCategoriesAndMakesAndModels,
-  getMake } from '@lib/api';
+  getMake,
+} from '@lib/api';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
+import styles from '../page.module.scss';
 
 export default async function CategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
@@ -58,10 +60,12 @@ export default async function CategoryPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
-        <BreadcrumbsProduct
-          currentProduct={currentProduct}
-          categories={categories}
-        />
+        <div className={styles.breadcrumbs}>
+          <BreadcrumbsProduct
+            currentProduct={currentProduct}
+            categories={categories}
+          />
+        </div>
         <ProductHero
           make={makeData.name}
           title={categoryData?.name}
