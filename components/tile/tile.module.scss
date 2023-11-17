@@ -1,4 +1,5 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -6,13 +7,41 @@
   max-width: 290px;
 
   @include bp(medium) {
-    max-width: none;
     width: calc(100% / 3 - (2 / 3 * 24px));
+    max-width: none;
     flex-grow: 1;
   }
 
   @include bp(large) {
     width: calc(100% / 3 - (2 / 3 * 48px));
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-white-20);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
+  &.blog {
+    width: 100%;
+    max-width: 100%;
+
+    &.title {
+      color: var(--color-white-100);
+    }
+  }
+
+  &.carousel {
+    width: 100%;
+    max-width: 100%;
+
+    @include bp(medium) {
+      width: calc(33.3333% - 32px);
+      max-width: calc(33.3333% - 32px);
+    }
   }
 }
 
@@ -85,25 +114,6 @@
   color: var(--color-white-40);
   font-size: 14px;
   line-height: 1.6;
-}
-
-.blog {
-  width: 100%;
-  max-width: 100%;
-
-  &.title {
-    color: var(--color-white-100);
-  }
-}
-
-.carousel {
-  max-width: 100%;
-  width: 100%;
-
-  @include bp(medium) {
-    width: calc(33.3333% - 32px);
-    max-width: calc(33.3333% - 32px);
-  }
 }
 
 .title {
