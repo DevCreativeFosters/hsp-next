@@ -43,7 +43,9 @@ function Products({ isActive, categories, products }, ref) {
             <li className={styles.productItem} key={index}>
               <Link className={styles.productLink} href={url}>
                 <div className={styles.productImageWrapper}>
-                  <Image src={image} width={144} height={96} alt={title} />
+                  {image && (
+                    <Image src={image} width={144} height={96} alt={title} />
+                  )}
                 </div>
                 <div className={styles.productTitle}>{title}</div>
               </Link>

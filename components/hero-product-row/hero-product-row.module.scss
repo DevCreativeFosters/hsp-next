@@ -2,6 +2,7 @@
   --product-card-width: 134px;
 
   position: relative;
+  z-index: var(--z-index-component);
 
   @media (width >= 300px) and (width <= 350px) {
     --product-card-width: 156px;

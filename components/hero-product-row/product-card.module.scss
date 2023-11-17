@@ -4,6 +4,11 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: filter 200ms;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
 }
 
 .imageContainer {

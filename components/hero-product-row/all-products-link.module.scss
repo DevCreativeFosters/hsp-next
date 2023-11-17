@@ -17,6 +17,8 @@
   font-family: var(--font-secondary);
   font-size: 16px;
   font-weight: 600;
+  background-color: transparent;
+  transition: all 200ms;
 
   @include bp(medium) {
     position: relative;
@@ -30,6 +32,19 @@
     justify-content: center;
     align-self: flex-start;
     flex-shrink: 0;
-    transition: width 0.2s;
+  }
+
+  &:hover {
+    background-color: var(--color-primary-100);
+    border-color: var(--color-primary-100);
+  }
+
+  path {
+    fill: var(--color-primary-100) !important;
+    transition: fill 200ms;
+  }
+
+  &:hover path {
+    fill: var(--color-white-100) !important;
   }
 }
