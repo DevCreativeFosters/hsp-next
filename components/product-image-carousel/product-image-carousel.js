@@ -39,15 +39,36 @@ export default function ProductImageCarousel({ images }) {
     setBackgroundPosition('50% 50%');
   }, []);
 
-  const handleMouseMove = ev => {
-    if (zoomed) {
+  const handleMouseMove = useCallback(
+    ev => {
+      if (!zoomed) return;
+
+      let clientX, clientY;
+      if (ev.type === 'touchmove') {
+        clientX = ev.touches[0].clientX;
+        clientY = ev.touches[0].clientY;
+      } else {
+        clientX = ev.clientX;
+        clientY = ev.clientY;
+      }
+
       const container = mainImageContainerRef.current;
       const rectangle = container.getBoundingClientRect();
-      const x = ((ev.clientX - rectangle.left) / container.offsetWidth) * 100;
-      const y = ((ev.clientY - rectangle.top) / container.offsetHeight) * 100;
+      const x = ((clientX - rectangle.left) / container.offsetWidth) * 100;
+      const y = ((clientY - rectangle.top) / container.offsetHeight) * 100;
       setBackgroundPosition(`${x}% ${y}%`);
-    }
-  };
+    },
+    [zoomed],
+  );
+
+  const handleTouchStart = useCallback(() => {
+    setZoomed(true);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    setZoomed(false);
+    setBackgroundPosition('50% 50%');
+  }, []);
 
   const handleThumbnailClick = useCallback(selectedImageUrl => {
     setSelectedImage(selectedImageUrl);
@@ -68,7 +89,7 @@ export default function ProductImageCarousel({ images }) {
   useEffect(
     function loadAllSlides() {
       const slides = images?.map((item, index) => (
-        <SwiperSlide key={index}>
+        <SwiperSlide className={styles.swiperSlide} key={index}>
           <Image
             className={styles.thumbnail}
             src={item.sourceUrl}
@@ -115,12 +136,16 @@ export default function ProductImageCarousel({ images }) {
         onMouseEnter={handleZoomEnter}
         onMouseLeave={handleZoomLeave}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleMouseMove}
+        onTouchEnd={handleTouchEnd}
         style={containerStyle}
       />
       <div ref={swiperHeightRef}>
         <Swiper
           className={styles.swiper}
-          slidesPerView={4}
+          slidesPerView="auto"
+          centeredSlides={true}
           spaceBetween={isMobile ? 16 : 24}
           navigation
           onSwiper={swiper => (swiperRef.current = swiper)}
