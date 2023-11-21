@@ -35,16 +35,11 @@
   }
 
   &:hover {
-    background-color: var(--color-primary-100);
-    border-color: var(--color-primary-100);
+    background-color: var(--color-white-20);
   }
 
   path {
     fill: var(--color-primary-100) !important;
     transition: fill 200ms;
-  }
-
-  &:hover path {
-    fill: var(--color-white-100) !important;
   }
 }
