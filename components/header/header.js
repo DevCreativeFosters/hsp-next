@@ -103,32 +103,43 @@ export default function Header({
 
             <nav className={styles.secondaryMenu}>
               <ul className={styles.secondaryMenuList}>
-                {secondaryMenu?.map(({ label, url, icon, variant }, index) => (
-                  <li key={label + index} className={styles.secondaryMenuItem}>
-                    <Button
-                      href={url}
-                      size="xsmall"
-                      variant={variant}
-                      background="dark"
-                      leftIcon={icon}
+                {secondaryMenu?.map(
+                  ({ label, url, iconPredefined, icon, variant }, index) => (
+                    <li
+                      key={label + index}
+                      className={styles.secondaryMenuItem}
                     >
-                      {label}
-                    </Button>
-                  </li>
-                ))}
+                      <Button
+                        href={url}
+                        size="xsmall"
+                        variant={variant}
+                        background="dark"
+                        leftIcon={
+                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                        }
+                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+                      >
+                        {label}
+                      </Button>
+                    </li>
+                  ),
+                )}
               </ul>
             </nav>
 
             <nav className={styles.socialMenu}>
               <ul className={styles.socialMenuList}>
-                {socialMenu?.map(({ url, icon }, index) => (
+                {socialMenu?.map(({ url, iconPredefined, icon }, index) => (
                   <li key={url + index} className={styles.socialMenuItem}>
                     <Button
                       href={url}
                       size="small"
                       variant="tertiary"
                       background="dark"
-                      leftIconUrl={icon}
+                      leftIcon={
+                        iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                      }
+                      leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
                     />
                   </li>
                 ))}
