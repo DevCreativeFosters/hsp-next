@@ -85,8 +85,10 @@ export default function StoreLocatorSearch() {
   }, [viewMode, isFullScreen]);
 
   const isInlineResultListVisible = Boolean(
-    location && searchGeolocation && radius && isFullScreen,
+    location && searchGeolocation && radius && isFullScreen && isMobile,
   );
+
+  const isSearchButtonVisible = !isInlineResultListVisible;
 
   useEffect(
     function toggleSuggestions() {
@@ -223,14 +225,14 @@ export default function StoreLocatorSearch() {
               />
             </div>
 
-            {!isInlineResultListVisible && (
+            {isSearchButtonVisible && (
               <Button
                 type="button"
                 className={styles.button}
                 rightIcon="search"
                 href="#store-search"
                 onClick={() => {
-                  if (!isFullScreen) {
+                  if (isMobile && !isFullScreen) {
                     setIsFullScreen(true);
                   } else {
                     formRef.current.reportValidity();
