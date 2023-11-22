@@ -82,7 +82,7 @@
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;
-  padding-inline: 24px;
+  padding: 0 24px 8px;
   margin-bottom: 112px;
 
   &::-webkit-scrollbar {
@@ -94,7 +94,7 @@
   }
 
   @include bp(large) {
-    padding-inline: 0;
+    padding-inline: 8px;
     mask-image: none;
   }
 
