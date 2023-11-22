@@ -97,10 +97,10 @@ export default function TileCarousel({
 
   useEffect(
     function syncCurrentOffset() {
-      const itemEl = containerRef.current.querySelector(
+      const itemEl = containerRef.current?.querySelector(
         `#${carouselId} > :nth-child(${currentN + 1})`,
       );
-      const newOffset = itemEl.offsetLeft;
+      const newOffset = itemEl?.offsetLeft;
       setCurrentOffset(newOffset);
     },
     [carouselId, currentN],
@@ -126,7 +126,7 @@ export default function TileCarousel({
 
   return (
     <>
-      {items.length > 0 && (
+      {items?.length > 0 && (
         <div className={styles.carousel} ref={carouselRef}>
           <div>
             <div

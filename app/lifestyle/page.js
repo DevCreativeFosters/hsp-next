@@ -1,8 +1,7 @@
-import { Fragment } from 'react';
 import { getPageData, getGlobalOptions } from '@lib/api';
+import { renderBlock } from '@lib/block';
 import Layout from '@components/layout/layout';
 import FeaturedPost from '@components/featured-post/featured-post';
-import { renderBlock } from '@lib/block';
 
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
@@ -21,9 +20,7 @@ export default async function LifestylePage() {
         date={featuredPost?.date}
         postType="HSP TV"
       />
-      {contentBlocks.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
-      ))}
+      {contentBlocks.map(contentBlock => contentBlock)}
     </Layout>
   );
 }
