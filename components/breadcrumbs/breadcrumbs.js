@@ -1,6 +1,6 @@
 'use client';
 
-import { createRef } from 'react';
+import { Fragment, createRef } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Button from '@components/button/button';
@@ -62,7 +62,7 @@ function Breadcrumbs({ items, className }) {
         {itemsWithSeparators.map((item, index) => {
           if (item === SEPARATOR) {
             return (
-              <div className={styles.separator} key={index}>
+              <div className={styles.separator} key={item + index}>
                 {SEPARATOR}
               </div>
             );
@@ -74,7 +74,7 @@ function Breadcrumbs({ items, className }) {
                 variant="secondary"
                 disabled={item.disabled}
                 onClick={item.onClick || null}
-                key={index}
+                key={item.type + index}
               >
                 {item.label}
               </Button>
@@ -86,23 +86,38 @@ function Breadcrumbs({ items, className }) {
                 className={clsx(styles.itemLink, {
                   [styles.strong]: item.strong,
                 })}
-                key={index}
+                key={item.url + index}
               >
                 {item.label}
               </Link>
             );
           } else if (item?.type === 'select') {
             return (
-              <CustomSelect
-                options={item.options}
-                selectedValue={item.selectedValue}
-                placeholder={item.placeholder}
-                disabled={item.disabled}
-                onSelect={item.onSelectCallbackAndActivateNext}
-                strong={item.strong}
-                key={index}
-                fRef={item.ref}
-              />
+              <Fragment key={item.type + index}>
+                <CustomSelect
+                  options={item.options}
+                  selectedValue={item.selectedValue}
+                  placeholder={item.placeholder}
+                  disabled={item.disabled}
+                  onSelect={item.onSelectCallbackAndActivateNext}
+                  strong={item.strong}
+                  fRef={item.ref}
+                />
+                {item.checkbox?.visible && (
+                  <label
+                    key={item.checkbox.checkboxLabel + index}
+                    className={styles.checkboxContainer}
+                  >
+                    {item.checkbox.checkboxLabel}
+                    <input
+                      type="checkbox"
+                      checked={item.checkbox.checked}
+                      onChange={item.checkbox.onChange}
+                    />
+                    <button className={styles.checkbox} />
+                  </label>
+                )}
+              </Fragment>
             );
           }
         })}

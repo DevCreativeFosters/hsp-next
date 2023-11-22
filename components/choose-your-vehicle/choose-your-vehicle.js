@@ -3,16 +3,18 @@
 import clsx from 'clsx';
 import { useCallback, useState, useEffect } from 'react';
 import { useIsMobile } from '@hooks/useIsMobile';
+import { setCookie, deleteCookie } from '@lib/cookies';
 import Button from '@components/button/button';
 import ArrowDown from '@assets/material-icons/expand-more-primary.svg';
 import styles from './choose-your-vehicle.module.scss';
+import slugify from '@lib/slugify';
 
 const LOCAL_STORAGE_VEHICLE = 'hsp-my-vehicle';
 
 const SELECT_LABELS = {
   GENERIC: 'Choose',
   VEHICLE: 'Choose your vehicle',
-  MAKE: 'Choose make',
+  MAKER: 'Choose make',
   MODEL: 'Choose model',
 };
 
@@ -40,44 +42,54 @@ export default function ChooseYourVehicle({ makes }) {
 
   const handleCancel = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
+    deleteCookie(LOCAL_STORAGE_VEHICLE);
     setMakeSelected(null);
     setModelSelected(null);
     setFinalSelection(null);
   }, []);
 
   const handleSave = useCallback(() => {
-    localStorage.setItem(
-      LOCAL_STORAGE_VEHICLE,
-      JSON.stringify({ make: makeSelected, model: modelSelected }),
-    );
+    const savedVehicle = JSON.stringify({
+      maker: makeSelected,
+      model: modelSelected,
+    });
+    localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
+
+    setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
 
     setFinalSelection({
-      make: makeSelected,
+      maker: makeSelected,
       model: modelSelected,
     });
     setDropdownOpened(false);
   }, [makeSelected, modelSelected]);
 
   const handleSelectedMake = useCallback(make => {
-    setMakeSelected(make);
+    setMakeSelected({
+      label: make,
+      value: slugify(make),
+    });
     setModelSelected(null);
     setDisplayMakes(false);
   }, []);
 
   const handleSelectedModel = useCallback(model => {
-    setModelSelected(model);
+    setModelSelected({
+      label: model,
+      value: slugify(model),
+    });
     setDisplayModels(false);
   }, []);
 
   useEffect(function loadSavedVehicle() {
     const savedSelection = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
     if (savedSelection) {
-      const { make, model } = JSON.parse(savedSelection);
-      setMakeSelected(make);
-      setModelSelected(model);
+      const savedVehicle = JSON.parse(savedSelection);
+      setMakeSelected(savedVehicle.maker);
+      setModelSelected(savedVehicle.model);
       setFinalSelection({
-        make: make,
-        model: model,
+        maker: savedVehicle.maker,
+        model: savedVehicle.model,
       });
     }
   }, []);
@@ -109,9 +121,9 @@ export default function ChooseYourVehicle({ makes }) {
             )
           ) : (
             <>
-              {finalSelection.make}{' '}
+              {finalSelection.maker?.label}{' '}
               <span className={styles.modelAndVariantText}>
-                {finalSelection.model}
+                {finalSelection.model?.label}
               </span>
             </>
           )}
@@ -132,7 +144,7 @@ export default function ChooseYourVehicle({ makes }) {
               className={styles.select}
               onClick={() => setDisplayMakes(!displayMakes)}
             >
-              {makeSelected || SELECT_LABELS.MAKE} <ArrowDown />
+              {makeSelected?.label || SELECT_LABELS.MAKER} <ArrowDown />
             </button>
             {displayMakes && (
               <div>
@@ -158,12 +170,12 @@ export default function ChooseYourVehicle({ makes }) {
                 }
               }}
             >
-              {modelSelected || SELECT_LABELS.MODEL} <ArrowDown />
+              {modelSelected?.label || SELECT_LABELS.MODEL} <ArrowDown />
             </div>
             {displayModels && (
               <div>
                 {makeAndModels.map(({ name, models }) => {
-                  if (name === makeSelected) {
+                  if (name === makeSelected.label) {
                     return models.map(model => (
                       <button
                         className={styles.option}
