@@ -44,6 +44,8 @@ export const metadata = {
   description: 'HSP',
 };
 
+export const revalidate = 30;
+
 export default async function RootLayout({ children }) {
   return (
     <html lang="en" className={clsx(hind.variable, khand.variable)}>
