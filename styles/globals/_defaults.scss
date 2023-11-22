@@ -2,6 +2,7 @@
 
 html,
 body {
+  height: 100%;
   padding: 0;
   margin: 0;
   font-family: var(--font-primary);
@@ -9,14 +10,16 @@ body {
   color: var(--color-text);
   background: var(--color-dark-gray-100);
   background: #181616;
+  overflow: hidden auto;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #464646 #0e0e0e;
 
   &::-webkit-scrollbar {
-    overflow: hidden;
+    @media (hover: hover) {
+      overflow: hidden;
+    }
   }
 
   &::-webkit-scrollbar-track {
@@ -31,14 +34,7 @@ body {
   }
 }
 
-html {
-  height: 100%;
-  overflow: hidden;
-}
-
 body {
-  height: 100%;
-
   --current-breakpoint: small;
 
   @each $breakpoint, $size in $breakpoints {

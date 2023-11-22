@@ -3,6 +3,7 @@
 
 .header {
   position: fixed;
+  top: 0;
   z-index: var(--z-index-header);
   width: 100%;
 }

@@ -75,6 +75,11 @@
   font-weight: 600;
   line-height: 1.3;
   transition: transform 200ms;
+  padding-inline: 24px;
+
+  @include bp(medium) {
+    padding-inline: 4px; // optical
+  }
 
   .tile:hover & {
     transform: translateY(-5px);
