@@ -12,11 +12,5 @@ export default async function SupportPage() {
   const content = await getPageData('support');
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
-  return (
-    <Layout>
-      {contentBlocks.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
-      ))}
-    </Layout>
-  );
+  return <Layout>{contentBlocks.map(contentBlock => contentBlock)}</Layout>;
 }

@@ -10,15 +10,9 @@ export const metadata = {
 
 export default async function HomePage() {
   const content = await getPageData('');
-  const contentBlocks = await content?.flexibleContent?.blocks?.map(
-    renderBlock,
-  );
+  const contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);
 
   return (
-    <Layout withMap>
-      {contentBlocks.map((contentBlock, index) => (
-        <>{contentBlock}</>
-      ))}
-    </Layout>
+    <Layout withMap>{contentBlocks.map(contentBlock => contentBlock)}</Layout>
   );
 }

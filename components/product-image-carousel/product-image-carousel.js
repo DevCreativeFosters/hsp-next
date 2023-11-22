@@ -144,8 +144,7 @@ export default function ProductImageCarousel({ images }) {
       <div ref={swiperHeightRef}>
         <Swiper
           className={styles.swiper}
-          slidesPerView="auto"
-          centeredSlides={true}
+          slidesPerView={isMobile ? 'auto' : 4}
           spaceBetween={isMobile ? 16 : 24}
           navigation
           onSwiper={swiper => (swiperRef.current = swiper)}
