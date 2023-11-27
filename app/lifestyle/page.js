@@ -13,9 +13,10 @@ export default async function LifestylePage() {
     <Layout title="HSP 4x4 - Lifestyle">
       <FeaturedPost
         title={featuredPost?.title}
-        excerpt={featuredPost?.excerpt}
+        excerpt={featuredPost?.hspTvPostCustomFields?.description}
         uri={featuredPost?.uri}
-        videoUrl={featuredPost?.hspTvPostCustomFields?.videoUrl}
+        video={featuredPost?.hspTvPostCustomFields?.backgroundVideo}
+        youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
         tags={featuredPost?.tags}
         date={featuredPost?.date}
         postType="HSP TV"

@@ -44,7 +44,7 @@ export default function Lifestyle({
         content={featured.excerpt}
         createdAt={featured.date}
         url={featured.uri}
-        tags={featured.tags.nodes}
+        tags={featured.tags?.nodes}
         image={featured.featuredImage?.node}
       />
       {posts.length > 0 && (
