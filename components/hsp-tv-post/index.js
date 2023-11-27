@@ -42,9 +42,9 @@ export function HspTvPost({
             )}
           </div>
         )}
-        {customFields?.videoUrl && (
+        {customFields?.backgroundVideo && (
           <VideoIframe
-            src={customFields?.videoUrl}
+            src={customFields?.backgroundVideo.mediaItemUrl}
             desktopWidth={1320}
             desktopHeight={742}
             mobileWidth={342}

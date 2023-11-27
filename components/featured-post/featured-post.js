@@ -12,7 +12,8 @@ export default function FeaturedPost({
   title,
   excerpt,
   uri,
-  videoUrl,
+  video,
+  youtubeId,
   tags,
   date,
   postType,
@@ -38,9 +39,9 @@ export default function FeaturedPost({
 
   return (
     <div className={styles.featuredPost}>
-      {videoUrl && (
+      {video && (
         <video className={styles.video} ref={videoRef} loop muted>
-          <source src={videoUrl} type="video/mp4" />
+          <source src={video.mediaItemUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
@@ -69,9 +70,9 @@ export default function FeaturedPost({
               dangerouslySetInnerHTML={{ __html: excerpt }}
             />
           )}
-          {(videoUrl || uri) && (
+          {(youtubeId || uri) && (
             <div className={styles.buttons}>
-              {videoUrl && (
+              {youtubeId && (
                 <Button
                   onToggleIconClick={() => null} // WIP - add video modal popup functionality
                   variant="primary"
