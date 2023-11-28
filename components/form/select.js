@@ -18,16 +18,15 @@ export default function Select({
   options = [],
   prefix = '',
   suffix = '',
-  selected,
-  onChange = value => null,
+  value,
+  onChange = val => null,
   onClick = () => null,
   ...props
 }) {
-  const [selectedValue, setSelectedValue] = useState(selected);
   const [isOpen, setOpen] = useState(false);
   const selectedOption = useMemo(
-    () => options.find(option => option.value === selectedValue),
-    [options, selectedValue],
+    () => options.find(option => option.value === value),
+    [options, value],
   );
 
   const [elementId] = useState(id || uuidv4());
@@ -47,7 +46,6 @@ export default function Select({
 
   const handleSelectOption = useCallback(
     value => () => {
-      setSelectedValue(value);
       onChange(value);
       setOpen(false);
     },
@@ -77,7 +75,7 @@ export default function Select({
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
-            [styles.filled]: selectedValue,
+            [styles.filled]: value,
           })}
           {...props}
           onClick={ev => {

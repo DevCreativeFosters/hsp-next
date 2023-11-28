@@ -3,7 +3,10 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
-import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
+import StoreLocatorContext, {
+  DEFAULT_RADIUS,
+  RADIUS_OPTIONS,
+} from '@contexts/store-locator';
 import useMobileVh from '@hooks/useMobileVh';
 import { findLocationsInRadius } from '@lib/store-locations';
 import {
@@ -89,7 +92,8 @@ export default function EnquiryForm() {
     setSearchGeolocation(null);
     setFilteredLocations(allLocations);
     setSelectedStore(null);
-  }, [setSearchGeolocation]);
+    setRadius(DEFAULT_RADIUS);
+  }, [setSearchGeolocation, setRadius]);
 
   const interactWithDisabledForm = useCallback(() => {
     if (selectedStore) {
@@ -163,7 +167,7 @@ export default function EnquiryForm() {
           placeholder="Variant"
           label="Variant"
           options={OPTIONS_PRODUCTS}
-          selected={SELECTED_PRODUCT.value}
+          value={SELECTED_PRODUCT.value}
         />
 
         <div
@@ -206,7 +210,7 @@ export default function EnquiryForm() {
               suffix="km"
               onChange={onRadiusChange}
               options={RADIUS_OPTIONS}
-              selected={radius}
+              value={radius}
               disabled={selectedStore}
             />
           </div>
