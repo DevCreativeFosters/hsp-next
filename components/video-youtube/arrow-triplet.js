@@ -8,15 +8,12 @@ export function ArrowTriplet({ reversed }) {
         [styles.isReversed]: reversed,
       })}
     >
-      <span
-        className={clsx(styles.seekArrow, { [styles.isReversed]: reversed })}
-      />
-      <span
-        className={clsx(styles.seekArrow, { [styles.isReversed]: reversed })}
-      />
-      <span
-        className={clsx(styles.seekArrow, { [styles.isReversed]: reversed })}
-      />
+      {[...Array(3)].map((_, index) => (
+        <span
+          key={index}
+          className={clsx(styles.seekArrow, { [styles.isReversed]: reversed })}
+        />
+      ))}
     </div>
   );
 }

@@ -1,12 +1,14 @@
-import Button from '@components/button/button';
-import { ArrowTriplet } from '@components/video-youtube/arrow-triplet';
-import { YoutubeCloseButton } from '@components/video-youtube/youtube-close-button';
+'use client';
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import clsx from 'clsx';
+import { ArrowTriplet } from '@components/video-youtube/arrow-triplet';
+import { YoutubeCloseButton } from '@components/video-youtube/youtube-close-button';
 import styles from './video-youtube.module.scss';
 
 const SEEK_INTERVAL = 5; // [s]
+const ANIMATION_DURATION = 500 + 100; // CSS animation duration + a bit of margin
 
 export function VideoYoutube({ youtubeId, isActive, onClose }) {
   const [player, setPlayer] = useState(null);
@@ -134,7 +136,7 @@ export function VideoYoutube({ youtubeId, isActive, onClose }) {
       clearTimeout(handler);
       tmoPlaybackHandler.current = setTimeout(() => {
         setPlaybackIcon(null);
-      }, 500 + 100);
+      }, ANIMATION_DURATION);
 
       return () => {
         clearTimeout(handler);
@@ -149,7 +151,7 @@ export function VideoYoutube({ youtubeId, isActive, onClose }) {
       clearTimeout(handler);
       tmoSeekHandler.current = setTimeout(() => {
         setSeekIcon(null);
-      }, 500 + 100);
+      }, ANIMATION_DURATION);
 
       return () => {
         clearTimeout(handler);

@@ -1,13 +1,12 @@
 'use client';
 
-import { VideoYoutube } from '@components/video-youtube/video-youtube';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { POST_TYPES } from '@lib/post-types';
 import routes from '@lib/routes';
-import { usePathname } from 'next/dist/client/components/navigation';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useIsMobile } from '@hooks/useIsMobile';
+import { VideoYoutube } from '@components/video-youtube/video-youtube';
 import Tag from '@components/tag/tag';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -26,10 +25,9 @@ export default function FeaturedPost({
   const router = useRouter();
   const searchParams = useSearchParams();
   const videoPreview = searchParams.get('videoPreview');
-  const pathname = usePathname();
   const isMobile = useIsMobile();
   const videoRef = useRef(null);
-  const [isPlayerActive, setIsPlayerActive] = useState(videoPreview);
+  const [isPlayerActive, setIsPlayerActive] = useState(Boolean(videoPreview));
 
   let moreUrl;
   if (postType === POST_TYPES.TV) {
