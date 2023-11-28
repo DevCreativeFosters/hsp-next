@@ -1,0 +1,56 @@
+.button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  transform: none;
+  background: var(--color-black-100);
+  color: white;
+
+  &:hover {
+    background: #222;
+  }
+
+  @media (hover: hover) {
+    left: auto;
+    top: 3px;
+    right: 15px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.icon {
+  position: relative;
+  top: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.label {
+  display: none;
+
+  @media (hover: hover) {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'YouTube Noto', Roboto, Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    white-space: nowrap;
+  }
+}

@@ -1,5 +1,6 @@
 'use client';
 
+import Tag from '@components/tag/tag';
 import { useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -89,9 +90,7 @@ export default function Tile({
           <ul className={styles.tagList}>
             {tagsNormalized.map(({ name, link }, index) => (
               <li key={index}>
-                <Link className={styles.tag} href={link.url || ''}>
-                  {name}
-                </Link>
+                <Tag name={name} size="small" />
               </li>
             ))}
           </ul>
