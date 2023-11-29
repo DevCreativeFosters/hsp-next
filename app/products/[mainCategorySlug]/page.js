@@ -37,6 +37,7 @@ export default async function MainCategoryPage({ params }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
+            mainCategory={true}
             currentProduct={currentProduct}
             categories={categories}
           />

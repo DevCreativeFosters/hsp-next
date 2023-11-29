@@ -200,5 +200,5 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
     },
   ];
 
-  return <Breadcrumbs items={items} />;
+  return <Breadcrumbs items={items} product />;
 }

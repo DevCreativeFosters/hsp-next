@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, createRef } from 'react';
+import { Fragment, createRef, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Button from '@components/button/button';
@@ -21,7 +21,8 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items, className }) {
+function Breadcrumbs({ items, product }) {
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const itemsNormalized = items
     .map(item => ({
       ...item,
@@ -40,10 +41,17 @@ function Breadcrumbs({ items, className }) {
       },
     }));
 
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
   const itemsWithSeparators = addSeparators(itemsNormalized);
   const itemsLength = itemsNormalized.length;
-  const singleBreadcrumb =
-    itemsLength > 1 ? itemsNormalized[itemsLength - 2] : null;
+  const singleBreadcrumb = product
+    ? { url: '/products', label: 'Products' }
+    : itemsLength > 1
+    ? itemsNormalized[itemsLength - 2]
+    : null;
 
   return (
     <>
@@ -57,7 +65,64 @@ function Breadcrumbs({ items, className }) {
             {singleBreadcrumb.label}
           </Link>
         )}
+        {product && (
+          <Button
+            variant="tertiary"
+            rightIcon={isDropdownVisible ? 'close' : 'expand-more-primary'}
+            onClick={toggleDropdown}
+            className={styles.dropdownButton}
+          />
+        )}
       </div>
+      {isDropdownVisible && (
+        <div className={styles.productDropdowns}>
+          {itemsWithSeparators.map((item, index) => {
+            if (item?.type === 'button') {
+              return (
+                <Button
+                  href={item.url || '#'}
+                  size="xsmall"
+                  variant="secondary"
+                  disabled={item.disabled}
+                  onClick={item.onClick || null}
+                  key={index}
+                  className={styles.applyButton}
+                >
+                  {item.label}
+                </Button>
+              );
+            } else if (item?.type === 'select') {
+              return (
+                <Fragment key={item.type + index}>
+                  <CustomSelect
+                    options={item.options}
+                    selectedValue={item.selectedValue}
+                    placeholder={item.placeholder}
+                    disabled={item.disabled}
+                    onSelect={item.onSelectCallbackAndActivateNext}
+                    strong={item.strong}
+                    fRef={item.ref}
+                  />
+                  {item.checkbox?.visible && (
+                    <label
+                      key={item.checkbox.checkboxLabel + index}
+                      className={styles.checkboxContainer}
+                    >
+                      {item.checkbox.checkboxLabel}
+                      <input
+                        type="checkbox"
+                        checked={item.checkbox.checked}
+                        onChange={item.checkbox.onChange}
+                      />
+                      <button className={styles.checkbox} />
+                    </label>
+                  )}
+                </Fragment>
+              );
+            }
+          })}
+        </div>
+      )}
       <div className={clsx(styles.container, styles.full)}>
         {itemsWithSeparators.map((item, index) => {
           if (item === SEPARATOR) {
