@@ -120,10 +120,11 @@
   display: none;
   flex-direction: column;
   gap: 24px;
+  height: min-content;
 
   @include bp(large) {
     position: sticky;
-    top: 120px;
+    top: var(--header-height);
     display: flex;
     padding: 0;
     gap: 48px;
