@@ -1,0 +1,206 @@
+@import '/styles/globals/helpers';
+
+.backdrop {
+  content: '';
+  position: fixed;
+  display: block;
+  background-color: var(--color-black-60);
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: var(--z-index-backdrop);
+}
+
+.enquiryModal {
+  max-width: 1320px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: calc(100% - 40px);
+  height: calc(100% - 80px);
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden auto;
+  background-color: #181616;
+  border-radius: 16px;
+  padding: 48px 16px;
+  z-index: var(--z-index-modal);
+
+  @include scrollbar;
+
+  @include bp(large) {
+    padding: 48px;
+    width: calc(100% - 80px);
+    height: calc(100% - 80px);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.title {
+  margin-top: 4px;
+  margin-bottom: 48px;
+
+  @include bp(medium) {
+    margin-top: 0;
+    line-height: 1.06;
+  }
+}
+
+.containers {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include bp(large) {
+    flex-direction: row;
+  }
+}
+
+.formContainer {
+  width: 100%;
+
+  @include bp(large) {
+    width: 50%;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+}
+
+.label {
+  width: 100%;
+  color: var(--color-white-80);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  @include bp(large) {
+    margin: 24px 0;
+  }
+
+  &:first-of-type {
+    margin: 0;
+  }
+}
+
+.tooltip {
+  position: absolute;
+  background-color: var(--color-black-100);
+  padding: 24px;
+  border-radius: 8px;
+  top: 0;
+  right: 0;
+  z-index: var(--z-index-tooltip);
+
+  @include bp(large) {
+    bottom: 0;
+    top: unset;
+  }
+}
+
+.tooltipButton {
+  z-index: var(--z-index-tooltip-button);
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.backwardButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include bp(large) {
+    display: none;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 48px;
+  right: 48px;
+  display: none;
+
+  @include bp(large) {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+  }
+}
+
+.enquirySummary {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+
+  @include bp(large) {
+    width: 50%;
+  }
+}
+
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @include bp(medium) {
+    margin-bottom: 0;
+  }
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.totalPrice {
+  gap: 4px;
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 24px;
+
+  @include bp(large) {
+    flex-direction: row;
+    align-items: center;
+    font-size: 36px;
+  }
+}
+
+.totalInstallationCost {
+  color: var(--color-primary-100);
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2;
+
+  @include bp(large) {
+    font-size: 24px;
+  }
+}

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import FullStar from '@assets/material-icons/star-full.svg';
-import HalfStar from '@assets/material-icons/star-half.svg';
-import EmptyStar from '@assets/material-icons/star-empty.svg';
+import FullStar from '@assets/icons/star-full.svg';
+import HalfStar from '@assets/icons/star-half.svg';
+import EmptyStar from '@assets/icons/star-empty.svg';
 
 const NUMBER_OF_STARS = 5;
 

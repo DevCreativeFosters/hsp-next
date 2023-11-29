@@ -1,0 +1,258 @@
+import { useCallback, useState } from 'react';
+import Button from '@components/button/button';
+import Form from '@components/form/form';
+import Input from '@components/form/input';
+import Textarea from '@components/form/textarea';
+import StoreTile from '@components/store-tile/store-tile';
+import EnquiryProduct from './enquiry-product';
+import styles from './enquiry-modal.module.scss';
+
+const TOOLTIP_TEXT =
+  'If you are enquiring about products for a new car you are getting from a dealership, provide the dealership email address, so they are also informed about the adjustments.';
+
+export default function EnquiryModal({
+  onClose,
+  store,
+  product,
+  productPrice,
+  installationPrice,
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    city: '',
+    message: '',
+    dealershipEmail: '',
+  });
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    city: '',
+    message: '',
+    dealershipEmail: '',
+  });
+
+  const validateForm = useCallback(() => {
+    let newErrors = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      city: '',
+      message: '',
+      dealershipEmail: '',
+    };
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    }
+
+    if (
+      formData.dealershipEmail &&
+      !/\S+@\S+\.\S+/.test(formData.dealershipEmail)
+    ) {
+      newErrors.dealershipEmail = 'Dealership email is invalid';
+    }
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some(
+      errorMessage => errorMessage !== '',
+    );
+
+    return !hasErrors;
+  }, [formData]);
+
+  const handleFormChange = useCallback(
+    ev => {
+      setFormData({
+        ...formData,
+        [ev.target.name]: ev.target.value,
+      });
+    },
+    [formData],
+  );
+
+  const handleFormSubmit = useCallback(
+    ev => {
+      ev.preventDefault();
+      const isValid = validateForm();
+      if (isValid) {
+        //submit form
+      }
+    },
+    [validateForm],
+  );
+
+  return (
+    <>
+      <div className={styles.backdrop} onClick={onClose} />
+      <div className={styles.enquiryModal}>
+        <div className={styles.header}>
+          <Button
+            rightIcon="arrow-backward-large"
+            onClick={onClose}
+            variant="tertiary"
+            className={styles.backwardButton}
+          />
+          <h3 className={styles.title}>Send enquiry</h3>
+          <Button
+            rightIcon="close-large"
+            onClick={onClose}
+            variant="tertiary"
+            className={styles.closeButton}
+          />
+        </div>
+        <div className={styles.containers}>
+          <div className={styles.formContainer}>
+            <Form onSubmit={handleFormSubmit}>
+              <label className={styles.label}>Your details: </label>
+              <Input
+                label="First name"
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleFormChange}
+                placeholder="First name"
+                halfWidth
+                required
+                errorMessage={errors.firstName}
+              />
+              <Input
+                label="Last name"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleFormChange}
+                placeholder="Last name"
+                halfWidth
+                required
+                errorMessage={errors.lastName}
+              />
+              <Input
+                label="E-mail"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleFormChange}
+                placeholder="E-mail"
+                halfWidth
+                required
+                errorMessage={errors.email}
+              />
+              <Input
+                label="Phone"
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleFormChange}
+                placeholder="Phone"
+                halfWidth
+                required
+                errorMessage={errors.phone}
+              />
+              <Input
+                label="City"
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleFormChange}
+                placeholder="City"
+                required
+                errorMessage={errors.city}
+              />
+              <Textarea
+                label="Your message"
+                name="message"
+                value={formData.message}
+                onChange={handleFormChange}
+                placeholder="Your message"
+                required
+                errorMessage={errors.message}
+              />
+              <label className={styles.label}>
+                Send also to dealership:{' '}
+                <Button
+                  className={styles.tooltipButton}
+                  rightIcon="question-mark"
+                  variant="tertiary"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                  onClick={() => setShowTooltip(!showTooltip)}
+                />
+                {showTooltip && (
+                  <div className={styles.tooltip}>{TOOLTIP_TEXT}</div>
+                )}
+              </label>
+              <Input
+                type="email"
+                name="dealershipEmail"
+                value={formData.dealershipEmail}
+                onChange={handleFormChange}
+                placeholder="Your dealership e-mail address"
+                errorMessage={errors.dealershipEmail}
+              />
+            </Form>
+          </div>
+          <div className={styles.enquirySummary}>
+            <label className={styles.label}>Products of interest:</label>
+            <div className={styles.products}>
+              <EnquiryProduct
+                name={product.label}
+                imageUrl="http://stghsp.wpenginepowered.com/wp-content/uploads/2023/11/premium-hard-lid.png"
+                price={productPrice}
+                installationCost={installationPrice}
+              />
+            </div>
+            <label className={styles.label}>Your local store:</label>
+            <StoreTile item={store} />
+            <div className={styles.total}>
+              <div className={styles.totalPrice}>
+                ${productPrice.toLocaleString()}{' '}
+                <span className={styles.totalInstallationCost}>
+                  {' '}
+                  + ${installationPrice.toLocaleString()} for installation
+                </span>
+              </div>
+              <Button
+                type="submit"
+                rightIcon="send"
+                size="large"
+                onClick={handleFormSubmit}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
