@@ -20,6 +20,7 @@ import StoreList from '@components/store-list/store-list';
 import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import Button from '@components/button/button';
+import EnquiryModal from './enquiry-modal';
 
 import styles from './enquiry-form.module.scss';
 
@@ -46,11 +47,20 @@ export default function EnquiryForm() {
   const [highlight, setHighlight] = useState(false);
   const [productPrice] = useState(EXAMPLE_PRODUCT_PRICE);
   const [installationPrice] = useState(EXAMPLE_INSTALLATION_PRICE);
+  const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
 
   useMobileVh();
+
+  const handleOpenModal = () => {
+    setEnquiryModalOpened(true);
+  };
+
+  const handleCloseModal = () => {
+    setEnquiryModalOpened(false);
+  };
 
   const { searchGeolocation, setSearchGeolocation, radius, setRadius } =
     useContext(StoreLocatorContext);
@@ -274,11 +284,21 @@ export default function EnquiryForm() {
             className={styles.submitButton}
             size="large"
             disabled={!selectedStore}
+            onClick={handleOpenModal}
           >
             Make an enquiry
           </Button>
         </div>
       </form>
+      {enquiryModalOpened && (
+        <EnquiryModal
+          onClose={handleCloseModal}
+          store={selectedStore}
+          product={SELECTED_PRODUCT}
+          productPrice={productPrice}
+          installationPrice={installationPrice}
+        />
+      )}
     </section>
   );
 }

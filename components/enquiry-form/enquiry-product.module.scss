@@ -1,0 +1,55 @@
+.price {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.installationCost {
+  color: var(--color-primary-100);
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.productImage {
+  border-radius: 8px;
+}
+
+.name {
+  color: var(--color-white-100);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+  position: absolute;
+  top: 0;
+
+  @include bp(large) {
+    position: relative;
+    top: initial;
+  }
+}
+
+.product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-white-5);
+  border-radius: 16px;
+  padding: 68px 24px 16px;
+  position: relative;
+
+  @include bp(large) {
+    padding: 16px 24px;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+}

@@ -5,7 +5,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { useIsMobile } from '@hooks/useIsMobile';
 import { setCookie, deleteCookie } from '@lib/cookies';
 import Button from '@components/button/button';
-import ArrowDown from '@assets/material-icons/expand-more-primary.svg';
+import ArrowDown from '@assets/icons/expand-more-primary.svg';
 import styles from './choose-your-vehicle.module.scss';
 import slugify from '@lib/slugify';
 
