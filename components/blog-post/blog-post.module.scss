@@ -51,13 +51,14 @@
 
 .information {
   display: none;
+  height: min-content;
 
   @include bp(large) {
     display: flex;
     flex-direction: column;
     gap: 48px;
     position: sticky;
-    top: 120px;
+    top: var(--header-height);
     padding: 0;
   }
 }
@@ -119,11 +120,6 @@
     margin-top: -16px;
     background-color: var(--color-black-100);
   }
-}
-
-.stickySidebar {
-  grid-area: unset;
-  height: min-content;
 }
 
 .breadcrumbsMobile {

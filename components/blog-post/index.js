@@ -1,14 +1,12 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import clsx from 'clsx';
 import Image from 'next/image';
 import routes from '@lib/routes';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
 import Container from '@components/container/container';
 import RelatedPosts from '@components/related-posts/related-posts';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
-import PostSidebar from '@components/post-sidebar';
 import styles from './blog-post.module.scss';
 
 export function BlogPost({
@@ -19,7 +17,6 @@ export function BlogPost({
   slug,
   relatedPosts,
 }) {
-  const [isSticky, setIsSticky] = useState(false);
   const informationRef = useRef(null);
 
   return (
@@ -61,36 +58,29 @@ export function BlogPost({
             )}
           </div>
         </div>
-        <div
-          ref={informationRef}
-          className={clsx(styles.information, {
-            [styles.stickySidebar]: isSticky,
-          })}
-        >
-          <PostSidebar elementRef={informationRef} setIsSticky={setIsSticky}>
-            <BreadcrumbsLifestyle
-              initialContentTypeRoute={routes.blog()}
-              exactBreadcrumb={{
-                label: title,
-                url: routes.blog(slug),
-                strong: true,
-              }}
+        <div ref={informationRef} className={styles.information}>
+          <BreadcrumbsLifestyle
+            initialContentTypeRoute={routes.blog()}
+            exactBreadcrumb={{
+              label: title,
+              url: routes.blog(slug),
+              strong: true,
+            }}
+          />
+          {title && <h1 className={styles.title}>{title}</h1>}
+          {excerpt && (
+            <div
+              className={styles.excerpt}
+              dangerouslySetInnerHTML={{ __html: excerpt }}
             />
-            {title && <h1 className={styles.title}>{title}</h1>}
-            {excerpt && (
-              <div
-                className={styles.excerpt}
-                dangerouslySetInnerHTML={{ __html: excerpt }}
-              />
-            )}
-            <div className={styles.relatedPostsContainer}>
-              <RelatedPosts
-                posts={relatedPosts}
-                type="blog"
-                url={routes.blog()}
-              />
-            </div>
-          </PostSidebar>
+          )}
+          <div className={styles.relatedPostsContainer}>
+            <RelatedPosts
+              posts={relatedPosts}
+              type="blog"
+              url={routes.blog()}
+            />
+          </div>
         </div>
       </div>
     </Container>
