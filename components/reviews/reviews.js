@@ -79,6 +79,7 @@ export default function Reviews({ data }) {
             )}
             <Button
               href={data?.allReviewsLink?.link.url}
+              className={styles.allReviewsButton}
               rightIcon="external-link"
             >
               {data?.allReviewsLink?.link.title}
