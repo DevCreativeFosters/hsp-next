@@ -136,22 +136,19 @@
 
 .buttonContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin-top: 24px;
 
   @include bp(medium) {
-    justify-content: space-between;
     margin-top: 32px;
   }
 }
 
 .actionButton {
-  display: none;
+  --block-padding: 8px;
 
   @include bp(medium) {
-    display: block;
-
     --block-padding: 16px;
   }
 }
