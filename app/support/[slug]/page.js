@@ -16,10 +16,9 @@ export const metadata = {
 };
 
 export default async function SupportSubpage({ params }) {
-  const gutenbergContent = await getPageGutenbergContent(
-    `support/${params.slug}`,
-  );
-  const content = await getPageData(`support/${params.slug}`);
+  const supportUrl = routes.support(params.slug);
+  const gutenbergContent = await getPageGutenbergContent(supportUrl);
+  const content = await getPageData(supportUrl);
   const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
 
   return (
