@@ -29,6 +29,14 @@
 
 .content {
   position: relative;
+
+  &.reserveSpaceForVehicleSelection {
+    padding-top: 40px;
+
+    @include bp(large) {
+      padding-top: 0;
+    }
+  }
 }
 
 .bottomSticky {

@@ -20,7 +20,7 @@ export default async function HSPCelebritiesPage() {
     'lifestyle/hsp-celebrities',
   );
   return (
-    <Layout>
+    <Layout reserveSpaceForVehicleSelection>
       <Background colorStops={[]} containMargins>
         <Container collapseMargin>
           <BreadcrumbsLifestyle

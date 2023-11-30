@@ -31,6 +31,10 @@
       'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu socialMenu'
       'logo mainMenu mainMenu mainMenu vehicle vehicle';
     grid-template-columns: 130px 10fr 10fr 10fr 10fr 1fr;
+    gap: 0 16px;
+  }
+
+  @include bp(full) {
     gap: 0 24px;
   }
 }
@@ -90,6 +94,16 @@
 
 .mainMenuList {
   white-space: nowrap;
+}
+
+.mainMenuButton {
+  @include bp(large) {
+    --inline-padding: 20px;
+  }
+
+  @include bp(full) {
+    --inline-padding: 24px;
+  }
 }
 
 .secondaryMenuList {
@@ -153,22 +167,27 @@
 
 .vehicleSelection {
   position: absolute;
-  bottom: -40px;
-  margin-left: 50%;
+  top: 100%;
+  left: 50%;
   transform: translateX(-50%);
+  max-width: calc(100vw - 8px);
 
   @include bp(large) {
     @include center;
 
     position: relative;
+    top: initial;
+    left: initial;
     transform: initial;
-    margin-left: 0;
-    bottom: 0;
     grid-area: vehicle;
     justify-self: flex-end;
-    gap: 16px;
+    gap: 8px;
     white-space: nowrap;
     color: white;
+  }
+
+  @include bp(full) {
+    gap: 16px;
   }
 }
 

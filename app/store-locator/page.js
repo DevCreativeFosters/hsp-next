@@ -17,7 +17,7 @@ export const metadata = {
 
 export default async function StoreLocatorPage() {
   return (
-    <Layout withMap withFooter={false}>
+    <Layout withMap withFooter={false} reserveSpaceForVehicleSelection>
       <FullscreenCollapse>
         <div className={styles.breadcrumbs}>
           <Breadcrumbs

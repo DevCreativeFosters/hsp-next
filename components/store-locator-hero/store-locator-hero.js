@@ -1,6 +1,5 @@
 'use client';
 
-import Button from '@components/button/button';
 import Container from '@components/container/container';
 import styles from './store-locator-hero.module.scss';
 
@@ -16,15 +15,6 @@ export default function StoreLocatorHero() {
               peace of mind.
             </p>
           </div>
-
-          <Button
-            className={styles.button}
-            size="large"
-            rightIcon="search"
-            href="#store-search"
-          >
-            Search
-          </Button>
         </main>
 
         <aside className={styles.aside}>
