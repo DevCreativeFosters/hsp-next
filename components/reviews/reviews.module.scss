@@ -127,3 +127,11 @@
 .overflowHidden {
   overflow: hidden;
 }
+
+.allReviewsButton {
+  min-width: 167px;
+
+  svg {
+    max-width: 20px;
+  }
+}
