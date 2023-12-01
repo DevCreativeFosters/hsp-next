@@ -1,4 +1,4 @@
-import CloseLarge from '@assets/material-icons/close-large.svg';
+import CloseLarge from '@assets/icons/close-large.svg';
 import styles from './youtube-close-button.module.scss';
 
 export function YoutubeCloseButton({ label, onClick = () => null }) {
