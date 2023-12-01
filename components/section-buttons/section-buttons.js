@@ -24,7 +24,7 @@ export default function SectionButtons({
       {buttons.map(({ label, link, withArrowForwardIcon, ...props }, index) => (
         <Button
           key={index}
-          href={link?.url}
+          href={link?.url || link}
           target={link?.target || null}
           {...props}
           rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
