@@ -91,16 +91,18 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
   const handleMakerChange = useCallback((value, label) => {
     setMaker({
-      slug: value,
       name: label,
+      slug: value,
+      value, // @TODO: remove it after "value -> slug" rename
     });
     setModel(null);
   }, []);
 
   const handleModelChange = useCallback((value, label) => {
     setModel({
-      slug: value,
       name: label,
+      slug: value,
+      value, // @TODO: remove it after "value -> slug" rename
     });
   }, []);
 
@@ -109,11 +111,19 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
       const savedSelection = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
       if (savedSelection) {
         const savedVehicle = JSON.parse(savedSelection);
-        const makerFound = findMakerBySlug(savedVehicle.maker.slug);
+
+        // const makerFound = findMakerBySlug(savedVehicle.maker.slug);
+        // const modelFound = findModelBySlug(
+        //   savedVehicle.maker.slug,
+        //   savedVehicle.model.slug,
+        // );
+
+        const makerFound = findMakerBySlug(savedVehicle.maker.value); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
         const modelFound = findModelBySlug(
-          savedVehicle.maker.slug,
-          savedVehicle.model.slug,
-        );
+          savedVehicle.maker.value,
+          savedVehicle.model.value,
+        ); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
+
         if (makerFound) {
           setMaker(makerFound);
         }

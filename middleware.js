@@ -26,14 +26,10 @@ export function middleware(request) {
     }
 
     if (hspMyVehicle) {
-      const { make, model } = JSON.parse(hspMyVehicle.value);
-
-      if (make && model) {
-        url.pathname = routes.product(
-          pathSegments[1],
-          slugify(make),
-          slugify(model),
-        );
+      const { maker, model } = JSON.parse(hspMyVehicle.value);
+      const productType = pathSegments[1];
+      if (maker && model) {
+        url.pathname = routes.product(productType, maker.slug, model.slug);
         return NextResponse.redirect(url);
       }
     }
