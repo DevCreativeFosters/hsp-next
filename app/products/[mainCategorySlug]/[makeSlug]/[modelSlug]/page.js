@@ -5,6 +5,8 @@ import ProductImageCarousel from '@components/product-image-carousel/product-ima
 import ProductTabs from '@components/product-tabs/product-tabs';
 import EnquiryForm from 'components/enquiry-form/enquiry-form';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import ErrorPage from '@components/error-page';
+import PageContainer from '@components/page-container/page-container';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import {
   getCategoriesAndMakesAndModels,
@@ -29,11 +31,11 @@ export default async function CategoryPage({ params }) {
 
   const currentProduct = {
     mainCategory: {
-      label: mainCategory.name,
+      label: mainCategory?.name,
       value: mainCategorySlug,
     },
     make: {
-      label: make.name,
+      label: make?.name,
       value: makeSlug,
     },
     model: {
@@ -45,10 +47,19 @@ export default async function CategoryPage({ params }) {
   const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
-  if (!firstMatchedProduct) {
+  if (!firstMatchedProduct || !mainCategory || !make) {
     return (
-      <Layout title="Product">
-        <Container>No product found.</Container>
+      <Layout title="Product" withMap>
+        <Container>
+          <PageContainer>
+            <ErrorPage
+              title="Product not found"
+              text="Sorry, we couldn't find the product you are looking for."
+              buttonText="Back to Products"
+              product
+            />
+          </PageContainer>
+        </Container>
       </Layout>
     );
   }

@@ -60,6 +60,11 @@
   padding-left: 26px;
   cursor: pointer;
   user-select: none;
+  line-height: 1;
+
+  @include bp(medium) {
+    line-height: initial;
+  }
 
   .checkbox {
     position: absolute;
@@ -90,8 +95,10 @@
       transform: rotate(45deg);
 
       @include bp(medium) {
-        left: 6px;
-        top: 3px;
+        left: 4px;
+        top: 1px;
+        width: 5px;
+        height: 9px;
       }
     }
   }
@@ -106,7 +113,7 @@
     &:checked {
       + .checkbox {
         background-color: var(--color-primary-100);
-        border: solid var(--color-primary-100);
+        border: 2px solid var(--color-primary-100);
       }
 
       + .checkbox::after {
