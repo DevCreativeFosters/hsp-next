@@ -159,7 +159,7 @@ export default function StoreLocatorSearch() {
           <ArrowForwardIcon />
         </button>
 
-        <h3 className={styles.heading}>[ Locate a store ]</h3>
+        <h3 className={styles.heading}>Locate a store</h3>
       </header>
 
       <div
@@ -180,7 +180,7 @@ export default function StoreLocatorSearch() {
               <StoreLocatorInput
                 type="text"
                 name="location"
-                placeholder="[ Search location ]"
+                placeholder="Search location"
                 icon="search"
                 withResetButton
                 value={locationInput}
@@ -200,18 +200,17 @@ export default function StoreLocatorSearch() {
                 selectLocation={selectLocation}
               />
             </div>
-
             <Select
               id="search-radius"
               className={styles.radius}
               size="large"
-              placeholder="[ Select radius ]"
+              placeholder="Select radius"
               background="dark"
               suffix="km"
               onClick={onFormInteraction}
               onChange={onRadiusChange}
               options={RADIUS_OPTIONS}
-              selected={radius}
+              value={radius}
             />
 
             <div className={styles.mobileOnly}>

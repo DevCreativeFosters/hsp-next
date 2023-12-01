@@ -9,11 +9,11 @@ export default function StoreLocatorHero() {
     <Container>
       <section className={styles.wrapper}>
         <main className={styles.main}>
-          <h1 className={styles.title}>[ Locate your store ]</h1>
+          <h1 className={styles.title}>Locate your store</h1>
           <div className={styles.description}>
             <p>
-              [ We have first class fitters located all around Australia for
-              your peace of mind. ]
+              We have first class fitters located all around Australia for your
+              peace of mind.
             </p>
           </div>
 
@@ -23,18 +23,18 @@ export default function StoreLocatorHero() {
             rightIcon="search"
             href="#store-search"
           >
-            ISearch
+            Search
           </Button>
         </main>
 
         <aside className={styles.aside}>
-          <h3 className={styles.asideTitle}>[ Become a Distributor ]</h3>
+          <h3 className={styles.asideTitle}>Become a Distributor</h3>
           <div className={styles.asideDescription}>
             <p>
-              [ For more information on becoming a HSP Distributor or Fitter,
+              For more information on becoming a HSP Distributor or Fitter,
               please contact us on <a href="tel:1300441498">1300 441 498</a> or
               send an email to{' '}
-              <a href="mailto:info@hsputelids.com">info@hsputelids.com</a>. ]
+              <a href="mailto:info@hsputelids.com">info@hsputelids.com</a>.
             </p>
           </div>
         </aside>
