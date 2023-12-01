@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useId } from 'react';
+import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
-import { v4 as uuidv4 } from 'uuid';
 import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
@@ -19,17 +19,18 @@ export default function Select({
   prefix = '',
   suffix = '',
   value,
-  onChange = val => null,
+  dropdownInDocumentFlow,
+  onChange = () => null,
   onClick = () => null,
   ...props
 }) {
   const [isOpen, setOpen] = useState(false);
   const selectedOption = useMemo(
-    () => options.find(option => option.value === value),
+    () => options.find(option => value !== undefined && option.value === value),
     [options, value],
   );
 
-  const [elementId] = useState(id || uuidv4());
+  const elementId = useId();
 
   const handleClickOutside = () => {
     setOpen(false);
@@ -45,8 +46,8 @@ export default function Select({
   };
 
   const handleSelectOption = useCallback(
-    value => () => {
-      onChange(value);
+    (value, label) => {
+      onChange(value, label);
       setOpen(false);
     },
     [onChange],
@@ -66,7 +67,6 @@ export default function Select({
             {label}
           </label>
         )}
-
         <button
           id={elementId}
           ref={triggerRef}
@@ -79,8 +79,8 @@ export default function Select({
           })}
           {...props}
           onClick={ev => {
-            onClick();
             toggleDropdown(ev);
+            onClick();
           }}
         >
           {selectedOption?.label || selectedOption?.value !== undefined ? (
@@ -92,32 +92,62 @@ export default function Select({
           ) : (
             placeholder
           )}
-
-          <div className={clsx(styles.pivot, { [styles.reversed]: isOpen })}>
-            <ExpandMoreNeutral />
-          </div>
-        </button>
-        <div
-          className={clsx(styles.dropdown, { [styles.isOpen]: isOpen })}
-          role="listbox"
-          tabIndex="0"
-        >
           {options.map(({ label, value }, index) => (
-            <button
+            <div
+              className={clsx(styles.value, styles.forStretchOnly)}
               key={index}
-              className={styles.option}
-              type="button"
-              role="option"
-              aria-selected={Boolean(selectedOption)}
-              onClick={handleSelectOption(value)}
-              tabIndex={0}
               data-value={value !== undefined ? value : label}
             >
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
               {label || value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
-            </button>
+            </div>
           ))}
+
+          <span className={clsx(styles.pivot, { [styles.reversed]: isOpen })}>
+            <ExpandMoreNeutral />
+          </span>
+        </button>
+
+        <div
+          className={clsx(styles.dropdownContainer, {
+            [styles.isInDocumentFlow]: dropdownInDocumentFlow,
+          })}
+        >
+          <AnimateHeight
+            height={isOpen ? 'auto' : 0}
+            duration={200}
+            contentClassName={styles.animateHeightContainer}
+          >
+            <div
+              className={clsx(styles.dropdown, {
+                [styles.isOpen]: isOpen,
+              })}
+              role="listbox"
+              tabIndex="0"
+            >
+              {options.map(({ label, value }, index) => (
+                <button
+                  key={index}
+                  className={styles.option}
+                  type="button"
+                  role="option"
+                  aria-selected={Boolean(selectedOption)}
+                  onClick={() => handleSelectOption(value, label)}
+                  tabIndex={0}
+                  data-value={value !== undefined ? value : label}
+                >
+                  {prefix && (
+                    <span className={styles.prefixSuffix}>{prefix} </span>
+                  )}
+                  {label || value}
+                  {suffix && (
+                    <span className={styles.prefixSuffix}> {suffix}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </AnimateHeight>
         </div>
       </div>
       {errorMessage && (

@@ -222,11 +222,15 @@
 
   display: flex;
   height: 28px;
-  margin-left: -36px;
+  margin-left: -32px;
   padding: 0 8px;
   transition: transform 400ms;
   transform-origin: center center;
   border-radius: 4px;
+
+  @include bp(full) {
+    margin-left: -36px;
+  }
 
   @media (hover: hover) {
     background: var(--color-black-100);

@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 import {
   getFooterMenus,
@@ -41,7 +42,12 @@ async function getLayoutData() {
 
 const data = await getLayoutData();
 
-export default function Layout({ withMap, withFooter = true, children }) {
+export default function Layout({
+  withMap,
+  withFooter = true,
+  reserveSpaceForVehicleSelection,
+  children,
+}) {
   const normalizedFooterMenus = {
     hsp: [],
     legal: [],
@@ -110,7 +116,14 @@ export default function Layout({ withMap, withFooter = true, children }) {
             />
           </div>
         )}
-        <div className={styles.content}>{children}</div>
+        <div
+          className={clsx(styles.content, {
+            [styles.reserveSpaceForVehicleSelection]:
+              reserveSpaceForVehicleSelection,
+          })}
+        >
+          {children}
+        </div>
       </main>
       {withFooter && (
         <div className={styles.bottomSticky}>

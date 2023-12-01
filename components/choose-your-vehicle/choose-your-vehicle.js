@@ -1,207 +1,232 @@
 'use client';
 
+import { useCallback, useState, useEffect, useMemo } from 'react';
+import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
-import { useCallback, useState, useEffect } from 'react';
-import { useIsMobile } from '@hooks/useIsMobile';
 import { setCookie, deleteCookie } from '@lib/cookies';
+import { useIsMobile } from '@hooks/useIsMobile';
+import Select from '@components/form/select';
 import Button from '@components/button/button';
-import ArrowDown from '@assets/icons/expand-more-primary.svg';
+import EditIcon from '@assets/icons/edit.svg';
+import CloseIcon from '@assets/icons/close.svg';
+import CancelIcon from '@assets/icons/cancel.svg';
+import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
 import styles from './choose-your-vehicle.module.scss';
-import slugify from '@lib/slugify';
 
 const LOCAL_STORAGE_VEHICLE = 'hsp-my-vehicle';
 
 const SELECT_LABELS = {
-  GENERIC: 'Choose',
-  VEHICLE: 'Choose your vehicle',
+  GENERIC_SHORT: 'Choose',
+  GENERIC_FULL: 'Choose your vehicle',
   MAKER: 'Choose make',
   MODEL: 'Choose model',
 };
 
-export default function ChooseYourVehicle({ makes }) {
+export default function ChooseYourVehicle({ makes: makersAndModels }) {
   const [dropdownOpened, setDropdownOpened] = useState(false);
-  const [displayMakes, setDisplayMakes] = useState(false);
-  const [displayModels, setDisplayModels] = useState(false);
-  const [makeSelected, setMakeSelected] = useState(null);
-  const [modelSelected, setModelSelected] = useState(null);
+  const [maker, setMaker] = useState(null);
+  const [model, setModel] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
 
   const isMobile = useIsMobile(1280);
-  const nonEmptySelection = makeSelected && modelSelected && finalSelection;
+  const nonEmptySelection = maker && model && finalSelection;
 
-  const makeAndModels = makes.map(make => {
-    return {
-      name: make.name,
-      models: make.children.nodes.map(({ name }) => {
-        return {
-          name: name,
-        };
-      }),
-    };
-  });
+  const findMakerBySlug = useCallback(
+    slug => makersAndModels.find(({ slug: makerSlug }) => makerSlug === slug),
+    [makersAndModels],
+  );
 
-  const handleCancel = useCallback(() => {
+  const findModelBySlug = useCallback(
+    (makerSlug, modelSlug) => {
+      return findMakerBySlug(makerSlug)?.models?.find(
+        ({ slug }) => slug === modelSlug,
+      );
+    },
+    [findMakerBySlug],
+  );
+
+  const makerSelectOptions = useMemo(
+    () =>
+      makersAndModels.map(({ name, slug }) => ({
+        label: name,
+        value: slug,
+      })),
+    [makersAndModels],
+  );
+
+  const modelSelectOptions = useMemo(() => {
+    return (
+      makersAndModels
+        .find(({ slug }) => slug === maker?.slug)
+        ?.models.map(({ name, slug }) => ({
+          value: slug,
+          label: name,
+        })) || []
+    );
+  }, [makersAndModels, maker]);
+
+  const handleVehicleReset = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
     deleteCookie(LOCAL_STORAGE_VEHICLE);
-    setMakeSelected(null);
-    setModelSelected(null);
+    setMaker(null);
+    setModel(null);
     setFinalSelection(null);
   }, []);
 
   const handleSave = useCallback(() => {
-    const savedVehicle = JSON.stringify({
-      maker: makeSelected,
-      model: modelSelected,
+    const vehicleString = JSON.stringify({
+      maker,
+      model,
     });
-    localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
 
-    setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+    localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
+    setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
     setFinalSelection({
-      maker: makeSelected,
-      model: modelSelected,
+      makerName: maker.name,
+      modelName: model.name,
     });
     setDropdownOpened(false);
-  }, [makeSelected, modelSelected]);
+  }, [maker, model]);
 
-  const handleSelectedMake = useCallback(make => {
-    setMakeSelected({
-      label: make,
-      value: slugify(make),
+  const handleMakerChange = useCallback((value, label) => {
+    setMaker({
+      name: label,
+      slug: value,
+      value, // @TODO: remove it after "value -> slug" rename
     });
-    setModelSelected(null);
-    setDisplayMakes(false);
+    setModel(null);
   }, []);
 
-  const handleSelectedModel = useCallback(model => {
-    setModelSelected({
-      label: model,
-      value: slugify(model),
+  const handleModelChange = useCallback((value, label) => {
+    setModel({
+      name: label,
+      slug: value,
+      value, // @TODO: remove it after "value -> slug" rename
     });
-    setDisplayModels(false);
   }, []);
 
-  useEffect(function loadSavedVehicle() {
-    const savedSelection = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
-    if (savedSelection) {
-      const savedVehicle = JSON.parse(savedSelection);
-      setMakeSelected(savedVehicle.maker);
-      setModelSelected(savedVehicle.model);
-      setFinalSelection({
-        maker: savedVehicle.maker,
-        model: savedVehicle.model,
-      });
-    }
-  }, []);
+  useEffect(
+    function loadSavedVehicle() {
+      const savedSelection = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
+      if (savedSelection) {
+        const savedVehicle = JSON.parse(savedSelection);
+
+        // const makerFound = findMakerBySlug(savedVehicle.maker.slug);
+        // const modelFound = findModelBySlug(
+        //   savedVehicle.maker.slug,
+        //   savedVehicle.model.slug,
+        // );
+
+        const makerFound = findMakerBySlug(savedVehicle.maker.value); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
+        const modelFound = findModelBySlug(
+          savedVehicle.maker.value,
+          savedVehicle.model.value,
+        ); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
+
+        if (makerFound) {
+          setMaker(makerFound);
+        }
+        if (modelFound) {
+          setModel(modelFound);
+        }
+        if (makerFound && modelFound) {
+          setFinalSelection({
+            makerName: makerFound.name,
+            modelName: modelFound.name,
+          });
+        }
+      }
+    },
+    [findMakerBySlug, findModelBySlug],
+  );
+
+  const Icon = dropdownOpened ? (
+    <CloseIcon />
+  ) : nonEmptySelection ? (
+    <EditIcon />
+  ) : (
+    <ExpandMoreNeutralIcon />
+  );
 
   return (
     <div className={styles.container}>
-      <div className={styles.buttons}>
+      <div className={styles.containerTrigger}>
         <Button
           variant="primary"
-          rightIcon={
-            dropdownOpened
-              ? 'close'
-              : nonEmptySelection
-              ? 'edit'
-              : 'expand-more-primary'
-          }
           onClick={() => setDropdownOpened(!dropdownOpened)}
           className={clsx(styles.chooseButton, {
-            [styles.closed]: !dropdownOpened && nonEmptySelection,
             [styles.opened]: dropdownOpened,
-            [styles.selected]: nonEmptySelection,
+            [styles.nonEmpty]: finalSelection,
           })}
         >
-          {!finalSelection ? (
-            isMobile ? (
-              SELECT_LABELS.VEHICLE
-            ) : (
-              SELECT_LABELS.GENERIC
-            )
-          ) : (
-            <>
-              {finalSelection.maker?.label}{' '}
+          {finalSelection ? (
+            <span className={styles.fullName}>
+              {finalSelection.makerName}{' '}
               <span className={styles.modelAndVariantText}>
-                {finalSelection.model?.label}
+                {finalSelection.modelName}
               </span>
-            </>
+            </span>
+          ) : isMobile ? (
+            <span className={styles.placeholder}>
+              {SELECT_LABELS.GENERIC_FULL}
+            </span>
+          ) : (
+            SELECT_LABELS.GENERIC_SHORT
           )}
+          <div className={styles.iconWrapper}>{Icon}</div>
         </Button>
-        {nonEmptySelection && !dropdownOpened && !isMobile && (
-          <Button
-            className={styles.cancelButton}
+
+        <div className={styles.resetButtonContainer}>
+          <button
+            className={styles.resetButton}
             variant="primary"
-            rightIcon={'cancel'}
-            onClick={handleCancel}
-          />
-        )}
+            onClick={handleVehicleReset}
+          >
+            <CancelIcon />
+          </button>
+        </div>
       </div>
-      {dropdownOpened && (
-        <div className={styles.dropdownMenu}>
-          <div className={styles.menuContainer}>
-            <button
-              className={styles.select}
-              onClick={() => setDisplayMakes(!displayMakes)}
-            >
-              {makeSelected?.label || SELECT_LABELS.MAKER} <ArrowDown />
-            </button>
-            {displayMakes && (
-              <div>
-                {makeAndModels.map(make => (
-                  <button
-                    className={styles.option}
-                    key={make.name}
-                    value={make.name}
-                    onClick={() => handleSelectedMake(make.name)}
-                  >
-                    {make.name}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div
-              className={clsx(styles.select, {
-                [styles.disabled]: !makeSelected,
-              })}
-              onClick={() => {
-                if (makeSelected) {
-                  setDisplayModels(!displayModels);
-                }
-              }}
-            >
-              {modelSelected?.label || SELECT_LABELS.MODEL} <ArrowDown />
-            </div>
-            {displayModels && (
-              <div>
-                {makeAndModels.map(({ name, models }) => {
-                  if (name === makeSelected.label) {
-                    return models.map(model => (
-                      <button
-                        className={styles.option}
-                        key={model.name}
-                        value={model.name}
-                        onClick={() => handleSelectedModel(model.name)}
-                      >
-                        {model.name}
-                      </button>
-                    ));
-                  }
-                })}
-              </div>
-            )}
+
+      <AnimateHeight
+        className={styles.containerAnimateHeight}
+        height={dropdownOpened ? 'auto' : 0}
+        duration={300}
+        contentClassName={clsx(styles.containerInner, {
+          [styles.opened]: dropdownOpened,
+        })}
+      >
+        <div className={styles.dropdownOuter}>
+          <div className={styles.dropdownInner}>
+            <Select
+              size="large"
+              placeholder={SELECT_LABELS.MAKER}
+              options={makerSelectOptions}
+              value={maker?.slug || null}
+              dropdownInDocumentFlow
+              onChange={handleMakerChange}
+            />
+            <Select
+              size="large"
+              placeholder={SELECT_LABELS.MODEL}
+              options={modelSelectOptions}
+              value={model?.slug || null}
+              disabled={!modelSelectOptions.length}
+              dropdownInDocumentFlow
+              onChange={handleModelChange}
+            />
             <Button
+              className={styles.save}
               variant="primary"
               rightIcon="save"
               onClick={handleSave}
-              disabled={!makeSelected || !modelSelected}
-              className={styles.save}
+              disabled={!maker || !model}
             >
               Save
             </Button>
           </div>
         </div>
-      )}
+      </AnimateHeight>
     </div>
   );
 }
