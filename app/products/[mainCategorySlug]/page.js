@@ -1,10 +1,12 @@
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
+import { renderBlock } from '@lib/block';
 import {
   getCategoriesAndMakesAndModels,
+  getMainProductCategoryBlocks,
   getMainProductCategory,
 } from '@lib/api';
 import styles from './page.module.scss';
@@ -34,6 +36,10 @@ export default async function MainCategoryPage({ params }) {
     );
   }
 
+  const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
+  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
+    renderBlock(block, 'product_category'),
+  );
   const currentProduct = {
     mainCategory: {
       label: categoryData.name,
@@ -75,6 +81,7 @@ export default async function MainCategoryPage({ params }) {
           }}
         />
       </Container>
+      {contentBlocks.map(contentBlock => contentBlock)}
     </Layout>
   );
 }

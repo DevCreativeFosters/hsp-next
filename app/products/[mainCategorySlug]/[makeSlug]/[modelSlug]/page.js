@@ -8,6 +8,7 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import ErrorPage from '@components/error-page';
 import PageContainer from '@components/page-container/page-container';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
+import { renderBlock } from '@lib/block';
 import {
   getCategoriesAndMakesAndModels,
   getMainProductCategory,
@@ -28,6 +29,9 @@ export default async function CategoryPage({ params }) {
     modelSlug,
   );
   const firstMatchedProduct = products.length ? products[0] : null;
+  const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
+    block => renderBlock(block, 'product'),
+  );
 
   const currentProduct = {
     mainCategory: {
@@ -117,6 +121,7 @@ export default async function CategoryPage({ params }) {
           }
         />
       </Container>
+      {contentBlocks.map(contentBlock => contentBlock)}
     </Layout>
   );
 }

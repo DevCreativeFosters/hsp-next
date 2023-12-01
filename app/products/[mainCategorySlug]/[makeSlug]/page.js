@@ -4,10 +4,12 @@ import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import PageContainer from '@components/page-container/page-container';
 import ErrorPage from '@components/error-page';
+import { renderBlock } from '@lib/block';
 import {
   getMainProductCategory,
   getCategoriesAndMakesAndModels,
   getMake,
+  getMainProductCategoryBlocks,
 } from '@lib/api';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import styles from '../page.module.scss';
@@ -17,6 +19,10 @@ export default async function CategoryPage({ params }) {
   const categoryData = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage;
+  const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
+  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
+    renderBlock(block, 'product_category'),
+  );
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(mainCategorySlug);
@@ -100,6 +106,7 @@ export default async function CategoryPage({ params }) {
           }}
         />
       </Container>
+      {contentBlocks.map(contentBlock => contentBlock)}
     </Layout>
   );
 }
