@@ -3,7 +3,7 @@
 .container {
   position: fixed;
   left: var(--container-inline-padding);
-  top: 124px + 2px;
+  top: var(--header-height);
   display: flex;
   gap: 24px;
   width: 1024px;

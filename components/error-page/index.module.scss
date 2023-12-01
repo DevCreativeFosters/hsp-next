@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - var(--header-height));
+  padding: 24px 24px 72px;
+
+  @include bp(large) {
+    flex-direction: row;
+    height: initial;
+    padding: 0;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-top: 60px;
+  width: 100%;
+
+  @include bp(large) {
+    padding-top: 0;
+    width: initial;
+  }
+}
+
+.title {
+  margin: 0;
+}
+
+.text {
+  color: var(--color-white-80);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+
+  @include bp(large) {
+    font-size: 24px;
+  }
+}
+
+.help {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  background-color: var(--color-black-100);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 100%;
+
+  @include bp(large) {
+    max-width: 431px;
+    padding: 48px;
+  }
+}
+
+.helpTitle {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.33;
+  margin: 0;
+
+  @include bp(large) {
+    font-size: 36px;
+  }
+}
+
+.helpText {
+  color: var(--color-white-80);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+}
+
+.link {
+  color: var(--color-primary-100);
+  text-decoration: underline;
+}

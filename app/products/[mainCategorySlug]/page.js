@@ -8,12 +8,32 @@ import {
   getMainProductCategory,
 } from '@lib/api';
 import styles from './page.module.scss';
+import PageContainer from '@components/page-container/page-container';
+import ErrorPage from '@components/error-page';
 
 export default async function MainCategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
   const categoryData = await getMainProductCategory(mainCategorySlug);
-  const mainCategoryDetails = categoryData.mainCategoryDetails;
-  const featuredImage = mainCategoryDetails.featuredImage;
+  const mainCategoryDetails = categoryData?.mainCategoryDetails;
+  const featuredImage = mainCategoryDetails?.featuredImage;
+
+  if (!categoryData) {
+    return (
+      <Layout title="Product" withMap>
+        <Container>
+          <PageContainer>
+            <ErrorPage
+              title="Product not found"
+              text="Sorry, we couldn't find the product you are looking for."
+              buttonText="Back to Products"
+              product
+            />
+          </PageContainer>
+        </Container>
+      </Layout>
+    );
+  }
+
   const currentProduct = {
     mainCategory: {
       label: categoryData.name,

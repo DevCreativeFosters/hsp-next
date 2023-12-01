@@ -2,6 +2,8 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import PageContainer from '@components/page-container/page-container';
+import ErrorPage from '@components/error-page';
 import {
   getMainProductCategory,
   getCategoriesAndMakesAndModels,
@@ -13,12 +15,30 @@ import styles from '../page.module.scss';
 export default async function CategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
   const categoryData = await getMainProductCategory(mainCategorySlug);
-  const mainCategoryDetails = categoryData.mainCategoryDetails;
-  const featuredImage = mainCategoryDetails.featuredImage;
+  const mainCategoryDetails = categoryData?.mainCategoryDetails;
+  const featuredImage = mainCategoryDetails?.featuredImage;
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(mainCategorySlug);
-  const details = makeData.detailsFields.details;
+  const details = makeData?.detailsFields.details;
+
+  if (!makeData || !categoryData) {
+    return (
+      <Layout title="Product" withMap>
+        <Container>
+          <PageContainer>
+            <ErrorPage
+              title="Product not found"
+              text="Sorry, we couldn't find the product you are looking for."
+              buttonText="Back to Products"
+              product
+            />
+          </PageContainer>
+        </Container>
+      </Layout>
+    );
+  }
+
   const filteredData = details?.filter(
     data => data.relatedProductCategory.slug === mainCategorySlug,
   );
