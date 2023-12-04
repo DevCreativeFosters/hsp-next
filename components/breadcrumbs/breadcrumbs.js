@@ -136,11 +136,10 @@ function Breadcrumbs({ items, product }) {
               <Button
                 href={item.url || '#'}
                 size="xsmall"
-                variant={item.visible ? 'quinary' : 'secondary'}
+                variant="secondary"
                 disabled={item.disabled}
                 onClick={item.onClick || null}
                 key={item.type + index}
-                className={item.visible === false ? styles.hideButton : ''}
               >
                 {item.label}
               </Button>
