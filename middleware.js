@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import slugify from '@lib/slugify';
 import routes from '@lib/routes';
 
 const COOKIE_SAVED_VEHICLE = 'hsp-my-vehicle';

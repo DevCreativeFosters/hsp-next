@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import { setCookie } from '@lib/cookies';
 import routes from '@lib/routes';
@@ -8,6 +9,9 @@ import routes from '@lib/routes';
 const LOCAL_STORAGE_VEHICLE = 'hsp-my-vehicle';
 
 export default function BreadcrumbsProduct({ currentProduct, categories }) {
+  const [currentSavedVehicle, setCurrentSavedVehicle] = useState(
+    JSON.parse(localStorage.getItem(LOCAL_STORAGE_VEHICLE)),
+  );
   const [maker, setMaker] = useState(currentProduct.make || {});
   const [model, setModel] = useState(currentProduct.model || {});
   const [currentMakeList, setCurrentMakeList] = useState([]);
@@ -16,8 +20,24 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const [updateVehicleSelected, setUpdateVehicleSelected] = useState(false);
   const [vehicleNotMatching, setVehicleNotMatching] = useState(false);
   const isFirstLoad = useRef(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const applyChangedVehicle = () => {
+  const changeProductPageButtonVisibility =
+    pathname ===
+    routes.product(
+      currentProduct.mainCategory.value,
+      currentSavedVehicle?.maker.value,
+      currentSavedVehicle?.model.value,
+    )
+      ? false
+      : currentSavedVehicle?.maker.value !== undefined ||
+        currentSavedVehicle?.model.value !== undefined
+      ? currentSavedVehicle?.maker.value !== maker.value ||
+        currentSavedVehicle?.model.value !== model.value
+      : false;
+
+  const applyChangedVehicle = vehicleNotChanged => {
     let selectedMakeObj = {};
     let selectedModelObj = {};
 
@@ -38,9 +58,14 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       model: selectedModelObj ? selectedModelObj : '',
     });
 
-    localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
-
-    setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+    if (vehicleNotChanged) {
+      router.push(
+        routes.product(selectedMakeObj.value, selectedModelObj.value),
+      );
+    } else {
+      localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
+      setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+    }
   };
 
   const handleMakeSelect = newMake => {
@@ -193,10 +218,21 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
     {
       label: 'Apply',
       type: 'button',
-      disabled: !updateVehicleSelected,
       skipPrecedingSeparator: true,
       url: route,
-      onClick: () => applyChangedVehicle(),
+      onClick: () => applyChangedVehicle(!updateVehicleSelected),
+    },
+    {
+      visible: changeProductPageButtonVisibility,
+      label: `Change to ${
+        currentSavedVehicle?.maker.name || currentSavedVehicle?.maker.label
+      } ${currentSavedVehicle?.model.name || currentSavedVehicle?.model.label}`,
+      type: 'button',
+      skipPrecedingSeparator: true,
+      url: routes.product(
+        currentSavedVehicle?.maker.slug,
+        currentSavedVehicle?.model.slug,
+      ),
     },
   ];
 
