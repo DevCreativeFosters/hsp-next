@@ -40,7 +40,7 @@ export default async function CategoryPage({ params }) {
   }
 
   const filteredData = details?.filter(
-    data => data.relatedProductCategory.slug === mainCategorySlug,
+    data => data.relatedProductCategory?.slug === mainCategorySlug,
   );
   const productHeroData = {
     image:
