@@ -1,2 +1,121 @@
-// .carousel {
-// }
+@import '/styles/globals/typography';
+@import '/styles/globals/helpers';
+
+.productsCarousel {
+  @include bp-below(medium) {
+    overflow: hidden;
+    margin-inline: calc(-1 * var(--container-inline-padding));
+
+    /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+    :global(.swiper) {
+      overflow: visible;
+      padding-inline: var(--container-inline-padding);
+    }
+  }
+}
+
+.title {
+  @include paragraph-lg;
+
+  margin-block: 0 24px;
+}
+
+.swiperSlide {
+  --product-width: 134px;
+
+  width: var(--product-width);
+
+  @include bp(medium) {
+    --product-width: 168px;
+  }
+}
+
+.product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  transition: opacity 200ms;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    inset: -8px;
+    background: var(--color-white-10);
+    border-radius: var(--border-radius-md);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+
+  // &:hover::before {
+  //   @media (hover: hover) {
+  //     opacity: 1;
+  //   }
+  // }
+
+  &.isDisabled {
+    opacity: 0.5;
+  }
+}
+
+.productIcon {
+  @include center;
+
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  border-radius: 8px;
+  aspect-ratio: 1/1;
+  border: 2px solid currentcolor;
+  transition: all 150ms;
+  color: var(--color-black-100);
+
+  .checkIcon {
+    display: none;
+  }
+
+  .isSelected & {
+    color: var(--color-primary-100);
+
+    .checkIcon {
+      display: block;
+    }
+
+    .plusIcon {
+      display: none;
+    }
+  }
+}
+
+.productImageContainer {
+  position: relative;
+  border-radius: 8px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.4;
+  transition: width 0.2s;
+  background-color: var(--color-white-100);
+}
+
+.productImage {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.productName {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
