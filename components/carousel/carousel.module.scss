@@ -1,0 +1,32 @@
+@import '/styles/globals/helpers';
+
+.carousel {
+  position: relative;
+}
+
+.navigationButton {
+  @include center-vertical;
+
+  --side-space: -28px;
+
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  background-color: var(--color-black-100);
+
+  @include bp-below(large) {
+    display: none;
+  }
+}
+
+.prevButton {
+  left: var(--side-space);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.nextButton {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  right: var(--side-space);
+}

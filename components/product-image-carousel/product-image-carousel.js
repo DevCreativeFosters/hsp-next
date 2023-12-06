@@ -3,21 +3,21 @@
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
-import Button from '@components/button/button';
-import 'swiper/css';
+
+// import images from './mock-data';
+import Carousel from '@components/carousel/carousel';
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({ images }) {
   const isMobile = useIsMobile();
-  const swiperRef = useRef(null);
-  const swiperHeightRef = useRef(null);
+
   const [selectedImage, setSelectedImage] = useState(
     images?.length ? images[0] : null,
   );
   const [swiperSlides, setSwiperSlides] = useState(null);
-  const [navigationPosition, setNavigationPosition] = useState(0);
+
   const [backgroundPosition, setBackgroundPosition] = useState('50% 50%');
   const [zoomed, setZoomed] = useState(false);
   const mainImageContainerRef = useRef(null);
@@ -73,18 +73,6 @@ export default function ProductImageCarousel({ images }) {
     setSelectedImage(selectedImageUrl);
   }, []);
 
-  const handlePrevClick = useCallback(() => {
-    if (swiperRef.current) {
-      swiperRef.current.slidePrev();
-    }
-  }, []);
-
-  const handleNextClick = useCallback(() => {
-    if (swiperRef.current) {
-      swiperRef.current.slideNext();
-    }
-  }, []);
-
   useEffect(
     function loadAllSlides() {
       const slides = images?.map((item, index) => (
@@ -105,26 +93,6 @@ export default function ProductImageCarousel({ images }) {
     [handleThumbnailClick, images],
   );
 
-  useEffect(
-    function findSwiperSlidesHeight() {
-      const updateSwiperHeight = () => {
-        const height = swiperHeightRef.current.clientHeight;
-        setNavigationPosition(height / 2);
-      };
-
-      if (swiperSlides) {
-        updateSwiperHeight();
-      }
-
-      window.addEventListener('resize', updateSwiperHeight);
-
-      return () => {
-        window.removeEventListener('resize', updateSwiperHeight);
-      };
-    },
-    [swiperSlides],
-  );
-
   return (
     <div className={styles.container}>
       <div
@@ -140,43 +108,18 @@ export default function ProductImageCarousel({ images }) {
         onTouchEnd={handleTouchEnd}
         style={containerStyle}
       />
-      <div ref={swiperHeightRef}>
-        <Swiper
-          className={styles.swiper}
-          slidesPerView={isMobile ? 'auto' : 4}
-          spaceBetween={isMobile ? 16 : 24}
-          navigation
-          onSwiper={swiper => (swiperRef.current = swiper)}
-          loop={false}
-          slidesPerGroup={1}
-          watchSlidesProgress
-        >
-          {swiperSlides}
-        </Swiper>
-      </div>
-      <div className={styles.navigationContainer}>
-        {images?.length > 4 && swiperSlides && (
-          <div
-            className={styles.swiperButtons}
-            style={{ top: `-${navigationPosition}px` }}
-          >
-            <Button
-              className={styles.prevButton}
-              onClick={handlePrevClick}
-              variant="secondary"
-              background="dark"
-              rightIcon="arrow-previous"
-            />
-            <Button
-              className={styles.nextButton}
-              onClick={handleNextClick}
-              variant="secondary"
-              background="dark"
-              rightIcon="arrow-next"
-            />
-          </div>
-        )}
-      </div>
+      <Carousel
+        settings={{
+          slidesPerView: isMobile ? 'auto' : 4,
+          spaceBetween: isMobile ? 16 : 24,
+          navigation: true,
+          loop: false,
+          slidesPerGroup: 1,
+          watchSlidesProgress: true,
+        }}
+        slides={swiperSlides}
+        showNavigation={images?.length > 4}
+      />
     </div>
   );
 }

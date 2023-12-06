@@ -4,12 +4,6 @@
   object-position: center;
 }
 
-@mixin arrow-button() {
-  background-color: var(--color-black-100);
-  width: 56px;
-  height: 56px;
-}
-
 .container {
   width: 100%;
   position: relative;
@@ -57,40 +51,4 @@
   @include bp(large) {
     width: initial;
   }
-}
-
-.navigationContainer {
-  position: relative;
-}
-
-.swiperButtons {
-  display: none;
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1;
-
-  @include bp(large) {
-    display: flex;
-  }
-}
-
-.prevButton {
-  @include arrow-button;
-
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  transform: translateX(-28px);
-}
-
-.nextButton {
-  @include arrow-button;
-
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  transform: translateX(28px);
 }
