@@ -7,6 +7,7 @@ import EnquiryForm from 'components/enquiry-form/enquiry-form';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import ErrorPage from '@components/error-page';
 import PageContainer from '@components/page-container/page-container';
+import ContentBox from '@components/content-box/content-box';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import {
@@ -22,7 +23,23 @@ export default async function CategoryPage({ params }) {
   const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug;
   const mainCategory = await getMainProductCategory(mainCategorySlug);
+  const mainCategoryDetails = mainCategory.mainCategoryDetails;
   const make = await getMake(makeSlug);
+  const details = make.detailsFields.details;
+  const filteredData = details?.filter(
+    data => data.relatedProductCategory.slug === mainCategorySlug,
+  );
+  const productHeroData = {
+    warrantyDescription:
+      filteredData.length > 1
+        ? filteredData[0]?.warranty.warrantyDescription
+        : mainCategoryDetails?.warranty.warrantyDescription,
+    warrantyTimePeriod:
+      filteredData.length > 1
+        ? filteredData[0]?.warranty.warrantyTimePeriod
+        : mainCategoryDetails?.warranty.warrantyTimePeriod,
+  };
+
   const products = await getProductsByCategoriesSlugs(
     mainCategorySlug,
     makeSlug,
@@ -101,12 +118,26 @@ export default async function CategoryPage({ params }) {
                 {firstMatchedProduct?.productFields.description}
               </p>
             )}
+            <StoreLocatorProvider>
+              <EnquiryForm />
+            </StoreLocatorProvider>
+            <div className={styles.warranty}>
+              <ContentBox className={styles.warrantyDescription}>
+                <h3 className={styles.contentBoxTitle}>
+                  Warranty{' '}
+                  {productHeroData.warrantyTimePeriod && (
+                    <span className={styles.years}>
+                      +{productHeroData.warrantyTimePeriod} years
+                    </span>
+                  )}
+                </h3>
+                {productHeroData.warrantyDescription && (
+                  <p>{productHeroData.warrantyDescription}</p>
+                )}
+              </ContentBox>
+            </div>
           </div>
         </div>
-
-        <StoreLocatorProvider>
-          <EnquiryForm />
-        </StoreLocatorProvider>
 
         <ProductTabs
           featuresDescription={
