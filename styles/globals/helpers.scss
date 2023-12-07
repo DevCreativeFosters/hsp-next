@@ -4,6 +4,28 @@
   align-items: center;
 }
 
+@mixin center-vertical($is_imp: false) {
+  @if $is_imp == true {
+    position: absolute !important;
+  } @else {
+    position: absolute;
+  }
+
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin center-horizontal($is_imp: false) {
+  @if $is_imp == true {
+    position: absolute !important;
+  } @else {
+    position: absolute;
+  }
+
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @mixin scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #464646 #0e0e0e;
