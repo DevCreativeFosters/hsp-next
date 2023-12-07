@@ -119,7 +119,7 @@ export default async function CategoryPage({ params }) {
               </p>
             )}
             <StoreLocatorProvider>
-              <EnquiryForm />
+              <EnquiryForm productData={firstMatchedProduct} />
             </StoreLocatorProvider>
             <div className={styles.warranty}>
               <ContentBox className={styles.warrantyDescription}>

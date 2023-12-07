@@ -1,6 +1,12 @@
 {
     "61211": {
         "title": "Audiotech",
+        "product_installation_cost": [{
+            "product": {
+                "slug": "premium-hard-lid"
+            },
+            "installation_cost": "200"
+        }],
         "field_cpt_locations_google_map": {
             "address": "unit 1\/209 Scollay Street, Greenway ACT, Australia",
             "lat": -35.4210478,

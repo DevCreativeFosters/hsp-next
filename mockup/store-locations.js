@@ -25,6 +25,7 @@ export const allLocations = Object.values(ALL_LOCATIONS).map(record => {
   const stateAbbr = record.field_cpt_locations_google_map.state_short;
   const postalCode = record.field_cpt_locations_google_map.post_code;
   const country = record.field_cpt_locations_google_map.country;
+  const productInstallationCost = record.product_installation_cost;
 
   return {
     name: record.title,
@@ -46,5 +47,6 @@ export const allLocations = Object.values(ALL_LOCATIONS).map(record => {
     tel: record.field_cpt_locations_phone,
     url: record.url,
     directions_url: '#',
+    productInstallationCost,
   };
 });

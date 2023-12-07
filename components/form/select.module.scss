@@ -171,6 +171,7 @@
   position: absolute;
   top: 100%;
   width: 100%;
+  z-index: var(--z-index-dropdown);
 
   &.isInDocumentFlow {
     position: relative;
