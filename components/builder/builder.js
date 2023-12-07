@@ -30,6 +30,7 @@ export default function Builder({ model, products }) {
       <Container className={styles.container}>
         <div className={styles.top}>
           <Sidebar selectedProducts={selectedProducts} />
+
           <Preview model={model} selectedProducts={selectedProducts} />
         </div>
         <ProductsCarousel
