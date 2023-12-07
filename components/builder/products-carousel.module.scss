@@ -2,6 +2,20 @@
 @import '/styles/globals/helpers';
 
 .productsCarousel {
+  margin-top: 24px;
+
+  @include bp(medium) {
+    margin-top: 40px;
+  }
+}
+
+.title {
+  @include paragraph-lg;
+
+  margin-block: 0 24px;
+}
+
+.carousel {
   @include bp-below(medium) {
     overflow: hidden;
     margin-inline: calc(-1 * var(--container-inline-padding));
@@ -12,12 +26,6 @@
       padding-inline: var(--container-inline-padding);
     }
   }
-}
-
-.title {
-  @include paragraph-lg;
-
-  margin-block: 0 24px;
 }
 
 .swiperSlide {
