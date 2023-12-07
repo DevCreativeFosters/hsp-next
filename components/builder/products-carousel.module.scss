@@ -41,25 +41,6 @@
   padding: 0;
   transition: opacity 200ms;
 
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    z-index: -1;
-    inset: -8px;
-    background: var(--color-white-10);
-    border-radius: var(--border-radius-md);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 200ms;
-  }
-
-  // &:hover::before {
-  //   @media (hover: hover) {
-  //     opacity: 1;
-  //   }
-  // }
-
   &.isDisabled {
     opacity: 0.5;
   }
