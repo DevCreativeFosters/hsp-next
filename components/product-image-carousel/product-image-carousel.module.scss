@@ -12,9 +12,13 @@
 
 .container {
   width: 100%;
+  position: relative;
 
   @include bp(large) {
     width: 50%;
+    position: sticky;
+    top: 144px;
+    height: min-content;
   }
 }
 

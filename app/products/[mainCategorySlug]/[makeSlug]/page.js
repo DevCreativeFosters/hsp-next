@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }) {
         : mainCategoryDetails?.warranty.warrantyDescription,
     warrantyTimePeriod:
       filteredData.length > 1
-        ? filteredData[0]?.warranty.warrantytimePeriod
+        ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
   };
 

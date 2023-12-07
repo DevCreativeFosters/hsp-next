@@ -39,3 +39,25 @@
     margin-top: 0;
   }
 }
+
+.contentBoxTitle {
+  display: flex;
+  justify-content: space-between;
+}
+
+.warrantyDescription {
+  p {
+    color: var(--color-white-80);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    @include bp(large) {
+      font-size: 20px;
+    }
+  }
+}
+
+.years {
+  color: var(--color-primary-100);
+}

@@ -6,7 +6,6 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Button from '@components/button/button';
-// import images from './mock-data';
 import 'swiper/css';
 import styles from './product-image-carousel.module.scss';
 
