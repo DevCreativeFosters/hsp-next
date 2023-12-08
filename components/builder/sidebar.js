@@ -12,6 +12,7 @@ import styles from './sidebar.module.scss';
 const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
 const CancelIcon = getIcon('cancel');
+const CarIcon = getIcon('car');
 
 const DEFAULT_PRICE_SUMMARY = {
   price: 0,
@@ -83,6 +84,20 @@ const ProductsList = ({ selectedProducts, removeProduct }) => {
   );
 };
 
+const NrCircle = ({ nr, isSmall, className }) => {
+  if (nr === 0) return null;
+
+  return (
+    <div
+      className={clsx(styles.nr, {
+        [styles.isSmall]: isSmall,
+      })}
+    >
+      {nr}
+    </div>
+  );
+};
+
 export default function Sidebar({
   selectedProducts,
   removeProduct,
@@ -122,7 +137,11 @@ export default function Sidebar({
       >
         <Section
           id="products"
-          headerChildren={<>Your setup</>}
+          headerChildren={
+            <>
+              Your setup <NrCircle nr={selectedProducts.length} />
+            </>
+          }
           headerClick={setOpenSection}
           isOpen={openSection === 'products'}
         >
@@ -140,14 +159,25 @@ export default function Sidebar({
           Locator placeholder
         </Section>
         <div className={styles.summary}>
+          <button
+            className={styles.mobileSidebarToggle}
+            onClick={toggleOpen}
+            type="button"
+          >
+            <CarIcon />
+          </button>
           <div className={styles.summaryPrice}>
             {formatPrice(priceSummary.price)}
           </div>
           <div className={styles.summaryInstallation}>
             +{' '}
-            {priceSummary.installationCost === 0
-              ? 'installation cost'
-              : formatPrice(priceSummary.installationCost)}
+            {priceSummary.installationCost === 0 ? (
+              <>
+                installation <span className={styles.isDesktop}>cost</span>
+              </>
+            ) : (
+              formatPrice(priceSummary.installationCost)
+            )}
           </div>
           <Button className={styles.summaryButton} size="large" disabled>
             Send enquiry
@@ -156,16 +186,19 @@ export default function Sidebar({
       </div>
       <div className={styles.sidebarMobileBar}>
         <button
-          className={styles.sidebarMobileBarToggle}
+          className={styles.mobileSidebarToggle}
           onClick={toggleOpen}
           type="button"
         >
           <ListIcon />
+          <NrCircle nr={selectedProducts.length} isSmall />
         </button>
         <div className={styles.sidebarMobileBarPrice}>
           {formatPrice(priceSummary.price)}
         </div>
-        <Button disabled>Send enquiry</Button>
+        <Button size="large" disabled>
+          Send enquiry
+        </Button>
       </div>
     </>
   );
