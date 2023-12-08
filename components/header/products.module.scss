@@ -1,4 +1,5 @@
 @import '/styles/globals/typography';
+@import '/styles/globals/helpers';
 
 .container {
   position: fixed;
@@ -6,7 +7,7 @@
   top: var(--header-height);
   display: flex;
   gap: 24px;
-  width: 1024px;
+  width: fit-content;
   padding: 48px;
   border-radius: 24px;
   color: var(--color-white-100);
@@ -54,6 +55,11 @@
   flex-grow: 1;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 48px;
+  max-height: calc(70vh - 144px);
+  overflow: hidden auto;
+  padding-right: 20px;
+
+  @include scrollbar;
 }
 
 .productItem {
@@ -71,7 +77,7 @@
   }
 }
 
-.productLink {
+.productLink img {
   display: block;
   transition: transform 200ms;
 
