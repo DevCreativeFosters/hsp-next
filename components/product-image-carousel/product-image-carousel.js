@@ -73,6 +73,33 @@ export default function ProductImageCarousel({ images }) {
     setSelectedImage(selectedImageUrl);
   }, []);
 
+  const handleTouchMoveDocument = useCallback(
+    ev => {
+      if (zoomed) {
+        ev.preventDefault();
+      }
+    },
+    [zoomed],
+  );
+
+  useEffect(() => {
+    const handleBodyOverflow = () => {
+      if (isMobile) {
+        document.body.style.overflowY = zoomed ? 'hidden' : 'auto';
+      }
+    };
+
+    handleBodyOverflow();
+    document.addEventListener('touchmove', handleTouchMoveDocument, {
+      passive: false,
+    });
+
+    return () => {
+      document.body.style.overflowY = 'auto';
+      document.removeEventListener('touchmove', handleTouchMoveDocument);
+    };
+  }, [zoomed, handleTouchMoveDocument]);
+
   useEffect(
     function loadAllSlides() {
       const slides = images?.map((item, index) => (
