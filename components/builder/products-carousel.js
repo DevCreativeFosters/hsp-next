@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { SwiperSlide } from 'swiper/react';
 import clsx from 'clsx';
-import { useIsMobile } from '@hooks/useIsMobile';
 
 import Carousel from '@components/carousel/carousel';
 import { getIcon } from '@lib/icons';
@@ -13,9 +12,13 @@ import styles from './products-carousel.module.scss';
 const PlusIcon = getIcon('plus');
 const CheckMarkIcon = getIcon('check-mark');
 
-export default function ProductsCarousel({ products }) {
-  const isMobile = useIsMobile();
-
+export default function ProductsCarousel({
+  className,
+  products,
+  selectedProducts,
+  disabledProducts,
+  toggleProduct,
+}) {
   const slides = products?.map(product => {
     const productTitle = product.variantName;
     const productImage = product.uteBuilderImages.imageDesktop?.sourceUrl;
@@ -24,13 +27,11 @@ export default function ProductsCarousel({ products }) {
       <SwiperSlide className={styles.swiperSlide} key={product.variantSlug}>
         <button
           className={clsx(styles.product, {
-            [styles.isSelected]: false,
-            [styles.isDisabled]: false,
+            [styles.isSelected]: selectedProducts.includes(product),
+            [styles.isDisabled]: disabledProducts.includes(product),
           })}
           type="button"
-          onClick={() => {
-            // toggle product
-          }}
+          onClick={() => toggleProduct(product)}
         >
           <div className={styles.productImageContainer}>
             <Image
@@ -39,6 +40,7 @@ export default function ProductsCarousel({ products }) {
               alt={productTitle}
               width={168}
               height={Math.round(168 / 1.4)}
+              style={{ objectFit: 'contain' }}
             />
           </div>
           <div className={styles.productIcon}>
@@ -52,9 +54,10 @@ export default function ProductsCarousel({ products }) {
   });
 
   return (
-    <div className={styles.productsCarousel}>
+    <div className={clsx(styles.productsCarousel, className)}>
       <h2 className={styles.title}>Add products to your vehicle</h2>
       <Carousel
+        className={styles.carousel}
         settings={{
           slidesPerView: 'auto',
           spaceBetween: 24,

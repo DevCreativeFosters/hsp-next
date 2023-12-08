@@ -1,0 +1,36 @@
+.builder {
+  --vertical-padding: 0 24px;
+
+  min-height: calc(100svh - var(--header-height));
+  display: grid;
+  place-items: center;
+  padding-block: var(--vertical-padding);
+
+  @include bp(large) {
+    --vertical-padding: 24px 48px;
+  }
+}
+
+.container {
+  display: grid;
+  grid-template-rows: 1fr auto;
+
+  @include bp(large) {
+    height: auto;
+  }
+}
+
+.top {
+  position: relative;
+  display: flex;
+  min-height: 300px;
+
+  @include bp-below(large) {
+    margin-inline: calc(-1 * var(--container-inline-padding));
+  }
+
+  @include bp(large) {
+    display: flex;
+    gap: 48px;
+  }
+}
