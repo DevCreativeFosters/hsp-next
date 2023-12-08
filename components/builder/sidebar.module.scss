@@ -1,20 +1,180 @@
+@import '/styles/globals/typography';
+
 .sidebar {
+  --border-color: var(--color-white-20);
+
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100vw;
+  min-height: calc(100svh - var(--header-height));
+  padding: 48px var(--container-inline-padding) var(--container-inline-padding);
+  color: var(--color-white-80);
+  background-color: var(--color-black-100);
+
+  &.isOpen {
+    display: flex;
+  }
+
+  @include bp(large) {
+    display: flex;
+    position: static;
+    min-height: unset;
+    z-index: unset;
+    border: var(--border-size) solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 8px 32px 32px;
+    flex: 0 0 408px;
+    width: 408px;
+    background: transparent;
+  }
+}
+
+.sidebarMobileBar {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
+  width: 100vw;
   z-index: 1;
-  color: var(--color-black-100);
-  padding: var(--container-inline-padding);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px var(--container-inline-padding) var(--container-inline-padding);
   background: var(--color-white-80);
 
-  @include bp(large) {
-    position: static;
-    border: var(--border-size) solid var(--color-white-20);
-    border-radius: var(--border-radius-md);
-    padding: 32px;
-    flex: 0 0 408px;
-    color: unset;
-    background: transparent;
+  @include bp(medium) {
+    display: none;
   }
+}
+
+.sidebarMobileBarToggle {
+  margin-right: auto;
+  background: black;
+}
+
+.section {
+  &.isOpen {
+    flex: 1;
+  }
+}
+
+.sectionHeader {
+  @include paragraph-lg;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 24px 0;
+  color: inherit;
+  text-align: left;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  border-bottom: var(--border-size) solid var(--border-color);
+}
+
+.sectionHeaderIcon {
+  margin-left: auto;
+  transition: transform 0.4s;
+  transform-origin: center center;
+
+  .section.isOpen & {
+    transform: rotate(180deg);
+  }
+}
+
+.sectionContent {
+  padding-block: 24px;
+  display: none;
+
+  .section.isOpen & {
+    display: block;
+  }
+}
+
+.noProducts {
+  display: grid;
+  gap: 24px;
+}
+
+.productsList {
+  display: grid;
+  gap: 8px;
+  counter-reset: section;
+  padding: 0;
+  margin: 0;
+}
+
+.productsListItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: counters(section, '.');
+    counter-increment: section;
+    color: var(--color-primary-100);
+    min-width: 24px;
+    font-family: var(--font-secondary);
+    font-weight: 600;
+  }
+}
+
+.productBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 16px;
+  border: var(--border-size) solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  flex: 1;
+
+  &.isEmpty {
+    justify-content: center;
+  }
+}
+
+.productBoxName {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  color: var(--color-white-100);
+}
+
+.productRemove {
+  display: grid;
+  place-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: '. button' 'price button' 'installation button' '. button';
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.summaryPrice,
+.sidebarMobileBarPrice {
+  @include paragraph-lg;
+
+  grid-area: price;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  color: var(--color-primary-100);
+}
+
+.summaryInstallation {
+  grid-area: installation;
+}
+
+.summaryButton {
+  grid-area: button;
 }
