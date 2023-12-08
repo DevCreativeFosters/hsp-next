@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useMemo,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
 import StoreLocatorContext, {
@@ -24,21 +31,9 @@ import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import Button from '@components/button/button';
 import EnquiryModal from './enquiry-modal';
-
 import styles from './enquiry-form.module.scss';
 
-const OPTIONS_PRODUCTS = [
-  {
-    label: 'Premium 1PCE Hard Lid',
-    value: 'premium-1pce-hard-lid',
-  },
-];
-
-const SELECTED_PRODUCT = OPTIONS_PRODUCTS[0];
-const EXAMPLE_PRODUCT_PRICE = 2300;
-const EXAMPLE_INSTALLATION_PRICE = 500;
-
-export default function EnquiryForm() {
+export default function EnquiryForm({ productData }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [_, setIsFormValid] = useState(false);
   const [locationInput, setLocationInput] = useState('');
@@ -48,14 +43,38 @@ export default function EnquiryForm() {
   const [filteredLocations, setFilteredLocations] = useState(allLocations);
   const [isMapVisible, setMapVisible] = useState(false);
   const [highlight, setHighlight] = useState(false);
-  const [productPrice] = useState(EXAMPLE_PRODUCT_PRICE);
-  const [installationPrice] = useState(EXAMPLE_INSTALLATION_PRICE);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState('');
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
+  const productFields = productData.productFields;
+  const productPrice = productFields?.price;
+  const variants = productFields?.variants;
+  const variantOptions = variants.map(({ variantName, variantSlug }) => ({
+    label: variantName,
+    value: variantSlug,
+  }));
+  const installationCost = useMemo(() => {
+    let storeCost;
+    const storeInstallationCost = selectedStore?.productInstallationCost;
+
+    if (selectedStore && storeInstallationCost?.length) {
+      storeInstallationCost.map(item => {
+        if (item.product.slug === productData.slug) {
+          storeCost = item.installation_cost;
+        }
+      });
+    }
+
+    return storeCost || productFields.installationCost;
+  }, [selectedStore, productData.slug, productFields.installationCost]);
 
   useMobileVh();
+
+  const onVariantChange = useCallback((value, label) => {
+    setSelectedVariant({ value, label });
+  }, []);
 
   const handleOpenModal = () => {
     setEnquiryModalOpened(true);
@@ -176,8 +195,12 @@ export default function EnquiryForm() {
           size="large"
           placeholder="Variant"
           label="Variant"
-          options={OPTIONS_PRODUCTS}
-          value={SELECTED_PRODUCT.value}
+          onChange={onVariantChange}
+          options={variantOptions}
+          value={
+            selectedVariant?.value ||
+            (variantOptions.length ? variantOptions[0].value : '')
+          }
         />
 
         <div
@@ -275,10 +298,10 @@ export default function EnquiryForm() {
           {productPrice > 0 && (
             <span className={styles.productsPrice}>${productPrice}</span>
           )}
-          {selectedStore && installationPrice > 0 && (
-            <span className={styles.installationPrice}>
+          {selectedStore && installationCost > 0 && (
+            <span className={styles.installationCost}>
               <span> + </span>
-              <span> ${installationPrice} </span>
+              <span> ${installationCost} </span>
               <span> for installation </span>
             </span>
           )}
@@ -298,9 +321,11 @@ export default function EnquiryForm() {
         <EnquiryModal
           onClose={handleCloseModal}
           store={selectedStore}
-          product={SELECTED_PRODUCT}
+          selectedVariant={
+            selectedVariant || (variantOptions.length ? variantOptions[0] : '')
+          }
           productPrice={productPrice}
-          installationPrice={installationPrice}
+          installationCost={installationCost}
         />
       )}
     </section>

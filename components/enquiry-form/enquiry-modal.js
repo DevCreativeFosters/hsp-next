@@ -13,9 +13,9 @@ const TOOLTIP_TEXT =
 export default function EnquiryModal({
   onClose,
   store,
-  product,
+  selectedVariant,
   productPrice,
-  installationPrice,
+  installationCost,
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [formData, setFormData] = useState({
@@ -225,10 +225,10 @@ export default function EnquiryModal({
             <label className={styles.label}>Products of interest:</label>
             <div className={styles.products}>
               <EnquiryProduct
-                name={product.label}
+                name={selectedVariant.label}
                 imageUrl="http://stghsp.wpenginepowered.com/wp-content/uploads/2023/11/premium-hard-lid.png"
                 price={productPrice}
-                installationCost={installationPrice}
+                installationCost={installationCost}
               />
             </div>
             <label className={styles.label}>Your local store:</label>
@@ -238,7 +238,7 @@ export default function EnquiryModal({
                 ${productPrice.toLocaleString()}{' '}
                 <span className={styles.totalInstallationCost}>
                   {' '}
-                  + ${installationPrice.toLocaleString()} for installation
+                  + ${installationCost.toLocaleString()} for installation
                 </span>
               </div>
               <Button
