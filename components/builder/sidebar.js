@@ -2,11 +2,9 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import clsx from 'clsx';
-
 import Button from '@components/button/button';
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
-
 import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
