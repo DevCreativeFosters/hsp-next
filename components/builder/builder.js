@@ -8,6 +8,13 @@ import Sidebar from './sidebar';
 
 import styles from './builder.module.scss';
 
+const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
+  products.filter(
+    product =>
+      product.productSlug === productSlug &&
+      product.variantSlug !== variantSlug,
+  );
+
 export default function Builder({ model, products }) {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
@@ -15,10 +22,19 @@ export default function Builder({ model, products }) {
   const addProduct = useCallback(
     product => {
       const newSelectedProducts = [...selectedProducts, product];
+      const newDisabledProducts = [
+        ...disabledProducts,
+        ...getOtherProductsWithSameParent(
+          products,
+          product.productSlug,
+          product.variantSlug,
+        ),
+      ];
 
       setSelectedProducts(newSelectedProducts);
+      setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts],
+    [selectedProducts, disabledProducts, products],
   );
 
   const removeProduct = useCallback(
@@ -26,10 +42,19 @@ export default function Builder({ model, products }) {
       const newSelectedProducts = selectedProducts.filter(
         selectedProduct => selectedProduct !== product,
       );
+      const otherProductsWithSameParent = getOtherProductsWithSameParent(
+        products,
+        product.productSlug,
+        product.variantSlug,
+      );
+      const newDisabledProducts = disabledProducts.filter(
+        el => !otherProductsWithSameParent.includes(el),
+      );
 
       setSelectedProducts(newSelectedProducts);
+      setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts],
+    [selectedProducts, disabledProducts, products],
   );
 
   const toggleProduct = useCallback(

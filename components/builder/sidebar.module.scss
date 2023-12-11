@@ -137,6 +137,10 @@
   font-family: var(--font-secondary);
   font-weight: 600;
   border-bottom: var(--border-size) solid var(--border-color);
+
+  .section.isOpen & {
+    border-bottom-color: transparent;
+  }
 }
 
 .sectionHeaderIcon {
@@ -150,8 +154,9 @@
 }
 
 .sectionContent {
-  padding-block: 24px;
+  padding-block: 0 24px;
   display: none;
+  border-bottom: var(--border-size) solid var(--border-color);
 
   .section.isOpen & {
     display: block;

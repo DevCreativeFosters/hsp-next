@@ -26,6 +26,7 @@ export default async function TempBuilderPage() {
             productVariant.variantDetails.price ||
             (parentInherit && product.productFields.price),
           installationCost: product.productFields.installationCost,
+          productSlug: product.slug,
         });
       });
     }

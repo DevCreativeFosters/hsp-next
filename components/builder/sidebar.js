@@ -179,7 +179,11 @@ export default function Sidebar({
               formatPrice(priceSummary.installationCost)
             )}
           </div>
-          <Button className={styles.summaryButton} size="large" disabled>
+          <Button
+            className={styles.summaryButton}
+            size="large"
+            disabled={selectedProducts.length === 0 || !store}
+          >
             Send enquiry
           </Button>
         </div>
@@ -196,7 +200,7 @@ export default function Sidebar({
         <div className={styles.sidebarMobileBarPrice}>
           {formatPrice(priceSummary.price)}
         </div>
-        <Button size="large" disabled>
+        <Button size="large" disabled={selectedProducts.length === 0 || !store}>
           Send enquiry
         </Button>
       </div>
