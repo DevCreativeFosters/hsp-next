@@ -18,12 +18,15 @@ export default async function TempBuilderPage() {
   products?.forEach(product => {
     if (product.productFields.variants) {
       product.productFields.variants.forEach(productVariant => {
+        const parentInherit = productVariant.parentInherit;
+
         productsVariants.push({
           ...productVariant,
-          price: productVariant.variantDetails.price,
-          installationCost:
-            productVariant.installationCost ||
-            product.productFields.installationCost,
+          price:
+            productVariant.variantDetails.price ||
+            (parentInherit && product.productFields.price),
+          installationCost: product.productFields.installationCost,
+          productSlug: product.slug,
         });
       });
     }

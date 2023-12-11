@@ -8,28 +8,72 @@ import Sidebar from './sidebar';
 
 import styles from './builder.module.scss';
 
+const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
+  products.filter(
+    product =>
+      product.productSlug === productSlug &&
+      product.variantSlug !== variantSlug,
+  );
+
 export default function Builder({ model, products }) {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
 
-  const toggleProduct = useCallback(
+  const addProduct = useCallback(
     product => {
-      const newSelectedProducts = selectedProducts.includes(product)
-        ? selectedProducts.filter(
-            selectedProduct => selectedProduct !== product,
-          )
-        : [...selectedProducts, product];
+      const newSelectedProducts = [...selectedProducts, product];
+      const newDisabledProducts = [
+        ...disabledProducts,
+        ...getOtherProductsWithSameParent(
+          products,
+          product.productSlug,
+          product.variantSlug,
+        ),
+      ];
 
       setSelectedProducts(newSelectedProducts);
+      setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts],
+    [selectedProducts, disabledProducts, products],
+  );
+
+  const removeProduct = useCallback(
+    product => {
+      const newSelectedProducts = selectedProducts.filter(
+        selectedProduct => selectedProduct !== product,
+      );
+      const otherProductsWithSameParent = getOtherProductsWithSameParent(
+        products,
+        product.productSlug,
+        product.variantSlug,
+      );
+      const newDisabledProducts = disabledProducts.filter(
+        el => !otherProductsWithSameParent.includes(el),
+      );
+
+      setSelectedProducts(newSelectedProducts);
+      setDisabledProducts(newDisabledProducts);
+    },
+    [selectedProducts, disabledProducts, products],
+  );
+
+  const toggleProduct = useCallback(
+    product => {
+      selectedProducts.includes(product)
+        ? removeProduct(product)
+        : addProduct(product);
+    },
+    [selectedProducts, addProduct, removeProduct],
   );
 
   return (
     <div className={styles.builder}>
       <Container className={styles.container}>
         <div className={styles.top}>
-          <Sidebar selectedProducts={selectedProducts} />
+          <Sidebar
+            selectedProducts={selectedProducts}
+            removeProduct={removeProduct}
+          />
 
           <Preview model={model} selectedProducts={selectedProducts} />
         </div>

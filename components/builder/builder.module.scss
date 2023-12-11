@@ -2,8 +2,9 @@
   --vertical-padding: 0 24px;
 
   min-height: calc(100svh - var(--header-height));
-  display: grid;
-  place-items: center;
+  display: flex;
+
+  // place-items: center;
   padding-block: var(--vertical-padding);
 
   @include bp(large) {
@@ -12,8 +13,9 @@
 }
 
 .container {
-  display: grid;
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: column;
+  height: auto;
 
   @include bp(large) {
     height: auto;
@@ -23,6 +25,7 @@
 .top {
   position: relative;
   display: flex;
+  flex: 1;
   min-height: 300px;
 
   @include bp-below(large) {
