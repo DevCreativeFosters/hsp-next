@@ -15,7 +15,7 @@ export default function FeaturedArticle({
     dateStyle: 'long',
   });
 
-  const tagsNormalized = tags.map(({ name, link }) => ({
+  const tagsNormalized = tags?.map(({ name, link }) => ({
     name,
     link: {
       url: link?.url || link,
