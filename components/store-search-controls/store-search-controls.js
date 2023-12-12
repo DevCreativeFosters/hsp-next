@@ -8,10 +8,7 @@ import {
   getPlaceGeoLocation,
   stringifySuggestion,
 } from '@lib/google-place';
-import StoreLocatorContext, {
-  DEFAULT_RADIUS,
-  RADIUS_OPTIONS,
-} from '@contexts/store-locator';
+import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
 import { findLocationsInRadius } from '@lib/store-locations';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
@@ -19,9 +16,9 @@ import Select from '@components/form/select';
 import Switch from '@components/form/switch';
 import { allLocations } from '@mockup/store-locations';
 
-import styles from './builder.module.scss';
+import styles from './store-locator-search.module.scss';
 
-export default function SearchControls({ interactWithDisabledForm }) {
+export default function StoreSearchControls({ interactWithDisabledForm }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
   const [location, setLocation] = useState(undefined);
@@ -36,6 +33,7 @@ export default function SearchControls({ interactWithDisabledForm }) {
     setRadius,
     isMapVisible,
     setMapVisible,
+    // resetFilteredLocations,
   } = useContext(StoreLocatorContext);
 
   const onRadiusChange = useCallback(
@@ -58,14 +56,21 @@ export default function SearchControls({ interactWithDisabledForm }) {
     [sessionToken, setSearchGeolocation],
   );
 
-  // const onClear = useCallback(() => {
-  //   setLocation(null);
-  //   setLocationInput('');
-  //   setSearchGeolocation(null);
-  //   setFilteredLocations(allLocations);
-  //   setSelectedStore(null);
-  //   setRadius(DEFAULT_RADIUS);
-  // }, [setSearchGeolocation, setRadius]);
+  // on clear store ?
+  // useEffect(
+  //   function clearControls() {
+  //     if (selectedStore === null) {
+  //       setLocation(null);
+  //       setLocationInput('');
+  //       setSearchGeolocation(null);
+  //       setRadius(DEFAULT_RADIUS);
+  //       resetFilteredLocations();
+  //     }
+
+  //     return () => {};
+  //   },
+  //   [selectedStore, setRadius, setSearchGeolocation, resetFilteredLocations],
+  // );
 
   useEffect(
     function toggleSuggestions() {
@@ -100,7 +105,7 @@ export default function SearchControls({ interactWithDisabledForm }) {
         setFilteredLocations(allLocations);
       };
     },
-    [searchGeolocation, radius],
+    [searchGeolocation, setFilteredLocations, radius],
   );
 
   return (

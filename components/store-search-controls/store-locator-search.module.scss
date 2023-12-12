@@ -1,0 +1,36 @@
+.searchControls {
+  display: grid;
+  grid-gap: 16px;
+  grid-template-areas:
+    'location location'
+    'radius mapToggler';
+  grid-template-columns: 3fr 1fr;
+
+  @include bp(medium) {
+    grid-template-areas:
+      'location radius'
+      'mapToggler mapToggler';
+    align-items: end;
+  }
+
+  &.isDisabled {
+    opacity: 0.25;
+  }
+}
+
+.location {
+  grid-area: location;
+  position: relative;
+  flex-grow: 1;
+}
+
+.radius {
+  grid-area: radius;
+}
+
+.mapToggler {
+  grid-area: mapToggler;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}

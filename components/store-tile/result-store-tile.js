@@ -19,7 +19,7 @@ export default function ResultsStoreTile({ item, isHighlighted }) {
         className={clsx(styles.resultClearButton, {
           [styles.isHighlighted]: isHighlighted,
         })}
-        onClick={setSelectedStore(null)}
+        onClick={() => setSelectedStore(null)}
         aria-label="Clear chosen store"
       >
         <span />

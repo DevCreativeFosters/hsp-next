@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import Button from '@components/button/button';
-import SearchControls from './search-controls';
+import StoreSearchControls from '@components/store-search-controls/store-search-controls';
 import StoreLocatorContext from '@contexts/store-locator';
 import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import { getIcon } from '@lib/icons';
@@ -158,7 +158,7 @@ export default function Sidebar({
           headerClick={setOpenSection}
           isOpen={openSection === 'store'}
         >
-          <SearchControls />
+          <StoreSearchControls />
           {selectedStore && <ResultsStoreTile item={selectedStore} />}
         </Section>
         <div className={styles.summary}>
