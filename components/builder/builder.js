@@ -8,6 +8,7 @@ import Sidebar from './sidebar';
 import StoreLocatorContext from '@contexts/store-locator';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import { useIsMobile } from '@hooks/useIsMobile';
 
 import styles from './builder.module.scss';
 
@@ -18,12 +19,33 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
       product.variantSlug !== variantSlug,
   );
 
+const DEFAULT_OPEN_SECTION = 'products';
+
 export default function Builder({ model, products }) {
+  const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
+  const isMobile = useIsMobile(1280);
 
-  const { filteredLocations, setSelectedStore, isMapVisible } =
-    useContext(StoreLocatorContext);
+  const {
+    searchGeolocation,
+    filteredLocations,
+    selectedStore,
+    setSelectedStore,
+    isMapVisible,
+    radius,
+  } = useContext(StoreLocatorContext);
+
+  const isInlineResultListVisible = Boolean(
+    !selectedStore &&
+      openSection === 'store' &&
+      location &&
+      searchGeolocation &&
+      radius,
+  );
+  const isInlineMapVisible = Boolean(
+    !selectedStore && openSection === 'store' && !isMobile && isMapVisible,
+  );
 
   const addProduct = useCallback(
     product => {
@@ -77,30 +99,31 @@ export default function Builder({ model, products }) {
       <Container className={styles.container}>
         <div className={styles.top}>
           <Sidebar
+            openSection={openSection}
+            setOpenSection={setOpenSection}
             selectedProducts={selectedProducts}
             removeProduct={removeProduct}
+            isMobile={isMobile}
           />
 
           <StoreList
             className={styles.results}
             items={filteredLocations}
-            show={true}
-            // show={isInlineResultListVisible}
+            show={isInlineResultListVisible}
             onSelect={item => {
               setSelectedStore(item);
             }}
           />
 
-          <div className={styles.preview}>
-            <Preview model={model} selectedProducts={selectedProducts} />
-            {isMapVisible && (
+          <Preview model={model} selectedProducts={selectedProducts}>
+            {isInlineMapVisible && (
               <StoreLocatorMap
                 className={styles.map}
                 locations={filteredLocations}
                 onMarkerClick={setSelectedStore}
               />
             )}
-          </div>
+          </Preview>
         </div>
         <ProductsCarousel
           products={products}

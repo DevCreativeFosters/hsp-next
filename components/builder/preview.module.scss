@@ -4,9 +4,10 @@
   overflow: clip;
   background: var(--color-white-100);
 
-  @include bp(medium) {
+  @include bp(large) {
     aspect-ratio: 864/538;
     border-radius: var(--border-radius-md);
+    margin-left: var(--gap);
   }
 }
 

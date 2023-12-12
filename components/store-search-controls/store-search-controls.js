@@ -16,9 +16,13 @@ import Select from '@components/form/select';
 import Switch from '@components/form/switch';
 import { allLocations } from '@mockup/store-locations';
 
-import styles from './store-locator-search.module.scss';
+import styles from './store-search-controls.module.scss';
 
-export default function StoreSearchControls({ interactWithDisabledForm }) {
+export default function StoreSearchControls({
+  isWide,
+  isHidden,
+  interactWithDisabledForm,
+}) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
   const [location, setLocation] = useState(undefined);
@@ -111,7 +115,9 @@ export default function StoreSearchControls({ interactWithDisabledForm }) {
   return (
     <div
       className={clsx(styles.searchControls, {
+        [styles.isWide]: isWide,
         [styles.isDisabled]: selectedStore,
+        [styles.isHidden]: isHidden,
       })}
       onClick={interactWithDisabledForm}
     >

@@ -7,14 +7,20 @@
   grid-template-columns: 3fr 1fr;
 
   @include bp(medium) {
-    grid-template-areas:
-      'location radius'
-      'mapToggler mapToggler';
-    align-items: end;
+    &.isWide {
+      grid-template-areas:
+        'location radius'
+        'mapToggler mapToggler';
+      align-items: end;
+    }
   }
 
   &.isDisabled {
     opacity: 0.25;
+  }
+
+  &.isHidden {
+    display: none;
   }
 }
 
@@ -26,6 +32,7 @@
 
 .radius {
   grid-area: radius;
+  z-index: 4;
 }
 
 .mapToggler {

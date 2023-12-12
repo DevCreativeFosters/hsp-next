@@ -126,6 +126,7 @@ export default function EnquiryForm({ productData }) {
         />
 
         <StoreSearchControls
+          isWide
           interactWithDisabledForm={interactWithDisabledForm}
         />
 

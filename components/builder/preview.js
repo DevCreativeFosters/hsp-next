@@ -6,7 +6,12 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import styles from './preview.module.scss';
 
-export default function Preview({ model, selectedProducts, className }) {
+export default function Preview({
+  model,
+  selectedProducts,
+  className,
+  children,
+}) {
   const modelName = model.name;
   const modelImageDesktop = model.uteBuilderImages.imageDesktop?.sourceUrl;
   const modelImageMobile = model.uteBuilderImages.imageMobile?.sourceUrl;
@@ -54,6 +59,7 @@ export default function Preview({ model, selectedProducts, className }) {
           </Fragment>
         );
       })}
+      {children}
     </div>
   );
 }

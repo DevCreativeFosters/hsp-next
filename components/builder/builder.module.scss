@@ -7,6 +7,8 @@
 
   @include bp(large) {
     --vertical-padding: 24px 48px;
+
+    align-items: center;
   }
 }
 
@@ -16,11 +18,13 @@
   height: auto;
 
   @include bp(large) {
-    height: auto;
+    display: block;
   }
 }
 
 .top {
+  --gap: 24px;
+
   position: relative;
   display: flex;
   flex: 1;
@@ -32,25 +36,38 @@
 
   @include bp(large) {
     display: flex;
-    gap: 48px;
+    gap: var(--gap);
+    min-height: 538px;
   }
 }
 
 .results {
-  width: 320px;
-}
+  display: none;
 
-.preview {
-  position: relative;
-  flex: 1;
+  @include bp(large) {
+    display: block;
+    width: 318px;
+    height: 538px;
+    border-radius: var(--border-radius-md);
+    background: var(--color-black-100);
+
+    ul {
+      background: transparent;
+    }
+  }
 }
 
 .map {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  min-height: unset !important;
+  display: none;
+
+  @include bp(large) {
+    display: block;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    min-height: unset !important;
+  }
 }

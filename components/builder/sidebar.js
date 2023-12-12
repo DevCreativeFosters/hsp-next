@@ -6,14 +6,16 @@ import Button from '@components/button/button';
 import StoreSearchControls from '@components/store-search-controls/store-search-controls';
 import StoreLocatorContext from '@contexts/store-locator';
 import ResultsStoreTile from '@components/store-tile/result-store-tile';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import ProductsList from './sidebar-products-list';
+
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
 import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
-const CancelIcon = getIcon('cancel');
-const CarIcon = getIcon('car');
 
 const DEFAULT_PRICE_SUMMARY = {
   price: 0,
@@ -46,51 +48,12 @@ const Section = ({
   );
 };
 
-const ProductsList = ({ selectedProducts, removeProduct }) => {
-  return (
-    <>
-      {selectedProducts.length !== 0 ? (
-        <ol className={styles.productsList}>
-          {selectedProducts?.map(selectedProduct => {
-            const productTitle = selectedProduct.variantName;
-            const productPrice = selectedProduct.price;
-            const productSlug = selectedProduct.variantSlug;
-
-            return (
-              <li className={styles.productsListItem} key={productSlug}>
-                <div className={styles.productBox}>
-                  {formatPrice(productPrice)}
-                  <span className={styles.productBoxName}>{productTitle}</span>
-                </div>
-                <Button
-                  className={styles.productRemove}
-                  variant="quaternary"
-                  onClick={() => removeProduct(selectedProduct)}
-                >
-                  <CancelIcon />
-                </Button>
-              </li>
-            );
-          })}
-        </ol>
-      ) : (
-        <div className={styles.noProducts}>
-          Select products from the bottom of the screen to create a quote.
-          <div className={clsx(styles.productBox, styles.isEmpty)}>
-            No products added yet
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
 const NrCircle = ({ nr, isSmall, className }) => {
   if (nr === 0) return null;
 
   return (
     <div
-      className={clsx(styles.nr, {
+      className={clsx(styles.nr, className, {
         [styles.isSmall]: isSmall,
       })}
     >
@@ -100,15 +63,29 @@ const NrCircle = ({ nr, isSmall, className }) => {
 };
 
 export default function Sidebar({
+  openSection,
+  setOpenSection,
   selectedProducts,
   removeProduct,
+  isMobile,
   className,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [openSection, setOpenSection] = useState('store');
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
 
-  const { selectedStore } = useContext(StoreLocatorContext);
+  const {
+    searchGeolocation,
+    selectedStore,
+    setSelectedStore,
+    filteredLocations,
+    isMapVisible,
+    radius,
+  } = useContext(StoreLocatorContext);
+
+  const isInlineResultListVisible = Boolean(
+    location && searchGeolocation && radius,
+  );
+  const isInlineMapVisible = Boolean(isMobile && isMapVisible);
 
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
@@ -158,8 +135,28 @@ export default function Sidebar({
           headerClick={setOpenSection}
           isOpen={openSection === 'store'}
         >
-          <StoreSearchControls />
-          {selectedStore && <ResultsStoreTile item={selectedStore} />}
+          <StoreSearchControls isHidden={selectedStore} />
+          {selectedStore ? (
+            <ResultsStoreTile item={selectedStore} />
+          ) : (
+            <>
+              {isInlineMapVisible && (
+                <StoreLocatorMap
+                  className={styles.map}
+                  locations={filteredLocations}
+                  onMarkerClick={setSelectedStore}
+                />
+              )}
+              <StoreList
+                className={styles.results}
+                items={filteredLocations}
+                show={isInlineResultListVisible}
+                onSelect={item => {
+                  setSelectedStore(item);
+                }}
+              />
+            </>
+          )}
         </Section>
         <div className={styles.summary}>
           <button
@@ -167,7 +164,8 @@ export default function Sidebar({
             onClick={toggleOpen}
             type="button"
           >
-            <CarIcon />
+            <ListIcon />
+            <NrCircle nr={selectedProducts.length} />
           </button>
           <div className={styles.summaryPrice}>
             {formatPrice(priceSummary.price)}
@@ -179,7 +177,10 @@ export default function Sidebar({
                 installation <span className={styles.isDesktop}>cost</span>
               </>
             ) : (
-              formatPrice(priceSummary.installationCost)
+              <>
+                {formatPrice(priceSummary.installationCost)}
+                <span className={styles.isDesktop}> for installation</span>
+              </>
             )}
           </div>
           <Button
