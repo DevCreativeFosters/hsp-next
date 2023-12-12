@@ -76,7 +76,7 @@ export default function Tile({
     [title],
   );
 
-  const tagsNormalized = tags.map(normalizeTag).filter(Boolean);
+  const tagsNormalized = tags?.map(normalizeTag).filter(Boolean);
 
   return (
     <article className={tileClassNames}>
@@ -86,7 +86,7 @@ export default function Tile({
       >
         {urlNormalized ? renderLink(TheImage) : TheImage}
 
-        {tagsNormalized.length > 0 && (
+        {tagsNormalized?.length > 0 && (
           <ul className={styles.tagList}>
             {tagsNormalized.map(({ name, link }, index) => (
               <li key={index}>
