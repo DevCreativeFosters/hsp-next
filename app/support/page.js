@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function SupportPage() {
   const content = await getPageData('support');
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return <Layout>{contentBlocks.map(contentBlock => contentBlock)}</Layout>;
 }

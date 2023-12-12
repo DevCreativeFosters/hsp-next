@@ -8,7 +8,7 @@ export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
   const globalOptions = await getGlobalOptions();
   const featuredPost = globalOptions?.featuredPost;
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
     <Layout title="HSP 4x4 - Lifestyle">

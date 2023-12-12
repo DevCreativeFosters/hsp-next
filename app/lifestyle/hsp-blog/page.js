@@ -24,7 +24,7 @@ export default async function BlogPage() {
   const allPosts = posts?.posts?.nodes;
   const totalPosts = allPosts?.length;
   const content = await getPageData('lifestyle/hsp-blog');
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   const paginationScope = 'posts-list';
 

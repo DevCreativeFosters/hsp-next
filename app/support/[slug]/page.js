@@ -19,7 +19,7 @@ export default async function SupportSubpage({ params }) {
   const supportUrl = routes.support(params.slug);
   const gutenbergContent = await getPageGutenbergContent(supportUrl);
   const content = await getPageData(supportUrl);
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
     <Layout>
