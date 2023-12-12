@@ -75,6 +75,7 @@ export default function Sidebar({
 
   const {
     searchGeolocation,
+    location,
     selectedStore,
     setSelectedStore,
     filteredLocations,
