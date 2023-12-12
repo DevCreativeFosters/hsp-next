@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import Container from '@components/container/container';
 import ProductsCarousel from './products-carousel';
 import Preview from './preview';
 import Sidebar from './sidebar';
+import StoreLocatorContext from '@contexts/store-locator';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
 
@@ -18,6 +21,9 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 export default function Builder({ model, products }) {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
+
+  const { filteredLocations, setSelectedStore, isMapVisible } =
+    useContext(StoreLocatorContext);
 
   const addProduct = useCallback(
     product => {
@@ -75,7 +81,26 @@ export default function Builder({ model, products }) {
             removeProduct={removeProduct}
           />
 
-          <Preview model={model} selectedProducts={selectedProducts} />
+          <StoreList
+            className={styles.results}
+            items={filteredLocations}
+            show={true}
+            // show={isInlineResultListVisible}
+            onSelect={item => {
+              setSelectedStore(item);
+            }}
+          />
+
+          <div className={styles.preview}>
+            <Preview model={model} selectedProducts={selectedProducts} />
+            {isMapVisible && (
+              <StoreLocatorMap
+                className={styles.map}
+                locations={filteredLocations}
+                onMarkerClick={setSelectedStore}
+              />
+            )}
+          </div>
         </div>
         <ProductsCarousel
           products={products}

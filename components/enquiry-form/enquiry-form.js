@@ -286,7 +286,7 @@ export default function EnquiryForm({ productData }) {
             <StoreList
               className={styles.results}
               items={filteredLocations}
-              show={isInlineResultListVisible}
+              show={true}
               onSelect={item => {
                 setSelectedStore(item);
               }}

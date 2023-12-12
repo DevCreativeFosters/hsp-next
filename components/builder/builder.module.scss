@@ -3,8 +3,6 @@
 
   min-height: calc(100svh - var(--header-height));
   display: flex;
-
-  // place-items: center;
   padding-block: var(--vertical-padding);
 
   @include bp(large) {
@@ -36,4 +34,23 @@
     display: flex;
     gap: 48px;
   }
+}
+
+.results {
+  width: 320px;
+}
+
+.preview {
+  position: relative;
+  flex: 1;
+}
+
+.map {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  min-height: unset !important;
 }

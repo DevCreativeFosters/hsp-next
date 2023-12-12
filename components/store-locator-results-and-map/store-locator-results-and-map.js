@@ -12,9 +12,15 @@ import styles from './store-locator-results-and-map.module.scss';
 
 export default function StoreLocatorResultsAndMap() {
   const resultsRef = useRef(null);
-  const { searchGeolocation, radius } = useContext(StoreLocatorContext);
-  const [filteredLocations, setFilteredLocations] = useState(allLocations);
-  const [selectedStore, setSelectedStore] = useState(null);
+  const {
+    searchGeolocation,
+    filteredLocations,
+    setFilteredLocations,
+    radius,
+    selectedStore,
+    setSelectedStore,
+    resetFilteredLocations,
+  } = useContext(StoreLocatorContext);
 
   useEffect(
     function scrollToSelectedResultItem() {
@@ -37,11 +43,11 @@ export default function StoreLocatorResultsAndMap() {
       if (searchGeolocation && radius) {
         setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
       } else {
-        setFilteredLocations(allLocations);
+        resetFilteredLocations();
       }
       return () => {};
     },
-    [searchGeolocation, radius],
+    [searchGeolocation, radius, resetFilteredLocations, setFilteredLocations],
   );
 
   return (

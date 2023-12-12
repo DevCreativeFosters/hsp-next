@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import Button from '@components/button/button';
+import SearchControls from './search-controls';
+import StoreLocatorContext from '@contexts/store-locator';
+import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
 import styles from './sidebar.module.scss';
@@ -102,9 +105,10 @@ export default function Sidebar({
   className,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [openSection, setOpenSection] = useState('products');
+  const [openSection, setOpenSection] = useState('store');
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
-  const [store, setStore] = useState(null);
+
+  const { selectedStore } = useContext(StoreLocatorContext);
 
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
@@ -154,7 +158,8 @@ export default function Sidebar({
           headerClick={setOpenSection}
           isOpen={openSection === 'store'}
         >
-          Locator placeholder
+          <SearchControls />
+          {selectedStore && <ResultsStoreTile item={selectedStore} />}
         </Section>
         <div className={styles.summary}>
           <button
@@ -180,7 +185,7 @@ export default function Sidebar({
           <Button
             className={styles.summaryButton}
             size="large"
-            disabled={selectedProducts.length === 0 || !store}
+            disabled={selectedProducts.length === 0 || !selectedStore}
           >
             Send enquiry
           </Button>
@@ -198,7 +203,10 @@ export default function Sidebar({
         <div className={styles.sidebarMobileBarPrice}>
           {formatPrice(priceSummary.price)}
         </div>
-        <Button size="large" disabled={selectedProducts.length === 0 || !store}>
+        <Button
+          size="large"
+          disabled={selectedProducts.length === 0 || !selectedStore}
+        >
           Send enquiry
         </Button>
       </div>
