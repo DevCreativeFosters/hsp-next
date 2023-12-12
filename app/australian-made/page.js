@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function AustralianMadePage() {
   const content = await getPageData('australian-made');
-  const contentBlocks = content?.flexibleContent.blocks.map(renderBlock);
+  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
     <Layout withMap>{contentBlocks.map(contentBlock => contentBlock)}</Layout>
