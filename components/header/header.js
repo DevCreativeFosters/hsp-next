@@ -76,14 +76,12 @@ export default function Header({
                   ({ label, url, subItems, subItemGroups, name }, index) => (
                     <li key={label + index}>
                       <Button
-                        className={styles.mainMenuButton}
                         href={url}
                         size="small"
                         variant="tertiary"
                         background="dark"
                         toggleable={
-                          (subItems?.length > 0 || subItemGroups?.length > 0) &&
-                          url === ''
+                          subItems?.length > 0 && url === '/products/'
                             ? 'neutral'
                             : null
                         }
