@@ -9,7 +9,12 @@
   cursor: pointer;
   transition: var(--transition);
 
+  &.isLoading,
   &:hover {
     background: var(--color-black-20);
+  }
+
+  &.isLoading {
+    pointer-events: none;
   }
 }
