@@ -1,6 +1,7 @@
 import { getModelBySlug, getProductsWithVariants } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Builder from '@components/builder/builder';
+import { StoreLocatorProvider } from '@contexts/store-locator';
 
 export const metadata = {
   title: 'HSP 4x4 - UTP Builder',
@@ -34,7 +35,9 @@ export default async function TempBuilderPage() {
 
   return (
     <Layout withFooter={false}>
-      <Builder model={model} products={productsVariants} />
+      <StoreLocatorProvider>
+        <Builder model={model} products={productsVariants} />
+      </StoreLocatorProvider>
     </Layout>
   );
 }

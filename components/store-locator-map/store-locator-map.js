@@ -1,5 +1,6 @@
-import StoreLocatorContext from '@contexts/store-locator';
 import { useContext, useEffect, useState } from 'react';
+import clsx from 'clsx';
+import StoreLocatorContext from '@contexts/store-locator';
 import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { googleMapsMarkerClusterRenderer } from '@lib/google-maps-marker-cluster-renderer';
@@ -12,7 +13,11 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
 
 const DEFAULT_MAP_ZOOM = 4;
 
-export default function StoreLocatorMap({ locations, onMarkerClick }) {
+export default function StoreLocatorMap({
+  locations,
+  onMarkerClick,
+  className,
+}) {
   const { searchGeolocation } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
 
@@ -95,7 +100,7 @@ export default function StoreLocatorMap({ locations, onMarkerClick }) {
   );
 
   return (
-    <div className={styles.mapWrapper}>
+    <div className={clsx(styles.mapWrapper, className)}>
       <div className={styles.map} id="store-locator-map" />
     </div>
   );

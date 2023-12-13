@@ -6,7 +6,11 @@ export default function StoreList({ className, items, show, onSelect }) {
   useMobileVh();
 
   if (show && items?.length === 0) {
-    return <div>Sorry, there are no results for given location and radius</div>;
+    return (
+      <div className={className}>
+        Sorry, there are no results for given location and radius
+      </div>
+    );
   }
 
   if (!items?.length > 0 || !show) return null;
