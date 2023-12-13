@@ -21,7 +21,7 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 
 const DEFAULT_OPEN_SECTION = 'products';
 
-export default function Builder({ model, products }) {
+export default function Builder({ makeName, model, products }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
@@ -115,7 +115,11 @@ export default function Builder({ model, products }) {
             }}
           />
 
-          <Preview model={model} selectedProducts={selectedProducts}>
+          <Preview
+            makeName={makeName}
+            model={model}
+            selectedProducts={selectedProducts}
+          >
             {isInlineMapVisible && (
               <StoreLocatorMap
                 className={styles.map}

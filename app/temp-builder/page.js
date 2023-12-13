@@ -9,11 +9,10 @@ export const metadata = {
 };
 
 export default async function TempBuilderPage() {
-  const model = await getModelBySlug('next-gen-ranger-raptor');
-  const products = await getProductsWithVariants(
-    'ford',
-    'next-gen-ranger-raptor',
-  );
+  const makeName = 'ford';
+  const modelName = 'next-gen-ranger-raptor';
+  const model = await getModelBySlug(modelName);
+  const products = await getProductsWithVariants(makeName, modelName);
   const productsVariants = [];
 
   products?.forEach(product => {
@@ -36,7 +35,11 @@ export default async function TempBuilderPage() {
   return (
     <Layout withFooter={false}>
       <StoreLocatorProvider>
-        <Builder model={model} products={productsVariants} />
+        <Builder
+          makeName={makeName}
+          model={model}
+          products={productsVariants}
+        />
       </StoreLocatorProvider>
     </Layout>
   );

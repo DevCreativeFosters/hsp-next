@@ -31,3 +31,14 @@
     display: none;
   }
 }
+
+.downloadButton {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+
+  @include bp-below(large) {
+    display: none;
+  }
+}
