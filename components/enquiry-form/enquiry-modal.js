@@ -226,11 +226,11 @@ export default function EnquiryModal({
             <label className={styles.label}>Products of interest:</label>
             <div className={styles.products}>
               {selectedProducts?.map(selectedProduct => {
-                const productTitle = selectedProduct.variantName;
-                const productPrice = selectedProduct.price;
+                const productTitle = selectedProduct?.variantName;
+                const productPrice = selectedProduct?.price;
                 const productInstallationCost =
-                  selectedProduct.installationCost;
-                const productSlug = selectedProduct.variantSlug;
+                  selectedProduct?.installationCost;
+                const productSlug = selectedProduct?.variantSlug;
                 const productImage = selectedProduct?.variantDetails?.images
                   ?.length
                   ? selectedProduct?.variantDetails?.images[0].image?.sourceUrl
