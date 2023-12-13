@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import clsx from 'clsx';
 import useMobileVh from '@hooks/useMobileVh';
 import StoreSearchControls from '@components/store-search-controls/store-search-controls';
 import StoreLocatorContext from '@contexts/store-locator';
@@ -18,24 +17,38 @@ import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import Button from '@components/button/button';
 import EnquiryModal from './enquiry-modal';
+import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-form.module.scss';
 
 export default function EnquiryForm({ productData }) {
-  const [sessionToken, setSessionToken] = useState(uuidv4());
+  const productFields = productData.productFields;
+  const variants = productFields?.variants.map(productVariant => ({
+    ...productVariant,
+    price:
+      productVariant.variantDetails.price ||
+      (productVariant.parentInherit && productFields.price),
+  }));
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
-  const productFields = productData.productFields;
-  const productPrice = productFields?.price;
-  const variants = productFields?.variants;
   const variantOptions = variants.map(({ variantName, variantSlug }) => ({
     label: variantName,
     value: variantSlug,
   }));
+
+  const {
+    searchGeolocation,
+    filteredLocations,
+    selectedStore,
+    setSelectedStore,
+    radius,
+    isMapVisible,
+  } = useContext(StoreLocatorContext);
+
   const installationCost = useMemo(() => {
     let storeCost;
     const storeInstallationCost = selectedStore?.productInstallationCost;
@@ -53,9 +66,18 @@ export default function EnquiryForm({ productData }) {
 
   useMobileVh();
 
-  const onVariantChange = useCallback((value, label) => {
-    setSelectedVariant({ value, label });
-  }, []);
+  const onVariantChange = useCallback(
+    value => {
+      const newSelectedVariant = variants.find(
+        variant => variant.variantSlug === value,
+      );
+
+      console.log('NEW', newSelectedVariant);
+
+      setSelectedVariant(newSelectedVariant);
+    },
+    [variants],
+  );
 
   const handleOpenModal = () => {
     setEnquiryModalOpened(true);
@@ -64,15 +86,6 @@ export default function EnquiryForm({ productData }) {
   const handleCloseModal = () => {
     setEnquiryModalOpened(false);
   };
-
-  const {
-    searchGeolocation,
-    filteredLocations,
-    selectedStore,
-    setSelectedStore,
-    radius,
-    isMapVisible,
-  } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(
     location && searchGeolocation && radius,
@@ -119,10 +132,7 @@ export default function EnquiryForm({ productData }) {
           label="Variant"
           onChange={onVariantChange}
           options={variantOptions}
-          value={
-            selectedVariant?.value ||
-            (variantOptions.length ? variantOptions[0].value : '')
-          }
+          value={selectedVariant?.variantSlug}
         />
 
         <StoreSearchControls
@@ -153,13 +163,15 @@ export default function EnquiryForm({ productData }) {
         )}
 
         <div className={styles.price}>
-          {productPrice > 0 && (
-            <span className={styles.productsPrice}>${productPrice}</span>
+          {selectedVariant.price > 0 && (
+            <span className={styles.productsPrice}>
+              {formatPrice(selectedVariant.price)}
+            </span>
           )}
           {selectedStore && installationCost > 0 && (
             <span className={styles.installationCost}>
               <span> + </span>
-              <span> ${installationCost} </span>
+              <span> {formatPrice(installationCost)} </span>
               <span> for installation </span>
             </span>
           )}
@@ -179,10 +191,10 @@ export default function EnquiryForm({ productData }) {
         <EnquiryModal
           onClose={handleCloseModal}
           store={selectedStore}
-          selectedVariant={
-            selectedVariant || (variantOptions.length ? variantOptions[0] : '')
-          }
-          productPrice={productPrice}
+          selectedProducts={[
+            { ...selectedVariant, installationCost: installationCost },
+          ]}
+          productPrice={selectedVariant.price}
           installationCost={installationCost}
         />
       )}

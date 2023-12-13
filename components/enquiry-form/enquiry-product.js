@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-product.module.scss';
 
 export default function EnquiryProduct({
@@ -21,10 +22,10 @@ export default function EnquiryProduct({
       {name && <p className={styles.name}>{name}</p>}
       {price && (
         <div className={styles.price}>
-          ${Number(price).toLocaleString()}{' '}
+          {formatPrice(price)}{' '}
           <span className={styles.installationCost}>
             {' '}
-            + ${Number(installationCost).toLocaleString()}
+            + {formatPrice(installationCost)}
           </span>
         </div>
       )}

@@ -15,20 +15,39 @@
 .layer {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  left: 0;
+  transform: translateY(-50%);
   object-fit: contain;
+  object-position: left center;
+  max-width: 100%;
+  max-height: 100%;
+
+  @media (orientation: landscape) or (width >= 480px) {
+    object-position: center;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  @include bp(large) {
+    left: auto;
+    right: 0;
+    max-width: unset;
+    max-height: unset;
+    transform: translateY(-50%);
+  }
 }
 
 .isMobile {
-  @include bp(medium) {
+  @media (orientation: landscape) or (width >= 480px) {
     display: none;
   }
 }
 
 .isDesktop {
-  @include bp-below(medium) {
-    display: none;
+  display: none;
+
+  @media (orientation: landscape) or (width >= 480px) {
+    display: block;
   }
 }
 

@@ -8,8 +8,8 @@ import StoreLocatorContext from '@contexts/store-locator';
 import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import EnquiryModal from '@components/enquiry-form/enquiry-modal';
 import ProductsList from './sidebar-products-list';
-
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
 import styles from './sidebar.module.scss';
@@ -72,6 +72,7 @@ export default function Sidebar({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
+  const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const {
     searchGeolocation,
@@ -91,6 +92,14 @@ export default function Sidebar({
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
+
+  const handleOpenModal = () => {
+    setEnquiryModalOpened(true);
+  };
+
+  const handleCloseModal = () => {
+    setEnquiryModalOpened(false);
+  };
 
   useEffect(
     function calculatePrice() {
@@ -188,6 +197,7 @@ export default function Sidebar({
             className={styles.summaryButton}
             size="large"
             disabled={selectedProducts.length === 0 || !selectedStore}
+            onClick={handleOpenModal}
           >
             Send enquiry
           </Button>
@@ -208,10 +218,20 @@ export default function Sidebar({
         <Button
           size="large"
           disabled={selectedProducts.length === 0 || !selectedStore}
+          onClick={handleOpenModal}
         >
           Send enquiry
         </Button>
       </div>
+      {enquiryModalOpened && (
+        <EnquiryModal
+          onClose={handleCloseModal}
+          store={selectedStore}
+          selectedProducts={selectedProducts}
+          productPrice={priceSummary.price}
+          installationCost={priceSummary.installationCost}
+        />
+      )}
     </>
   );
 }

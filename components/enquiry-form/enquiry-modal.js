@@ -5,6 +5,7 @@ import Input from '@components/form/input';
 import Textarea from '@components/form/textarea';
 import StoreTile from '@components/store-tile/store-tile';
 import EnquiryProduct from './enquiry-product';
+import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-modal.module.scss';
 
 const TOOLTIP_TEXT =
@@ -13,7 +14,7 @@ const TOOLTIP_TEXT =
 export default function EnquiryModal({
   onClose,
   store,
-  selectedVariant,
+  selectedProducts,
   productPrice,
   installationCost,
 }) {
@@ -224,21 +225,36 @@ export default function EnquiryModal({
           <div className={styles.enquirySummary}>
             <label className={styles.label}>Products of interest:</label>
             <div className={styles.products}>
-              <EnquiryProduct
-                name={selectedVariant.label}
-                imageUrl="http://stghsp.wpenginepowered.com/wp-content/uploads/2023/11/premium-hard-lid.png"
-                price={productPrice}
-                installationCost={installationCost}
-              />
+              {selectedProducts?.map(selectedProduct => {
+                const productTitle = selectedProduct?.variantName;
+                const productPrice = selectedProduct?.price;
+                const productInstallationCost =
+                  selectedProduct?.installationCost;
+                const productSlug = selectedProduct?.variantSlug;
+                const productImage = selectedProduct?.variantDetails?.images
+                  ?.length
+                  ? selectedProduct?.variantDetails?.images[0].image?.sourceUrl
+                  : null;
+
+                return (
+                  <EnquiryProduct
+                    name={productTitle}
+                    imageUrl={productImage}
+                    price={productPrice}
+                    installationCost={productInstallationCost}
+                    key={productSlug}
+                  />
+                );
+              })}
             </div>
             <label className={styles.label}>Your local store:</label>
             <StoreTile item={store} />
             <div className={styles.total}>
               <div className={styles.totalPrice}>
-                ${productPrice.toLocaleString()}{' '}
+                {formatPrice(productPrice)}{' '}
                 <span className={styles.totalInstallationCost}>
                   {' '}
-                  + ${installationCost.toLocaleString()} for installation
+                  + {formatPrice(installationCost)} for installation
                 </span>
               </div>
               <Button
