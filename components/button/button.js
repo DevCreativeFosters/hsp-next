@@ -79,20 +79,6 @@ export default function Button({
     }),
   };
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className={buttonClassNames}
-        style={fontStyle}
-        target={target}
-        {...props}
-      >
-        {buttonBody}
-      </Link>
-    );
-  }
-
   return (
     <OptionalToggleWrapperEl {...optionalToggleWrapperElProps}>
       {toggleable && (
@@ -108,14 +94,14 @@ export default function Button({
         </ToggleContainer>
       )}
 
-      <button
+      <Link
+        href={href}
         className={buttonClassNames}
-        type={type}
         fontStyle={fontStyle}
         {...props}
       >
         {buttonBody}
-      </button>
+      </Link>
     </OptionalToggleWrapperEl>
   );
 }
