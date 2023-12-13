@@ -30,21 +30,16 @@ export default function Builder({ model, products }) {
   const {
     searchGeolocation,
     filteredLocations,
-    selectedStore,
     setSelectedStore,
     isMapVisible,
     radius,
   } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(
-    !selectedStore &&
-      openSection === 'store' &&
-      location &&
-      searchGeolocation &&
-      radius,
+    openSection === 'store' && location && searchGeolocation && radius,
   );
   const isInlineMapVisible = Boolean(
-    !selectedStore && openSection === 'store' && !isMobile && isMapVisible,
+    openSection === 'store' && !isMobile && isMapVisible,
   );
 
   const addProduct = useCallback(
