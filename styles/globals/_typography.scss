@@ -1,5 +1,14 @@
 @import './breakpoints';
 
+@mixin text-link {
+  text-decoration: underline;
+  transition: var(--transition);
+
+  &:hover {
+    color: var(--color-primary-100);
+  }
+}
+
 @mixin paragraph {
   --current-font-size: var(--mobile-font-size);
 
