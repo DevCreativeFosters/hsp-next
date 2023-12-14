@@ -16,7 +16,12 @@ export default function VideoCarousel({
   return (
     <div className={styles.container}>
       <Container>
-        <SectionIntro title={title} description={description} fitInline>
+        <SectionIntro
+          title={title}
+          description={description}
+          fitInline
+          narrowDescription
+        >
           <SectionButtons buttons={buttons} />
         </SectionIntro>
 
