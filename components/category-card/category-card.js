@@ -1,19 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import routes from '@lib/routes';
+import { formatPrice } from '@lib/helpers';
 import styles from './category-card.module.scss';
 
 export default function CategoryCard({ category }) {
-  const featuredImage = category?.mainCategoryDetails?.featuredImage;
+  const productImageUrl =
+    category.mainCategoryDetails?.productImage?.mediaItemUrl;
   const productUrl = routes.product(category.slug);
 
   return (
     <Link href={productUrl} className={styles.categoryCard}>
-      {featuredImage?.mediaItemUrl && (
+      {productImageUrl && (
         <div className={styles.imageContainer}>
           <Image
             className={styles.categoryImage}
-            src={featuredImage?.mediaItemUrl}
+            src={productImageUrl}
             alt={category.name}
             fill
           />
@@ -24,7 +26,7 @@ export default function CategoryCard({ category }) {
       )}
       {category.mainCategoryDetails.fromPrice && (
         <div className={styles.fromPrice}>
-          from ${category.mainCategoryDetails.fromPrice}
+          from {formatPrice(category.mainCategoryDetails.fromPrice)}
         </div>
       )}
     </Link>
