@@ -245,14 +245,10 @@
       background: var(--color-white-10);
     }
   }
+}
 
-  &[div] {
-    pointer-events: none;
-  }
-
-  &[button] {
-    pointer-events: all;
-  }
+div.toggleContainer {
+  pointer-events: none;
 }
 
 .toggleIcon {
