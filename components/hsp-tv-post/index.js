@@ -6,7 +6,7 @@ import routes from '@lib/routes';
 import RelatedPosts from '@components/related-posts/related-posts';
 import Container from '@components/container/container';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
-import VideoIframe from '@components/video-iframe/video-iframe';
+import VideoContainer from '@components/video-container/video-container';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './hsp-tv-post.module.scss';
 
@@ -18,6 +18,8 @@ export function HspTvPost({
   customFields,
 }) {
   const informationRef = useRef(null);
+
+  console.log(customFields);
 
   return (
     <Container>
@@ -40,14 +42,8 @@ export function HspTvPost({
             )}
           </div>
         )}
-        {customFields?.backgroundVideo && (
-          <VideoIframe
-            src={customFields?.backgroundVideo.mediaItemUrl}
-            desktopWidth={1320}
-            desktopHeight={742}
-            mobileWidth={342}
-            mobileHeight={293}
-          />
+        {customFields.videoId && customFields?.backgroundVideo && (
+          <VideoContainer youtubeId={customFields.videoId} />
         )}
       </div>
       <div className={styles.post}>

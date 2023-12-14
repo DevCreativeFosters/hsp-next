@@ -10,7 +10,7 @@ import styles from './video-youtube.module.scss';
 const SEEK_INTERVAL = 5; // [s]
 const ANIMATION_DURATION = 500 + 100; // CSS animation duration + a bit of margin
 
-export function VideoYoutube({ youtubeId, isActive, onClose }) {
+export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
   const [player, setPlayer] = useState(null);
   const [playbackIcon, setPlaybackIcon] = useState(null);
   const [seekIcon, setSeekIcon] = useState(null);
@@ -163,6 +163,7 @@ export function VideoYoutube({ youtubeId, isActive, onClose }) {
   return (
     <div
       className={clsx(styles.iframeOuterWrapper, {
+        [styles.isModal]: isModal,
         [styles.isVisible]: isActive,
       })}
     >
@@ -213,7 +214,7 @@ export function VideoYoutube({ youtubeId, isActive, onClose }) {
         </div>
       </div>
 
-      <YoutubeCloseButton label="Back" onClick={onClose} />
+      {isModal && <YoutubeCloseButton label="Back" onClick={onClose} />}
     </div>
   );
 }
