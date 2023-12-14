@@ -231,10 +231,8 @@ export default function EnquiryModal({
                 const productInstallationCost =
                   selectedProduct?.installationCost;
                 const productSlug = selectedProduct?.variantSlug;
-                const productImage = selectedProduct?.variantDetails?.images
-                  ?.length
-                  ? selectedProduct?.variantDetails?.images[0].image?.sourceUrl
-                  : null;
+                const productImage =
+                  selectedProduct?.uteBuilderImages?.imageDesktop?.sourceUrl;
 
                 return (
                   <EnquiryProduct

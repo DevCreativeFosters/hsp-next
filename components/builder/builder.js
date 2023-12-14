@@ -28,6 +28,7 @@ export default function Builder({ makeName, model, products }) {
   const isMobile = useIsMobile(1280);
 
   const {
+    location,
     searchGeolocation,
     filteredLocations,
     setSelectedStore,

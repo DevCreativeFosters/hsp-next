@@ -41,6 +41,7 @@ export default function EnquiryForm({ productData }) {
   }));
 
   const {
+    location,
     searchGeolocation,
     filteredLocations,
     selectedStore,

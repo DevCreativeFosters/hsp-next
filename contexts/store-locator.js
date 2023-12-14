@@ -18,6 +18,7 @@ export const RADIUS_OPTIONS = [
 export const DEFAULT_RADIUS = RADIUS_OPTIONS[RADIUS_OPTIONS.length - 1].value;
 
 export const StoreLocatorProvider = ({ children }) => {
+  const [location, setLocation] = useState(undefined);
   const [searchGeolocation, setSearchGeolocation] = useState(null);
   const [filteredLocations, setFilteredLocations] = useState(allLocations);
   const [radius, setRadius] = useState(DEFAULT_RADIUS);
@@ -33,6 +34,8 @@ export const StoreLocatorProvider = ({ children }) => {
       value={{
         searchGeolocation,
         setSearchGeolocation,
+        location,
+        setLocation,
         filteredLocations,
         setFilteredLocations,
         radius,
