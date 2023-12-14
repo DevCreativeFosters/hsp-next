@@ -20,7 +20,8 @@
 }
 
 .productImage {
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-white-100);
 }
 
 .name {

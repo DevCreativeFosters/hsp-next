@@ -25,10 +25,11 @@ export default function StoreSearchControls({
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
-  const [location, setLocation] = useState(undefined);
   const [suggestions, setSuggestions] = useState([]);
 
   const {
+    location,
+    setLocation,
     searchGeolocation,
     setSearchGeolocation,
     setFilteredLocations,
@@ -57,7 +58,7 @@ export default function StoreSearchControls({
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
     },
-    [sessionToken, setSearchGeolocation],
+    [sessionToken, setLocation, setSearchGeolocation],
   );
 
   // on clear store ?
