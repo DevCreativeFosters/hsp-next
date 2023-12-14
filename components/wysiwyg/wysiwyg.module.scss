@@ -1,3 +1,5 @@
+@import '/styles/globals/typography';
+
 .wysiwyg {
   p {
     color: var(--color-white-80);
@@ -108,6 +110,10 @@
     }
   }
 
+  a {
+    @include text-link;
+  }
+
   table {
     border-collapse: separate;
     border-spacing: 0;
@@ -171,6 +177,7 @@
             font-size: 20px;
           }
 
+          /* stylelint-disable-next-line no-descending-specificity */
           a {
             display: block;
             width: 100%;
@@ -180,6 +187,7 @@
             font-size: 24px;
             font-weight: 600;
             line-height: normal;
+            text-decoration: none;
 
             @include bp(medium) {
               width: min-content;
