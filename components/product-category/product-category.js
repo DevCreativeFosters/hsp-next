@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import TaxonomyCard from '@components/category-card/category-card';
+import CategoryCard from '@components/category-card/category-card';
 import TitleAndDescription from '@components/title-and-description/title-and-description';
 import styles from './product-category.module.scss';
 import { getIcon } from '@lib/icons';
@@ -16,7 +16,7 @@ export default function ProductCategory({ category }) {
       />
       <div className={styles.subCategories}>
         {subCategories.map(subCategory => (
-          <TaxonomyCard key={subCategory.databaseId} category={subCategory} />
+          <CategoryCard key={subCategory.databaseId} category={subCategory} />
         ))}
         <Link href="#" className={styles.ctaLink}>
           <span>Build Your Setup</span>
