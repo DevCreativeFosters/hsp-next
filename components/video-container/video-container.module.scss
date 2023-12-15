@@ -1,0 +1,24 @@
+.videoContainer {
+  margin: 24px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 342/293;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+
+  @include bp(medium) {
+    aspect-ratio: 16/9;
+  }
+
+  @include bp(large) {
+    margin: 96px 0;
+  }
+}
+
+.iframe {
+  display: block;
+  border: 0;
+  width: 100%;
+  height: 100%;
+}

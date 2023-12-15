@@ -133,6 +133,7 @@ export default function FeaturedPost({
           youtubeId={youtubeId}
           isActive={isPlayerActive}
           onClose={handleCloseVideo}
+          isModal
         />
       )}
     </div>
