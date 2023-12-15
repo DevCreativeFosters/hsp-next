@@ -19,8 +19,6 @@ export function HspTvPost({
 }) {
   const informationRef = useRef(null);
 
-  console.log(customFields);
-
   return (
     <Container>
       <div className={styles.breadcrumbs}>
