@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { getPageData } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import Layout from '@components/layout/layout';
