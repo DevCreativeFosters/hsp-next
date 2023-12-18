@@ -98,6 +98,7 @@ export default function Button({
         href={href}
         className={buttonClassNames}
         fontStyle={fontStyle}
+        target={target}
         {...props}
       >
         {buttonBody}

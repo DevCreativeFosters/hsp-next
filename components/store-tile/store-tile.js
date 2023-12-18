@@ -119,6 +119,7 @@ export default function StoreTile({
             rightIcon="external-link"
             href={directionsUrl}
             target="_blank"
+            rel="noopener noreferrer"
           >
             Directions
           </Button>
