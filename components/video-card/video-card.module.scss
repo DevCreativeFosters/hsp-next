@@ -6,17 +6,21 @@
 }
 
 .rectangle {
-  & video {
+  height: auto;
+  aspect-ratio: 342/293;
+
+  video {
+    display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 342/293;
+    height: 100%;
+    object-fit: cover;
+  }
 
-    @include bp(medium) {
-      aspect-ratio: 345/493;
-    }
+  @include bp(medium) {
+    aspect-ratio: 345/493;
+  }
 
-    @include bp(large) {
-      aspect-ratio: 750/639;
-    }
+  @include bp(large) {
+    aspect-ratio: 750/639;
   }
 }

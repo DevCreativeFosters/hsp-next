@@ -35,7 +35,7 @@ export default function VideoCard({ url, variant, productUrl }) {
   }, []);
 
   const videoElement = (
-    <video className={styles.video} ref={videoRef} loop muted>
+    <video className={styles.video} ref={videoRef} loop muted playsInline>
       <source src={url} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
