@@ -1,11 +1,13 @@
 .downloadButton {
+  --size: 40px;
+
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  width: var(--size);
+  height: var(--size);
   border-radius: var(--border-radius-sm);
   color: var(--color-black-100);
-  background: var(--color-black-10);
+  background: var(--color-white-40);
   cursor: pointer;
   transition: var(--transition);
 
@@ -16,5 +18,11 @@
 
   &.isLoading {
     pointer-events: none;
+  }
+
+  @include bp(large) {
+    --size: 56px;
+
+    background: var(--color-black-10);
   }
 }
