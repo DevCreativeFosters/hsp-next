@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Image from 'next/image';
+import { ConditionalWrapper } from '@lib/helpers';
 import styles from './button.module.scss';
 
 export default function Button({
@@ -94,15 +95,36 @@ export default function Button({
         </ToggleContainer>
       )}
 
-      <Link
-        href={href}
-        className={buttonClassNames}
-        fontStyle={fontStyle}
-        target={target}
-        {...props}
+      <ConditionalWrapper
+        condition={href}
+        wrapper={wrapChildren => {
+          return (
+            <Link
+              href={href}
+              className={buttonClassNames}
+              fontStyle={fontStyle}
+              target={target}
+              {...props}
+            >
+              {wrapChildren}
+            </Link>
+          );
+        }}
+        elseWrapper={wrapChildren => {
+          return (
+            <button
+              className={buttonClassNames}
+              fontStyle={fontStyle}
+              type={type}
+              {...props}
+            >
+              {wrapChildren}
+            </button>
+          );
+        }}
       >
         {buttonBody}
-      </Link>
+      </ConditionalWrapper>
     </OptionalToggleWrapperEl>
   );
 }
