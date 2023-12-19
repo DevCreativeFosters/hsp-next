@@ -19,6 +19,7 @@ import { allLocations } from '@mockup/store-locations';
 import styles from './store-search-controls.module.scss';
 
 export default function StoreSearchControls({
+  label = 'Locate your store',
   isWide,
   isHidden,
   interactWithDisabledForm,
@@ -126,7 +127,7 @@ export default function StoreSearchControls({
         <StoreLocatorInput
           type="text"
           name="location"
-          label="Locate your store"
+          label={label}
           placeholder="Your location"
           icon="search"
           withResetButton

@@ -145,7 +145,7 @@ export default function Sidebar({
           headerClick={setOpenSection}
           isOpen={openSection === 'store'}
         >
-          <StoreSearchControls isHidden={selectedStore} />
+          <StoreSearchControls label={null} isHidden={selectedStore} />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
           ) : (
