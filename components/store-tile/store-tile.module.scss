@@ -152,6 +152,7 @@
 // Results UI wrapper
 .resultUI {
   display: flex;
+  align-items: center;
 }
 
 .resultContainer {
@@ -159,7 +160,6 @@
 }
 
 .resultClearButton {
-  margin-top: 8px;
   width: 48px;
   height: 48px;
   padding: 12px;
