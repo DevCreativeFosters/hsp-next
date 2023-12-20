@@ -1,12 +1,17 @@
 import { useCallback, useState } from 'react';
+import Link from 'next/link';
+
 import Button from '@components/button/button';
 import Form from '@components/form/form';
 import Input from '@components/form/input';
 import Textarea from '@components/form/textarea';
 import StoreTile from '@components/store-tile/store-tile';
 import EnquiryProduct from './enquiry-product';
+import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-modal.module.scss';
+
+const QuestionMarkIcon = getIcon('question-mark');
 
 const TOOLTIP_TEXT =
   'If you are enquiring about products for a new car you are getting from a dealership, provide the dealership email address, so they are also informed about the adjustments.';
@@ -198,28 +203,7 @@ export default function EnquiryModal({
                 required
                 errorMessage={errors.message}
               />
-              <label className={styles.label}>
-                Send also to dealership:{' '}
-                <Button
-                  className={styles.tooltipButton}
-                  rightIcon="question-mark"
-                  variant="tertiary"
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
-                  onClick={() => setShowTooltip(!showTooltip)}
-                />
-                {showTooltip && (
-                  <div className={styles.tooltip}>{TOOLTIP_TEXT}</div>
-                )}
-              </label>
-              <Input
-                type="email"
-                name="dealershipEmail"
-                value={formData.dealershipEmail}
-                onChange={handleFormChange}
-                placeholder="Your dealership e-mail address"
-                errorMessage={errors.dealershipEmail}
-              />
+              {/* Choose an option:* Pick-up from store Get it installed */}
             </Form>
           </div>
           <div className={styles.enquirySummary}>
@@ -246,25 +230,60 @@ export default function EnquiryModal({
               })}
             </div>
             <label className={styles.label}>Your local store:</label>
-            <StoreTile item={store} />
-            <div className={styles.total}>
-              <div className={styles.totalPrice}>
-                {formatPrice(productPrice)}{' '}
-                <span className={styles.totalInstallationCost}>
-                  {' '}
-                  + {formatPrice(installationCost)} for installation
-                </span>
-              </div>
+            <label className={styles.label}>
+              Total cost: *Installation cost may vary
               <Button
-                type="submit"
-                rightIcon="send"
-                size="large"
-                onClick={handleFormSubmit}
-              >
-                Submit
-              </Button>
-            </div>
+                className={styles.tooltipButton}
+                rightIcon="question-mark"
+                variant="tertiary"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                onClick={() => setShowTooltip(!showTooltip)}
+              />
+              {showTooltip && (
+                <div className={styles.tooltip}>
+                  Installation cost may vary. To read the whole breakdown please
+                  read our Terms & Conditions.
+                </div>
+              )}
+            </label>
+            <table className={styles.priceSummary}>
+              <tr>
+                <td>Products</td>
+                <td>{formatPrice(productPrice)} </td>
+              </tr>
+              <tr>
+                <td>Installation*</td>
+                <td>{formatPrice(installationCost)}</td>
+              </tr>
+              <tr>
+                <td>Freight</td>
+                <td>$0</td>
+              </tr>
+              <tr className={styles.isSummary}>
+                <td>Total</td>
+                <td>{formatPrice(productPrice + installationCost)}</td>
+              </tr>
+            </table>
+            <label className={styles.label}>Your local store:</label>
+            {/* <StoreTile item={store} /> */}
           </div>
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.footerInfo}>
+            <QuestionMarkIcon />
+            By submitting the form you agree to our{' '}
+            <Link href="/">Terms & Conditions</Link>.
+          </div>
+          <Button
+            type="submit"
+            rightIcon="send"
+            size="large"
+            onClick={handleFormSubmit}
+            className={styles.footerButton}
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </>
