@@ -10,7 +10,7 @@ import useGravityForm from '@hooks/useGravityForm';
 import { sendGravityForm } from '@lib/api';
 import styles from './gform.module.scss';
 
-export default function GForm({ form }) {
+export default function GForm({ form, attributes }) {
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
@@ -56,7 +56,12 @@ export default function GForm({ form }) {
   };
 
   return (
-    <Form method="post" onSubmit={handleSubmit} withPadding withBackground>
+    <Form
+      method="post"
+      onSubmit={handleSubmit}
+      withPadding={attributes.withPadding}
+      withBackground={attributes.withBackground}
+    >
       {isSubmitted ? (
         <Confirmation resetForm={resetForm} content={confirmation.message} />
       ) : (

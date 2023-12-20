@@ -13,6 +13,6 @@ export default async function AustralianMadePage() {
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
-    <Layout withMap>{contentBlocks.map(contentBlock => contentBlock)}</Layout>
+    <Layout withMap>{contentBlocks?.map(contentBlock => contentBlock)}</Layout>
   );
 }

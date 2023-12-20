@@ -106,7 +106,7 @@ export default async function CategoryPage({ params }) {
           }}
         />
       </Container>
-      {contentBlocks.map(contentBlock => contentBlock)}
+      {contentBlocks?.map(contentBlock => contentBlock)}
     </Layout>
   );
 }
