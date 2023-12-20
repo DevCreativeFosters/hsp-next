@@ -15,7 +15,7 @@ export default function Preview({
   className,
   children,
 }) {
-  const modelName = model.name;
+  const modelName = model?.name;
   const modelImageDesktop = model.uteBuilderImages.imageDesktop?.sourceUrl;
   const modelImageMobile = model.uteBuilderImages.imageMobile?.sourceUrl;
   const [mergeImages, setMergeImages] = useState([]);
