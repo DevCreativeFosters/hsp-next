@@ -81,7 +81,7 @@ export default async function MainCategoryPage({ params }) {
           }}
         />
       </Container>
-      {contentBlocks.map(contentBlock => contentBlock)}
+      {contentBlocks?.map(contentBlock => contentBlock)}
     </Layout>
   );
 }

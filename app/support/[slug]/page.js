@@ -43,7 +43,7 @@ export default async function SupportSubpage({ params }) {
               </Sidebar>
               <div className={styles.contentContainer}>
                 {content?.title && (
-                  <h1 className={styles.title}>{content?.title}</h1>
+                  <h1 className={styles.title}>{content.title}</h1>
                 )}
                 {content && (
                   <Wysiwyg

@@ -1,10 +1,10 @@
+import { useMemo } from 'react';
 import clsx from 'clsx';
+import { replaceShortcodes } from '@lib/replace-shortcodes';
 import styles from './wysiwyg.module.scss';
 
 export default function Wysiwyg({ className, content }) {
-  return (
-    <div className={clsx(styles.wysiwyg, className)}>
-      {content && <div dangerouslySetInnerHTML={{ __html: content }} />}
-    </div>
-  );
+  const parsedContent = useMemo(() => replaceShortcodes(content), [content]);
+
+  return <div className={clsx(styles.wysiwyg, className)}>{parsedContent}</div>;
 }

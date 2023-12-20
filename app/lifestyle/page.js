@@ -23,7 +23,7 @@ export default async function LifestylePage() {
         date={featuredPost?.date}
         postType={POST_TYPES.TV}
       />
-      {contentBlocks.map(contentBlock => contentBlock)}
+      {contentBlocks?.map(contentBlock => contentBlock)}
     </Layout>
   );
 }

@@ -10,6 +10,7 @@ import PageContainer from '@components/page-container/page-container';
 import GravityForm from '@components/gravity-forms/gravity-form-provider';
 import Button from '@components/button/button';
 import Logo from '@assets/images/logo.svg';
+import { renderBlock } from '@lib/block';
 
 export default async function ContactUs() {
   const content = await getPageData('contact-us');
@@ -17,6 +18,7 @@ export default async function ContactUs() {
   const contactUsForm = await getGravityForm(1);
   const contactUsInfo = globalOptions?.contactUsInfo;
   const servicesBox = globalOptions?.servicesBox || [];
+  const contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);
 
   return (
     <Layout title="Contact Us">
@@ -58,9 +60,7 @@ export default async function ContactUs() {
                 </ContentBox>
               )}
             </Sidebar>
-            <div>
-              <GravityForm form={contactUsForm.gfForm} />
-            </div>
+            <div>{contentBlocks?.map(contentBlock => contentBlock)}</div>
           </PageGrid>
         </PageContainer>
       </Container>
