@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext, useRef, useEffect } from 'react';
 import Container from '@components/container/container';
 import ProductsCarousel from './products-carousel';
 import Preview from './preview';
@@ -25,12 +25,15 @@ export default function Builder({ makeName, model, products }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
+  const [topHeight, setHeight] = useState(0);
+  const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
   const {
     location,
     searchGeolocation,
     filteredLocations,
+    selectedStore,
     setSelectedStore,
     isMapVisible,
     radius,
@@ -42,6 +45,15 @@ export default function Builder({ makeName, model, products }) {
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
+
+  useEffect(function setTopHeightObserver() {
+    if (!topRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      setHeight(topRef.current.getBoundingClientRect().height);
+    });
+    resizeObserver.observe(topRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const addProduct = useCallback(
     product => {
@@ -93,7 +105,7 @@ export default function Builder({ makeName, model, products }) {
   return (
     <div className={styles.builder}>
       <Container className={styles.container}>
-        <div className={styles.top}>
+        <div className={styles.top} ref={topRef}>
           <Sidebar
             openSection={openSection}
             setOpenSection={setOpenSection}
@@ -108,6 +120,9 @@ export default function Builder({ makeName, model, products }) {
             show={isInlineResultListVisible}
             onSelect={item => {
               setSelectedStore(item);
+            }}
+            style={{
+              height: selectedStore ? topHeight : null,
             }}
           />
 

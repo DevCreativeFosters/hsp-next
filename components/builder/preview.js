@@ -24,6 +24,7 @@ export default function Preview({
     let newMergeImages = [];
 
     if (selectedProducts?.length > 0) {
+      newMergeImages.push(BgPicture);
       newMergeImages.push(modelImageDesktop);
 
       selectedProducts.forEach(selectedProduct => {

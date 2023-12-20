@@ -61,7 +61,7 @@
 .backgroundDesktop,
 .backgroundMobile {
   object-fit: cover;
-  object-position: center top;
+  object-position: right top;
   z-index: -1;
 }
 
@@ -72,6 +72,9 @@
 }
 
 .backgroundMobile {
+  object-fit: cover;
+  object-position: center top;
+
   @include bp(large) {
     display: none;
   }
