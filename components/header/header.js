@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Link from 'next/link';
+import { VehicleProvider } from '@contexts/vehicle';
 import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';

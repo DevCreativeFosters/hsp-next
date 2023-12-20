@@ -126,6 +126,7 @@
 
 .dropdownOuter {
   padding: 24px;
+  min-width: 385px;
   background: var(--color-primary-100);
 
   @include bp(large) {

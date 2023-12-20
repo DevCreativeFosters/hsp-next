@@ -50,17 +50,17 @@ export default async function CategoryPage({ params }) {
   );
   const productHeroData = {
     image:
-      filteredData.length > 1 ? filteredData[0].featuredImage : featuredImage,
+      filteredData?.length > 1 ? filteredData[0].featuredImage : featuredImage,
     features:
-      filteredData.length > 1
+      filteredData?.length > 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
     warrantyDescription:
-      filteredData.length > 1
+      filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyDescription
         : mainCategoryDetails?.warranty.warrantyDescription,
     warrantyTimePeriod:
-      filteredData.length > 1
+      filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
   };

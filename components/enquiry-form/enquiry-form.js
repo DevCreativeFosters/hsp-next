@@ -21,21 +21,17 @@ import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-form.module.scss';
 
 export default function EnquiryForm({ productData }) {
-  const productFields = productData.productFields;
-  const variants = productFields?.variants.map(productVariant => ({
-    ...productVariant,
-    price:
-      productVariant.variantDetails.price ||
-      (productVariant.parentInherit && productFields.price),
-  }));
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
+  const [selectedVariant, setSelectedVariant] = useState({});
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
-  const variantOptions = variants.map(({ variantName, variantSlug }) => ({
+  const productFields = productData.productFields;
+  const productPrice = productFields?.price;
+  const variants = productFields?.variants;
+  const variantOptions = variants?.map(({ variantName, variantSlug }) => ({
     label: variantName,
     value: variantSlug,
   }));
@@ -133,7 +129,10 @@ export default function EnquiryForm({ productData }) {
           label="Variant"
           onChange={onVariantChange}
           options={variantOptions}
-          value={selectedVariant?.variantSlug}
+          value={
+            selectedVariant?.value ||
+            (variantOptions?.length ? variantOptions[0]?.value : '')
+          }
         />
 
         <StoreSearchControls
