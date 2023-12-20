@@ -4,6 +4,8 @@ import { useEffect, useState, Fragment } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import DownloadButton from '@components/download-button/download-button';
+import BgPicture from '@assets/images/bg-concrete.webp';
+import BgPictureMobile from '@assets/images/bg-concrete-mobile.webp';
 import styles from './preview.module.scss';
 
 export default function Preview({
@@ -40,20 +42,20 @@ export default function Preview({
   return (
     <div className={clsx(styles.preview, className)}>
       <Image
-        className={clsx(styles.background, styles.isDesktop)}
+        className={clsx(styles.base, styles.isDesktop)}
         src={modelImageDesktop}
         alt={modelName}
         width={864}
         height={538}
       />
       <Image
-        className={clsx(styles.background, styles.isMobile)}
+        className={clsx(styles.base, styles.isMobile)}
         src={modelImageMobile}
         alt={modelName}
         width={390}
         height={535}
       />
-      {mergeImages.length && (
+      {!!mergeImages.length && (
         <DownloadButton
           className={styles.downloadButton}
           images={mergeImages}
@@ -88,6 +90,18 @@ export default function Preview({
         );
       })}
       {children}
+      <Image
+        className={styles.backgroundDesktop}
+        src={BgPicture}
+        alt="Concrete grey floor"
+        fill={true}
+      />
+      <Image
+        className={styles.backgroundMobile}
+        src={BgPictureMobile}
+        alt="Concrete grey floor"
+        fill={true}
+      />
     </div>
   );
 }

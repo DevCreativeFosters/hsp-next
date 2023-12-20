@@ -22,7 +22,5 @@
 
   @include bp(large) {
     --size: 56px;
-
-    background: var(--color-black-10);
   }
 }

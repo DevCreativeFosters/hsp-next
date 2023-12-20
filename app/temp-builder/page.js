@@ -9,8 +9,8 @@ export const metadata = {
 };
 
 export default async function TempBuilderPage() {
-  const makeName = 'ford';
-  const modelName = 'next-gen-ranger-raptor';
+  const makeName = 'mazda';
+  const modelName = 'bt-50-2013-2020';
   const model = await getModelBySlug(modelName);
   const products = await getProductsWithVariants(makeName, modelName);
   const productsVariants = [];

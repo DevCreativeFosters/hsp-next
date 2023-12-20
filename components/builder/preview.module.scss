@@ -1,8 +1,9 @@
 .preview {
   position: relative;
+  z-index: 0;
   flex: 1;
   overflow: clip;
-  background: var(--color-white-100);
+  background: var(--color-black-100);
 
   @include bp(large) {
     aspect-ratio: 864/538;
@@ -11,22 +12,16 @@
   }
 }
 
-.background,
+.base,
 .layer {
   position: absolute;
   top: 50%;
-  left: 0;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
   max-width: 100%;
   max-height: 100%;
-
-  @media (orientation: landscape) or (width >= 480px) {
-    object-position: center;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-  }
 
   @include bp(large) {
     left: auto;
@@ -60,5 +55,24 @@
   @include bp(large) {
     right: 20px;
     bottom: 20px;
+  }
+}
+
+.backgroundDesktop,
+.backgroundMobile {
+  object-fit: cover;
+  object-position: center top;
+  z-index: -1;
+}
+
+.backgroundDesktop {
+  @include bp-below(large) {
+    display: none;
+  }
+}
+
+.backgroundMobile {
+  @include bp(large) {
+    display: none;
   }
 }
