@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import useMobileVh from '@hooks/useMobileVh';
 import styles from './store-list.module.scss';
 
-export default function StoreList({ className, items, show, onSelect }) {
+export default function StoreList({ className, items, show, onSelect, style }) {
   useMobileVh();
 
   if (show && items?.length === 0) {
@@ -16,7 +16,7 @@ export default function StoreList({ className, items, show, onSelect }) {
   if (!items?.length > 0 || !show) return null;
 
   return (
-    <div className={clsx(styles.listWrapper, className)}>
+    <div className={clsx(styles.listWrapper, className)} style={style}>
       <ul className={styles.list}>
         {items.map((item, index) => {
           const { name, location, address } = item;

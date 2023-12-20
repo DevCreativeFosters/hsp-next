@@ -13,7 +13,7 @@
 
   &.isLoading,
   &:hover {
-    background: var(--color-black-20);
+    background: var(--color-white-60);
   }
 
   &.isLoading {
@@ -22,7 +22,5 @@
 
   @include bp(large) {
     --size: 56px;
-
-    background: var(--color-black-10);
   }
 }
