@@ -27,7 +27,7 @@ export default async function CategoryPage({ params }) {
   const make = await getMake(makeSlug);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
-    data => data.relatedProductCategory.slug === mainCategorySlug,
+    data => data.relatedProductCategory?.slug === mainCategorySlug,
   );
   const productHeroData = {
     warrantyDescription:
