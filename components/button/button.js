@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
@@ -7,27 +7,30 @@ import { getIcon } from '@lib/icons';
 import { ConditionalWrapper } from '@lib/helpers';
 import styles from './button.module.scss';
 
-export default function Button({
-  size = 'small',
-  variant = 'primary',
-  background = 'dark',
-  fontStyle = null,
-  leftIcon = null,
-  rightIcon = null,
-  leftIconUrl = null,
-  rightIconUrl = null,
-  toggleable = null,
-  isToggled = false,
-  onToggleIconClick = null,
-  isBusy,
-  href = '',
-  target = null,
-  type = 'button',
-  children,
-  footer,
-  className,
-  ...props
-}) {
+function ButtonWithRef(
+  {
+    size = 'small',
+    variant = 'primary',
+    background = 'dark',
+    fontStyle = null,
+    leftIcon = null,
+    rightIcon = null,
+    leftIconUrl = null,
+    rightIconUrl = null,
+    toggleable = null,
+    isToggled = false,
+    onToggleIconClick = null,
+    isBusy,
+    href = '',
+    target = null,
+    type = 'button',
+    children,
+    footer,
+    className,
+    ...props
+  },
+  ref,
+) {
   const buttonClassNames = clsx(styles.button, className, {
     [styles.xsmall]: size === 'xsmall',
     [styles.small]: size === 'small',
@@ -85,7 +88,7 @@ export default function Button({
     ...(toggleable && { className: styles.optionalToggleWrapper }),
   };
 
-  const ToggleContainer = onToggleIconClick ? Button : 'div';
+  const ToggleContainer = onToggleIconClick ? ButtonWithRef : 'div';
   const ToggleContainerProps = {
     ...(onToggleIconClick && {
       onClick: onToggleIconClick,
@@ -126,6 +129,7 @@ export default function Button({
         elseWrapper={wrapChildren => {
           return (
             <button
+              ref={ref}
               className={buttonClassNames}
               fontStyle={fontStyle}
               type={type}
@@ -141,3 +145,5 @@ export default function Button({
     </OptionalToggleWrapperEl>
   );
 }
+
+export default forwardRef(ButtonWithRef);

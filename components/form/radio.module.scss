@@ -6,17 +6,17 @@
   --label-font-size: 16px;
   --mark-size: 18px;
 
-  display: grid;
-  gap: 24px;
   position: relative;
+  display: grid;
   flex: 100%;
   max-width: 100%;
+  gap: 24px;
 
   @include bp(medium) {
     --title-font-size: 20px;
 
-    grid-template-columns: auto 1fr;
     align-items: center;
+    grid-template-columns: auto 1fr;
   }
 }
 
@@ -44,59 +44,60 @@
 
 .title {
   font-size: var(--title-font-size);
-  color: var(--title-color);
   overflow: hidden;
   width: 100%;
   transition: var(--transition);
   pointer-events: none;
+  color: var(--title-color);
 }
 
 .inputWrapper {
   position: relative;
   display: inline-flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  flex-wrap: wrap;
   width: 100%;
   min-height: var(--mark-size);
-  border: 0;
-  padding: 0;
   margin: calc(var(--border-size) * 2) 0 0 0;
+  padding: 0;
+  border: 0;
+  gap: 16px;
 }
 
 .label {
   font-family: var(--font-secondary);
-  font-size: var(--label-font-size);
   font-weight: 600;
+  font-size: var(--label-font-size);
   overflow: hidden;
 }
 
 .radioMark {
+  position: relative;
   width: var(--mark-size);
   height: var(--mark-size);
   border: var(--border-size) solid var(--border-color);
   border-radius: 50%;
-  position: relative;
 
   &::after {
+    position: absolute;
     content: '';
     opacity: 0;
+    border-radius: 50%;
     background-color: var(--border-color);
     inset: 3px;
-    position: absolute;
-    border-radius: 50%;
   }
 }
 
 .radioInput {
   position: relative;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
   text-align: left;
   color: var(--font-color);
   border-radius: var(--border-radius-sm);
-  transition: var(--transition);
-  cursor: pointer;
+  gap: 8px;
 
   input[type='radio']:focus ~ .label,
   input[type='radio']:active ~ .label,

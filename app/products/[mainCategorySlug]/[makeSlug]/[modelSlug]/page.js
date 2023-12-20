@@ -11,6 +11,7 @@ import ContentBox from '@components/content-box/content-box';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import {
+  getGlobalOptions,
   getCategoriesAndMakesAndModels,
   getMainProductCategory,
   getMake,
@@ -19,6 +20,8 @@ import {
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params }) {
+  const globalOptions = await getGlobalOptions();
+  const enquiryFormId = globalOptions?.enquiryFormId;
   const mainCategorySlug = params.mainCategorySlug;
   const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug;
@@ -119,7 +122,10 @@ export default async function CategoryPage({ params }) {
               </p>
             )}
             <StoreLocatorProvider>
-              <EnquiryForm productData={firstMatchedProduct} />
+              <EnquiryForm
+                enquiryFormId={enquiryFormId}
+                productData={firstMatchedProduct}
+              />
             </StoreLocatorProvider>
             <div className={styles.warranty}>
               <ContentBox className={styles.warrantyDescription}>

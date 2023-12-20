@@ -42,8 +42,14 @@ function getValue(type, fieldValue) {
 }
 
 export default function InputField({ form, field, fieldErrors }) {
-  const { id, type, label, layoutGridColumnSpan, isRequired, placeholder } =
-    field;
+  const {
+    databaseId: id,
+    type,
+    label,
+    layoutGridColumnSpan,
+    isRequired,
+    placeholder,
+  } = field;
   const formId = form.formId;
   const { state, dispatch } = useGravityForm();
   const fieldValue = state.find(fieldValue => fieldValue.id === id);

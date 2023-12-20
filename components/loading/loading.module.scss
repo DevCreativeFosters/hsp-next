@@ -15,3 +15,10 @@
   transform-origin: center;
   animation: loading 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
+
+.big {
+  svg {
+    width: 64px;
+    height: 64px;
+  }
+}

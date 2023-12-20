@@ -5,8 +5,8 @@ import {
   useMemo,
   useContext,
   useEffect,
-  useRef,
   useState,
+  useRef,
 } from 'react';
 import useMobileVh from '@hooks/useMobileVh';
 import StoreSearchControls from '@components/store-search-controls/store-search-controls';
@@ -20,11 +20,11 @@ import EnquiryModal from './enquiry-modal';
 import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-form.module.scss';
 
-export default function EnquiryForm({ productData }) {
+export default function EnquiryForm({ enquiryFormId, productData }) {
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState({});
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -69,9 +69,7 @@ export default function EnquiryForm({ productData }) {
         variant => variant.variantSlug === value,
       );
 
-      console.log('NEW', newSelectedVariant);
-
-      setSelectedVariant(newSelectedVariant);
+      setSelectedVariant([newSelectedVariant]);
     },
     [variants],
   );
@@ -130,7 +128,7 @@ export default function EnquiryForm({ productData }) {
           onChange={onVariantChange}
           options={variantOptions}
           value={
-            selectedVariant?.value ||
+            (selectedVariant && selectedVariant[0]?.variantSlug) ||
             (variantOptions?.length ? variantOptions[0]?.value : '')
           }
         />
@@ -163,9 +161,9 @@ export default function EnquiryForm({ productData }) {
         )}
 
         <div className={styles.price}>
-          {selectedVariant.price > 0 && (
+          {productPrice > 0 && (
             <span className={styles.productsPrice}>
-              {formatPrice(selectedVariant.price)}
+              {formatPrice(productPrice)}
             </span>
           )}
           {selectedStore && installationCost > 0 && (
@@ -189,12 +187,13 @@ export default function EnquiryForm({ productData }) {
       </form>
       {enquiryModalOpened && (
         <EnquiryModal
+          enquiryFormId={enquiryFormId}
           onClose={handleCloseModal}
           store={selectedStore}
-          selectedProducts={[
-            { ...selectedVariant, installationCost: installationCost },
-          ]}
-          productPrice={selectedVariant.price}
+          selectedProducts={
+            selectedVariant || (variants?.length ? [variants[0]] : [])
+          }
+          productPrice={productPrice}
           installationCost={installationCost}
         />
       )}

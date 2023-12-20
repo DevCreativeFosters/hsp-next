@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useImperativeHandle, useRef, useState } from 'react';
 import Button from '@components/button/button';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
@@ -10,29 +10,42 @@ import useGravityForm from '@hooks/useGravityForm';
 import { sendGravityForm } from '@lib/api';
 import styles from './gform.module.scss';
 
-export default function GForm({ form, attributes }) {
+export default function GForm({
+  innerRef,
+  form,
+  hiddenInputs,
+  attributes = {},
+  submitButton,
+  onReset,
+  onError,
+  onSubmit,
+  onSuccess,
+}) {
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
   const [fieldErrors, setFieldErrors] = useState([]);
   const formFields = form.formFields?.nodes || [];
   const { state, dispatch } = useGravityForm();
+  const submitRef = useRef(null);
 
   const resetForm = useCallback(() => {
     dispatch({
       type: 'resetFieldValues',
     });
+    onReset();
     setLoading(false);
     setSubmitted(false);
     setFieldErrors([]);
     setConfirmation(null);
-  }, [dispatch]);
+  }, [dispatch, onReset]);
 
   const handleSubmit = async ev => {
-    ev.preventDefault();
+    if (ev) ev.preventDefault();
     if (isLoading) return;
 
     setLoading(true);
+    onSubmit();
     await sendGravityForm({
       id: form.formId,
       fieldValues: state,
@@ -42,10 +55,12 @@ export default function GForm({ form, attributes }) {
         const errors = response.submitGfForm.errors;
 
         if (!errors?.length) {
+          onSuccess();
           setSubmitted(true);
           setConfirmation(gfFormConfirmation);
           setLoading(false);
         } else {
+          onError();
           setFieldErrors(errors);
           setLoading(false);
         }
@@ -54,6 +69,20 @@ export default function GForm({ form, attributes }) {
         console.error(error);
       });
   };
+
+  useImperativeHandle(
+    innerRef,
+    () => {
+      return {
+        handleSubmit: () => {
+          if (submitRef.current) {
+            submitRef.current.click();
+          }
+        },
+      };
+    },
+    [],
+  );
 
   return (
     <Form
@@ -67,7 +96,7 @@ export default function GForm({ form, attributes }) {
       ) : (
         <>
           <div className={styles.formDescription}>
-            {form.title && <h3>{form.title}</h3>}
+            {attributes.title && form.title && <h3>{form.title}</h3>}
             {form.description && <p>{form.description}</p>}
           </div>
           {formFields.map(field => (
@@ -76,12 +105,17 @@ export default function GForm({ form, attributes }) {
               form={form}
               field={field}
               fieldErrors={fieldErrors}
+              hiddenInputs={hiddenInputs}
             />
           ))}
           <Button
+            ref={submitRef}
             type="submit"
+            size="large"
+            className={styles.submitButton}
             disabled={isLoading}
             rightIcon={isLoading ? null : 'send'}
+            style={submitButton === false ? { display: 'none' } : {}}
           >
             {form?.button?.text || 'Submit'} {isLoading && <Loading />}
           </Button>
