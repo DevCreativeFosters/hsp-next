@@ -19,6 +19,7 @@ import Header from '@components/header/header';
 import BgContinent from '@assets/images/bg-continent.png';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import styles from './layout.module.scss';
+import { VehicleProvider } from '@contexts/vehicle';
 
 async function getLayoutData() {
   const globalOptions = await getGlobalOptions();
@@ -95,43 +96,45 @@ export default function Layout({
 
   return (
     <>
-      <Header
-        mainMenu={normalizedMainMenu}
-        secondaryMenu={topNavigationMenu}
-        socialMenu={socialMenu}
-        mobileMenu={normalizedMobileMenu}
-        productCategories={data.productCategories}
-        products={normalizedProductData}
-        makes={data.makes}
-      />
-      <main className={styles.main}>
-        {withMap && (
-          <div className={styles.background}>
-            <Image
-              className={styles.backgroundImage}
-              src={BgContinent}
-              alt="Shape of Australia continent"
-              fill={true}
-              quality={80}
-            />
+      <VehicleProvider>
+        <Header
+          mainMenu={normalizedMainMenu}
+          secondaryMenu={topNavigationMenu}
+          socialMenu={socialMenu}
+          mobileMenu={normalizedMobileMenu}
+          productCategories={data.productCategories}
+          products={normalizedProductData}
+          makes={data.makes}
+        />
+        <main className={styles.main}>
+          {withMap && (
+            <div className={styles.background}>
+              <Image
+                className={styles.backgroundImage}
+                src={BgContinent}
+                alt="Shape of Australia continent"
+                fill={true}
+                quality={80}
+              />
+            </div>
+          )}
+          <div
+            className={clsx(styles.content, {
+              [styles.reserveSpaceForVehicleSelection]:
+                reserveSpaceForVehicleSelection,
+            })}
+          >
+            {children}
+          </div>
+        </main>
+        {withFooter && (
+          <div className={styles.bottomSticky}>
+            <FullscreenCollapse>
+              <Footer menus={normalizedFooterMenus} text={footerText} />
+            </FullscreenCollapse>
           </div>
         )}
-        <div
-          className={clsx(styles.content, {
-            [styles.reserveSpaceForVehicleSelection]:
-              reserveSpaceForVehicleSelection,
-          })}
-        >
-          {children}
-        </div>
-      </main>
-      {withFooter && (
-        <div className={styles.bottomSticky}>
-          <FullscreenCollapse>
-            <Footer menus={normalizedFooterMenus} text={footerText} />
-          </FullscreenCollapse>
-        </div>
-      )}
+      </VehicleProvider>
     </>
   );
 }

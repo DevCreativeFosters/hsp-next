@@ -98,7 +98,7 @@ export default function ProductImageCarousel({ images }) {
       document.body.style.overflowY = 'auto';
       document.removeEventListener('touchmove', handleTouchMoveDocument);
     };
-  }, [zoomed, handleTouchMoveDocument]);
+  }, [isMobile, zoomed, handleTouchMoveDocument]);
 
   useEffect(
     function loadAllSlides() {

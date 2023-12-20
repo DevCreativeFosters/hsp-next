@@ -3,6 +3,7 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
+import { useVehicleContext } from '@contexts/vehicle';
 import { setCookie, deleteCookie } from '@lib/cookies';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Select from '@components/form/select';
@@ -23,10 +24,16 @@ const SELECT_LABELS = {
 };
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
+  const {
+    setSavedVehicleGlobal,
+    savedVehicleGlobal,
+    finalSelection,
+    setVehicleSelection,
+  } = useVehicleContext();
+
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
-  const [finalSelection, setFinalSelection] = useState(null);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
@@ -70,8 +77,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     deleteCookie(LOCAL_STORAGE_VEHICLE);
     setMaker(null);
     setModel(null);
-    setFinalSelection(null);
-  }, []);
+    setVehicleSelection(null);
+    setSavedVehicleGlobal(null);
+  }, [setVehicleSelection, setSavedVehicleGlobal]);
 
   const handleSave = useCallback(() => {
     const vehicleString = JSON.stringify({
@@ -82,12 +90,17 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
     setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-    setFinalSelection({
-      makerName: maker.name,
-      modelName: model.name,
+    setSavedVehicleGlobal({
+      maker,
+      model,
+    });
+
+    setVehicleSelection({
+      makerName: maker?.name || undefined,
+      modelName: model?.name || undefined,
     });
     setDropdownOpened(false);
-  }, [maker, model]);
+  }, [maker, model, setSavedVehicleGlobal, setVehicleSelection]);
 
   const handleMakerChange = useCallback((value, label) => {
     setMaker({
@@ -112,16 +125,10 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
       if (savedSelection) {
         const savedVehicle = JSON.parse(savedSelection);
 
-        // const makerFound = findMakerBySlug(savedVehicle.maker.slug);
-        // const modelFound = findModelBySlug(
-        //   savedVehicle.maker.slug,
-        //   savedVehicle.model.slug,
-        // );
-
-        const makerFound = findMakerBySlug(savedVehicle.maker.value); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
+        const makerFound = findMakerBySlug(savedVehicle?.maker?.value); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
         const modelFound = findModelBySlug(
-          savedVehicle.maker.value,
-          savedVehicle.model.value,
+          savedVehicle?.maker?.value,
+          savedVehicle?.model?.value,
         ); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
 
         if (makerFound) {
@@ -130,15 +137,15 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         if (modelFound) {
           setModel(modelFound);
         }
-        if (makerFound && modelFound) {
-          setFinalSelection({
-            makerName: makerFound.name,
-            modelName: modelFound.name,
+        if (makerFound || modelFound) {
+          setVehicleSelection({
+            makerName: makerFound?.name,
+            modelName: modelFound?.name,
           });
         }
       }
     },
-    [findMakerBySlug, findModelBySlug],
+    [savedVehicleGlobal],
   );
 
   const Icon = dropdownOpened ? (
@@ -220,7 +227,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
               variant="primary"
               rightIcon="save"
               onClick={handleSave}
-              disabled={!maker || !model}
+              disabled={!maker && !model}
             >
               Save
             </Button>

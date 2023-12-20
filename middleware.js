@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import slugify from '@lib/slugify';
-import routes from '@lib/routes';
 
 const COOKIE_SAVED_VEHICLE = 'hsp-my-vehicle';
 
@@ -15,21 +13,16 @@ export function middleware(request) {
   const hspMyVehicle = request.cookies.get(COOKIE_SAVED_VEHICLE);
 
   if (pathSegments[0] === 'products' && pathSegments.length === 2) {
-    const referer = request.headers.get('referer');
-    const refererPathSegments = referer ? getPathSegments(referer) : [];
-
-    if (
-      refererPathSegments.length > 2 &&
-      refererPathSegments[1] === pathSegments[1]
-    ) {
-      return NextResponse.next();
-    }
-
     if (hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
-      const productType = pathSegments[1];
-      if (maker && model) {
-        url.pathname = routes.product(productType, maker.slug, model.slug);
+
+      if (maker && maker.value) {
+        const productType = pathSegments[1];
+        url.pathname =
+          model && model.value
+            ? `/products/${productType}/${maker.value}/${model.value}`
+            : `/products/${productType}/${maker.value}`;
+
         return NextResponse.redirect(url);
       }
     }
@@ -39,5 +32,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/:path*', '/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/products/:path*'],
 };

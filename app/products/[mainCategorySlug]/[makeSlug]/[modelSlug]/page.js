@@ -25,17 +25,17 @@ export default async function CategoryPage({ params }) {
   const mainCategory = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = mainCategory.mainCategoryDetails;
   const make = await getMake(makeSlug);
-  const details = make.detailsFields.details;
+  const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory.slug === mainCategorySlug,
   );
   const productHeroData = {
     warrantyDescription:
-      filteredData.length > 1
+      filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyDescription
         : mainCategoryDetails?.warranty.warrantyDescription,
     warrantyTimePeriod:
-      filteredData.length > 1
+      filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
   };
