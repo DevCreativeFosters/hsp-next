@@ -1,4 +1,5 @@
 .layout {
+  display: grid;
   margin-top: 48px;
 
   @include bp(large) {
@@ -28,6 +29,8 @@
 .list {
   list-style: none;
   padding: 0;
+  margin: 0;
+  scroll-margin-top: calc(var(--header-height) + 32px);
 
   @include bp(large) {
     grid-area: questions;
@@ -40,6 +43,12 @@
   &.active,
   &:hover {
     background: var(--color-white-5);
+  }
+
+  @include bp-below(large) {
+    .list:not(.activeForMobile) &:nth-child(n + 3) {
+      display: none;
+    }
   }
 }
 
@@ -89,5 +98,24 @@
 
   & > :last-child {
     margin-bottom: 0;
+  }
+}
+
+.buttonToggle {
+  margin-top: 24px;
+  justify-self: end;
+
+  svg {
+    transform: rotate(90deg);
+  }
+
+  &.isActive {
+    svg {
+      transform: rotate(-90deg);
+    }
+  }
+
+  @include bp(large) {
+    display: none;
   }
 }
