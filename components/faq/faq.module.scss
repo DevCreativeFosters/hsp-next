@@ -45,7 +45,7 @@
     background: var(--color-white-5);
   }
 
-  @include bp-below(large) {
+  @include bp-below(medium) {
     .list:not(.activeForMobile) &:nth-child(n + 3) {
       display: none;
     }
@@ -115,7 +115,7 @@
     }
   }
 
-  @include bp(large) {
+  @include bp(medium) {
     display: none;
   }
 }
