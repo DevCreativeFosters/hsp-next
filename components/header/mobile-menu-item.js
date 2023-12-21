@@ -16,45 +16,47 @@ export default function MobileMenuItem({
 
     return (
       <ul className={styles.mobileMenuSubList}>
-        {subItems?.map((subItem, j) => (
-          <li key={subItem.url + j}>
-            <Button
-              href={subItem.url}
-              size="small"
-              variant="tertiary"
-              background="dark"
-              fontStyle={{
-                ...((subItem.special || !subItem.subItems) && {
-                  fontFamily: 'var(--font-primary)',
-                  fontSize: '20px',
-                  fontWeight: 400,
-                  marginLeft: 0,
-                }),
-              }}
-              className={subItem.subItems ? styles.menuItemLabel : ''}
-            >
-              {subItem.label}
-            </Button>
-            {subItem.subItems?.map((item, index) => (
-              <div className={styles.submenuItemsMobile} key={item.url + index}>
-                <Button
-                  href={item.fontFamilyurl}
-                  size="small"
-                  variant="senary"
-                  background="dark"
-                  style={{
-                    fontFamily: 'var(--font-primary)',
-                    fontSize: '20px',
-                    fontWeight: 400,
-                    color: 'var(--color-white-100)',
-                  }}
+        {subItems?.map((subItem, j) => {
+          const fontStyle = {
+            fontFamily: 'var(--font-primary)',
+            fontSize: '20px',
+            fontWeight: 400,
+            marginLeft: 0,
+          };
+
+          return (
+            <li key={subItem.url + j}>
+              <Button
+                href={subItem.url}
+                size="small"
+                variant="tertiary"
+                background="dark"
+                style={subItem.special ? { ...fontStyle } : {}}
+                className={
+                  subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
+                }
+              >
+                {subItem.label}
+              </Button>
+              {subItem.subItems?.map((item, index) => (
+                <div
+                  className={styles.submenuItemsMobile}
+                  key={item.url + index}
                 >
-                  {item.label}
-                </Button>
-              </div>
-            ))}
-          </li>
-        ))}
+                  <Button
+                    href={item.url}
+                    size="small"
+                    variant="senary"
+                    background="dark"
+                    style={{ ...fontStyle }}
+                  >
+                    {item.label}
+                  </Button>
+                </div>
+              ))}
+            </li>
+          );
+        })}
       </ul>
     );
   }, []);
