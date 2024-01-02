@@ -2,8 +2,10 @@ import { useCallback, useState } from 'react';
 import Link from 'next/link';
 
 import Button from '@components/button/button';
+import Tooltip from '@components/tooltip/tooltip';
 import Form from '@components/form/form';
 import Input from '@components/form/input';
+import Radio from '@components/form/radio';
 import Textarea from '@components/form/textarea';
 import StoreTile from '@components/store-tile/store-tile';
 import EnquiryProduct from './enquiry-product';
@@ -11,10 +13,18 @@ import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-modal.module.scss';
 
-const QuestionMarkIcon = getIcon('question-mark');
+const InfoIcon = getIcon('info');
 
-const TOOLTIP_TEXT =
-  'If you are enquiring about products for a new car you are getting from a dealership, provide the dealership email address, so they are also informed about the adjustments.';
+const DEFAULT_VALUES = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  city: '',
+  message: '',
+  delivery: '',
+  dealershipEmail: '',
+};
 
 export default function EnquiryModal({
   onClose,
@@ -23,36 +33,11 @@ export default function EnquiryModal({
   productPrice,
   installationCost,
 }) {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    city: '',
-    message: '',
-    dealershipEmail: '',
-  });
-  const [errors, setErrors] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    city: '',
-    message: '',
-    dealershipEmail: '',
-  });
+  const [formData, setFormData] = useState(DEFAULT_VALUES);
+  const [errors, setErrors] = useState(DEFAULT_VALUES);
 
   const validateForm = useCallback(() => {
-    let newErrors = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      city: '',
-      message: '',
-      dealershipEmail: '',
-    };
+    let newErrors = DEFAULT_VALUES;
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
@@ -79,6 +64,8 @@ export default function EnquiryModal({
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
     }
+
+    // TODO: ADD validate delivery
 
     if (
       formData.dealershipEmail &&
@@ -110,6 +97,7 @@ export default function EnquiryModal({
     ev => {
       ev.preventDefault();
       const isValid = validateForm();
+
       if (isValid) {
         //submit form
       }
@@ -203,7 +191,18 @@ export default function EnquiryModal({
                 required
                 errorMessage={errors.message}
               />
-              {/* Choose an option:* Pick-up from store Get it installed */}
+              <Radio
+                label="Choose an option:"
+                name="delivery"
+                options={[
+                  { label: 'Pick-up from store', value: 'pick-up' },
+                  { label: 'Get it installed', value: 'install' },
+                ]}
+                value={formData.delivery}
+                onChange={handleFormChange}
+                required
+                errorMessage={errors.delivery}
+              />
             </Form>
           </div>
           <div className={styles.enquirySummary}>
@@ -229,23 +228,14 @@ export default function EnquiryModal({
                 );
               })}
             </div>
-            <label className={styles.label}>Your local store:</label>
             <label className={styles.label}>
-              Total cost: *Installation cost may vary
-              <Button
-                className={styles.tooltipButton}
-                rightIcon="question-mark"
-                variant="tertiary"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onClick={() => setShowTooltip(!showTooltip)}
+              Total cost:
+              <Tooltip
+                title={'*Installation cost may vary'}
+                content={
+                  'Installation cost may vary. To read the whole breakdown please read our <a href="/privacy-terms-and-conditions/">Terms & Conditions.</a>'
+                }
               />
-              {showTooltip && (
-                <div className={styles.tooltip}>
-                  Installation cost may vary. To read the whole breakdown please
-                  read our Terms & Conditions.
-                </div>
-              )}
             </label>
             <table className={styles.priceSummary}>
               <tr>
@@ -271,9 +261,11 @@ export default function EnquiryModal({
         </div>
         <div className={styles.footer}>
           <div className={styles.footerInfo}>
-            <QuestionMarkIcon />
+            <InfoIcon />
             By submitting the form you agree to our{' '}
-            <Link href="/">Terms & Conditions</Link>.
+            <Link href="/privacy-terms-and-conditions/">
+              Terms & Conditions.
+            </Link>
           </div>
           <Button
             type="submit"
@@ -281,6 +273,7 @@ export default function EnquiryModal({
             size="large"
             onClick={handleFormSubmit}
             className={styles.footerButton}
+            disabled={true}
           >
             Submit
           </Button>

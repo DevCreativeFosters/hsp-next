@@ -1,0 +1,46 @@
+@import '/styles/globals/typography';
+
+.tooltipContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.title {
+  @include paragraph-sm;
+}
+
+.tooltipButton {
+  pointer-events: auto;
+  z-index: var(--z-index-tooltip-button);
+  cursor: pointer;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.tooltip {
+  @include paragraph-sm;
+
+  position: absolute;
+  padding: 24px;
+  top: 0;
+  right: 0;
+  z-index: var(--z-index-tooltip);
+  color: var(--color-white-80);
+  border-radius: 8px;
+  background-color: var(--color-black-100);
+  pointer-events: auto;
+
+  a {
+    color: var(--color-white-100);
+    text-decoration: underline;
+  }
+
+  @include bp(large) {
+    bottom: 0;
+    top: unset;
+  }
+}
