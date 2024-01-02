@@ -9,8 +9,7 @@
   @include bp(medium) {
     flex-direction: row;
     grid-area: buttons;
-    justify-self: flex-end;
-    align-self: center;
+    place-self: center flex-end;
   }
 
   &.alternatingLayout {
@@ -19,15 +18,16 @@
       grid-auto-flow: column;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(var(--alternating-layout-break-row), 1fr);
+
+      & > * {
+        justify-content: space-between;
+        width: 100%;
+      }
     }
 
     @include bp(large) {
       display: flex;
       flex-direction: column;
-    }
-
-    & > * {
-      justify-content: space-between;
     }
   }
 }
