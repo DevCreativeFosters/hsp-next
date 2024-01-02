@@ -1,0 +1,132 @@
+@import '/styles/globals/typography';
+@import '/styles/globals/helpers';
+
+.wrapper {
+  --title-font-size: 16px;
+  --label-font-size: 16px;
+  --mark-size: 18px;
+
+  display: grid;
+  gap: 24px;
+  position: relative;
+  flex: 100%;
+  max-width: 100%;
+
+  @include bp(medium) {
+    --title-font-size: 20px;
+
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+}
+
+.lightBackground {
+  --title-color: var(--color-black-80);
+  --font-color: var(--color-black-60);
+  --border-color: var(--color-black-20);
+  --focus-color: var(--color-black-80);
+  --filled-color: var(--color-black-100);
+}
+
+.darkBackground {
+  --title-color: var(--color-white-80);
+  --font-color: var(--color-white-60);
+  --border-color: var(--color-white-100);
+  --focus-color: var(--color-white-80);
+  --filled-color: var(--color-white-100);
+}
+
+.halfWidth {
+  @include bp(medium) {
+    flex: calc(50% - 12px);
+  }
+}
+
+.title {
+  font-size: var(--title-font-size);
+  color: var(--title-color);
+  overflow: hidden;
+  width: 100%;
+  transition: var(--transition);
+  pointer-events: none;
+}
+
+.inputWrapper {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: var(--mark-size);
+  border: 0;
+  padding: 0;
+  margin: calc(var(--border-size) * 2) 0 0 0;
+}
+
+.label {
+  font-family: var(--font-secondary);
+  font-size: var(--label-font-size);
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.radioMark {
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border: var(--border-size) solid var(--border-color);
+  border-radius: 50%;
+  position: relative;
+
+  &::after {
+    content: '';
+    opacity: 0;
+    background-color: var(--border-color);
+    inset: 3px;
+    position: absolute;
+    border-radius: 50%;
+  }
+}
+
+.radioInput {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  text-align: left;
+  color: var(--font-color);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  cursor: pointer;
+
+  input[type='radio']:focus ~ .label,
+  input[type='radio']:active ~ .label,
+  &:hover {
+    color: var(--focus-color);
+  }
+
+  &.error {
+    --border-color: var(--color-error);
+  }
+
+  &.filled {
+    color: var(--filled-color);
+  }
+
+  input[type='radio'] {
+    @include sr-only;
+  }
+
+  input[type='radio']:checked + .radioMark::after {
+    opacity: 1;
+  }
+}
+
+.required {
+  color: var(--color-primary-60);
+}
+
+.errorMessage {
+  font-size: 14px;
+  margin-top: -17px;
+  color: var(--color-error);
+}
