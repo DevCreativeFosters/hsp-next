@@ -1,4 +1,6 @@
 .layout {
+  --question-horizontal-padding: 24px;
+
   display: grid;
   margin-top: 48px;
 
@@ -13,11 +15,18 @@
   }
 }
 
+.intro {
+  @include bp(medium) {
+    padding-inline: var(--question-horizontal-padding);
+  }
+}
+
 .buttonsContainer {
   margin: 48px 24px;
 
   @include bp(medium) {
     margin: 48px 0;
+    padding: var(--question-horizontal-padding);
   }
 
   @include bp(large) {
@@ -56,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px;
+  padding: 24px var(--question-horizontal-padding);
   color: var(--color-white-80);
   font-family: var(--font-secondary);
   font-size: 20px;
