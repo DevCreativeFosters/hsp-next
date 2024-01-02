@@ -44,7 +44,13 @@ function Products({ isActive, categories, products }, ref) {
               <Link className={styles.productLink} href={url}>
                 <div className={styles.productImageWrapper}>
                   {image && (
-                    <Image src={image} width={144} height={96} alt={title} />
+                    <Image
+                      className={styles.productImage}
+                      src={image}
+                      width={144}
+                      height={96}
+                      alt={title}
+                    />
                   )}
                 </div>
                 <div className={styles.productTitle}>{title}</div>
