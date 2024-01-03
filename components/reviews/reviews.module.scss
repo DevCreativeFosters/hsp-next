@@ -82,5 +82,7 @@
 
   svg {
     max-width: 20px;
+    flex-shrink: 0;
+    margin-inline: 5px 10px;
   }
 }
