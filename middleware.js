@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
+import constants from '@lib/constants';
 
-const COOKIE_SAVED_VEHICLE = 'hsp-my-vehicle';
+const COOKIE_SAVED_VEHICLE = constants.LOCAL_STORAGE_VEHICLE;
 
 function getPathSegments(url) {
   const path = new URL(url).pathname;

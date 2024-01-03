@@ -49,7 +49,7 @@ export default function Builder({ makeName, model, products }) {
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      setHeight(topRef.current.getBoundingClientRect().height);
+      setHeight(topRef.current?.getBoundingClientRect().height);
     });
     resizeObserver.observe(topRef.current);
     return () => resizeObserver.disconnect();
@@ -62,8 +62,8 @@ export default function Builder({ makeName, model, products }) {
         ...disabledProducts,
         ...getOtherProductsWithSameParent(
           products,
-          product.productSlug,
-          product.variantSlug,
+          products.productSlug,
+          products.variantSlug,
         ),
       ];
 
