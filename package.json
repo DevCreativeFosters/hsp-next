@@ -42,7 +42,7 @@
     "lint-staged": "^13.2.3",
     "node-sass-glob-importer": "^5.3.3",
     "postcss": "^8.4.27",
-    "prettier": "3.0.0",
+    "prettier": "^3.1.1",
     "sass": "^1.64.2",
     "stylelint": "^15.10.2",
     "stylelint-config-standard-scss": "^10.0.0"
