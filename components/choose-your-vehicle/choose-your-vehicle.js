@@ -1,10 +1,10 @@
 'use client';
 
-import { useCallback, useState, useEffect, useMemo } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
+import constants from '@lib/constants';
+import { useVehicleSelection } from '@lib/use-vehicle-select';
 import { useVehicleContext } from '@contexts/vehicle';
-import { setCookie, deleteCookie } from '@lib/cookies';
 import { useIsMobile } from '@hooks/useIsMobile';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
@@ -14,139 +14,27 @@ import CancelIcon from '@assets/icons/cancel.svg';
 import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
 import styles from './choose-your-vehicle.module.scss';
 
-const LOCAL_STORAGE_VEHICLE = 'hsp-my-vehicle';
-
-const SELECT_LABELS = {
-  GENERIC_SHORT: 'Choose',
-  GENERIC_FULL: 'Choose your vehicle',
-  MAKER: 'Choose make',
-  MODEL: 'Choose model',
-};
-
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
   const {
-    setSavedVehicleGlobal,
-    savedVehicleGlobal,
+    maker,
+    model,
+    handleSave,
+    handleVehicleReset,
     finalSelection,
     setVehicleSelection,
+    dropdownOpened,
+    setDropdownOpened,
   } = useVehicleContext();
 
-  const [dropdownOpened, setDropdownOpened] = useState(false);
-  const [maker, setMaker] = useState(null);
-  const [model, setModel] = useState(null);
+  const {
+    handleMakerChange,
+    handleModelChange,
+    makerSelectOptions,
+    modelSelectOptions,
+  } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
-
-  const findMakerBySlug = useCallback(
-    slug => makersAndModels.find(({ slug: makerSlug }) => makerSlug === slug),
-    [makersAndModels],
-  );
-
-  const findModelBySlug = useCallback(
-    (makerSlug, modelSlug) => {
-      return findMakerBySlug(makerSlug)?.models?.find(
-        ({ slug }) => slug === modelSlug,
-      );
-    },
-    [findMakerBySlug],
-  );
-
-  const makerSelectOptions = useMemo(
-    () =>
-      makersAndModels.map(({ name, slug }) => ({
-        label: name,
-        value: slug,
-      })),
-    [makersAndModels],
-  );
-
-  const modelSelectOptions = useMemo(() => {
-    return (
-      makersAndModels
-        .find(({ slug }) => slug === maker?.slug)
-        ?.models.map(({ name, slug }) => ({
-          value: slug,
-          label: name,
-        })) || []
-    );
-  }, [makersAndModels, maker]);
-
-  const handleVehicleReset = useCallback(() => {
-    localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
-    deleteCookie(LOCAL_STORAGE_VEHICLE);
-    setMaker(null);
-    setModel(null);
-    setVehicleSelection(null);
-    setSavedVehicleGlobal(null);
-  }, [setVehicleSelection, setSavedVehicleGlobal]);
-
-  const handleSave = useCallback(() => {
-    const vehicleString = JSON.stringify({
-      maker,
-      model,
-    });
-
-    localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
-    setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
-
-    setSavedVehicleGlobal({
-      maker,
-      model,
-    });
-
-    setVehicleSelection({
-      makerName: maker?.name || undefined,
-      modelName: model?.name || undefined,
-    });
-    setDropdownOpened(false);
-  }, [maker, model, setSavedVehicleGlobal, setVehicleSelection]);
-
-  const handleMakerChange = useCallback((value, label) => {
-    setMaker({
-      name: label,
-      slug: value,
-      value, // @TODO: remove it after "value -> slug" rename
-    });
-    setModel(null);
-  }, []);
-
-  const handleModelChange = useCallback((value, label) => {
-    setModel({
-      name: label,
-      slug: value,
-      value, // @TODO: remove it after "value -> slug" rename
-    });
-  }, []);
-
-  useEffect(
-    function loadSavedVehicle() {
-      const savedSelection = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
-      if (savedSelection) {
-        const savedVehicle = JSON.parse(savedSelection);
-
-        const makerFound = findMakerBySlug(savedVehicle?.maker?.value); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
-        const modelFound = findModelBySlug(
-          savedVehicle?.maker?.value,
-          savedVehicle?.model?.value,
-        ); // @TODO: remove it after "value -> slug" rename, use commented-out code above instead
-
-        if (makerFound) {
-          setMaker(makerFound);
-        }
-        if (modelFound) {
-          setModel(modelFound);
-        }
-        if (makerFound || modelFound) {
-          setVehicleSelection({
-            makerName: makerFound?.name,
-            modelName: modelFound?.name,
-          });
-        }
-      }
-    },
-    [savedVehicleGlobal],
-  );
 
   const Icon = dropdownOpened ? (
     <CloseIcon />
@@ -176,10 +64,10 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
             </span>
           ) : isMobile ? (
             <span className={styles.placeholder}>
-              {SELECT_LABELS.GENERIC_FULL}
+              {constants.SELECT_LABELS.GENERIC_FULL}
             </span>
           ) : (
-            SELECT_LABELS.GENERIC_SHORT
+            constants.SELECT_LABELS.GENERIC_SHORT
           )}
           <div className={styles.iconWrapper}>{Icon}</div>
         </Button>
@@ -207,7 +95,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
           <div className={styles.dropdownInner}>
             <Select
               size="large"
-              placeholder={SELECT_LABELS.MAKER}
+              placeholder={constants.SELECT_LABELS.MAKER}
               options={makerSelectOptions}
               value={maker?.slug || null}
               dropdownInDocumentFlow
@@ -215,7 +103,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
             />
             <Select
               size="large"
-              placeholder={SELECT_LABELS.MODEL}
+              placeholder={constants.SELECT_LABELS.MODEL}
               options={modelSelectOptions}
               value={model?.slug || null}
               disabled={!modelSelectOptions.length}

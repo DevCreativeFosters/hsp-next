@@ -6,8 +6,7 @@ import { useVehicleContext } from '@contexts/vehicle';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import { setCookie } from '@lib/cookies';
 import routes from '@lib/routes';
-
-const LOCAL_STORAGE_VEHICLE = 'hsp-my-vehicle';
+import constants from '@lib/constants';
 
 export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const [currentSavedVehicle, setCurrentSavedVehicle] = useState({});
@@ -28,16 +27,14 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const isFirstLoad = useRef(true);
   const pathname = usePathname();
   const router = useRouter();
-  const {
-    setSavedVehicleGlobal,
-    savedVehicleGlobal,
-    finalSelection,
-    setVehicleSelection,
-  } = useVehicleContext();
+  const { setSavedVehicleGlobal, savedVehicleGlobal, finalSelection } =
+    useVehicleContext();
 
   useEffect(
     function loadSavedVehicleFromLocalStorage() {
-      const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
+      const savedVehicle = localStorage.getItem(
+        constants.LOCAL_STORAGE_VEHICLE,
+      );
       if (savedVehicle) {
         setCurrentSavedVehicle(JSON.parse(savedVehicle));
       }
@@ -150,8 +147,8 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       });
 
       if (changeVehicle) {
-        localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
-        setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+        localStorage.setItem(constants.LOCAL_STORAGE_VEHICLE, savedVehicle);
+        setCookie(constants.LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
       }
 
       const route = routes.product(
@@ -221,7 +218,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   useEffect(
     function checkIfStoredVehicleMatchesSelectedVehicle() {
       const storedVehicle = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_VEHICLE),
+        localStorage.getItem(constants.LOCAL_STORAGE_VEHICLE),
       );
 
       const makeAndModelSelected = maker?.value && model?.value;
