@@ -36,7 +36,7 @@
   opacity: 0;
   transition: opacity 150ms;
 
-  @for $i from 1 through 5 {
+  @for $i from 1 through 20 {
     .container.isActive &:nth-of-type(#{$i}) {
       transition-delay: #{100 + $i * 50}ms;
     }
