@@ -72,7 +72,7 @@ export default function Sidebar({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
-  const [enquiryModalOpened, setEnquiryModalOpened] = useState(true);
+  const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const {
     searchGeolocation,
