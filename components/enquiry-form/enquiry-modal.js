@@ -256,7 +256,7 @@ export default function EnquiryModal({
               </tr>
             </table>
             <label className={styles.label}>Your local store:</label>
-            {/* <StoreTile item={store} /> */}
+            <StoreTile item={store} />
           </div>
         </div>
         <div className={styles.footer}>
