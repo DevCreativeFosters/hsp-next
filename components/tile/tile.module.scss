@@ -26,8 +26,7 @@
   }
 
   &.blog {
-    width: 100%;
-    max-width: 100%;
+    max-width: none;
 
     &.title {
       color: var(--color-white-100);
@@ -39,8 +38,13 @@
     max-width: 100%;
 
     @include bp(medium) {
-      width: calc(33.3333% - 32px);
-      max-width: calc(33.3333% - 32px);
+      width: calc(100% / 3 - (2 / 3 * 24px));
+      max-width: calc(100% / 3 - (2 / 3 * 24px));
+    }
+
+    @include bp(large) {
+      width: calc(100% / 3 - (2 / 3 * 48px));
+      max-width: calc(100% / 3 - (2 / 3 * 48px));
     }
   }
 }

@@ -5,7 +5,6 @@ import SectionButtons from '@components/section-buttons/section-buttons';
 import FeaturedArticle from './featured-article';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Tile from '@components/tile/tile';
-import styles from './lifestyle.module.scss';
 import routes from '@lib/routes';
 
 export default function Lifestyle({
@@ -34,8 +33,8 @@ export default function Lifestyle({
   );
 
   return (
-    <div className={styles.container}>
-      <SectionIntro title={title} description={description}>
+    <>
+      <SectionIntro title={title} description={description} noTopMargin>
         <SectionButtons buttons={buttons} />
       </SectionIntro>
 
@@ -50,6 +49,6 @@ export default function Lifestyle({
       {posts.length > 0 && (
         <TileCarousel items={postsNormalized} itemTemplate={Tile} />
       )}
-    </div>
+    </>
   );
 }

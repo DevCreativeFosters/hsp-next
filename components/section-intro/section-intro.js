@@ -7,17 +7,26 @@ export default function SectionIntro({
   description = null,
   fitInline,
   narrowDescription,
+  noMargin,
+  noTopMargin,
+  noBottomMargin,
   children,
 }) {
   return (
     <div
       className={clsx(styles.container, {
         [styles.fitInline]: fitInline,
+        [styles.noChildren]: !children,
         [styles.narrowDescription]: narrowDescription,
+        [styles.noTopMargin]: noTopMargin,
+        [styles.noBottomMargin]: noBottomMargin,
+        [styles.noMargin]: noMargin,
       })}
     >
-      <h2 className={styles.title}>{title}</h2>
-      <TextElement className={styles.description} text={description} />
+      {title && <h2 className={styles.title}>{title}</h2>}
+      {description && (
+        <TextElement className={styles.description} text={description} />
+      )}
       {children}
     </div>
   );

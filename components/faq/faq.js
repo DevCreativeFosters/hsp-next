@@ -44,7 +44,7 @@ export default function FAQ({ title, description, buttons, questions }) {
   return (
     <div className={styles.layout}>
       <div className={styles.intro}>
-        <SectionIntro title={title} description={description} />
+        <SectionIntro title={title} description={description} noMargin />
       </div>
 
       <div className={styles.buttonsContainer}>

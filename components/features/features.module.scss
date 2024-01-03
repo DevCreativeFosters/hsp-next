@@ -5,8 +5,7 @@
   flex-direction: column;
   gap: 48px;
   position: relative;
-  margin-top: 72px;
-  margin-bottom: 96px;
+  margin-block: 72px 96px;
 
   @include bp(medium) {
     display: grid;
