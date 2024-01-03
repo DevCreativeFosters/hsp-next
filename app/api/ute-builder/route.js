@@ -1,0 +1,20 @@
+import { NextResponse } from 'next/server';
+import { getModelBySlug, getProductsWithVariants } from '@lib/api';
+
+export async function GET(req) {
+  const url = new URL(req.url);
+  const params = url.searchParams;
+  const model = params.get('model');
+  const make = params.get('make');
+
+  try {
+    const modelData = await getModelBySlug(model);
+    const productData = await getProductsWithVariants(make, model);
+    return NextResponse.json({ modelData, productData });
+  } catch (error) {
+    return NextResponse.json(
+      { message: `Error fetching ${error}` },
+      { status: 500 },
+    );
+  }
+}

@@ -1,0 +1,189 @@
+.container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column-reverse;
+  min-height: calc(100vh - var(--header-height));
+
+  @include bp(large) {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: calc(100vh - var(--header-height));
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    position: fixed;
+    z-index: -2;
+    top: 0;
+    left: 0;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+      0deg,
+      var(--color-black-20),
+      var(--color-black-100)
+    );
+  }
+}
+
+.chooseVehicleContainer {
+  display: flex;
+  padding: 80px 24px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  background: var(--color-primary-100);
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+
+  @include bp(large) {
+    margin-top: 48px;
+    padding: 32px 96px;
+  }
+}
+
+.vehicleSelector {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  border-radius: 16px;
+  padding: 24px;
+  background-color: var(--color-black-100);
+
+  @include bp(large) {
+    flex-direction: row;
+    padding: 16px 48px;
+  }
+}
+
+.chooseVehiclePill {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  display: flex;
+  height: 56px;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--color-primary-100);
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  @include bp(large) {
+    top: -50px;
+    left: 96px;
+    padding: 16px 24px;
+  }
+}
+
+.select {
+  width: 100%;
+  min-height: 48px;
+
+  button {
+    @include bp(large) {
+      border: 0;
+    }
+  }
+
+  > div {
+    position: relative;
+
+    @include bp(large) {
+      position: absolute;
+    }
+  }
+}
+
+.button {
+  min-width: fit-content;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 69px 24px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  max-width: 745px;
+}
+
+.title {
+  margin: 0;
+}
+
+.text {
+  color: var(--color-white-80);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.help {
+  display: none;
+  flex-direction: column;
+  gap: 48px;
+  background-color: var(--color-black-100);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 100%;
+
+  @include bp(large) {
+    display: flex;
+    max-width: 431px;
+    padding: 48px;
+  }
+}
+
+.helpTitle {
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.33;
+  margin: 0;
+
+  @include bp(large) {
+    font-size: 36px;
+  }
+}
+
+.helpText {
+  color: var(--color-white-80);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+}
+
+.link {
+  color: var(--color-primary-100);
+  text-decoration: underline;
+}
