@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import clsx from 'clsx';
+
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+import Button from '@components/button/button';
 import styles from './product-tabs.module.scss';
 
 export default function ProductTabs({
@@ -11,6 +13,8 @@ export default function ProductTabs({
   featuresBoxes,
   specificationDescription,
   specificationContent,
+  manualsDescription,
+  manualsLinks,
 }) {
   const [activeTab, setActiveTab] = useState('features');
 
@@ -37,6 +41,16 @@ export default function ProductTabs({
         >
           Technical Specifications
         </div>
+        {manualsLinks?.length > 0 && (
+          <div
+            className={clsx(styles.tab, {
+              [styles.activeTab]: activeTab === 'manuals',
+            })}
+            onClick={() => handleTabClick('manuals')}
+          >
+            Manuals
+          </div>
+        )}
       </div>
       <div className={styles.content}>
         {activeTab === 'features' && (
@@ -110,6 +124,26 @@ export default function ProductTabs({
                 content={specificationContent}
               />
             )}
+          </>
+        )}
+        {activeTab === 'manuals' && (
+          <>
+            {manualsDescription && (
+              <p className={styles.description}>{manualsDescription}</p>
+            )}
+            <div className={styles.manualsContainer}>
+              {manualsLinks.map(downloadLink => (
+                <Button
+                  href={downloadLink.url}
+                  variant="quinary"
+                  rightIcon={'download'}
+                  download
+                  key={downloadLink.url}
+                >
+                  {downloadLink.label}
+                </Button>
+              ))}
+            </div>
           </>
         )}
       </div>

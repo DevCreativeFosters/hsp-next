@@ -150,6 +150,23 @@ export default async function CategoryPage({ params }) {
           specificationContent={
             firstMatchedProduct?.productFields.specification
           }
+          // TODO: add data from backend
+          manualsDescription="For more technical information on our hard lid please read below, or simply scroll to the bottom of this page to get in touch with one of our knowledgeable staff memebers."
+          // TODO: add data from backend
+          manualsLinks={[
+            {
+              label: 'Product flyer',
+              url: '/',
+            },
+            {
+              label: 'How to use the product',
+              url: '/',
+            },
+            {
+              label: 'Instruction sheet',
+              url: '/',
+            },
+          ]}
         />
       </Container>
       {contentBlocks?.map(contentBlock => contentBlock)}
