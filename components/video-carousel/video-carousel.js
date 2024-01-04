@@ -14,24 +14,22 @@ export default function VideoCarousel({
   context,
 }) {
   return (
-    <div className={styles.container}>
-      <Container>
-        <SectionIntro
-          title={title}
-          description={description}
-          fitInline
-          narrowDescription
-        >
-          <SectionButtons buttons={buttons} />
-        </SectionIntro>
+    <Container collapseMargin>
+      <SectionIntro
+        title={title}
+        description={description}
+        fitInline
+        narrowDescription
+      >
+        <SectionButtons buttons={buttons} />
+      </SectionIntro>
 
-        <TileCarousel
-          items={videos}
-          itemTemplate={VideoTile}
-          itemTemplateType="celebrities"
-          context={context}
-        />
-      </Container>
-    </div>
+      <TileCarousel
+        items={videos}
+        itemTemplate={VideoTile}
+        itemTemplateType="celebrities"
+        context={context}
+      />
+    </Container>
   );
 }

@@ -17,6 +17,7 @@
     "can-autoplay": "^3.0.2",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
+    "html-entities": "^2.4.0",
     "html-react-parser": "^4.2.2",
     "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",

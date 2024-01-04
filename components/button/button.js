@@ -1,8 +1,9 @@
-import { getIcon } from '@lib/icons';
 import React from 'react';
 import Link from 'next/link';
-import clsx from 'clsx';
 import Image from 'next/image';
+import clsx from 'clsx';
+import { decode } from 'html-entities';
+import { getIcon } from '@lib/icons';
 import { ConditionalWrapper } from '@lib/helpers';
 import styles from './button.module.scss';
 
@@ -59,7 +60,7 @@ export default function Button({
       {leftIconUrl && (
         <Image src={leftIconUrl} alt={''} width={20} height={20} />
       )}
-      {children}
+      {typeof children === 'string' ? decode(children) : children}
       {rightIconUrl && (
         <Image src={rightIconUrl} alt={''} width={20} height={20} />
       )}

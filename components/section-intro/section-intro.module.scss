@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 24px;
   padding-left: 24px;
+  margin-block: 72px 56px;
 
   @include bp(medium) {
     display: grid;
@@ -12,16 +13,41 @@
     padding-left: 0;
   }
 
+  @include bp(large) {
+    margin-block: 96px 56px;
+  }
+
   &.fitInline {
     @include bp(large) {
       gap: 48px;
       grid-template-areas: 'title description buttons';
       grid-template-columns: auto 1fr auto;
-
-      &.narrowDescription {
-        grid-template-columns: auto 515px 1fr;
-      }
     }
+  }
+
+  &.fitInline.noChildren {
+    @include bp(large) {
+      grid-template-areas: 'title description';
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  &.fitInline.narrowDescription {
+    @include bp(large) {
+      grid-template-columns: auto 515px 1fr;
+    }
+  }
+
+  &.noTopMargin {
+    margin-top: 0;
+  }
+
+  &.noBottomMargin {
+    margin-bottom: 0;
+  }
+
+  &.noMargin {
+    margin-block: 0;
   }
 }
 

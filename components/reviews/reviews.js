@@ -1,5 +1,7 @@
 'use client';
 
+import SectionButtons from '@components/section-buttons/section-buttons';
+import SectionIntro from '@components/section-intro/section-intro';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -54,14 +56,13 @@ export default function Reviews({ data }) {
   }, []);
 
   return (
-    <Container>
-      <div className={styles.container}>
-        <div className={styles.sectionInformation}>
-          <h2 className={styles.title}>{data?.title}</h2>
-          <div
-            className={styles.text}
-            dangerouslySetInnerHTML={{ __html: data?.description }}
-          />
+    <Container collapseTopMargin>
+      <SectionIntro
+        title={data?.title}
+        description={data?.description}
+        fitInline
+      >
+        <SectionButtons>
           <div className={styles.actionButtons}>
             {groupedReviews.length > 1 && (
               <div className={styles.swiperButtons}>
@@ -85,35 +86,34 @@ export default function Reviews({ data }) {
               {data?.allReviewsLink?.link.title}
             </Button>
           </div>
-        </div>
-      </div>
-      <div className={styles.reviews}>
-        <Swiper
-          className={styles.swiper}
-          slidesPerView={1}
-          spaceBetween={isMobile ? 0 : 24}
-          navigation
-          onSwiper={swiper => (swiperRef.current = swiper)}
-          loop={false}
-          slidesPerGroup={1}
-          watchSlidesProgress
-        >
-          {groupedReviews.map((group, groupIndex) => (
-            <SwiperSlide key={groupIndex}>
-              <div className={styles.reviewContainer}>
-                {group.map((review, index) => (
-                  <Review
-                    key={index}
-                    score={review.score}
-                    name={review.reviewerName}
-                    text={review.reviewText}
-                  />
-                ))}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+        </SectionButtons>
+      </SectionIntro>
+
+      <Swiper
+        className={styles.swiper}
+        slidesPerView={1}
+        spaceBetween={isMobile ? 0 : 24}
+        navigation
+        onSwiper={swiper => (swiperRef.current = swiper)}
+        loop={false}
+        slidesPerGroup={1}
+        watchSlidesProgress
+      >
+        {groupedReviews.map((group, groupIndex) => (
+          <SwiperSlide key={groupIndex}>
+            <div className={styles.reviewContainer}>
+              {group.map((review, index) => (
+                <Review
+                  key={index}
+                  score={review.score}
+                  name={review.reviewerName}
+                  text={review.reviewText}
+                />
+              ))}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </Container>
   );
 }

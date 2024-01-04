@@ -37,6 +37,11 @@
   gap: 16px;
   max-width: 636px;
   width: 100%;
+  padding-inline: 24px;
+
+  @include bp(medium) {
+    padding-inline: 0;
+  }
 
   @include bp(large) {
     gap: 24px;

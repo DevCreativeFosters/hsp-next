@@ -4,6 +4,8 @@ import styles from './container.module.scss';
 export default function Container({
   relative,
   collapseMargin,
+  collapseTopMargin,
+  collapseBottomMargin,
   className,
   children,
 }) {
@@ -13,6 +15,8 @@ export default function Container({
         styles.container,
         {
           [styles.isRelative]: relative,
+          [styles.collapseTopMargin]: collapseTopMargin,
+          [styles.collapseBottomMargin]: collapseBottomMargin,
           [styles.collapseMargin]: collapseMargin,
         },
         className,

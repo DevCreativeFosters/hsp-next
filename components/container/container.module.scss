@@ -12,6 +12,14 @@
     position: relative;
   }
 
+  &.collapseTopMargin {
+    padding-top: 0;
+  }
+
+  &.collapseBottomMargin {
+    padding-bottom: 0;
+  }
+
   &.collapseMargin {
     padding-block: 0;
   }

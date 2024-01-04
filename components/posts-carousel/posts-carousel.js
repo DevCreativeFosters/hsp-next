@@ -1,5 +1,7 @@
 'use client';
 
+import SectionButtons from '@components/section-buttons/section-buttons';
+import SectionIntro from '@components/section-intro/section-intro';
 import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Tile from '@components/tile/tile';
@@ -58,15 +60,9 @@ export default function PostsCarousel({ title, description, button, posts }) {
   }, []);
 
   return (
-    <Container>
-      <div className={styles.container}>
-        <div className={styles.sectionInformation}>
-          <div className={styles.header}>
-            <h2 className={styles.title}>{title}</h2>
-            <div className={styles.text}>
-              {description && <p>{description}</p>}
-            </div>
-          </div>
+    <Container collapseMargin>
+      <SectionIntro title={title} description={description} fitInline>
+        <SectionButtons>
           <div className={styles.actionButtons}>
             {groupedPosts.length > 1 && (
               <div className={styles.swiperButtons}>
@@ -86,30 +82,29 @@ export default function PostsCarousel({ title, description, button, posts }) {
               {button.title}
             </Button>
           </div>
-        </div>
-      </div>
-      <div className={styles.posts}>
-        <Swiper
-          className={styles.swiper}
-          slidesPerView={1}
-          spaceBetween={isMobile ? 0 : 24}
-          navigation
-          onSwiper={swiper => (swiperRef.current = swiper)}
-          loop={false}
-          slidesPerGroup={1}
-          watchSlidesProgress
-        >
-          {groupedPosts.map((group, groupIndex) => (
-            <SwiperSlide key={groupIndex}>
-              <div className={styles.postContainer}>
-                {group.map((props, index) => (
-                  <Tile key={index} {...props} />
-                ))}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+        </SectionButtons>
+      </SectionIntro>
+
+      <Swiper
+        className={styles.swiper}
+        slidesPerView={1}
+        spaceBetween={isMobile ? 0 : 24}
+        navigation
+        onSwiper={swiper => (swiperRef.current = swiper)}
+        loop={false}
+        slidesPerGroup={1}
+        watchSlidesProgress
+      >
+        {groupedPosts.map((group, groupIndex) => (
+          <SwiperSlide key={groupIndex}>
+            <div className={styles.postContainer}>
+              {group.map((props, index) => (
+                <Tile key={index} {...props} />
+              ))}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </Container>
   );
 }

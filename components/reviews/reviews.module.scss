@@ -1,54 +1,3 @@
-.container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  padding: 48px 24px;
-
-  @include bp(medium) {
-    padding: 48px 0;
-  }
-
-  @include bp(large) {
-    padding: 96px 0;
-  }
-}
-
-.sectionInformation {
-  display: grid;
-  grid-template-columns: 100%;
-
-  @include bp(medium) {
-    gap: 24px;
-    grid-template-areas: 'title buttons' 'description description';
-    grid-template-columns: unset;
-    padding-left: 0;
-  }
-
-  @include bp(large) {
-    gap: 48px;
-    grid-template-areas: 'title description buttons';
-    grid-template-columns: auto 515px 1fr;
-  }
-}
-
-.title {
-  color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  font-weight: 600;
-  line-height: 1.33;
-
-  @include bp(medium) {
-    grid-area: title;
-  }
-
-  @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-  }
-}
-
 .text {
   grid-row: auto;
   grid-column: auto;
@@ -83,7 +32,6 @@
   gap: 16px;
 
   @include bp(medium) {
-    grid-area: buttons;
     justify-content: flex-end;
   }
 }
@@ -110,8 +58,8 @@
     width: 40px;
 
     &:first-child {
-      border-top-right-radius: 0 !important;
-      border-bottom-right-radius: 0 !important;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     &:last-child {
@@ -129,14 +77,12 @@
   }
 }
 
-.overflowHidden {
-  overflow: hidden;
-}
-
 .allReviewsButton {
   min-width: 167px;
 
   svg {
     max-width: 20px;
+    flex-shrink: 0;
+    margin-inline: 5px 10px;
   }
 }

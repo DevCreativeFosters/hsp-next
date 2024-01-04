@@ -73,7 +73,7 @@ h1,
 h2 {
   font-size: 48px;
 
-  @include bp(medium) {
+  @include bp(large) {
     font-size: 64px;
   }
 }
