@@ -69,7 +69,9 @@ export default function Newsletter() {
 
   return (
     <Container>
-      <Script src="https://www.google.com/recaptcha/api.js?hl=en" />
+      <Script
+        src={`https://www.google.com/recaptcha/enterprise.js?render=${GOOGLE_RECAPTCHA_SITEKEY}`}
+      />
 
       <div className={styles.wrapper}>
         {IllustrationImage && (
