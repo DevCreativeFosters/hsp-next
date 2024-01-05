@@ -11,7 +11,7 @@
 .footerContainerB {
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  gap: 0 6rem;
   padding: 48px 0;
   position: relative;
   z-index: var(--z-index-footer);
@@ -149,7 +149,8 @@
   border-top: 2px solid var(--color-white-20);
 }
 
-.copyrightText {
+.copyrightText,
+.recaptchaText {
   color: var(--color-white-80);
   font-family: var(--font-primary);
   font-size: 0.875rem;
@@ -157,8 +158,18 @@
   font-weight: 400;
   line-height: normal;
   margin: 0;
+}
 
+.copyrightText {
   &:first-child {
     text-transform: uppercase;
+  }
+}
+
+.recaptchaText {
+  margin-top: 1em;
+
+  a {
+    text-decoration: underline;
   }
 }

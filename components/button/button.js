@@ -19,6 +19,7 @@ export default function Button({
   toggleable = null,
   isToggled = false,
   onToggleIconClick = null,
+  isBusy,
   href = '',
   target = null,
   type = 'button',
@@ -47,6 +48,7 @@ export default function Button({
     [styles.toggleable]: toggleable,
     [styles.noText]: !children,
     [styles.footer]: footer,
+    [styles.isBusy]: isBusy,
   });
 
   const LeftIconSvg = getIcon(leftIcon);
@@ -67,6 +69,16 @@ export default function Button({
       {RightIconSvg && <RightIconSvg />}
     </>
   );
+
+  const buttonBodyWithOptionalSpinner =
+    isBusy !== undefined ? (
+      <>
+        <span className={styles.labelWrapper}>{buttonBody}</span>
+        <span className={styles.spinner} />
+      </>
+    ) : (
+      buttonBody
+    );
 
   const OptionalToggleWrapperEl = toggleable ? 'div' : React.Fragment;
   const optionalToggleWrapperElProps = {
@@ -124,7 +136,7 @@ export default function Button({
           );
         }}
       >
-        {buttonBody}
+        {buttonBodyWithOptionalSpinner}
       </ConditionalWrapper>
     </OptionalToggleWrapperEl>
   );

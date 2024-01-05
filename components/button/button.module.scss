@@ -5,6 +5,7 @@
   --icon-side-padding: 16px;
   --inline-padding: 24px;
 
+  position: relative;
   font-family: var(--font-secondary);
   font-weight: 600;
   font-size: var(--font-size);
@@ -281,5 +282,42 @@ div.toggleContainer {
   &:hover {
     text-decoration: underline;
     color: var(--hover-font-color);
+  }
+}
+
+.labelWrapper {
+  opacity: 1;
+  transition: opacity 100ms;
+
+  .isBusy > & {
+    opacity: 0;
+  }
+}
+
+.spinner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  border: 4px solid currentcolor;
+  border-right-color: transparent;
+  margin-top: 1px; // optical
+  transform: translateX(-50%) translateY(-50%);
+  transition: opacity 100ms;
+  opacity: 0;
+  pointer-events: none;
+  animation: spin 1s infinite linear;
+  transform-origin: left top;
+
+  .isBusy > & {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
   }
 }

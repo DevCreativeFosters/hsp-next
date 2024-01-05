@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
@@ -10,9 +11,8 @@ import Input from '@components/form/input';
 import IllustrationImage from '@assets/images/newsletter-illustration.png';
 import styles from './newsletter.module.scss';
 
-const GOOGLE_RECAPTCHA_SITEKEY = '6LefRkUpAAAAAJH90AsZ4wLZ6fou7USSFkf4Z-QZ';
-const BREVO_SIGNUP_URL =
-  'https://e63d896b.sibforms.com/serve/MUIFAFFmSfbbHDUbEAHTGrPBlm2kYnxEZKCHYNgZ82_TV32OpvoRnJLVvA_KUbXpVmUX2sztaA4xHG39IcSCjL4n8mm95Tk-Qm66-8Lx7Bx5V8IBdDYfwviOLHSH6MekbQyjQ4ZybzSy8ADU2Y1zcEYJNbRtjTgIuSjM339sO_3oKBD9tXPOMveDRf2ByWz_qkXHbZ32QIDfPAuM';
+const GOOGLE_RECAPTCHA_SITEKEY =
+  process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
 
 const title = 'Join our community';
 const description = `
@@ -26,7 +26,8 @@ const description = `
 export default function Newsletter() {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
   const tokenRef = useRef(null);
   const formRef = useRef();
 
@@ -41,15 +42,13 @@ export default function Newsletter() {
     async ev => {
       const token = tokenRef.current;
       ev.preventDefault();
-      const response = await brevoNewsletterSignup(
-        BREVO_SIGNUP_URL + '?isAjax=1',
-        {
-          EMAIL: email,
-          locale: 'en',
-          'g-recaptcha-response': token,
-          // email_address_check: '',
-        },
-      );
+      setIsBusy(true);
+      const response = await brevoNewsletterSignup({
+        EMAIL: email,
+        locale: 'en',
+        'g-recaptcha-response': token,
+        // email_address_check: '',
+      });
 
       if (response.success) {
         setError(null);
@@ -59,6 +58,7 @@ export default function Newsletter() {
         setConfirmationMessage(null);
         setError(Object.values(response.errors).join(' '));
       }
+      setIsBusy(false);
     },
     [email],
   );
@@ -124,19 +124,24 @@ export default function Newsletter() {
             </Button>
           ) : (
             <Button
-              className={[styles.button, 'g-recaptcha']}
+              className={clsx(styles.button, 'g-recaptcha', {
+                [styles.isBusy]: isBusy,
+              })}
               type="submit"
               size="large"
               data-sitekey={GOOGLE_RECAPTCHA_SITEKEY}
               data-callback="onCaptchaSuccess"
               data-action="requestSubmit"
               onClick={ev => {
-                console.log('onClick');
                 const isValid = formRef.current.reportValidity();
-                if (!isValid) {
+                if (isValid) {
+                  setIsBusy(true);
+                } else {
                   ev.preventDefault();
                 }
               }}
+              disabled={isBusy}
+              isBusy={isBusy}
             >
               Submit
             </Button>
