@@ -1,0 +1,136 @@
+.wrapper {
+  position: relative;
+  padding: 96px 24px 48px;
+  border-radius: 32px;
+  margin: 192px 0 48px;
+  background: var(--color-black-100);
+
+  @include bp(medium) {
+    padding: 48px;
+  }
+
+  @include bp(large) {
+    display: grid;
+    grid-template-areas:
+      'title illustration'
+      'description form';
+    grid-auto-columns: 1fr;
+    grid-gap: 32px 48px;
+    margin-top: 256px;
+  }
+}
+
+.illustrationWrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  max-width: 90%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include bp(small) {
+    left: auto;
+    right: 48px;
+    transform: translateY(-50%);
+  }
+
+  @include bp(medium) {
+    width: 320px;
+    transform: translateY(-55%);
+  }
+
+  @include bp(large) {
+    grid-area: illustration;
+    width: 435px;
+    inset: auto auto -16px 0;
+    transform: none;
+  }
+
+  @include bp(full) {
+    bottom: -16px;
+  }
+}
+
+.illustration {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.title {
+  font-family: var(--font-secondary);
+  font-size: 36px;
+  line-height: 1.33;
+
+  @include bp(large) {
+    grid-area: title;
+    font-size: 48px;
+  }
+}
+
+.description {
+  max-width: 750px;
+  color: var(--color-white-80);
+  font-size: 16px;
+  line-height: 1.4;
+
+  @include bp(large) {
+    grid-area: description;
+    font-size: 20px;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 48px;
+
+  @include bp(medium) {
+    flex-direction: row;
+    max-width: 750px;
+  }
+
+  @include bp(large) {
+    grid-area: form;
+    margin-top: 0;
+    max-width: 100%;
+  }
+}
+
+.emailWrapper {
+  align-self: stretch;
+
+  @include bp(medium) {
+    flex-grow: 1;
+  }
+}
+
+.button {
+  @include bp(medium) {
+    --block-padding: 14px;
+  }
+}
+
+.confirmation {
+  display: flex;
+  vertical-align: center;
+  padding-block: 11.5px;
+  font-size: 24px;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  color: #aac06d;
+
+  @include bp(medium) {
+    padding-block: 10px;
+  }
+}

@@ -1,3 +1,4 @@
+import Newsletter from '@components/newsletter/newsletter';
 import clsx from 'clsx';
 import Image from 'next/image';
 import {
@@ -130,6 +131,7 @@ export default function Layout({
         {withFooter && (
           <div className={styles.bottomSticky}>
             <FullscreenCollapse>
+              <Newsletter />
               <Footer menus={normalizedFooterMenus} text={footerText} />
             </FullscreenCollapse>
           </div>

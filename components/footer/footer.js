@@ -175,8 +175,20 @@ export default function Footer({ menus, text }) {
               <p className={styles.copyrightText}>
                 Copyright HSP UTE LIDS {year}
               </p>
+
               <p className={styles.copyrightText}>Made by Xfive</p>
             </div>
+            <p className={styles.recaptchaText}>
+              <span>This site is protected by reCAPTCHA and the Google </span>
+              <a href="https://policies.google.com/privacy">
+                Privacy Policy
+              </a>{' '}
+              <span> and </span>
+              <a href="https://policies.google.com/terms">
+                Terms of Service
+              </a>{' '}
+              <span> apply. </span>
+            </p>
           </div>
         </div>
       </Container>
