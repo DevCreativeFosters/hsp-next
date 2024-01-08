@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import Button from '@components/button/button';
 import styles from './product-tabs.module.scss';
+
+const DEFAULT_TAB = 'features';
 
 export default function ProductTabs({
   featuresDescription,
@@ -16,41 +18,27 @@ export default function ProductTabs({
   manualsDescription,
   manualsLinks,
 }) {
-  const [activeTab, setActiveTab] = useState('features');
-
-  const handleTabClick = useCallback(tab => {
-    setActiveTab(tab);
-  }, []);
+  const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
+  const tabs = {
+    features: 'Features',
+    specs: 'Technical Specifications',
+    ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
+  };
 
   return (
     <div className={styles.tabs}>
       <div className={styles.headers}>
-        <div
-          className={clsx(styles.tab, {
-            [styles.activeTab]: activeTab === 'features',
-          })}
-          onClick={() => handleTabClick('features')}
-        >
-          Features
-        </div>
-        <div
-          className={clsx(styles.tab, {
-            [styles.activeTab]: activeTab === 'technical-specifications',
-          })}
-          onClick={() => handleTabClick('technical-specifications')}
-        >
-          Technical Specifications
-        </div>
-        {manualsLinks?.length > 0 && (
+        {Object.entries(tabs).map(([tabKey, tabTitle]) => (
           <div
+            key={tabKey}
             className={clsx(styles.tab, {
-              [styles.activeTab]: activeTab === 'manuals',
+              [styles.activeTab]: activeTab === tabKey,
             })}
-            onClick={() => handleTabClick('manuals')}
+            onClick={() => setActiveTab(tabKey)}
           >
-            Manuals
+            {tabTitle}
           </div>
-        )}
+        ))}
       </div>
       <div className={styles.content}>
         {activeTab === 'features' && (
@@ -113,7 +101,7 @@ export default function ProductTabs({
             </div>
           </>
         )}
-        {activeTab === 'technical-specifications' && (
+        {activeTab === 'specs' && (
           <>
             {specificationDescription && (
               <p className={styles.description}>{specificationDescription}</p>
