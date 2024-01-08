@@ -22,6 +22,9 @@ import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-colla
 import styles from './layout.module.scss';
 import { VehicleProvider } from '@contexts/vehicle';
 
+const GOOGLE_RECAPTCHA_SITEKEY =
+  process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
+
 async function getLayoutData() {
   const globalOptions = await getGlobalOptions();
   const footerMenus = await getFooterMenus();
@@ -131,7 +134,7 @@ export default function Layout({
         {withFooter && (
           <div className={styles.bottomSticky}>
             <FullscreenCollapse>
-              <Newsletter />
+              <Newsletter googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY} />
               <Footer menus={normalizedFooterMenus} text={footerText} />
             </FullscreenCollapse>
           </div>

@@ -11,9 +11,6 @@ import Input from '@components/form/input';
 import IllustrationImage from '@assets/images/newsletter-illustration.png';
 import styles from './newsletter.module.scss';
 
-const GOOGLE_RECAPTCHA_SITEKEY =
-  process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
-
 const title = 'Join our community';
 const description = `
   <p>
@@ -23,7 +20,7 @@ const description = `
   </p>
 `;
 
-export default function Newsletter() {
+export default function Newsletter({ googleRecaptchaSitekey }) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
   const [error, setError] = useState('');
@@ -70,7 +67,7 @@ export default function Newsletter() {
   return (
     <Container>
       <Script
-        src={`https://www.google.com/recaptcha/enterprise.js?render=${GOOGLE_RECAPTCHA_SITEKEY}`}
+        src={`https://www.google.com/recaptcha/enterprise.js?render=${googleRecaptchaSitekey}`}
       />
 
       <div className={styles.wrapper}>
@@ -131,7 +128,7 @@ export default function Newsletter() {
               })}
               type="submit"
               size="large"
-              data-sitekey={GOOGLE_RECAPTCHA_SITEKEY}
+              data-sitekey={googleRecaptchaSitekey}
               data-callback="onCaptchaSuccess"
               data-action="requestSubmit"
               onClick={ev => {
