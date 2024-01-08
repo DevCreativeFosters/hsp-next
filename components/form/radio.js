@@ -52,6 +52,7 @@ export default function Radio({
                 checked={isChecked}
                 value={optionValue}
                 onChange={props.onChange || handleInternalChange}
+                required={required}
               />
               <div className={styles.radioMark} />
               <span className={styles.label}>{text}</span>
