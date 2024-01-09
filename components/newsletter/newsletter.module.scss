@@ -73,10 +73,16 @@
   color: var(--color-white-80);
   font-size: 16px;
   line-height: 1.4;
+  margin-top: 24px;
+
+  @include bp(medium) {
+    margin-top: 48px;
+  }
 
   @include bp(large) {
     grid-area: description;
     font-size: 20px;
+    margin-top: 0;
   }
 
   > :first-child {
@@ -98,6 +104,7 @@
   @include bp(medium) {
     flex-direction: row;
     max-width: 750px;
+    align-self: flex-start;
   }
 
   @include bp(large) {
@@ -115,16 +122,18 @@
   }
 }
 
+.input {
+  --block-padding: 16px;
+}
+
 .button {
-  @include bp(medium) {
-    --block-padding: 14px;
-  }
+  --block-padding: 16px;
 }
 
 .confirmation {
   display: flex;
-  vertical-align: center;
-  padding-block: 11.5px;
+  align-items: center;
+  height: 56px;
   font-size: 24px;
   font-family: var(--font-secondary);
   font-weight: 600;
