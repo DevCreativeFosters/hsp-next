@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import styles from './input.module.scss';
 
 export default function Input({
+  className,
   type = 'text',
   size = 'large',
   background = 'dark',
@@ -29,11 +30,15 @@ export default function Input({
       })}
     >
       <div
-        className={clsx(styles.inputWrapper, {
-          [styles.small]: size === 'small',
-          [styles.large]: size === 'large',
-          [styles.hasLabel]: label,
-        })}
+        className={clsx(
+          styles.inputWrapper,
+          {
+            [styles.small]: size === 'small',
+            [styles.large]: size === 'large',
+            [styles.hasLabel]: label,
+          },
+          className,
+        )}
       >
         <input
           type={type}

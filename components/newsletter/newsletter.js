@@ -98,6 +98,7 @@ export default function Newsletter({ googleRecaptchaSitekey }) {
               <div className={styles.confirmation}>{confirmationMessage}</div>
             ) : (
               <Input
+                className={styles.input}
                 type="email"
                 size="large"
                 placeholder="Enter your e-mail address"
@@ -122,28 +123,30 @@ export default function Newsletter({ googleRecaptchaSitekey }) {
               Reset
             </Button>
           ) : (
-            <Button
-              className={clsx(styles.button, 'g-recaptcha', {
-                [styles.isBusy]: isBusy,
-              })}
-              type="submit"
-              size="large"
-              data-sitekey={googleRecaptchaSitekey}
-              data-callback="onCaptchaSuccess"
-              data-action="requestSubmit"
-              onClick={ev => {
-                const isValid = formRef.current.reportValidity();
-                if (isValid) {
-                  setIsBusy(true);
-                } else {
-                  ev.preventDefault();
-                }
-              }}
-              disabled={isBusy}
-              isBusy={isBusy}
-            >
-              Submit
-            </Button>
+            <div>
+              <Button
+                className={clsx(styles.button, 'g-recaptcha', {
+                  [styles.isBusy]: isBusy,
+                })}
+                type="submit"
+                size="large"
+                data-sitekey={googleRecaptchaSitekey}
+                data-callback="onCaptchaSuccess"
+                data-action="requestSubmit"
+                onClick={ev => {
+                  const isValid = formRef.current.reportValidity();
+                  if (isValid) {
+                    setIsBusy(true);
+                  } else {
+                    ev.preventDefault();
+                  }
+                }}
+                disabled={isBusy}
+                isBusy={isBusy}
+              >
+                Submit
+              </Button>
+            </div>
           )}
         </form>
       </div>
