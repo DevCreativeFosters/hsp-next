@@ -88,7 +88,7 @@ function ButtonWithRef(
     ...(toggleable && { className: styles.optionalToggleWrapper }),
   };
 
-  const ToggleContainer = onToggleIconClick ? ButtonWithRef : 'div';
+  const ToggleContainer = onToggleIconClick ? Button : 'div';
   const ToggleContainerProps = {
     ...(onToggleIconClick && {
       onClick: onToggleIconClick,
@@ -146,4 +146,5 @@ function ButtonWithRef(
   );
 }
 
-export default forwardRef(ButtonWithRef);
+const Button = forwardRef(ButtonWithRef);
+export default Button;

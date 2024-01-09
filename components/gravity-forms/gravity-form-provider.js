@@ -3,7 +3,7 @@
 import { useCallback, useState, useEffect, forwardRef } from 'react';
 import GForm from './gform';
 import { getGravityForm } from '@lib/api';
-import { GravityFormProvider } from '@hooks/useGravityForm';
+import { GravityFormProvider } from '@contexts/gravity-form';
 import Loading from '@components/loading/loading';
 
 function GravityFormWithRef(
@@ -39,7 +39,7 @@ function GravityFormWithRef(
     fetchGfForm();
   }, [fetchGfForm]);
 
-  if (!gfForm) return <Loading color="white" size="big" />;
+  if (!gfForm) return <Loading color="white" size="large" />;
 
   return (
     <GravityFormProvider>

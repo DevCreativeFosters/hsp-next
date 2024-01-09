@@ -128,7 +128,7 @@ export default function EnquiryForm({ enquiryFormId, productData }) {
           onChange={onVariantChange}
           options={variantOptions}
           value={
-            (selectedVariant && selectedVariant[0]?.variantSlug) ||
+            selectedVariant?.[0]?.variantSlug ||
             (variantOptions?.length ? variantOptions[0]?.value : '')
           }
         />
@@ -167,7 +167,7 @@ export default function EnquiryForm({ enquiryFormId, productData }) {
             </span>
           )}
           {selectedStore && installationCost > 0 && (
-            <span className={styles.installationCost}>
+            <span>
               <span> + </span>
               <span> {formatPrice(installationCost)} </span>
               <span> for installation </span>
@@ -191,7 +191,7 @@ export default function EnquiryForm({ enquiryFormId, productData }) {
           onClose={handleCloseModal}
           store={selectedStore}
           selectedProducts={
-            selectedVariant || (variants?.length ? [variants[0]] : [])
+            selectedVariant || (variants?.length ? [variants[0]] : []) // TODO: Refactor selectedProducts prop while working on UTE Builder form
           }
           productPrice={productPrice}
           installationCost={installationCost}

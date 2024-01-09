@@ -9,6 +9,7 @@ import Loading from '@components/loading/loading';
 import EnquiryProduct from './enquiry-product';
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
+import routes from '@lib/routes';
 import styles from './enquiry-modal.module.scss';
 
 const InfoIcon = getIcon('info');
@@ -32,14 +33,8 @@ export default function EnquiryModal({
     }
   };
 
-  const onReset = useCallback(() => {
-    setFormIsSending(false);
-    setFormIsSent(false);
+  const onLoad = useCallback(() => {
     setLoading(false);
-  }, []);
-
-  const onError = useCallback(() => {
-    setFormIsSending(false);
   }, []);
 
   const onSubmit = useCallback(() => {
@@ -51,8 +46,13 @@ export default function EnquiryModal({
     setFormIsSent(true);
   }, []);
 
-  const onLoad = useCallback(() => {
-    setLoading(false);
+  const onError = useCallback(() => {
+    setFormIsSending(false);
+  }, []);
+
+  const onReset = useCallback(() => {
+    setFormIsSending(false);
+    setFormIsSent(false);
   }, []);
 
   return (
@@ -62,7 +62,7 @@ export default function EnquiryModal({
         <div className={styles.enquiryContent}>
           {isLoading && (
             <div className={styles.enquiryLoader}>
-              <Loading color="white" size="big" />
+              <Loading color="white" size="large" />
             </div>
           )}
           <div className={styles.header}>
@@ -95,11 +95,11 @@ export default function EnquiryModal({
               <GravityForm
                 ref={formRef}
                 attributes={{ id: enquiryFormId }}
-                onSuccess={onSuccess}
-                onReset={onReset}
                 onLoad={onLoad}
-                onError={onError}
                 onSubmit={onSubmit}
+                onSuccess={onSuccess}
+                onError={onError}
+                onReset={onReset}
                 submitButton={false}
                 hiddenInputs={[
                   {
@@ -143,7 +143,7 @@ export default function EnquiryModal({
                     attributes={{
                       title: '*Installation cost may vary',
                       content:
-                        'Installation cost may vary. To read the whole breakdown please read our <a href="/privacy-terms-and-conditions/">Terms & Conditions.</a>',
+                        'Installation costs may vary. For a complete breakdown, please refer to our <a href="/privacy-terms-and-conditions/">Terms & Conditions.</a>',
                     }}
                   />
                 </label>
@@ -177,9 +177,7 @@ export default function EnquiryModal({
               <div className={styles.footerInfo}>
                 <InfoIcon />
                 By submitting the form you agree to our{' '}
-                <Link href="/privacy-terms-and-conditions/">
-                  Terms & Conditions.
-                </Link>
+                <Link href={routes.privacyAndTerms}>Terms & Conditions.</Link>
               </div>
               <Button
                 type="submit"

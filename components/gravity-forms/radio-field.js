@@ -4,7 +4,7 @@ import useGravityForm from '@hooks/useGravityForm';
 
 const DEFAULT_VALUE = '';
 
-export default function TextAreaField({ form, field, fieldErrors }) {
+export default function RadioField({ form, field, fieldErrors }) {
   const { databaseId: id, label, isRequired, choices } = field;
   const { state, dispatch } = useGravityForm();
   const formId = form.formId;

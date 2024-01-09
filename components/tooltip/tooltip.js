@@ -7,7 +7,7 @@ import Button from '@components/button/button';
 import styles from './tooltip.module.scss';
 
 export default function Tooltip({ attributes = {}, className }) {
-  const [isVisible, setIsVisible] = useState();
+  const [isVisible, setIsVisible] = useState(false);
 
   if (!attributes.content) {
     return null;

@@ -1,5 +1,5 @@
 import parse from 'html-react-parser';
-import { getGlobalOptions, getGravityForm, getPageData } from '@lib/api';
+import { getGlobalOptions, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import ContentBox from '@components/content-box/content-box';
