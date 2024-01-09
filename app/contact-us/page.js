@@ -1,5 +1,5 @@
 import parse from 'html-react-parser';
-import { getGlobalOptions, getGravityForm, getPageData } from '@lib/api';
+import { getGlobalOptions, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import ContentBox from '@components/content-box/content-box';
@@ -7,7 +7,6 @@ import SectionIntro from '@components/section-intro/section-intro';
 import PageGrid from '@components/page-grid/page-grid';
 import Sidebar from '@components/sidebar/sidebar';
 import PageContainer from '@components/page-container/page-container';
-import GravityForm from '@components/gravity-forms/gravity-form-provider';
 import Button from '@components/button/button';
 import Logo from '@assets/images/logo.svg';
 import { renderBlock } from '@lib/block';
@@ -15,7 +14,6 @@ import { renderBlock } from '@lib/block';
 export default async function ContactUs() {
   const content = await getPageData('contact-us');
   const globalOptions = await getGlobalOptions();
-  const contactUsForm = await getGravityForm(1);
   const contactUsInfo = globalOptions?.contactUsInfo;
   const servicesBox = globalOptions?.servicesBox || [];
   const contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);

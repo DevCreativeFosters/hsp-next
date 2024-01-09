@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import Textarea from '@components/form/textarea';
+import Radio from '@components/form/radio';
 import useGravityForm from '@hooks/useGravityForm';
 
 const DEFAULT_VALUE = '';
 
-export default function TextAreaField({ form, field, fieldErrors }) {
-  const { databaseId: id, label, isRequired, placeholder } = field;
+export default function RadioField({ form, field, fieldErrors }) {
+  const { databaseId: id, label, isRequired, choices } = field;
   const { state, dispatch } = useGravityForm();
   const formId = form.formId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
@@ -15,14 +15,12 @@ export default function TextAreaField({ form, field, fieldErrors }) {
   }, [id, fieldErrors]);
 
   return (
-    <Textarea
+    <Radio
       id={`gform_${formId}_${id}`}
       name={`gform_${formId}_${id}`}
-      placeholder={placeholder}
-      errorMessage={fieldError?.message}
       label={label}
-      required={Boolean(isRequired)}
       value={value}
+      options={choices}
       onChange={event => {
         dispatch({
           type: 'updateFieldValue',
@@ -32,6 +30,8 @@ export default function TextAreaField({ form, field, fieldErrors }) {
           },
         });
       }}
+      required={Boolean(isRequired)}
+      errorMessage={fieldError?.message}
     />
   );
 }

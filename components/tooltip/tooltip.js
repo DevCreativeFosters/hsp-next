@@ -1,30 +1,36 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import parse from 'html-react-parser';
+import { useState } from 'react';
 import clsx from 'clsx';
-
+import parse from 'html-react-parser';
 import Button from '@components/button/button';
-
 import styles from './tooltip.module.scss';
 
-export default function Tile({ title, content, className }) {
-  const [showTooltip, setShowTooltip] = useState(false);
+export default function Tooltip({ attributes = {}, className }) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  if (!attributes.content) {
+    return null;
+  }
 
   return (
     <div
       className={clsx(styles.tooltipContainer, className)}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
     >
-      {title && <div className={styles.title}>{title}</div>}
+      {attributes.title && (
+        <div className={styles.title}>{attributes.title}</div>
+      )}
       <Button
         className={styles.tooltipButton}
-        rightIcon="info"
+        rightIcon="question-mark"
         variant="tertiary"
-        onClick={() => setShowTooltip(!showTooltip)}
+        onClick={() => setIsVisible(!isVisible)}
       />
-      {showTooltip && <div className={styles.tooltip}>{parse(content)}</div>}
+      {isVisible && (
+        <div className={styles.tooltip}>{parse(attributes.content)}</div>
+      )}
     </div>
   );
 }

@@ -35,7 +35,7 @@ export default function Radio({
         </label>
       )}
       <fieldset {...props} className={clsx(styles.inputWrapper)}>
-        {options.map(({ label, value: optionValue }) => {
+        {options.map(({ text, value: optionValue }) => {
           const isChecked = (props.value || internalValue) === optionValue;
 
           return (
@@ -52,9 +52,10 @@ export default function Radio({
                 checked={isChecked}
                 value={optionValue}
                 onChange={props.onChange || handleInternalChange}
+                required={required}
               />
               <div className={styles.radioMark} />
-              <span className={styles.label}>{label}</span>
+              <span className={styles.label}>{text}</span>
             </label>
           );
         })}

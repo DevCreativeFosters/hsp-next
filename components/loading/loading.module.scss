@@ -11,7 +11,13 @@
 .loading {
   position: relative;
   display: inline-flex;
-  transform-origin: top right;
   transform-origin: center;
   animation: loading 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.large {
+  svg {
+    width: 64px;
+    height: 64px;
+  }
 }
