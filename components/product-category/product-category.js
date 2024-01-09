@@ -7,14 +7,19 @@ import { getIcon } from '@lib/icons';
 export default function ProductCategory({ category }) {
   const subCategories = category?.children?.nodes || [];
   const ArrowIcon = getIcon('arrow-forward');
-
   return (
     <div className={styles.productCategory}>
       <TitleAndDescription
         title={category?.name}
         description={category?.description}
       />
-      <div className={styles.subCategories}>
+      <div
+        className={styles.subCategories}
+        data-total-tiles={subCategories.length + 1}
+        data-total-tiles-mod-2={(subCategories.length + 1) % 2}
+        data-total-tiles-mod-3={(subCategories.length + 1) % 3}
+        data-total-tiles-mod-4={(subCategories.length + 1) % 4}
+      >
         {subCategories.map(subCategory => (
           <CategoryCard key={subCategory.databaseId} category={subCategory} />
         ))}

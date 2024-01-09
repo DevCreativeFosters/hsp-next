@@ -3,11 +3,15 @@
 }
 
 .subCategories {
+  --gap: 16px;
+
   display: flex;
-  align-content: stretch;
   flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 48px;
+  gap: var(--gap);
+
+  @include bp(medium) {
+    --gap: 24px;
+  }
 }
 
 .ctaLink {
@@ -19,12 +23,11 @@
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  min-width: 240px;
   padding: 24px;
-  transition: var(--transition);
   border: 2px solid var(--color-primary-40);
   border-radius: var(--border-radius-sm);
   gap: 8px;
+  transition: var(--transition);
 
   &:focus,
   &:hover {
