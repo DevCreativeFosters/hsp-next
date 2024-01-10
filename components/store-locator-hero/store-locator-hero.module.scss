@@ -19,11 +19,11 @@
 }
 
 .main {
-  padding-bottom: 48px;
+  margin-bottom: 48px;
 
   @include bp(large) {
     width: 56%;
-    padding-bottom: 0;
+    margin-bottom: 0;
   }
 }
 

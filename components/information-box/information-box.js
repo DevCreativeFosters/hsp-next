@@ -15,11 +15,9 @@ export default function InformationBox({ isSidebar, hideOn, className }) {
       }}
     >
       <Element
-        className={clsx(
-          styles.informationBox,
-          styles[`hide-${hideOn}`],
-          className,
-        )}
+        className={clsx(styles.informationBox, className, {
+          [styles[`hide-${hideOn}`]]: hideOn,
+        })}
       >
         <h3 className={styles.title}>Become a Distributor</h3>
         <div className={styles.text}>
