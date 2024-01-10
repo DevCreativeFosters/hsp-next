@@ -9,7 +9,7 @@ import Loading from '@components/loading/loading';
 function GravityFormWithRef(
   {
     attributes,
-    hiddenInputs,
+    hiddenInputs = [],
     submitButton = true,
     onReset = () => null,
     onSubmit = () => null,
