@@ -88,6 +88,14 @@ export default async function CategoryPage({ params }) {
     );
   }
 
+  const manualPdfItems =
+    firstMatchedProduct?.productFields?.manualPdfItems?.map(item => {
+      return {
+        label: item?.manualPdf.title,
+        url: item?.manualPdf.mediaItemUrl,
+      };
+    });
+
   const images = firstMatchedProduct?.productFields?.images?.map(
     (item, index) => {
       return {
@@ -156,23 +164,10 @@ export default async function CategoryPage({ params }) {
           specificationContent={
             firstMatchedProduct?.productFields.specification
           }
-          // TODO: add data from backend
-          manualsDescription="For more technical information on our hard lid please read below, or simply scroll to the bottom of this page to get in touch with one of our knowledgeable staff memebers."
-          // TODO: add data from backend
-          manualsLinks={[
-            {
-              label: 'Product flyer',
-              url: '/',
-            },
-            {
-              label: 'How to use the product',
-              url: '/',
-            },
-            {
-              label: 'Instruction sheet',
-              url: '/',
-            },
-          ]}
+          manualsDescription={
+            firstMatchedProduct?.productFields?.manualsDescription
+          }
+          manualsLinks={manualPdfItems}
         />
       </Container>
       {contentBlocks?.map(contentBlock => contentBlock)}
