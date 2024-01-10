@@ -24,7 +24,7 @@ export default function ProductCategory({ category }) {
           <CategoryCard key={subCategory.databaseId} category={subCategory} />
         ))}
         <Link href="#" className={styles.ctaLink}>
-          <span>Build Your Setup</span>
+          <span>Build your setup</span>
           <ArrowIcon />
         </Link>
       </div>
