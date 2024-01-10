@@ -1,11 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
 
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import Button from '@components/button/button';
+import { scrollIntoViewHorizontally } from '@lib/helpers';
 import styles from './product-tabs.module.scss';
 
 const DEFAULT_TAB = 'features';
@@ -18,6 +19,7 @@ export default function ProductTabs({
   manualsDescription,
   manualsLinks,
 }) {
+  const headerRef = useRef(null);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
   const tabs = {
     features: 'Features',
@@ -25,19 +27,30 @@ export default function ProductTabs({
     ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
   };
 
+  useEffect(
+    function scrollActiveTabButtonIntoView() {
+      const activeTabButton = document.getElementById(activeTab);
+
+      scrollIntoViewHorizontally(headerRef.current, activeTabButton, 24);
+    },
+    [activeTab],
+  );
+
   return (
     <div className={styles.tabs}>
-      <div className={styles.headers}>
+      <div className={styles.headers} ref={headerRef}>
         {Object.entries(tabs).map(([tabKey, tabTitle]) => (
-          <div
+          <button
+            id={tabKey}
             key={tabKey}
             className={clsx(styles.tab, {
               [styles.activeTab]: activeTab === tabKey,
             })}
+            type="button"
             onClick={() => setActiveTab(tabKey)}
           >
             {tabTitle}
-          </div>
+          </button>
         ))}
       </div>
       <div className={styles.content}>
