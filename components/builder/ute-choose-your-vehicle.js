@@ -1,6 +1,7 @@
 import constants from '@lib/constants';
 import { useVehicleContext } from '@contexts/vehicle';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
+import { getValueOrSlug } from '@lib/helpers';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
@@ -27,7 +28,7 @@ export default function UTEChooseYourVehicle({ makes: makersAndModels }) {
             size="large"
             placeholder={constants.SELECT_LABELS.MAKER}
             options={makerSelectOptions}
-            value={maker?.slug || null}
+            value={getValueOrSlug(maker) || null}
             dropdownInDocumentFlow
             onChange={handleMakerChange}
             className={styles.select}
@@ -36,7 +37,7 @@ export default function UTEChooseYourVehicle({ makes: makersAndModels }) {
             size="large"
             placeholder={constants.SELECT_LABELS.MODEL}
             options={modelSelectOptions}
-            value={model?.slug || null}
+            value={getValueOrSlug(model) || null}
             disabled={!modelSelectOptions.length}
             dropdownInDocumentFlow
             onChange={handleModelChange}

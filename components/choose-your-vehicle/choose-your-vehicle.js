@@ -6,6 +6,7 @@ import constants from '@lib/constants';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 import { useVehicleContext } from '@contexts/vehicle';
 import { useIsMobile } from '@hooks/useIsMobile';
+import { getValueOrSlug } from '@lib/helpers';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
 import EditIcon from '@assets/icons/edit.svg';
@@ -97,7 +98,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
               size="large"
               placeholder={constants.SELECT_LABELS.MAKER}
               options={makerSelectOptions}
-              value={maker?.slug || null}
+              value={getValueOrSlug(maker) || null}
               dropdownInDocumentFlow
               onChange={handleMakerChange}
             />
@@ -105,7 +106,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
               size="large"
               placeholder={constants.SELECT_LABELS.MODEL}
               options={modelSelectOptions}
-              value={model?.slug || null}
+              value={getValueOrSlug(model) || null}
               disabled={!modelSelectOptions.length}
               dropdownInDocumentFlow
               onChange={handleModelChange}

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useVehicleContext } from '@contexts/vehicle';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import { setCookie } from '@lib/cookies';
+import { getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
 import constants from '@lib/constants';
 
@@ -27,8 +28,12 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const isFirstLoad = useRef(true);
   const pathname = usePathname();
   const router = useRouter();
-  const { setSavedVehicleGlobal, savedVehicleGlobal, finalSelection } =
-    useVehicleContext();
+  const {
+    setSavedVehicleGlobal,
+    savedVehicleGlobal,
+    finalSelection,
+    setVehicleSelection,
+  } = useVehicleContext();
 
   useEffect(
     function loadSavedVehicleFromLocalStorage() {
@@ -46,14 +51,15 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
     function conditionalLogicForButtonVisibility() {
       const productRoute = routes.product(
         currentProduct.mainCategory.value,
-        maker?.value,
-        model?.value,
+        getValueOrSlug(maker),
+        getValueOrSlug(model),
       );
 
       const isVehicleMatch =
-        currentSavedVehicle?.maker?.value === maker.value &&
-        currentSavedVehicle?.model?.value ===
-          (model.value !== '' ? model.value : undefined);
+        getValueOrSlug(currentSavedVehicle?.maker) ===
+          (getValueOrSlug(maker) || undefined) &&
+        getValueOrSlug(currentSavedVehicle?.model) ===
+          (getValueOrSlug(model) || undefined);
 
       if (pathname === productRoute) {
         if (isVehicleMatch) {
@@ -85,32 +91,28 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   );
 
   useEffect(() => {
-    const savedMake = currentSavedVehicle?.maker?.value;
-    const savedModel = currentSavedVehicle?.model?.value;
+    const savedMake = getValueOrSlug(currentSavedVehicle?.maker);
+    const savedModel = getValueOrSlug(currentSavedVehicle?.model);
+    const currentMake = getValueOrSlug(maker);
+    const currentModel = getValueOrSlug(model);
+
     const route = routes.product(
       currentProduct.mainCategory.value,
-      currentSavedVehicle?.maker?.value,
-      currentSavedVehicle?.model?.value,
+      savedMake,
+      savedModel,
     );
-
-    const buttonVisibility =
-      pathname === route
-        ? false
-        : savedMake !== undefined || savedModel !== undefined
-        ? savedMake === maker.value && savedModel === model.value
-        : false;
 
     if (savedMake !== undefined || savedModel !== undefined) {
       if (pathname === route) {
-        if (savedMake === maker.value && savedModel === model.value) {
+        if (savedMake === currentMake && savedModel === currentModel) {
           setIsChangeProductPageButtonVisible(false);
-        } else if (savedMake !== maker.value || savedModel !== model.value) {
+        } else if (savedMake !== currentMake || savedModel !== currentModel) {
           setIsChangeProductPageButtonVisible(false);
         }
       } else {
-        if (savedMake === maker.value && savedModel === model.value) {
+        if (savedMake === currentMake && savedModel === currentModel) {
           setIsChangeProductPageButtonVisible(true);
-        } else if (savedMake !== maker.value || savedModel !== model.value) {
+        } else if (savedMake !== currentMake || savedModel !== currentModel) {
           setIsChangeProductPageButtonVisible(true);
         } else {
           setIsChangeProductPageButtonVisible(false);
@@ -124,14 +126,17 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       let selectedMakeObj = {};
       let selectedModelObj = {};
 
+      const selectedMake = getValueOrSlug(maker);
+      const selectedModel = getValueOrSlug(model);
+
       currentMakeList.forEach(carMaker => {
-        if (carMaker.value === maker.value) {
+        if (carMaker.value === selectedMake) {
           selectedMakeObj = carMaker;
         }
       });
 
       currentModelList.forEach(carModel => {
-        if (carModel.value === model.value) {
+        if (carModel.value === selectedModel) {
           selectedModelObj = carModel;
         }
       });
@@ -149,12 +154,18 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       if (changeVehicle) {
         localStorage.setItem(constants.LOCAL_STORAGE_VEHICLE, savedVehicle);
         setCookie(constants.LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+        setVehicleSelection({
+          makerName:
+            selectedMakeObj?.name || selectedMakeObj?.label || undefined,
+          modelName:
+            selectedModelObj?.name || selectedModelObj?.label || undefined,
+        });
       }
 
       const route = routes.product(
         currentProduct.mainCategory.value,
-        maker?.value,
-        model?.value,
+        selectedMake,
+        selectedModel,
       );
 
       router.push(route);
@@ -165,6 +176,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       maker,
       model,
       setSavedVehicleGlobal,
+      setVehicleSelection,
       currentProduct,
       router,
     ],
@@ -175,17 +187,17 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
 
     setMaker({
       label: makeObj ? makeObj.label : undefined,
-      value: makeObj ? makeObj.value : undefined,
+      slug: makeObj ? getValueOrSlug(makeObj) : undefined,
     });
 
     setModel({
       label: '',
-      value: '',
+      slug: '',
     });
 
     const route = routes.product(
       currentProduct.mainCategory.value,
-      makeObj ? makeObj.value : undefined,
+      makeObj ? getValueOrSlug(makeObj) : undefined,
     );
 
     setApplyRoute(route);
@@ -196,20 +208,20 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       if (newModel === model.value) {
         return {
           label: model.label,
-          value: model.value,
+          slug: model.value,
         };
       }
     });
 
     setModel({
       label: modelObj.label,
-      value: modelObj.value,
+      value: getValueOrSlug(modelObj),
     });
 
     const route = routes.product(
       currentProduct.mainCategory.value,
-      maker?.value,
-      modelObj.value,
+      getValueOrSlug(maker),
+      getValueOrSlug(modelObj),
     );
 
     setApplyRoute(route);
@@ -221,12 +233,13 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
         localStorage.getItem(constants.LOCAL_STORAGE_VEHICLE),
       );
 
-      const makeAndModelSelected = maker?.value && model?.value;
+      const makeAndModelSelected =
+        getValueOrSlug(maker) && getValueOrSlug(model);
 
       const matchesStoredVehicle =
         storedVehicle &&
-        storedVehicle?.maker?.value === maker.value &&
-        storedVehicle?.model?.value === model.value;
+        getValueOrSlug(storedVehicle?.maker) === getValueOrSlug(maker) &&
+        getValueOrSlug(storedVehicle?.model) === getValueOrSlug(model);
 
       setVehicleNotMatching(makeAndModelSelected && !matchesStoredVehicle);
     },
@@ -264,7 +277,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       const modelList = categories
         .reduce((accumulator, category) => {
           const foundMake = category.makes.find(
-            make => make.make.toLowerCase() === maker.value,
+            make => make.make.toLowerCase() === getValueOrSlug(maker),
           );
           if (foundMake) {
             accumulator.push(...foundMake.models);
@@ -284,16 +297,19 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
 
       setCurrentModelList(modelList);
     },
-    [categories, maker.value],
+    [categories, maker],
   );
 
   useEffect(
     function setProductRoute() {
-      if (maker.value && model.value) {
+      const selectedMake = getValueOrSlug(maker);
+      const selectedModel = getValueOrSlug(model);
+
+      if (selectedMake && selectedModel) {
         const productRoute = routes.product(
           currentProduct.mainCategory?.value,
-          maker.value,
-          model.value,
+          selectedMake,
+          selectedModel,
         );
         setRoute(productRoute);
       }
@@ -315,7 +331,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       type: 'select',
       name: 'maker',
       placeholder: 'Choose make',
-      selectedValue: maker.value,
+      selectedValue: getValueOrSlug(maker),
       onSelect: newMake => handleMakeSelect(newMake),
       onSelectOpenNext: false,
       options: currentMakeList,
@@ -325,8 +341,8 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       type: 'select',
       name: 'model',
       placeholder: 'Choose model',
-      disabled: !maker.value,
-      selectedValue: model.value,
+      disabled: !getValueOrSlug(maker),
+      selectedValue: getValueOrSlug(model),
       onSelect: newModel => handleModelSelect(newModel),
       options: currentModelList,
       strong: Boolean(model),
@@ -352,21 +368,21 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
         currentSavedVehicle?.maker?.name
           ? currentSavedVehicle?.maker?.name
           : '' || currentSavedVehicle?.maker?.label
-          ? currentSavedVehicle?.maker?.label
-          : ''
+            ? currentSavedVehicle?.maker?.label
+            : ''
       } ${
         currentSavedVehicle?.model?.name
           ? currentSavedVehicle?.model?.name
           : '' || currentSavedVehicle?.model?.label
-          ? currentSavedVehicle?.model?.label
-          : ''
+            ? currentSavedVehicle?.model?.label
+            : ''
       }`,
       type: 'button',
       skipPrecedingSeparator: true,
       url: routes.product(
         currentProduct.mainCategory.value,
-        currentSavedVehicle?.maker?.value,
-        currentSavedVehicle?.model?.value,
+        getValueOrSlug(currentSavedVehicle?.maker),
+        getValueOrSlug(currentSavedVehicle?.model),
       ),
     },
   ];

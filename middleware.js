@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import constants from '@lib/constants';
+import { getValueOrSlug } from '@lib/helpers';
 
 const COOKIE_SAVED_VEHICLE = constants.LOCAL_STORAGE_VEHICLE;
 
@@ -17,12 +18,14 @@ export function middleware(request) {
     if (hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
 
-      if (maker && maker.value) {
+      if (maker && getValueOrSlug(maker)) {
         const productType = pathSegments[1];
         url.pathname =
-          model && model.value
-            ? `/products/${productType}/${maker.value}/${model.value}`
-            : `/products/${productType}/${maker.value}`;
+          model && getValueOrSlug(model)
+            ? `/products/${productType}/${getValueOrSlug(
+                maker,
+              )}/${getValueOrSlug(model)}`
+            : `/products/${productType}/${getValueOrSlug(maker)}`;
 
         return NextResponse.redirect(url);
       }
