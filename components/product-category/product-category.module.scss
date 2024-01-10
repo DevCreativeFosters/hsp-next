@@ -17,17 +17,22 @@
 .ctaLink {
   font-family: var(--font-secondary);
   font-weight: 600;
-  font-size: 24px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  padding: 24px;
+  padding: 8px;
   border: 2px solid var(--color-primary-40);
   border-radius: var(--border-radius-sm);
   gap: 8px;
   transition: var(--transition);
+  text-align: center;
+
+  @include bp(large) {
+    font-size: 24px;
+  }
 
   &:focus,
   &:hover {
