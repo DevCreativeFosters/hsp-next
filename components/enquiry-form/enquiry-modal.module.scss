@@ -76,7 +76,7 @@ $desktop-height: 1140px;
   align-items: center;
   gap: 24px;
   margin-bottom: 48px;
-  padding-inline: 24px;
+  padding-inline: 0;
 
   @include bp(large) {
     justify-content: space-between;
@@ -87,6 +87,10 @@ $desktop-height: 1140px;
     @media screen and (height >= $desktop-height) {
       padding: 48px var(--padding-horizontal) 24px;
     }
+  }
+
+  .isSent & {
+    padding-inline: 24px;
   }
 }
 
