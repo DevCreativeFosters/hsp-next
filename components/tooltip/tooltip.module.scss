@@ -25,14 +25,20 @@
   @include paragraph-sm;
 
   position: absolute;
-  padding: 24px;
   top: 0;
   right: 0;
   z-index: var(--z-index-tooltip);
-  color: var(--color-white-80);
+  padding: 24px 36px 24px 24px;
+  border: 2px solid var(--color-black-100);
   border-radius: 8px;
-  background-color: var(--color-black-100);
+  color: var(--color-white-80);
+  background-color: var(--color-dark-gray-100);
   pointer-events: auto;
+
+  @include bp(large) {
+    background-color: var(--color-black-100);
+    border: 2px solid var(--color-dark-gray-100);
+  }
 
   a {
     color: var(--color-white-100);

@@ -99,9 +99,9 @@ export default function GForm({
             {attributes.title && form.title && <h3>{form.title}</h3>}
             {form.description && <p>{form.description}</p>}
           </div>
-          {formFields.map(field => (
+          {formFields.map((field, index) => (
             <GravityFormsField
-              key={field?.id}
+              key={`${field?.id}-${index}`}
               form={form}
               field={field}
               fieldErrors={fieldErrors}
