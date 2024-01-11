@@ -1,0 +1,53 @@
+.informationBox {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-black-100);
+  padding: 32px 24px;
+  margin-block: 24px 48px;
+  border-radius: 16px;
+  gap: 24px;
+
+  @include bp-below(large) {
+    &.hide-mobile {
+      display: none;
+    }
+  }
+
+  @include bp(large) {
+    &.hide-desktop {
+      display: none;
+    }
+  }
+}
+
+.title {
+  font-family: var(--font-secondary);
+  font-size: 24px;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 1.25;
+
+  p:first-of-type {
+    margin-top: 0;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--color-primary-100);
+    font-weight: 600;
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--color-white-100);
+    }
+  }
+
+  @include bp(medium) {
+    font-size: 20px;
+  }
+}

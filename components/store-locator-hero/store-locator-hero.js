@@ -1,6 +1,7 @@
 'use client';
 
 import Container from '@components/container/container';
+import InformationBox from '@components/information-box/information-box';
 import styles from './store-locator-hero.module.scss';
 
 export default function StoreLocatorHero() {
@@ -16,18 +17,7 @@ export default function StoreLocatorHero() {
             </p>
           </div>
         </main>
-
-        <aside className={styles.aside}>
-          <h3 className={styles.asideTitle}>Become a Distributor</h3>
-          <div className={styles.asideDescription}>
-            <p>
-              For more information on becoming a HSP Distributor or Fitter,
-              please contact us on <a href="tel:1300441498">1300 441 498</a> or
-              send an email to{' '}
-              <a href="mailto:info@hsputelids.com">info@hsputelids.com</a>.
-            </p>
-          </div>
-        </aside>
+        <InformationBox className={styles.aside} isSidebar hideOn="mobile" />
       </section>
     </Container>
   );
