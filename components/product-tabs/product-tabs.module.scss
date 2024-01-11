@@ -31,7 +31,7 @@
   white-space: nowrap;
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  padding-bottom: 8px;
+  padding: 0 0 8px;
   transition: var(--transition);
 
   @media (hover: hover) {
