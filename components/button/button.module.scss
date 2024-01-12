@@ -228,6 +228,7 @@
   transition: transform 400ms;
   transform-origin: center center;
   border-radius: 4px;
+  z-index: 2;
 
   @include bp(full) {
     margin-left: -36px;
