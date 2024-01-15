@@ -16,6 +16,8 @@ export default function GForm({
   hiddenInputs,
   attributes = {},
   submitButton,
+  preventConfirmation,
+  onChange,
   onReset,
   onError,
   onSubmit,
@@ -84,21 +86,27 @@ export default function GForm({
     [],
   );
 
+  const isTitleVisible = attributes.title && form.title;
+
   return (
     <Form
       method="post"
       onSubmit={handleSubmit}
       withPadding={attributes.withPadding}
       withBackground={attributes.withBackground}
+      onChange={onChange}
     >
-      {isSubmitted ? (
+      {isSubmitted && !preventConfirmation ? (
         <Confirmation resetForm={resetForm} content={confirmation.message} />
       ) : (
         <>
-          <div className={styles.formDescription}>
-            {attributes.title && form.title && <h3>{form.title}</h3>}
-            {form.description && <p>{form.description}</p>}
-          </div>
+          {(isTitleVisible || form.description) && (
+            <div className={styles.formDescription}>
+              {isTitleVisible && <h3>{form.title}</h3>}
+              {form.description && <p>{form.description}</p>}
+            </div>
+          )}
+
           {formFields.map((field, index) => (
             <GravityFormsField
               key={`${field?.id}-${index}`}

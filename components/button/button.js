@@ -1,10 +1,11 @@
-import React, { forwardRef } from 'react';
+'use client';
+
+import React, { forwardRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { decode } from 'html-entities';
 import { getIcon } from '@lib/icons';
-import { ConditionalWrapper } from '@lib/helpers';
 import styles from './button.module.scss';
 
 function ButtonWithRef(
@@ -12,6 +13,7 @@ function ButtonWithRef(
     size = 'small',
     variant = 'primary',
     background = 'dark',
+    download,
     fontStyle = null,
     leftIcon = null,
     rightIcon = null,
@@ -97,6 +99,8 @@ function ButtonWithRef(
     }),
   };
 
+  const LinkOrButton = href ? Link : 'button';
+
   return (
     <OptionalToggleWrapperEl {...optionalToggleWrapperElProps}>
       {toggleable && (
@@ -112,37 +116,17 @@ function ButtonWithRef(
         </ToggleContainer>
       )}
 
-      <ConditionalWrapper
-        condition={href}
-        wrapper={wrapChildren => {
-          return (
-            <Link
-              href={href}
-              className={buttonClassNames}
-              fontStyle={fontStyle}
-              target={target}
-              {...props}
-            >
-              {wrapChildren}
-            </Link>
-          );
-        }}
-        elseWrapper={wrapChildren => {
-          return (
-            <button
-              ref={ref}
-              className={buttonClassNames}
-              fontStyle={fontStyle}
-              type={type}
-              {...props}
-            >
-              {wrapChildren}
-            </button>
-          );
-        }}
+      <LinkOrButton
+        ref={ref}
+        href={href || null}
+        type={href ? null : type}
+        className={buttonClassNames}
+        fontStyle={fontStyle}
+        target={target}
+        {...props}
       >
         {buttonBodyWithOptionalSpinner}
-      </ConditionalWrapper>
+      </LinkOrButton>
     </OptionalToggleWrapperEl>
   );
 }

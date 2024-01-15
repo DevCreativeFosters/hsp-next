@@ -2,7 +2,7 @@
 
 .button {
   --font-size: 24px;
-  --icon-side-padding: 16px;
+  --icon-side-padding: 20px;
   --inline-padding: 24px;
 
   position: relative;
@@ -43,6 +43,10 @@
 
   svg path {
     fill: currentcolor;
+  }
+
+  &.rightIcon {
+    padding-right: var(--icon-side-padding);
   }
 }
 
@@ -299,6 +303,10 @@ div.toggleContainer {
 .labelWrapper {
   opacity: 1;
   transition: opacity 100ms;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
 
   .isBusy > & {
     opacity: 0;

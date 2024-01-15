@@ -1,3 +1,4 @@
+import { MODAL_PORTAL_ID } from '@components/modal/modal';
 import Newsletter from '@components/newsletter/newsletter';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -19,8 +20,8 @@ import Footer from '@components/footer/footer';
 import Header from '@components/header/header';
 import BgContinent from '@assets/images/bg-continent.png';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
-import styles from './layout.module.scss';
 import { VehicleProvider } from '@contexts/vehicle';
+import styles from './layout.module.scss';
 
 const GOOGLE_RECAPTCHA_SITEKEY =
   process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
@@ -139,6 +140,8 @@ export default function Layout({
             </FullscreenCollapse>
           </div>
         )}
+
+        <div id={MODAL_PORTAL_ID}></div>
       </VehicleProvider>
     </>
   );

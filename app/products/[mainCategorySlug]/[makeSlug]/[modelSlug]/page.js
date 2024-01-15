@@ -22,6 +22,7 @@ import styles from './page.module.scss';
 export default async function CategoryPage({ params }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
+  const downloadFileFormId = globalOptions?.downloadFileFormId;
   const mainCategorySlug = params.mainCategorySlug;
   const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug;
@@ -158,6 +159,7 @@ export default async function CategoryPage({ params }) {
             firstMatchedProduct?.productFields?.manualsDescription
           }
           manualsLinks={manualPdfItems}
+          downloadFileFormId={downloadFileFormId}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
