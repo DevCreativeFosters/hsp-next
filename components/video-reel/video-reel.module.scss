@@ -5,15 +5,20 @@
 
 .track {
   --aspect-ratio: 294/546;
-  --width: 264px;
-  --width-current: 408px;
+  --height: 30vh;
+  --min-height: 300px;
+  --max-height: 738px;
+  --height-current: 42vh;
+  --min-height-current: 420px;
+  --max-height-current: 960px;
   --gap: 24px;
 
   width: fit-content;
 
   @include bp(large) {
-    --width: 294px;
     --gap: 48px;
+    --height: 45vh;
+    --height-current: 60vh;
   }
 
   display: flex;
@@ -21,40 +26,24 @@
   align-items: center;
   margin-block: var(--gap);
   transition: transform 400ms;
-  min-height: 820px;
-
-  @include bp(medium) {
-    transform: translateX(156px);
-
-    @for $i from 1 through 100 {
-      &[data-current='#{$i}'] {
-        transform: translateX(#{-288 * ($i - 1) - 132}px);
-      }
-    }
-  }
-
-  @include bp(large) {
-    transform: translateX(342px);
-
-    @for $i from 1 through 100 {
-      &[data-current='#{$i}'] {
-        transform: translateX(#{-342 * ($i - 1)}px);
-      }
-    }
-  }
 
   .placeholderFrontTile,
   .placeholderEndTile {
     display: block;
     position: absolute;
-    width: var(--width);
+    height: var(--height);
+    min-height: var(--min-height);
+    max-height: var(--max-height);
+    width: auto;
     box-sizing: border-box;
     aspect-ratio: var(--aspect-ratio);
     border-radius: 16px;
     background: var(--color-black-40);
     border: 2px solid var(--color-white-5);
     transition:
-      width 400ms,
+      height 400ms,
+      min-height 400ms,
+      max-height 400ms,
       opacity 400ms;
   }
 
@@ -80,12 +69,12 @@
 
   .placeholderEndTile {
     &:nth-last-child(1) {
-      left: calc(100% + var(--width) * 2 + var(--gap) * 3);
+      left: calc(100% + var(--placeholder-width) * 2 + var(--gap) * 3);
       opacity: 0.1;
     }
 
     &:nth-last-child(2) {
-      left: calc(100% + var(--width) + var(--gap) * 2);
+      left: calc(100% + var(--placeholder-width) + var(--gap) * 2);
       opacity: 0.2;
     }
 
@@ -102,18 +91,26 @@
 
 .tile {
   position: relative;
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+  width: auto;
   aspect-ratio: var(--aspect-ratio);
   flex-shrink: 0;
-  width: var(--width);
   border-radius: 16px;
   background: var(--color-black-100);
   transition:
-    width 400ms,
+    height 400ms,
+    min-height 400ms,
+    max-height 400ms,
     opacity 400ms;
   opacity: 0.3;
 
   &.isActive {
-    width: var(--width-current);
+    height: var(--height-current);
+    min-height: var(--min-height-current);
+    max-height: var(--max-height-current);
+    width: auto;
     opacity: 1;
   }
 }
