@@ -1,6 +1,6 @@
 @import '/styles/globals/helpers';
 
-$desktop-height: 1140px;
+$desktop-height: 1160px;
 
 .backdrop {
   position: fixed;
@@ -19,7 +19,8 @@ $desktop-height: 1140px;
 }
 
 .enquiryModal {
-  --max-height: calc(100vh - 80px);
+  --viewport-margin: 48px;
+  --max-height: calc(100vh - 2 * var(--viewport-margin));
 
   @include scrollbar;
 
@@ -35,7 +36,7 @@ $desktop-height: 1140px;
     top: 50%;
     left: 50%;
     width: 1320px;
-    max-width: calc(100% - 80px);
+    max-width: calc(100% - 2 * var(--viewport-margin));
     max-height: var(--max-height);
     border-radius: 16px;
     background-color: var(--color-dark-gray-100);
@@ -63,7 +64,7 @@ $desktop-height: 1140px;
     display: flex;
     flex-direction: column;
     padding: 0;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 2 * var(--viewport-margin));
   }
 
   .isSent & {
