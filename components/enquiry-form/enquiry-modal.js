@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Button from '@components/button/button';
 import Tooltip from '@components/tooltip/tooltip';
 import StoreTile from '@components/store-tile/store-tile';
-import GravityForm from '@components/gravity-forms/gravity-form-provider';
+import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import Loading from '@components/loading/loading';
 import EnquiryProduct from './enquiry-product';
 import { getIcon } from '@lib/icons';
@@ -95,7 +95,7 @@ export default function EnquiryModal({
                   [styles.onSuccess]: formIsSent,
                 })}
               >
-                <GravityForm
+                <GravityFormWrapper
                   ref={formRef}
                   attributes={{ id: enquiryFormId }}
                   onLoad={onLoad}
