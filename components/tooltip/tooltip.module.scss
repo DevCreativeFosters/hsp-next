@@ -37,7 +37,7 @@
 
   @include bp(large) {
     background-color: var(--color-black-100);
-    border: 2px solid var(--color-dark-gray-100);
+    border-color: var(--color-dark-gray-100);
   }
 
   a {

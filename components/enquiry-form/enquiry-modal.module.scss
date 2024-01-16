@@ -170,8 +170,8 @@ $desktop-height: 1160px;
   }
 
   p {
-    font-weight: 400;
     font-size: 20px;
+    font-weight: 400;
     font-style: normal;
     line-height: 1.2;
   }
@@ -276,10 +276,10 @@ $desktop-height: 1160px;
   }
 
   td:last-child {
+    border-right: 0;
     font-family: var(--font-secondary);
     font-weight: 600;
     text-align: right;
-    border-right: 0;
 
     @include bp(large) {
       border-right: 1px solid var(--border-color);
@@ -288,8 +288,8 @@ $desktop-height: 1160px;
   }
 
   .total {
-    font-family: var(--font-secondary);
     color: var(--color-primary-100);
+    font-family: var(--font-secondary);
     font-weight: 600;
 
     td {
