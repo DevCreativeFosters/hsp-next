@@ -38,7 +38,7 @@ $desktop-height: 1160px;
     width: 1320px;
     max-width: calc(100% - 2 * var(--viewport-margin));
     max-height: var(--max-height);
-    border-radius: 16px;
+    border-radius: var(--border-radius-md);
     background-color: var(--color-dark-gray-100);
     transform: translateX(-50%) translateY(-50%);
     overflow: hidden;

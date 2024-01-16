@@ -158,7 +158,7 @@ export default function EnquiryModal({
                       <tbody>
                         <tr>
                           <td>Products</td>
-                          <td>{formatPrice(productPrice)} </td>
+                          <td>{formatPrice(productPrice)}</td>
                         </tr>
                         <tr>
                           <td>Installation*</td>

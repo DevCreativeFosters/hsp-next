@@ -30,7 +30,7 @@
   z-index: var(--z-index-tooltip);
   padding: 24px 36px 24px 24px;
   border: 2px solid var(--color-black-100);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   color: var(--color-white-80);
   background-color: var(--color-dark-gray-100);
   pointer-events: auto;
