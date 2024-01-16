@@ -8,7 +8,7 @@ import { brevoNewsletterSignup } from '@lib/api';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
-import IllustrationImage from '@assets/images/newsletter-illustration.png';
+import IllustrationImage from '@assets/images/newsletter-illustration.webp';
 import styles from './newsletter.module.scss';
 
 const title = 'Join our community';
