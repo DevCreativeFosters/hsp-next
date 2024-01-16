@@ -5,10 +5,8 @@ import { useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import normalizeTag from '@lib/normalize-tag';
 import styles from './tile.module.scss';
 import routes from '@lib/routes';
-import { isHome } from '@lib/helpers';
 
 export default function Tile({
   title,
@@ -16,7 +14,6 @@ export default function Tile({
   createdAt,
   url,
   link,
-  tags,
   image,
   variant,
   className,
@@ -80,8 +77,6 @@ export default function Tile({
     [title],
   );
 
-  const tagsNormalized = tags?.map(normalizeTag).filter(Boolean);
-
   return (
     <article className={tileClassNames}>
       <div
@@ -89,16 +84,6 @@ export default function Tile({
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
         {urlNormalized ? renderLink(TheImage) : TheImage}
-
-        {!isHome && tagsNormalized?.length > 0 && (
-          <ul className={styles.tagList}>
-            {tagsNormalized.map(({ name, link }, index) => (
-              <li key={index}>
-                <Tag name={name} size="small" />
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
       <div className={styles.info}>
         {createdAt && (
