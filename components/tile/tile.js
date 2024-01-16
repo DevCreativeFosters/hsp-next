@@ -8,6 +8,7 @@ import Link from 'next/link';
 import normalizeTag from '@lib/normalize-tag';
 import styles from './tile.module.scss';
 import routes from '@lib/routes';
+import { isHome } from '@lib/helpers';
 
 export default function Tile({
   title,
@@ -18,6 +19,7 @@ export default function Tile({
   tags,
   image,
   variant,
+  className,
 }) {
   const postUrl = url || link?.url;
   const segments = postUrl.split('/').filter(Boolean);
@@ -27,16 +29,18 @@ export default function Tile({
     variant === 'blog'
       ? routes.blog(slug)
       : variant === 'hsp-tv'
-      ? routes.tv(slug)
-      : postUrl;
+        ? routes.tv(slug)
+        : postUrl;
 
   const tileClassNames = clsx(styles.container, {
     [styles.blog]: variant === 'blog' || variant === 'hsp-tv',
     [styles.carousel]: variant === 'carousel',
+    [styles[className]]: className,
   });
 
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    dateStyle: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
+    year: 'numeric',
+    month: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
   });
 
   const imageWidth = image?.mediaDetails?.width;
@@ -86,7 +90,7 @@ export default function Tile({
       >
         {urlNormalized ? renderLink(TheImage) : TheImage}
 
-        {tagsNormalized?.length > 0 && (
+        {!isHome && tagsNormalized?.length > 0 && (
           <ul className={styles.tagList}>
             {tagsNormalized.map(({ name, link }, index) => (
               <li key={index}>

@@ -14,6 +14,16 @@ export default function Lifestyle({
   featured,
   posts,
 }) {
+  const featuredNormalized = {
+    title: featured.title,
+    content: featured.excerpt,
+    createdAt: featured.date,
+    url: featured.uri,
+    tags: featured.tags?.nodes || [],
+    image: featured.featuredImage?.node,
+    className: 'featured',
+  };
+
   const postsNormalized = posts.map(
     ({ date, excerpt, tags, featuredImage, link, ...props }) => {
       const slug = link
@@ -32,6 +42,8 @@ export default function Lifestyle({
     },
   );
 
+  const carouselItems = [featuredNormalized, ...postsNormalized];
+
   return (
     <>
       <SectionIntro title={title} description={description} noTopMargin>
@@ -46,8 +58,8 @@ export default function Lifestyle({
         tags={featured.tags?.nodes}
         image={featured.featuredImage?.node}
       />
-      {posts.length > 0 && (
-        <TileCarousel items={postsNormalized} itemTemplate={Tile} />
+      {carouselItems.length > 0 && (
+        <TileCarousel items={carouselItems} itemTemplate={Tile} />
       )}
     </>
   );

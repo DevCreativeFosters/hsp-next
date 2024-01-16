@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@components/lifestyle/featured-article.module.scss';
+import { isHome } from '@lib/helpers';
 
 export default function FeaturedArticle({
   title,
@@ -44,7 +45,7 @@ export default function FeaturedArticle({
   return (
     <article className={styles.container}>
       <div className={styles.info}>
-        {tagsNormalized?.length > 0 && (
+        {!isHome && tagsNormalized?.length > 0 && (
           <ul className={styles.tagList}>
             {tagsNormalized.map(({ name, link }, index) => (
               <li key={index}>

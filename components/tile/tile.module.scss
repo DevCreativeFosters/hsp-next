@@ -48,6 +48,12 @@
       max-width: calc(100% / 3 - (2 / 3 * 48px));
     }
   }
+
+  &.featured {
+    @include bp(medium) {
+      display: none;
+    }
+  }
 }
 
 .imageContainer {
