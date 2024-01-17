@@ -118,17 +118,27 @@ export default async function CategoryPage({ params }) {
         <div className={styles.header}>
           <ProductImageCarousel images={images} />
           <div className={styles.details}>
-            <h1 className={styles.name}>
-              {mainCategory.name} <br />
-              <span className={styles.variant}>
-                {make.name} {firstMatchedProduct?.title}
-              </span>
-            </h1>
-            {firstMatchedProduct?.productFields.description && (
-              <p className={styles.description}>
-                {firstMatchedProduct?.productFields.description}
-              </p>
-            )}
+            <div className={styles.mainText}>
+              <h1 className={styles.name}>
+                {mainCategory.name} <br />
+                <span className={styles.variant}>
+                  {make.name} {firstMatchedProduct?.title}
+                </span>
+              </h1>
+              {firstMatchedProduct?.productFields.sku !== null && (
+                <h5 className={styles.sku}>
+                  Part No.{' '}
+                  <span className={styles.redColor}>
+                    {firstMatchedProduct?.productFields.sku}
+                  </span>
+                </h5>
+              )}
+              {firstMatchedProduct?.productFields.description && (
+                <p className={styles.description}>
+                  {firstMatchedProduct?.productFields.description}
+                </p>
+              )}
+            </div>
             <StoreLocatorProvider>
               <EnquiryForm
                 enquiryFormId={enquiryFormId}
