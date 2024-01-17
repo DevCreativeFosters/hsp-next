@@ -19,6 +19,16 @@
   }
 }
 
+.mainText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include bp(medium) {
+    gap: 24px;
+  }
+}
+
 .name {
   line-height: 1.25;
 }
@@ -30,6 +40,11 @@
 .description {
   color: var(--color-white-80);
   font-size: 24px;
+  margin: 0;
+
+  @include bp(medium) {
+    margin-bottom: 16px;
+  }
 }
 
 .breadcrumbs {
@@ -58,6 +73,11 @@
   }
 }
 
-.years {
+.years,
+.redColor {
   color: var(--color-primary-100);
+}
+
+.sku {
+  text-transform: uppercase;
 }
