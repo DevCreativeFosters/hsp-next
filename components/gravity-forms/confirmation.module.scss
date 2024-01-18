@@ -5,7 +5,7 @@
   padding: 0 24px;
   gap: 48px;
 
-  @include bp(medium) {
+  @include bp(large) {
     padding: 0;
   }
   /* stylelint-disable selector-pseudo-class-no-unknown, selector-class-pattern */

@@ -6,7 +6,7 @@ import { getGravityForm } from '@lib/api';
 import { GravityFormProvider } from '@contexts/gravity-form';
 import Loading from '@components/loading/loading';
 
-function GravityFormWithRef(
+function GravityFormWrapperWithRef(
   {
     attributes,
     hiddenInputs = [],
@@ -58,4 +58,4 @@ function GravityFormWithRef(
   );
 }
 
-export default forwardRef(GravityFormWithRef);
+export default forwardRef(GravityFormWrapperWithRef);
