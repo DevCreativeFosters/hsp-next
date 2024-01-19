@@ -225,4 +225,12 @@
   figure {
     margin: 48px 0;
   }
+
+  form {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
