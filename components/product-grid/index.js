@@ -26,7 +26,7 @@ export default function ProductGrid({ title, products }) {
                 </div>
                 <Link
                   href={product.link?.url || '#'}
-                  tabindex="-1"
+                  tabIndex="-1"
                   className={styles.imageContainer}
                 >
                   <Image

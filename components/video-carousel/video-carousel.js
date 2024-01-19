@@ -29,6 +29,7 @@ export default function VideoCarousel({
         itemTemplate={VideoTile}
         itemTemplateType="celebrities"
         context={context}
+        name="Video carousel a.k.a Celebrities"
       />
     </Container>
   );

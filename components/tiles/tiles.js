@@ -11,7 +11,7 @@ export default function Tiles({ title, description, buttons, tiles }) {
         <SectionButtons buttons={buttons} />
       </SectionIntro>
 
-      <TileCarousel items={tiles} itemTemplate={Tile} />
+      <TileCarousel items={tiles} itemTemplate={Tile} name="Tiles" />
     </div>
   );
 }
