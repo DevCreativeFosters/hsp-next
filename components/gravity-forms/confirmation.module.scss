@@ -17,6 +17,11 @@
   }
   /* stylelint-enable selector-pseudo-class-no-unknown, selector-class-pattern */
   p {
+    margin: 0;
     line-height: 1.6;
+  }
+
+  h3 {
+    margin: 0;
   }
 }
