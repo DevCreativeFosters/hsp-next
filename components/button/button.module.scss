@@ -211,6 +211,16 @@
   }
 }
 
+.septenary {
+  --font-color: var(--color-primary-100);
+  --hover-font-color: var(--color-primary-100);
+  --bg-color: transparent;
+
+  svg path {
+    fill: var(--color-white-100);
+  }
+}
+
 .optionalToggleWrapper {
   display: flex;
   align-items: center;

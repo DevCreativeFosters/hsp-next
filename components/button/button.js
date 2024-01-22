@@ -42,6 +42,7 @@ function ButtonWithRef(
     [styles.quaternary]: variant === 'quaternary',
     [styles.quinary]: variant === 'quinary',
     [styles.senary]: variant === 'senary',
+    [styles.septenary]: variant === 'septenary',
     [styles.footerItem]: variant === 'footer-item',
     [styles.relatedPost]: variant === 'related-post',
     [styles.darkBackground]: background === 'dark',

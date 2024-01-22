@@ -62,42 +62,45 @@ export default function Header({
             </Link>
 
             <div className={styles.callButtonContainer}>
-              <Button
-                className={styles.callButton}
-                size="small"
-                variant="secondary"
-                background="dark"
-                rightIcon="call"
-              />
+              {secondaryMenu?.map(item => {
+                if (item.mobileDisplay === true) {
+                  return (
+                    <Button
+                      key={item.url}
+                      size="small"
+                      variant="tertiary"
+                      background="dark"
+                      rightIcon={item.iconPredefined || item.icon}
+                    />
+                  );
+                }
+              })}
             </div>
 
             <nav className={styles.mainMenu} ref={mainMenuRef}>
               <ul className={styles.mainMenuList}>
-                {mainMenu?.map(
-                  ({ label, url, subItems, subItemGroups, name }, index) => (
-                    <li key={label + index}>
-                      <Button
-                        href={url}
-                        size="small"
-                        variant="tertiary"
-                        background="dark"
-                        toggleable={
-                          subItems?.length > 0 && url === '/products/'
-                            ? 'neutral'
-                            : null
-                        }
-                        isToggled={currentSubmenu === name}
-                        onToggleIconClick={() => {
-                          const newValue =
-                            currentSubmenu === name ? null : name;
-                          setCurrentSubmenu(newValue);
-                        }}
-                      >
-                        {label}
-                      </Button>
-                    </li>
-                  ),
-                )}
+                {mainMenu?.map(({ label, url, subItems, name }, index) => (
+                  <li key={label + index}>
+                    <Button
+                      href={url}
+                      size="small"
+                      variant="tertiary"
+                      background="dark"
+                      toggleable={
+                        subItems?.length > 0 && url === '/products/'
+                          ? 'neutral'
+                          : null
+                      }
+                      isToggled={currentSubmenu === name}
+                      onToggleIconClick={() => {
+                        const newValue = currentSubmenu === name ? null : name;
+                        setCurrentSubmenu(newValue);
+                      }}
+                    >
+                      {label}
+                    </Button>
+                  </li>
+                ))}
               </ul>
             </nav>
 
