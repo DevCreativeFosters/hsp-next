@@ -1,5 +1,7 @@
 'use client';
 
+import Button from '@components/button/button';
+import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useEffect, useRef, useCallback, useState } from 'react';
@@ -13,10 +15,13 @@ import styles from './product-image-carousel.module.scss';
 export default function ProductImageCarousel({ images }) {
   const isMobile = useIsMobile();
 
+  const buttonPrevRef = useRef();
+  const buttonNextRef = useRef();
+
   const [selectedImage, setSelectedImage] = useState(
     images?.length ? images[0] : null,
   );
-  const [swiperSlides, setSwiperSlides] = useState(null);
+  const [swiperSlides, setSwiperSlides] = useState([]);
 
   const [backgroundPosition, setBackgroundPosition] = useState('50% 50%');
   const [zoomed, setZoomed] = useState(false);
@@ -102,23 +107,25 @@ export default function ProductImageCarousel({ images }) {
 
   useEffect(
     function loadAllSlides() {
-      const slides = images?.map((item, index) => (
-        <SwiperSlide className={styles.swiperSlide} key={index}>
-          <Image
-            className={styles.thumbnail}
-            src={item.sourceUrl}
-            alt={item.alt}
-            width={141}
-            height={141}
-            onClick={() => handleThumbnailClick(item)}
-          />
-        </SwiperSlide>
-      ));
+      // const slides = images?.map((item, index) => (
+      //   <SwiperSlide className={styles.swiperSlide} key={index}>
+      //     <Image
+      //       className={styles.thumbnail}
+      //       src={item.sourceUrl}
+      //       alt={item.alt}
+      //       width={141}
+      //       height={141}
+      //       onClick={() => handleThumbnailClick(item)}
+      //     />
+      //   </SwiperSlide>
+      // ));
 
-      setSwiperSlides(slides);
+      setSwiperSlides(images);
     },
     [handleThumbnailClick, images],
   );
+
+  const isNavigationVisible = images?.length > 4;
 
   return (
     <div className={styles.container}>
@@ -135,18 +142,62 @@ export default function ProductImageCarousel({ images }) {
         onTouchEnd={handleTouchEnd}
         style={containerStyle}
       />
-      <Carousel
-        settings={{
-          slidesPerView: isMobile ? 'auto' : 4,
-          spaceBetween: isMobile ? 16 : 24,
-          navigation: true,
-          loop: false,
-          slidesPerGroup: 1,
-          watchSlidesProgress: true,
+      <TileCarousel
+        id="product-gallery"
+        items={swiperSlides}
+        resetStyle
+        buttonPrevRef={buttonPrevRef}
+        buttonNextRef={buttonNextRef}
+        itemTemplate={item => {
+          console.log('item', item);
+          return (
+            <div className={styles.swiperSlide}>
+              <Image
+                className={styles.thumbnail}
+                src={item.sourceUrl}
+                alt={item.alt}
+                width={141}
+                height={141}
+                onClick={() => handleThumbnailClick(item)}
+              />
+            </div>
+          );
         }}
-        slides={swiperSlides}
-        showNavigation={images?.length > 4}
-      />
+      >
+        {isNavigationVisible && swiperSlides.length && (
+          <>
+            <Button
+              ref={buttonPrevRef}
+              className={clsx(styles.navigationButton, styles.prevButton)}
+              // onClick={handlePrevClick}
+              variant="secondary"
+              background="dark"
+              rightIcon="arrow-previous"
+            />
+            <Button
+              ref={buttonNextRef}
+              className={clsx(styles.navigationButton, styles.nextButton)}
+              // onClick={handleNextClick}
+              variant="secondary"
+              background="dark"
+              rightIcon="arrow-next"
+            />
+          </>
+        )}
+      </TileCarousel>
+
+      {/*<Carousel*/}
+      {/*  settings={{*/}
+      {/*    slidesPerView: isMobile ? 'auto' : 4,*/}
+      {/*    spaceBetween: isMobile ? 16 : 24,*/}
+      {/*    navigation: true,*/}
+      {/*    loop: false,*/}
+      {/*    slidesPerGroup: 1,*/}
+      {/*    watchSlidesProgress: true,*/}
+      {/*  }}*/}
+      {/*  slides={swiperSlides}*/}
+      {/*  showNavigation={images?.length > 4}*/}
+      {/*/>*/}
     </div>
   );
 }

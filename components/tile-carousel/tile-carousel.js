@@ -14,6 +14,7 @@ export default function TileCarousel({
   id = '',
   buttonPrevRef,
   buttonNextRef,
+  resetStyle,
   name,
   context,
   children,
@@ -220,6 +221,7 @@ export default function TileCarousel({
         <div
           className={clsx(styles.carousel, {
             [styles.isDragging]: isDragging,
+            [styles.resetStyle]: resetStyle,
           })}
           ref={carouselRef}
         >

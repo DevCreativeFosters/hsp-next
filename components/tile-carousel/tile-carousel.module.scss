@@ -15,19 +15,31 @@
   @include bp(full) {
     overflow: hidden;
   }
+
+  &.resetStyle {
+    padding: 0;
+    margin: 0;
+    transform: none;
+    width: 100%;
+  }
 }
 
 .container {
   position: relative;
   display: flex;
   align-items: stretch;
-  gap: 24px;
   transition: transform 300ms;
   transform: translateX(var(--offset));
 
-  @include bp(large) {
-    gap: 48px;
+  .carousel:not(.resetStyle) {
+    gap: 24px;
+
+    @include bp(large) {
+      gap: 48px;
+    }
   }
+
+
 
   * {
     -webkit-user-drag: none;
