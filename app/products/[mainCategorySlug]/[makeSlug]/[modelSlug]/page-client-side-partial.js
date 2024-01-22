@@ -1,7 +1,7 @@
 'use client';
 
-import { StoreLocatorProvider } from '@contexts/store-locator';
 import { useState } from 'react';
+import { StoreLocatorProvider } from '@contexts/store-locator';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import styles from './page.module.scss';
 
