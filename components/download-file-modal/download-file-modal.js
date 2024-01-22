@@ -7,7 +7,7 @@ import { LOCAL_STORAGE_DOWNLOAD_FILE_EMAIL } from '@lib/local-storage';
 import Modal from '@components/modal/modal';
 import Loading from '@components/loading/loading';
 import Button from '@components/button/button';
-import GravityForm from '@components/gravity-forms/gravity-form-provider';
+import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
 import styles from './download-file-modal.module.scss';
 
@@ -97,7 +97,7 @@ export default function DownloadFileModal({
             <Loading color="white" size="large" />
           </div>
           <div className={styles.gravityForm}>
-            <GravityForm
+            <GravityFormWrapper
               ref={gravityFormRef}
               attributes={{ id: downloadFileFormId }}
               submitButton={false}
