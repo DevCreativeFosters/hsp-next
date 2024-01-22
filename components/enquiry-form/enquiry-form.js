@@ -20,7 +20,11 @@ import EnquiryModal from './enquiry-modal';
 import { formatPrice } from '@lib/helpers';
 import styles from './enquiry-form.module.scss';
 
-export default function EnquiryForm({ enquiryFormId, productData }) {
+export default function EnquiryForm({
+  enquiryFormId,
+  productData,
+  onVariantChange: onVariantChangeCallback = () => {},
+}) {
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
@@ -70,6 +74,7 @@ export default function EnquiryForm({ enquiryFormId, productData }) {
       );
 
       setSelectedVariant([newSelectedVariant]);
+      onVariantChangeCallback(newSelectedVariant);
     },
     [variants],
   );

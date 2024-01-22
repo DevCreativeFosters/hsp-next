@@ -1,9 +1,7 @@
-import { StoreLocatorProvider } from '@contexts/store-locator';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
-import EnquiryForm from 'components/enquiry-form/enquiry-form';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import ErrorPage from '@components/error-page';
 import PageContainer from '@components/page-container/page-container';
@@ -17,6 +15,7 @@ import {
   getMake,
   getProductsByCategoriesSlugs,
 } from '@lib/api';
+import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params }) {
@@ -118,33 +117,13 @@ export default async function CategoryPage({ params }) {
         <div className={styles.header}>
           <ProductImageCarousel images={images} />
           <div className={styles.details}>
-            <div className={styles.mainText}>
-              <h1 className={styles.name}>
-                {mainCategory.name} <br />
-                <span className={styles.variant}>
-                  {make.name} {firstMatchedProduct?.title}
-                </span>
-              </h1>
-              {firstMatchedProduct?.productFields.sku !== null && (
-                <h5 className={styles.sku}>
-                  Part No.{' '}
-                  <span className={styles.redColor}>
-                    {firstMatchedProduct?.productFields.sku}
-                  </span>
-                </h5>
-              )}
-              {firstMatchedProduct?.productFields.description && (
-                <p className={styles.description}>
-                  {firstMatchedProduct?.productFields.description}
-                </p>
-              )}
-            </div>
-            <StoreLocatorProvider>
-              <EnquiryForm
-                enquiryFormId={enquiryFormId}
-                productData={firstMatchedProduct}
-              />
-            </StoreLocatorProvider>
+            <PageClientSidePartial
+              mainCategory={mainCategory}
+              make={make}
+              enquiryFormId={enquiryFormId}
+              firstMatchedProduct={firstMatchedProduct}
+            />
+
             <div className={styles.warranty}>
               <ContentBox className={styles.warrantyDescription}>
                 <h3 className={styles.contentBoxTitle}>
