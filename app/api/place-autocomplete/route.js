@@ -9,6 +9,7 @@ export async function GET(request) {
   const params = [
     `input=${query}`,
     'components=country:au',
+    'types=(regions)',
     sessionToken ? `sessiontoken=${sessionToken}` : null,
     `key=${GOOGLE_MAPS_API_KEY}`,
   ]
