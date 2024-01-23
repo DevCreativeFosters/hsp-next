@@ -15,7 +15,7 @@ export default function ProductGrid({ title, products }) {
               <div key={product.title} className={styles.product}>
                 <div className={styles.buttonContainer}>
                   <Button
-                    href={product.link.url}
+                    href={product.link?.url || '#'}
                     rightIcon="arrow-forward"
                     size="small"
                     variant="tertiary"
@@ -25,7 +25,7 @@ export default function ProductGrid({ title, products }) {
                   </Button>
                 </div>
                 <Link
-                  href={product.link.url}
+                  href={product.link?.url || '#'}
                   tabindex="-1"
                   className={styles.imageContainer}
                 >

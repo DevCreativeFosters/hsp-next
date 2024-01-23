@@ -12,8 +12,13 @@ import styles from './page.module.scss';
 export const metadata = {
   title: 'HSP 4x4 - Store locator',
   // description: ''
-  viewport:
-    'width=device-width, height=device-height, initial-scale=1.0, interactive-widget=resizes-visual',
+};
+
+export const viewport = {
+  width: 'device-width',
+  height: 'device-height',
+  initialScale: 1,
+  interactiveWidget: 'resizes-visual',
 };
 
 export default async function StoreLocatorPage() {
