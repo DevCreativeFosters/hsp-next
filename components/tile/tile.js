@@ -1,6 +1,5 @@
 'use client';
 
-import Tag from '@components/tag/tag';
 import { useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
