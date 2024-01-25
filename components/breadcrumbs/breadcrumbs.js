@@ -50,8 +50,8 @@ function Breadcrumbs({ items, product }) {
   const singleBreadcrumb = product
     ? { url: '/products', label: 'Products' }
     : itemsLength > 1
-    ? itemsNormalized[itemsLength - 2]
-    : null;
+      ? itemsNormalized[itemsLength - 2]
+      : null;
 
   return (
     <>
@@ -82,11 +82,13 @@ function Breadcrumbs({ items, product }) {
                 <Button
                   href={item.url || '#'}
                   size="xsmall"
-                  variant="secondary"
+                  variant={item.variant || 'quinary'}
                   disabled={item.disabled}
                   onClick={item.onClick || null}
-                  key={index}
-                  className={styles.applyButton}
+                  key={item.type + index}
+                  className={clsx(styles.applyButton, {
+                    [styles.hideButton]: !item.visible,
+                  })}
                 >
                   {item.label}
                 </Button>
