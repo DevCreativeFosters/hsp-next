@@ -15,13 +15,13 @@
     display: flex;
     justify-content: space-between;
 
-    @include bp(medium) {
+    @include bp(medium-large) {
       display: none;
     }
   }
 
   &.full {
-    @include bp(medium) {
+    @include bp(medium-large) {
       display: flex;
     }
   }
@@ -127,8 +127,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-bottom: 16px;
 
-  @include bp(medium) {
+  @include bp(medium-large) {
     display: none;
   }
 }
@@ -143,7 +144,6 @@
 
 .applyButton {
   width: 100%;
-  margin-bottom: 16px;
 }
 
 .hideButton {
