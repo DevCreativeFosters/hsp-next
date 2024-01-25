@@ -141,7 +141,7 @@ export default function Layout({
           </div>
         )}
 
-        <div id={MODAL_PORTAL_ID}></div>
+        <div id={MODAL_PORTAL_ID} />
       </VehicleProvider>
     </>
   );

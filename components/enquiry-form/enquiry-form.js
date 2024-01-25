@@ -76,7 +76,7 @@ export default function EnquiryForm({
       setSelectedVariant([newSelectedVariant]);
       onVariantChangeCallback(newSelectedVariant);
     },
-    [variants],
+    [variants, onVariantChangeCallback],
   );
 
   const handleOpenModal = () => {

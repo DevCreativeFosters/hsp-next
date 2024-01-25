@@ -1,5 +1,6 @@
 'use client';
 
+import { getFileName } from '@lib/get-file-name';
 import {
   Fragment,
   useCallback,
@@ -25,14 +26,7 @@ export default function DownloadFileButton({
   const buttonRef = useRef();
 
   const fileNameNormalized = useMemo(() => {
-    if (fileName) {
-      return fileName;
-    } else if (href) {
-      const url = new URL(href);
-      const { pathname } = url;
-      return pathname.substring(pathname.lastIndexOf('/') + 1);
-    }
-    return '';
+    return fileName || getFileName(href);
   }, [fileName, href]);
 
   const onDownloadButtonClick = useCallback(

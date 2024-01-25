@@ -15,9 +15,9 @@ export default function DownloadFileModal({
   href,
   fileName,
   isVisible,
-  downloadFileFormId,
-  onClose,
+  onClose = () => {},
 }) {
+  const [formId, setFormId] = useState(null);
   const [email, setEmail] = useState('');
   const [isFormReady, setIsFormReady] = useState(false);
   const [isFormBusy, setIsFormBusy] = useState(false);
@@ -71,6 +71,15 @@ export default function DownloadFileModal({
     [isVisible],
   );
 
+  useEffect(function syncFormId() {
+    const id = parseInt(
+      document.documentElement.getAttribute('data-download-file-form-id'),
+    );
+    if (id) {
+      setFormId(id);
+    }
+  }, []);
+
   return (
     <Modal
       title="Download"
@@ -99,7 +108,7 @@ export default function DownloadFileModal({
           <div className={styles.gravityForm}>
             <GravityFormWrapper
               ref={gravityFormRef}
-              attributes={{ id: downloadFileFormId }}
+              attributes={{ id: formId }}
               submitButton={false}
               preventConfirmation
               onLoad={onGravityFormLoad}
@@ -133,7 +142,7 @@ export default function DownloadFileModal({
           Download
         </Button>
 
-        {downloadNow && (
+        {downloadNow && href && (
           <Link
             className={styles.hiddenLink}
             href={href}
