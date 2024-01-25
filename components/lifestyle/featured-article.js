@@ -8,19 +8,12 @@ export default function FeaturedArticle({
   content,
   createdAt,
   url,
-  tags,
   image,
 }) {
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    dateStyle: 'long',
+    year: 'numeric',
+    month: 'long',
   });
-
-  const tagsNormalized = tags?.map(({ name, link }) => ({
-    name,
-    link: {
-      url: link?.url || link,
-    },
-  }));
 
   const imageWidth = image?.mediaDetails.width;
   const imageHeight = image?.mediaDetails.height;
@@ -44,18 +37,6 @@ export default function FeaturedArticle({
   return (
     <article className={styles.container}>
       <div className={styles.info}>
-        {tagsNormalized?.length > 0 && (
-          <ul className={styles.tagList}>
-            {tagsNormalized.map(({ name, link }, index) => (
-              <li key={index}>
-                <a className={styles.tag} href={link?.url || ''}>
-                  {name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-
         <time className={styles.date} dateTime={createdAt}>
           {createdAtHuman}
         </time>

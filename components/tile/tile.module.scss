@@ -48,6 +48,12 @@
       max-width: calc(100% / 3 - (2 / 3 * 48px));
     }
   }
+
+  &.featured {
+    @include bp(medium) {
+      display: none;
+    }
+  }
 }
 
 .imageContainer {
@@ -85,17 +91,6 @@
   border-radius: 0 0 16px 16px;
   background: var(--color-black-100);
   flex-grow: 1;
-}
-
-.tagList {
-  position: absolute;
-  left: 24px;
-  top: 24px;
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 12px;
 }
 
 .date {
