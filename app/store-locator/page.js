@@ -1,5 +1,6 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import routes from '@lib/routes';
+import { getStores } from '@lib/api';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
@@ -22,6 +23,8 @@ export const viewport = {
 };
 
 export default async function StoreLocatorPage() {
+  const stores = await getStores();
+
   return (
     <Layout withMap withFooter={false} reserveSpaceForVehicleSelection>
       <FullscreenCollapse>
@@ -42,7 +45,7 @@ export default async function StoreLocatorPage() {
 
       <StoreLocatorProvider>
         <StoreLocatorSearch />
-        <StoreLocatorResultsAndMap />
+        <StoreLocatorResultsAndMap stores={stores} />
       </StoreLocatorProvider>
       <FullscreenCollapse>
         <InformationBox hideOn="desktop" />

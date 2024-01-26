@@ -10,7 +10,7 @@ import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import styles from './store-locator-results-and-map.module.scss';
 
-export default function StoreLocatorResultsAndMap() {
+export default function StoreLocatorResultsAndMap({ stores }) {
   const resultsRef = useRef(null);
   const {
     searchGeolocation,
