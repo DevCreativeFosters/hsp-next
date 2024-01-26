@@ -41,12 +41,25 @@
     opacity: 0.5;
   }
 
+  svg {
+    flex-shrink: 0;
+  }
+
   svg path {
     fill: currentcolor;
   }
 
   &.rightIcon {
     padding-right: var(--icon-side-padding);
+  }
+
+  &.shortenable {
+    justify-self: flex-start;
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
   }
 }
 
@@ -261,6 +274,16 @@
       background: var(--color-white-10);
     }
   }
+}
+
+.shortenableWrapper {
+  overflow: hidden;
+}
+
+.shortenableLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 div.toggleContainer {

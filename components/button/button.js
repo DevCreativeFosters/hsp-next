@@ -19,7 +19,8 @@ function ButtonWithRef(
     rightIcon = null,
     leftIconUrl = null,
     rightIconUrl = null,
-    toggleable = null,
+    toggleable,
+    shortenable,
     isToggled = false,
     onToggleIconClick = null,
     isBusy,
@@ -52,6 +53,7 @@ function ButtonWithRef(
     [styles.leftIcon]: leftIcon || leftIconUrl,
     [styles.rightIcon]: rightIcon || rightIconUrl,
     [styles.toggleable]: toggleable,
+    [styles.shortenable]: shortenable,
     [styles.noText]: !children,
     [styles.footer]: footer,
     [styles.isBusy]: isBusy,
@@ -62,13 +64,24 @@ function ButtonWithRef(
   const ToggleableNeutralIconSvg = getIcon('expand-more-neutral');
   const ToggleablePrimaryIconSvg = getIcon('expand-more-primary');
 
+  const childrenNormalized =
+    typeof children === 'string' ? decode(children) : children;
+
   const buttonBody = (
     <>
       {LeftIconSvg && <LeftIconSvg />}
       {leftIconUrl && (
         <Image src={leftIconUrl} alt={''} width={20} height={20} />
       )}
-      {typeof children === 'string' ? decode(children) : children}
+
+      {shortenable ? (
+        <span className={styles.shortenableWrapper}>
+          <span className={styles.shortenableLabel}>{childrenNormalized}</span>
+        </span>
+      ) : (
+        childrenNormalized
+      )}
+
       {rightIconUrl && (
         <Image src={rightIconUrl} alt={''} width={20} height={20} />
       )}

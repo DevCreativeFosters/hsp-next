@@ -143,6 +143,7 @@ export default function ProductTabs({
                       download
                       variant="quinary"
                       rightIcon={'download'}
+                      shortenable
                       downloadFileFormId={downloadFileFormId}
                     >
                       {label}
