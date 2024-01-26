@@ -1,12 +1,11 @@
 import clsx from 'clsx';
 import styles from './feature.module.scss';
 
-export default function Feature({ title, description, index }) {
+export default function Feature({ title, description, index, style }) {
   return (
     <div
       className={clsx(styles.featureTile, styles[`f${index + 1}`])}
-      key={index}
-      style={{ order: (index + 1) * 10 }}
+      style={style}
     >
       {title && <h3 className={styles.featureTitle}>{title}</h3>}
       {description && (
