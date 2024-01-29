@@ -59,6 +59,30 @@ export default function Features({
           </Button>
         )}
       </div>
+      {isMobile ? (
+        <Carousel
+          className={styles.featuresCarousel}
+          settings={{
+            slidesPerView: 1.17,
+            spaceBetween: 16,
+            loop: false,
+          }}
+          slides={features.map((feature, index) => (
+            <SwiperSlide className={styles.slide} key={index}>
+              <Feature {...feature} index={index} />
+            </SwiperSlide>
+          ))}
+        />
+      ) : (
+        features.map((feature, index) => (
+          <Feature
+            {...feature}
+            index={index}
+            key={index}
+            style={{ order: (index + 1) * 10 }}
+          />
+        ))
+      )}
       {video?.src && (
         <div className={styles.videoTile}>
           <video
@@ -73,31 +97,6 @@ export default function Features({
             Your browser does not support the video tag.
           </video>
         </div>
-      )}
-
-      {isMobile ? (
-        <Carousel
-          className={styles.featuresCarousel}
-          settings={{
-            slidesPerView: 1.17,
-            spaceBetween: 16,
-            loop: false,
-          }}
-          slides={features.map((feature, index) => (
-            <SwiperSlide key={index}>
-              <Feature {...feature} index={index} />
-            </SwiperSlide>
-          ))}
-        />
-      ) : (
-        features.map((feature, index) => (
-          <Feature
-            {...feature}
-            index={index}
-            key={index}
-            style={{ order: (index + 1) * 10 }}
-          />
-        ))
       )}
     </div>
   );

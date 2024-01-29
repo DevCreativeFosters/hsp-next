@@ -9,6 +9,7 @@
 
   @include bp(medium) {
     display: grid;
+    column-gap: 24px;
     grid-template-areas:
       'video leading'
       'feature1 feature1'
@@ -16,6 +17,7 @@
   }
 
   @include bp(large) {
+    column-gap: 48px;
     grid-template-areas:
       'video leading'
       'video feature1'
@@ -25,7 +27,7 @@
 }
 
 .leadingFeature {
-  padding: 24px;
+  padding: 24px 24px 0;
 
   @include bp(medium) {
     grid-area: leading;
@@ -33,10 +35,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    padding: 48px 24px;
   }
 
   @include bp(large) {
     align-self: center;
+    padding: 48px;
   }
 }
 
@@ -74,7 +78,6 @@
 
 .videoTile {
   position: relative;
-  order: 99; // last element
   max-width: 100%;
   border-radius: 16px;
   overflow: hidden;
@@ -125,4 +128,8 @@
   & > div {
     padding-inline: var(--container-inline-padding);
   }
+}
+
+.slide {
+  height: auto;
 }
