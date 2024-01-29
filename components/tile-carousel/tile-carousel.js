@@ -2,19 +2,18 @@
 
 import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
 import styles from './tile-carousel.module.scss';
 
 const ID_PREFIX = 'carousel';
 
 export default function TileCarousel({
-  className,
   items = [],
   itemTemplate: ItemTemplate,
   id = '',
   buttonPrevRef,
   buttonNextRef,
   resetStyle,
+  smallGaps,
   name,
   context,
   children,
@@ -218,28 +217,31 @@ export default function TileCarousel({
   return (
     <>
       {items?.length > 0 && (
-        <div
-          className={clsx(styles.carousel, {
-            [styles.isDragging]: isDragging,
-            [styles.resetStyle]: resetStyle,
-          })}
-          ref={carouselRef}
-        >
+        <div className={styles.carouselWrapper}>
           <div
-            className={clsx(styles.container, className, {
+            className={clsx(styles.carousel, {
               [styles.isDragging]: isDragging,
+              [styles.resetStyle]: resetStyle,
+              [styles.smallGaps]: smallGaps,
             })}
-            ref={containerRef}
-            id={carouselId}
-            style={{ '--offset': `${carouselPosition}px` }}
+            ref={carouselRef}
           >
-            {items.map((props, index) => (
-              <ItemTemplate key={index} context={context} {...props} />
-            ))}
+            <div
+              className={clsx(styles.container, {
+                [styles.isDragging]: isDragging,
+              })}
+              ref={containerRef}
+              id={carouselId}
+              style={{ '--offset': `${carouselPosition}px` }}
+            >
+              {items.map((props, index) => (
+                <ItemTemplate key={index} context={context} {...props} />
+              ))}
+            </div>
           </div>
+          {children}
         </div>
       )}
-      {children}
     </>
   );
 }

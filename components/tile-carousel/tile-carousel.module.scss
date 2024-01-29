@@ -1,4 +1,9 @@
+.carouselWrapper {
+  position: relative;
+}
+
 .carousel {
+  position: relative;
   width: 100vw;
   max-width: calc(1320px + var(--container-inline-padding) * 2);
   padding-inline: var(--container-inline-padding);
@@ -10,6 +15,7 @@
 
   @include bp(large) {
     gap: 48px;
+    overflow: hidden;
   }
 
   @include bp(full) {
@@ -28,18 +34,21 @@
   position: relative;
   display: flex;
   align-items: stretch;
+  gap: 24px;
   transition: transform 300ms;
   transform: translateX(var(--offset));
 
-  .carousel:not(.resetStyle) {
-    gap: 24px;
-
-    @include bp(large) {
-      gap: 48px;
-    }
+  @include bp(large) {
+    gap: 48px;
   }
 
+  .smallGaps > & {
+    gap: 16px;
 
+    @include bp(medium) {
+      gap: 24px;
+    }
+  }
 
   * {
     -webkit-user-drag: none;

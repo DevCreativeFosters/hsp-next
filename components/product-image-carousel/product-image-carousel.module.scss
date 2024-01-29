@@ -1,7 +1,13 @@
+@import '/styles/globals/helpers';
+
 @mixin image() {
-  border-radius: 16px;
+  border-radius: var(--border-radius-sm);
   object-fit: cover;
   object-position: center;
+
+  @include bp(medium) {
+    border-radius: var(--border-radius-sm);
+  }
 }
 
 .container {
@@ -35,6 +41,18 @@
   }
 }
 
+.thumbnailCarouselContainer {
+  @include bp(large) {
+    gap: 24px;
+  }
+}
+
+.thumbnailWrapper {
+  width: 25%;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
 .thumbnail {
   @include image;
 
@@ -44,12 +62,29 @@
   aspect-ratio: 1;
 }
 
-.swiperSlide {
-  width: 25% !important;
-  min-width: 80px;
-  flex-shrink: 0;
+.navigationButton {
+  @include center-vertical;
 
-  @include bp(large) {
-    width: initial;
+  --side-space: -28px;
+
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  background-color: var(--color-black-100);
+
+  @include bp-below(large) {
+    display: none;
   }
+}
+
+.prevButton {
+  left: var(--side-space);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.nextButton {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  right: var(--side-space);
 }

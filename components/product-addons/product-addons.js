@@ -50,7 +50,6 @@ export default function ProductAddons({ title, description, products }) {
       </SectionIntro>
 
       <TileCarousel
-        className={styles.carousel}
         items={productsNormalized}
         itemTemplate={ProductItem}
         buttonPrevRef={buttonPrevRef}
