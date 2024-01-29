@@ -6,6 +6,8 @@ import styles from './tile-carousel.module.scss';
 
 const ID_PREFIX = 'carousel';
 
+const MIN_SHIFT = 40;
+
 export default function TileCarousel({
   items = [],
   itemTemplate: ItemTemplate,
@@ -49,9 +51,13 @@ export default function TileCarousel({
   const findClosest = useCallback(
     (offset, direction) => {
       const tileOffsets = getTileOffsets();
-      let index = tileOffsets.findIndex(value => value >= Math.abs(offset));
+      let index = tileOffsets.findIndex(
+        value => value + MIN_SHIFT >= Math.abs(offset),
+      );
       if (direction > 0) {
-        index = tileOffsets.findLastIndex(value => value <= Math.abs(offset));
+        index = tileOffsets.findLastIndex(
+          value => value - MIN_SHIFT <= Math.abs(offset),
+        );
       }
       return {
         index,
@@ -62,12 +68,11 @@ export default function TileCarousel({
   );
 
   const snap = useCallback(
-    deltaX => {
-      const direction = lastMovementDirection || deltaX;
+    direction => {
       const { index } = findClosest(carouselPosition, direction);
       setCurrentIndex(index);
     },
-    [lastMovementDirection, carouselPosition, findClosest],
+    [carouselPosition, findClosest],
   );
 
   const goToPrev = useCallback(() => {
@@ -117,7 +122,21 @@ export default function TileCarousel({
       const deltaX = ev.clientX - pointerXSnapshot;
       setPointerXSnapshot(null);
       setIsDragging(false);
-      snap(deltaX);
+      const direction = Math.sign(lastMovementDirection || deltaX);
+      snap(direction);
+    },
+    [pointerXSnapshot, lastMovementDirection, snap],
+  );
+
+  const onPointerCancel = useCallback(
+    ev => {
+      if (pointerXSnapshot === null) {
+        return;
+      }
+      const deltaX = ev.clientX - pointerXSnapshot;
+      setPointerXSnapshot(null);
+      setIsDragging(false);
+      snap(Math.sign(deltaX));
     },
     [pointerXSnapshot, snap],
   );
@@ -166,15 +185,17 @@ export default function TileCarousel({
       el?.addEventListener('pointermove', onPointerMove, { passive: true });
       el?.addEventListener('pointerup', onPointerUp);
       el?.addEventListener('pointerleave', onPointerUp);
+      el?.addEventListener('pointercancel', onPointerCancel);
 
       return () => {
         el?.removeEventListener('pointerdown', onPointerDown);
         el?.removeEventListener('pointermove', onPointerMove);
         el?.removeEventListener('pointerup', onPointerUp);
         el?.removeEventListener('pointerleave', onPointerUp);
+        el?.removeEventListener('pointercancel', onPointerCancel);
       };
     },
-    [onPointerDown, onPointerMove, onPointerUp],
+    [onPointerDown, onPointerMove, onPointerUp, onPointerCancel],
   );
 
   useEffect(
@@ -227,9 +248,7 @@ export default function TileCarousel({
             ref={carouselRef}
           >
             <div
-              className={clsx(styles.container, {
-                [styles.isDragging]: isDragging,
-              })}
+              className={styles.container}
               ref={containerRef}
               id={carouselId}
               style={{ '--offset': `${carouselPosition}px` }}
