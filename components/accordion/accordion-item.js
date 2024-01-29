@@ -5,15 +5,15 @@ import styles from './accordion-item.module.scss';
 import clsx from 'clsx';
 
 export default function AccordionItem({
-  title,
-  children,
   isOpen,
   onToggle,
+  className,
   animationDuration = 300,
   titleTag: TitleTag = 'div',
-  titleStyles = {},
-  serialNo,
+  text,
+  id,
   date,
+  children,
 }) {
   const ExpandIcon = getIcon('expand-more-neutral');
 
@@ -27,26 +27,36 @@ export default function AccordionItem({
   );
 
   return (
-    <div className={clsx(styles.accordionItem, { [styles.active]: isOpen })}>
+    <div
+      className={clsx(
+        styles.accordionItem,
+        { [styles.active]: isOpen },
+        className,
+      )}
+    >
       <div
-        className={styles.accordionItemButton}
+        className={styles.button}
         role="button"
         tabIndex={0}
         onKeyUp={handleKeyUp}
         onClick={onToggle}
         aria-expanded={isOpen}
+        aria-label={text}
       >
-        <TitleTag className={styles.accordionItemText} style={titleStyles}>
-          {title && <span>{title}</span>}
-          {serialNo && <span>{serialNo}</span>}
-          {date && <time>{date}</time>}
-        </TitleTag>
-        <div className={styles.accordionItemIndicator}>
+        <div className={styles.wrapper}>
+          <TitleTag className={styles.title}>
+            {text && <span className={styles.text}>{text}</span>}
+            {id && <span className={styles.id}> {id}</span>}
+          </TitleTag>
+          {date && <time className={styles.date}>{date}</time>}
+        </div>
+
+        <div className={styles.arrow}>
           <ExpandIcon />
         </div>
       </div>
       <AnimateHeight duration={animationDuration} height={isOpen ? 'auto' : 0}>
-        <div className={styles.accordionItemBody}>{children}</div>
+        <div className={styles.body}>{children}</div>
       </AnimateHeight>
     </div>
   );

@@ -2,7 +2,7 @@
   border-bottom: 2px solid var(--color-white-20);
 }
 
-.accordionItemButton {
+.button {
   --accordion-item-horizontal-padding: 24px;
 
   display: flex;
@@ -21,16 +21,33 @@
 
   &:hover,
   .accordionItem.active & {
-    color: var(--color-white-100);
     cursor: pointer;
   }
 }
 
-.accordionItemText {
+.wrapper {
   margin-right: 24px;
+
+  @include bp(medium) {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
-.accordionItemIndicator {
+.id {
+  color: var(--color-primary-100);
+}
+
+.date {
+  color: var(--color-white-60);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2.2;
+}
+
+.arrow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,7 +61,7 @@
   }
 }
 
-.accordionItemBody {
+.body {
   padding: 24px;
   margin-bottom: 24px;
 
