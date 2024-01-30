@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import clsx from 'clsx';
+import { SwiperSlide } from 'swiper/react';
+import { useIsMobile } from '@hooks/useIsMobile';
 import Button from '@components/button/button';
+import Carousel from '@components/carousel/carousel';
+import Feature from './feature';
 import styles from './features.module.scss';
 
 export default function Features({
@@ -13,6 +16,7 @@ export default function Features({
   features,
 }) {
   const videoRef = useRef(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -55,6 +59,30 @@ export default function Features({
           </Button>
         )}
       </div>
+      {isMobile ? (
+        <Carousel
+          className={styles.featuresCarousel}
+          settings={{
+            slidesPerView: 1.17,
+            spaceBetween: 16,
+            loop: false,
+          }}
+          slides={features.map((feature, index) => (
+            <SwiperSlide className={styles.slide} key={index}>
+              <Feature {...feature} index={index} />
+            </SwiperSlide>
+          ))}
+        />
+      ) : (
+        features.map((feature, index) => (
+          <Feature
+            {...feature}
+            index={index}
+            key={index}
+            style={{ order: (index + 1) * 10 }}
+          />
+        ))
+      )}
       {video?.src && (
         <div className={styles.videoTile}>
           <video
@@ -70,22 +98,6 @@ export default function Features({
           </video>
         </div>
       )}
-
-      {features.map(({ title, description }, index) => (
-        <div
-          className={clsx(styles.featureTile, styles[`f${index + 1}`])}
-          key={index}
-          style={{ order: (index + 1) * 10 }}
-        >
-          {title && <h3 className={styles.featureTitle}>{title}</h3>}
-          {description && (
-            <div
-              className={styles.featureDescription}
-              dangerouslySetInnerHTML={{ __html: description }}
-            />
-          )}
-        </div>
-      ))}
     </div>
   );
 }

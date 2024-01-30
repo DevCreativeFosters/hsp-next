@@ -1,0 +1,69 @@
+@import '/styles/globals/typography';
+
+.featureTile {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 24px;
+  padding: 48px 24px;
+  border: 2px solid var(--color-white-20);
+  border-radius: 16px;
+
+  @include bp(large) {
+    padding: 48px;
+  }
+
+  &.f1 {
+    grid-area: feature1;
+
+    @include bp(large) {
+      align-self: flex-end;
+    }
+  }
+
+  &.f2 {
+    grid-area: feature2;
+  }
+
+  &.f3 {
+    grid-area: feature3;
+  }
+}
+
+.featureTitle {
+  font-family: var(--font-secondary);
+  line-height: 1.33;
+
+  @include bp(medium) {
+    font-size: 36px;
+  }
+
+  @include bp(large) {
+    font-size: 48px;
+  }
+}
+
+.featureDescription {
+  color: var(--color-white-80);
+  line-height: 1.3;
+
+  a {
+    @include text-link;
+  }
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+
+  @include bp(full) {
+    line-height: 1.6;
+  }
+
+  p:first-of-type {
+    margin-top: 0;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+}
