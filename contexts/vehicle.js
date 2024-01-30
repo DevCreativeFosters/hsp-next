@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useState } from 'react';
 import { setCookie, deleteCookie } from '@lib/cookies';
-import constants from '@lib/constants';
+import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 
 const VehicleContext = createContext();
 
@@ -21,8 +21,8 @@ export const VehicleProvider = ({ children }) => {
   };
 
   const handleVehicleReset = useCallback(() => {
-    localStorage.removeItem(constants.LOCAL_STORAGE_VEHICLE);
-    deleteCookie(constants.LOCAL_STORAGE_VEHICLE);
+    localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
+    deleteCookie(LOCAL_STORAGE_VEHICLE);
     setMaker(null);
     setModel(null);
     setVehicleSelection(null);
@@ -31,8 +31,8 @@ export const VehicleProvider = ({ children }) => {
 
   const handleSave = useCallback(() => {
     const vehicleString = JSON.stringify({ maker, model });
-    localStorage.setItem(constants.LOCAL_STORAGE_VEHICLE, vehicleString);
-    setCookie(constants.LOCAL_STORAGE_VEHICLE, vehicleString, 7);
+    localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
+    setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
     setSavedVehicleGlobal({ maker, model });
     setVehicleSelection({

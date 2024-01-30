@@ -7,7 +7,7 @@ import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import { setCookie } from '@lib/cookies';
 import { getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
-import constants from '@lib/constants';
+import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 
 export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const [currentSavedVehicle, setCurrentSavedVehicle] = useState({});
@@ -37,9 +37,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
 
   useEffect(
     function loadSavedVehicleFromLocalStorage() {
-      const savedVehicle = localStorage.getItem(
-        constants.LOCAL_STORAGE_VEHICLE,
-      );
+      const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
       if (savedVehicle) {
         setCurrentSavedVehicle(JSON.parse(savedVehicle));
       }
@@ -152,8 +150,8 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       });
 
       if (changeVehicle) {
-        localStorage.setItem(constants.LOCAL_STORAGE_VEHICLE, savedVehicle);
-        setCookie(constants.LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
+        localStorage.setItem(LOCAL_STORAGE_VEHICLE, savedVehicle);
+        setCookie(LOCAL_STORAGE_VEHICLE, savedVehicle, 7);
         setVehicleSelection({
           makerName:
             selectedMakeObj?.name || selectedMakeObj?.label || undefined,
@@ -230,7 +228,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   useEffect(
     function checkIfStoredVehicleMatchesSelectedVehicle() {
       const storedVehicle = JSON.parse(
-        localStorage.getItem(constants.LOCAL_STORAGE_VEHICLE),
+        localStorage.getItem(LOCAL_STORAGE_VEHICLE),
       );
 
       const makeAndModelSelected =

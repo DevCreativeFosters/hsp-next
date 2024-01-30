@@ -18,8 +18,25 @@ $desktop-height: 1160px;
   }
 }
 
+.decorativeBackground {
+  display: none;
+
+  .isSent & {
+    @include bp(large) {
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 230px;
+      background: red;
+    }
+  }
+}
+
 .enquiryModal {
   --viewport-margin: 48px;
+  --padding-horizontal: 48px;
   --max-height: calc(100vh - 2 * var(--viewport-margin));
 
   @include scrollbar;
@@ -31,14 +48,13 @@ $desktop-height: 1160px;
   overflow: hidden auto;
 
   @include bp(large) {
-    --padding-horizontal: 48px;
-
     top: 50%;
     left: 50%;
     width: 1320px;
     max-width: calc(100% - 2 * var(--viewport-margin));
+    min-height: 400px;
     max-height: var(--max-height);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
     background-color: var(--color-dark-gray-100);
     transform: translateX(-50%) translateY(-50%);
     overflow: hidden;
@@ -59,6 +75,7 @@ $desktop-height: 1160px;
 .enquiryContent {
   position: relative;
   padding: 48px 16px;
+  min-height: inherit;
 
   @include bp(large) {
     display: flex;
@@ -91,7 +108,12 @@ $desktop-height: 1160px;
   }
 
   .isSent & {
+    box-shadow: none;
     padding-inline: 24px;
+
+    @include bp(large) {
+      padding: 48px var(--padding-horizontal) 24px;
+    }
   }
 }
 
@@ -126,6 +148,10 @@ $desktop-height: 1160px;
     @media screen and (height >= $desktop-height) {
       top: -12px;
     }
+  }
+
+  svg {
+    filter: drop-shadow(2px 2px 2px var(--color-black-100));
   }
 }
 
@@ -340,6 +366,7 @@ $desktop-height: 1160px;
 
   svg {
     color: var(--color-white-100);
+    flex-shrink: 0;
   }
 
   a {

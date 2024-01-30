@@ -53,6 +53,11 @@ a {
   color: inherit;
 }
 
+[href],
+[data-href] {
+  cursor: pointer;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -118,4 +123,8 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+a span[data-require-user-email] {
+  pointer-events: none;
 }

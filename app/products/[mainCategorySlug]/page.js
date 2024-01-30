@@ -1,7 +1,4 @@
-import Container from '@components/container/container';
-import Layout from '@components/layout/layout';
-import ProductHero from '@components/product-hero';
-import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import { Fragment } from 'react';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import {
@@ -9,9 +6,13 @@ import {
   getMainProductCategoryBlocks,
   getMainProductCategory,
 } from '@lib/api';
-import styles from './page.module.scss';
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
+import ProductHero from '@components/product-hero';
+import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import PageContainer from '@components/page-container/page-container';
 import ErrorPage from '@components/error-page';
+import styles from './page.module.scss';
 
 export default async function MainCategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
@@ -81,7 +82,9 @@ export default async function MainCategoryPage({ params }) {
           }}
         />
       </Container>
-      {contentBlocks?.map(contentBlock => contentBlock)}
+      {contentBlocks?.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }

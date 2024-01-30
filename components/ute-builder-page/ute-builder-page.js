@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useVehicleContext } from '@contexts/vehicle';
-import constants from '@lib/constants';
+import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import Builder from '@components/builder/builder';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
@@ -27,7 +27,7 @@ export default function UteBuilderPage({ makes }) {
       setProductVariants(data?.productData);
     };
 
-    const savedVehicle = localStorage.getItem(constants.LOCAL_STORAGE_VEHICLE);
+    const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
 
     if (finalSelection) {
       if (savedVehicle) {

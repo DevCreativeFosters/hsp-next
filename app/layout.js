@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import clsx from 'clsx';
+import { getGlobalOptions } from '@lib/api';
 import LayoutClient from './layout-client';
 import '@styles/main.scss';
 
@@ -47,8 +48,14 @@ export const metadata = {
 export const revalidate = 30;
 
 export default async function RootLayout({ children }) {
+  const globalOptions = await getGlobalOptions();
+  const downloadFileFormId = globalOptions?.downloadFileFormId;
   return (
-    <html lang="en" className={clsx(hind.variable, khand.variable)}>
+    <html
+      lang="en"
+      className={clsx(hind.variable, khand.variable)}
+      data-download-file-form-id={downloadFileFormId}
+    >
       <body className="" data-rh="class">
         {children}
         <LayoutClient />

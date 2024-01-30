@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import parse from 'html-react-parser';
 import { getGlobalOptions, getPageData } from '@lib/api';
 import Layout from '@components/layout/layout';
@@ -58,7 +59,11 @@ export default async function ContactUs() {
                 </ContentBox>
               )}
             </Sidebar>
-            <div>{contentBlocks?.map(contentBlock => contentBlock)}</div>
+            <div>
+              {contentBlocks?.map((contentBlock, index) => (
+                <Fragment key={index}>{contentBlock}</Fragment>
+              ))}
+            </div>
           </PageGrid>
         </PageContainer>
       </Container>

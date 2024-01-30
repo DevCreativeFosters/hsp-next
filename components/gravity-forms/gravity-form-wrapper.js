@@ -11,6 +11,8 @@ function GravityFormWrapperWithRef(
     attributes,
     hiddenInputs = [],
     submitButton = true,
+    preventConfirmation,
+    onChange = () => null,
     onReset = () => null,
     onSubmit = () => null,
     onSuccess = () => null,
@@ -47,12 +49,14 @@ function GravityFormWrapperWithRef(
         innerRef={ref}
         form={gfForm}
         hiddenInputs={hiddenInputs}
+        onChange={onChange}
         onReset={onReset}
         onSubmit={onSubmit}
         onSuccess={onSuccess}
         onError={onError}
         submitButton={submitButton}
         attributes={attributes}
+        preventConfirmation={preventConfirmation}
       />
     </GravityFormProvider>
   );

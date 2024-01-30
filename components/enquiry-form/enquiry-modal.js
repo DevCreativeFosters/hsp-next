@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -9,6 +10,7 @@ import Loading from '@components/loading/loading';
 import EnquiryProduct from './enquiry-product';
 import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
+import DecorationImage from '@assets/images/bg-offroad.webp';
 import routes from '@lib/routes';
 import styles from './enquiry-modal.module.scss';
 
@@ -68,6 +70,15 @@ export default function EnquiryModal({
         )}
         <div className={styles.enquiryContent}>
           <div className={styles.header}>
+            <div className={styles.decorativeBackground}>
+              <Image
+                src={DecorationImage.src}
+                width={230}
+                height={406}
+                alt="Ford Raptor off-roading through the mud"
+              />
+            </div>
+
             <Button
               rightIcon="arrow-backward-large"
               onClick={onClose}
@@ -183,31 +194,28 @@ export default function EnquiryModal({
                 </div>
               )}
             </div>
-
-            {!formIsSent && (
-              <div className={styles.footer}>
-                <div className={styles.footerInfo}>
-                  <InfoIcon />
-                  <div>
-                    By submitting the form you agree to our{' '}
-                    <Link href={routes.privacyAndTerms}>
-                      Terms & Conditions.
-                    </Link>
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  rightIcon={formIsSending ? '' : 'send'}
-                  size="large"
-                  onClick={handleSubmitClick}
-                  className={styles.footerButton}
-                  disabled={formIsSending}
-                >
-                  Submit {formIsSending && <Loading />}
-                </Button>
-              </div>
-            )}
           </div>
+          {!formIsSent && (
+            <div className={styles.footer}>
+              <div className={styles.footerInfo}>
+                <InfoIcon />
+                <div>
+                  By submitting the form you agree to our{' '}
+                  <Link href={routes.privacyAndTerms}>Terms & Conditions.</Link>
+                </div>
+              </div>
+              <Button
+                type="submit"
+                rightIcon={formIsSending ? '' : 'send'}
+                size="large"
+                onClick={handleSubmitClick}
+                className={styles.footerButton}
+                disabled={formIsSending}
+              >
+                Submit {formIsSending && <Loading />}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

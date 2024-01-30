@@ -10,9 +10,9 @@ export default function ProductGrid({ title, products }) {
       <div className={styles.container}>
         {title && <h2 className={styles.title}>{title}</h2>}
         <div className={styles.grid}>
-          {products?.map(product => {
+          {products?.map((product, index) => {
             return (
-              <div key={product.title} className={styles.product}>
+              <div key={`${product.title}-${index}`} className={styles.product}>
                 <div className={styles.buttonContainer}>
                   <Button
                     href={product.link?.url || '#'}
@@ -26,7 +26,7 @@ export default function ProductGrid({ title, products }) {
                 </div>
                 <Link
                   href={product.link?.url || '#'}
-                  tabindex="-1"
+                  tabIndex="-1"
                   className={styles.imageContainer}
                 >
                   <Image

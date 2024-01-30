@@ -1,11 +1,4 @@
-import Container from '@components/container/container';
-import Layout from '@components/layout/layout';
-import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
-import ProductTabs from '@components/product-tabs/product-tabs';
-import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import ErrorPage from '@components/error-page';
-import PageContainer from '@components/page-container/page-container';
-import ContentBox from '@components/content-box/content-box';
+import { Fragment } from 'react';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import {
@@ -16,11 +9,20 @@ import {
   getProductsByCategoriesSlugs,
 } from '@lib/api';
 import PageClientSidePartial from './page-client-side-partial';
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
+import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
+import ProductTabs from '@components/product-tabs/product-tabs';
+import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import ErrorPage from '@components/error-page';
+import PageContainer from '@components/page-container/page-container';
+import ContentBox from '@components/content-box/content-box';
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
+  const downloadFileFormId = globalOptions?.downloadFileFormId;
   const mainCategorySlug = params.mainCategorySlug;
   const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug;
@@ -157,9 +159,12 @@ export default async function CategoryPage({ params }) {
             firstMatchedProduct?.productFields?.manualsDescription
           }
           manualsLinks={manualPdfItems}
+          downloadFileFormId={downloadFileFormId}
         />
       </Container>
-      {contentBlocks?.map(contentBlock => contentBlock)}
+      {contentBlocks?.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }

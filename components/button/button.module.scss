@@ -2,7 +2,7 @@
 
 .button {
   --font-size: 24px;
-  --icon-side-padding: 16px;
+  --icon-side-padding: 20px;
   --inline-padding: 24px;
 
   position: relative;
@@ -41,8 +41,25 @@
     opacity: 0.5;
   }
 
+  svg {
+    flex-shrink: 0;
+  }
+
   svg path {
     fill: currentcolor;
+  }
+
+  &.rightIcon {
+    padding-right: var(--icon-side-padding);
+  }
+
+  &.shortenable {
+    justify-self: flex-start;
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
   }
 }
 
@@ -259,6 +276,16 @@
   }
 }
 
+.shortenableWrapper {
+  overflow: hidden;
+}
+
+.shortenableLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 div.toggleContainer {
   pointer-events: none;
 }
@@ -299,6 +326,10 @@ div.toggleContainer {
 .labelWrapper {
   opacity: 1;
   transition: opacity 100ms;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
 
   .isBusy > & {
     opacity: 0;

@@ -1,0 +1,129 @@
+.contentGrid {
+  display: grid;
+  grid-template-areas:
+    'info'
+    'instruction'
+    'email '
+    'disclaimer'
+    'submit';
+  gap: 24px 0;
+  grid-template-columns: 1fr auto;
+
+  @include bp(medium) {
+    grid-template-areas:
+      'info info'
+      'instruction instruction'
+      'email email'
+      'disclaimer submit';
+    gap: 24px 24px;
+  }
+
+  @include bp(large) {
+    gap: 24px 48px;
+  }
+}
+
+.info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+
+  @include bp(medium) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.fileName {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid var(--color-white-40);
+  border-radius: 4px;
+  color: var(--color-white-60);
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  background-color: var(--color-white-10);
+  flex-shrink: 2;
+}
+
+.instruction {
+  grid-area: instruction;
+  opacity: 0;
+  transition: opacity 200ms 0ms;
+  pointer-events: none;
+
+  .isFormReady & {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.email {
+  grid-area: email;
+  margin-block: 0 8px;
+  min-height: 77px;
+
+  @include bp(large) {
+    margin-block: 8px 24px;
+  }
+}
+
+.spinner {
+  position: absolute;
+  left: 50%;
+  opacity: 1;
+  pointer-events: none;
+  transform: translateX(-50%);
+
+  .isFormReady & {
+    opacity: 0;
+  }
+}
+
+.gravityForm {
+  opacity: 0;
+  transition: opacity 200ms 50ms;
+  pointer-events: none;
+
+  .isFormReady & {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.disclaimer {
+  grid-area: disclaimer;
+  align-items: stretch;
+  align-self: stretch;
+  display: flex;
+  opacity: 0;
+  transition: opacity 200ms 100ms;
+  pointer-events: none;
+
+  .isFormReady & {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.button {
+  grid-area: submit;
+  place-self: stretch flex-end;
+  opacity: 0;
+  transition: opacity 200ms 150ms;
+  pointer-events: none;
+
+  .isFormReady & {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.hiddenLink {
+  position: absolute;
+  visibility: hidden;
+}

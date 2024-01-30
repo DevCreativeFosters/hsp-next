@@ -1,12 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
 import clsx from 'clsx';
-
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
-import Button from '@components/button/button';
 import { scrollIntoViewHorizontally } from '@lib/helpers';
+import DownloadFileButton from '@components/download-file-button/download-file-button';
 import styles from './product-tabs.module.scss';
 
 const DEFAULT_TAB = 'features';
@@ -18,6 +17,7 @@ export default function ProductTabs({
   specificationContent,
   manualsDescription,
   manualsLinks,
+  downloadFileFormId,
 }) {
   const headerRef = useRef(null);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
@@ -133,17 +133,22 @@ export default function ProductTabs({
               <p className={styles.description}>{manualsDescription}</p>
             )}
             <div className={styles.manualsContainer}>
-              {manualsLinks.map(downloadLink => (
-                <Button
-                  href={downloadLink.url}
-                  variant="quinary"
-                  rightIcon={'download'}
-                  download
-                  key={downloadLink.url}
-                >
-                  {downloadLink.label}
-                </Button>
-              ))}
+              {manualsLinks.map(({ url, label }, index) => {
+                if (!url) return null;
+                return (
+                  <DownloadFileButton
+                    key={`${url}-${index}`}
+                    href={url}
+                    download
+                    variant="quinary"
+                    rightIcon="download"
+                    shortenable
+                    downloadFileFormId={downloadFileFormId}
+                  >
+                    {label}
+                  </DownloadFileButton>
+                );
+              })}
             </div>
           </>
         )}

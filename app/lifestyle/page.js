@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { getPageData, getGlobalOptions } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import { POST_TYPES } from '@lib/post-types';
@@ -23,7 +24,9 @@ export default async function LifestylePage() {
         date={featuredPost?.date}
         postType={POST_TYPES.TV}
       />
-      {contentBlocks?.map(contentBlock => contentBlock)}
+      {contentBlocks?.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }

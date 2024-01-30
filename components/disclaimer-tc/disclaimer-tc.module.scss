@@ -1,0 +1,19 @@
+.disclaimer {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  color: var(--color-white-80);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-white-5);
+  gap: 10px;
+  flex-grow: 1;
+
+  svg {
+    flex-shrink: 0;
+    color: var(--color-white-100);
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
