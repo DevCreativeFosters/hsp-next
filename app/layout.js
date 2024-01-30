@@ -1,4 +1,5 @@
 import localFont from 'next/font/local';
+import NextTopLoader from 'nextjs-toploader';
 import clsx from 'clsx';
 import { getGlobalOptions } from '@lib/api';
 import LayoutClient from './layout-client';
@@ -57,6 +58,7 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
     >
       <body className="" data-rh="class">
+        <NextTopLoader color="#ed2935ff" />
         {children}
         <LayoutClient />
       </body>
