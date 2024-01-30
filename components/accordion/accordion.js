@@ -7,14 +7,14 @@ export default function Accordion({ children, className }) {
 
   const toggleItem = useCallback(
     index => {
-      setActiveIndex(activeIndex === index ? null : index);
+      setActiveIndex(activeIndex === index ? -1 : index);
     },
     [activeIndex],
   );
 
   return (
     <div className={className}>
-      {React.Children.map(children, (child, index) =>
+      {children.map((child, index) =>
         React.cloneElement(child, {
           isOpen: index === activeIndex,
           onToggle: () => toggleItem(index),

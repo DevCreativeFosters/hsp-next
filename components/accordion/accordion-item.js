@@ -1,6 +1,7 @@
 import AnimateHeight from 'react-animate-height';
 import { getIcon } from '@lib/icons';
 import { useCallback } from 'react';
+import AccordionTrigger from './accordion-trigger';
 import styles from './accordion-item.module.scss';
 import clsx from 'clsx';
 
@@ -8,11 +9,9 @@ export default function AccordionItem({
   isOpen,
   onToggle,
   className,
+  resetStyling = false,
   animationDuration = 300,
-  titleTag: TitleTag = 'div',
-  text,
-  id,
-  date,
+  triggerContent,
   children,
 }) {
   const ExpandIcon = getIcon('expand-more-neutral');
@@ -31,30 +30,22 @@ export default function AccordionItem({
       className={clsx(
         styles.accordionItem,
         { [styles.active]: isOpen },
+        { [styles.reset]: resetStyling },
         className,
       )}
     >
-      <div
-        className={styles.button}
-        role="button"
-        tabIndex={0}
-        onKeyUp={handleKeyUp}
+      <AccordionTrigger
         onClick={onToggle}
-        aria-expanded={isOpen}
-        aria-label={text}
+        onKeyUp={handleKeyUp}
+        isOpen={isOpen}
+        resetStyling={resetStyling}
       >
-        <div className={styles.wrapper}>
-          <TitleTag className={styles.title}>
-            {text && <span className={styles.text}>{text}</span>}
-            {id && <span className={styles.id}> {id}</span>}
-          </TitleTag>
-          {date && <time className={styles.date}>{date}</time>}
-        </div>
-
+        {triggerContent}
         <div className={styles.arrow}>
           <ExpandIcon />
         </div>
-      </div>
+      </AccordionTrigger>
+
       <AnimateHeight duration={animationDuration} height={isOpen ? 'auto' : 0}>
         <div className={styles.body}>{children}</div>
       </AnimateHeight>
