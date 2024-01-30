@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Link from 'next/link';
-import { VehicleProvider } from '@contexts/vehicle';
+import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
@@ -49,7 +49,11 @@ export default function Header({
 
       <header className={styles.header} ref={headerRef}>
         <FullscreenCollapse className={styles.headerInner}>
-          <div className={styles.grid}>
+          <div
+            className={clsx(styles.grid, {
+              [styles.withoutSocialMenu]: !socialMenu,
+            })}
+          >
             <div className={styles.hamburgerContainer}>
               <HamburgerButton
                 onClick={toggleMenu}
@@ -130,24 +134,26 @@ export default function Header({
               </ul>
             </nav>
 
-            <nav className={styles.socialMenu}>
-              <ul className={styles.socialMenuList}>
-                {socialMenu?.map(({ url, iconPredefined, icon }, index) => (
-                  <li key={url + index} className={styles.socialMenuItem}>
-                    <Button
-                      href={url}
-                      size="small"
-                      variant="tertiary"
-                      background="dark"
-                      leftIcon={
-                        iconPredefined !== 'CUSTOM' ? iconPredefined : false
-                      }
-                      leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            {socialMenu && (
+              <nav className={styles.socialMenu}>
+                <ul className={styles.socialMenuList}>
+                  {socialMenu.map(({ url, iconPredefined, icon }, index) => (
+                    <li key={url + index} className={styles.socialMenuItem}>
+                      <Button
+                        href={url}
+                        size="small"
+                        variant="tertiary"
+                        background="dark"
+                        leftIcon={
+                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                        }
+                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
 
             <MobileMenu items={mobileMenu} isMenuActive={isMobileMenuActive} />
 
