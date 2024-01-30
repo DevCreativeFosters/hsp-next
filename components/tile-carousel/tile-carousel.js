@@ -1,145 +1,264 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
 import styles from './tile-carousel.module.scss';
 
-const MIN_SWIPE_THRESHOLD = 20;
+const ID_PREFIX = 'carousel';
 
-const DEFAULT_ID = 'carousel';
+const MIN_SHIFT = 40;
 
 export default function TileCarousel({
-  items,
+  items = [],
   itemTemplate: ItemTemplate,
   id = '',
+  buttonPrevRef,
+  buttonNextRef,
+  resetStyle,
+  smallGaps,
+  name,
   context,
+  children,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
 
-  const isEnabled = useMediaQuery('(max-width: 767px)');
-  const [touchStartX, setTouchStartX] = useState(null);
-  const [currentN, setCurrentN] = useState(0);
-  const [currentOffset, setCurrentOffset] = useState(0);
-  const [maxOffset, setMaxOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [pointerXSnapshot, setPointerXSnapshot] = useState(null);
+  const [carouselPositionSnapshot, setCarouselPositionSnapshot] = useState(0);
+  const [carouselPosition, setCarouselPosition] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [maxIndex, setMaxIndex] = useState(items.length - 1);
+  const [maxPositionShift, setMaxPositionShift] = useState(0);
+  const [lastMovementDirection, setLastMovementDirection] = useState(0);
+  const carouselId = `${ID_PREFIX}${id ? '-' + id : ''}`;
+  const positionMin = -maxPositionShift;
+  const positionMax = 0;
 
-  const carouselId = `${DEFAULT_ID}${id ? '-' + id : ''}`;
-
-  const currentOffsetNormalized = Math.min(maxOffset, currentOffset);
-
-  const goTo = useCallback(n => {
-    setCurrentN(n);
-  }, []);
-
-  const goToPrev = useCallback(() => {
-    const prevNo = Math.max(currentN - 1, 0);
-    goTo(prevNo);
-  }, [currentN, goTo]);
-
-  const goToNext = useCallback(() => {
-    const nextNo = Math.min(currentN + 1, items.length - 1);
-    goTo(nextNo);
-  }, [currentN, items, goTo]);
-
-  const onTouchStart = useCallback(ev => {
-    const clientX = ev.touches[0]?.clientX;
-    if (clientX) {
-      setTouchStartX(clientX);
-    }
-  }, []);
-  const onTouchMove = useCallback(
-    ev => {
-      if (!touchStartX) return;
-      const currentX = ev.touches[0].clientX;
-      const deltaX = currentX - touchStartX;
-      if (deltaX > MIN_SWIPE_THRESHOLD) {
-        goToPrev();
-        setTouchStartX(null);
-      } else if (deltaX < -MIN_SWIPE_THRESHOLD) {
-        goToNext();
-        setTouchStartX(null);
-      }
+  const normalize = useCallback(
+    value => {
+      return Math.min(positionMax, Math.max(positionMin, value));
     },
-    [touchStartX, goToPrev, goToNext],
+    [positionMin, positionMax],
   );
 
-  const syncMaxOffset = useCallback(() => {
+  const getTileOffsets = useCallback(() => {
+    const items = containerRef.current?.querySelectorAll(`#${carouselId} > *`);
+    if (!items) return [];
+    return Array.from(items).map(el => el?.offsetLeft);
+  }, [carouselId]);
+
+  const findClosest = useCallback(
+    (offset, direction) => {
+      const tileOffsets = getTileOffsets();
+      let index = tileOffsets.findIndex(
+        value => value + MIN_SHIFT >= Math.abs(offset),
+      );
+      if (direction > 0) {
+        index = tileOffsets.findLastIndex(
+          value => value - MIN_SHIFT <= Math.abs(offset),
+        );
+      }
+      return {
+        index,
+        offset: tileOffsets[index],
+      };
+    },
+    [getTileOffsets],
+  );
+
+  const snap = useCallback(
+    direction => {
+      const { index } = findClosest(carouselPosition, direction);
+      setCurrentIndex(index);
+    },
+    [carouselPosition, findClosest],
+  );
+
+  const goToPrev = useCallback(() => {
+    if (!isDragging) {
+      const prevNo = Math.max(currentIndex - 1, 0);
+      setCurrentIndex(prevNo);
+    }
+  }, [isDragging, currentIndex]);
+
+  const goToNext = useCallback(() => {
+    if (!isDragging) {
+      const nextNo = Math.min(currentIndex + 1, maxIndex);
+      setCurrentIndex(nextNo);
+    }
+  }, [isDragging, currentIndex, maxIndex]);
+
+  const onPointerDown = useCallback(
+    ev => {
+      setPointerXSnapshot(ev.clientX);
+      setCarouselPositionSnapshot(carouselPosition);
+    },
+    [carouselPosition],
+  );
+
+  const onPointerMove = useCallback(
+    ev => {
+      if (pointerXSnapshot === null) {
+        return;
+      }
+      setIsDragging(true);
+      const deltaX = ev.clientX - pointerXSnapshot;
+      const newCarouselShift = carouselPositionSnapshot + deltaX;
+      if (currentIndex !== undefined) {
+        setCurrentIndex(undefined);
+      }
+      setCarouselPosition(normalize(newCarouselShift));
+      setLastMovementDirection(Math.sign(ev.movementX));
+    },
+    [pointerXSnapshot, carouselPositionSnapshot, normalize, currentIndex],
+  );
+
+  const onPointerUp = useCallback(
+    ev => {
+      if (pointerXSnapshot === null) {
+        return;
+      }
+      const deltaX = ev.clientX - pointerXSnapshot;
+      setPointerXSnapshot(null);
+      setIsDragging(false);
+      const direction = Math.sign(lastMovementDirection || deltaX);
+      snap(direction);
+    },
+    [pointerXSnapshot, lastMovementDirection, snap],
+  );
+
+  const onPointerCancel = useCallback(
+    ev => {
+      if (pointerXSnapshot === null) {
+        return;
+      }
+      const deltaX = ev.clientX - pointerXSnapshot;
+      setPointerXSnapshot(null);
+      setIsDragging(false);
+      snap(Math.sign(deltaX));
+    },
+    [pointerXSnapshot, snap],
+  );
+
+  const setupConstraints = useCallback(() => {
     const container = containerRef.current;
     if (container) {
       const containerWidth = container.offsetWidth;
       const lastItem = container.querySelector(`#${carouselId} > :last-child`);
       const contentWidth = lastItem.offsetLeft + lastItem.offsetWidth;
-      const maxOffset = Math.max(contentWidth - containerWidth, 0);
-      setMaxOffset(maxOffset);
+      const calculatedMaxShift = Math.max(contentWidth - containerWidth, 0);
+      setMaxPositionShift(calculatedMaxShift);
+      setMaxIndex(
+        getTileOffsets().findIndex(value => value >= calculatedMaxShift),
+      );
     }
-  }, [carouselId]);
-  const onTouchEnd = useCallback(() => {
-    setTouchStartX(null);
+  }, [carouselId, getTileOffsets]);
+
+  useEffect(function logCarouselName() {
+    // console.log('carousel name', name); // debug
   }, []);
 
   useEffect(
-    function addTouchListeners() {
+    function initialSyncOfConstraints() {
+      setupConstraints();
+    },
+    [setupConstraints],
+  );
+
+  useEffect(
+    function syncMaxShiftOnResize() {
+      window.addEventListener('resize', setupConstraints);
+
+      return () => {
+        window.removeEventListener('resize', setupConstraints);
+      };
+    },
+    [setupConstraints],
+  );
+
+  useEffect(
+    function addPointerListeners() {
       const el = carouselRef.current;
-      if (isEnabled && el) {
-        el.addEventListener('touchstart', onTouchStart);
-        el.addEventListener('touchmove', onTouchMove, { passive: true });
-        el.addEventListener('touchend', onTouchEnd);
+
+      el?.addEventListener('pointerdown', onPointerDown);
+      el?.addEventListener('pointermove', onPointerMove, { passive: true });
+      el?.addEventListener('pointerup', onPointerUp);
+      el?.addEventListener('pointerleave', onPointerUp);
+      el?.addEventListener('pointercancel', onPointerCancel);
+
+      return () => {
+        el?.removeEventListener('pointerdown', onPointerDown);
+        el?.removeEventListener('pointermove', onPointerMove);
+        el?.removeEventListener('pointerup', onPointerUp);
+        el?.removeEventListener('pointerleave', onPointerUp);
+        el?.removeEventListener('pointercancel', onPointerCancel);
+      };
+    },
+    [onPointerDown, onPointerMove, onPointerUp, onPointerCancel],
+  );
+
+  useEffect(
+    function syncOffset() {
+      if (currentIndex === undefined || isDragging) {
+        return;
+      }
+      const newOffset = getTileOffsets()[currentIndex];
+      setCarouselPosition(normalize(-newOffset));
+    },
+    [currentIndex, isDragging, getTileOffsets, normalize, carouselPosition],
+  );
+
+  useEffect(
+    function bindExternalPrevNextButtons() {
+      const buttonPrev = buttonPrevRef?.current;
+      const buttonNext = buttonNextRef?.current;
+
+      if (buttonPrev) {
+        buttonPrev.addEventListener('click', goToPrev);
+      }
+
+      if (buttonNext) {
+        buttonNext.addEventListener('click', goToNext);
       }
 
       return () => {
-        el?.removeEventListener('touchstart', onTouchStart);
-        el?.removeEventListener('touchmove', onTouchMove);
-        el?.removeEventListener('touchend', onTouchEnd);
+        if (buttonPrev) {
+          buttonPrev.removeEventListener('click', goToPrev);
+        }
+
+        if (buttonNext) {
+          buttonNext.removeEventListener('click', goToNext);
+        }
       };
     },
-    [isEnabled, onTouchStart, onTouchMove, onTouchEnd],
-  );
-
-  useEffect(
-    function syncCurrentOffset() {
-      const itemEl = containerRef.current?.querySelector(
-        `#${carouselId} > :nth-child(${currentN + 1})`,
-      );
-      const newOffset = itemEl?.offsetLeft;
-      setCurrentOffset(newOffset);
-    },
-    [carouselId, currentN],
-  );
-
-  useEffect(
-    function syncMaxOffsetInitially() {
-      syncMaxOffset();
-    },
-    [syncMaxOffset],
-  );
-
-  useEffect(
-    function syncMaxOffsetOnResize() {
-      window.addEventListener('resize', syncMaxOffset);
-
-      return () => {
-        window.removeEventListener('resize', syncMaxOffset);
-      };
-    },
-    [syncMaxOffset],
+    [buttonNextRef, buttonPrevRef, goToPrev, goToNext],
   );
 
   return (
     <>
       {items?.length > 0 && (
-        <div className={styles.carousel} ref={carouselRef}>
-          <div>
+        <div className={styles.carouselWrapper}>
+          <div
+            className={clsx(styles.carousel, {
+              [styles.isDragging]: isDragging,
+              [styles.resetStyle]: resetStyle,
+              [styles.smallGaps]: smallGaps,
+            })}
+            ref={carouselRef}
+          >
             <div
               className={styles.container}
               ref={containerRef}
               id={carouselId}
-              style={{ '--offset': `-${currentOffsetNormalized}px` }}
+              style={{ '--offset': `${carouselPosition}px` }}
             >
               {items.map((props, index) => (
                 <ItemTemplate key={index} context={context} {...props} />
               ))}
             </div>
           </div>
+          {children}
         </div>
       )}
     </>

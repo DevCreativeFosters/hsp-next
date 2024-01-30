@@ -1,0 +1,31 @@
+.buttons {
+  display: flex;
+  gap: 8px;
+
+  @include bp-below(medium) {
+    display: none;
+  }
+}
+
+.button {
+  width: 40px;
+  height: 40px;
+
+  &.prev {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &.next {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  &.prev svg {
+    rotate: 90deg;
+  }
+
+  &.next svg {
+    rotate: -90deg;
+  }
+}

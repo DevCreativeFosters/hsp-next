@@ -1,0 +1,43 @@
+.product {
+  flex-shrink: 0;
+  position: relative;
+  width: 86%;
+  max-width: 294px;
+  padding: 8px;
+  border: 2px solid var(--color-white-20);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+
+  @include bp(large) {
+    width: 294px;
+    padding: 20px;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  background: var(--color-white-10);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  min-height: 160px;
+  margin-bottom: 16px;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.name {
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 16px 8px;
+}
+
+.price {
+  font-size: 14px;
+  color: var(--color-white-80);
+  line-height: 1.5;
+  margin-top: 8px;
+}

@@ -56,7 +56,11 @@ export default function Lifestyle({
         image={featured.featuredImage?.node}
       />
       {carouselItems.length > 0 && (
-        <TileCarousel items={carouselItems} itemTemplate={Tile} />
+        <TileCarousel
+          items={carouselItems}
+          itemTemplate={Tile}
+          name="Lifestyle -> posts"
+        />
       )}
     </>
   );

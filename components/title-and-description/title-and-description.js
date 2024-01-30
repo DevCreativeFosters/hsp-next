@@ -1,4 +1,3 @@
-import Container from '@components/container/container';
 import styles from './title-and-description.module.scss';
 
 export default function TitleAndDescription({ title, description }) {

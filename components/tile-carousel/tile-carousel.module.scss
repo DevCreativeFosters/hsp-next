@@ -1,22 +1,32 @@
+.carouselWrapper {
+  position: relative;
+  touch-action: pan-y;
+}
+
 .carousel {
+  position: relative;
   width: 100vw;
+  max-width: calc(1320px + var(--container-inline-padding) * 2);
   padding-inline: var(--container-inline-padding);
   margin-top: 56px;
   margin-bottom: 56px;
   margin-left: 50%;
   transform: translateX(-50%);
 
-  @include bp(medium) {
-    margin-left: 0;
-    transform: none;
-    padding: 0;
-    width: 100%;
-    max-width: calc(1320px + var(--container-inline-padding) * 2);
-    overflow-x: hidden;
-  }
-
   @include bp(large) {
     gap: 48px;
+    overflow: hidden;
+  }
+
+  @include bp(full) {
+    overflow: hidden;
+  }
+
+  &.resetStyle {
+    padding: 0;
+    margin: 0;
+    transform: none;
+    width: 100%;
   }
 }
 
@@ -28,11 +38,28 @@
   transition: transform 300ms;
   transform: translateX(var(--offset));
 
-  @include bp(medium) {
-    transform: none !important;
-  }
-
   @include bp(large) {
     gap: 48px;
+  }
+
+  .smallGaps > & {
+    gap: 16px;
+
+    @include bp(medium) {
+      gap: 24px;
+    }
+  }
+
+  * {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .carousel.isDragging & {
+    transition-duration: 0ms;
+
+    & > * {
+      pointer-events: none;
+    }
   }
 }

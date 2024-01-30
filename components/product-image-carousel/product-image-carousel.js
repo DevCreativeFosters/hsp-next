@@ -1,33 +1,37 @@
 'use client';
 
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { SwiperSlide } from 'swiper/react';
 import { useIsMobile } from '@hooks/useIsMobile';
-
-// import images from './mock-data';
-import Carousel from '@components/carousel/carousel';
+import Button from '@components/button/button';
+import TileCarousel from '@components/tile-carousel/tile-carousel';
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({ images }) {
   const isMobile = useIsMobile();
 
+  const buttonPrevRef = useRef();
+  const buttonNextRef = useRef();
+
   const [selectedImage, setSelectedImage] = useState(
     images?.length ? images[0] : null,
   );
-  const [swiperSlides, setSwiperSlides] = useState(null);
 
   const [backgroundPosition, setBackgroundPosition] = useState('50% 50%');
   const [zoomed, setZoomed] = useState(false);
   const mainImageContainerRef = useRef(null);
 
-  const containerStyle = {
-    backgroundImage: selectedImage ? `url(${selectedImage.sourceUrl})` : 'none',
-    backgroundSize: zoomed ? '250%' : 'cover',
-    backgroundPosition: backgroundPosition,
-    backgroundRepeat: 'no-repeat',
-  };
+  const containerStyle = useMemo(() => {
+    return {
+      backgroundImage: selectedImage
+        ? `url(${selectedImage.sourceUrl})`
+        : 'none',
+      backgroundSize: zoomed ? '250%' : 'cover',
+      backgroundPosition: backgroundPosition,
+      backgroundRepeat: 'no-repeat',
+    };
+  }, [selectedImage, zoomed, backgroundPosition]);
 
   const handleZoomEnter = useCallback(() => {
     setZoomed(true);
@@ -100,25 +104,23 @@ export default function ProductImageCarousel({ images }) {
     };
   }, [isMobile, zoomed, handleTouchMoveDocument]);
 
-  useEffect(
-    function loadAllSlides() {
-      const slides = images?.map((item, index) => (
-        <SwiperSlide className={styles.swiperSlide} key={index}>
-          <Image
-            className={styles.thumbnail}
-            src={item.sourceUrl}
-            alt={item.alt}
-            width={141}
-            height={141}
-            onClick={() => handleThumbnailClick(item)}
-          />
-        </SwiperSlide>
-      ));
+  const isNavigationVisible = images?.length > 4;
 
-      setSwiperSlides(slides);
-    },
-    [handleThumbnailClick, images],
-  );
+  const itemTpl = useMemo(() => {
+    const itemTemplate = item => (
+      <div className={styles.thumbnailWrapper}>
+        <Image
+          className={styles.thumbnail}
+          src={item.sourceUrl}
+          alt={item.alt}
+          width={141}
+          height={141}
+          onClick={() => handleThumbnailClick(item)}
+        />
+      </div>
+    );
+    return itemTemplate;
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -135,18 +137,36 @@ export default function ProductImageCarousel({ images }) {
         onTouchEnd={handleTouchEnd}
         style={containerStyle}
       />
-      <Carousel
-        settings={{
-          slidesPerView: isMobile ? 'auto' : 4,
-          spaceBetween: isMobile ? 16 : 24,
-          navigation: true,
-          loop: false,
-          slidesPerGroup: 1,
-          watchSlidesProgress: true,
-        }}
-        slides={swiperSlides}
-        showNavigation={images?.length > 4}
-      />
+      <TileCarousel
+        containerClassName={styles.thumbnailCarouselContainer}
+        id="product-gallery"
+        items={images}
+        resetStyle
+        smallGaps
+        name="Product image carousel"
+        buttonPrevRef={buttonPrevRef}
+        buttonNextRef={buttonNextRef}
+        itemTemplate={itemTpl}
+      >
+        {isNavigationVisible && images.length && (
+          <>
+            <Button
+              ref={buttonPrevRef}
+              className={clsx(styles.navigationButton, styles.prevButton)}
+              variant="secondary"
+              background="dark"
+              rightIcon="arrow-previous"
+            />
+            <Button
+              ref={buttonNextRef}
+              className={clsx(styles.navigationButton, styles.nextButton)}
+              variant="secondary"
+              background="dark"
+              rightIcon="arrow-next"
+            />
+          </>
+        )}
+      </TileCarousel>
     </div>
   );
 }

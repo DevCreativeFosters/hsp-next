@@ -26,7 +26,11 @@ export default function PostsMasonry({ title, description, button, posts }) {
 
       {isMobile ? (
         <div className={styles.carousel}>
-          <TileCarousel items={posts} itemTemplate={Tile} />
+          <TileCarousel
+            items={posts}
+            itemTemplate={Tile}
+            name="posts masonry"
+          />
         </div>
       ) : (
         <div className={styles.masonry} data-items={posts.length}>
