@@ -1,9 +1,9 @@
 'use client';
 
-import DownloadLinkWrapper from '@components/download-link-wrapper/download-link-wrapper';
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import { replaceShortcodes } from '@lib/replace-shortcodes';
+import DownloadLinkWrapper from '@components/download-link-wrapper/download-link-wrapper';
 import styles from './wysiwyg.module.scss';
 
 export default function Wysiwyg({ className, content }) {

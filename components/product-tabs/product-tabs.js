@@ -133,24 +133,22 @@ export default function ProductTabs({
               <p className={styles.description}>{manualsDescription}</p>
             )}
             <div className={styles.manualsContainer}>
-              {[...manualsLinks, ...manualsLinks].map(
-                ({ url, label }, index) => {
-                  if (!url) return null;
-                  return (
-                    <DownloadFileButton
-                      key={`${url}-${index}`}
-                      href={url}
-                      download
-                      variant="quinary"
-                      rightIcon={'download'}
-                      shortenable
-                      downloadFileFormId={downloadFileFormId}
-                    >
-                      {label}
-                    </DownloadFileButton>
-                  );
-                },
-              )}
+              {manualsLinks.map(({ url, label }, index) => {
+                if (!url) return null;
+                return (
+                  <DownloadFileButton
+                    key={`${url}-${index}`}
+                    href={url}
+                    download
+                    variant="quinary"
+                    rightIcon="download"
+                    shortenable
+                    downloadFileFormId={downloadFileFormId}
+                  >
+                    {label}
+                  </DownloadFileButton>
+                );
+              })}
             </div>
           </>
         )}

@@ -75,7 +75,7 @@ export default function EnquiryModal({
                 src={DecorationImage.src}
                 width={230}
                 height={406}
-                alt="Ford Raptor offroading throud the mud"
+                alt="Ford Raptor off-roading through the mud"
               />
             </div>
 

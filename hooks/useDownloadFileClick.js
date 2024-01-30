@@ -1,9 +1,7 @@
 'use client';
 
-import { MODAL_PORTAL_ID } from '@components/modal/modal';
-import { LOCAL_STORAGE_DOWNLOAD_FILE_EMAIL } from '@lib/local-storage';
-import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { LOCAL_STORAGE_DOWNLOAD_FILE_EMAIL } from '@lib/local-storage';
 import { getFileName } from '@lib/get-file-name';
 import { isPdf } from '@lib/file-types';
 import DownloadFileModal from '@components/download-file-modal/download-file-modal';

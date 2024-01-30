@@ -1,6 +1,6 @@
-import { getGlobalOptions } from '@lib/api';
 import localFont from 'next/font/local';
 import clsx from 'clsx';
+import { getGlobalOptions } from '@lib/api';
 import LayoutClient from './layout-client';
 import '@styles/main.scss';
 
