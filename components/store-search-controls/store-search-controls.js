@@ -52,7 +52,7 @@ export default function StoreSearchControls({
   const selectLocation = useCallback(
     async suggestion => {
       setLocation(suggestion);
-      setLocationInput(suggestion.structured_formatting.main_text);
+      setLocationInput(suggestion.description);
       const placeId = suggestion.place_id;
       setSuggestions([]);
       const geolocation = await getPlaceGeoLocation(placeId, sessionToken);

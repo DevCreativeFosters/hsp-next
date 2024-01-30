@@ -58,7 +58,7 @@ export default function StoreLocatorSearch() {
   const selectLocation = useCallback(
     async suggestion => {
       setLocation(suggestion);
-      setLocationInput(suggestion.structured_formatting.main_text);
+      setLocationInput(suggestion.description);
       const placeId = suggestion.place_id;
       setSuggestions([]);
       const placeDetails = await getPlaceDetails(placeId, sessionToken);
