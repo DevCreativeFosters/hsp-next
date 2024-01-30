@@ -34,6 +34,14 @@
     gap: 0 16px;
   }
 
+  &.withoutSocialMenu {
+    @include bp(large) {
+      grid-template-areas:
+        'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu'
+        'logo mainMenu mainMenu mainMenu vehicle vehicle';
+    }
+  }
+
   @include bp(full) {
     gap: 0 24px;
   }

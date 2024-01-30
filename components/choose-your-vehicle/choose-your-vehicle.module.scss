@@ -17,7 +17,7 @@
 .chooseButton {
   display: flex;
   justify-content: space-between;
-  width: 100vw;
+  width: calc(100vw - 2 * var(--container-inline-padding));
   max-width: 390px;
   border-radius: 0 0 8px 8px;
   padding-inline: 16px;
@@ -46,10 +46,12 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transition: border-radius 50ms;
+    width: 100vw;
 
     @include bp(large) {
       padding-top: 8px;
       border-top-right-radius: 8px;
+      width: auto;
     }
   }
 }
@@ -126,7 +128,7 @@
 
 .dropdownOuter {
   padding: 24px;
-  min-width: 385px;
+  min-width: 360px;
   background: var(--color-primary-100);
 
   @include bp(large) {
