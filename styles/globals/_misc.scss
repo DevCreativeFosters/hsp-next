@@ -1,3 +1,14 @@
 .grecaptcha-badge {
   visibility: hidden;
 }
+
+// style toploader: https://www.npmjs.com/package/nextjs-toploader
+#nprogress#nprogress {
+  // double id to boost specificity
+  .spinner {
+    top: 10px;
+    left: 5px;
+    right: auto;
+    z-index: var(--z-index-loading-spinner);
+  }
+}
