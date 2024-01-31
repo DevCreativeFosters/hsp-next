@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState, useRef } from 'react';
+import replacePdfLinks from '@lib/replace-pdf-links';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
 import { getIcon } from '@lib/icons';
@@ -39,6 +40,13 @@ export default function FAQ({ title, description, buttons, questions }) {
       }
     },
     [toggleItem],
+  );
+
+  useEffect(
+    function replaceLinks() {
+      replacePdfLinks(listRef.current);
+    },
+    [activeItemIndices],
   );
 
   return (
