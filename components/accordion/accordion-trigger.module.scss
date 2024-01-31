@@ -1,0 +1,37 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  color: var(--color-white-80);
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  &:hover {
+    background: var(--color-white-5);
+  }
+
+  &:hover,
+  .accordionItem.active & {
+    cursor: pointer;
+  }
+
+  &.reset {
+    padding: unset;
+    color: unset;
+    font-size: unset;
+    font-weight: unset;
+    line-height: unset;
+  }
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}

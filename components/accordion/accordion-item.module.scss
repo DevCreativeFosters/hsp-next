@@ -1,0 +1,41 @@
+.accordionItem {
+  border-bottom: 2px solid var(--color-white-20);
+
+  &.reset {
+    border-bottom: unset;
+  }
+}
+
+.arrow {
+  transition: transform 400ms;
+
+  .accordionItem.active & {
+    transform: rotate(180deg);
+  }
+}
+
+.body {
+  padding: 24px;
+  margin-bottom: 24px;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  .accordionItem.reset & {
+    padding: unset;
+    margin: unset;
+
+    & > :first-child {
+      margin-top: unset;
+    }
+
+    & > :last-child {
+      margin-bottom: unset;
+    }
+  }
+}
