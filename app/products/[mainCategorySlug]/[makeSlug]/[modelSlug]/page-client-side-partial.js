@@ -12,6 +12,7 @@ export default function PageClientSidePartial({
   make,
   enquiryFormId,
   firstMatchedProduct,
+  allLocations,
 }) {
   const [variant, setVariant] = useState(
     firstMatchedProduct?.productFields.variants?.[0],
@@ -42,6 +43,7 @@ export default function PageClientSidePartial({
           enquiryFormId={enquiryFormId}
           productData={firstMatchedProduct}
           onVariantChange={setVariant}
+          allLocations={allLocations}
         />
       </StoreLocatorProvider>
     </>

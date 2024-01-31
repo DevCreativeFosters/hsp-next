@@ -23,7 +23,7 @@ export const viewport = {
 };
 
 export default async function StoreLocatorPage() {
-  const stores = await getStores();
+  const allStores = await getStores();
 
   return (
     <Layout withMap withFooter={false} reserveSpaceForVehicleSelection>
@@ -45,7 +45,7 @@ export default async function StoreLocatorPage() {
 
       <StoreLocatorProvider>
         <StoreLocatorSearch />
-        <StoreLocatorResultsAndMap stores={stores} />
+        <StoreLocatorResultsAndMap allStores={allStores} />
       </StoreLocatorProvider>
       <FullscreenCollapse>
         <InformationBox hideOn="desktop" />

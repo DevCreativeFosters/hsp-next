@@ -7,6 +7,7 @@ import {
   getMainProductCategory,
   getMake,
   getProductsByCategoriesSlugs,
+  getStores,
 } from '@lib/api';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
@@ -43,6 +44,8 @@ export default async function CategoryPage({ params }) {
         ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
   };
+
+  const allLocations = await getStores();
 
   const products = await getProductsByCategoriesSlugs(
     mainCategorySlug,
@@ -124,6 +127,7 @@ export default async function CategoryPage({ params }) {
               make={make}
               enquiryFormId={enquiryFormId}
               firstMatchedProduct={firstMatchedProduct}
+              allLocations={allLocations}
             />
 
             <div className={styles.warranty}>

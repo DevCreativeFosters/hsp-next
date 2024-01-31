@@ -9,7 +9,7 @@ import Container from '@components/container/container';
 import PageContainer from '@components/page-container/page-container';
 import Loading from '@components/loading/loading';
 
-export default function UteBuilderPage({ makes }) {
+export default function UteBuilderPage({ makes, allLocations }) {
   const [vehicleSelected, setVehicleSelected] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [makeName, setMakeName] = useState('');
@@ -80,7 +80,14 @@ export default function UteBuilderPage({ makes }) {
   }
 
   if (model !== null && model !== undefined && productVariants.length > 0) {
-    return <Builder makeName={makeName} model={model} products={variantList} />;
+    return (
+      <Builder
+        makeName={makeName}
+        model={model}
+        products={variantList}
+        allLocations={allLocations}
+      />
+    );
   }
 
   return (

@@ -24,10 +24,11 @@
   }
 }
 
-.nameContainer {
+.typeContainer {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-top: 8px;
 }
 
 .name {
@@ -39,13 +40,9 @@
 }
 
 .imageWrapper {
-  width: 48px;
+  width: 24px;
   aspect-ratio: 1;
   flex-shrink: 0;
-
-  @include bp(medium) {
-    display: none;
-  }
 
   @include bp(large) {
     display: block;
@@ -58,6 +55,25 @@
   height: 100%;
   object-fit: contain;
   object-position: center center;
+}
+
+.storeTypeLabel {
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: uppercase;
+  margin-block: 0;
+  color: var(--color-white-80);
+
+  &.super {
+    color: #00a651;
+  }
+
+  &.major {
+    color: #27aae1;
+  }
 }
 
 .location {
@@ -111,42 +127,70 @@
   flex-shrink: 0;
 }
 
-.pusher {
-  flex-grow: 1;
-}
+// .pusher {
+//   flex-grow: 1;
+// }
 
 .separator {
   width: 100%;
   height: 1px;
-  margin-block: 24px 12px;
+  margin-block: 16px;
   background: var(--color-white-10);
 }
 
 .extra {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  padding-block: 16px;
+
+  @include bp(large) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .link {
   font-family: var(--font-secondary);
   font-size: 16px;
   padding-inline: 8px !important;
+  width: fit-content;
+
+  @include bp(large) {
+    width: 100%;
+  }
 
   svg {
     width: 12px;
     height: 12px;
-
-    path {
-      fill: var(--color-primary-100);
-    }
   }
 }
 
-.distance {
-  font-family: var(--font-secondary);
-  line-height: 1;
-  white-space: nowrap;
+.inStoreDisplays {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @include bp(large) {
+    flex-direction: row;
+  }
+}
+
+.displaysLabel {
+  color: var(--color-white-80);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-block: 8px;
+}
+
+.displays {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
 
 // Results UI wrapper

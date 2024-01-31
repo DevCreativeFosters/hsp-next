@@ -1,16 +1,16 @@
 'use client';
 
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { findLocationsInRadius } from '@lib/store-locations';
 import { getGeoHash } from '@lib/get-geo-hash';
+import normalizeStores from '@lib/normalize-stores';
 import StoreLocatorContext from '@contexts/store-locator';
-import { allLocations } from '@mockup/store-locations';
 import Container from '@components/container/container';
 import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import styles from './store-locator-results-and-map.module.scss';
 
-export default function StoreLocatorResultsAndMap({ stores }) {
+export default function StoreLocatorResultsAndMap({ allStores }) {
   const resultsRef = useRef(null);
   const {
     searchGeolocation,
@@ -19,8 +19,15 @@ export default function StoreLocatorResultsAndMap({ stores }) {
     radius,
     selectedStore,
     setSelectedStore,
-    resetFilteredLocations,
   } = useContext(StoreLocatorContext);
+
+  useEffect(
+    function setInitialLocationList() {
+      const locationList = normalizeStores(allStores);
+      setFilteredLocations(locationList);
+    },
+    [allStores, setFilteredLocations],
+  );
 
   useEffect(
     function scrollToSelectedResultItem() {
@@ -40,14 +47,15 @@ export default function StoreLocatorResultsAndMap({ stores }) {
 
   useEffect(
     function syncMapBoundaries() {
+      const locationList = normalizeStores(allStores);
       if (searchGeolocation && radius) {
         setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
       } else {
-        resetFilteredLocations();
+        setFilteredLocations(locationList);
       }
       return () => {};
     },
-    [searchGeolocation, radius, resetFilteredLocations, setFilteredLocations],
+    [searchGeolocation, radius, allStores, setFilteredLocations],
   );
 
   return (

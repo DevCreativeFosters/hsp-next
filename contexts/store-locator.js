@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useCallback, createContext } from 'react';
-import { allLocations } from '@mockup/store-locations';
+import { useState, createContext } from 'react';
 
 const StoreLocatorContext = createContext({});
 
@@ -20,14 +19,10 @@ export const DEFAULT_RADIUS = RADIUS_OPTIONS[RADIUS_OPTIONS.length - 1].value;
 export const StoreLocatorProvider = ({ children }) => {
   const [location, setLocation] = useState(undefined);
   const [searchGeolocation, setSearchGeolocation] = useState(null);
-  const [filteredLocations, setFilteredLocations] = useState(allLocations);
+  const [filteredLocations, setFilteredLocations] = useState([]);
   const [radius, setRadius] = useState(DEFAULT_RADIUS);
   const [selectedStore, setSelectedStore] = useState(null);
   const [isMapVisible, setMapVisible] = useState(false);
-
-  const resetFilteredLocations = useCallback(() => {
-    setFilteredLocations(allLocations);
-  }, []);
 
   return (
     <StoreLocatorContext.Provider
@@ -44,7 +39,6 @@ export const StoreLocatorProvider = ({ children }) => {
         setSelectedStore,
         isMapVisible,
         setMapVisible,
-        resetFilteredLocations,
       }}
     >
       {children}
