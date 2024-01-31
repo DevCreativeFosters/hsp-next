@@ -14,7 +14,6 @@ import StoreLocatorInput from '@components/store-locator-input/store-locator-inp
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
 import Select from '@components/form/select';
 import Switch from '@components/form/switch';
-import { allLocations } from '@mockup/store-locations';
 
 import styles from './store-search-controls.module.scss';
 
@@ -23,6 +22,7 @@ export default function StoreSearchControls({
   isWide,
   isHidden,
   interactWithDisabledForm,
+  allLocations,
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
@@ -39,7 +39,6 @@ export default function StoreSearchControls({
     setRadius,
     isMapVisible,
     setMapVisible,
-    // resetFilteredLocations,
   } = useContext(StoreLocatorContext);
 
   const onRadiusChange = useCallback(
@@ -70,12 +69,11 @@ export default function StoreSearchControls({
   //       setLocationInput('');
   //       setSearchGeolocation(null);
   //       setRadius(DEFAULT_RADIUS);
-  //       resetFilteredLocations();
   //     }
 
   //     return () => {};
   //   },
-  //   [selectedStore, setRadius, setSearchGeolocation, resetFilteredLocations],
+  //   [selectedStore, setRadius, setSearchGeolocation],
   // );
 
   useEffect(
@@ -111,7 +109,7 @@ export default function StoreSearchControls({
         setFilteredLocations(allLocations);
       };
     },
-    [searchGeolocation, setFilteredLocations, radius],
+    [searchGeolocation, setFilteredLocations, radius, allLocations],
   );
 
   return (

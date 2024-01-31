@@ -69,6 +69,7 @@ export default function Sidebar({
   removeProduct,
   isMobile,
   className,
+  allLocations,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
@@ -145,7 +146,11 @@ export default function Sidebar({
           headerClick={setOpenSection}
           isOpen={openSection === 'store'}
         >
-          <StoreSearchControls label={null} isHidden={selectedStore} />
+          <StoreSearchControls
+            label={null}
+            isHidden={selectedStore}
+            allLocations={allLocations}
+          />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
           ) : (

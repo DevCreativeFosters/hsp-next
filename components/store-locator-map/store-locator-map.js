@@ -14,7 +14,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
 const DEFAULT_MAP_ZOOM = 4;
 
 export default function StoreLocatorMap({
-  locations,
+  locations = [],
   onMarkerClick,
   className,
 }) {
@@ -53,6 +53,11 @@ export default function StoreLocatorMap({
         const bounds = new google.maps.LatLngBounds();
         markers = locations.map(location => {
           const { name, geolocation, icon } = location;
+
+          if (geolocation.lat == null || geolocation.lng == null) {
+            return;
+          }
+
           const marker = new google.maps.Marker({
             position: geolocation,
             title: name,
@@ -62,6 +67,8 @@ export default function StoreLocatorMap({
           marker.addListener('click', () => onMarkerClick(location));
           return marker;
         });
+
+        markers = markers.filter(marker => marker !== undefined);
 
         markerCluster = new MarkerClusterer({
           map: googleMap,

@@ -6,10 +6,8 @@ import { getIcon } from '@lib/icons';
 import { getGeoHash } from '@lib/get-geo-hash';
 import Button from '@components/button/button';
 
-import TypeAgentImage from '@assets/images/type-agent.webp';
-import TypeStoreImage from '@assets/images/type-store.webp';
-import TypeDistributorImage from '@assets/images/type-distributor.webp';
-import TypeHSPImage from '@assets/images/type-hsp.webp';
+import TypeSuperImage from '@assets/images/type-super.webp';
+import TypeMajorImage from '@assets/images/type-major.webp';
 
 import styles from './store-tile.module.scss';
 
@@ -24,28 +22,26 @@ export default function StoreTile({
     tel,
     geolocation,
     type,
-    distance,
+    displays,
+    learnMoreUrl,
   },
   selected,
 }) {
   let storeImage;
+  let storeTypeLabel;
   switch (type) {
-    case 'AGENT':
-      storeImage = TypeAgentImage;
+    case 'SUPER':
+      storeImage = TypeSuperImage;
+      storeTypeLabel = 'Super Store';
       break;
-    case 'STORE':
-      storeImage = TypeStoreImage;
-      break;
-    case 'DISTRIBUTOR':
-      storeImage = TypeDistributorImage;
-      break;
-    case 'HSP':
-      storeImage = TypeHSPImage;
+    case 'MAJOR':
+      storeImage = TypeMajorImage;
+      storeTypeLabel = 'Major Distributor';
       break;
   }
 
   const geoHash = getGeoHash(geolocation);
-  const telNormalized = tel.replaceAll(/([^0-9+])/gi, '');
+  const telNormalized = tel?.toString().replaceAll(/([^0-9+])/gi, '');
 
   const { lat, lng } = geolocation;
   let addressString = address;
@@ -56,7 +52,6 @@ export default function StoreTile({
   const addressStringPure = addressString.replaceAll('<br />', ', ');
 
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-  const distanceNormalized = Math.round(distance / 1000);
 
   const copyAddressToClipboard = useCallback(() => {
     try {
@@ -71,16 +66,21 @@ export default function StoreTile({
       className={clsx(styles.tile, { [styles.isSelected]: selected })}
       id={geoHash}
     >
-      <div className={styles.nameContainer}>
-        <div
-          className={styles.name}
-          dangerouslySetInnerHTML={{ __html: name }}
-        />
+      <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
+      <div className={styles.typeContainer}>
         {storeImage && (
           <div className={styles.imageWrapper}>
             <Image className={styles.image} src={storeImage} alt={type} />
           </div>
         )}
+        <p
+          className={clsx(styles.storeTypeLabel, {
+            [styles.major]: type === 'MAJOR',
+            [styles.super]: type === 'SUPER',
+          })}
+        >
+          {storeTypeLabel}
+        </p>
       </div>
       <div className={styles.location}>
         <div className={styles.icon}>
@@ -102,33 +102,66 @@ export default function StoreTile({
           )}
         </div>
       </div>
-      <a className={styles.tel} href={`tel:${telNormalized}`}>
-        <div className={styles.icon}>
-          <PhoneIcon />
-        </div>
-        {tel}
-      </a>
-      <div className={styles.pusher} />
-      <div className={styles.separator} />
+      {tel && (
+        <a className={styles.tel} href={`tel:${telNormalized}`}>
+          <div className={styles.icon}>
+            <PhoneIcon />
+          </div>
+          {tel}
+        </a>
+      )}
       <div className={styles.extra}>
-        <div>
-          <Button
-            className={styles.link}
-            variant="tertiary"
-            size="small"
-            rightIcon="external-link"
-            href={directionsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Directions
-          </Button>
-        </div>
-
-        {distanceNormalized ? (
-          <div className={styles.distance}>({distanceNormalized} km)</div>
-        ) : null}
+        <Button
+          className={styles.link}
+          variant="quinary"
+          size="small"
+          rightIcon="external-link"
+          href={directionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Directions
+        </Button>
+        <Button
+          className={styles.link}
+          variant="primary"
+          size="small"
+          rightIcon="external-link"
+          href={learnMoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+        </Button>
       </div>
+      <div className={styles.pusher} />
+      {displays?.length > 1 && (
+        <div className={styles.displaysContainer}>
+          <div className={styles.separator} />
+          <div className={styles.inStoreDisplays}>
+            <p className={styles.displaysLabel}>In Store Displays</p>
+            <div className={styles.displays}>
+              {displays.map((product, idx) => {
+                const imageUrl =
+                  product.productCategory.mainCategoryDetails?.inStoreImage
+                    ?.mediaItemUrl;
+                const altText = product.productCategory.name;
+                if (imageUrl) {
+                  return (
+                    <Image
+                      key={idx + altText}
+                      src={imageUrl}
+                      alt={altText}
+                      width={40}
+                      height={40}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </li>
   );
 }

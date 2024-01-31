@@ -23,6 +23,7 @@ import styles from './enquiry-form.module.scss';
 export default function EnquiryForm({
   enquiryFormId,
   productData,
+  allLocations,
   onVariantChange: onVariantChangeCallback = () => {},
 }) {
   const [_, setIsFormValid] = useState(false);
@@ -141,6 +142,7 @@ export default function EnquiryForm({
         <StoreSearchControls
           isWide
           interactWithDisabledForm={interactWithDisabledForm}
+          allLocations={allLocations}
         />
 
         {selectedStore ? (
