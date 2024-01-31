@@ -9,6 +9,13 @@
     align-items: center;
     gap: 48px;
   }
+
+  &.stacked-centered {
+    @include bp(large) {
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
 }
 
 .title {
@@ -20,6 +27,12 @@
   @include bp(large) {
     font-size: 64px;
   }
+
+  .section.stacked-centered & {
+    @include bp(large) {
+      text-align: center;
+    }
+  }
 }
 
 .description {
@@ -28,4 +41,10 @@
   font-weight: 400;
   line-height: 1.2;
   margin: 0;
+
+  .section.stacked-centered & {
+    @include bp(large) {
+      text-align: center;
+    }
+  }
 }
