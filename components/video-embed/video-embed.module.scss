@@ -3,7 +3,7 @@
   max-width: 100%;
   height: auto;
   margin-block: 48px;
-  padding-bottom: 56.25%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 
   @include bp(large) {

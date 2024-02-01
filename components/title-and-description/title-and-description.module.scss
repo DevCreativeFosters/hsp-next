@@ -7,13 +7,12 @@
   @include bp(large) {
     flex-direction: row;
     align-items: center;
-    gap: 48px;
+    gap: 24px 48px;
   }
 
   &.stacked-centered {
     @include bp(large) {
       flex-direction: column;
-      gap: 24px;
     }
   }
 }

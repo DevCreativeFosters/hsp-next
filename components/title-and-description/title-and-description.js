@@ -11,7 +11,7 @@ export default function TitleAndDescription({
       <section
         className={clsx(styles.section, layoutVariant && styles[layoutVariant])}
       >
-        {title && <h1 className={styles.title}>{layoutVariant}</h1>}
+        {title && <h1 className={styles.title}>{title}</h1>}
         {description && <p className={styles.description}>{description}</p>}
       </section>
     );
