@@ -2,14 +2,12 @@ import { convertToEmbedUrl } from '@lib/convert-video-embed-url';
 import styles from './video-embed.module.scss';
 
 export default function VideoEmbed({ videoUrl }) {
-  if (videoUrl) {
+  const embedUrl = convertToEmbedUrl(videoUrl);
+
+  if (embedUrl) {
     return (
       <div className={styles.embed}>
-        <iframe
-          src={convertToEmbedUrl(videoUrl)}
-          frameborder="0"
-          allowfullscreen
-        />
+        <iframe src={embedUrl} frameborder="0" allowfullscreen />
       </div>
     );
   }
