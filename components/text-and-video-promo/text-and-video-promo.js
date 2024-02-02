@@ -16,25 +16,28 @@ export default function TextAndImagePromo({
     <Container>
       <div className={styles.promo}>
         <div className={styles.text}>
-          <h2 className={styles.title}>
-            <TextElement text={title} />
-          </h2>
-          <div
-            className={styles.description}
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
-          <Button
-            className={styles.moreButton}
-            size="large"
-            href={linkUrl}
-            style={{ maxWidth: 'fit-content' }}
-          >
-            {linkText}
-          </Button>
+          {title && (
+            <h2 className={styles.title}>
+              <TextElement text={title} />
+            </h2>
+          )}
+          {description && (
+            <div
+              className={styles.description}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          )}
+          {linkUrl && linkText && (
+            <Button className={styles.moreButton} size="large" href={linkUrl}>
+              {linkText}
+            </Button>
+          )}
         </div>
-        <div className={styles.video}>
-          <VideoCard variant="rectangle" url={videoUrl} />
-        </div>
+        {videoUrl && (
+          <div className={styles.video}>
+            <VideoCard variant="rectangle" url={videoUrl} />
+          </div>
+        )}
       </div>
     </Container>
   );
