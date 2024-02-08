@@ -15,6 +15,11 @@ function formatTinyMCETables(htmlString) {
   // Remove inline styles from table cells
   htmlString = htmlString.replace(/(<(?:td|th)[^>]*?)\s*style="[^"]*"/gi, '$1');
 
+  // Replace td for th inside thead element
+  htmlString = htmlString.replace(/<thead>(.*?)<\/thead>/gis, function (match) {
+    return match.replace(/<td/gi, '<th').replace(/<\/td>/gi, '</th>');
+  });
+
   // Wrap tables in figure
   htmlString = htmlString.replace(/<table/gi, '<figure><table');
   htmlString = htmlString.replace(/<\/table>/gi, '</table></figure>');
