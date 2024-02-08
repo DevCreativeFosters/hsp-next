@@ -16,10 +16,15 @@ export const metadata = {
 };
 
 export default async function SupportSubpage({ params }) {
-  const supportUrl = routes.support(params.slug);
+  const removeFirstSlash = string => {
+    return string.startsWith('/') ? string.substring(1) : string;
+  };
+
+  const supportUrl = removeFirstSlash(routes.support(params.slug));
   const gutenbergContent = await getPageGutenbergContent(supportUrl);
   const content = await getPageData(supportUrl);
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const accordions = content?.supportPagesContent?.accordions;
 
   return (
     <Layout>
@@ -49,6 +54,7 @@ export default async function SupportSubpage({ params }) {
                   <Wysiwyg
                     className={styles.content}
                     content={gutenbergContent?.content}
+                    accordions={accordions}
                   />
                 )}
               </div>
