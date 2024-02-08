@@ -32,6 +32,11 @@
 
   &.reserveSpaceForVehicleSelection {
     padding-top: 40px;
+    transition: padding-top 0.3s ease-in-out;
+
+    [class*='store-locator-fullscreen'] & {
+      padding-top: 0;
+    }
 
     @include bp(large) {
       padding-top: 0;
