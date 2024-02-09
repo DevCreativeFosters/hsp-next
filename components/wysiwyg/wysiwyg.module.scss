@@ -232,3 +232,17 @@
     }
   }
 }
+
+.accordion {
+  margin-block: 48px;
+}
+
+.accordionItemBody {
+  figure {
+    margin-bottom: 0;
+
+    &:not(:last-child) {
+      margin-bottom: 48px;
+    }
+  }
+}

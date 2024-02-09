@@ -1,8 +1,13 @@
 .accordionItem {
   border-bottom: 2px solid var(--color-white-20);
 
+  &.active {
+    background-color: var(--color-white-5);
+  }
+
   &.reset {
     border-bottom: unset;
+    background-color: unset;
   }
 }
 

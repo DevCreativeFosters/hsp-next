@@ -36,13 +36,14 @@ export default function Wysiwyg({ className, content, accordions }) {
         {parsedContent}
 
         {accordions && accordions.length > 0 && (
-          <Accordion>
+          <Accordion className={styles.accordion}>
             {accordions.map(
               (accordion, index) =>
                 accordion.title && (
                   <AccordionItem key={index} triggerContent={accordion.title}>
                     {accordion.content && (
                       <div
+                        className={styles.accordionItemBody}
                         dangerouslySetInnerHTML={{
                           __html: formatTinyMCETables(accordion.content),
                         }}
