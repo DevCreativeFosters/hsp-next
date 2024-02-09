@@ -103,7 +103,7 @@ export default async function CategoryPage({ params }) {
   const images = firstMatchedProduct?.productFields?.images?.map(
     (item, index) => {
       return {
-        sourceUrl: item.image.mediaItemUrl,
+        sourceUrl: item?.mediaItemUrl,
         alt: index === 0 ? 'mainImage' : '',
         mainImage: index === 0,
       };
