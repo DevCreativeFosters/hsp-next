@@ -16,11 +16,7 @@ export const metadata = {
 };
 
 export default async function SupportSubpage({ params }) {
-  const removeFirstSlash = string => {
-    return string.startsWith('/') ? string.substring(1) : string;
-  };
-
-  const supportUrl = removeFirstSlash(routes.support(params.slug));
+  const supportUrl = routes.support(params.slug);
   const gutenbergContent = await getPageGutenbergContent(supportUrl);
   const content = await getPageData(supportUrl);
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
