@@ -11,38 +11,17 @@ import Input from '@components/form/input';
 import IllustrationImage from '@assets/images/newsletter-illustration.webp';
 import styles from './newsletter.module.scss';
 
-const title = 'Join our community';
-const description = `
-  <p>
-    Want to beef up your ride? The Ford Ranger PX Hard Lid is the
-    perfect meal ticket. This tonneau cover boasts dimensional,
-    aerodynamic styling and comes with premium standard features.
-  </p>
-`;
-
-export default function Newsletter({ googleRecaptchaSitekey }) {
-  const [globalOptions, setGlobalOptions] = useState(null);
+export default function Newsletter({
+  googleRecaptchaSitekey,
+  title,
+  description,
+}) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
   const [error, setError] = useState('');
   const [isBusy, setIsBusy] = useState(false);
   const tokenRef = useRef(null);
   const formRef = useRef();
-  const customTitle = globalOptions?.newsletterTitle;
-  const customDescription = globalOptions?.newsletterDescription;
-
-  useEffect(() => {
-    async function fetchGlobalOptions() {
-      try {
-        const data = await getGlobalOptions();
-        setGlobalOptions(data);
-      } catch (error) {
-        console.log('Failed to fetch the global options', error);
-      }
-    }
-
-    fetchGlobalOptions();
-  }, []);
 
   const onCaptchaSuccess = useCallback(token => {
     tokenRef.current = token;
@@ -103,11 +82,11 @@ export default function Newsletter({ googleRecaptchaSitekey }) {
             />
           </div>
         )}
-        <h3 className={styles.title}>{customTitle ? customTitle : title}</h3>
+        <h3 className={styles.title}>{title}</h3>
         <div
           className={styles.description}
           dangerouslySetInnerHTML={{
-            __html: customDescription ? customDescription : description,
+            __html: description,
           }}
         />
         <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>

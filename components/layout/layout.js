@@ -70,6 +70,8 @@ export default function Layout({
   const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
   const normalizedProductData = normalizeProductData(data.productCategories);
   normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
+  const newsletterTitle = data.globalOptions?.newsletterTitle;
+  const newsletterDescription = data.globalOptions?.newsletterDescription;
 
   data.footerMenus?.forEach(menu => {
     const menuLocation = menu?.node?.locations[0];
@@ -135,7 +137,11 @@ export default function Layout({
         {withFooter && (
           <div className={styles.bottomSticky}>
             <FullscreenCollapse>
-              <Newsletter googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY} />
+              <Newsletter
+                googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
+                title={newsletterTitle}
+                description={newsletterDescription}
+              />
               <Footer menus={normalizedFooterMenus} text={footerText} />
             </FullscreenCollapse>
           </div>
