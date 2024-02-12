@@ -13,7 +13,6 @@
     "@googlemaps/js-api-loader": "^1.16.2",
     "@googlemaps/markerclusterer": "^2.5.0",
     "@svgr/webpack": "^8.0.1",
-    "axios": "^1.5.1",
     "can-autoplay": "^3.0.2",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
