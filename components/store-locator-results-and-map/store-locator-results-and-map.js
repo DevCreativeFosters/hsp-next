@@ -10,23 +10,23 @@ import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import styles from './store-locator-results-and-map.module.scss';
 
-export default function StoreLocatorResultsAndMap({ allStores }) {
+export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
     searchGeolocation,
     filteredLocations,
     setFilteredLocations,
-    radius,
     selectedStore,
     setSelectedStore,
+    filteredStores,
   } = useContext(StoreLocatorContext);
 
   useEffect(
     function setInitialLocationList() {
-      const locationList = normalizeStores(allStores);
+      const locationList = normalizeStores(allLocations);
       setFilteredLocations(locationList);
     },
-    [allStores, setFilteredLocations],
+    [allLocations, setFilteredLocations],
   );
 
   useEffect(
@@ -47,15 +47,16 @@ export default function StoreLocatorResultsAndMap({ allStores }) {
 
   useEffect(
     function syncMapBoundaries() {
-      const locationList = normalizeStores(allStores);
-      if (searchGeolocation && radius) {
-        setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
+      const locationList = normalizeStores(allLocations);
+      if (searchGeolocation) {
+        setFilteredLocations(
+          findLocationsInRadius(searchGeolocation, locationList),
+        );
       } else {
         setFilteredLocations(locationList);
       }
-      return () => {};
     },
-    [searchGeolocation, radius, allStores, setFilteredLocations],
+    [searchGeolocation, allLocations, setFilteredLocations],
   );
 
   return (
@@ -63,9 +64,9 @@ export default function StoreLocatorResultsAndMap({ allStores }) {
       <Container className={styles.container}>
         <div className={styles.visualContainer}>
           <div className={styles.results} ref={resultsRef}>
-            {filteredLocations.length > 0 ? (
+            {filteredStores.length > 0 ? (
               <ul className={styles.resultList}>
-                {filteredLocations.map((result, index) => {
+                {filteredStores.map((result, index) => {
                   const isSelected =
                     selectedStore?.geolocation?.lat ===
                       result.geolocation.lat &&
