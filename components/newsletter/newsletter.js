@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
-import { brevoNewsletterSignup, getGlobalOptions } from '@lib/api';
+import { brevoNewsletterSignup } from '@lib/api';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
@@ -82,13 +82,15 @@ export default function Newsletter({
             />
           </div>
         )}
-        <h3 className={styles.title}>{title}</h3>
-        <div
-          className={styles.description}
-          dangerouslySetInnerHTML={{
-            __html: description,
-          }}
-        />
+        {title && <h3 className={styles.title}>{title}</h3>}
+        {description && (
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
+        )}
         <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
