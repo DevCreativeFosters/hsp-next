@@ -1,13 +1,18 @@
-import Select from '@components/form/select';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import useGravityForm from '@hooks/useGravityForm';
+import InputWrapper from '@components/gravity-forms/input-wrapper';
+import Select from '@components/form/select';
+import {
+  initializeState,
+  onComplexFieldChange,
+} from '@components/gravity-forms/_helpers';
+import { COUNTRY_OPTIONS } from '@mockup/countries';
 import Input from '@components/form/input';
-import CustomSelect from '@components/custom-select/custom-select';
-import InputWrapper from './input-wrapper';
 
 const DEFAULT_VALUE = '';
 
 export default function AddressField({ form, field, fieldErrors }) {
+  const parentKey = 'addressValues';
   const { databaseId: id, isRequired, inputs } = field;
   const formId = form.formId;
   const { state, dispatch } = useGravityForm();
@@ -18,34 +23,40 @@ export default function AddressField({ form, field, fieldErrors }) {
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 
+  const onSelectChange = useCallback(value => {}, []);
+
+  useEffect(() => {
+    initializeState({
+      id,
+      visibleInputs,
+      parentKey,
+      dispatch,
+    });
+  }, []);
+
   return visibleInputs.map(
-    ({ id, key, label, customLabel, placeholder, value }) => {
-      const stateValue = state.find(fieldValue => fieldValue.id === id)?.value;
+    ({
+      id: inputId,
+      key: childKey,
+      label,
+      customLabel,
+      placeholder,
+      value,
+    }) => {
+      const stateValue = state.find(fieldValue => fieldValue.id === id)?.[
+        parentKey
+      ][childKey];
       const valueCalculated =
         stateValue !== undefined ? stateValue : value || DEFAULT_VALUE;
 
-      const oneOfValue = ['city', 'state', 'zip', 'country'].includes(key)
+      const oneOfValue = ['city', 'state', 'zip', 'country'].includes(childKey)
         ? 2
         : 1;
 
-      const countryOptions = [
-        {
-          label: 'Australia',
-          value: 'AU',
-        },
-        {
-          label: 'Thailand',
-          value: 'TH',
-        },
-        {
-          label: 'New Zeland',
-          value: 'NZ',
-        },
-      ];
-
       const sharedProps = {
-        id: `gform_${formId}_${id}`,
-        name: `gform_${formId}_${id}`,
+        size: 'large',
+        id: `gform_${formId}_${inputId}`,
+        name: `gform_${formId}_${inputId}`,
         label: customLabel || label,
         placeholder,
         value: valueCalculated,
@@ -54,38 +65,31 @@ export default function AddressField({ form, field, fieldErrors }) {
         ...(field.autocompleteAttribute && {
           autoComplete: field.hasAutocomplete,
         }),
-      };
-
-      const inputProps = {
-        onChange: ev => {
-          dispatch({
-            type: 'updateFieldValue',
-            payload: {
-              id,
-              value: ev.target.value,
-            },
+        onChange: valueOrEvent => {
+          const newValue =
+            typeof valueOrEvent === 'string'
+              ? valueOrEvent
+              : valueOrEvent.target.value;
+          onComplexFieldChange({
+            id,
+            parentKey,
+            childKey,
+            value: newValue,
+            state,
+            dispatch,
           });
         },
       };
 
-      const selectProps = {
-        options: key === 'country' ? countryOptions : null,
-        onChange: value =>
-          dispatch({
-            type: 'updateFieldValue',
-            payload: {
-              id,
-              value,
-            },
-          }),
-      };
-
       return (
-        <InputWrapper oneOf={oneOfValue} key={id}>
-          {key === 'country' ? (
-            <Select size="large" {...sharedProps} {...selectProps} />
+        <InputWrapper oneOf={oneOfValue} key={childKey}>
+          {childKey === 'country' ? (
+            <Select
+              {...sharedProps}
+              options={childKey === 'country' ? COUNTRY_OPTIONS : null}
+            />
           ) : (
-            <Input type="text" {...sharedProps} {...inputProps} />
+            <Input type="text" {...sharedProps} />
           )}
         </InputWrapper>
       );

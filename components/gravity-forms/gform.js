@@ -1,14 +1,37 @@
 'use client';
 
-import { useCallback, useImperativeHandle, useRef, useState } from 'react';
+import {
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { ApolloClient, gql, InMemoryCache, useMutation } from '@apollo/client';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import Button from '@components/button/button';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
 import GravityFormsField from './field';
 import Confirmation from './confirmation';
 import useGravityForm from '@hooks/useGravityForm';
-import { sendGravityForm } from '@lib/api/send-gravity-form';
 import styles from './gform.module.scss';
+
+const SUBMIT_MUTATION = gql`
+  mutation ($input: SubmitGfFormInput!) {
+    submitGfForm(input: $input) {
+      confirmation {
+        type
+        message
+        url
+      }
+      errors {
+        id
+        message
+      }
+    }
+  }
+`;
 
 export default function GForm({
   innerRef,
@@ -42,20 +65,35 @@ export default function GForm({
     setConfirmation(null);
   }, [dispatch, onReset]);
 
+  const client = useMemo(() => {
+    return new ApolloClient({
+      cache: new InMemoryCache(),
+      link: createUploadLink({
+        uri: process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
+      }),
+    });
+  }, []);
+
+  const [formSubmitMutation] = useMutation(SUBMIT_MUTATION, { client });
+
   const handleSubmit = async ev => {
     if (ev) ev.preventDefault();
     if (isLoading) return;
 
     setLoading(true);
     onSubmit();
-    await sendGravityForm({
-      id: form.formId,
-      fieldValues: state,
+
+    await formSubmitMutation({
+      variables: {
+        input: {
+          id: form.formId,
+          fieldValues: state,
+        },
+      },
     })
       .then(response => {
-        const gfFormConfirmation = response.submitGfForm.confirmation;
-        const errors = response.submitGfForm.errors;
-
+        const gfFormConfirmation = response.data.submitGfForm.confirmation;
+        const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
           onSuccess();
           setSubmitted(true);

@@ -37,18 +37,29 @@
   .nativeInput:focus + & {
     border-color: var(--focus-border-color);
   }
+
+  &.error {
+    border-color: var(--color-error);
+  }
 }
 
 .fileNameWrapper {
   display: inline-flex;
   align-items: center;
+  gap: 2px;
   flex-shrink: 2;
-  max-width: 150px;
+  max-width: 170px;
   padding: 4px 6px 4px 12px;
   border: 1px solid var(--color-white-40);
   border-radius: 4px;
   color: var(--color-white-60);
   background-color: var(--color-white-20);
+
+  &.isInvalid {
+    border-color: var(--color-primary-100);
+    color: var(--color-primary-100);
+    background: var(--color-primary-20);
+  }
 }
 
 .fileName {
@@ -96,4 +107,11 @@
     right: 20px;
     transform: translateY(-50%);
   }
+}
+
+.errorMessage {
+  font-size: 14px;
+  padding-top: 7px;
+  padding-left: 10px;
+  color: var(--color-error);
 }

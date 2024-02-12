@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import Input from '@components/form/input';
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -63,6 +63,15 @@ export default function InputField({ form, field, fieldErrors }) {
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
   }, [id, fieldErrors]);
+
+  useEffect(() => {
+    if (valueCalculated) {
+      dispatch({
+        type: 'updateFieldValue',
+        payload: getPayload(type, id, valueCalculated),
+      });
+    }
+  }, []);
 
   return (
     <Input

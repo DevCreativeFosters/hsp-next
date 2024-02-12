@@ -8,32 +8,21 @@ import {
   useState,
 } from 'react';
 import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
+import { USER_EXAMPLE } from '@mockup/user';
 
 const UserContext = createContext();
 
-const USER_DATA_EXAMPLE = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'johndoe@example.com',
-  phone: '070072772',
-  streetAddress: 'Sydney Park Road 48',
-  streetAddress2: 'Extra street info',
-  city: 'Sydney',
-  state: 'NSW',
-  postalCode: 2055,
-  country: 'AU',
-};
-
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(USER_DATA_EXAMPLE);
-
+  const [user, setUser] = useState(USER_EXAMPLE);
   const getUserFromStorage = useCallback(() => {
     const userString = sessionStorage.getItem(SESSION_STORAGE_USER_DATA);
-    try {
-      const userParsed = JSON.parse(userString);
-      setUser(userParsed);
-    } catch (err) {
-      console.error(err);
+    if (userString) {
+      try {
+        const userParsed = JSON.parse(userString);
+        setUser(userParsed);
+      } catch (err) {
+        console.error(err);
+      }
     }
   }, []);
 
@@ -42,7 +31,7 @@ export const UserProvider = ({ children }) => {
     sessionStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
   }, [user]);
 
-  useEffect(handleSave, []);
+  useEffect(handleSave, []); // TODO: replace with actual authentication
   useEffect(getUserFromStorage, []);
 
   return (
