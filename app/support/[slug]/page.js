@@ -20,6 +20,7 @@ export default async function SupportSubpage({ params }) {
   const gutenbergContent = await getPageGutenbergContent(supportUrl);
   const content = await getPageData(supportUrl);
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const accordions = content?.supportPagesContent?.accordions;
 
   return (
     <Layout>
@@ -49,6 +50,7 @@ export default async function SupportSubpage({ params }) {
                   <Wysiwyg
                     className={styles.content}
                     content={gutenbergContent?.content}
+                    accordions={accordions}
                   />
                 )}
               </div>
