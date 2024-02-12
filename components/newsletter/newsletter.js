@@ -11,16 +11,11 @@ import Input from '@components/form/input';
 import IllustrationImage from '@assets/images/newsletter-illustration.webp';
 import styles from './newsletter.module.scss';
 
-const title = 'Join our community';
-const description = `
-  <p>
-    Want to beef up your ride? The Ford Ranger PX Hard Lid is the
-    perfect meal ticket. This tonneau cover boasts dimensional,
-    aerodynamic styling and comes with premium standard features.
-  </p>
-`;
-
-export default function Newsletter({ googleRecaptchaSitekey }) {
+export default function Newsletter({
+  googleRecaptchaSitekey,
+  title,
+  description,
+}) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
   const [error, setError] = useState('');
@@ -87,11 +82,15 @@ export default function Newsletter({ googleRecaptchaSitekey }) {
             />
           </div>
         )}
-        <h3 className={styles.title}>{title}</h3>
-        <div
-          className={styles.description}
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
+        {title && <h3 className={styles.title}>{title}</h3>}
+        {description && (
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{
+              __html: description,
+            }}
+          />
+        )}
         <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
