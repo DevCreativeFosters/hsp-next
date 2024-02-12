@@ -87,6 +87,10 @@ export default function ProductImageCarousel({ images }) {
   );
 
   useEffect(() => {
+    setSelectedImage(images?.[0]);
+  }, [images]);
+
+  useEffect(() => {
     const handleBodyOverflow = () => {
       if (isMobile) {
         document.body.style.overflowY = zoomed ? 'hidden' : 'auto';
