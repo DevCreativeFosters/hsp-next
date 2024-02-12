@@ -22,8 +22,12 @@ export default function ProductTabs({
   const headerRef = useRef(null);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
   const tabs = {
-    features: 'Features',
-    specs: 'Technical Specifications',
+    ...((featuresDescription || featuresBoxes?.length > 0) && {
+      features: 'Features',
+    }),
+    ...((specificationDescription || specificationContent) && {
+      specs: 'Technical Specifications',
+    }),
     ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
   };
 
@@ -70,13 +74,15 @@ export default function ProductTabs({
                     key={feature.title}
                   >
                     <div>
-                      <Image
-                        className={styles.icon}
-                        src={feature.icon.mediaItemUrl || ''}
-                        width={58}
-                        height={58}
-                        alt="icon"
-                      />
+                      {feature.icon && (
+                        <Image
+                          className={styles.icon}
+                          src={feature.icon.mediaItemUrl || ''}
+                          width={58}
+                          height={58}
+                          alt="icon"
+                        />
+                      )}
                       <div className={styles.featureContent}>
                         {feature.title && <h5>{feature.title}</h5>}
                         <Wysiwyg

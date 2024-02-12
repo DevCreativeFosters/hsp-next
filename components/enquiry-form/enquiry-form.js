@@ -29,7 +29,6 @@ export default function EnquiryForm({
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState(null);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -40,6 +39,13 @@ export default function EnquiryForm({
     label: variantName,
     value: variantSlug,
   }));
+  const [selectedVariant, setSelectedVariant] = useState(variants?.[0]);
+
+  const variantPrice = selectedVariant.variantDetails.price
+    ? selectedVariant.variantDetails.price
+    : selectedVariant.parentInherit
+      ? productPrice
+      : null;
 
   const {
     location,
@@ -74,7 +80,7 @@ export default function EnquiryForm({
         variant => variant.variantSlug === value,
       );
 
-      setSelectedVariant([newSelectedVariant]);
+      setSelectedVariant(newSelectedVariant);
       onVariantChangeCallback(newSelectedVariant);
     },
     [variants, onVariantChangeCallback],
@@ -101,6 +107,10 @@ export default function EnquiryForm({
       setHighlight(Math.random());
     }
   }, [selectedStore]);
+
+  useEffect(() => {
+    setSelectedVariant(variants?.[0]);
+  }, [variants]);
 
   useEffect(
     function resetHighlight() {
@@ -168,9 +178,9 @@ export default function EnquiryForm({
         )}
 
         <div className={styles.price}>
-          {productPrice > 0 && (
+          {variantPrice && (
             <span className={styles.productsPrice}>
-              {formatPrice(productPrice)}
+              {formatPrice(variantPrice)}
             </span>
           )}
           {selectedStore && installationCost > 0 && (
