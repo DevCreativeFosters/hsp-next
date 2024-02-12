@@ -1,14 +1,12 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import { scrollIntoViewHorizontally } from '@lib/helpers';
 import DownloadFileButton from '@components/download-file-button/download-file-button';
 import styles from './product-tabs.module.scss';
-
-const DEFAULT_TAB = 'features';
 
 export default function ProductTabs({
   featuresDescription,
@@ -20,16 +18,30 @@ export default function ProductTabs({
   downloadFileFormId,
 }) {
   const headerRef = useRef(null);
-  const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
-  const tabs = {
-    ...((featuresDescription || featuresBoxes?.length > 0) && {
-      features: 'Features',
+  const tabs = useMemo(
+    () => ({
+      ...((featuresDescription || featuresBoxes?.length > 0) && {
+        features: 'Features',
+      }),
+      ...((specificationDescription || specificationContent) && {
+        specs: 'Technical Specifications',
+      }),
+      ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
     }),
-    ...((specificationDescription || specificationContent) && {
-      specs: 'Technical Specifications',
-    }),
-    ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
-  };
+    [
+      featuresDescription,
+      featuresBoxes,
+      specificationDescription,
+      specificationContent,
+      manualsLinks,
+    ],
+  );
+
+  const [activeTab, setActiveTab] = useState(Object.keys(tabs)[0]);
+
+  useEffect(() => {
+    setActiveTab(Object.keys(tabs)[0]);
+  }, [tabs]);
 
   useEffect(
     function scrollActiveTabButtonIntoView() {

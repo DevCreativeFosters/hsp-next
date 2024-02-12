@@ -77,12 +77,12 @@ export default function PageClientSidePartial({
     variant?.variantDetails?.images?.length > 0
       ? variant.variantDetails.images.map((image, index) => ({
           sourceUrl: image?.mediaItemUrl,
-          alt: 'Variant Image',
+          alt: image?.altText ? image?.altText : 'Product variant image',
           mainImage: index === 0,
         }))
       : firstMatchedProduct?.productFields?.images?.map((image, index) => ({
           sourceUrl: image?.mediaItemUrl,
-          alt: index === 0 ? 'mainImage' : '',
+          alt: image?.altText ? image?.altText : 'Main product image',
           mainImage: index === 0,
         }));
 
@@ -113,22 +113,24 @@ export default function PageClientSidePartial({
               allLocations={allLocations}
             />
           </StoreLocatorProvider>
-
-          <div className={styles.warranty}>
-            <ContentBox className={styles.warrantyDescription}>
-              <h3 className={styles.contentBoxTitle}>
-                Warranty{' '}
-                {productHeroData.warrantyTimePeriod && (
-                  <span className={styles.years}>
-                    +{productHeroData.warrantyTimePeriod} years
-                  </span>
+          {(productHeroData.warrantyTimePeriod ||
+            productHeroData.warrantyDescription) && (
+            <div className={styles.warranty}>
+              <ContentBox className={styles.warrantyDescription}>
+                <h3 className={styles.contentBoxTitle}>
+                  Warranty{' '}
+                  {productHeroData.warrantyTimePeriod && (
+                    <span className={styles.years}>
+                      +{productHeroData.warrantyTimePeriod} years
+                    </span>
+                  )}
+                </h3>
+                {productHeroData.warrantyDescription && (
+                  <p>{productHeroData.warrantyDescription}</p>
                 )}
-              </h3>
-              {productHeroData.warrantyDescription && (
-                <p>{productHeroData.warrantyDescription}</p>
-              )}
-            </ContentBox>
-          </div>
+              </ContentBox>
+            </div>
+          )}
         </div>
       </div>
       <ProductTabs
