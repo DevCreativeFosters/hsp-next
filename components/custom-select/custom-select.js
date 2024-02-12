@@ -43,6 +43,10 @@ export default function CustomSelect({
     setIsOpen(false);
   };
 
+  const open = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
   useClickOutside(handleClickOutside, [dropdownRef]);
 
   const breakRow = Math.max(
@@ -52,11 +56,14 @@ export default function CustomSelect({
 
   useEffect(
     function openDropdownOnExternalEvent() {
-      fRef.current.addEventListener('open-custom-select', () => {
-        setIsOpen(true);
-      });
+      const el = fRef?.current;
+      el?.addEventListener('open-custom-select', open);
+
+      return () => {
+        el?.removeEventListener('open-custom-select', open);
+      };
     },
-    [fRef],
+    [fRef, open],
   );
 
   return (

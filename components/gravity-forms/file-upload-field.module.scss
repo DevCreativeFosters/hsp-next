@@ -1,0 +1,99 @@
+.labelWrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.nativeInput {
+  width: 0;
+  height: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+.customInput {
+  --font-color: var(--color-white-60);
+  --border-color: var(--color-white-20);
+  --focus-border-color: var(--color-white-40);
+  --hover-bg-color: var(--color-white-5);
+  --placeholder-color: var(--color-white-60);
+  --filled-color: var(--color-white-100);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 48px 12px 24px;
+  border: var(--border-size) solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--font-color);
+  font-size: 20px;
+  background: transparent;
+  transition: var(--transition);
+  cursor: pointer;
+
+  .nativeInput:focus + & {
+    border-color: var(--focus-border-color);
+  }
+}
+
+.fileNameWrapper {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 2;
+  max-width: 150px;
+  padding: 4px 6px 4px 12px;
+  border: 1px solid var(--color-white-40);
+  border-radius: 4px;
+  color: var(--color-white-60);
+  background-color: var(--color-white-20);
+}
+
+.fileName {
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.removeButton {
+  padding: 4px 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-white-20);
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.cta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.types {
+  font-size: 16px;
+}
+
+.icon {
+  position: relative;
+  top: 2px;
+
+  @include bp(large) {
+    position: absolute;
+    top: calc(50% + 2px); // optical
+    right: 20px;
+    transform: translateY(-50%);
+  }
+}

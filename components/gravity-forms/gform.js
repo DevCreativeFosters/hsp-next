@@ -4,10 +4,10 @@ import { useCallback, useImperativeHandle, useRef, useState } from 'react';
 import Button from '@components/button/button';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
-import GravityFormsField from './fields';
+import GravityFormsField from './field';
 import Confirmation from './confirmation';
 import useGravityForm from '@hooks/useGravityForm';
-import { sendGravityForm } from '@lib/api';
+import { sendGravityForm } from '@lib/api/send-gravity-form';
 import styles from './gform.module.scss';
 
 export default function GForm({
@@ -109,7 +109,7 @@ export default function GForm({
 
           {formFields.map((field, index) => (
             <GravityFormsField
-              key={`${field?.id}-${index}`}
+              key={`id-${field?.databaseId}-${index}`}
               form={form}
               field={field}
               fieldErrors={fieldErrors}

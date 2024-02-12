@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 import Image from 'next/image';
+import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
+import { UserProvider } from '@contexts/user';
 import {
   getFooterMenus,
   getGlobalOptions,
@@ -7,6 +9,8 @@ import {
   getMenuDropdownProducts,
   getMainProductCategories,
   getAllMakes,
+  getProductCategories,
+  getStores,
 } from '@lib/api';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
@@ -27,22 +31,38 @@ const GOOGLE_RECAPTCHA_SITEKEY =
   process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
 
 async function getLayoutData() {
-  const globalOptions = await getGlobalOptions();
-  const footerMenus = await getFooterMenus();
-  const mainMenu = await getMenu('main-menu');
-  const mobileMenu = await getMenu('mobile-navigation');
-  const productCategories = await getMainProductCategories();
-  const products = await getMenuDropdownProducts();
-  const makes = await getAllMakes();
+  const [
+    globalOptions,
+    footerMenus,
+    mainMenu,
+    mobileMenu,
+    mainProductCategories,
+    productCategories,
+    products,
+    makes,
+    allStores,
+  ] = await Promise.all([
+    getGlobalOptions(),
+    getFooterMenus(),
+    getMenu('main-menu'),
+    getMenu('mobile-navigation'),
+    getMainProductCategories(),
+    getProductCategories(),
+    getMenuDropdownProducts(),
+    getAllMakes(),
+    getStores(),
+  ]);
 
   return {
     globalOptions,
     footerMenus,
     mainMenu,
     mobileMenu,
+    mainProductCategories,
     productCategories,
     products,
     makes,
+    allStores,
   };
 }
 
@@ -68,7 +88,9 @@ export default function Layout({
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
   const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
-  const normalizedProductData = normalizeProductData(data.productCategories);
+  const normalizedProductData = normalizeProductData(
+    data.mainProductCategories,
+  );
   normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
   const newsletterTitle = data.globalOptions?.newsletterTitle;
   const newsletterDescription = data.globalOptions?.newsletterDescription;
@@ -100,55 +122,65 @@ export default function Layout({
         break;
     }
   });
+  const mainProductCategoryIds = data.mainProductCategories.map(({ id }) => id);
+  const productSubCategories = data.productCategories.filter(({ parent }) =>
+    mainProductCategoryIds.includes(parent?.node?.id),
+  );
+
+  console.log('data.allStores', data.allStores);
 
   return (
-    <>
-      <VehicleProvider>
-        <Header
-          mainMenu={normalizedMainMenu}
-          secondaryMenu={topNavigationMenu}
-          socialMenu={socialMenu}
-          mobileMenu={normalizedMobileMenu}
-          productCategories={data.productCategories}
-          products={normalizedProductData}
-          makes={data.makes}
-        />
-        <main className={styles.main}>
-          {withMap && (
-            <div className={styles.background}>
-              <Image
-                className={styles.backgroundImage}
-                src={BgContinent}
-                alt="Shape of Australia continent"
-                fill={true}
-                quality={80}
-              />
+    <GravityFormsStaticDataProvider
+      productSubCategories={productSubCategories}
+      stores={data.allStores}
+    >
+      <UserProvider>
+        <VehicleProvider>
+          <Header
+            mainMenu={normalizedMainMenu}
+            secondaryMenu={topNavigationMenu}
+            socialMenu={socialMenu}
+            mobileMenu={normalizedMobileMenu}
+            mainProductCategories={data.mainProductCategories}
+            products={normalizedProductData}
+            makes={data.makes}
+          />
+          <main className={styles.main}>
+            {withMap && (
+              <div className={styles.background}>
+                <Image
+                  className={styles.backgroundImage}
+                  src={BgContinent}
+                  alt="Shape of Australia continent"
+                  fill={true}
+                  quality={80}
+                />
+              </div>
+            )}
+            <div
+              className={clsx(styles.content, {
+                [styles.reserveSpaceForVehicleSelection]:
+                  reserveSpaceForVehicleSelection,
+              })}
+            >
+              {children}
+            </div>
+          </main>
+          {withFooter && (
+            <div className={styles.bottomSticky}>
+              <FullscreenCollapse>
+                <Newsletter
+                  googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
+                  title={newsletterTitle}
+                  description={newsletterDescription}
+                />
+                <Footer menus={normalizedFooterMenus} text={footerText} />
+              </FullscreenCollapse>
             </div>
           )}
-          <div
-            className={clsx(styles.content, {
-              [styles.reserveSpaceForVehicleSelection]:
-                reserveSpaceForVehicleSelection,
-            })}
-          >
-            {children}
-          </div>
-        </main>
-        {withFooter && (
-          <div className={styles.bottomSticky}>
-            <FullscreenCollapse>
-              <Newsletter
-                googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
-                title={newsletterTitle}
-                description={newsletterDescription}
-              />
-              <Footer menus={normalizedFooterMenus} text={footerText} />
-            </FullscreenCollapse>
-          </div>
-        )}
-
-        <div id={MODAL_PORTAL_ID} />
-      </VehicleProvider>
-    </>
+          <div id={MODAL_PORTAL_ID} />
+        </VehicleProvider>
+      </UserProvider>
+    </GravityFormsStaticDataProvider>
   );
 }
