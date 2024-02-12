@@ -18,6 +18,7 @@ import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 import Button from '@components/button/button';
 import EnquiryModal from './enquiry-modal';
 import { formatPrice } from '@lib/helpers';
+import { findLocationsInRadius } from '@lib/store-locations';
 import styles from './enquiry-form.module.scss';
 
 export default function EnquiryForm({
@@ -30,6 +31,7 @@ export default function EnquiryForm({
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showMoreResults, setShowMoreResults] = useState(false);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -45,11 +47,23 @@ export default function EnquiryForm({
     location,
     searchGeolocation,
     filteredLocations,
+    filteredStores,
+    setFilteredStores,
     selectedStore,
     setSelectedStore,
-    radius,
     isMapVisible,
   } = useContext(StoreLocatorContext);
+
+  useEffect(
+    function syncLocationsBasedOnInitialSearch() {
+      if (searchGeolocation) {
+        setFilteredStores(
+          findLocationsInRadius(searchGeolocation, filteredLocations),
+        );
+      }
+    },
+    [searchGeolocation, filteredLocations, setFilteredStores],
+  );
 
   const installationCost = useMemo(() => {
     let storeCost;
@@ -88,9 +102,7 @@ export default function EnquiryForm({
     setEnquiryModalOpened(false);
   };
 
-  const isInlineResultListVisible = Boolean(
-    location && searchGeolocation && radius,
-  );
+  const isInlineResultListVisible = Boolean(location && searchGeolocation);
 
   const onAnyInputChange = useCallback(ev => {
     setIsFormValid(formRef.current?.checkValidity());
@@ -158,12 +170,27 @@ export default function EnquiryForm({
 
             <StoreList
               className={styles.results}
-              items={filteredLocations}
+              items={filteredStores}
               show={isInlineResultListVisible}
+              showMoreResults={showMoreResults}
               onSelect={item => {
                 setSelectedStore(item);
               }}
             />
+            {!showMoreResults &&
+              isInlineResultListVisible &&
+              filteredStores.length > 0 && (
+                <div className={styles.showMoreWrapper}>
+                  <Button
+                    size="small"
+                    variant="septenary"
+                    onClick={() => setShowMoreResults(true)}
+                    className={styles.showMoreButton}
+                  >
+                    Load more results
+                  </Button>
+                </div>
+              )}
           </>
         )}
 

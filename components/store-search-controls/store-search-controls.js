@@ -8,14 +8,14 @@ import {
   getPlaceGeoLocation,
   stringifySuggestion,
 } from '@lib/google-place';
-import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
+import StoreLocatorContext from '@contexts/store-locator';
 import { findLocationsInRadius } from '@lib/store-locations';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
-import Select from '@components/form/select';
 import Switch from '@components/form/switch';
 
 import styles from './store-search-controls.module.scss';
+import normalizeStores from '@lib/normalize-stores';
 
 export default function StoreSearchControls({
   label = 'Locate your store',
@@ -35,18 +35,9 @@ export default function StoreSearchControls({
     setSearchGeolocation,
     setFilteredLocations,
     selectedStore,
-    radius,
-    setRadius,
     isMapVisible,
     setMapVisible,
   } = useContext(StoreLocatorContext);
-
-  const onRadiusChange = useCallback(
-    value => {
-      setRadius(value);
-    },
-    [setRadius],
-  );
 
   const selectLocation = useCallback(
     async suggestion => {
@@ -68,12 +59,11 @@ export default function StoreSearchControls({
   //       setLocation(null);
   //       setLocationInput('');
   //       setSearchGeolocation(null);
-  //       setRadius(DEFAULT_RADIUS);
   //     }
 
   //     return () => {};
   //   },
-  //   [selectedStore, setRadius, setSearchGeolocation],
+  //   [selectedStore, setSearchGeolocation],
   // );
 
   useEffect(
@@ -102,14 +92,19 @@ export default function StoreSearchControls({
 
   useEffect(
     function syncStoreLocationResultList() {
-      if (searchGeolocation && radius) {
-        setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
+      const locationList = normalizeStores(allLocations);
+      if (searchGeolocation) {
+        setFilteredLocations(
+          findLocationsInRadius(searchGeolocation, locationList),
+        );
+      } else {
+        setFilteredLocations(locationList);
       }
       return () => {
-        setFilteredLocations(allLocations);
+        setFilteredLocations(locationList);
       };
     },
-    [searchGeolocation, setFilteredLocations, radius, allLocations],
+    [searchGeolocation, setFilteredLocations, allLocations],
   );
 
   return (
@@ -140,23 +135,9 @@ export default function StoreSearchControls({
           required
           disabled={selectedStore}
         />
-
         <StoreLocatorSuggestions
           items={suggestions}
           selectLocation={selectLocation}
-        />
-      </div>
-      <div className={styles.radius}>
-        <Select
-          id="search-radius"
-          size="large"
-          placeholder="[Select radius]"
-          background="dark"
-          suffix="km"
-          onChange={onRadiusChange}
-          options={RADIUS_OPTIONS}
-          value={radius}
-          disabled={selectedStore}
         />
       </div>
       <div className={styles.mapToggler}>

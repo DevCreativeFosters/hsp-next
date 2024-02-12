@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { findLocationsInRadius } from '@lib/store-locations';
+import normalizeStores from '@lib/normalize-stores';
 import {
   getPlaceDetails,
   getPlaceSuggestions,
@@ -12,8 +13,7 @@ import {
 } from '@lib/google-place';
 import useMobileVh from '@hooks/useMobileVh';
 import { useIsMobile } from '@hooks/useIsMobile';
-import StoreLocatorContext, { RADIUS_OPTIONS } from '@contexts/store-locator';
-import Select from '@components/form/select';
+import StoreLocatorContext from '@contexts/store-locator';
 import Button from '@components/button/button';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
@@ -23,9 +23,9 @@ import ArrowForwardIcon from '@assets/icons/arrow-forward.svg';
 
 import styles from './store-locator-search.module.scss';
 
-export default function StoreLocatorSearch() {
+export default function StoreLocatorSearch({ allLocations }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [_, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -39,7 +39,7 @@ export default function StoreLocatorSearch() {
 
   useMobileVh();
 
-  const { searchGeolocation, setSearchGeolocation, radius, setRadius } =
+  const { searchGeolocation, setSearchGeolocation } =
     useContext(StoreLocatorContext);
 
   const onFormInteraction = useCallback(
@@ -69,13 +69,6 @@ export default function StoreLocatorSearch() {
     [setSearchGeolocation, sessionToken],
   );
 
-  const onRadiusChange = useCallback(
-    value => {
-      setRadius(value);
-    },
-    [setRadius],
-  );
-
   const goBack = useCallback(() => {
     if (viewMode === 'RESULT') {
       setViewMode('LIST');
@@ -85,7 +78,7 @@ export default function StoreLocatorSearch() {
   }, [viewMode, isFullScreen]);
 
   const isInlineResultListVisible = Boolean(
-    location && searchGeolocation && radius && isFullScreen && isMobile,
+    location && searchGeolocation && isFullScreen && isMobile,
   );
 
   const isSearchButtonVisible = !isInlineResultListVisible;
@@ -134,12 +127,17 @@ export default function StoreLocatorSearch() {
 
   useEffect(
     function syncStoreLocationResultList() {
-      if (searchGeolocation && radius) {
-        setFilteredLocations(findLocationsInRadius(searchGeolocation, radius));
+      const locationList = normalizeStores(allLocations);
+      if (searchGeolocation) {
+        setFilteredLocations(
+          findLocationsInRadius(searchGeolocation, locationList),
+        );
+      } else {
+        setFilteredLocations(locationList);
       }
       return () => {};
     },
-    [searchGeolocation, radius],
+    [searchGeolocation, allLocations],
   );
 
   return (
@@ -180,7 +178,7 @@ export default function StoreLocatorSearch() {
               <StoreLocatorInput
                 type="text"
                 name="location"
-                placeholder="Search location"
+                placeholder="Your location"
                 icon="search"
                 withResetButton
                 value={locationInput}
@@ -200,18 +198,6 @@ export default function StoreLocatorSearch() {
                 selectLocation={selectLocation}
               />
             </div>
-            <Select
-              id="search-radius"
-              className={styles.radius}
-              size="large"
-              placeholder="Select radius"
-              background="dark"
-              suffix="km"
-              onClick={onFormInteraction}
-              onChange={onRadiusChange}
-              options={RADIUS_OPTIONS}
-              value={radius}
-            />
 
             <div className={styles.mobileOnly}>
               <StoreList
@@ -238,7 +224,7 @@ export default function StoreLocatorSearch() {
                   }
                 }}
               >
-                [Search]
+                Search
               </Button>
             )}
           </form>
@@ -253,7 +239,7 @@ export default function StoreLocatorSearch() {
                 onClick={goBack}
                 leftIcon="arrow-backward"
               >
-                [ Back to search ]
+                Back to search
               </Button>
             </div>
           </div>

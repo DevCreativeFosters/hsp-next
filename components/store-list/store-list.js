@@ -2,7 +2,14 @@ import clsx from 'clsx';
 import useMobileVh from '@hooks/useMobileVh';
 import styles from './store-list.module.scss';
 
-export default function StoreList({ className, items, show, onSelect, style }) {
+export default function StoreList({
+  className,
+  items,
+  show,
+  showMoreResults,
+  onSelect,
+  style,
+}) {
   useMobileVh();
 
   if (show && items?.length === 0) {
@@ -15,10 +22,12 @@ export default function StoreList({ className, items, show, onSelect, style }) {
 
   if (!items?.length > 0 || !show) return null;
 
+  const results = showMoreResults ? items : items.slice(0, 5);
+
   return (
     <div className={clsx(styles.listWrapper, className)} style={style}>
       <ul className={styles.list}>
-        {items.map((item, index) => {
+        {results.map((item, index) => {
           const { name, location, address } = item;
           const { street, city, stateAbbr, postalCode, country } = location;
           let printedAddress = address
