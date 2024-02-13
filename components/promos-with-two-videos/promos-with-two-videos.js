@@ -31,7 +31,7 @@ export default function PromoWithTwoVideos({ data }) {
               <VideoCard
                 key={idx}
                 idx={idx}
-                url={accessory?.videoUrl}
+                url={accessory?.videoFile?.mediaItemUrl}
                 name={accessory?.accessoryName}
                 price={accessory?.price}
                 productUrl={accessory?.productLink?.url}
