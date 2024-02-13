@@ -7,7 +7,7 @@ export default function VideoEmbed({ videoUrl }) {
   if (embedUrl) {
     return (
       <div className={styles.embed}>
-        <iframe src={embedUrl} frameborder="0" allowfullscreen />
+        <iframe src={embedUrl} frameBorder="0" allowFullScreen />
       </div>
     );
   }
