@@ -25,7 +25,7 @@
   gap: 12px 16px;
   width: 100%;
   min-height: 56px;
-  padding: 12px 48px 12px 24px;
+  padding: 12px 24px;
   border: var(--border-size) solid var(--border-color);
   border-radius: var(--border-radius-sm);
   color: var(--font-color);
@@ -33,6 +33,10 @@
   background: transparent;
   transition: var(--transition);
   cursor: pointer;
+
+  @include bp(large) {
+    padding: 12px 48px 12px 24px;
+  }
 
   .nativeInput:focus + & {
     border-color: var(--focus-border-color);
