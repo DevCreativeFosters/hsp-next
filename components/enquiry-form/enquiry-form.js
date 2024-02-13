@@ -160,8 +160,8 @@ export default function EnquiryForm({
           onChange={onVariantChange}
           options={variantOptions}
           value={
-            selectedVariant?.[0]?.variantSlug ||
-            (variantOptions?.length ? variantOptions[0]?.value : '')
+            selectedVariant?.variantSlug ||
+            (variantOptions?.length ? variantOptions?.value : '')
           }
         />
 
