@@ -127,8 +127,6 @@ export default function Layout({
     mainProductCategoryIds.includes(parent?.node?.id),
   );
 
-  console.log('data.allStores', data.allStores);
-
   return (
     <GravityFormsStaticDataProvider
       productSubCategories={productSubCategories}
