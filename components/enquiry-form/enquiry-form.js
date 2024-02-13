@@ -179,7 +179,7 @@ export default function EnquiryForm({
             />
             {!showMoreResults &&
               isInlineResultListVisible &&
-              filteredStores.length > 0 && (
+              filteredStores.length > 5 && (
                 <div className={styles.showMoreWrapper}>
                   <Button
                     size="small"
