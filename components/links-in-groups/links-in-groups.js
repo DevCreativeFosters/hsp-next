@@ -19,18 +19,24 @@ export default function LinksInGroups({ title, description, groups, variant }) {
             <h3 className={styles.title}>{title}</h3>
             {links.length > 0 && (
               <ul className={styles.list}>
-                {links.map(({ link: { title: label, url, target } }, index) => (
-                  <li className={styles.listItem} key={index}>
-                    <Button
-                      href={url}
-                      variant="senary"
-                      rightIcon="arrow-forward"
-                      className={styles.link}
-                    >
-                      <span dangerouslySetInnerHTML={{ __html: label }} />
-                    </Button>
-                  </li>
-                ))}
+                {links.map(({ link }, index) => {
+                  if (link) {
+                    const { title: label, url } = link;
+
+                    return (
+                      <li className={styles.listItem} key={index}>
+                        <Button
+                          href={url}
+                          variant="senary"
+                          rightIcon="arrow-forward"
+                          className={styles.link}
+                        >
+                          <span dangerouslySetInnerHTML={{ __html: label }} />
+                        </Button>
+                      </li>
+                    );
+                  }
+                })}
               </ul>
             )}
           </div>
