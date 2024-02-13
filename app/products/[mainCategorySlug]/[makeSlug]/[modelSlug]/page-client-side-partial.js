@@ -18,12 +18,11 @@ const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   return null;
 };
 
-const getVariantDataForProperties = (variant, parent, properties) => {
-  return properties.reduce((acc, property) => {
+const getVariantDataForProperties = (variant, parent, properties) =>
+  properties.reduce((acc, property) => {
     acc[property] = getVariantDataOrFallbackToParent(variant, parent, property);
     return acc;
   }, {});
-};
 
 export default function PageClientSidePartial({
   mainCategory,
@@ -115,21 +114,19 @@ export default function PageClientSidePartial({
           </StoreLocatorProvider>
           {(productHeroData.warrantyTimePeriod ||
             productHeroData.warrantyDescription) && (
-            <div className={styles.warranty}>
-              <ContentBox className={styles.warrantyDescription}>
-                <h3 className={styles.contentBoxTitle}>
-                  Warranty{' '}
-                  {productHeroData.warrantyTimePeriod && (
-                    <span className={styles.years}>
-                      +{productHeroData.warrantyTimePeriod} years
-                    </span>
-                  )}
-                </h3>
-                {productHeroData.warrantyDescription && (
-                  <p>{productHeroData.warrantyDescription}</p>
+            <ContentBox className={styles.warrantyDescription}>
+              <h3 className={styles.contentBoxTitle}>
+                Warranty{' '}
+                {productHeroData.warrantyTimePeriod && (
+                  <span className={styles.years}>
+                    +{productHeroData.warrantyTimePeriod} years
+                  </span>
                 )}
-              </ContentBox>
-            </div>
+              </h3>
+              {productHeroData.warrantyDescription && (
+                <p>{productHeroData.warrantyDescription}</p>
+              )}
+            </ContentBox>
           )}
         </div>
       </div>

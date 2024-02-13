@@ -43,7 +43,7 @@ export default function EnquiryForm({
   }));
   const [selectedVariant, setSelectedVariant] = useState(variants?.[0]);
 
-  const variantPrice = selectedVariant.variantDetails.price
+  const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant.variantDetails.price
     : selectedVariant.parentInherit
       ? productPrice
@@ -121,7 +121,11 @@ export default function EnquiryForm({
   }, [selectedStore]);
 
   useEffect(() => {
-    setSelectedVariant(variants?.[0]);
+    if (variants && variants.length > 0) {
+      setSelectedVariant(variants?.[0]);
+    } else {
+      setSelectedVariant(null);
+    }
   }, [variants]);
 
   useEffect(
@@ -205,7 +209,7 @@ export default function EnquiryForm({
         )}
 
         <div className={styles.price}>
-          {variantPrice && (
+          {variantPrice > 0 && (
             <span className={styles.productsPrice}>
               {formatPrice(variantPrice)}
             </span>
