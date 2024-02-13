@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-export default function LayoutClient() {
+export default function RootLayoutClient() {
   const pathname = usePathname();
 
   useEffect(() => {

@@ -1,0 +1,12 @@
+.wrapper {
+  flex: 1 1 100%;
+  max-width: 100%;
+
+  @for $i from 1 through 6 {
+    &.width-1-of-#{$i} {
+      @include bp(medium) {
+        flex: 1 1 calc(100% / #{$i} - var(--form-gap) / #{$i} * #{$i - 1});
+      }
+    }
+  }
+}

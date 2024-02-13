@@ -44,8 +44,8 @@ export default async function StoreLocatorPage() {
       </FullscreenCollapse>
 
       <StoreLocatorProvider>
-        <StoreLocatorSearch />
-        <StoreLocatorResultsAndMap allStores={allStores} />
+        <StoreLocatorSearch allLocations={allStores} />
+        <StoreLocatorResultsAndMap allLocations={allStores} />
       </StoreLocatorProvider>
       <FullscreenCollapse>
         <InformationBox hideOn="desktop" />
