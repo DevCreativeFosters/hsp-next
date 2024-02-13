@@ -2,6 +2,7 @@
 
 .listWrapper {
   /* stylelint-disable scss/operator-no-newline-before */
+  /* stylelint-disable scss/operator-no-newline-after */
   height: calc(
     100 * var(--vh) - var(--store-locator-form-header-height) - (2 * 24px) -
       (2 * 48px) - (2 * 12px) - var(--container-inline-padding)

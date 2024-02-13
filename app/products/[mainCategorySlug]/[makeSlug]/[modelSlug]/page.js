@@ -12,12 +12,9 @@ import {
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
-import ProductTabs from '@components/product-tabs/product-tabs';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import ErrorPage from '@components/error-page';
 import PageContainer from '@components/page-container/page-container';
-import ContentBox from '@components/content-box/content-box';
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params }) {
@@ -56,7 +53,6 @@ export default async function CategoryPage({ params }) {
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block => renderBlock(block, 'product'),
   );
-
   const currentProduct = {
     mainCategory: {
       label: mainCategory?.name,
@@ -92,24 +88,6 @@ export default async function CategoryPage({ params }) {
     );
   }
 
-  const manualPdfItems =
-    firstMatchedProduct?.productFields?.manualPdfItems?.map(item => {
-      return {
-        label: item?.manualPdf.title,
-        url: item?.manualPdf.mediaItemUrl,
-      };
-    });
-
-  const images = firstMatchedProduct?.productFields?.images?.map(
-    (item, index) => {
-      return {
-        sourceUrl: item?.mediaItemUrl,
-        alt: index === 0 ? 'mainImage' : '',
-        mainImage: index === 0,
-      };
-    },
-  );
-
   return (
     <Layout title="Product">
       <Container>
@@ -119,50 +97,13 @@ export default async function CategoryPage({ params }) {
             categories={categories}
           />
         </div>
-        <div className={styles.header}>
-          <ProductImageCarousel images={images} />
-          <div className={styles.details}>
-            <PageClientSidePartial
-              mainCategory={mainCategory}
-              make={make}
-              enquiryFormId={enquiryFormId}
-              firstMatchedProduct={firstMatchedProduct}
-              allLocations={allLocations}
-            />
-
-            <div className={styles.warranty}>
-              <ContentBox className={styles.warrantyDescription}>
-                <h3 className={styles.contentBoxTitle}>
-                  Warranty{' '}
-                  {productHeroData.warrantyTimePeriod && (
-                    <span className={styles.years}>
-                      +{productHeroData.warrantyTimePeriod} years
-                    </span>
-                  )}
-                </h3>
-                {productHeroData.warrantyDescription && (
-                  <p>{productHeroData.warrantyDescription}</p>
-                )}
-              </ContentBox>
-            </div>
-          </div>
-        </div>
-
-        <ProductTabs
-          featuresDescription={
-            firstMatchedProduct?.productFields.featuresDescription
-          }
-          featuresBoxes={firstMatchedProduct?.productFields.featuresBoxes}
-          specificationDescription={
-            firstMatchedProduct?.productFields.specificationDescription
-          }
-          specificationContent={
-            firstMatchedProduct?.productFields.specification
-          }
-          manualsDescription={
-            firstMatchedProduct?.productFields?.manualsDescription
-          }
-          manualsLinks={manualPdfItems}
+        <PageClientSidePartial
+          mainCategory={mainCategory}
+          make={make}
+          enquiryFormId={enquiryFormId}
+          firstMatchedProduct={firstMatchedProduct}
+          allLocations={allLocations}
+          productHeroData={productHeroData}
           downloadFileFormId={downloadFileFormId}
         />
       </Container>
