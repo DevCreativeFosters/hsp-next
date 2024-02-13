@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { getPageData, getPageGutenbergContent } from '@lib/api';
+import { getPageData } from '@lib/api';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
@@ -17,7 +17,6 @@ export const metadata = {
 
 export default async function SupportSubpage({ params }) {
   const supportUrl = routes.support(params.slug);
-  const gutenbergContent = await getPageGutenbergContent(supportUrl);
   const content = await getPageData(supportUrl);
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
   const accordions = content?.supportPagesContent?.accordions;
@@ -49,7 +48,7 @@ export default async function SupportSubpage({ params }) {
                 {content && (
                   <Wysiwyg
                     className={styles.content}
-                    content={gutenbergContent?.content}
+                    content={content?.content}
                     accordions={accordions}
                   />
                 )}
