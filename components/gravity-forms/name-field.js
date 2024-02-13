@@ -21,14 +21,18 @@ export default function NameField({ form, field, fieldErrors }) {
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 
-  useEffect(() => {
-    initializeState({
-      id,
-      visibleInputs,
-      parentKey,
-      dispatch,
-    });
-  }, []);
+  useEffect(
+    function syncFieldState() {
+      initializeState({
+        id,
+        visibleInputs,
+        parentKey,
+        dispatch,
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return visibleInputs.map(
     ({

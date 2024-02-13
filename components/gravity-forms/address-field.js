@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import useGravityForm from '@hooks/useGravityForm';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
 import Select from '@components/form/select';
@@ -23,16 +23,18 @@ export default function AddressField({ form, field, fieldErrors }) {
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 
-  const onSelectChange = useCallback(value => {}, []);
-
-  useEffect(() => {
-    initializeState({
-      id,
-      visibleInputs,
-      parentKey,
-      dispatch,
-    });
-  }, []);
+  useEffect(
+    function syncFieldState() {
+      initializeState({
+        id,
+        visibleInputs,
+        parentKey,
+        dispatch,
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return visibleInputs.map(
     ({

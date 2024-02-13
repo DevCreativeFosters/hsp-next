@@ -44,16 +44,27 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       };
     }
     return null;
-  }, [files, fieldErrors, field]);
+  }, [
+    maxFiles,
+    maxSize,
+    files,
+    fieldErrors,
+    field,
+    tooManyFilesErrorMessage,
+    tooBigFileErrorMessage,
+  ]);
 
-  const acceptedTypesNormalized =
-    field.allowedExtensions?.map(ext => {
-      const startsWithDot = ext.slice(0, 1) === '.';
-      if (!startsWithDot && (ext?.length === 3 || ext?.length === 4)) {
-        return `.${ext}`;
-      }
-      return ext;
-    }) || [];
+  const acceptedTypesNormalized = useMemo(() => {
+    return (
+      field.allowedExtensions?.map(ext => {
+        const startsWithDot = ext.slice(0, 1) === '.';
+        if (!startsWithDot && (ext?.length === 3 || ext?.length === 4)) {
+          return `.${ext}`;
+        }
+        return ext;
+      }) || []
+    );
+  }, [field.allowedExtensions]);
 
   const acceptedTypesPrinted = acceptedTypesNormalized
     .map(ext => (ext.slice(0, 1) === '.' ? ext.slice(1) : ext))
@@ -62,21 +73,24 @@ export default function FileUploadField({ form, field, fieldErrors }) {
   const maxFilesPrinted =
     maxFiles > 0 ? `max. ${maxFiles} file${maxFiles > 1 ? 's' : ''}` : '';
 
-  const getValidationErrors = function (file) {
-    const errors = [];
-    if (maxSize && file.size > maxSize) {
-      errors.push('File is too big');
-    }
-    if (acceptedTypesNormalized.length) {
-      const matchedType = acceptedTypesNormalized.find(
-        ext => ext === file.name.slice(-1 * ext.length),
-      );
-      if (!matchedType) {
-        errors.push('File type is not allowed');
+  const getValidationErrors = useCallback(
+    file => {
+      const errors = [];
+      if (maxSize && file.size > maxSize) {
+        errors.push('File is too big');
       }
-    }
-    return errors;
-  };
+      if (acceptedTypesNormalized.length) {
+        const matchedType = acceptedTypesNormalized.find(
+          ext => ext === file.name.slice(-1 * ext.length),
+        );
+        if (!matchedType) {
+          errors.push('File type is not allowed');
+        }
+      }
+      return errors;
+    },
+    [maxSize, acceptedTypesNormalized],
+  );
 
   const addFiles = useCallback(
     inputElement => {

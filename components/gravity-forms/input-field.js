@@ -64,14 +64,18 @@ export default function InputField({ form, field, fieldErrors }) {
     return fieldErrors.find(fieldError => fieldError.id === id);
   }, [id, fieldErrors]);
 
-  useEffect(() => {
-    if (valueCalculated) {
-      dispatch({
-        type: 'updateFieldValue',
-        payload: getPayload(type, id, valueCalculated),
-      });
-    }
-  }, []);
+  useEffect(
+    function syncFieldState() {
+      if (valueCalculated) {
+        dispatch({
+          type: 'updateFieldValue',
+          payload: getPayload(type, id, valueCalculated),
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return (
     <Input
