@@ -2,7 +2,7 @@ import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 import clsx from 'clsx';
 import { getGlobalOptions } from '@lib/api';
-import LayoutClient from './layout-client';
+import RootLayoutClient from './layout-client';
 import '@styles/main.scss';
 
 const hind = localFont({
@@ -60,7 +60,7 @@ export default async function RootLayout({ children }) {
       <body className="" data-rh="class">
         <NextTopLoader color="#ed2935ff" />
         {children}
-        <LayoutClient />
+        <RootLayoutClient />
       </body>
     </html>
   );

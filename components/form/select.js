@@ -53,6 +53,9 @@ export default function Select({
     [onChange],
   );
 
+  const isPlaceholder =
+    !selectedOption?.label && selectedOption?.value === undefined;
+
   return (
     <div className={clsx(styles.wrapperOuter, className)}>
       <div
@@ -83,14 +86,14 @@ export default function Select({
             onClick();
           }}
         >
-          {selectedOption?.label || selectedOption?.value !== undefined ? (
+          {isPlaceholder ? (
+            <div className={styles.placeholder}>{placeholder}</div>
+          ) : (
             <div className={styles.value}>
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
               {selectedOption.label || selectedOption.value}
               {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
             </div>
-          ) : (
-            placeholder
           )}
           {options.map(({ label, value }, index) => (
             <div

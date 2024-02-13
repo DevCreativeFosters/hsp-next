@@ -10,12 +10,15 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@apollo/client": "^3.9.4",
     "@googlemaps/js-api-loader": "^1.16.2",
     "@googlemaps/markerclusterer": "^2.5.0",
     "@svgr/webpack": "^8.0.1",
+    "apollo-upload-client": "^18.0.1",
     "can-autoplay": "^3.0.2",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
+    "graphql": "^16.8.1",
     "html-entities": "^2.4.0",
     "html-react-parser": "^4.2.2",
     "intersection-observer": "^0.12.2",

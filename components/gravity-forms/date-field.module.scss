@@ -1,0 +1,51 @@
+.dateInput {
+  input {
+    resize: none;
+
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+
+    &::-webkit-datetime-edit-text {
+      color: var(--color-white-60);
+      cursor: pointer;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      background-color: var(--color-white-40);
+      filter: invert(0.6);
+      border-radius: var(--border-radius-sm);
+      padding: 8px;
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-white-60);
+        }
+      }
+    }
+
+    &::-webkit-datetime-edit-text,
+    &::-webkit-datetime-edit-day-field,
+    &::-webkit-datetime-edit-month-field,
+    &::-webkit-datetime-edit-year-field {
+      opacity: 0;
+      transition: opacity 100ms 0ms;
+      cursor: pointer;
+    }
+
+    &:focus,
+    &:active,
+    &[class*='filled'] {
+      &::-webkit-datetime-edit-text,
+      &::-webkit-datetime-edit-day-field,
+      &::-webkit-datetime-edit-month-field,
+      &::-webkit-datetime-edit-year-field {
+        opacity: 1;
+        transition: opacity 200ms 100ms;
+      }
+    }
+  }
+}

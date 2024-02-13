@@ -19,7 +19,7 @@ export default function Header({
   secondaryMenu,
   socialMenu,
   mobileMenu,
-  productCategories,
+  mainProductCategories,
   products,
   makes,
 }) {
@@ -165,7 +165,7 @@ export default function Header({
 
           <Products
             isActive={currentSubmenu === 'products'}
-            categories={productCategories}
+            categories={mainProductCategories}
             products={products}
             ref={productsRef}
           />
