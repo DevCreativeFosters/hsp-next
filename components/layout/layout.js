@@ -31,27 +31,15 @@ const GOOGLE_RECAPTCHA_SITEKEY =
   process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
 
 async function getLayoutData() {
-  const [
-    globalOptions,
-    footerMenus,
-    mainMenu,
-    mobileMenu,
-    mainProductCategories,
-    productCategories,
-    products,
-    makes,
-    allStores,
-  ] = await Promise.all([
-    getGlobalOptions(),
-    getFooterMenus(),
-    getMenu('main-menu'),
-    getMenu('mobile-navigation'),
-    getMainProductCategories(),
-    getProductCategories(),
-    getMenuDropdownProducts(),
-    getAllMakes(),
-    getStores(),
-  ]);
+  const globalOptions = await getGlobalOptions();
+  const footerMenus = await getFooterMenus();
+  const mainMenu = await getMenu('main-menu');
+  const mobileMenu = await getMenu('mobile-navigation');
+  const mainProductCategories = await getMainProductCategories();
+  const productCategories = await getProductCategories();
+  const products = await getMenuDropdownProducts();
+  const makes = await getAllMakes();
+  const allStores = await getStores();
 
   return {
     globalOptions,
