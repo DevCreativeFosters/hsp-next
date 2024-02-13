@@ -1,3 +1,4 @@
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 'use client';
 
 import { useState } from 'react';
@@ -7,16 +8,6 @@ import ProductImageCarousel from '@components/product-image-carousel/product-ima
 import ContentBox from '@components/content-box/content-box';
 import ProductTabs from '@components/product-tabs/product-tabs';
 import styles from './page.module.scss';
-
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
-const properties = [
-  'description',
-  'featuresDescription',
-  'featuresBoxes',
-  'specificationDescription',
-  'specification',
-  'manualsDescription',
-];
 
 const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   if (variant && variant.variantDetails[property]) {
@@ -46,6 +37,15 @@ export default function PageClientSidePartial({
   const [variant, setVariant] = useState(
     firstMatchedProduct?.productFields.variants?.[0],
   );
+
+  const properties = [
+    'description',
+    'featuresDescription',
+    'featuresBoxes',
+    'specificationDescription',
+    'specification',
+    'manualsDescription',
+  ];
 
   const variantData = getVariantDataForProperties(
     variant,
