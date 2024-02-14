@@ -37,24 +37,23 @@ export function middleware(request) {
     return NextResponse.rewrite(paginatedUrl);
   }
 
-  if ((pathSegments[0] === 'lifestyle', pathSegments[1] === 'lifestyle'))
-    if (pathSegments[0] === 'products' && pathSegments.length === 2) {
-      if (hspMyVehicle) {
-        const { maker, model } = JSON.parse(hspMyVehicle.value);
+  if (pathSegments[0] === 'products' && pathSegments.length === 2) {
+    if (hspMyVehicle) {
+      const { maker, model } = JSON.parse(hspMyVehicle.value);
 
-        if (maker && getValueOrSlug(maker)) {
-          const productType = pathSegments[1];
-          url.pathname =
-            model && getValueOrSlug(model)
-              ? `/products/${productType}/${getValueOrSlug(
-                  maker,
-                )}/${getValueOrSlug(model)}`
-              : `/products/${productType}/${getValueOrSlug(maker)}`;
+      if (maker && getValueOrSlug(maker)) {
+        const productType = pathSegments[1];
+        url.pathname =
+          model && getValueOrSlug(model)
+            ? `/products/${productType}/${getValueOrSlug(
+                maker,
+              )}/${getValueOrSlug(model)}`
+            : `/products/${productType}/${getValueOrSlug(maker)}`;
 
-          return NextResponse.redirect(url);
-        }
+        return NextResponse.redirect(url);
       }
     }
+  }
 
   return NextResponse.next();
 }
