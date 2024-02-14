@@ -1,12 +1,12 @@
-import { getAllHspTvPosts, getPageData } from '@lib/api';
+import { getPageData } from '@lib/api';
+import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
 import { renderBlock } from '@lib/block';
+import routes from '@lib/routes';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
 import PostsList from '@components/posts-list/posts-list';
 import Pagination from '@components/pagination/pagination';
-import { PaginationContextProvider } from '@contexts/pagination';
-import routes from '@lib/routes';
 import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
@@ -16,39 +16,34 @@ export const metadata = {
   // description: ''
 };
 
-export default async function HspTVPage() {
-  const posts = await getAllHspTvPosts(1000);
-  const allPosts = posts?.hspTvPosts?.nodes;
-  const totalPosts = allPosts?.length;
+export default async function HspTVPage({ searchParams }) {
+  const currentPage = Number(searchParams.page) || 1;
+  const offset = (currentPage - 1) * POSTS_PER_PAGE;
+  const postsResponse = await getHspTvPosts(POSTS_PER_PAGE, offset);
+  const posts = postsResponse?.hspTvPosts.nodes || [];
+  const totalPosts =
+    postsResponse?.hspTvPosts.pageInfo.offsetPagination.total || 0;
+
   const content = await getPageData('lifestyle/hsp-blog');
   const contentResolved = content?.flexibleContent?.blocks.map(renderBlock);
 
-  const paginationScope = 'posts-list';
-
   return (
-    <PaginationContextProvider>
-      <Layout title="">
-        <Container>
-          <div className={styles.breadcrumbs}>
-            <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
-          </div>
-          {contentResolved}
-          <PostsList
-            variant="hsp-tv"
-            posts={allPosts}
+    <Layout title="">
+      <Container>
+        <div className={styles.breadcrumbs}>
+          <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
+        </div>
+        {contentResolved}
+        <PostsList variant="hsp-tv" posts={posts} perPage={POSTS_PER_PAGE} />
+        {totalPosts > POSTS_PER_PAGE && (
+          <Pagination
             perPage={POSTS_PER_PAGE}
-            paginationScope={paginationScope}
+            total={totalPosts}
+            current={currentPage}
+            urlBase={routes.tv()}
           />
-          {totalPosts > POSTS_PER_PAGE && (
-            <Pagination
-              perPage={POSTS_PER_PAGE}
-              totalPosts={totalPosts}
-              scope={paginationScope}
-            />
-          )}
-          {/*<Newsletter />*/}
-        </Container>
-      </Layout>
-    </PaginationContextProvider>
+        )}
+      </Container>
+    </Layout>
   );
 }

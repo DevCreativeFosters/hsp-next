@@ -1,45 +1,21 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import Button from '@components/button/button';
-import { usePaginationContext } from '@contexts/pagination';
 
 import styles from './pagination.module.scss';
 
 export default function Pagination({
   perPage,
-  totalPosts,
+  total,
   maxPagesToShow = 3,
-  scope,
+  current = 1,
+  urlBase,
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { setValue: setPaginationValue } = usePaginationContext(scope);
-  const totalPages = Math.ceil(totalPosts / perPage);
-
-  useEffect(() => {
-    setPaginationValue(currentValue => {
-      const scopeObj = {};
-      scopeObj[scope] = currentPage;
-      return { ...currentValue, ...scopeObj };
-    });
-  }, [scope, currentPage, setPaginationValue]);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const totalPages = Math.ceil(total / perPage);
 
   const pageButtons = [];
   const half = Math.floor((maxPagesToShow - 1) / 2);
-  let start = currentPage - half;
-  let end = currentPage + half;
+  let start = current - half;
+  let end = current + half;
 
   if (start < 1) {
     start = 1;
@@ -71,31 +47,42 @@ export default function Pagination({
     pageButtons.push(totalPages);
   }
 
+  const getPaginatedUrl = useCallback(
+    pageNumber => {
+      const validPageNumber = Math.min(Math.max(pageNumber, 1), totalPages);
+      if (validPageNumber > 1) {
+        return `${urlBase}/page-${validPageNumber}`;
+      }
+      return urlBase;
+    },
+    [totalPages, urlBase],
+  );
+
   return (
     <div className={styles.pagination}>
       <Button
+        href={getPaginatedUrl(current - 1)}
         size="mixed"
         variant="secondary"
         rightIcon="arrow-previous"
-        disabled={currentPage === 1}
-        onClick={handlePrevious}
+        disabled={current === 1}
       />
 
       {pageButtons.map((value, index) => {
         const isNumber = Number.isInteger(value);
-        const isCurrent = currentPage === value;
+        const isCurrent = current === value;
         const variant = isCurrent
           ? 'primary'
           : isNumber
-          ? 'secondary'
-          : 'ternary';
+            ? 'secondary'
+            : 'ternary';
         return (
           <Button
+            href={getPaginatedUrl(value)}
             key={`${value}-${index}`}
             size="mixed"
             variant={variant}
             disabled={!isNumber || isCurrent}
-            onClick={() => (isNumber ? setCurrentPage(value) : null)}
           >
             {value}
           </Button>
@@ -103,11 +90,11 @@ export default function Pagination({
       })}
 
       <Button
+        href={getPaginatedUrl(current + 1)}
         size="mixed"
         variant="secondary"
         rightIcon="arrow-next"
-        disabled={currentPage === totalPages}
-        onClick={handleNext}
+        disabled={current === totalPages}
       />
     </div>
   );

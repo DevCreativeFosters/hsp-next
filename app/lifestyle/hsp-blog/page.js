@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 
-import { getAllBlogPosts, getPageData } from '@lib/api';
+import { getPageData } from '@lib/api';
+import { getBlogPosts } from '@lib/api/get-blog-posts';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
-import { PaginationContextProvider } from '@contexts/pagination';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
@@ -19,14 +19,14 @@ export const metadata = {
   // description: ''
 };
 
-export default async function BlogPage() {
-  const posts = await getAllBlogPosts(1000);
-  const allPosts = posts?.posts?.nodes;
-  const totalPosts = allPosts?.length;
+export default async function BlogPage({ searchParams }) {
+  const currentPage = Number(searchParams.page) || 1;
+  const offset = (currentPage - 1) * POSTS_PER_PAGE;
+  const postsResponse = await getBlogPosts(POSTS_PER_PAGE, offset);
+  const posts = postsResponse?.posts.nodes || [];
+  const totalPosts = postsResponse?.posts.pageInfo.offsetPagination.total || 0;
   const content = await getPageData('lifestyle/hsp-blog');
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
-
-  const paginationScope = 'posts-list';
 
   const colorStops = [
     { colorStop: { color: 'black' } },
@@ -34,35 +34,28 @@ export default async function BlogPage() {
   ];
 
   return (
-    <PaginationContextProvider>
-      <Layout title="">
-        <Background colorStops={colorStops} containMargins>
-          <Container collapseMargin>
-            <div className={styles.breadcrumbs}>
-              <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
-            </div>
-          </Container>
-          {contentBlocks?.map((contentBlock, index) => (
-            <Fragment key={index}>{contentBlock}</Fragment>
-          ))}
-          <Container collapseMargin>
-            <PostsList
-              variant="blog"
-              posts={allPosts}
+    <Layout title="">
+      <Background colorStops={colorStops} containMargins>
+        <Container collapseMargin>
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
+          </div>
+        </Container>
+        {contentBlocks?.map((contentBlock, index) => (
+          <Fragment key={index}>{contentBlock}</Fragment>
+        ))}
+        <Container collapseMargin>
+          <PostsList variant="blog" posts={posts} currentPage={currentPage} />
+          {totalPosts > POSTS_PER_PAGE && (
+            <Pagination
               perPage={POSTS_PER_PAGE}
-              paginationScope={paginationScope}
+              total={totalPosts}
+              current={currentPage}
+              urlBase={routes.blog()}
             />
-            {totalPosts > POSTS_PER_PAGE && (
-              <Pagination
-                perPage={POSTS_PER_PAGE}
-                totalPosts={totalPosts}
-                scope={paginationScope}
-              />
-            )}
-          </Container>
-          {/*<Newsletter />*/}
-        </Background>
-      </Layout>
-    </PaginationContextProvider>
+          )}
+        </Container>
+      </Background>
+    </Layout>
   );
 }

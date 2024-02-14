@@ -1,4 +1,4 @@
-import { getHspTvPost, getHspTvPosts } from '@lib/api';
+import { getHspTvPost, getRecentHspTvPosts } from '@lib/api';
 import Layout from '@components/layout/layout';
 import { HspTvPost } from '@components/hsp-tv-post';
 
@@ -11,7 +11,7 @@ export default async function HspTVPost({ params }) {
   const slug = post?.uri?.replaceAll('/', '');
   const customFields = post?.hspTvPostCustomFields;
 
-  const relatedPosts = await getHspTvPosts(NUMBER_OF_RELATED_POSTS);
+  const relatedPosts = await getRecentHspTvPosts(NUMBER_OF_RELATED_POSTS);
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
