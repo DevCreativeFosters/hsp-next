@@ -1,4 +1,4 @@
-import { getBlogPost, getBlogPosts } from '@lib/api';
+import { getBlogPost, getRecentBlogPosts } from '@lib/api';
 import Layout from '@components/layout/layout';
 import { BlogPost } from '@components/blog-post';
 
@@ -12,7 +12,7 @@ export default async function BlogPostPage({ params }) {
   const image = post?.featuredImage?.node;
   const slug = post?.uri?.replaceAll('/', '');
 
-  const relatedPosts = await getBlogPosts(NUMBER_OF_RELATED_POSTS);
+  const relatedPosts = await getRecentBlogPosts(NUMBER_OF_RELATED_POSTS);
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
