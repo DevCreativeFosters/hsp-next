@@ -39,6 +39,8 @@ export default function PageClientSidePartial({
 
   const properties = [
     'description',
+    'warrantyTimePeriod',
+    'warrantyDescription',
     'featuresDescription',
     'featuresBoxes',
     'specificationDescription',
@@ -54,6 +56,8 @@ export default function PageClientSidePartial({
 
   const {
     description,
+    warrantyTimePeriod,
+    warrantyDescription,
     featuresDescription,
     featuresBoxes,
     specificationDescription,
@@ -112,20 +116,17 @@ export default function PageClientSidePartial({
               allLocations={allLocations}
             />
           </StoreLocatorProvider>
-          {(productHeroData.warrantyTimePeriod ||
-            productHeroData.warrantyDescription) && (
+          {warrantyTimePeriod && (
             <ContentBox className={styles.warrantyDescription}>
               <h3 className={styles.contentBoxTitle}>
                 Warranty{' '}
-                {productHeroData.warrantyTimePeriod && (
+                {warrantyTimePeriod && (
                   <span className={styles.years}>
-                    +{productHeroData.warrantyTimePeriod} years
+                    +{warrantyTimePeriod} years
                   </span>
                 )}
               </h3>
-              {productHeroData.warrantyDescription && (
-                <p>{productHeroData.warrantyDescription}</p>
-              )}
+              {warrantyDescription && <p>{warrantyDescription}</p>}
             </ContentBox>
           )}
         </div>
