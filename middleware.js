@@ -26,9 +26,7 @@ export function middleware(request) {
           if (isPagination) {
             const pageNumber = lastSegment.split('page-')[1];
             const searchParams = new URLSearchParams({ page: pageNumber });
-            return [`${url.origin}${route}`, searchParams.toString()]
-              .filter(Boolean)
-              .join('?');
+            return [`${url.origin}${route}`, searchParams.toString()].join('?');
           }
         }
       }
