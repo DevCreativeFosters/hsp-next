@@ -89,7 +89,7 @@ export default function ProductTabs({
                       {feature.icon && (
                         <Image
                           className={styles.icon}
-                          src={feature.icon.mediaItemUrl || ''}
+                          src={feature.icon.node?.mediaItemUrl || ''}
                           width={58}
                           height={58}
                           alt="icon"
@@ -112,7 +112,7 @@ export default function ProductTabs({
                         muted
                       >
                         <source
-                          src={feature.video.mediaItemUrl || ''}
+                          src={feature.video?.node?.mediaItemUrl || ''}
                           type="video/mp4"
                         />
                         Your browser does not support the video tag.
@@ -121,7 +121,7 @@ export default function ProductTabs({
                     {feature.image && (
                       <Image
                         className={styles.image}
-                        src={feature.image.mediaItemUrl || ''}
+                        src={feature.image?.node?.mediaItemUrl || ''}
                         width={636}
                         height={166}
                         alt=""

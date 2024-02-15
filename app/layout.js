@@ -1,7 +1,7 @@
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 import clsx from 'clsx';
-import { getGlobalOptions } from '@lib/api';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import RootLayoutClient from './layout-client';
 import '@styles/main.scss';
 

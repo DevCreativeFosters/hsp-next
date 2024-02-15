@@ -1,11 +1,9 @@
 import { Fragment } from 'react';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
-import {
-  getCategoriesAndMakesAndModels,
-  getMainProductCategoryBlocks,
-  getMainProductCategory,
-} from '@lib/api';
+import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
@@ -18,7 +16,7 @@ export default async function MainCategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
   const categoryData = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
-  const featuredImage = mainCategoryDetails?.featuredImage;
+  const featuredImage = mainCategoryDetails?.featuredImage?.node;
 
   if (!categoryData) {
     return (
@@ -56,7 +54,7 @@ export default async function MainCategoryPage({ params }) {
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
   return (

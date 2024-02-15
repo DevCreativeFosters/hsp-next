@@ -1,8 +1,6 @@
 import routes from '@lib/routes';
-import {
-  getLatestNumberOfHSPCelebritiesPosts,
-  getPageGutenbergContent,
-} from '@lib/api';
+import { getPageData } from '@lib/api/get-page-data';
+import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number-of-HSP-celebrities-posts';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
@@ -15,10 +13,8 @@ export const metadata = {
 };
 
 export default async function HSPCelebritiesPage() {
-  const posts = await getLatestNumberOfHSPCelebritiesPosts();
-  const gutenbergContent = await getPageGutenbergContent(
-    'lifestyle/hsp-celebrities',
-  );
+  const posts = await getLatestNumberOfHSPCelebritiesPosts(9999);
+  const content = await getPageData('lifestyle/hsp-celebrities');
   return (
     <Layout reserveSpaceForVehicleSelection>
       <Background colorStops={[]} containMargins>
@@ -28,8 +24,8 @@ export default async function HSPCelebritiesPage() {
           />
         </Container>
         <PageClient
-          title={gutenbergContent.title}
-          description={gutenbergContent.content}
+          title={content?.title}
+          description={content?.content}
           posts={posts?.celebrities?.nodes}
         />
         {/*<Newsletter />*/}

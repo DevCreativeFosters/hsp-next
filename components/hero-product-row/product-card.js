@@ -7,7 +7,7 @@ export default function ProductCard({ product }) {
   const productLink = product.link?.url || '';
   const productTitle = product.title;
   const productStartingPrice = product.startingPrice;
-  const productImage = product.productImage?.sourceUrl;
+  const productImage = product.productImage?.node?.sourceUrl;
 
   return (
     <Link href={productLink} className={styles.card}>

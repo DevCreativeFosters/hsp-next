@@ -6,7 +6,7 @@ import styles from './category-card.module.scss';
 
 export default function CategoryCard({ category }) {
   const productImageUrl =
-    category.mainCategoryDetails?.productImage?.mediaItemUrl;
+    category.mainCategoryDetails?.productImage?.node?.mediaItemUrl;
   const productUrl = routes.product(category.slug);
 
   return (

@@ -23,8 +23,8 @@ export default function VideoReel({ items, currentIndex, setCurrentIndex }) {
               index={index}
               title={title}
               isActive={index === currentIndex}
-              thumbnail={celebrityPostsCustomFields?.thumbnail}
-              video={celebrityPostsCustomFields?.video}
+              thumbnail={celebrityPostsCustomFields?.thumbnail?.node}
+              video={celebrityPostsCustomFields?.video?.node}
             />
             <h5 className={styles.title}>{title}</h5>
           </div>

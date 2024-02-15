@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,10 +17,9 @@ export default function CategoriesAndProducts({ data }) {
     <div className={styles.container}>
       <div className={styles.links}>
         {links.map((link, index) => (
-          <>
+          <Fragment key={link.title + index}>
             {link && (
               <div
-                key={link.title + index}
                 className={styles.linkContainer}
                 onClick={() => setHoveredIndex(index)}
               >
@@ -33,7 +32,7 @@ export default function CategoriesAndProducts({ data }) {
                 <ArrowForward />
               </div>
             )}
-          </>
+          </Fragment>
         ))}
       </div>
       <div className={styles.products}>
@@ -49,8 +48,8 @@ export default function CategoriesAndProducts({ data }) {
                   [styles.objectFitContain]:
                     product.imageCoverContain === 'contain',
                 })}
-                src={product.productImage?.sourceUrl}
-                alt={product.productImage?.altText || ''}
+                src={product.productImage?.node?.sourceUrl}
+                alt={product.productImage?.node?.altText || ''}
                 width={570}
                 height={162}
               />

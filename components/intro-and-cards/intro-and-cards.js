@@ -22,8 +22,8 @@ export default function IntroAndCards({ title, description, cards }) {
                 key={card?.title + idx}
                 title={card?.title}
                 description={card?.description}
-                icon={card?.image}
-                backgroundImage={card?.backgroundImage}
+                icon={card?.image?.node}
+                backgroundImage={card?.backgroundImage?.node}
               />
             );
           })}

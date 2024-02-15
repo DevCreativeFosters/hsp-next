@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
-import { getPageData, getGlobalOptions } from '@lib/api';
+import { getPageData } from '@lib/api/get-page-data';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { renderBlock } from '@lib/block';
 import { POST_TYPES } from '@lib/post-types';
 import Layout from '@components/layout/layout';
@@ -8,7 +9,7 @@ import FeaturedPost from '@components/featured-post/featured-post';
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
   const globalOptions = await getGlobalOptions();
-  const featuredPost = globalOptions?.featuredPost;
+  const featuredPost = globalOptions?.featuredPost.nodes?.[0];
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
@@ -18,7 +19,7 @@ export default async function LifestylePage() {
         excerpt={featuredPost?.hspTvPostCustomFields?.description}
         uri={featuredPost?.uri}
         slug={featuredPost?.slug}
-        video={featuredPost?.hspTvPostCustomFields?.backgroundVideo}
+        video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
         youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
         tags={featuredPost?.tags}
         date={featuredPost?.date}

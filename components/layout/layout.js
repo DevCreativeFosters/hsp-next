@@ -2,16 +2,14 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
 import { UserProvider } from '@contexts/user';
-import {
-  getFooterMenus,
-  getGlobalOptions,
-  getMenu,
-  getMenuDropdownProducts,
-  getMainProductCategories,
-  getAllMakes,
-  getProductCategories,
-  getStores,
-} from '@lib/api';
+import { getStores } from '@lib/api/get-stores';
+import { getMenuDropdownProducts } from '@lib/api/get-menu-dropdown-products';
+import { getProductCategories } from '@lib/api/get-product-categories';
+import { getMenu } from '@lib/api/get-menu';
+import { getAllMakes } from '@lib/api/get-all-makes';
+import { getMainProductCategories } from '@lib/api/get-main-product-categories';
+import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getFooterMenus } from '@lib/api/get-footer-menus';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';

@@ -24,8 +24,8 @@ export default function InformationCards({ cards }) {
                   <div className={styles.backgroundContainer}>
                     <Image
                       className={styles.backgroundImage}
-                      src={backgroundImage.sourceUrl}
-                      alt={backgroundImage.altText}
+                      src={backgroundImage.node?.sourceUrl}
+                      alt={backgroundImage.node?.altText}
                       fill={true}
                     />
                     <div className={styles.backgroundGradient} />
@@ -34,8 +34,8 @@ export default function InformationCards({ cards }) {
                 {icon && (
                   <div className={styles.iconContainer}>
                     <Image
-                      src={icon?.sourceUrl}
-                      alt={icon?.altText}
+                      src={icon?.node?.sourceUrl}
+                      alt={icon?.node?.altText}
                       fill={true}
                     />
                   </div>

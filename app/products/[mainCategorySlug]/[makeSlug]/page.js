@@ -1,11 +1,9 @@
 import { Fragment } from 'react';
 import { renderBlock } from '@lib/block';
-import {
-  getMainProductCategory,
-  getCategoriesAndMakesAndModels,
-  getMake,
-  getMainProductCategoryBlocks,
-} from '@lib/api';
+import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getMake } from '@lib/api/get-make';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -19,7 +17,7 @@ export default async function CategoryPage({ params }) {
   const mainCategorySlug = params.mainCategorySlug;
   const categoryData = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
-  const featuredImage = mainCategoryDetails?.featuredImage;
+  const featuredImage = mainCategoryDetails?.featuredImage?.node;
   const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
   const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
     renderBlock(block, 'product_category'),
@@ -47,11 +45,13 @@ export default async function CategoryPage({ params }) {
   }
 
   const filteredData = details?.filter(
-    data => data.relatedProductCategory?.slug === mainCategorySlug,
+    data => data.relatedProductCategory?.[0]?.slug === mainCategorySlug,
   );
   const productHeroData = {
     image:
-      filteredData?.length > 1 ? filteredData[0].featuredImage : featuredImage,
+      filteredData?.length > 1
+        ? filteredData[0].featuredImage?.node
+        : featuredImage,
     features:
       filteredData?.length > 1
         ? filteredData[0]?.features
@@ -81,7 +81,7 @@ export default async function CategoryPage({ params }) {
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
   return (

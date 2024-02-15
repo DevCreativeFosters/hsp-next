@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import parse from 'html-react-parser';
-import { getGlobalOptions, getPageData } from '@lib/api';
+import { getPageData } from '@lib/api/get-page-data';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import Layout from '@components/layout/layout';
 import Container from '@components/container/container';
 import ContentBox from '@components/content-box/content-box';

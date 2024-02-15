@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import styles from './video-card.module.scss';
 import Link from 'next/link';
 
-export default function VideoCard({ idx, url, name, price, productUrl = '' }) {
+export default function VideoCard({ idx, url, name, price, productUrl }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function VideoCard({ idx, url, name, price, productUrl = '' }) {
 
   return (
     <Link
-      href={productUrl}
+      href={productUrl || ''}
       className={clsx(styles.videoCard, {
         [styles.videoCardA]: idx === 0,
         [styles.videoCardB]: idx === 1,

@@ -91,12 +91,6 @@ export default function Hero({ slides, transition = 'fade' }) {
     >
       <div className={styles.track} data-index={currentSlideIndex}>
         {slides.map(({ backgroundImage, backgroundImagePosition }, index) => {
-          const aspectRatio =
-            backgroundImage?.mediaDetails?.width &&
-            backgroundImage?.mediaDetails?.height
-              ? backgroundImage.mediaDetails.width /
-                backgroundImage.mediaDetails.height
-              : 1;
           return (
             <div
               className={clsx(styles.slide, {
@@ -105,12 +99,13 @@ export default function Hero({ slides, transition = 'fade' }) {
               key={index}
             >
               {Boolean(
-                preloadedAssets.includes(index) && backgroundImage?.sourceUrl,
+                preloadedAssets.includes(index) &&
+                  backgroundImage?.node?.sourceUrl,
               ) ? (
                 <Image
                   className={styles.backgroundImage}
-                  src={backgroundImage?.sourceUrl}
-                  alt={backgroundImage?.altText || ''}
+                  src={backgroundImage?.node?.sourceUrl}
+                  alt={backgroundImage?.node?.altText || ''}
                   fill={true}
                   style={{ objectPosition: backgroundImagePosition }}
                 />

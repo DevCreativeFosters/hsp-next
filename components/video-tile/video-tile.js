@@ -14,8 +14,8 @@ export default function VideoTile({
   context,
 }) {
   const isFullscreenRef = useRef(false);
-  const thumbnail = celebrityPostsCustomFields?.thumbnail;
-  const video = celebrityPostsCustomFields?.video;
+  const thumbnail = celebrityPostsCustomFields?.thumbnail?.node;
+  const video = celebrityPostsCustomFields?.video?.node;
   const videoUrl = video?.mediaItemUrl;
   const videoExtension = videoUrl?.split('.').slice(-1)?.[0];
 

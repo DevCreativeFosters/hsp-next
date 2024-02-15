@@ -10,7 +10,7 @@ export default function TextAndImagePromo({
   description,
   videoUrl,
   linkText,
-  linkUrl,
+  linkUrl = '',
 }) {
   return (
     <Container>

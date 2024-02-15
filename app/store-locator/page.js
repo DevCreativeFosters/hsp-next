@@ -1,6 +1,6 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import routes from '@lib/routes';
-import { getStores } from '@lib/api';
+import { getStores } from '@lib/api/get-stores';
 import Layout from '@components/layout/layout';
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';

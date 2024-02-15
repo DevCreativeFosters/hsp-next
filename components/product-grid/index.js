@@ -30,7 +30,7 @@ export default function ProductGrid({ title, products }) {
                   className={styles.imageContainer}
                 >
                   <Image
-                    src={product.productImage.mediaItemUrl}
+                    src={product.productImage?.node?.mediaItemUrl}
                     fill
                     alt={product.title}
                     className={styles.image}

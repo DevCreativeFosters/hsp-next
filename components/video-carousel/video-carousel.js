@@ -3,8 +3,6 @@ import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import VideoTile from '@components/video-tile/video-tile';
-import routes from '@lib/routes';
-import styles from './video-carousel.module.scss';
 
 export default function VideoCarousel({
   title,
