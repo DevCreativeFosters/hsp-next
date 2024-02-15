@@ -1,17 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Tile from '@components/tile/tile';
 import styles from './posts-list.module.scss';
 
 export default function PostsList({ posts, variant, currentPage }) {
-  useEffect(
-    function scrollToTopWhenPaginationChanges() {
-      window.scrollTo(0, 0);
-    },
-    [currentPage],
-  );
-
   return (
     <div className={styles.posts}>
       {posts?.map((post, idx) => {
