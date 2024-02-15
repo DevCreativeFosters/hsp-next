@@ -1,5 +1,9 @@
 @import './breakpoints';
 
+html {
+  --vh: 1vh;
+}
+
 html,
 body {
   height: 100%;

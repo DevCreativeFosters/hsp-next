@@ -36,6 +36,7 @@ const SUBMIT_MUTATION = gql`
 export default function GForm({
   innerRef,
   form,
+  isDirty,
   hiddenInputs,
   attributes = {},
   submitButton,
@@ -132,6 +133,7 @@ export default function GForm({
       onSubmit={handleSubmit}
       withPadding={attributes.withPadding}
       withBackground={attributes.withBackground}
+      isDirty={isDirty}
       onChange={onChange}
     >
       {isSubmitted && !preventConfirmation ? (

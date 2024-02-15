@@ -14,6 +14,9 @@ export default function useMobileVh() {
       window.removeEventListener('resize', calculateVh);
       window.removeEventListener('orientationchange', calculateVh);
       document.documentElement.style.removeProperty('--vh');
+
+      // this should re-add `--vh` if there are still other instances of useMobileVh in place
+      window.dispatchEvent(new Event('resize'));
     };
   }, []);
 }
