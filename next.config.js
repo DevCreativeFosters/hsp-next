@@ -24,6 +24,7 @@ module.exports = {
       'prodhsp.wpenginepowered.com',
       'stghsp.wpenginepowered.com',
       'devhsp.wpenginepowered.com',
+      'scontent.cdninstagram.com',
     ],
   },
   sassOptions: {
