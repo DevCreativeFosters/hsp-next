@@ -1,10 +1,10 @@
 // This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 'use client';
 
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
