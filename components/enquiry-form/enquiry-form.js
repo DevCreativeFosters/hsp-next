@@ -239,7 +239,11 @@ export default function EnquiryForm({
           onClose={handleCloseModal}
           store={selectedStore}
           selectedProducts={
-            selectedVariant || (variants?.length ? [variants[0]] : []) // TODO: Refactor selectedProducts prop while working on UTE Builder form
+            selectedVariant
+              ? [selectedVariant]
+              : variants?.length
+                ? [variants[0]]
+                : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
           }
           productPrice={productPrice}
           installationCost={installationCost}
