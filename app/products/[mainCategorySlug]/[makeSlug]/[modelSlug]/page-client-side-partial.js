@@ -1,7 +1,10 @@
 // This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 'use client';
 
-import { useState } from 'react';
+import routes from '@lib/routes';
+import { trimSlash } from '@lib/trim-slash';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
@@ -32,10 +35,14 @@ export default function PageClientSidePartial({
   allLocations,
   productHeroData,
   downloadFileFormId,
+  pageParams,
+  variantSlug,
 }) {
-  const [variant, setVariant] = useState(
-    firstMatchedProduct?.productFields.variants?.[0],
-  );
+  const productVariants = firstMatchedProduct?.productFields.variants;
+  const variant =
+    productVariants.find(
+      ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
+    ) || productVariants[0];
 
   const properties = [
     'description',
@@ -89,6 +96,22 @@ export default function PageClientSidePartial({
           mainImage: index === 0,
         }));
 
+  const router = useRouter();
+
+  const onVariantChange = useCallback(
+    newVariantSlug => {
+      const { mainCategorySlug, makeSlug, modelSlug } = pageParams;
+      const newRoute = routes.product(
+        mainCategorySlug,
+        makeSlug,
+        modelSlug,
+        newVariantSlug,
+      );
+      router.push(newRoute);
+    },
+    [pageParams],
+  );
+
   return (
     <>
       <div className={styles.header}>
@@ -112,7 +135,8 @@ export default function PageClientSidePartial({
             <EnquiryForm
               enquiryFormId={enquiryFormId}
               productData={firstMatchedProduct}
-              onVariantChange={setVariant}
+              variantSlug={variantSlug}
+              onVariantChange={onVariantChange}
               allLocations={allLocations}
             />
           </StoreLocatorProvider>

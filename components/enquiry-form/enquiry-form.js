@@ -1,5 +1,6 @@
 'use client';
 
+import { trimSlash } from '@lib/trim-slash';
 import {
   useCallback,
   useMemo,
@@ -25,7 +26,8 @@ export default function EnquiryForm({
   enquiryFormId,
   productData,
   allLocations,
-  onVariantChange: onVariantChangeCallback = () => {},
+  variantSlug,
+  onVariantChange: onVariantChangeCallback = slug => {},
 }) {
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
@@ -41,7 +43,10 @@ export default function EnquiryForm({
     label: variantName,
     value: variantSlug,
   }));
-  const [selectedVariant, setSelectedVariant] = useState(variants?.[0]);
+
+  const selectedVariant =
+    variants.find(({ variantSlug: slug }) => trimSlash(slug) === variantSlug) ||
+    variants?.[0];
 
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant.variantDetails.price
@@ -93,9 +98,10 @@ export default function EnquiryForm({
       const newSelectedVariant = variants.find(
         variant => variant.variantSlug === value,
       );
-
-      setSelectedVariant(newSelectedVariant);
-      onVariantChangeCallback(newSelectedVariant);
+      const variantSlug = newSelectedVariant?.variantSlug;
+      if (variantSlug) {
+        onVariantChangeCallback(trimSlash(variantSlug));
+      }
     },
     [variants, onVariantChangeCallback],
   );
@@ -119,14 +125,6 @@ export default function EnquiryForm({
       setHighlight(Math.random());
     }
   }, [selectedStore]);
-
-  useEffect(() => {
-    if (variants && variants.length > 0) {
-      setSelectedVariant(variants?.[0]);
-    } else {
-      setSelectedVariant(null);
-    }
-  }, [variants]);
 
   useEffect(
     function resetHighlight() {
