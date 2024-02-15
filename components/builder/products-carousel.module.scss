@@ -90,12 +90,19 @@
   border-radius: 8px;
   width: 100%;
   height: auto;
-  aspect-ratio: 1.4;
+  aspect-ratio: 1;
   transition: width 0.2s;
   background-color: var(--color-white-100);
+
+  @include bp(medium) {
+    aspect-ratio: 1.4;
+  }
 }
 
 .productImage {
+  position: absolute;
+  top: 0;
+  left: 0;
   border-radius: 8px;
   object-fit: cover;
   width: 100%;
