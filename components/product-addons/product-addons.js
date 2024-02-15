@@ -1,5 +1,6 @@
 'use client';
 
+import routes from '@lib/routes';
 import { useRef } from 'react';
 import clsx from 'clsx';
 import SectionButtons from '@components/section-buttons/section-buttons';
@@ -16,15 +17,39 @@ export default function ProductAddons({ title, description, products }) {
   const buttonNextRef = useRef();
 
   const productsNormalized = products.map(product => {
-    const urlNormalized =
-      product.url || product.link?.url || product.link || '';
     const imageUrl = product.featuredImage?.sourceUrl;
+    const categories = product.productCategories.nodes;
+    const makesAndModels = product.makesAndModels.nodes.map(el => ({
+      ...el,
+      parent: el.parent?.node || null,
+    }));
+    const variants = product.productFields.variants;
+    const categorySlug = categories[0]?.slug;
+    const model = makesAndModels.find(({ parent }) => parent);
+    const makeSlug = model?.parent?.slug; // 2
+    const modelSlug = model?.slug;
+    const cheapestVariant = variants?.find(
+      ({ variantDetails: { price } }) => price === product.lowestPrice,
+    );
+
+    let url;
+    if (categorySlug && makeSlug && modelSlug) {
+      const variantSlug = cheapestVariant?.variantSlug;
+      const variantSlugNormalized =
+        variantSlug?.slice(0, 1) === '/' ? variantSlug.slice(1) : variantSlug;
+      url = routes.product(
+        categorySlug,
+        makeSlug,
+        modelSlug,
+        variantSlugNormalized,
+      );
+    }
 
     return {
-      url: urlNormalized,
+      url,
       imageUrl,
       name: product.title,
-      price: 2300,
+      price: product.lowestPrice,
     };
   });
 

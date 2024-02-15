@@ -6,7 +6,7 @@ import { getValueOrSlug } from '@lib/helpers';
 const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
 
 function getPathSegments(url) {
-  const path = new URL(url).pathname;
+  const path = typeof url === 'string' ? url : new URL(url).pathname;
   return path?.split('/').filter(Boolean);
 }
 
@@ -37,6 +37,17 @@ export function middleware(request) {
     return NextResponse.rewrite(paginatedUrl);
   }
 
+  if (pathSegments[0] === getPathSegments(routes.products)[0]) {
+    const variantSlug = pathSegments[4];
+    if (variantSlug) {
+      const newUrl = new URL(
+        [url.origin, ...pathSegments.slice(0, 4)].join('/'),
+      );
+      newUrl.searchParams.set('variant', variantSlug);
+      return NextResponse.rewrite(newUrl);
+    }
+  }
+
   if (pathSegments[0] === 'products' && pathSegments.length === 2) {
     if (hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
@@ -60,6 +71,7 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
+    '/products/:category*/:make*/:model*/:variant*',
     '/products/:path*',
     '/lifestyle/hsp-blog/:path*', // this must match with routes.blog()
     '/lifestyle/hsp-tv/:path*', // this must match with routes.tv()

@@ -17,7 +17,7 @@ import ErrorPage from '@components/error-page';
 import PageContainer from '@components/page-container/page-container';
 import styles from './page.module.scss';
 
-export default async function CategoryPage({ params }) {
+export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
@@ -102,9 +102,11 @@ export default async function CategoryPage({ params }) {
           make={make}
           enquiryFormId={enquiryFormId}
           firstMatchedProduct={firstMatchedProduct}
+          variantSlug={searchParams.variant}
           allLocations={allLocations}
           productHeroData={productHeroData}
           downloadFileFormId={downloadFileFormId}
+          pageParams={params}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
