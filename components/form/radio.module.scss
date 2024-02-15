@@ -5,6 +5,7 @@
   --title-font-size: 16px;
   --label-font-size: 16px;
   --mark-size: 18px;
+  --color-error: var(--color-primary-100);
 
   position: relative;
   display: grid;
@@ -88,7 +89,7 @@
   }
 }
 
-.radioInput {
+.radioLabel {
   position: relative;
   display: flex;
   align-items: center;
@@ -99,8 +100,8 @@
   border-radius: var(--border-radius-sm);
   gap: 8px;
 
-  input[type='radio']:focus ~ .label,
-  input[type='radio']:active ~ .label,
+  .realInputElement:focus ~ .label,
+  .realInputElement:active ~ .label,
   &:hover {
     color: var(--focus-color);
   }
@@ -119,6 +120,16 @@
 
   input[type='radio']:checked + .radioMark::after {
     opacity: 1;
+  }
+}
+
+form[class*='is-dirty'] .realInputElement:invalid {
+  & ~ .label {
+    color: var(--color-error);
+  }
+
+  & ~ .radioMark {
+    border-color: var(--color-error);
   }
 }
 

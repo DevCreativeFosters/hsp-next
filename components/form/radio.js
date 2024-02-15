@@ -40,13 +40,14 @@ export default function Radio({
 
           return (
             <label
-              className={clsx(styles.radioInput, {
+              className={clsx(styles.radioLabel, {
                 [styles.error]: errorMessage,
                 [styles.filled]: isChecked,
               })}
               key={optionValue}
             >
               <input
+                className={styles.realInputElement}
                 type="radio"
                 name={name}
                 checked={isChecked}

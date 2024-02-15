@@ -27,11 +27,13 @@ export default function EnquiryModal({
   const [isLoading, setLoading] = useState(true);
   const [formIsSending, setFormIsSending] = useState(false);
   const [formIsSent, setFormIsSent] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
 
   const handleSubmitClick = () => {
     if (formRef.current) {
       formRef.current.handleSubmit();
+      setIsFormDirty(true);
     }
   };
 
@@ -109,6 +111,7 @@ export default function EnquiryModal({
                 <GravityFormWrapper
                   ref={formRef}
                   attributes={{ id: enquiryFormId }}
+                  isDirty={isFormDirty}
                   onLoad={onLoad}
                   onSubmit={onSubmit}
                   onSuccess={onSuccess}

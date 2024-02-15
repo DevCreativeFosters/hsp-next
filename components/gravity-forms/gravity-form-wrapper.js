@@ -13,6 +13,7 @@ function GravityFormWrapperWithRef(
     attributes,
     hiddenInputs = [],
     submitButton = true,
+    isDirty = false,
     preventConfirmation,
     onChange = () => null,
     onReset = () => null,
@@ -136,6 +137,7 @@ function GravityFormWrapperWithRef(
       <GForm
         innerRef={ref}
         form={gfForm}
+        isDirty={isDirty}
         hiddenInputs={hiddenInputs}
         onChange={onChange}
         onReset={onReset}

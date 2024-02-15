@@ -6,6 +6,7 @@ import styles from './form.module.scss';
 export default function Form({
   withPadding = false,
   withBackground = false,
+  isDirty = false,
   children,
   ...props
 }) {
@@ -14,6 +15,7 @@ export default function Form({
       className={clsx(styles.form, {
         [styles.withPadding]: withPadding,
         [styles.withBackground]: withBackground,
+        'is-dirty': isDirty,
       })}
       {...props}
     >

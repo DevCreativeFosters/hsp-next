@@ -37,13 +37,13 @@ $desktop-height: 1160px;
 .enquiryModal {
   --viewport-margin: 48px;
   --padding-horizontal: 48px;
-  --max-height: calc(100vh - 2 * var(--viewport-margin));
+  --max-height: calc(100 * var(--vh) - 2 * var(--viewport-margin));
 
   @include scrollbar;
 
   position: relative;
   z-index: var(--z-index-modal);
-  max-height: 100%;
+  max-height: calc(100 * var(--vh));
   background-color: var(--color-black-100);
   overflow: hidden auto;
 
