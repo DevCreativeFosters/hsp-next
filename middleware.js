@@ -20,14 +20,16 @@ export function middleware(request) {
     .map(route => {
       const routeSegments = route.slice(1).split('/');
       if (pathSegments.join().includes(routeSegments.join())) {
-        if (pathSegments.length > routeSegments.length) {
-          const remainingSegments = pathSegments.slice(routeSegments.length);
-          const searchParams = new URLSearchParams(
-            remainingSegments.map(segment => segment.split('-')),
-          );
-          return [`${url.origin}${route}`, searchParams.toString()]
-            .filter(Boolean)
-            .join('?');
+        if (pathSegments.length === routeSegments.length + 1) {
+          const lastSegment = pathSegments.slice(-1)[0];
+          const isPagination = lastSegment.startsWith('page-');
+          if (isPagination) {
+            const pageNumber = lastSegment.split('page-')[1];
+            const searchParams = new URLSearchParams({ page: pageNumber });
+            return [`${url.origin}${route}`, searchParams.toString()]
+              .filter(Boolean)
+              .join('?');
+          }
         }
       }
     })
