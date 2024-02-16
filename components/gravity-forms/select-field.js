@@ -3,18 +3,6 @@ import InputWrapper from '@components/gravity-forms/input-wrapper';
 import useGravityForm from '@hooks/useGravityForm';
 import { useMemo } from 'react';
 
-function getDefaultValueNormalized(field, options) {
-  if (field.defaultValue) {
-    const matchedOption = options.find(
-      ({ value }) => value === field.defaultValue,
-    );
-    if (matchedOption) {
-      return matchedOption.value;
-    }
-  }
-  return field.placeholder || options[0]?.value;
-}
-
 export default function SelectField({ form, field, fieldErrors }) {
   const { formId } = form;
   const { state, dispatch } = useGravityForm();
@@ -28,10 +16,7 @@ export default function SelectField({ form, field, fieldErrors }) {
     fieldValue => fieldValue.id === field.id,
   )?.value;
 
-  const defaultValue = getDefaultValueNormalized(field, options);
-
-  const valueCalculated =
-    stateValue !== undefined ? stateValue : field.value || defaultValue;
+  const valueCalculated = stateValue !== undefined ? stateValue : field.value;
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === field.id);
@@ -48,6 +33,7 @@ export default function SelectField({ form, field, fieldErrors }) {
         options={options}
         value={valueCalculated}
         errorMessage={fieldError?.message}
+        required={Boolean(field.isRequired)}
         onChange={value =>
           dispatch({
             type: 'updateFieldValue',
