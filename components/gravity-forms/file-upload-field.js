@@ -10,9 +10,10 @@ const MEGA_BYTE = Math.pow(1024, 2);
 function SingleFile({ file, errors, onRemove }) {
   const inputRef = useRef();
   const errorMessage = errors.filter(Boolean).join('. ');
+
   const onInvalid = useCallback(() => {
     inputRef.current.setCustomValidity(errorMessage);
-  }, []);
+  }, [errorMessage]);
 
   return (
     <div
@@ -129,7 +130,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       }
       return errors;
     },
-    [maxSize, acceptedTypesNormalized],
+    [maxSize, maxFiles, acceptedTypesNormalized, tooManyFilesErrorMessage],
   );
 
   const addFiles = useCallback(
@@ -162,7 +163,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
 
       setFiles(filteredFiles);
     },
-    [files],
+    [files, getValidationErrors],
   );
 
   useEffect(
@@ -186,7 +187,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
         },
       });
     },
-    [files],
+    [files, dispatch, field.id],
   );
 
   return (
