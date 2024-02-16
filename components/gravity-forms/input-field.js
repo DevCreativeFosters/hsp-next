@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import Input from '@components/form/input';
 import useGravityForm from '@hooks/useGravityForm';
 

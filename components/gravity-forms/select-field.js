@@ -1,6 +1,7 @@
 import Select from '@components/form/select';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
 import useGravityForm from '@hooks/useGravityForm';
+import { useMemo } from 'react';
 
 function getDefaultValueNormalized(field, options) {
   if (field.defaultValue) {
@@ -32,6 +33,10 @@ export default function SelectField({ form, field, fieldErrors }) {
   const valueCalculated =
     stateValue !== undefined ? stateValue : field.value || defaultValue;
 
+  const fieldError = useMemo(() => {
+    return fieldErrors.find(fieldError => fieldError.id === field.id);
+  }, [field.id, fieldErrors]);
+
   return (
     <InputWrapper oneOf={1}>
       <Select
@@ -42,6 +47,7 @@ export default function SelectField({ form, field, fieldErrors }) {
         placeholder={field.placeholder}
         options={options}
         value={valueCalculated}
+        errorMessage={fieldError?.message}
         onChange={value =>
           dispatch({
             type: 'updateFieldValue',

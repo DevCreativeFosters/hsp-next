@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Input from '@components/form/input';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
 import useGravityForm from '@hooks/useGravityForm';
@@ -13,12 +14,16 @@ export default function DateField({
   max = new Date().toISOString().split('T')[0],
 }) {
   const { formId } = form;
-  const { id, value, label, placeholder } = field;
+  const { id, value, label, placeholder, isRequired } = field;
   const { state, dispatch } = useGravityForm();
 
   const stateValue = state.find(fieldValue => fieldValue.id === id)?.value;
   const valueCalculated =
     stateValue !== undefined ? stateValue : value || DEFAULT_VALUE;
+
+  const fieldError = useMemo(() => {
+    return fieldErrors.find(fieldError => fieldError.id === id);
+  }, [id, fieldErrors]);
 
   return (
     <InputWrapper oneOf={2}>
@@ -29,8 +34,10 @@ export default function DateField({
         id={`gform_${formId}_${id}`}
         name={`gform_${formId}_${id}`}
         label={label}
+        required={Boolean(isRequired)}
         placeholder={placeholder}
         value={valueCalculated}
+        errorMessage={fieldError?.message}
         min={min}
         max={max}
         onChange={ev =>
