@@ -151,7 +151,6 @@ export default function FileUploadField({ form, field, fieldErrors }) {
           data-max-file-size={field.maxFileSize || null}
           onChange={ev => {
             addFiles(ev.nativeEvent.target);
-            console.log('field', field);
             dispatch({
               type: 'updateFieldValue',
               payload: {
