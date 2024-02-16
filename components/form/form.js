@@ -6,6 +6,7 @@ import styles from './form.module.scss';
 export default function Form({
   withPadding = false,
   withBackground = false,
+  withTermsAndConditions = false,
   isDirty = false,
   children,
   ...props

@@ -12,6 +12,7 @@ import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import Button from '@components/button/button';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
+import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
 import GravityFormsField from './field';
 import Confirmation from './confirmation';
 import useGravityForm from '@hooks/useGravityForm';
@@ -156,6 +157,11 @@ export default function GForm({
               hiddenInputs={hiddenInputs}
             />
           ))}
+
+          {attributes.withTermsAndConditions && (
+            <DisclaimerTC fullWidth withBlockMargin />
+          )}
+
           <Button
             ref={submitRef}
             type="submit"
