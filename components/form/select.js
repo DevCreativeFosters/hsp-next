@@ -114,6 +114,7 @@ export default function Select({
         </button>
 
         <select
+          name={`fake_${props.name}`}
           className={styles.realSelect}
           required={required}
           value={value || ''}

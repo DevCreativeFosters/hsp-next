@@ -7,17 +7,52 @@ import styles from './file-upload-field.module.scss';
 
 const MEGA_BYTE = Math.pow(1024, 2);
 
+function SingleFile({ file, errors, onRemove }) {
+  const inputRef = useRef();
+  const errorMessage = errors.filter(Boolean).join('. ');
+  const onInvalid = useCallback(() => {
+    inputRef.current.setCustomValidity(errorMessage);
+  }, []);
+
+  return (
+    <div
+      className={clsx(styles.fileNameWrapper, {
+        [styles.isInvalid]: errors.length,
+      })}
+      title={errors.length ? errors.join('. ') : file.name}
+    >
+      <span className={styles.fileName}>{file.name}</span>
+      <button
+        type="button"
+        className={styles.removeButton}
+        title="Click to remove"
+        onClick={ev => onRemove(ev, file)}
+      >
+        <DeleteIcon />
+      </button>
+      <input
+        className={styles.childInput}
+        ref={inputRef}
+        type="text"
+        required={Boolean(errors.length)}
+        onInvalid={onInvalid}
+        tabIndex={-1}
+      />
+    </div>
+  );
+}
+
 export default function FileUploadField({ form, field, fieldErrors }) {
   const { formId } = form;
   const [files, setFiles] = useState([]);
   const inputRef = useRef();
   const { dispatch } = useGravityForm();
   const multiple = field.canAcceptMultipleFiles || null;
-  const maxFiles = field.maxFiles;
+  const maxFiles = parseInt(field.maxFiles) || undefined;
   const maxSize = (field.maxFileSize || 0) * MEGA_BYTE;
 
   const tooBigFileErrorMessage = `Maximum allowed file size is ${field.maxFileSize} MB`;
-  const tooManyFilesErrorMessage = `You can upload only ${maxFiles} file${
+  const tooManyFilesErrorMessage = `You can only upload  ${maxFiles} file${
     maxFiles > 1 ? 's' : ''
   }.`;
 
@@ -73,8 +108,10 @@ export default function FileUploadField({ form, field, fieldErrors }) {
   const maxFilesPrinted =
     maxFiles > 0 ? `max. ${maxFiles} file${maxFiles > 1 ? 's' : ''}` : '';
 
+  const maxSizePrinted = `max. ${field.maxFileSize} MB per file`;
+
   const getValidationErrors = useCallback(
-    file => {
+    (file, index) => {
       const errors = [];
       if (maxSize && file.size > maxSize) {
         errors.push('File is too big');
@@ -87,6 +124,9 @@ export default function FileUploadField({ form, field, fieldErrors }) {
           errors.push('File type is not allowed');
         }
       }
+      if (maxFiles && index + 1 > maxFiles) {
+        errors.push(tooManyFilesErrorMessage);
+      }
       return errors;
     },
     [maxSize, acceptedTypesNormalized],
@@ -94,15 +134,15 @@ export default function FileUploadField({ form, field, fieldErrors }) {
 
   const addFiles = useCallback(
     inputElement => {
-      const freshFiles = Array.from(inputElement.files).map(file => {
+      const freshFiles = Array.from(inputElement.files).map((file, index) => {
         return {
           fileHandle: file,
-          errors: getValidationErrors(file),
+          errors: getValidationErrors(file, files.length + index),
         };
       });
       setFiles(oldFiles => [...oldFiles, ...freshFiles]);
     },
-    [getValidationErrors],
+    [files, getValidationErrors],
   );
 
   const onRemoveFileClick = useCallback(
@@ -110,10 +150,15 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       ev.stopPropagation();
       ev.preventDefault();
 
-      const filteredFiles = files.filter(
-        ({ fileHandle: { name, size } }) =>
-          name !== file.name && size !== file.size,
-      );
+      const filteredFiles = files
+        .filter(
+          ({ fileHandle: { name, size } }) =>
+            name !== file.name && size !== file.size,
+        )
+        .map(({ fileHandle }, index) => ({
+          fileHandle,
+          errors: getValidationErrors(fileHandle, index),
+        }));
 
       setFiles(filteredFiles);
     },
@@ -133,6 +178,13 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       } else {
         inputRef.current.value = '';
       }
+      dispatch({
+        type: 'updateFieldValue',
+        payload: {
+          id: field.id,
+          fileUploadValues: inputRef.current?.files || [],
+        },
+      });
     },
     [files],
   );
@@ -151,13 +203,6 @@ export default function FileUploadField({ form, field, fieldErrors }) {
           data-max-file-size={field.maxFileSize || null}
           onChange={ev => {
             addFiles(ev.nativeEvent.target);
-            dispatch({
-              type: 'updateFieldValue',
-              payload: {
-                id: field.id,
-                fileUploadValues: inputRef.current.files,
-              },
-            });
           }}
         />
         <div
@@ -166,23 +211,12 @@ export default function FileUploadField({ form, field, fieldErrors }) {
           })}
         >
           {files.map(({ fileHandle: file, errors }, index) => (
-            <div
+            <SingleFile
               key={`${file.name}-${index}`}
-              className={clsx(styles.fileNameWrapper, {
-                [styles.isInvalid]: errors.length,
-              })}
-              title={errors.length ? errors.join('. ') : file.name}
-            >
-              <span className={styles.fileName}>{file.name}</span>
-              <button
-                type="button"
-                className={styles.removeButton}
-                title="Click to remove"
-                onClick={ev => onRemoveFileClick(ev, file)}
-              >
-                <DeleteIcon />
-              </button>
-            </div>
+              file={file}
+              errors={errors}
+              onRemove={onRemoveFileClick}
+            />
           ))}
 
           <div className={styles.cta}>
@@ -190,10 +224,10 @@ export default function FileUploadField({ form, field, fieldErrors }) {
               <AttachmentIcon />
             </div>
             <span>{field.label}</span>
-            {(acceptedTypesPrinted || maxFiles > 0) && (
+            {(acceptedTypesPrinted || maxFiles > 0 || maxSize) && (
               <span className={styles.types}>
                 (
-                {[acceptedTypesPrinted, maxFilesPrinted]
+                {[acceptedTypesPrinted, maxFilesPrinted, maxSizePrinted]
                   .filter(Boolean)
                   .join(', ')}
                 )
