@@ -25,7 +25,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug;
   const mainCategory = await getMainProductCategory(mainCategorySlug);
-  const mainCategoryDetails = mainCategory.mainCategoryDetails;
+  const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
