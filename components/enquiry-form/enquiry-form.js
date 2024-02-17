@@ -45,12 +45,13 @@ export default function EnquiryForm({
   }));
 
   const selectedVariant =
-    variants.find(({ variantSlug: slug }) => trimSlash(slug) === variantSlug) ||
-    variants?.[0];
+    variants?.find(
+      ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
+    ) || variants?.[0];
 
   const variantPrice = selectedVariant?.variantDetails?.price
-    ? selectedVariant.variantDetails.price
-    : selectedVariant.parentInherit
+    ? selectedVariant?.variantDetails.price
+    : selectedVariant?.parentInherit
       ? productPrice
       : null;
 

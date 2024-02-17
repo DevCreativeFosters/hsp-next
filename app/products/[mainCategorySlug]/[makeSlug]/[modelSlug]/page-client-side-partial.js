@@ -38,11 +38,11 @@ export default function PageClientSidePartial({
   pageParams,
   variantSlug,
 }) {
-  const productVariants = firstMatchedProduct?.productFields.variants;
+  const productVariants = firstMatchedProduct?.productFields.variants || [];
   const variant =
     productVariants.find(
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
-    ) || productVariants[0];
+    ) || productVariants?.[0];
 
   const properties = [
     'description',
@@ -73,26 +73,26 @@ export default function PageClientSidePartial({
   } = variantData;
 
   const manualPdfItems =
-    variant?.variantDetails?.manualPdfItems?.length > 0
+    variant?.variantDetails.manualPdfItems?.length > 0
       ? variant.variantDetails.manualPdfItems.map(item => ({
           label: item?.manualPdf.title,
           url: item?.manualPdf.mediaItemUrl,
         }))
-      : firstMatchedProduct?.productFields?.manualPdfItems?.map(item => ({
+      : firstMatchedProduct?.productFields.manualPdfItems?.map(item => ({
           label: item?.manualPdf.title,
           url: item?.manualPdf.mediaItemUrl,
         }));
 
   const carouselImages =
-    variant?.variantDetails?.images?.length > 0
+    variant?.variantDetails.images?.length > 0
       ? variant.variantDetails.images.map((image, index) => ({
-          sourceUrl: image?.mediaItemUrl,
-          alt: image?.altText ? image?.altText : 'Product variant image',
+          sourceUrl: image.mediaItemUrl,
+          alt: image.altText ? image?.altText : 'Product variant image',
           mainImage: index === 0,
         }))
-      : firstMatchedProduct?.productFields?.images?.map((image, index) => ({
-          sourceUrl: image?.mediaItemUrl,
-          alt: image?.altText ? image?.altText : 'Main product image',
+      : firstMatchedProduct?.productFields.images?.map((image, index) => ({
+          sourceUrl: image.mediaItemUrl,
+          alt: image.altText ? image.altText : 'Main product image',
           mainImage: index === 0,
         }));
 
