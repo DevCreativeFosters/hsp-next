@@ -244,7 +244,7 @@ export default function EnquiryForm({
                 ? [variants[0]]
                 : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
           }
-          productPrice={productPrice}
+          productPrice={variantPrice}
           installationCost={installationCost}
         />
       )}
