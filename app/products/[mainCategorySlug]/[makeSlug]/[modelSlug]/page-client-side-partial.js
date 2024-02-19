@@ -33,7 +33,6 @@ export default function PageClientSidePartial({
   enquiryFormId,
   firstMatchedProduct,
   allLocations,
-  productHeroData,
   downloadFileFormId,
   pageParams,
   variantSlug,
