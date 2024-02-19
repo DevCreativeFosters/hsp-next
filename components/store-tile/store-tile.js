@@ -23,7 +23,7 @@ export default function StoreTile({
     geolocation,
     type,
     displays,
-    learnMoreUrl,
+    learnMoreButton,
   },
   selected,
 }) {
@@ -87,15 +87,15 @@ export default function StoreTile({
           <LocationIcon />
         </div>
         <div onClick={copyAddressToClipboard}>
-          {street && city && stateAbbr && postalCode && country ? (
+          {street || city || stateAbbr || postalCode || country ? (
             <>
-              <div>{street}</div>
+              {street && <div>{street}</div>}
               <div>
-                <span>{city}, </span>
-                <span>{stateAbbr} </span>
-                <span>{postalCode}</span>
+                {city && <span>{city}, </span>}
+                {stateAbbr && <span>{stateAbbr} </span>}
+                {postalCode && <span>{postalCode}</span>}
               </div>
-              <div>{country}</div>
+              {country && <div>{country}</div>}
             </>
           ) : (
             <div dangerouslySetInnerHTML={{ __html: addressString }}></div>
@@ -122,17 +122,21 @@ export default function StoreTile({
         >
           Directions
         </Button>
-        <Button
-          className={styles.link}
-          variant="primary"
-          size="small"
-          rightIcon="external-link"
-          href={learnMoreUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn more
-        </Button>
+        {learnMoreButton && (
+          <Button
+            className={styles.link}
+            variant="primary"
+            size="small"
+            rightIcon="external-link"
+            href={learnMoreButton?.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {learnMoreButton?.title && learnMoreButton?.title !== ''
+              ? learnMoreButton?.title
+              : 'Learn more'}
+          </Button>
+        )}
       </div>
       <div className={styles.pusher} />
       {displays?.length > 1 && (
