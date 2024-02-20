@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import styles from './video-card.module.scss';
 import Link from 'next/link';
 
-export default function VideoCard({ idx, url, name, price, productUrl }) {
+export default function VideoCard({ idx, url, name, price, productUrl = '' }) {
   const videoRef = useRef(null);
 
   useEffect(() => {

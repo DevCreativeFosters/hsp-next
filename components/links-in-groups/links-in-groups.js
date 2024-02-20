@@ -26,7 +26,7 @@ export default function LinksInGroups({ title, description, groups, variant }) {
                     return (
                       <li className={styles.listItem} key={index}>
                         <Button
-                          href={url}
+                          href={url || ''}
                           variant="senary"
                           rightIcon="arrow-forward"
                           className={styles.link}
