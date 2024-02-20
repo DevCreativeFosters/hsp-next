@@ -43,6 +43,7 @@ export default function AddressField({ form, field, fieldErrors }) {
       label,
       customLabel,
       placeholder,
+      autocompleteAttribute,
       value,
     }) => {
       const stateValue = state.find(fieldValue => fieldValue.id === id)?.[
@@ -64,8 +65,8 @@ export default function AddressField({ form, field, fieldErrors }) {
         value: valueCalculated,
         errorMessage: fieldError?.message,
         required: Boolean(isRequired),
-        ...(field.autocompleteAttribute && {
-          autoComplete: field.hasAutocomplete,
+        ...(field.hasAutocomplete && {
+          autoComplete: autocompleteAttribute,
         }),
         onChange: valueOrEvent => {
           const newValue =
@@ -86,10 +87,7 @@ export default function AddressField({ form, field, fieldErrors }) {
       return (
         <InputWrapper oneOf={oneOfValue} key={childKey}>
           {childKey === 'country' ? (
-            <Select
-              {...sharedProps}
-              options={childKey === 'country' ? COUNTRY_OPTIONS : null}
-            />
+            <Select {...sharedProps} options={COUNTRY_OPTIONS} />
           ) : (
             <Input type="text" {...sharedProps} />
           )}

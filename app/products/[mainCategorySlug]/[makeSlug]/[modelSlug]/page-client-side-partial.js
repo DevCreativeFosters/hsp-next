@@ -108,7 +108,7 @@ export default function PageClientSidePartial({
       );
       router.push(newRoute);
     },
-    [pageParams],
+    [pageParams, router],
   );
 
   return (
