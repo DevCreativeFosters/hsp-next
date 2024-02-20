@@ -22,6 +22,7 @@ export default async function UteBuilder() {
   const uteCovers = await getTermChildren(
     globalOptions?.coversCategory?.slug || '',
   );
+  const uteCovers = await getTermChildren(globalOptions?.coversCategory?.slug);
 
   return (
     <Layout withFooter={false}>
