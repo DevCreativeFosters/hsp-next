@@ -111,17 +111,19 @@ export default function StoreTile({
         </a>
       )}
       <div className={styles.extra}>
-        <Button
-          className={styles.link}
-          variant="quinary"
-          size="small"
-          rightIcon="external-link"
-          href={directionsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Directions
-        </Button>
+        {directionsUrl && (
+          <Button
+            className={styles.link}
+            variant="quinary"
+            size="small"
+            rightIcon="external-link"
+            href={directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Directions
+          </Button>
+        )}
         {learnMoreButton && (
           <Button
             className={styles.link}
