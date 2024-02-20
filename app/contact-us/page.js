@@ -43,17 +43,21 @@ export default async function ContactUs() {
                     {servicesBox.map((serviceLink, index) => {
                       const link = serviceLink.link;
 
-                      return (
-                        <Button
-                          key={index}
-                          href={link.url}
-                          target={link.target}
-                          variant="senary"
-                          rightIcon="arrow-forward"
-                        >
-                          {link.title}
-                        </Button>
-                      );
+                      if (link) {
+                        return (
+                          <Button
+                            key={index}
+                            href={link?.url || ''}
+                            target={link?.target}
+                            variant="senary"
+                            rightIcon="arrow-forward"
+                          >
+                            {link?.title}
+                          </Button>
+                        );
+                      }
+
+                      return null;
                     })}
                   </div>
                 </ContentBox>

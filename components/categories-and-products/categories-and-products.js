@@ -17,19 +17,23 @@ export default function CategoriesAndProducts({ data }) {
     <div className={styles.container}>
       <div className={styles.links}>
         {links.map((link, index) => (
-          <div
-            key={link.title + index}
-            className={styles.linkContainer}
-            onClick={() => setHoveredIndex(index)}
-          >
-            <Link
-              className={styles.link}
-              href={link.url}
-              onMouseEnter={() => setHoveredIndex(index)}
-              dangerouslySetInnerHTML={{ __html: link.title }}
-            />
-            <ArrowForward />
-          </div>
+          <>
+            {link && (
+              <div
+                key={link.title + index}
+                className={styles.linkContainer}
+                onClick={() => setHoveredIndex(index)}
+              >
+                <Link
+                  className={styles.link}
+                  href={link.url || ''}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  dangerouslySetInnerHTML={{ __html: link.title }}
+                />
+                <ArrowForward />
+              </div>
+            )}
+          </>
         ))}
       </div>
       <div className={styles.products}>
