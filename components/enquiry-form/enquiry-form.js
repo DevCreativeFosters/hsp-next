@@ -1,14 +1,7 @@
 'use client';
 
 import { trimSlash } from '@lib/trim-slash';
-import {
-  useCallback,
-  useMemo,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
+import { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import useMobileVh from '@hooks/useMobileVh';
 import StoreSearchControls from '@components/store-search-controls/store-search-controls';
 import StoreLocatorContext from '@contexts/store-locator';
@@ -38,6 +31,7 @@ export default function EnquiryForm({
   const formRef = useRef(null);
   const productFields = productData.productFields;
   const productPrice = productFields?.price;
+  const productInstallationPrice = productFields?.installationCost;
   const variants = productFields?.variants;
   const variantOptions = variants?.map(({ variantName, variantSlug }) => ({
     label: variantName,
@@ -54,6 +48,15 @@ export default function EnquiryForm({
     : selectedVariant?.parentInherit
       ? productPrice
       : null;
+
+  const variantInstallationPrice = selectedVariant?.variantDetails
+    ?.installationCost
+    ? selectedVariant?.variantDetails.installationCost
+    : selectedVariant?.parentInherit
+      ? productInstallationPrice
+      : null;
+
+  console.log(selectedVariant);
 
   const {
     location,
@@ -76,21 +79,6 @@ export default function EnquiryForm({
     },
     [searchGeolocation, filteredLocations, setFilteredStores],
   );
-
-  const installationCost = useMemo(() => {
-    let storeCost;
-    const storeInstallationCost = selectedStore?.productInstallationCost;
-
-    if (selectedStore && storeInstallationCost?.length) {
-      storeInstallationCost.map(item => {
-        if (item.product.slug === productData.slug) {
-          storeCost = item.installation_cost;
-        }
-      });
-    }
-
-    return storeCost || productFields.installationCost;
-  }, [selectedStore, productData.slug, productFields.installationCost]);
 
   useMobileVh();
 
@@ -213,10 +201,9 @@ export default function EnquiryForm({
               {formatPrice(variantPrice)}
             </span>
           )}
-          {selectedStore && installationCost > 0 && (
-            <span>
-              <span> + </span>
-              <span> {formatPrice(installationCost)} </span>
+          {variantInstallationPrice > 0 && (
+            <span className={styles.installationPrice}>
+              +<span> {formatPrice(variantInstallationPrice)} </span>
               <span> for installation </span>
             </span>
           )}
@@ -245,7 +232,7 @@ export default function EnquiryForm({
                 : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
           }
           productPrice={productPrice}
-          installationCost={installationCost}
+          installationCost={variantInstallationPrice}
         />
       )}
     </section>
