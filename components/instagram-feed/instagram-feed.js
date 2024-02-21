@@ -72,10 +72,10 @@ export default function InstagramFeed({ title, description }) {
           noBottomMargin
         />
 
-        {/* <InstagramFeedSMLinks /> */}
+        {/* <InstagramFeedSMLinks socialMenu={socialMedia} /> */}
 
         <ul className={styles.socialMedia}>
-          {socialMedia.map(({ url, iconPredefined, icon }, index) => (
+          {socialMedia?.map(({ url, iconPredefined, icon }, index) => (
             <li key={url + index}>
               <Button
                 href={url}
