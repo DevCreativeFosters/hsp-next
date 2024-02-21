@@ -47,9 +47,9 @@ export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
             Your browser does not support the video tag.
           </video>
 
-          <button type="button" className={styles.button}>
+          {/* <button type="button" className={styles.button}>
             <PlayIcon />
-          </button>
+          </button> */}
 
           <div
             className={clsx(styles.eventsCaptureArea, styles.cursorOnly)}
