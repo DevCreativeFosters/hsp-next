@@ -11,6 +11,18 @@
   overflow: hidden;
 }
 
+.childInput {
+  width: 1px;
+  height: 1px;
+  border: 0;
+  padding: 0;
+  position: absolute;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  left: calc(50% - 1px);
+}
+
 .customInput {
   --font-color: var(--color-white-60);
   --border-color: var(--color-white-20);
@@ -48,6 +60,7 @@
 }
 
 .fileNameWrapper {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 2px;

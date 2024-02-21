@@ -19,6 +19,7 @@ export default function Select({
   prefix = '',
   suffix = '',
   value,
+  required = null,
   dropdownInDocumentFlow,
   onChange = () => null,
   onClick = () => null,
@@ -111,6 +112,16 @@ export default function Select({
             <ExpandMoreNeutral />
           </span>
         </button>
+
+        <select
+          name={`fake_${props.name}`}
+          className={styles.realSelect}
+          required={required}
+          value={value || ''}
+          onChange={() => {}}
+        >
+          {value ? <option>{value}</option> : null}
+        </select>
 
         <div
           className={clsx(styles.dropdownContainer, {

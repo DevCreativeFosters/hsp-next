@@ -8,7 +8,7 @@ export const COUNTRY_OPTIONS = [
     value: 'TH',
   },
   {
-    label: 'New Zeland',
+    label: 'New Zealand',
     value: 'NZ',
   },
 ];

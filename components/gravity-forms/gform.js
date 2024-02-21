@@ -76,7 +76,9 @@ export default function GForm({
     });
   }, []);
 
-  const [formSubmitMutation] = useMutation(SUBMIT_MUTATION, { client });
+  const [formSubmitMutation] = useMutation(SUBMIT_MUTATION, {
+    client,
+  });
 
   const handleSubmit = async ev => {
     if (ev) ev.preventDefault();

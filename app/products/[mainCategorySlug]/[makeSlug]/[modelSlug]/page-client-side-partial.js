@@ -33,7 +33,6 @@ export default function PageClientSidePartial({
   enquiryFormId,
   firstMatchedProduct,
   allLocations,
-  productHeroData,
   downloadFileFormId,
   pageParams,
   variantSlug,
@@ -109,7 +108,7 @@ export default function PageClientSidePartial({
       );
       router.push(newRoute);
     },
-    [pageParams],
+    [pageParams, router],
   );
 
   return (

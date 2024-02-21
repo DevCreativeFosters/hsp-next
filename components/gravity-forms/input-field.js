@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import Input from '@components/form/input';
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -50,6 +50,7 @@ export default function InputField({ form, field, fieldErrors }) {
     isRequired,
     placeholder,
     value,
+    defaultValue,
   } = field;
 
   const formId = form.formId;
@@ -58,7 +59,9 @@ export default function InputField({ form, field, fieldErrors }) {
 
   const stateValue = getValue(type, fieldValue);
   const valueCalculated =
-    stateValue !== undefined ? stateValue : value || DEFAULT_VALUE;
+    stateValue !== undefined
+      ? stateValue
+      : value || defaultValue || DEFAULT_VALUE;
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);

@@ -46,7 +46,7 @@ export default function Tile({
   const renderLink = useCallback(
     children => (
       <Link
-        href={urlNormalized}
+        href={urlNormalized || ''}
         className={styles.link}
         target={link?.target || null}
       >

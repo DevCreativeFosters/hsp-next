@@ -11,7 +11,7 @@ import styles from './video-background-hero.module.scss';
 export default function VideoBackgroundHero({
   title,
   description,
-  linkLabel,
+  link,
   videoUrl,
 }) {
   const videoRef = useRef(null);
@@ -29,13 +29,11 @@ export default function VideoBackgroundHero({
         <div className={styles.content}>
           <h1 className={styles.title}>{title}</h1>
           <p className={styles.description}>{description}</p>
-          <Button
-            size="large"
-            onClick={() => null} // WIP - add video modal popup functionality
-            rightIcon="play-button"
-          >
-            {linkLabel}
-          </Button>
+          {link && (
+            <Button size="large" href={link.url} rightIcon="play-button">
+              {link.title}
+            </Button>
+          )}
         </div>
       </Container>
     </section>
