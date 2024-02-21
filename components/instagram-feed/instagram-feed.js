@@ -10,6 +10,7 @@ import Loading from '@components/loading/loading';
 import { getGlobalOptions } from '@lib/api';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import Button from '@components/button/button';
+import styles from './instagram-feed.module.scss';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;
 const IG_TOKEN = process.env.NEXT_PUBLIC_IG_TOKEN;
@@ -62,27 +63,32 @@ export default function InstagramFeed({ title, description }) {
 
   return (
     <Container>
-      <SectionIntro
-        title={title}
-        description={description}
-        fitInline
-        narrowDescription
-      />
+      <div className={styles.wrapper}>
+        <SectionIntro
+          title={title}
+          description={description}
+          fitInline
+          narrowDescription
+          noBottomMargin
+        />
 
-      <ul>
-        {socialMedia.map(({ url, iconPredefined, icon }, index) => (
-          <li key={url + index}>
-            <Button
-              href={url}
-              size="small"
-              variant="tertiary"
-              background="dark"
-              leftIcon={iconPredefined !== 'CUSTOM' ? iconPredefined : false}
-              leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
-            />
-          </li>
-        ))}
-      </ul>
+        {/* <InstagramFeedSMLinks /> */}
+
+        <ul className={styles.socialMedia}>
+          {socialMedia.map(({ url, iconPredefined, icon }, index) => (
+            <li key={url + index}>
+              <Button
+                href={url}
+                size="small"
+                variant="tertiary"
+                background="dark"
+                leftIcon={iconPredefined !== 'CUSTOM' ? iconPredefined : false}
+                leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {isLoading && (
         <div>
