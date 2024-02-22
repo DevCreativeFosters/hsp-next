@@ -56,8 +56,6 @@ export default function EnquiryForm({
       ? productInstallationPrice
       : null;
 
-  console.log(selectedVariant);
-
   const {
     location,
     searchGeolocation,
