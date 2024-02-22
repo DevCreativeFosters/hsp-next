@@ -23,14 +23,10 @@
 
 .price {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
   margin-top: 36px;
-
-  @include bp(medium) {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 12px;
-  }
+  gap: 8px;
 }
 
 .productsPrice {
@@ -39,6 +35,10 @@
   line-height: 1.33;
   font-family: var(--font-secondary);
   font-weight: bold;
+
+  @include bp(medium) {
+    font-size: 48px;
+  }
 }
 
 .installationPrice {
@@ -47,6 +47,10 @@
   line-height: 1.33;
   font-family: var(--font-secondary);
   font-weight: bold;
+
+  @include bp(medium) {
+    font-size: 36px;
+  }
 }
 
 .buttonWrapper {
