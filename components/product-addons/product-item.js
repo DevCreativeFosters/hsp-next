@@ -6,7 +6,7 @@ import { formatPrice } from '@lib/helpers';
 
 import styles from './product-item.module.scss';
 
-export default function ProductItem({ name, imageUrl, url, price }) {
+export default function ProductItem({ name, imageUrl, url = '', price }) {
   const LinkOrDiv = url ? Link : 'div';
   return (
     <LinkOrDiv href={url} className={styles.product}>

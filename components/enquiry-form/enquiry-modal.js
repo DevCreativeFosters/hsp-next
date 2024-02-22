@@ -144,7 +144,7 @@ export default function EnquiryModal({
                         uteBuilderImages,
                       }) => {
                         const productImage =
-                          uteBuilderImages?.imageDesktop?.sourceUrl;
+                          uteBuilderImages?.imageDesktop?.node?.sourceUrl;
 
                         return (
                           <EnquiryProduct

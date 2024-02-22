@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@components/button/button';
-import { getModelsByMakeSlug, getProductsByCategoriesSlugs } from '@lib/api';
+import { getModelsByMakeSlug } from '@lib/api/get-models-by-make-slug';
 import { useCallback, useEffect, useState } from 'react';
 
 // Example component

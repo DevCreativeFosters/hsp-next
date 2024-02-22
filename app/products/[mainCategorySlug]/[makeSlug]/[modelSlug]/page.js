@@ -1,14 +1,12 @@
 import { Fragment } from 'react';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
-import {
-  getGlobalOptions,
-  getCategoriesAndMakesAndModels,
-  getMainProductCategory,
-  getMake,
-  getProductsByCategoriesSlugs,
-  getStores,
-} from '@lib/api';
+import { getStores } from '@lib/api/get-stores';
+import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
+import { getMake } from '@lib/api/get-make';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -29,7 +27,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const make = await getMake(makeSlug);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
-    data => data.relatedProductCategory?.slug === mainCategorySlug,
+    data => data.relatedProductCategory?.[0]?.slug === mainCategorySlug,
   );
   const productHeroData = {
     warrantyDescription:
@@ -68,7 +66,7 @@ export default async function CategoryPage({ params, searchParams }) {
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesAndMakesAndModels();
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
   if (!firstMatchedProduct || !mainCategory || !make) {

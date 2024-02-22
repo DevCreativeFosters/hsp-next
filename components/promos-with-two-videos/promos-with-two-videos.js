@@ -15,7 +15,7 @@ export default function PromoWithTwoVideos({ data }) {
             <p className={styles.description}>{description}</p>
             {buttonLink && (
               <Button
-                href={buttonLink.url}
+                href={buttonLink.url || ''}
                 rightIcon="arrow-forward"
                 size="large"
                 style={{ maxWidth: 'fit-content' }}
@@ -31,7 +31,7 @@ export default function PromoWithTwoVideos({ data }) {
               <VideoCard
                 key={idx}
                 idx={idx}
-                url={accessory?.videoFile?.mediaItemUrl}
+                url={accessory?.videoFile?.node?.mediaItemUrl}
                 name={accessory?.accessoryName}
                 price={accessory?.price}
                 productUrl={accessory?.productLink?.url}

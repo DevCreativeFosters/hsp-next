@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { getPageData } from '@lib/api';
+import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 import Layout from '@components/layout/layout';

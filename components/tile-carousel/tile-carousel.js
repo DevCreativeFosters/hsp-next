@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import styles from './tile-carousel.module.scss';
 
 const ID_PREFIX = 'carousel';
@@ -16,7 +16,6 @@ export default function TileCarousel({
   buttonNextRef,
   resetStyle,
   smallGaps,
-  name,
   context,
   children,
 }) {
@@ -154,10 +153,6 @@ export default function TileCarousel({
       );
     }
   }, [carouselId, getTileOffsets]);
-
-  useEffect(function logCarouselName() {
-    // console.log('carousel name', name); // debug
-  }, []);
 
   useEffect(
     function initialSyncOfConstraints() {

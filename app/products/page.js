@@ -2,7 +2,8 @@ import Layout from '@components/layout/layout';
 import ProductCategory from '@components/product-category/product-category';
 import Container from '@components/container/container';
 import { renderBlock } from '@lib/block';
-import { getPageData, getMainProductCategories } from '@lib/api';
+import { getMainProductCategories } from '@lib/api/get-main-product-categories';
+import { getPageData } from '@lib/api/get-page-data';
 
 export const metadata = {
   title: 'HSP 4x4 - Products',

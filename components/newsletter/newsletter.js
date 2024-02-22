@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
-import { brevoNewsletterSignup } from '@lib/api';
+import { sendBrevoNewsletterData } from '@lib/api/send-brevo-newsletter-data';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
@@ -35,7 +35,7 @@ export default function Newsletter({
       const token = tokenRef.current;
       ev.preventDefault();
       setIsBusy(true);
-      const response = await brevoNewsletterSignup({
+      const response = await sendBrevoNewsletterData({
         EMAIL: email,
         locale: 'en',
         'g-recaptcha-response': token,

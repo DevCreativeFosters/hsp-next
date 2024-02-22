@@ -1,4 +1,4 @@
-import { getPageData } from '@lib/api';
+import { getPageData } from '@lib/api/get-page-data';
 import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';

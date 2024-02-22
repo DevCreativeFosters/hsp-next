@@ -1,4 +1,5 @@
-import { getAllMakes, getStores } from '@lib/api';
+import { getStores } from '@lib/api/get-stores';
+import { getAllMakes } from '@lib/api/get-all-makes';
 import { StoreLocatorProvider } from '@contexts/store-locator';
 import Layout from '@components/layout/layout';
 import UteBuilderPage from '@components/ute-builder-page/ute-builder-page';

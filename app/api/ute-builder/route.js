@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getModelBySlug, getProductsWithVariants } from '@lib/api';
+import { getProductsWithVariants } from '@lib/api/get-products-with-variants';
+import { getModelBySlug } from '@lib/api/get-model-by-slug';
 
 export async function GET(req) {
   const url = new URL(req.url);

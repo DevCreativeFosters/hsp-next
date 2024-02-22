@@ -17,9 +17,10 @@ export default function Tile({
   variant,
   className,
 }) {
-  const postUrl = url || link?.url;
+  const postUrl = url || link?.url || '';
   const segments = postUrl.split('/').filter(Boolean);
   const slug = segments.pop();
+  const imageNormalized = image?.node ? image.node : image;
 
   const urlNormalized =
     variant === 'blog'
@@ -39,8 +40,8 @@ export default function Tile({
     month: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
   });
 
-  const imageWidth = image?.mediaDetails?.width;
-  const imageHeight = image?.mediaDetails?.height;
+  const imageWidth = imageNormalized.mediaDetails?.width;
+  const imageHeight = imageNormalized.mediaDetails?.height;
   const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
 
   const renderLink = useCallback(
@@ -58,17 +59,17 @@ export default function Tile({
 
   const TheImage = useMemo(
     () =>
-      image?.sourceUrl ? (
+      imageNormalized?.sourceUrl ? (
         <Image
           className={styles.image}
-          src={image.sourceUrl}
-          alt={image?.altText || ''}
+          src={imageNormalized.sourceUrl}
+          alt={imageNormalized.altText || ''}
           fill={true}
         />
       ) : (
         <span className={styles.imagePlaceholder} />
       ),
-    [image],
+    [imageNormalized],
   );
 
   const Title = useMemo(

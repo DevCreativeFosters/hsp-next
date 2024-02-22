@@ -27,7 +27,7 @@ export default function Accreditations({
               <Certification
                 key={certification.certificateName + idx}
                 name={certification.certificateName}
-                image={certification.image}
+                image={certification.image?.node}
               />
             ))}
           </div>

@@ -16,8 +16,10 @@ export default function Preview({
   children,
 }) {
   const modelName = model?.name;
-  const modelImageDesktop = model?.uteBuilderImages?.imageDesktop?.sourceUrl;
-  const modelImageMobile = model?.uteBuilderImages?.imageMobile?.sourceUrl;
+  const modelImageDesktop =
+    model?.uteBuilderImages?.imageDesktop?.node?.sourceUrl;
+  const modelImageMobile =
+    model?.uteBuilderImages?.imageMobile?.node?.sourceUrl;
   const [mergeImages, setMergeImages] = useState([]);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function Preview({
 
       selectedProducts.forEach(selectedProduct => {
         const productImageDesktop =
-          selectedProduct.uteBuilderImages.imageDesktop?.sourceUrl;
+          selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
         newMergeImages.push(productImageDesktop);
       });
@@ -67,9 +69,9 @@ export default function Preview({
         const productTitle = selectedProduct.variantName;
         const productSlug = selectedProduct.variantSlug;
         const productImageDesktop =
-          selectedProduct.uteBuilderImages.imageDesktop?.sourceUrl;
+          selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
         const productImageMobile =
-          selectedProduct.uteBuilderImages.imageMobile?.sourceUrl;
+          selectedProduct.uteBuilderImages.imageMobile?.node?.sourceUrl;
 
         return (
           <Fragment key={productSlug}>

@@ -72,8 +72,8 @@ export default function PageClient({ title, description, posts = [] }) {
       <div className={styles.fullscreenContainer}>
         <VideoEl
           isActive={true}
-          thumbnail={post.celebrityPostsCustomFields?.thumbnail}
-          video={post.celebrityPostsCustomFields?.video}
+          thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
+          video={post.celebrityPostsCustomFields?.video?.node}
         />
       </div>
     );

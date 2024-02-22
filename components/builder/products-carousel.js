@@ -21,7 +21,7 @@ export default function ProductsCarousel({
 }) {
   const slides = products?.map(product => {
     const productTitle = product.variantName;
-    const productImage = product.uteBuilderImages.imageDesktop?.sourceUrl;
+    const productImage = product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
     return (
       <SwiperSlide className={styles.swiperSlide} key={product.variantSlug}>

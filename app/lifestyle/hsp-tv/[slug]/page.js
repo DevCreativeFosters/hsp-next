@@ -1,4 +1,5 @@
-import { getHspTvPost, getRecentHspTvPosts } from '@lib/api';
+import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
+import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import Layout from '@components/layout/layout';
 import { HspTvPost } from '@components/hsp-tv-post';
 
