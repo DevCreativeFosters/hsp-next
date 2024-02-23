@@ -18,22 +18,21 @@ const IG_URL = `https://graph.instagram.com/${IG_USER_ID}/media?access_token=${I
 export default function InstagramFeed({ title, description }) {
   const [igFeed, setIgFeed] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [displayError, setDisplayError] = useState(false);
   const [socialMedia, setSocialMedia] = useState([]);
 
-  useEffect(() => {
+  useEffect(function fetchIGFeedOnLoad() {
     const fetchMedia = async () => {
       try {
         const res = await fetch(IG_URL);
         if (!res.ok) {
           throw new Error(`Error: ${res.status}`);
         }
-        setLoading(false);
         const json = await res.json();
         setIgFeed(json.data);
       } catch (error) {
         console.error('Failed to fetch Instagram feed:', error);
-        setError(true);
+        setDisplayError(true);
       } finally {
         setLoading(false);
       }
@@ -42,7 +41,7 @@ export default function InstagramFeed({ title, description }) {
     fetchMedia();
   }, []);
 
-  useEffect(() => {
+  useEffect(function fetchSocialMediaDataOnLoad() {
     const fetchSocialMedia = async () => {
       try {
         const globalOptions = await getGlobalOptions();
@@ -83,10 +82,11 @@ export default function InstagramFeed({ title, description }) {
         <div className={styles.loader}>
           <Loading color="white" size="large" />
         </div>
-      ) : (
+      ) : displayError ? (
         <p> Error in fetching data. Please try again later.</p>
+      ) : (
+        <TileCarousel items={transformedIgFeed} itemTemplate={InstagramTile} />
       )}
-      <TileCarousel items={transformedIgFeed} itemTemplate={InstagramTile} />
     </Container>
   );
 }

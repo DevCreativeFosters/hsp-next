@@ -17,7 +17,7 @@ export default function Tile({
   variant,
   className,
 }) {
-  const postUrl = url || link?.url || '';
+  const postUrl = url || link?.url || '#';
   const segments = postUrl.split('/').filter(Boolean);
   const slug = segments.pop();
 
