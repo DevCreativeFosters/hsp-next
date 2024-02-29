@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { getGlobalOptions } from '@lib/api';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import Container from '@components/container/container';
 import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
+import Loading from '@components/loading/loading';
 import InstagramTile from './instagram-tile';
 import InstagramFeedSMLinks from './instagram-feed-social-media';
-import Loading from '@components/loading/loading';
 import styles from './instagram-feed.module.scss';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;

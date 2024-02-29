@@ -1,16 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { useRef } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 import styles from './instagram-tile.module.scss';
 
 export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
   const videoRef = useRef(null);
-  const thumbnail = thumbnailUrl;
-  const mediaUrl = url;
-  let href = slug;
 
   const handleMouseEnter = () => {
     videoRef.current.play().catch(() => null);
@@ -21,16 +18,16 @@ export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
   };
 
   return (
-    <Link className={styles.tile} href={href}>
+    <Link className={styles.tile} href={slug || '#'}>
       {type === 'VIDEO' ? (
         <>
           <video
             ref={videoRef}
             className={styles.video}
             muted
-            poster={thumbnail}
+            poster={thumbnailUrl}
           >
-            <source src={mediaUrl} type="video/mp4" />
+            <source src={url} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 

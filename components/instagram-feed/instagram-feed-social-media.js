@@ -7,7 +7,7 @@ export default function InstagramFeedSocialMedia({ socialMenu }) {
       {socialMenu?.map(({ url, iconPredefined, icon }, index) => (
         <li key={url + index}>
           <Button
-            href={url}
+            href={url || '#'}
             size="small"
             variant="tertiary"
             background="dark"
