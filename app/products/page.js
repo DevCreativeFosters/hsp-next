@@ -4,6 +4,7 @@ import Container from '@components/container/container';
 import { renderBlock } from '@lib/block';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getPageData } from '@lib/api/get-page-data';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 
 export const metadata = {
   title: 'HSP 4x4 - Products',
@@ -13,7 +14,19 @@ export const metadata = {
 export default async function ProductsPage() {
   const content = await getPageData('products');
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
-  const mainProductCategories = (await getMainProductCategories()) || [];
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = [];
+
+  if (globalOptions?.coversCategory?.databaseId) {
+    excludeTree.push(globalOptions.coversCategory.databaseId);
+  }
+
+  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
+    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
+  }
+
+  const mainProductCategories =
+    (await getMainProductCategories(excludeTree)) || [];
 
   return (
     <Layout>

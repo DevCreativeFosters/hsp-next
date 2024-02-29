@@ -7,6 +7,8 @@ import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categorie
 import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getAllMakes } from '@lib/api/get-all-makes';
+import { getTermChildren } from '@lib/api/get-term-children';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -25,6 +27,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategory = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
+  const makes = await getAllMakes();
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === mainCategorySlug,
@@ -47,9 +50,17 @@ export default async function CategoryPage({ params, searchParams }) {
     makeSlug,
     modelSlug,
   );
+
   const firstMatchedProduct = products.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
-    block => renderBlock(block, 'product'),
+    block =>
+      renderBlock(
+        block,
+        'product',
+        makes,
+        firstMatchedProduct.productFields.variants,
+        params,
+      ),
   );
   const currentProduct = {
     mainCategory: {

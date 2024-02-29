@@ -4,6 +4,7 @@ import { renderBlock } from '@lib/block';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
@@ -18,7 +19,22 @@ export default async function MainCategoryPage({ params }) {
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
 
-  if (!categoryData) {
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = [];
+
+  if (globalOptions?.coversCategory?.databaseId) {
+    excludeTree.push(globalOptions.coversCategory.databaseId);
+  }
+
+  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
+    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
+  }
+
+  const shouldBeExcluded = excludeTree.includes(
+    categoryData?.parent?.node?.databaseId,
+  );
+
+  if (!categoryData || shouldBeExcluded) {
     return (
       <Layout title="Product" withMap>
         <Container>

@@ -21,13 +21,16 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 
 const DEFAULT_OPEN_SECTION = 'products';
 
-export default function Builder({ makeName, model, products, allLocations }) {
+export default function Builder({ makeName, model, products, allLocations, uteCovers }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
+
+  // @todo: get covers media based on model, make and uteCovers child slug
+  const coversWithMedia = [];
 
   const {
     location,

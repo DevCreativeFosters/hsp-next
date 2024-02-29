@@ -31,6 +31,16 @@
   }
 }
 
+.flexibleBlockContainer {
+  min-height: auto;
+  height: auto;
+  padding-block: 96px 56px;
+
+  &::before {
+    display: none;
+  }
+}
+
 .chooseVehicleContainer {
   display: flex;
   padding: 80px 24px 24px;
@@ -41,11 +51,19 @@
   width: 100vw;
   margin-left: 50%;
   transform: translateX(-50%);
+  height: min-content;
 
   @include bp(large) {
     margin-top: 48px;
     padding: 32px 96px;
+    position: sticky;
+    top: calc(var(--header-height) + 50px);
   }
+}
+
+.flexibleChooseYourVehicleContainer {
+  position: relative;
+  top: unset;
 }
 
 .vehicleSelector {

@@ -1,30 +1,70 @@
 'use client';
 
-import constants from '@lib/constants';
+import clsx from 'clsx';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useVehicleContext } from '@contexts/vehicle';
+import constants from '@lib/constants';
+import { trimSlash } from '@lib/trim-slash';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 import { getValueOrSlug } from '@lib/helpers';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
 import Button from '@components/button/button';
-import PageContainer from '@components/page-container/page-container';
-import styles from './ute-choose-your-vehicle.module.scss';
+import styles from '../builder/ute-choose-your-vehicle.module.scss';
 
-export default function UTEChooseYourVehicle({
+export default function ChooseYourVehicleBlock({
   makes: makersAndModels,
-  factoryOptions,
+  variants,
+  style,
+  params,
 }) {
-  const { maker, model, handleSave, setVehicleSelection } = useVehicleContext();
+  const variantsNormalized = variants.map(variant => {
+    return {
+      label: variant.variantName,
+      value: variant.variantSlug,
+    };
+  });
+  const { maker, model, variant, setVariant, handleSave, setVehicleSelection } =
+    useVehicleContext();
   const {
     handleMakerChange,
     handleModelChange,
+    handleVariantChange,
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
+  const path = usePathname();
+
+  const variantSlug = useMemo(() => {
+    return path.split('/').pop();
+  }, [path]);
+
+  const reload = !getValueOrSlug(variant);
+
+  useEffect(
+    function setGlobalVariantStateBySlug() {
+      variantsNormalized.forEach(variant => {
+        if (trimSlash(variant.value) === variantSlug) {
+          setVariant(variant);
+        }
+      });
+    },
+    [variantSlug],
+  );
+
   return (
-    <Container className={styles.container}>
-      <div className={styles.chooseVehicleContainer}>
+    <Container
+      className={clsx(styles.container, {
+        [styles.flexibleBlockContainer]: style === 'flexible',
+      })}
+    >
+      <div
+        className={clsx(styles.chooseVehicleContainer, {
+          [styles.flexibleChooseYourVehicleContainer]: style === 'flexible',
+        })}
+      >
         <p className={styles.chooseVehiclePill}>
           {constants.SELECT_LABELS.GENERIC_FULL}
         </p>
@@ -48,13 +88,14 @@ export default function UTEChooseYourVehicle({
             onChange={handleModelChange}
             className={styles.select}
           />
-          {factoryOptions?.length > 0 && (
+          {variants?.length > 0 && (
             <Select
               size="large"
-              placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
-              options={factoryOptions}
-              value={getValueOrSlug(model) || null}
-              disabled={!factoryOptions.length}
+              placeholder={constants.SELECT_LABELS.VARIANT}
+              options={variantsNormalized}
+              value={getValueOrSlug(variant) || null}
+              disabled={!variants.length}
+              onChange={handleVariantChange}
               dropdownInDocumentFlow
               className={styles.select}
             />
@@ -62,37 +103,13 @@ export default function UTEChooseYourVehicle({
           <Button
             rightIcon="arrow-forward"
             className={styles.button}
-            onClick={handleSave}
+            onClick={() => handleSave(params, reload)}
             disabled={!model}
           >
-            Start building
+            See details
           </Button>
         </div>
       </div>
-      <PageContainer>
-        <div className={styles.content}>
-          <div className={styles.main}>
-            <h1 className={styles.title}>UTE Builder</h1>
-            <p className={styles.text}>
-              Introducing our new tool that helps you create an enquiry for all
-              accessories that you need for your vehicle.
-            </p>
-          </div>
-          <div className={styles.help}>
-            <h4 className={styles.helpTitle}>Need help?</h4>
-            <p className={styles.helpText}>
-              If you need support, please contact us on{' '}
-              <a className={styles.link} href="tel:1300441498">
-                1300 441 498
-              </a>{' '}
-              or send an email to{' '}
-              <a className={styles.link} href="mailto:info@hsputelids.com">
-                info@hsputelids.com
-              </a>
-            </p>
-          </div>
-        </div>
-      </PageContainer>
     </Container>
   );
 }

@@ -14,6 +14,7 @@ export const VehicleProvider = ({ children }) => {
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
+  const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
@@ -38,18 +39,44 @@ export const VehicleProvider = ({ children }) => {
     }
   }, [router, pathname]);
 
-  const handleSave = useCallback(() => {
-    const vehicleString = JSON.stringify({ maker, model });
-    localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
-    setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
+  const handleSave = useCallback(
+    (params, reload) => {
+      const vehicleString = JSON.stringify({ maker, model });
+      localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
+      setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-    setSavedVehicleGlobal({ maker, model });
-    setVehicleSelection({
-      makerName: maker?.name || undefined,
-      modelName: model?.name || undefined,
-    });
-    setDropdownOpened(false);
-  }, [maker, model]);
+      setSavedVehicleGlobal({ maker, model });
+      setVehicleSelection({
+        makerName: maker?.name || undefined,
+        modelName: model?.name || undefined,
+      });
+      setDropdownOpened(false);
+
+      if (params) {
+        const { mainCategorySlug, makeSlug, modelSlug } = params;
+        const newRoute = routes.product(
+          mainCategorySlug,
+          makeSlug,
+          modelSlug,
+          variant?.slug,
+        );
+
+        router.push(newRoute);
+      }
+
+      if (reload) {
+        const { mainCategorySlug } = params;
+        const newRoute = routes.product(
+          mainCategorySlug,
+          maker?.slug,
+          model?.slug,
+        );
+
+        router.push(newRoute);
+      }
+    },
+    [maker, model, variant],
+  );
 
   return (
     <VehicleContext.Provider
@@ -62,6 +89,8 @@ export const VehicleProvider = ({ children }) => {
         setMaker,
         model,
         setModel,
+        variant,
+        setVariant,
         dropdownOpened,
         setDropdownOpened,
         handleVehicleReset,
