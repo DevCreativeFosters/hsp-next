@@ -9,7 +9,12 @@ import Container from '@components/container/container';
 import PageContainer from '@components/page-container/page-container';
 import Loading from '@components/loading/loading';
 
-export default function UteBuilderPage({ makes, allLocations }) {
+export default function UteBuilderPage({
+  makes,
+  allLocations,
+  factoryOptions,
+  uteCovers,
+}) {
   const [vehicleSelected, setVehicleSelected] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [makeName, setMakeName] = useState('');
@@ -76,7 +81,9 @@ export default function UteBuilderPage({ makes, allLocations }) {
   }, [productVariants]);
 
   if (!vehicleSelected && loaded) {
-    return <UTEChooseYourVehicle makes={makes} />;
+    return (
+      <UTEChooseYourVehicle makes={makes} factoryOptions={factoryOptions} />
+    );
   }
 
   if (model !== null && model !== undefined && productVariants.length > 0) {
@@ -86,6 +93,7 @@ export default function UteBuilderPage({ makes, allLocations }) {
         model={model}
         products={variantList}
         allLocations={allLocations}
+        uteCovers={uteCovers}
       />
     );
   }
