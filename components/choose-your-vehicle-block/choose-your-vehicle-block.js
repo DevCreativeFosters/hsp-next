@@ -1,7 +1,7 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useVehicleContext } from '@contexts/vehicle';
 import constants from '@lib/constants';
@@ -19,7 +19,7 @@ export default function ChooseYourVehicleBlock({
   style,
   params,
 }) {
-  const variantsNormalized = variants.map(variant => {
+  const variantsNormalized = variants?.map(variant => {
     return {
       label: variant.variantName,
       value: variant.variantSlug,
@@ -45,7 +45,7 @@ export default function ChooseYourVehicleBlock({
 
   useEffect(
     function setGlobalVariantStateBySlug() {
-      variantsNormalized.forEach(variant => {
+      variantsNormalized?.forEach(variant => {
         if (trimSlash(variant.value) === variantSlug) {
           setVariant(variant);
         }

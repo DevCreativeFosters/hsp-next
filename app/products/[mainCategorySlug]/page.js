@@ -5,6 +5,7 @@ import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-m
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getAllMakes } from '@lib/api/get-all-makes';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
@@ -18,6 +19,7 @@ export default async function MainCategoryPage({ params }) {
   const categoryData = await getMainProductCategory(mainCategorySlug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
+  const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
   const excludeTree = [];
@@ -53,7 +55,7 @@ export default async function MainCategoryPage({ params }) {
 
   const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
   const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, 'product_category'),
+    renderBlock(block, makes, [], params),
   );
   const currentProduct = {
     mainCategory: {

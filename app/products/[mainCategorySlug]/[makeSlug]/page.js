@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { renderBlock } from '@lib/block';
+import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
@@ -19,8 +20,9 @@ export default async function CategoryPage({ params }) {
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
   const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
+  const makes = await getAllMakes();
   const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, 'product_category'),
+    renderBlock(block, makes, [], params),
   );
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);
