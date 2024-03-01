@@ -56,7 +56,6 @@ export default async function CategoryPage({ params, searchParams }) {
     block =>
       renderBlock(
         block,
-        'product',
         makes,
         firstMatchedProduct.productFields.variants,
         params,
