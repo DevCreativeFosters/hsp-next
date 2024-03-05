@@ -189,7 +189,7 @@ export default function Select({
                   const searchNormalized = search.toLowerCase();
                   if (searchNormalized) {
                     return (
-                      label.includes(labelNormalized) ||
+                      labelNormalized.includes(searchNormalized) ||
                       valueNormalized.includes(searchNormalized)
                     );
                   }

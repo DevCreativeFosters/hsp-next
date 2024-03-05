@@ -22,7 +22,7 @@ function InputWithRef(
 ) {
   // Internal values are used for demos purposes to make component work with basic props
   // If would you like to use it along with other components please pass `onChange` and `value` props
-  const [internalValue, setInternalValue] = useState();
+  const [internalValue, setInternalValue] = useState('');
   const handleInternalChange = ev => {
     setInternalValue(ev.target.value);
   };
