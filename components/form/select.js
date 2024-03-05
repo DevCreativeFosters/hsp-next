@@ -187,9 +187,9 @@ export default function Select({
             >
               {options
                 .filter(({ label, value }) => {
-                  const labelNormalized = label.toLowerCase();
-                  const valueNormalized = value.toLowerCase();
-                  const searchNormalized = search.toLowerCase();
+                  const labelNormalized = label?.toLowerCase();
+                  const valueNormalized = value?.toLowerCase();
+                  const searchNormalized = search?.toLowerCase();
                   if (searchNormalized) {
                     return (
                       labelNormalized.includes(searchNormalized) ||
