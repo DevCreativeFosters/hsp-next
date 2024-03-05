@@ -1,11 +1,14 @@
 'use client';
 
+import Input from '@components/form/input';
 import { useState, useCallback, useMemo, useRef, useId } from 'react';
 import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
+
+const MIN_RESULTS_TO_ENABLE_SEARCH = 20;
 
 export default function Select({
   className,
@@ -25,7 +28,9 @@ export default function Select({
   onClick = () => null,
   ...props
 }) {
+  const searchInputRef = useRef();
   const [isOpen, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const selectedOption = useMemo(
     () => options.find(option => value !== undefined && option.value === value),
     [options, value],
@@ -40,11 +45,19 @@ export default function Select({
   const triggerRef = useRef();
   useClickOutside(handleClickOutside, [triggerRef]);
 
-  const toggleDropdown = ev => {
+  const toggleDropdown = useCallback(ev => {
     ev.stopPropagation();
 
-    setOpen(prevState => !prevState);
-  };
+    setOpen(prevState => {
+      const newState = !prevState;
+      if (newState) {
+        requestAnimationFrame(() => {
+          searchInputRef.current?.focus();
+        });
+      }
+      return newState;
+    });
+  }, []);
 
   const handleSelectOption = useCallback(
     (value, label) => {
@@ -54,12 +67,16 @@ export default function Select({
     [onChange],
   );
 
+  const isSearchVisible =
+    options.length >= MIN_RESULTS_TO_ENABLE_SEARCH && isOpen;
+
   const isPlaceholder =
     !selectedOption?.label && selectedOption?.value === undefined;
 
   return (
     <div className={clsx(styles.wrapperOuter, className)}>
       <div
+        ref={triggerRef}
         className={clsx(styles.wrapperInner, {
           [styles.small]: size === 'small',
           [styles.large]: size === 'large',
@@ -73,7 +90,6 @@ export default function Select({
         )}
         <button
           id={elementId}
-          ref={triggerRef}
           type="button"
           className={clsx(styles.trigger, {
             [styles.darkBackground]: background === 'dark',
@@ -87,15 +103,24 @@ export default function Select({
             onClick();
           }}
         >
-          {isPlaceholder ? (
-            <div className={styles.placeholder}>{placeholder}</div>
-          ) : (
-            <div className={styles.value}>
-              {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
-              {selectedOption.label || selectedOption.value}
-              {suffix && <span className={styles.prefixSuffix}> {suffix}</span>}
-            </div>
+          {!isSearchVisible && (
+            <>
+              {isPlaceholder ? (
+                <div className={styles.placeholder}>{placeholder}</div>
+              ) : (
+                <div className={styles.value}>
+                  {prefix && (
+                    <span className={styles.prefixSuffix}>{prefix} </span>
+                  )}
+                  {selectedOption.label || selectedOption.value}
+                  {suffix && (
+                    <span className={styles.prefixSuffix}> {suffix}</span>
+                  )}
+                </div>
+              )}
+            </>
           )}
+
           {options.map(({ label, value }, index) => (
             <div
               className={clsx(styles.value, styles.forStretchOnly)}
@@ -112,6 +137,26 @@ export default function Select({
             <ExpandMoreNeutral />
           </span>
         </button>
+
+        {isSearchVisible && (
+          <div
+            className={styles.searchContainer}
+            onClick={ev => {
+              ev.stopPropagation();
+              ev.preventDefault();
+            }}
+          >
+            <Input
+              ref={searchInputRef}
+              placeholder="Search..."
+              background="dark"
+              value={search}
+              onChange={ev => {
+                setSearch(ev.target.value);
+              }}
+            />
+          </div>
+        )}
 
         <select
           name={`fake_${props.name}`}
@@ -140,26 +185,39 @@ export default function Select({
               role="listbox"
               tabIndex="0"
             >
-              {options.map(({ label, value }, index) => (
-                <button
-                  key={index}
-                  className={styles.option}
-                  type="button"
-                  role="option"
-                  aria-selected={Boolean(selectedOption)}
-                  onClick={() => handleSelectOption(value, label)}
-                  tabIndex={0}
-                  data-value={value !== undefined ? value : label}
-                >
-                  {prefix && (
-                    <span className={styles.prefixSuffix}>{prefix} </span>
-                  )}
-                  {label || value}
-                  {suffix && (
-                    <span className={styles.prefixSuffix}> {suffix}</span>
-                  )}
-                </button>
-              ))}
+              {options
+                .filter(({ label, value }) => {
+                  const labelNormalized = label.toLowerCase();
+                  const valueNormalized = value.toLowerCase();
+                  const searchNormalized = search.toLowerCase();
+                  if (searchNormalized) {
+                    return (
+                      labelNormalized.includes(searchNormalized) ||
+                      valueNormalized.includes(searchNormalized)
+                    );
+                  }
+                  return true;
+                })
+                .map(({ label, value }, index) => (
+                  <button
+                    key={index}
+                    className={styles.option}
+                    type="button"
+                    role="option"
+                    aria-selected={Boolean(selectedOption)}
+                    onClick={() => handleSelectOption(value, label)}
+                    tabIndex={0}
+                    data-value={value !== undefined ? value : label}
+                  >
+                    {prefix && (
+                      <span className={styles.prefixSuffix}>{prefix} </span>
+                    )}
+                    {label || value}
+                    {suffix && (
+                      <span className={styles.prefixSuffix}> {suffix}</span>
+                    )}
+                  </button>
+                ))}
             </div>
           </AnimateHeight>
         </div>

@@ -95,9 +95,9 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       field.allowedExtensions?.map(ext => {
         const startsWithDot = ext.slice(0, 1) === '.';
         if (!startsWithDot && (ext?.length === 3 || ext?.length === 4)) {
-          return `.${ext}`;
+          return `.${ext.toLowerCase()}`;
         }
-        return ext;
+        return ext.toLowerCase();
       }) || []
     );
   }, [field.allowedExtensions]);
@@ -119,7 +119,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       }
       if (acceptedTypesNormalized.length) {
         const matchedType = acceptedTypesNormalized.find(
-          ext => ext === file.name.slice(-1 * ext.length),
+          ext => ext === file.name.toLowerCase().slice(-1 * ext.length),
         );
         if (!matchedType) {
           errors.push('File type is not allowed');
