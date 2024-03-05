@@ -8,6 +8,8 @@ import { useClickOutside } from '@hooks/useClickOutside';
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
 import styles from './select.module.scss';
 
+const MIN_RESULTS_TO_ENABLE_SEARCH = 20;
+
 export default function Select({
   className,
   id = '',
@@ -65,7 +67,8 @@ export default function Select({
     [onChange],
   );
 
-  const isSearchVisible = options.length > 20 && isOpen;
+  const isSearchVisible =
+    options.length >= MIN_RESULTS_TO_ENABLE_SEARCH && isOpen;
 
   const isPlaceholder =
     !selectedOption?.label && selectedOption?.value === undefined;
