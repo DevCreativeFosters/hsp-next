@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import Container from '@components/container/container';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import SectionIntro from '@components/section-intro/section-intro';
 import InstagramTile from '@components/instagram-tile/instagram-tile';
 import InstagramFeedSMLinks from './instagram-feed-sm-links';
 import Loading from '@components/loading/loading';
-import { getGlobalOptions } from '@lib/api';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import Button from '@components/button/button';
 import styles from './instagram-feed.module.scss';
@@ -72,7 +72,7 @@ export default function InstagramFeed({ title, description }) {
           noBottomMargin
         />
 
-        {/* <InstagramFeedSMLinks socialMenu={socialMedia} /> */}
+        <InstagramFeedSMLinks socialMenu={socialMedia} />
 
         <ul className={styles.socialMedia}>
           {socialMedia?.map(({ url, iconPredefined, icon }, index) => (
