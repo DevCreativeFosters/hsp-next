@@ -11,8 +11,10 @@ export default function InstagramFeedSocialMedia({ socialMenu }) {
             size="small"
             variant="tertiary"
             background="dark"
-            leftIcon={iconPredefined !== 'CUSTOM' ? iconPredefined : false}
-            leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+            leftIcon={
+              iconPredefined[0] !== 'CUSTOM' ? iconPredefined[0] : false
+            }
+            leftIconUrl={iconPredefined[0] === 'CUSTOM' ? icon : false}
           />
         </li>
       ))}
