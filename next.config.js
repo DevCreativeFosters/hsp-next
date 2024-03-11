@@ -19,11 +19,13 @@ module.exports = {
       '1.gravatar.com',
       '2.gravatar.com',
       'secure.gravatar.com',
+      'scontent-waw1-1.cdninstagram.com',
       'hsp-wp.x5view.co',
       'hsp-wp.test',
       'prodhsp.wpenginepowered.com',
       'stghsp.wpenginepowered.com',
       'devhsp.wpenginepowered.com',
+      'scontent.cdninstagram.com',
     ],
   },
   sassOptions: {
