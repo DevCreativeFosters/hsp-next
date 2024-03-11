@@ -1,0 +1,7 @@
+.container {
+  margin-top: 60px;
+
+  @include bp(medium) {
+    margin-top: 40px;
+  }
+}
