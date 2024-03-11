@@ -147,19 +147,6 @@ export default function StoreLocatorSearch({ allLocations }) {
       })}
       ref={wrapperOuterRef}
     >
-      <header className={styles.header}>
-        <button
-          className={clsx(styles.goBack, {
-            [styles.isVisible]: isFullScreen,
-          })}
-          onClick={goBack}
-        >
-          <ArrowForwardIcon />
-        </button>
-
-        <h3 className={styles.heading}>Locate a store</h3>
-      </header>
-
       <div
         className={clsx(styles.viewContainer, {
           [styles.listMode]: viewMode === 'LIST',
