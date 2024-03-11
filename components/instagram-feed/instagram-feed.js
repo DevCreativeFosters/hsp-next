@@ -8,7 +8,7 @@ import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Loading from '@components/loading/loading';
 import InstagramTile from './instagram-tile';
-import InstagramFeedSMLinks from './instagram-feed-social-media';
+import InstagramFeedSocialMedia from './instagram-feed-social-media';
 import styles from './instagram-feed.module.scss';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;
@@ -76,7 +76,7 @@ export default function InstagramFeed({ title, description }) {
           narrowDescription
           noBottomMargin
         />
-        <InstagramFeedSMLinks socialMenu={socialMedia} />
+        <InstagramFeedSocialMedia socialMenu={socialMedia} />
       </div>
       {isLoading ? (
         <div className={styles.loader}>
