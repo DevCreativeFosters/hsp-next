@@ -2,15 +2,13 @@
   position: relative;
   z-index: var(--z-index-store-search);
   top: 0;
-  height: var(--store-locator-mobile-form-height);
   background: var(--color-primary-100);
   transition: height 0.3s;
+  padding-block: 24px;
 
   @include bp(medium) {
     position: sticky;
     top: calc(var(--header-height) - var(--store-locator-form-header-height));
-    height: var(--store-locator-desktop-form-height);
-    padding-block: 24px;
   }
 
   &.isFullScreen {
@@ -24,52 +22,6 @@
 
   @include bp(medium) {
     height: auto;
-  }
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: var(--store-locator-form-header-height);
-  overflow: hidden;
-
-  @include bp(medium) {
-    align-items: flex-start;
-  }
-}
-
-.heading {
-  font-family: var(--font-secondary);
-  font-size: 24px;
-}
-
-.goBack {
-  position: absolute;
-  left: 24px - 12px; // optical
-  rotate: 180deg;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-
-  &.isVisible {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  @include bp(medium) {
-    display: none;
-  }
-
-  svg {
-    display: block;
-    scale: 1.5;
-    flex-shrink: 0;
   }
 }
 
