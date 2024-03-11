@@ -40,8 +40,8 @@ export default function Tile({
     month: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
   });
 
-  const imageWidth = imageNormalized.mediaDetails?.width;
-  const imageHeight = imageNormalized.mediaDetails?.height;
+  const imageWidth = imageNormalized?.width;
+  const imageHeight = imageNormalized?.height;
   const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
 
   const renderLink = useCallback(
