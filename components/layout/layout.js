@@ -14,7 +14,6 @@ import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
-import normalizeMenuData from '@lib/normalize-mobile-menu-data';
 import normalizeProductData from '@lib/normalize-product-data';
 import Header from '@components/header/header';
 import Footer from '@components/footer/footer';
@@ -73,11 +72,9 @@ export default function Layout({
   const topNavigationMenu = normalizeTopNavigationMenu(data.globalOptions);
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
-  const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
   const normalizedProductData = normalizeProductData(
     data.mainProductCategories,
   );
-  normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
   const newsletterTitle = data.globalOptions?.newsletterTitle;
   const newsletterDescription = data.globalOptions?.newsletterDescription;
 
