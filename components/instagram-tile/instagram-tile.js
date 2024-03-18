@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useRef, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import styles from './instagram-tile.module.scss';

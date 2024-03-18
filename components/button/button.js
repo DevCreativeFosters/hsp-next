@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useCallback } from 'react';
+import React, { forwardRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
