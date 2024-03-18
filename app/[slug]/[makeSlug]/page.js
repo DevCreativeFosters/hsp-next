@@ -10,8 +10,6 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import PageContainer from '@components/page-container/page-container';
-import ErrorPage from '@components/error-page';
 import styles from '../page.module.scss';
 import { notFound } from 'next/navigation';
 

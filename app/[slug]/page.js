@@ -10,13 +10,12 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import PageContainer from '@components/page-container/page-container';
-import ErrorPage from '@components/error-page';
 import styles from './page.module.scss';
 import { getPageData } from '@lib/api/get-page-data';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+import { notFound } from 'next/navigation';
 
-export default async function MainCategoryPage({ params }) {
+export default async function DynamicPage({ params }) {
   const slug = params.slug;
   const content = await getPageData(params?.slug);
   let contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);
@@ -58,20 +57,7 @@ export default async function MainCategoryPage({ params }) {
   );
 
   if (!categoryData || shouldBeExcluded) {
-    return (
-      <Layout title="Product" withMap>
-        <Container>
-          <PageContainer>
-            <ErrorPage
-              title="Product not found"
-              text="Sorry, we couldn't find the product you are looking for."
-              buttonText="Back to Products"
-              product
-            />
-          </PageContainer>
-        </Container>
-      </Layout>
-    );
+    return notFound();
   }
 
   const blocks = await getMainProductCategoryBlocks(slug);
