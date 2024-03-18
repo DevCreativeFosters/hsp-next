@@ -74,7 +74,7 @@ export default function Header({
                       size="small"
                       variant="tertiary"
                       background="dark"
-                      rightIcon={item.iconPredefined || item.icon}
+                      rightIcon={item.iconPredefined[0] || item.icon}
                     />
                   );
                 }
@@ -122,9 +122,13 @@ export default function Header({
                         variant={variant}
                         background="dark"
                         leftIcon={
-                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                          iconPredefined[0] !== 'CUSTOM'
+                            ? iconPredefined[0]
+                            : false
                         }
-                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+                        leftIconUrl={
+                          iconPredefined[0] === 'CUSTOM' ? icon : false
+                        }
                       >
                         {label}
                       </Button>
