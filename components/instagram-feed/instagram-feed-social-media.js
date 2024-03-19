@@ -8,6 +8,7 @@ export default function InstagramFeedSocialMedia({ socialMenu }) {
         <li key={url + index}>
           <Button
             href={url || '#'}
+            target="_blank"
             size="small"
             variant="tertiary"
             background="dark"
