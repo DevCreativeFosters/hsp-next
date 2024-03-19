@@ -78,10 +78,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
-  console.log('firstMatchedProduct', firstMatchedProduct);
-  console.log('mainCategory', mainCategory);
-  console.log('make', make);
-
   if (!firstMatchedProduct || !mainCategory || !make) {
     return (
       <Layout title="Product" withMap>
