@@ -31,7 +31,7 @@ export default function MobileMenuItem({
                 size="small"
                 variant="tertiary"
                 background="dark"
-                style={subItem.special ? { ...fontStyle } : {}}
+                style={subItem.special ? (j === 0 ? { ...fontStyle } : {}) : {}}
                 className={
                   subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
                 }
