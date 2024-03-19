@@ -17,7 +17,7 @@ export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
   };
 
   return (
-    <Link className={styles.tile} href={slug || '#'}>
+    <Link className={styles.tile} href={slug || '#'} target="_blank">
       {type === 'VIDEO' ? (
         <>
           <video
