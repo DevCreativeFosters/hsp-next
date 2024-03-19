@@ -31,6 +31,17 @@ export default async function CategoryPage({ params, searchParams }) {
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
+
+  let modelName;
+  makes?.some(make => {
+    const model = make.models?.find(model => model.slug === modelSlug)?.name;
+
+    if (model) {
+      modelName = model;
+      return true;
+    }
+  });
+
   const productHeroData = {
     warrantyDescription:
       filteredData?.length > 1
@@ -77,6 +88,7 @@ export default async function CategoryPage({ params, searchParams }) {
 
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
+  modelName = modelName || firstMatchedProduct?.title;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
     return (
@@ -107,6 +119,7 @@ export default async function CategoryPage({ params, searchParams }) {
         <PageClientSidePartial
           mainCategory={mainCategory}
           make={make}
+          modelName={modelName}
           enquiryFormId={enquiryFormId}
           firstMatchedProduct={firstMatchedProduct}
           variantSlug={searchParams.variant}

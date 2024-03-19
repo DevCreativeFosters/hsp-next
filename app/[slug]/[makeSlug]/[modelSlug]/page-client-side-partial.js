@@ -30,6 +30,7 @@ const getVariantDataForProperties = (variant, parent, properties) =>
 export default function PageClientSidePartial({
   mainCategory,
   make,
+  modelName,
   enquiryFormId,
   firstMatchedProduct,
   allLocations,
@@ -122,7 +123,7 @@ export default function PageClientSidePartial({
             <h1 className={styles.name}>
               {mainCategory.name} <br />
               <span className={styles.variant}>
-                {make.name} {firstMatchedProduct?.title}
+                {make.name} {modelName}
               </span>
             </h1>
             {variant?.sku && (
