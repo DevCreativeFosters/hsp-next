@@ -12,9 +12,8 @@ import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import ErrorPage from '@components/error-page';
-import PageContainer from '@components/page-container/page-container';
 import styles from './page.module.scss';
+import { redirect } from 'next/navigation';
 
 export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
@@ -91,20 +90,7 @@ export default async function CategoryPage({ params, searchParams }) {
   modelName = modelName || firstMatchedProduct?.title;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
-    return (
-      <Layout title="Product" withMap>
-        <Container>
-          <PageContainer>
-            <ErrorPage
-              title="Product not found"
-              text="Sorry, we couldn't find the product you are looking for."
-              buttonText="Back to Products"
-              product
-            />
-          </PageContainer>
-        </Container>
-      </Layout>
-    );
+    redirect(`/${slug}/${makeSlug}?compatible=false`);
   }
 
   return (
