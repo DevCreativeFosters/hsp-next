@@ -31,7 +31,7 @@ export default async function SupportSubpage({ params }) {
                 <div className={styles.breadcrumbs}>
                   <BreadcrumbsSupport
                     exactBreadcrumb={{
-                      label: content.title,
+                      label: content?.title,
                       url: routes.support(params.slug),
                       strong: true,
                     }}

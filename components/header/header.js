@@ -3,7 +3,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Link from 'next/link';
-import clsx from 'clsx';
 import { useClickOutside } from '@hooks/useClickOutside';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
@@ -17,7 +16,6 @@ import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehic
 export default function Header({
   mainMenu,
   secondaryMenu,
-  socialMenu,
   mobileMenu,
   mainProductCategories,
   products,
@@ -49,11 +47,7 @@ export default function Header({
 
       <header className={styles.header} ref={headerRef}>
         <FullscreenCollapse className={styles.headerInner}>
-          <div
-            className={clsx(styles.grid, {
-              [styles.withoutSocialMenu]: !socialMenu,
-            })}
-          >
+          <div className={styles.grid}>
             <div className={styles.hamburgerContainer}>
               <HamburgerButton
                 onClick={toggleMenu}
@@ -137,27 +131,6 @@ export default function Header({
                 )}
               </ul>
             </nav>
-
-            {socialMenu && (
-              <nav className={styles.socialMenu}>
-                <ul className={styles.socialMenuList}>
-                  {socialMenu.map(({ url, iconPredefined, icon }, index) => (
-                    <li key={url + index} className={styles.socialMenuItem}>
-                      <Button
-                        href={url}
-                        size="small"
-                        variant="tertiary"
-                        background="dark"
-                        leftIcon={
-                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
-                        }
-                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            )}
 
             <MobileMenu items={mobileMenu} isMenuActive={isMobileMenuActive} />
 
