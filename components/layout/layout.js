@@ -12,7 +12,6 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getFooterMenus } from '@lib/api/get-footer-menus';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
-import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
 import normalizeProductData from '@lib/normalize-product-data';
 import Header from '@components/header/header';
@@ -68,7 +67,6 @@ export default function Layout({
     services: [],
   };
   const footerText = data.globalOptions?.footerText;
-  const socialMenu = normalizeSocialMediaMenu(data.globalOptions);
   const topNavigationMenu = normalizeTopNavigationMenu(data.globalOptions);
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
@@ -120,7 +118,6 @@ export default function Layout({
           <Header
             mainMenu={normalizedMainMenu}
             secondaryMenu={topNavigationMenu}
-            socialMenu={socialMenu}
             mobileMenu={normalizedMobileMenu}
             mainProductCategories={data.mainProductCategories}
             products={normalizedProductData}
