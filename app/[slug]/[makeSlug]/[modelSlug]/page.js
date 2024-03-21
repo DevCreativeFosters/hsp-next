@@ -90,7 +90,7 @@ export default async function CategoryPage({ params, searchParams }) {
   modelName = modelName || firstMatchedProduct?.title;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
-    redirect(`/${slug}/${makeSlug}?compatible=false`);
+    redirect(`/${slug}?compatible=false`);
   }
 
   return (
