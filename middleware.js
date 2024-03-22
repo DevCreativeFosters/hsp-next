@@ -56,10 +56,10 @@ export function middleware(request) {
         const productType = pathSegments[1];
         url.pathname =
           model && getValueOrSlug(model)
-            ? `/products/${productType}/${getValueOrSlug(
-                maker,
-              )}/${getValueOrSlug(model)}`
-            : `/products/${productType}/${getValueOrSlug(maker)}`;
+            ? `/${productType}/${getValueOrSlug(maker)}/${getValueOrSlug(
+                model,
+              )}`
+            : `/${productType}/${getValueOrSlug(maker)}`;
 
         return NextResponse.redirect(url);
       }
@@ -71,8 +71,8 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    '/products/:category*/:make*/:model*/:variant*',
-    '/products/:path*',
+    '/:category*/:make*/:model*/:variant*',
+    '/:path*',
     '/lifestyle/hsp-blog/:path*', // this must match with routes.blog()
     '/lifestyle/hsp-tv/:path*', // this must match with routes.tv()
   ],
