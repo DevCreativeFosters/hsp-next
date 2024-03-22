@@ -14,6 +14,7 @@ import styles from './page.module.scss';
 import { getPageData } from '@lib/api/get-page-data';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import { notFound } from 'next/navigation';
+import { getExcludeTree } from '@lib/helpers';
 
 export default async function DynamicPage({ params }) {
   const slug = params.slug;
@@ -42,19 +43,8 @@ export default async function DynamicPage({ params }) {
   const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
-  const excludeTree = [];
-
-  if (globalOptions?.coversCategory?.databaseId) {
-    excludeTree.push(globalOptions.coversCategory.databaseId);
-  }
-
-  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
-    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
-  }
-
-  const shouldBeExcluded = excludeTree.includes(
-    categoryData?.parent?.node?.databaseId,
-  );
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
   if (!categoryData || shouldBeExcluded) {
     return notFound();
