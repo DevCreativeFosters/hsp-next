@@ -12,6 +12,7 @@ import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from '../page.module.scss';
 import { notFound } from 'next/navigation';
+import ProductNotFound from '@components/product-not-found/product-not-found';
 
 export default async function CategoryPage({ params }) {
   const slug = params.slug;
@@ -27,6 +28,10 @@ export default async function CategoryPage({ params }) {
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(slug);
   const details = makeData?.detailsFields.details;
+
+  if (!makeData && categoryData) {
+    return <ProductNotFound />;
+  }
 
   if (!makeData || !categoryData) {
     return notFound();
