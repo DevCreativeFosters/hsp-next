@@ -17,12 +17,14 @@ export default async function ProductsPage() {
   const globalOptions = await getGlobalOptions();
   const excludeTree = [];
 
-  if (globalOptions?.coversCategory?.databaseId) {
-    excludeTree.push(globalOptions.coversCategory.databaseId);
+  if (globalOptions?.coversCategory?.nodes[0]?.databaseId) {
+    excludeTree.push(globalOptions.coversCategory.nodes[0].databaseId);
   }
 
-  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
-    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
+  if (globalOptions?.compatibleFactoryOptions?.nodes[0]?.databaseId) {
+    excludeTree.push(
+      globalOptions.compatibleFactoryOptions.nodes[0].databaseId,
+    );
   }
 
   const mainProductCategories =
