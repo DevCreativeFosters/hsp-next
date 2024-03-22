@@ -13,7 +13,8 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from './page.module.scss';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getExcludeTree } from '@lib/helpers';
 
 export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
@@ -26,6 +27,8 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(mainCategory?.databaseId);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
@@ -91,6 +94,10 @@ export default async function CategoryPage({ params, searchParams }) {
 
   if (!firstMatchedProduct || !mainCategory || !make) {
     redirect(`/${slug}?compatible=false`);
+  }
+
+  if (shouldBeExcluded) {
+    return notFound();
   }
 
   return (
