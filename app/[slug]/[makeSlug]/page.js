@@ -13,6 +13,8 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from '../page.module.scss';
 import { notFound } from 'next/navigation';
 import ProductNotFound from '@components/product-not-found/product-not-found';
+import { getExcludeTree } from '@lib/helpers';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 
 export default async function CategoryPage({ params }) {
   const slug = params.slug;
@@ -28,12 +30,15 @@ export default async function CategoryPage({ params }) {
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(slug);
   const details = makeData?.detailsFields.details;
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
-  if (!makeData && categoryData) {
+  if (!makeData && categoryData && !shouldBeExcluded) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData) {
+  if (!makeData || !categoryData || shouldBeExcluded) {
     return notFound();
   }
 
