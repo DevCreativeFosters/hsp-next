@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { notFound } from 'next/navigation';
 import { renderBlock } from '@lib/block';
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
@@ -6,15 +7,14 @@ import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
+import { getExcludeTree } from '@lib/helpers';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import styles from '../page.module.scss';
-import { notFound } from 'next/navigation';
 import ProductNotFound from '@components/product-not-found/product-not-found';
-import { getExcludeTree } from '@lib/helpers';
-import { getGlobalOptions } from '@lib/api/get-global-options';
+import styles from '../page.module.scss';
 
 export default async function CategoryPage({ params }) {
   const slug = params.slug;

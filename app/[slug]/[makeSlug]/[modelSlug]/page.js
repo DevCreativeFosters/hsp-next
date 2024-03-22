@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { notFound, redirect } from 'next/navigation';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import { getStores } from '@lib/api/get-stores';
@@ -8,13 +9,12 @@ import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getAllMakes } from '@lib/api/get-all-makes';
+import { getExcludeTree } from '@lib/helpers';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from './page.module.scss';
-import { notFound, redirect } from 'next/navigation';
-import { getExcludeTree } from '@lib/helpers';
 
 export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
