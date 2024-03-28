@@ -128,9 +128,9 @@ export default function PageClientSidePartial({
               </span>
             </h1>
             {variant?.sku && (
-              <h5 className={styles.sku}>
+              <div className={styles.sku}>
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
-              </h5>
+              </div>
             )}
             {description && <p className={styles.description}>{description}</p>}
           </div>
