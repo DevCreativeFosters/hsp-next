@@ -13,7 +13,9 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from './page.module.scss';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import PageContainer from '@components/page-container/page-container';
+import ErrorPage from '@components/error-page';
 
 export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
@@ -21,7 +23,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug;
+  const modelSlug = params.modelSlug; // array of model and optional variant
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
@@ -81,7 +83,7 @@ export default async function CategoryPage({ params, searchParams }) {
     },
     model: {
       label: firstMatchedProduct?.title,
-      value: modelSlug,
+      value: modelSlug[0],
     },
   };
 
@@ -91,6 +93,32 @@ export default async function CategoryPage({ params, searchParams }) {
 
   if (!firstMatchedProduct || !mainCategory || !make) {
     redirect(`/${slug}?compatible=false`);
+  }
+
+  if (modelSlug.length > 2) {
+    return notFound();
+  }
+
+  const variantExists =
+    firstMatchedProduct?.productFields?.variants?.find(
+      ({ variantSlug }) => variantSlug === modelSlug[1].toLowerCase(),
+    ) || false;
+
+  if (!variantExists) {
+    return (
+      <Layout title="Product" withMap>
+        <Container>
+          <PageContainer>
+            <ErrorPage
+              title="Variant not found"
+              text="Sorry, we couldn't find the variant you are looking for."
+              buttonText="Back to Products"
+              product
+            />
+          </PageContainer>
+        </Container>
+      </Layout>
+    );
   }
 
   return (
@@ -108,7 +136,7 @@ export default async function CategoryPage({ params, searchParams }) {
           modelName={modelName}
           enquiryFormId={enquiryFormId}
           firstMatchedProduct={firstMatchedProduct}
-          variantSlug={searchParams.variant}
+          variantSlug={modelSlug[1]}
           allLocations={allLocations}
           productHeroData={productHeroData}
           downloadFileFormId={downloadFileFormId}
