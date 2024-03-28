@@ -16,9 +16,10 @@ export default async function ProductsPage() {
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
 
   const mainProductCategories =
-    (await getMainProductCategories(excludeTree)) || [];
+    (await getMainProductCategories(excludeTree, excludeChildren)) || [];
 
   return (
     <Layout>

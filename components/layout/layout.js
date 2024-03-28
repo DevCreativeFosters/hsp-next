@@ -37,7 +37,11 @@ async function getLayoutData() {
   const makes = await getAllMakes();
   const allStores = await getStores();
   const excludeTree = getExcludeTree(globalOptions);
-  const mainProductCategories = await getMainProductCategories(excludeTree);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const mainProductCategories = await getMainProductCategories(
+    excludeTree,
+    excludeChildren,
+  );
 
   return {
     globalOptions,
