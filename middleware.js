@@ -2,6 +2,7 @@ import routes from '@lib/routes';
 import { NextResponse } from 'next/server';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import { getValueOrSlug } from '@lib/helpers';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
 
 const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
 
@@ -10,7 +11,7 @@ function getPathSegments(url) {
   return path?.split('/').filter(Boolean);
 }
 
-export function middleware(request) {
+export async function middleware(request) {
   const url = request.nextUrl.clone();
   const pathSegments = getPathSegments(url);
   const hspMyVehicle = request.cookies.get(COOKIE_SAVED_VEHICLE);
@@ -37,12 +38,14 @@ export function middleware(request) {
     return NextResponse.rewrite(paginatedUrl);
   }
 
-  if (pathSegments[0] === 'products' && pathSegments.length === 2) {
-    if (hspMyVehicle) {
+  if (pathSegments.length === 1 && pathSegments[0] !== 'favicon.ico') {
+    const categoryData = await getMainProductCategory(pathSegments[0]);
+
+    if (categoryData && hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
 
       if (maker && getValueOrSlug(maker)) {
-        const productType = pathSegments[1];
+        const productType = pathSegments[0];
         url.pathname =
           model && getValueOrSlug(model)
             ? `/${productType}/${getValueOrSlug(maker)}/${getValueOrSlug(
