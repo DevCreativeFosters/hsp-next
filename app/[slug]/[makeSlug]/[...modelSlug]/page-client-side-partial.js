@@ -106,9 +106,10 @@ export default function PageClientSidePartial({
       const newRoute = routes.product(
         slug,
         makeSlug,
-        modelSlug,
+        modelSlug[0],
         newVariantSlug,
       );
+
       router.push(newRoute);
     },
     [pageParams, router],
