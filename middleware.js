@@ -37,17 +37,6 @@ export function middleware(request) {
     return NextResponse.rewrite(paginatedUrl);
   }
 
-  if (pathSegments[0] === getPathSegments(routes.products)[0]) {
-    const variantSlug = pathSegments[4];
-    if (variantSlug) {
-      const newUrl = new URL(
-        [url.origin, ...pathSegments.slice(0, 4)].join('/'),
-      );
-      newUrl.searchParams.set('variant', variantSlug);
-      return NextResponse.rewrite(newUrl);
-    }
-  }
-
   if (pathSegments[0] === 'products' && pathSegments.length === 2) {
     if (hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
