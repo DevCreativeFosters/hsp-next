@@ -79,11 +79,11 @@ export default function Reviews({ data }) {
               </div>
             )}
             <Button
-              href={data?.allReviewsLink?.link.url}
+              href={data?.allReviewsLink?.link?.url}
               className={styles.allReviewsButton}
               rightIcon="external-link"
             >
-              {data?.allReviewsLink?.link.title}
+              {data?.allReviewsLink?.link?.title}
             </Button>
           </div>
         </SectionButtons>

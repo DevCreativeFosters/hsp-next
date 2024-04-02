@@ -6,9 +6,9 @@ import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-m
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getAllMakes } from '@lib/api/get-all-makes';
-import { getTermChildren } from '@lib/api/get-term-children';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -51,6 +51,10 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
+  const mainCategoryBlocks =
+    await getMainProductCategoryBlocks(mainCategorySlug);
+  const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
+
   const firstMatchedProduct = products.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
@@ -59,6 +63,7 @@ export default async function CategoryPage({ params, searchParams }) {
         makes,
         firstMatchedProduct.productFields.variants,
         params,
+        mainCategoryContentBlocks,
       ),
   );
   const currentProduct = {
