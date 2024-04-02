@@ -1,8 +1,10 @@
 'use client';
 
-import routes from '@lib/routes';
-import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
+
+import { redirect } from 'next/navigation';
+
+import routes from '@lib/routes';
 
 export default function NotFound() {
   useEffect(() => {

@@ -1,17 +1,21 @@
 import { Fragment } from 'react';
+
 import parse from 'html-react-parser';
-import { getPageData } from '@lib/api/get-page-data';
+
 import { getGlobalOptions } from '@lib/api/get-global-options';
-import Layout from '@components/layout/layout';
+import { getPageData } from '@lib/api/get-page-data';
+import { renderBlock } from '@lib/block';
+
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import ContentBox from '@components/content-box/content-box';
-import SectionIntro from '@components/section-intro/section-intro';
-import PageGrid from '@components/page-grid/page-grid';
-import Sidebar from '@components/sidebar/sidebar';
+import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
-import Button from '@components/button/button';
+import PageGrid from '@components/page-grid/page-grid';
+import SectionIntro from '@components/section-intro/section-intro';
+import Sidebar from '@components/sidebar/sidebar';
+
 import Logo from '@assets/images/logo.svg';
-import { renderBlock } from '@lib/block';
 
 export default async function ContactUs() {
   const content = await getPageData('contact-us');
