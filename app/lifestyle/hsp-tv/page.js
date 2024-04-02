@@ -24,7 +24,7 @@ export default async function HspTVPage({ searchParams }) {
   const totalPosts =
     postsResponse?.hspTvPosts.pageInfo.offsetPagination.total || 0;
 
-  const content = await getPageData('lifestyle/hsp-blog');
+  const content = await getPageData('lifestyle/hsp-tv');
   const contentResolved = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (
