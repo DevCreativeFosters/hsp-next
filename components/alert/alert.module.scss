@@ -1,0 +1,13 @@
+.alert {
+  padding: 16px 24px;
+  font-size: 14px;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-white-5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  color: var(--color-white-100);
+}
