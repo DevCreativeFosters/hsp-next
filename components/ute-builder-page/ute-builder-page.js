@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
 import { useVehicleContext } from '@contexts/vehicle';
+
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+
 import Builder from '@components/builder/builder';
-import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
-import PageContainer from '@components/page-container/page-container';
 import Loading from '@components/loading/loading';
+import PageContainer from '@components/page-container/page-container';
 
 export default function UteBuilderPage({
   makes,
@@ -82,18 +84,14 @@ export default function UteBuilderPage({
 
   if (!vehicleSelected && loaded) {
     return (
-      <UTEChooseYourVehicle makes={makes} factoryOptions={factoryOptions} />
-    );
-  }
-
-  if (model !== null && model !== undefined && productVariants.length > 0) {
-    return (
       <Builder
         makeName={makeName}
         model={model}
         products={variantList}
         allLocations={allLocations}
         uteCovers={uteCovers}
+        factoryOptions={factoryOptions}
+        makes={makes}
       />
     );
   }
