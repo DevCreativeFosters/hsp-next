@@ -1,13 +1,16 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
-import routes from '@lib/routes';
+
 import { getStores } from '@lib/api/get-stores';
-import Layout from '@components/layout/layout';
+import routes from '@lib/routes';
+
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
-import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
-import InformationBox from '@components/information-box/information-box';
-import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
-import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+import InformationBox from '@components/information-box/information-box';
+import Layout from '@components/layout/layout';
+import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
+import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
+import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
+
 import styles from './page.module.scss';
 
 export const metadata = {
