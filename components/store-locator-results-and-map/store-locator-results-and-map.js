@@ -23,10 +23,10 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
 
   useEffect(
     function setInitialLocationList() {
-      const locationList = normalizeStores(allLocations);
+      const locationList = normalizeStores(allLocations, searchGeolocation);
       setFilteredLocations(locationList);
     },
-    [allLocations, setFilteredLocations],
+    [allLocations, setFilteredLocations, searchGeolocation],
   );
 
   useEffect(
@@ -47,7 +47,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
 
   useEffect(
     function syncMapBoundaries() {
-      const locationList = normalizeStores(allLocations);
+      const locationList = normalizeStores(allLocations, searchGeolocation);
       if (searchGeolocation) {
         setFilteredLocations(
           findLocationsInRadius(searchGeolocation, locationList),

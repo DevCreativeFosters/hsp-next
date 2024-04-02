@@ -174,6 +174,7 @@ export default function StoreLocatorSearch({ allLocations }) {
                   if (!value) {
                     setLocation(null);
                     setSearchGeolocation(null);
+                    setIsFullScreen(false);
                   }
                 }}
                 required

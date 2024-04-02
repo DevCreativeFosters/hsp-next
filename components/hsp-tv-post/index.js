@@ -47,15 +47,6 @@ export function HspTvPost({
       <div className={styles.post}>
         <div ref={informationRef} className={styles.information}>
           <div className={styles.relatedPostsContainer}>
-            <BreadcrumbsLifestyle
-              initialContentTypeRoute={routes.tv()}
-              exactBreadcrumb={{
-                label: title,
-                url: routes.tv(slug),
-                strong: true,
-              }}
-            />
-            <h1 className={clsx(styles.title, styles.stickyTitle)}>{title}</h1>
             <RelatedPosts
               posts={relatedPosts}
               type="hsp-tv"
