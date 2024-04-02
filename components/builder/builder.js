@@ -1,16 +1,20 @@
 'use client';
 
-import { useState, useCallback, useContext, useRef, useEffect } from 'react';
-import Container from '@components/container/container';
-import ProductsCarousel from './products-carousel';
-import Preview from './preview';
-import Sidebar from './sidebar';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import StoreList from '@components/store-list/store-list';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
+import Container from '@components/container/container';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+
 import styles from './builder.module.scss';
+import Preview from './preview';
+import ProductsCarousel from './products-carousel';
+import Sidebar from './sidebar';
 
 const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   products.filter(
@@ -21,7 +25,15 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 
 const DEFAULT_OPEN_SECTION = 'products';
 
-export default function Builder({ makeName, model, products, allLocations, uteCovers }) {
+export default function Builder({
+  makeName,
+  model,
+  products,
+  allLocations,
+  uteCovers,
+  makes,
+  factoryOptions,
+}) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
@@ -117,7 +129,6 @@ export default function Builder({ makeName, model, products, allLocations, uteCo
             isMobile={isMobile}
             allLocations={allLocations}
           />
-
           <StoreList
             className={styles.results}
             items={filteredLocations}
@@ -129,27 +140,35 @@ export default function Builder({ makeName, model, products, allLocations, uteCo
               height: selectedStore ? topHeight : null,
             }}
           />
-
-          <Preview
-            makeName={makeName}
-            model={model}
-            selectedProducts={selectedProducts}
-          >
-            {isInlineMapVisible && (
-              <StoreLocatorMap
-                className={styles.map}
-                locations={filteredLocations}
-                onMarkerClick={setSelectedStore}
-              />
-            )}
-          </Preview>
+          {makeName && model ? (
+            <Preview
+              makeName={makeName}
+              model={model}
+              selectedProducts={selectedProducts}
+            >
+              {isInlineMapVisible && (
+                <StoreLocatorMap
+                  className={styles.map}
+                  locations={filteredLocations}
+                  onMarkerClick={setSelectedStore}
+                />
+              )}
+            </Preview>
+          ) : (
+            <UTEChooseYourVehicle
+              makes={makes}
+              factoryOptions={factoryOptions}
+            />
+          )}
         </div>
-        <ProductsCarousel
-          products={products}
-          selectedProducts={selectedProducts}
-          disabledProducts={disabledProducts}
-          toggleProduct={toggleProduct}
-        />
+        {makeName && model && products && (
+          <ProductsCarousel
+            products={products}
+            selectedProducts={selectedProducts}
+            disabledProducts={disabledProducts}
+            toggleProduct={toggleProduct}
+          />
+        )}
       </Container>
     </div>
   );

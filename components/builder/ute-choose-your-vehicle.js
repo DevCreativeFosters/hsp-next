@@ -1,13 +1,16 @@
 'use client';
 
-import constants from '@lib/constants';
 import { useVehicleContext } from '@contexts/vehicle';
-import { useVehicleSelection } from '@lib/use-vehicle-select';
+
+import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
+import { useVehicleSelection } from '@lib/use-vehicle-select';
+
+import Alert from '@components/alert/alert';
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
-import Button from '@components/button/button';
-import PageContainer from '@components/page-container/page-container';
+
 import styles from './ute-choose-your-vehicle.module.scss';
 
 export default function UTEChooseYourVehicle({
@@ -24,10 +27,15 @@ export default function UTEChooseYourVehicle({
 
   return (
     <Container className={styles.container}>
+      <div className={styles.content}>
+        <h1 className={styles.title}>Welcome to the HSP UTE Builder</h1>
+        <Alert
+          content="To get started, please select your vehicle make and model below."
+          icon="info"
+        />
+      </div>
       <div className={styles.chooseVehicleContainer}>
-        <p className={styles.chooseVehiclePill}>
-          {constants.SELECT_LABELS.GENERIC_FULL}
-        </p>
+        <h2 className={styles.chooseVehicleTitle}>Choose your vehicle</h2>
         <div className={styles.vehicleSelector}>
           <Select
             size="large"
@@ -69,30 +77,6 @@ export default function UTEChooseYourVehicle({
           </Button>
         </div>
       </div>
-      <PageContainer>
-        <div className={styles.content}>
-          <div className={styles.main}>
-            <h1 className={styles.title}>UTE Builder</h1>
-            <p className={styles.text}>
-              Introducing our new tool that helps you create an enquiry for all
-              accessories that you need for your vehicle.
-            </p>
-          </div>
-          <div className={styles.help}>
-            <h4 className={styles.helpTitle}>Need help?</h4>
-            <p className={styles.helpText}>
-              If you need support, please contact us on{' '}
-              <a className={styles.link} href="tel:1300441498">
-                1300 441 498
-              </a>{' '}
-              or send an email to{' '}
-              <a className={styles.link} href="mailto:info@hsputelids.com">
-                info@hsputelids.com
-              </a>
-            </p>
-          </div>
-        </div>
-      </PageContainer>
     </Container>
   );
 }
