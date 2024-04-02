@@ -4,10 +4,12 @@ import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
+import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -32,12 +34,15 @@ export default async function CategoryPage({ params }) {
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(slug);
   const details = makeData?.detailsFields.details;
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
-  if (!makeData && categoryData) {
+  if (!makeData && categoryData && !shouldBeExcluded) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData) {
+  if (!makeData || !categoryData || shouldBeExcluded) {
     return notFound();
   }
 
