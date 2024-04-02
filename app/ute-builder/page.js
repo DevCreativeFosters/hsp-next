@@ -18,10 +18,10 @@ export default async function UteBuilder() {
   const allLocations = await getStores();
   const globalOptions = await getGlobalOptions();
   const factoryOptions = await getTermChildren(
-    globalOptions?.compatibleFactoryOptions?.slug || '',
+    globalOptions?.compatibleFactoryOptions?.nodes[0].slug || '',
   );
   const uteCovers = await getTermChildren(
-    globalOptions?.coversCategory?.slug || '',
+    globalOptions?.coversCategory?.nodes[0].slug || '',
   );
 
   return (
