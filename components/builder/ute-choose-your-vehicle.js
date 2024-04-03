@@ -62,7 +62,6 @@ export default function UTEChooseYourVehicle({
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               options={factoryOptions}
               value={getValueOrSlug(model) || null}
-              disabled={!factoryOptions.length}
               dropdownInDocumentFlow
               className={styles.select}
             />
