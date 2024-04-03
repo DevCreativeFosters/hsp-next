@@ -1,17 +1,22 @@
 'use client';
 
-import { useState, useCallback, useEffect, useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import clsx from 'clsx';
-import Button from '@components/button/button';
-import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import ResultsStoreTile from '@components/store-tile/result-store-tile';
+
+import { formatPrice } from '@lib/helpers';
+import { getIcon } from '@lib/icons';
+
+import Button from '@components/button/button';
+import EnquiryModal from '@components/enquiry-form/enquiry-modal';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import EnquiryModal from '@components/enquiry-form/enquiry-modal';
+import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import ResultsStoreTile from '@components/store-tile/result-store-tile';
+
 import ProductsList from './sidebar-products-list';
-import { getIcon } from '@lib/icons';
-import { formatPrice } from '@lib/helpers';
 import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
@@ -208,7 +213,11 @@ export default function Sidebar({
           </Button>
         </div>
       </div>
-      <div className={styles.sidebarMobileBar}>
+      <div
+        className={clsx(styles.sidebarMobileBar, {
+          [styles.isHidden]: selectedProducts.length === 0,
+        })}
+      >
         <button
           className={styles.mobileSidebarToggle}
           onClick={toggleOpen}
