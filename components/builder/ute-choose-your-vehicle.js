@@ -17,13 +17,21 @@ export default function UTEChooseYourVehicle({
   makes: makersAndModels,
   factoryOptions,
 }) {
-  const { maker, model, handleSave, setVehicleSelection } = useVehicleContext();
+  const { maker, model, handleSave, setVehicleSelection, factoryOption } =
+    useVehicleContext();
   const {
     handleMakerChange,
     handleModelChange,
     makerSelectOptions,
     modelSelectOptions,
-  } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
+    factorySelectOptions,
+    handleFactoryOptionsChange,
+  } = useVehicleSelection(
+    makersAndModels,
+    setVehicleSelection,
+    maker,
+    factoryOptions,
+  );
 
   return (
     <Container className={styles.container}>
@@ -60,10 +68,12 @@ export default function UTEChooseYourVehicle({
             <Select
               size="large"
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
-              options={factoryOptions}
-              value={getValueOrSlug(model) || null}
+              options={factorySelectOptions}
+              value={factoryOption?.slug || null}
               dropdownInDocumentFlow
               className={styles.select}
+              onChange={handleFactoryOptionsChange}
+              name="factoryOptions"
             />
           )}
           <Button

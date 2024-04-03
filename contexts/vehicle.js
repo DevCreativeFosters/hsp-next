@@ -1,8 +1,10 @@
 'use client';
 
 import { createContext, useCallback, useContext, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { setCookie, deleteCookie } from '@lib/cookies';
+
+import { usePathname, useRouter } from 'next/navigation';
+
+import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
@@ -14,6 +16,7 @@ export const VehicleProvider = ({ children }) => {
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
+  const [factoryOption, setFactoryOption] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
@@ -32,6 +35,7 @@ export const VehicleProvider = ({ children }) => {
     setModel(null);
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
+    setFactoryOption(null);
 
     const slug = pathname.split('/products/')[1]?.split('/')[0];
     if (slug) {
@@ -46,10 +50,17 @@ export const VehicleProvider = ({ children }) => {
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
       setSavedVehicleGlobal({ maker, model });
+
       setVehicleSelection({
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
       });
+
+      setFactoryOption({
+        name: factoryOption?.name || undefined,
+        slug: factoryOption?.slug || undefined,
+      });
+
       setDropdownOpened(false);
 
       if (params) {
@@ -95,6 +106,8 @@ export const VehicleProvider = ({ children }) => {
         setDropdownOpened,
         handleVehicleReset,
         handleSave,
+        setFactoryOption,
+        factoryOption,
       }}
     >
       {children}
