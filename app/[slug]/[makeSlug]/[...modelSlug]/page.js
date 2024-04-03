@@ -62,8 +62,7 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
-  const mainCategoryBlocks =
-    await getMainProductCategoryBlocks(mainCategorySlug);
+  const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
   const firstMatchedProduct = products.length ? products[0] : null;
