@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import clsx from 'clsx';
 import routes from '@lib/routes';
 import RelatedPosts from '@components/related-posts/related-posts';
 import Container from '@components/container/container';
