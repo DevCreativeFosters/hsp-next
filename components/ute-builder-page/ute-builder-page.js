@@ -17,7 +17,6 @@ export default function UteBuilderPage({
   factoryOptions,
   uteCovers,
 }) {
-  const [vehicleSelected, setVehicleSelected] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [makeName, setMakeName] = useState('');
   const [model, setModel] = useState({});
@@ -43,14 +42,8 @@ export default function UteBuilderPage({
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
         setMakeName(vehicle?.make?.label);
         fetchData(model, maker);
-        if (model) {
-          setVehicleSelected(true);
-        } else {
-          setVehicleSelected(false);
-        }
       }
     } else {
-      setVehicleSelected(false);
       setMakeName('');
       setModel({});
       setProductVariants([]);
@@ -82,7 +75,7 @@ export default function UteBuilderPage({
     return variants;
   }, [productVariants]);
 
-  if (!vehicleSelected && loaded) {
+  if (loaded) {
     return (
       <Builder
         makeName={makeName}
