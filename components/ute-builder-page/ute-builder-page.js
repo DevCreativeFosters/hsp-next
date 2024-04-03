@@ -40,7 +40,7 @@ export default function UteBuilderPage({
         const vehicle = JSON.parse(savedVehicle);
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
-        setMakeName(vehicle?.make?.label);
+        setMakeName(vehicle?.maker?.name);
         fetchData(model, maker);
       }
     } else {
