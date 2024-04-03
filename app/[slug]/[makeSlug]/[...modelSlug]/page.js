@@ -21,17 +21,28 @@ export default async function CategoryPage({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
-  const mainCategorySlug = params.mainCategorySlug;
+  const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug;
-  const mainCategory = await getMainProductCategory(mainCategorySlug);
+  const modelSlug = params.modelSlug; // array of model and optional variant
+  const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
-    data => data.relatedProductCategory?.[0]?.slug === mainCategorySlug,
+    data => data.relatedProductCategory?.[0]?.slug === slug,
   );
+
+  let modelName;
+  makes?.some(make => {
+    const model = make.models?.find(model => model.slug === modelSlug)?.name;
+
+    if (model) {
+      modelName = model;
+      return true;
+    }
+  });
+
   const productHeroData = {
     warrantyDescription:
       filteredData?.length > 1
@@ -46,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const allLocations = await getStores();
 
   const products = await getProductsByCategoriesSlugs(
-    mainCategorySlug,
+    slug,
     makeSlug,
     modelSlug,
   );
@@ -69,7 +80,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const currentProduct = {
     mainCategory: {
       label: mainCategory?.name,
-      value: mainCategorySlug,
+      value: slug,
     },
     make: {
       label: make?.name,
@@ -77,14 +88,15 @@ export default async function CategoryPage({ params, searchParams }) {
     },
     model: {
       label: firstMatchedProduct?.title,
-      value: modelSlug,
+      value: modelSlug[0],
     },
   };
 
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
+  modelName = modelName || firstMatchedProduct?.title;
 
-  if (!firstMatchedProduct || !mainCategory || !make) {
+  if (!firstMatchedProduct || !mainCategory || !make || modelSlug.length > 2) {
     return (
       <Layout title="Product" withMap>
         <Container>
@@ -113,9 +125,10 @@ export default async function CategoryPage({ params, searchParams }) {
         <PageClientSidePartial
           mainCategory={mainCategory}
           make={make}
+          modelName={modelName}
           enquiryFormId={enquiryFormId}
           firstMatchedProduct={firstMatchedProduct}
-          variantSlug={searchParams.variant}
+          variantSlug={modelSlug[1]}
           allLocations={allLocations}
           productHeroData={productHeroData}
           downloadFileFormId={downloadFileFormId}
