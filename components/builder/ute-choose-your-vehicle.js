@@ -53,6 +53,7 @@ export default function UTEChooseYourVehicle({
             dropdownInDocumentFlow
             onChange={handleMakerChange}
             className={styles.select}
+            name="maker"
           />
           <Select
             size="large"
@@ -63,6 +64,7 @@ export default function UTEChooseYourVehicle({
             dropdownInDocumentFlow
             onChange={handleModelChange}
             className={styles.select}
+            name="model"
           />
           {factoryOptions?.length && (
             <Select
