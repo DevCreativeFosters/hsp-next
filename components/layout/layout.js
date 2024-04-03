@@ -14,6 +14,7 @@ import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
 import normalizeProductData from '@lib/normalize-product-data';
+import { getExcludeTree } from '@lib/helpers';
 import Header from '@components/header/header';
 import Footer from '@components/footer/footer';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
@@ -31,11 +32,16 @@ async function getLayoutData() {
   const footerMenus = await getFooterMenus();
   const mainMenu = await getMenu('main-menu');
   const mobileMenu = await getMenu('mobile-navigation');
-  const mainProductCategories = await getMainProductCategories();
   const productCategories = await getProductCategories();
   const products = await getMenuDropdownProducts();
   const makes = await getAllMakes();
   const allStores = await getStores();
+  const excludeTree = getExcludeTree(globalOptions);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const mainProductCategories = await getMainProductCategories(
+    excludeTree,
+    excludeChildren,
+  );
 
   return {
     globalOptions,
