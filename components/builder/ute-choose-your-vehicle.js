@@ -56,7 +56,7 @@ export default function UTEChooseYourVehicle({
             onChange={handleModelChange}
             className={styles.select}
           />
-          {factoryOptions?.length > 0 && (
+          {factoryOptions?.length && (
             <Select
               size="large"
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
