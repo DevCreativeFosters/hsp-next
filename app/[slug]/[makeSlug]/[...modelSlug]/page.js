@@ -1,5 +1,4 @@
 import { Fragment } from 'react';
-import { notFound, redirect } from 'next/navigation';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import { getStores } from '@lib/api/get-stores';
@@ -7,16 +6,14 @@ import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-m
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getMake } from '@lib/api/get-make';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
-import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getAllMakes } from '@lib/api/get-all-makes';
-import { getExcludeTree } from '@lib/helpers';
 import PageClientSidePartial from './page-client-side-partial';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import PageContainer from '@components/page-container/page-container';
 import ErrorPage from '@components/error-page';
+import PageContainer from '@components/page-container/page-container';
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params, searchParams }) {
@@ -30,8 +27,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
-  const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(mainCategory?.databaseId);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
@@ -66,9 +61,6 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
-  const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
-  const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
-
   const firstMatchedProduct = products.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
@@ -77,7 +69,6 @@ export default async function CategoryPage({ params, searchParams }) {
         makes,
         firstMatchedProduct.productFields.variants,
         params,
-        mainCategoryContentBlocks,
       ),
   );
   const currentProduct = {
@@ -98,14 +89,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
-
-  if (!firstMatchedProduct || !mainCategory || !make) {
-    redirect(`/${slug}?compatible=false`);
-  }
-
-  if (shouldBeExcluded) {
-    return notFound();
-  }
 
   if (!firstMatchedProduct || !mainCategory || !make || modelSlug.length > 2) {
     return (
