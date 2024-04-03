@@ -19,7 +19,6 @@ import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
 import StoreTile from '@components/store-tile/store-tile';
-import ArrowForwardIcon from '@assets/icons/arrow-forward.svg';
 
 import styles from './store-locator-search.module.scss';
 
