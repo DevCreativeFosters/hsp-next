@@ -67,6 +67,10 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
+  const mainCategoryBlocks =
+    await getMainProductCategoryBlocks(mainCategorySlug);
+  const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
+
   const firstMatchedProduct = products.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
@@ -75,6 +79,7 @@ export default async function CategoryPage({ params, searchParams }) {
         makes,
         firstMatchedProduct.productFields.variants,
         params,
+        mainCategoryContentBlocks,
       ),
   );
   const currentProduct = {
