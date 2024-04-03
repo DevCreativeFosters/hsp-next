@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { notFound } from 'next/navigation';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { renderBlock } from '@lib/block';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
@@ -6,14 +7,14 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getAllMakes } from '@lib/api/get-all-makes';
+import { getExcludeTree } from '@lib/helpers';
+import { getPageData } from '@lib/api/get-page-data';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import styles from './page.module.scss';
-import { getPageData } from '@lib/api/get-page-data';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
-import { notFound } from 'next/navigation';
 
 export default async function DynamicPage({ params }) {
   const slug = params.slug;
@@ -42,19 +43,8 @@ export default async function DynamicPage({ params }) {
   const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
-  const excludeTree = [];
-
-  if (globalOptions?.coversCategory?.databaseId) {
-    excludeTree.push(globalOptions.coversCategory.databaseId);
-  }
-
-  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
-    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
-  }
-
-  const shouldBeExcluded = excludeTree.includes(
-    categoryData?.parent?.node?.databaseId,
-  );
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
   if (!categoryData || shouldBeExcluded) {
     return notFound();
