@@ -149,3 +149,16 @@
 .hideButton {
   display: none !important;
 }
+
+.incompatible {
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 1.25rem;
+  font-family: var(--font-secondary);
+  color: var(--color-white-100);
+}
+
+.incompatibleLabel {
+  color: var(--color-primary-100);
+  text-transform: uppercase;
+}

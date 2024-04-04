@@ -88,4 +88,11 @@
 
 .sku {
   text-transform: uppercase;
+  font-weight: 600;
+  font-size: 20px;
+  font-family: var(--font-secondary);
+
+  @include bp(medium) {
+    font-size: 24px;
+  }
 }

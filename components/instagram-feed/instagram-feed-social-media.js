@@ -8,13 +8,12 @@ export default function InstagramFeedSocialMedia({ socialMenu }) {
         <li key={url + index}>
           <Button
             href={url || '#'}
+            target="_blank"
             size="small"
             variant="tertiary"
             background="dark"
-            leftIcon={
-              iconPredefined[0] !== 'CUSTOM' ? iconPredefined[0] : false
-            }
-            leftIconUrl={iconPredefined[0] === 'CUSTOM' ? icon : false}
+            leftIcon={iconPredefined !== 'CUSTOM' ? iconPredefined : false}
+            leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
           />
         </li>
       ))}

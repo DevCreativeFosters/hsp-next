@@ -30,6 +30,7 @@ const getVariantDataForProperties = (variant, parent, properties) =>
 export default function PageClientSidePartial({
   mainCategory,
   make,
+  modelName,
   enquiryFormId,
   firstMatchedProduct,
   allLocations,
@@ -101,13 +102,14 @@ export default function PageClientSidePartial({
 
   const onVariantChange = useCallback(
     newVariantSlug => {
-      const { mainCategorySlug, makeSlug, modelSlug } = pageParams;
+      const { slug, makeSlug, modelSlug } = pageParams;
       const newRoute = routes.product(
-        mainCategorySlug,
+        slug,
         makeSlug,
-        modelSlug,
+        modelSlug[0],
         newVariantSlug,
       );
+
       router.push(newRoute);
     },
     [pageParams, router],
@@ -122,13 +124,13 @@ export default function PageClientSidePartial({
             <h1 className={styles.name}>
               {mainCategory.name} <br />
               <span className={styles.variant}>
-                {make.name} {firstMatchedProduct?.title}
+                {make.name} {modelName}
               </span>
             </h1>
             {variant?.sku && (
-              <h5 className={styles.sku}>
+              <div className={styles.sku}>
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
-              </h5>
+              </div>
             )}
             {description && <p className={styles.description}>{description}</p>}
           </div>
