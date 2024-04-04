@@ -1,19 +1,24 @@
 import { Fragment } from 'react';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
-import { renderBlock } from '@lib/block';
-import { getStores } from '@lib/api/get-stores';
-import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
-import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
-import { getMake } from '@lib/api/get-make';
-import { getMainProductCategory } from '@lib/api/get-main-product-category';
-import { getGlobalOptions } from '@lib/api/get-global-options';
+
+import { notFound, redirect } from 'next/navigation';
+
 import { getAllMakes } from '@lib/api/get-all-makes';
-import PageClientSidePartial from './page-client-side-partial';
-import Container from '@components/container/container';
-import Layout from '@components/layout/layout';
+import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getMake } from '@lib/api/get-make';
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
+import { getStores } from '@lib/api/get-stores';
+import { renderBlock } from '@lib/block';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
+
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
+import Container from '@components/container/container';
 import ErrorPage from '@components/error-page';
+import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
+
+import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
 export default async function CategoryPage({ params, searchParams }) {
@@ -31,6 +36,8 @@ export default async function CategoryPage({ params, searchParams }) {
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
+
+  console.log(modelSlug);
 
   let modelName;
   makes?.some(make => {
@@ -90,21 +97,36 @@ export default async function CategoryPage({ params, searchParams }) {
   const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
 
-  if (!firstMatchedProduct || !mainCategory || !make || modelSlug.length > 2) {
-    return (
-      <Layout title="Product" withMap>
-        <Container>
-          <PageContainer>
-            <ErrorPage
-              title="Product not found"
-              text="Sorry, we couldn't find the product you are looking for."
-              buttonText="Back to Products"
-              product
-            />
-          </PageContainer>
-        </Container>
-      </Layout>
-    );
+  if (!firstMatchedProduct || !mainCategory || !make) {
+    redirect(`/${slug}?compatible=false`);
+  }
+
+  if (modelSlug.length > 2) {
+    return notFound();
+  }
+
+  if (modelSlug.length === 2) {
+    const variantExists =
+      firstMatchedProduct?.productFields?.variants?.find(
+        ({ variantSlug }) => variantSlug === modelSlug[1].toLowerCase(),
+      ) || false;
+
+    if (!variantExists) {
+      return (
+        <Layout title="Product" withMap>
+          <Container>
+            <PageContainer>
+              <ErrorPage
+                title="Variant not found"
+                text="Sorry, we couldn't find the variant you are looking for."
+                buttonText="Back to Products"
+                product
+              />
+            </PageContainer>
+          </Container>
+        </Layout>
+      );
+    }
   }
 
   return (

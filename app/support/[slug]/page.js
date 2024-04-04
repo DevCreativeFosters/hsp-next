@@ -1,14 +1,17 @@
 import { Fragment } from 'react';
+
 import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
-import Layout from '@components/layout/layout';
-import Container from '@components/container/container';
-import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
-import PageGrid from '@components/page-grid/page-grid';
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
+import PageGrid from '@components/page-grid/page-grid';
 import Sidebar from '@components/sidebar/sidebar';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './page.module.scss';
 
 export const metadata = {

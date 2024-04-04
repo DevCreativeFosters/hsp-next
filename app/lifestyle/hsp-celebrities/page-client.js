@@ -1,14 +1,18 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
 import { useIsMobile } from '@hooks/useIsMobile';
-import Container from '@components/container/container';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import VideoReel from '@components/video-reel/video-reel';
 import VideoEl from '@components/video-reel/video-el';
+import VideoReel from '@components/video-reel/video-reel';
+
 import styles from './page-client.module.scss';
 
 export default function PageClient({ title, description, posts = [] }) {

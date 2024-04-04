@@ -1,10 +1,12 @@
-import routes from '@lib/routes';
-import { getPageData } from '@lib/api/get-page-data';
 import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number-of-HSP-celebrities-posts';
-import Layout from '@components/layout/layout';
-import Container from '@components/container/container';
-import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
+import { getPageData } from '@lib/api/get-page-data';
+import routes from '@lib/routes';
+
 import Background from '@components/background/background';
+import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
+
 import PageClient from './page-client';
 
 export const metadata = {
