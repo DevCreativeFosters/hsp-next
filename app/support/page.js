@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
+
 import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
+
 import Layout from '@components/layout/layout';
 
 export const metadata = {

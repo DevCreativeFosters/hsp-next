@@ -2,15 +2,26 @@
 'use client';
 
 import { useCallback } from 'react';
+
 import { useRouter } from 'next/navigation';
+
+import { StoreLocatorProvider } from '@contexts/store-locator';
+
 import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
-import { StoreLocatorProvider } from '@contexts/store-locator';
+
+import ContentBox from '@components/content-box/content-box';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
-import ContentBox from '@components/content-box/content-box';
 import ProductTabs from '@components/product-tabs/product-tabs';
+
 import styles from './page.module.scss';
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
 const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   if (variant && variant.variantDetails[property]) {

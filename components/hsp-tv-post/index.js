@@ -1,12 +1,15 @@
 'use client';
 
 import { useRef } from 'react';
+
 import routes from '@lib/routes';
-import RelatedPosts from '@components/related-posts/related-posts';
-import Container from '@components/container/container';
+
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
+import Container from '@components/container/container';
+import RelatedPosts from '@components/related-posts/related-posts';
 import VideoContainer from '@components/video-container/video-container';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './hsp-tv-post.module.scss';
 
 export function HspTvPost({
