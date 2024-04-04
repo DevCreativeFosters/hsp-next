@@ -39,9 +39,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
-    "eslint": "8.43.0",
+    "eslint": "^8.57.0",
     "eslint-config-next": "^14.0.3",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "node-sass-glob-importer": "^5.3.3",

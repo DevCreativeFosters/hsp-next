@@ -28,18 +28,10 @@
 
   @include bp(large) {
     grid-template-areas:
-      'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu socialMenu'
+      'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu'
       'logo mainMenu mainMenu mainMenu vehicle vehicle';
     grid-template-columns: 130px 10fr 10fr 10fr 10fr 1fr;
     gap: 0 16px;
-  }
-
-  &.withoutSocialMenu {
-    @include bp(large) {
-      grid-template-areas:
-        'secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu secondaryMenu'
-        'logo mainMenu mainMenu mainMenu vehicle vehicle';
-    }
   }
 
   @include bp(full) {
@@ -82,11 +74,6 @@
 
 .secondaryMenu {
   grid-area: secondaryMenu;
-  justify-self: flex-end;
-}
-
-.socialMenu {
-  grid-area: socialMenu;
   justify-self: flex-end;
 }
 
@@ -158,8 +145,9 @@
 
 .callButtonContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  gap: 16px;
   grid-area: call;
 
   @include bp(large) {

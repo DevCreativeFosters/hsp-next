@@ -12,10 +12,9 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getFooterMenus } from '@lib/api/get-footer-menus';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
-import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
-import normalizeMenuData from '@lib/normalize-mobile-menu-data';
 import normalizeProductData from '@lib/normalize-product-data';
+import { getExcludeTree } from '@lib/helpers';
 import Header from '@components/header/header';
 import Footer from '@components/footer/footer';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
@@ -33,11 +32,16 @@ async function getLayoutData() {
   const footerMenus = await getFooterMenus();
   const mainMenu = await getMenu('main-menu');
   const mobileMenu = await getMenu('mobile-navigation');
-  const mainProductCategories = await getMainProductCategories();
   const productCategories = await getProductCategories();
   const products = await getMenuDropdownProducts();
   const makes = await getAllMakes();
   const allStores = await getStores();
+  const excludeTree = getExcludeTree(globalOptions);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const mainProductCategories = await getMainProductCategories(
+    excludeTree,
+    excludeChildren,
+  );
 
   return {
     globalOptions,
@@ -69,15 +73,12 @@ export default function Layout({
     services: [],
   };
   const footerText = data.globalOptions?.footerText;
-  const socialMenu = normalizeSocialMediaMenu(data.globalOptions);
   const topNavigationMenu = normalizeTopNavigationMenu(data.globalOptions);
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
-  const normalizedMobileMainMenu = normalizeMenuData(data.mainMenu);
   const normalizedProductData = normalizeProductData(
     data.mainProductCategories,
   );
-  normalizedMobileMenu.splice(1, 0, ...normalizedMobileMainMenu);
   const newsletterTitle = data.globalOptions?.newsletterTitle;
   const newsletterDescription = data.globalOptions?.newsletterDescription;
 
@@ -123,7 +124,6 @@ export default function Layout({
           <Header
             mainMenu={normalizedMainMenu}
             secondaryMenu={topNavigationMenu}
-            socialMenu={socialMenu}
             mobileMenu={normalizedMobileMenu}
             mainProductCategories={data.mainProductCategories}
             products={normalizedProductData}
