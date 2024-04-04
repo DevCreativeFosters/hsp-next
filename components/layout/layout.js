@@ -43,6 +43,7 @@ async function getLayoutData() {
   const allStores = await getStores();
   const excludeTree = getExcludeTree(globalOptions);
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes[0].id];
   const mainProductCategories = await getMainProductCategories(
     excludeTree,
     excludeChildren,
@@ -58,6 +59,7 @@ async function getLayoutData() {
     products,
     makes,
     allStores,
+    excludeChildrenId,
   };
 }
 
@@ -115,8 +117,10 @@ export default function Layout({
     }
   });
   const mainProductCategoryIds = data.mainProductCategories.map(({ id }) => id);
-  const productSubCategories = data.productCategories.filter(({ parent }) =>
-    mainProductCategoryIds.includes(parent?.node?.id),
+  const productSubCategories = data.productCategories.filter(
+    ({ id, parent }) =>
+      mainProductCategoryIds.includes(parent?.node?.id) &&
+      !data.excludeChildrenId.includes(id),
   );
 
   return (
