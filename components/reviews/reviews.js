@@ -1,14 +1,17 @@
 'use client';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+
+import Button from '@components/button/button';
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { useIsMobile } from '@hooks/useIsMobile';
-import 'swiper/css';
 
-import Container from '@components/container/container';
-import Button from '@components/button/button';
 import Review from './review';
 import styles from './reviews.module.scss';
 

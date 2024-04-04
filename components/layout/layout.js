@@ -1,27 +1,32 @@
 import clsx from 'clsx';
 import Image from 'next/image';
+
 import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
 import { UserProvider } from '@contexts/user';
-import { getStores } from '@lib/api/get-stores';
+import { VehicleProvider } from '@contexts/vehicle';
+
+import { getAllMakes } from '@lib/api/get-all-makes';
+import { getFooterMenus } from '@lib/api/get-footer-menus';
+import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getMainProductCategories } from '@lib/api/get-main-product-categories';
+import { getMenu } from '@lib/api/get-menu';
 import { getMenuDropdownProducts } from '@lib/api/get-menu-dropdown-products';
 import { getProductCategories } from '@lib/api/get-product-categories';
-import { getMenu } from '@lib/api/get-menu';
-import { getAllMakes } from '@lib/api/get-all-makes';
-import { getMainProductCategories } from '@lib/api/get-main-product-categories';
-import { getGlobalOptions } from '@lib/api/get-global-options';
-import { getFooterMenus } from '@lib/api/get-footer-menus';
+import { getStores } from '@lib/api/get-stores';
+import { getExcludeTree } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
-import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
 import normalizeProductData from '@lib/normalize-product-data';
-import { getExcludeTree } from '@lib/helpers';
-import Header from '@components/header/header';
+import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
+
 import Footer from '@components/footer/footer';
+import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+import Header from '@components/header/header';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
 import Newsletter from '@components/newsletter/newsletter';
-import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
-import { VehicleProvider } from '@contexts/vehicle';
+
 import BgContinent from '@assets/images/bg-continent.png';
+
 import styles from './layout.module.scss';
 
 const GOOGLE_RECAPTCHA_SITEKEY =
