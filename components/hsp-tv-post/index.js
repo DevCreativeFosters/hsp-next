@@ -1,13 +1,15 @@
 'use client';
 
 import { useRef } from 'react';
-import clsx from 'clsx';
+
 import routes from '@lib/routes';
-import RelatedPosts from '@components/related-posts/related-posts';
-import Container from '@components/container/container';
+
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
+import Container from '@components/container/container';
+import RelatedPosts from '@components/related-posts/related-posts';
 import VideoContainer from '@components/video-container/video-container';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './hsp-tv-post.module.scss';
 
 export function HspTvPost({
@@ -47,15 +49,6 @@ export function HspTvPost({
       <div className={styles.post}>
         <div ref={informationRef} className={styles.information}>
           <div className={styles.relatedPostsContainer}>
-            <BreadcrumbsLifestyle
-              initialContentTypeRoute={routes.tv()}
-              exactBreadcrumb={{
-                label: title,
-                url: routes.tv(slug),
-                strong: true,
-              }}
-            />
-            <h1 className={clsx(styles.title, styles.stickyTitle)}>{title}</h1>
             <RelatedPosts
               posts={relatedPosts}
               type="hsp-tv"

@@ -1,7 +1,8 @@
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
-import Layout from '@components/layout/layout';
+
 import { BlogPost } from '@components/blog-post';
+import Layout from '@components/layout/layout';
 
 const NUMBER_OF_RELATED_POSTS = 5;
 

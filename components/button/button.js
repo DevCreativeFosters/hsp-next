@@ -1,11 +1,14 @@
 'use client';
 
-import React, { forwardRef, useCallback } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { forwardRef } from 'react';
+
 import clsx from 'clsx';
 import { decode } from 'html-entities';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { getIcon } from '@lib/icons';
+
 import styles from './button.module.scss';
 
 function ButtonWithRef(

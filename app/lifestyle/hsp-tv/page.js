@@ -1,12 +1,14 @@
-import { getPageData } from '@lib/api/get-page-data';
 import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
+import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
-import Layout from '@components/layout/layout';
-import Container from '@components/container/container';
+
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
-import PostsList from '@components/posts-list/posts-list';
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
 import Pagination from '@components/pagination/pagination';
+import PostsList from '@components/posts-list/posts-list';
+
 import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
@@ -24,7 +26,7 @@ export default async function HspTVPage({ searchParams }) {
   const totalPosts =
     postsResponse?.hspTvPosts.pageInfo.offsetPagination.total || 0;
 
-  const content = await getPageData('lifestyle/hsp-blog');
+  const content = await getPageData('lifestyle/hsp-tv');
   const contentResolved = content?.flexibleContent?.blocks.map(renderBlock);
 
   return (

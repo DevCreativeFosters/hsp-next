@@ -1,32 +1,26 @@
-import Layout from '@components/layout/layout';
-import ProductCategory from '@components/product-category/product-category';
-import Container from '@components/container/container';
-import { renderBlock } from '@lib/block';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getPageData } from '@lib/api/get-page-data';
-import { getGlobalOptions } from '@lib/api/get-global-options';
+import { renderBlock } from '@lib/block';
+import { getExcludeTree } from '@lib/helpers';
+
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
+import ProductCategory from '@components/product-category/product-category';
 
 export const metadata = {
   title: 'HSP 4x4 - Products',
-  // description: ''
 };
 
 export default async function ProductsPage() {
   const content = await getPageData('products');
   const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
   const globalOptions = await getGlobalOptions();
-  const excludeTree = [];
-
-  if (globalOptions?.coversCategory?.databaseId) {
-    excludeTree.push(globalOptions.coversCategory.databaseId);
-  }
-
-  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
-    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
-  }
+  const excludeTree = getExcludeTree(globalOptions);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
 
   const mainProductCategories =
-    (await getMainProductCategories(excludeTree)) || [];
+    (await getMainProductCategories(excludeTree, excludeChildren)) || [];
 
   return (
     <Layout>

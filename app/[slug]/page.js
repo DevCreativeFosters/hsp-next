@@ -1,22 +1,46 @@
 import { Fragment } from 'react';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
-import { renderBlock } from '@lib/block';
+
+import { notFound } from 'next/navigation';
+
+import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
-import { getGlobalOptions } from '@lib/api/get-global-options';
-import { getAllMakes } from '@lib/api/get-all-makes';
+import { getPageData } from '@lib/api/get-page-data';
+import { renderBlock } from '@lib/block';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
+
+import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
-import BreadcrumbsProduct from '@components/breadcrumbs-product';
-import PageContainer from '@components/page-container/page-container';
-import ErrorPage from '@components/error-page';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './page.module.scss';
 
-export default async function MainCategoryPage({ params }) {
-  const mainCategorySlug = params.mainCategorySlug;
-  const categoryData = await getMainProductCategory(mainCategorySlug);
+export default async function DynamicPage({ params }) {
+  const slug = params.slug;
+  const content = await getPageData(params?.slug);
+  let contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);
+  const title = content?.title;
+  const pageContent = content?.content;
+
+  if (pageContent || contentBlocks) {
+    return (
+      <Layout withMap>
+        {pageContent && (
+          <Container className={styles.container}>
+            {title && <h1>{title}</h1>}
+            {pageContent && <Wysiwyg content={pageContent} />}
+          </Container>
+        )}
+        {contentBlocks && contentBlocks?.map(contentBlock => contentBlock)}
+      </Layout>
+    );
+  }
+
+  const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
   const makes = await getAllMakes();
@@ -37,30 +61,17 @@ export default async function MainCategoryPage({ params }) {
   );
 
   if (!categoryData || shouldBeExcluded) {
-    return (
-      <Layout title="Product" withMap>
-        <Container>
-          <PageContainer>
-            <ErrorPage
-              title="Product not found"
-              text="Sorry, we couldn't find the product you are looking for."
-              buttonText="Back to Products"
-              product
-            />
-          </PageContainer>
-        </Container>
-      </Layout>
-    );
+    return notFound();
   }
 
-  const blocks = await getMainProductCategoryBlocks(mainCategorySlug);
-  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
+  const blocks = await getMainProductCategoryBlocks(slug);
+  contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
     renderBlock(block, makes, [], params),
   );
   const currentProduct = {
     mainCategory: {
       label: categoryData.name,
-      value: mainCategorySlug,
+      value: slug,
     },
     make: {
       label: '',

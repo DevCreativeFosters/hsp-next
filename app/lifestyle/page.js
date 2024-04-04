@@ -1,10 +1,12 @@
 import { Fragment } from 'react';
-import { getPageData } from '@lib/api/get-page-data';
+
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 import { POST_TYPES } from '@lib/post-types';
-import Layout from '@components/layout/layout';
+
 import FeaturedPost from '@components/featured-post/featured-post';
+import Layout from '@components/layout/layout';
 
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');

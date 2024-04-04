@@ -1,9 +1,11 @@
 'use client';
 
 import { useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+
 import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import styles from './instagram-tile.module.scss';
 
 export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
@@ -17,7 +19,7 @@ export default function InstagramTile({ slug, url, type, thumbnailUrl }) {
   };
 
   return (
-    <Link className={styles.tile} href={slug || '#'}>
+    <Link className={styles.tile} href={slug || '#'} target="_blank">
       {type === 'VIDEO' ? (
         <>
           <video

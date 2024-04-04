@@ -1,23 +1,26 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import Link from 'next/link';
-import clsx from 'clsx';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import { useClickOutside } from '@hooks/useClickOutside';
+
+import Button from '@components/button/button';
+import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
+import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+import HamburgerButton from '@components/hamburger-button/hamburger-button';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
-import Button from '@components/button/button';
-import HamburgerButton from '@components/hamburger-button/hamburger-button';
+
 import Logo from '@assets/images/logo.svg';
-import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+
 import styles from './header.module.scss';
-import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
 
 export default function Header({
   mainMenu,
   secondaryMenu,
-  socialMenu,
   mobileMenu,
   mainProductCategories,
   products,
@@ -49,11 +52,7 @@ export default function Header({
 
       <header className={styles.header} ref={headerRef}>
         <FullscreenCollapse className={styles.headerInner}>
-          <div
-            className={clsx(styles.grid, {
-              [styles.withoutSocialMenu]: !socialMenu,
-            })}
-          >
+          <div className={styles.grid}>
             <div className={styles.hamburgerContainer}>
               <HamburgerButton
                 onClick={toggleMenu}
@@ -74,7 +73,7 @@ export default function Header({
                       size="small"
                       variant="tertiary"
                       background="dark"
-                      rightIcon={item.iconPredefined || item.icon}
+                      rightIcon={item.iconPredefined[0] || item.icon}
                     />
                   );
                 }
@@ -122,9 +121,13 @@ export default function Header({
                         variant={variant}
                         background="dark"
                         leftIcon={
-                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
+                          iconPredefined[0] !== 'CUSTOM'
+                            ? iconPredefined[0]
+                            : false
                         }
-                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+                        leftIconUrl={
+                          iconPredefined[0] === 'CUSTOM' ? icon : false
+                        }
                       >
                         {label}
                       </Button>
@@ -133,27 +136,6 @@ export default function Header({
                 )}
               </ul>
             </nav>
-
-            {socialMenu && (
-              <nav className={styles.socialMenu}>
-                <ul className={styles.socialMenuList}>
-                  {socialMenu.map(({ url, iconPredefined, icon }, index) => (
-                    <li key={url + index} className={styles.socialMenuItem}>
-                      <Button
-                        href={url}
-                        size="small"
-                        variant="tertiary"
-                        background="dark"
-                        leftIcon={
-                          iconPredefined !== 'CUSTOM' ? iconPredefined : false
-                        }
-                        leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            )}
 
             <MobileMenu items={mobileMenu} isMenuActive={isMobileMenuActive} />
 

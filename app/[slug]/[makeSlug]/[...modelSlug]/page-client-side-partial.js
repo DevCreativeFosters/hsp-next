@@ -2,15 +2,28 @@
 'use client';
 
 import { useCallback } from 'react';
+
 import { useRouter } from 'next/navigation';
+
+import { StoreLocatorProvider } from '@contexts/store-locator';
+
 import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
-import { StoreLocatorProvider } from '@contexts/store-locator';
+
+import ContentBox from '@components/content-box/content-box';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
-import ContentBox from '@components/content-box/content-box';
 import ProductTabs from '@components/product-tabs/product-tabs';
+
 import styles from './page.module.scss';
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
 const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   if (variant && variant.variantDetails[property]) {
@@ -30,6 +43,7 @@ const getVariantDataForProperties = (variant, parent, properties) =>
 export default function PageClientSidePartial({
   mainCategory,
   make,
+  modelName,
   enquiryFormId,
   firstMatchedProduct,
   allLocations,
@@ -101,13 +115,14 @@ export default function PageClientSidePartial({
 
   const onVariantChange = useCallback(
     newVariantSlug => {
-      const { mainCategorySlug, makeSlug, modelSlug } = pageParams;
+      const { slug, makeSlug, modelSlug } = pageParams;
       const newRoute = routes.product(
-        mainCategorySlug,
+        slug,
         makeSlug,
-        modelSlug,
+        modelSlug[0],
         newVariantSlug,
       );
+
       router.push(newRoute);
     },
     [pageParams, router],
@@ -122,13 +137,13 @@ export default function PageClientSidePartial({
             <h1 className={styles.name}>
               {mainCategory.name} <br />
               <span className={styles.variant}>
-                {make.name} {firstMatchedProduct?.title}
+                {make.name} {modelName}
               </span>
             </h1>
             {variant?.sku && (
-              <h5 className={styles.sku}>
+              <div className={styles.sku}>
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
-              </h5>
+              </div>
             )}
             {description && <p className={styles.description}>{description}</p>}
           </div>

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   if (
@@ -17,7 +17,7 @@ export async function GET(request) {
   } catch (error) {
     return NextResponse.json(
       { message: `Error revalidating ${error}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

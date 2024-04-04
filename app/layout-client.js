@@ -1,10 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import { usePathname } from 'next/navigation';
 
 export default function RootLayoutClient() {
   const pathname = usePathname();
+
+  useEffect(() => {
+    document.body.scrollTop = 0;
+  }, [pathname]);
 
   useEffect(() => {
     const sessionCurrentPathname = sessionStorage.getItem('currentPathname');

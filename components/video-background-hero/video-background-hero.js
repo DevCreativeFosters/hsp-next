@@ -1,10 +1,11 @@
 'use client';
 
-import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useRef } from 'react';
 
-import Container from '@components/container/container';
+import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 
 import styles from './video-background-hero.module.scss';
 
@@ -20,7 +21,7 @@ export default function VideoBackgroundHero({
 
   return (
     <section className={styles.wrapper}>
-      <video className={styles.video} ref={videoRef} loop muted>
+      <video className={styles.video} ref={videoRef} playsInline loop muted>
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

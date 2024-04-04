@@ -1,12 +1,16 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
+
 import Image from 'next/image';
+
 import routes from '@lib/routes';
+
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
 import Container from '@components/container/container';
 import RelatedPosts from '@components/related-posts/related-posts';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './blog-post.module.scss';
 
 export function BlogPost({

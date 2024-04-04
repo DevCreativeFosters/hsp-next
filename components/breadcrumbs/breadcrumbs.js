@@ -1,11 +1,15 @@
 'use client';
 
-import { Fragment, createRef, useState } from 'react';
-import Link from 'next/link';
+import { Fragment, createRef, useEffect, useState } from 'react';
+
 import clsx from 'clsx';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import CustomSelect from '@components/custom-select/custom-select';
+
 import styles from './breadcrumbs.module.scss';
 
 const SEPARATOR = '/';
@@ -23,6 +27,7 @@ function addSeparators(items) {
 
 function Breadcrumbs({ items, product }) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [showIncompatibleNote, setShowIncompatibleNote] = useState(false);
   const itemsNormalized = items
     .map(item => ({
       ...item,
@@ -38,6 +43,7 @@ function Breadcrumbs({ items, product }) {
         if (item.onSelectOpenNext && nextRef) {
           nextRef.current.dispatchEvent(new Event('open-custom-select'));
         }
+        setShowIncompatibleNote(false);
       },
     }));
 
@@ -52,6 +58,13 @@ function Breadcrumbs({ items, product }) {
     : itemsLength > 1
       ? itemsNormalized[itemsLength - 2]
       : null;
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    searchParams.get('compatible') === 'false'
+      ? setShowIncompatibleNote(true)
+      : setShowIncompatibleNote(false);
+  }, [searchParams, setShowIncompatibleNote]);
 
   return (
     <>
@@ -195,6 +208,12 @@ function Breadcrumbs({ items, product }) {
             );
           }
         })}
+        {showIncompatibleNote && (
+          <div className={styles.incompatible}>
+            <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
+            product is not available for your selected vehicle.
+          </div>
+        )}
       </div>
     </>
   );
