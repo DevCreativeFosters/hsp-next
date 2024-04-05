@@ -20,9 +20,6 @@ export default async function UteBuilder() {
   const factoryOptions = await getTermChildren(
     globalOptions?.compatibleFactoryOptions?.nodes[0].slug || '',
   );
-  const uteCovers = await getTermChildren(
-    globalOptions?.coversCategory?.nodes[0].slug || '',
-  );
 
   return (
     <Layout withFooter={false}>
@@ -31,7 +28,6 @@ export default async function UteBuilder() {
           makes={makes}
           allLocations={allLocations}
           factoryOptions={factoryOptions}
-          uteCovers={uteCovers}
         />
       </StoreLocatorProvider>
     </Layout>
