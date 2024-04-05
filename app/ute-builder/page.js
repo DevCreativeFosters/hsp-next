@@ -2,8 +2,10 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import getNoCover from '@lib/api/get-no-cover';
 import { getStores } from '@lib/api/get-stores';
 import { getTermChildren } from '@lib/api/get-term-children';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Layout from '@components/layout/layout';
 import UteBuilderPage from '@components/ute-builder-page/ute-builder-page';
@@ -21,6 +23,9 @@ export default async function UteBuilder() {
     globalOptions?.compatibleFactoryOptions?.nodes[0].slug || '',
   );
 
+  const noCover = await getNoCover(globalOptions.noCoverCategory.nodes[0].slug);
+  const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+
   return (
     <Layout withFooter={false}>
       <StoreLocatorProvider>
@@ -29,6 +34,7 @@ export default async function UteBuilder() {
           allLocations={allLocations}
           factoryOptions={factoryOptions}
           globalOptions={globalOptions}
+          noCover={noCoverNormalized}
         />
       </StoreLocatorProvider>
     </Layout>
