@@ -1,10 +1,11 @@
 'use client';
 
-import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 import { useRef } from 'react';
 
-import Container from '@components/container/container';
+import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 
 import styles from './video-background-hero.module.scss';
 

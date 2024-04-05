@@ -1,19 +1,24 @@
 'use client';
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
+
+import StoreLocatorContext from '@contexts/store-locator';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+import useMobileVh from '@hooks/useMobileVh';
+
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
-import { findLocationsInRadius } from '@lib/store-locations';
-import normalizeStores from '@lib/normalize-stores';
 import {
   getPlaceDetails,
   getPlaceSuggestions,
   stringifySuggestion,
 } from '@lib/google-place';
-import useMobileVh from '@hooks/useMobileVh';
-import { useIsMobile } from '@hooks/useIsMobile';
-import StoreLocatorContext from '@contexts/store-locator';
+import normalizeStores from '@lib/normalize-stores';
+import { findLocationsInRadius } from '@lib/store-locations';
+
 import Button from '@components/button/button';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';

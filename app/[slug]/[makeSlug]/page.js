@@ -4,10 +4,8 @@ import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
-import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
-import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -42,7 +40,7 @@ export default async function CategoryPage({ params }) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData || shouldBeExcluded) {
+  if (!makeData || !categoryData) {
     return notFound();
   }
 

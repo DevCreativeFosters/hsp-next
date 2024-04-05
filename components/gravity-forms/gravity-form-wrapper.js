@@ -1,12 +1,21 @@
 'use client';
 
-import { useCallback, useState, useEffect, forwardRef } from 'react';
-import GForm from './gform';
-import { getGravityForm } from '@lib/api/get-gravity-form';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
+
 import { GravityFormProvider } from '@contexts/gravity-form';
 import { useGravityFormsStaticData } from '@contexts/gravity-forms-static-data';
 import { useUserContext } from '@contexts/user';
+
+import { getGravityForm } from '@lib/api/get-gravity-form';
+
 import Loading from '@components/loading/loading';
+
+import GForm from './gform';
+
+const storeNotListed = {
+  text: 'My store is not listed',
+  value: 'store-not-listed',
+};
 
 function GravityFormWrapperWithRef(
   {
@@ -58,6 +67,7 @@ function GravityFormWrapperWithRef(
             text: title,
             value: id,
           }));
+          field.choices.unshift(storeNotListed);
           break;
       }
     },
