@@ -43,6 +43,8 @@ export default function Builder({
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
   const [stepProducts, setStepProducts] = useState(products);
+  const [stepNumber, setStepNumber] = useState(1);
+  const [stepTitle, setStepTitle] = useState('Add your UTE covering');
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -198,6 +200,8 @@ export default function Builder({
             selectedProducts={selectedProducts}
             disabledProducts={disabledProducts}
             toggleProduct={toggleProduct}
+            stepNumber={stepNumber}
+            stepTitle={stepTitle}
           />
         )}
       </Container>

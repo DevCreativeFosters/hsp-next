@@ -1,11 +1,12 @@
 'use client';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import { SwiperSlide } from 'swiper/react';
-import clsx from 'clsx';
+
+import { getIcon } from '@lib/icons';
 
 import Carousel from '@components/carousel/carousel';
-import { getIcon } from '@lib/icons';
 
 import styles from './products-carousel.module.scss';
 
@@ -18,6 +19,8 @@ export default function ProductsCarousel({
   selectedProducts,
   disabledProducts,
   toggleProduct,
+  stepNumber,
+  stepTitle,
 }) {
   const slides = products?.map(product => {
     const productTitle = product.variantName;
@@ -55,7 +58,9 @@ export default function ProductsCarousel({
 
   return (
     <div className={clsx(styles.productsCarousel, className)}>
-      <h2 className={styles.title}>Add products to your vehicle</h2>
+      <h2 className={styles.title}>
+        <span className={styles.number}>Step {stepNumber}:</span> {stepTitle}
+      </h2>
       <Carousel
         className={styles.carousel}
         settings={{

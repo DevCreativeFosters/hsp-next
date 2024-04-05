@@ -12,7 +12,13 @@
 .title {
   @include paragraph-lg;
 
+  font-weight: 400;
   margin-block: 0 24px;
+}
+
+.number {
+  color: var(--color-primary-100);
+  font-weight: 600;
 }
 
 .carousel {
