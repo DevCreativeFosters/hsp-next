@@ -17,6 +17,7 @@ export default function UteBuilderPage({
   allLocations,
   factoryOptions,
   globalOptions,
+  noCover,
 }) {
   const [loaded, setLoaded] = useState(false);
   const [make, setMake] = useState({});
@@ -67,6 +68,7 @@ export default function UteBuilderPage({
         allLocations={allLocations}
         factoryOptions={factoryOptions}
         globalOptions={globalOptions}
+        noCover={noCover}
       />
     );
   }

@@ -6,6 +6,9 @@ import StoreLocatorContext from '@contexts/store-locator';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import getRelatedCovers from '@lib/api/get-related-covers';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
 import StoreList from '@components/store-list/store-list';
@@ -30,6 +33,7 @@ export default function Builder({
   model,
   makes,
   products,
+  noCover,
   allLocations,
   factoryOptions,
   globalOptions,
@@ -38,11 +42,38 @@ export default function Builder({
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
+  const [stepProducts, setStepProducts] = useState(products);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
-  // @todo: get covers media based on model, make and uteCovers child slug
-  const coversWithMedia = [];
+  useEffect(() => {
+    if (
+      !make.slug ||
+      !model.slug ||
+      !globalOptions ||
+      !globalOptions?.coversCategory
+    ) {
+      setStepProducts(products);
+
+      return;
+    }
+
+    getRelatedCovers(
+      make.slug,
+      model.slug,
+      globalOptions.coversCategory.nodes[0].slug,
+    ).then(relatedCovers => {
+      if (!relatedCovers) {
+        setStepProducts(products);
+
+        return;
+      }
+
+      const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+
+      setStepProducts([...normalizedCovers, ...noCover]);
+    });
+  }, [make, model, globalOptions, products, noCover]);
 
   const {
     location,
@@ -161,9 +192,9 @@ export default function Builder({
             />
           )}
         </div>
-        {make && model && products && (
+        {make && model && stepProducts.length > 0 && (
           <ProductsCarousel
-            products={products}
+            products={stepProducts}
             selectedProducts={selectedProducts}
             disabledProducts={disabledProducts}
             toggleProduct={toggleProduct}
