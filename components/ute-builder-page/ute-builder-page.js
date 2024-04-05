@@ -15,6 +15,7 @@ export default function UteBuilderPage({
   makes,
   allLocations,
   factoryOptions,
+  globalOptions,
 }) {
   const [loaded, setLoaded] = useState(false);
   const [make, setMake] = useState({});
@@ -79,10 +80,11 @@ export default function UteBuilderPage({
       <Builder
         make={make}
         model={model}
+        makes={makes}
         products={variantList}
         allLocations={allLocations}
         factoryOptions={factoryOptions}
-        makes={makes}
+        globalOptions={globalOptions}
       />
     );
   }

@@ -28,10 +28,11 @@ const DEFAULT_OPEN_SECTION = 'products';
 export default function Builder({
   make,
   model,
+  makes,
   products,
   allLocations,
-  makes,
   factoryOptions,
+  globalOptions,
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);

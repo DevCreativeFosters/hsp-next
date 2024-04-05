@@ -28,6 +28,7 @@ export default async function UteBuilder() {
           makes={makes}
           allLocations={allLocations}
           factoryOptions={factoryOptions}
+          globalOptions={globalOptions}
         />
       </StoreLocatorProvider>
     </Layout>
