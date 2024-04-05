@@ -1,15 +1,19 @@
 'use client';
 
-import { useEffect, useState, Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+
 import clsx from 'clsx';
 import Image from 'next/image';
+
 import DownloadButton from '@components/download-button/download-button';
-import BgPicture from '@assets/images/bg-concrete.webp';
+
 import BgPictureMobile from '@assets/images/bg-concrete-mobile.webp';
+import BgPicture from '@assets/images/bg-concrete.webp';
+
 import styles from './preview.module.scss';
 
 export default function Preview({
-  makeName,
+  make,
   model,
   selectedProducts,
   className,
@@ -62,7 +66,9 @@ export default function Preview({
         <DownloadButton
           className={styles.downloadButton}
           images={mergeImages}
-          fileName={`${makeName}_${modelName}_${new Date().toLocaleDateString()}`}
+          fileName={`${
+            make.name
+          }_${modelName}_${new Date().toLocaleDateString()}`}
         />
       )}
       {selectedProducts?.map(selectedProduct => {

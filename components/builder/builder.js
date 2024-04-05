@@ -26,11 +26,10 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 const DEFAULT_OPEN_SECTION = 'products';
 
 export default function Builder({
-  makeName,
+  make,
   model,
   products,
   allLocations,
-  uteCovers,
   makes,
   factoryOptions,
 }) {
@@ -140,9 +139,9 @@ export default function Builder({
               height: selectedStore ? topHeight : null,
             }}
           />
-          {makeName && model ? (
+          {make && model ? (
             <Preview
-              makeName={makeName}
+              make={make}
               model={model}
               selectedProducts={selectedProducts}
             >
@@ -161,7 +160,7 @@ export default function Builder({
             />
           )}
         </div>
-        {makeName && model && products && (
+        {make && model && products && (
           <ProductsCarousel
             products={products}
             selectedProducts={selectedProducts}

@@ -15,10 +15,9 @@ export default function UteBuilderPage({
   makes,
   allLocations,
   factoryOptions,
-  uteCovers,
 }) {
   const [loaded, setLoaded] = useState(false);
-  const [makeName, setMakeName] = useState('');
+  const [make, setMake] = useState({});
   const [model, setModel] = useState({});
   const [productVariants, setProductVariants] = useState([]);
   const { finalSelection, savedVehicleGlobal } = useVehicleContext();
@@ -40,11 +39,11 @@ export default function UteBuilderPage({
         const vehicle = JSON.parse(savedVehicle);
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
-        setMakeName(vehicle?.maker?.name);
+        setMake(vehicle?.maker);
         fetchData(model, maker);
       }
     } else {
-      setMakeName('');
+      setMake({});
       setModel({});
       setProductVariants([]);
     }
@@ -78,11 +77,10 @@ export default function UteBuilderPage({
   if (loaded) {
     return (
       <Builder
-        makeName={makeName}
+        make={make}
         model={model}
         products={variantList}
         allLocations={allLocations}
-        uteCovers={uteCovers}
         factoryOptions={factoryOptions}
         makes={makes}
       />
