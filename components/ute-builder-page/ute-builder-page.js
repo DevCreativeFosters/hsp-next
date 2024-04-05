@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Builder from '@components/builder/builder';
 import Container from '@components/container/container';
@@ -53,26 +54,7 @@ export default function UteBuilderPage({
   }, [finalSelection, savedVehicleGlobal]);
 
   const variantList = useMemo(() => {
-    const variants = [];
-
-    productVariants?.forEach(product => {
-      if (product.productFields.variants) {
-        product.productFields.variants.forEach(productVariant => {
-          const parentInherit = productVariant.parentInherit;
-
-          variants.push({
-            ...productVariant,
-            price:
-              productVariant.variantDetails.price ||
-              (parentInherit && product.productFields.price),
-            installationCost: product.productFields.installationCost,
-            productSlug: product.slug,
-          });
-        });
-      }
-    });
-
-    return variants;
+    return normalizeUteBuilderProducts(productVariants);
   }, [productVariants]);
 
   if (loaded) {
