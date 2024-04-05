@@ -27,6 +27,8 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   );
 
 const DEFAULT_OPEN_SECTION = 'products';
+const DEFAULT_STEP_NUMBER = 1;
+const DEFAULT_STEP_TITLE = 'Add your UTE covering';
 
 export default function Builder({
   make,
@@ -42,9 +44,10 @@ export default function Builder({
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
+  const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
-  const [stepNumber, setStepNumber] = useState(1);
-  const [stepTitle, setStepTitle] = useState('Add your UTE covering');
+  const [stepNumber, setStepNumber] = useState(DEFAULT_STEP_NUMBER);
+  const [stepTitle, setStepTitle] = useState(DEFAULT_STEP_TITLE);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -72,8 +75,10 @@ export default function Builder({
       }
 
       const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+      const covers = [...normalizedCovers, ...noCover];
 
-      setStepProducts([...normalizedCovers, ...noCover]);
+      setStepProducts(covers);
+      setCovers(covers);
     });
   }, [make, model, globalOptions, products, noCover]);
 
@@ -149,6 +154,22 @@ export default function Builder({
     },
     [selectedProducts, addProduct, removeProduct],
   );
+
+  useEffect(() => {
+    const coverSelected = selectedProducts.some(selectedProduct =>
+      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+    );
+
+    if (coverSelected) {
+      setStepProducts(products);
+      setStepNumber(2);
+      setStepTitle('Add your accessories');
+    } else {
+      setStepProducts(covers);
+      setStepNumber(DEFAULT_STEP_NUMBER);
+      setStepTitle(DEFAULT_STEP_TITLE);
+    }
+  }, [selectedProducts, setStepProducts, products, covers]);
 
   return (
     <div className={styles.builder}>
