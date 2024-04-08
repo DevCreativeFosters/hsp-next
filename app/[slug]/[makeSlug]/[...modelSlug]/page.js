@@ -38,8 +38,6 @@ export default async function CategoryPage({ params, searchParams }) {
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
 
-  console.log(modelSlug);
-
   let modelName;
   makes?.some(make => {
     const model = make.models?.find(model => model.slug === modelSlug)?.name;
