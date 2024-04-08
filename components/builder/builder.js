@@ -110,7 +110,12 @@ export default function Builder({
 
   const addProduct = useCallback(
     product => {
-      const newSelectedProducts = [...selectedProducts, product];
+      let newSelectedProducts = [...selectedProducts, product];
+
+      if (covers.some(cover => cover.productSlug === product.productSlug)) {
+        newSelectedProducts = [product, ...selectedProducts];
+      }
+
       const newDisabledProducts = [
         ...disabledProducts,
         ...getOtherProductsWithSameParent(
