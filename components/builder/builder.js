@@ -13,7 +13,9 @@ import normalizeUteBuilderProducts, {
 } from '@lib/normalize-ute-builder-products';
 
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
+import Button from '@components/button/button';
 import Container from '@components/container/container';
+import Modal from '@components/modal/modal';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
@@ -53,6 +55,7 @@ export default function Builder({
   const [compatibilityData, setCompatibilityData] = useState(null);
   const [stepNumber, setStepNumber] = useState(DEFAULT_STEP_NUMBER);
   const [stepTitle, setStepTitle] = useState(DEFAULT_STEP_TITLE);
+  const [showModal, setShowModal] = useState(false);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -129,6 +132,15 @@ export default function Builder({
       let newSelectedProducts = [...selectedProducts, product];
 
       if (covers.some(cover => cover.productSlug === product.productSlug)) {
+        const isCompatibleWithFactoryOptions = compatibilityData[
+          product.productSlug
+        ]?.factoryOptions.filter(option => option.slug === factoryOption.slug);
+
+        if (!isCompatibleWithFactoryOptions) {
+          setShowModal(true);
+          return;
+        }
+
         newSelectedProducts = [product, ...selectedProducts];
       }
 
@@ -198,6 +210,53 @@ export default function Builder({
       setStepTitle(DEFAULT_STEP_TITLE);
     }
   }, [selectedProducts, setStepProducts, products, covers]);
+
+  if (showModal) {
+    return (
+      <Modal
+        title="Factory Options Clash"
+        isVisible={true}
+        maxWidth={900}
+        onClose={() => {
+          setShowModal(false);
+        }}
+      >
+        <p>
+          For this selected HSP product to be installed, it requires the below
+          factory options to be removed.
+        </p>
+
+        <ol className={styles.list}>
+          <li>
+            <span className={styles.listItem}>{factoryOption.name}</span>
+          </li>
+        </ol>
+        <p>Do you want to proceed?</p>
+        <div className={styles.buttons}>
+          <Button
+            variant={'secondary'}
+            size={'large'}
+            className={styles.button}
+            onClick={() => {
+              setShowModal(false);
+              addProduct(selectedProducts[0]);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            size={'large'}
+            className={styles.button}
+            onClick={() => {
+              setShowModal(false);
+            }}
+          >
+            Accept
+          </Button>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <div className={styles.builder}>
