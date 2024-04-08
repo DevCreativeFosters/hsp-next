@@ -6,8 +6,11 @@ import StoreLocatorContext from '@contexts/store-locator';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import getCompatibilityData from '@lib/api/get-compatibility-data';
 import getRelatedCovers from '@lib/api/get-related-covers';
-import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+import normalizeUteBuilderProducts, {
+  normalizeCompatibilityData,
+} from '@lib/normalize-ute-builder-products';
 
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
@@ -46,6 +49,7 @@ export default function Builder({
   const [topHeight, setHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
+  const [compatibilityData, setCompatibilityData] = useState(null);
   const [stepNumber, setStepNumber] = useState(DEFAULT_STEP_NUMBER);
   const [stepTitle, setStepTitle] = useState(DEFAULT_STEP_TITLE);
   const topRef = useRef(null);
@@ -80,6 +84,17 @@ export default function Builder({
       setStepProducts(covers);
       setCovers(covers);
     });
+
+    getCompatibilityData(globalOptions.coversCategory.nodes[0].databaseId).then(
+      data => {
+        if (!data) {
+          return;
+        }
+
+        const normalizedData = normalizeCompatibilityData(data);
+        setCompatibilityData(normalizedData);
+      },
+    );
   }, [make, model, globalOptions, products, noCover]);
 
   const {
@@ -176,8 +191,6 @@ export default function Builder({
     }
   }, [selectedProducts, setStepProducts, products, covers]);
 
-  console.log(make, model);
-
   return (
     <div className={styles.builder}>
       <Container className={styles.container}>
@@ -226,6 +239,7 @@ export default function Builder({
           <ProductsCarousel
             products={stepProducts}
             selectedProducts={selectedProducts}
+            compatibilityData={compatibilityData}
             disabledProducts={disabledProducts}
             toggleProduct={toggleProduct}
             stepNumber={stepNumber}
