@@ -1,8 +1,12 @@
-import { useRef, useState, useCallback } from 'react';
-import AnimateHeight from 'react-animate-height';
+import { useCallback, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import Button from '@components/button/button';
+
 import styles from './mobile-menu-item.module.scss';
+
 export default function MobileMenuItem({
   label,
   url,
@@ -11,6 +15,8 @@ export default function MobileMenuItem({
 }) {
   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const containerRef = useRef();
+
+  console.log(subItems);
   const renderSubItems = useCallback(subItems => {
     if (!subItems?.length) return null;
 
@@ -33,7 +39,9 @@ export default function MobileMenuItem({
                 background="dark"
                 style={subItem.special ? (j === 0 ? { ...fontStyle } : {}) : {}}
                 className={
-                  subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
+                  subItem.subItems.length > 0
+                    ? styles.menuItemLabel
+                    : styles.menuSubItem
                 }
               >
                 {subItem.label}
