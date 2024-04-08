@@ -23,6 +23,7 @@ export default function UteBuilderPage({
   const [make, setMake] = useState(null);
   const [model, setModel] = useState(null);
   const [productVariants, setProductVariants] = useState(null);
+  const [factoryOption, setFactoryOption] = useState(null);
   const { finalSelection, savedVehicleGlobal } = useVehicleContext();
 
   useEffect(() => {
@@ -42,7 +43,10 @@ export default function UteBuilderPage({
         const vehicle = JSON.parse(savedVehicle);
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
+        const factoryOption = vehicle?.factoryOption || null;
         setMake(vehicle?.maker);
+        setFactoryOption(factoryOption);
+
         fetchData(model, maker);
       }
     } else {
@@ -67,6 +71,7 @@ export default function UteBuilderPage({
         products={variantList}
         allLocations={allLocations}
         factoryOptions={factoryOptions}
+        factoryOption={factoryOption}
         globalOptions={globalOptions}
         noCover={noCover}
       />

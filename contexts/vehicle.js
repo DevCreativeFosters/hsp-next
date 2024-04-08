@@ -45,20 +45,16 @@ export const VehicleProvider = ({ children }) => {
 
   const handleSave = useCallback(
     (params, reload) => {
-      const vehicleString = JSON.stringify({ maker, model });
+      const vehicleString = JSON.stringify({ maker, model, factoryOption });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ maker, model });
+      setSavedVehicleGlobal({ maker, model, factoryOption });
 
       setVehicleSelection({
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
-      });
-
-      setFactoryOption({
-        name: factoryOption?.name || undefined,
-        slug: factoryOption?.slug || undefined,
+        factoryOption: factoryOption?.name || undefined,
       });
 
       setDropdownOpened(false);
@@ -86,7 +82,7 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [maker, model, variant],
+    [maker, model, variant, factoryOption, router],
   );
 
   return (
@@ -107,7 +103,6 @@ export const VehicleProvider = ({ children }) => {
         handleVehicleReset,
         handleSave,
         setFactoryOption,
-        factoryOption,
       }}
     >
       {children}

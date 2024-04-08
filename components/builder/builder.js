@@ -41,6 +41,7 @@ export default function Builder({
   noCover,
   allLocations,
   factoryOptions,
+  factoryOption,
   globalOptions,
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
@@ -143,7 +144,14 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts, disabledProducts, products],
+    [
+      selectedProducts,
+      disabledProducts,
+      products,
+      factoryOption,
+      covers,
+      compatibilityData,
+    ],
   );
 
   const removeProduct = useCallback(
