@@ -20,9 +20,9 @@ export default function UteBuilderPage({
   noCover,
 }) {
   const [loaded, setLoaded] = useState(false);
-  const [make, setMake] = useState({});
-  const [model, setModel] = useState({});
-  const [productVariants, setProductVariants] = useState([]);
+  const [make, setMake] = useState(null);
+  const [model, setModel] = useState(null);
+  const [productVariants, setProductVariants] = useState(null);
   const { finalSelection, savedVehicleGlobal } = useVehicleContext();
 
   useEffect(() => {
@@ -46,9 +46,9 @@ export default function UteBuilderPage({
         fetchData(model, maker);
       }
     } else {
-      setMake({});
-      setModel({});
-      setProductVariants([]);
+      setMake(null);
+      setModel(null);
+      setProductVariants(null);
     }
 
     setLoaded(true);

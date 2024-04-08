@@ -53,8 +53,8 @@ export default function Builder({
 
   useEffect(() => {
     if (
-      !make.slug ||
-      !model.slug ||
+      !make?.slug ||
+      !model?.slug ||
       !globalOptions ||
       !globalOptions?.coversCategory
     ) {
@@ -175,6 +175,8 @@ export default function Builder({
       setStepTitle(DEFAULT_STEP_TITLE);
     }
   }, [selectedProducts, setStepProducts, products, covers]);
+
+  console.log(make, model);
 
   return (
     <div className={styles.builder}>
