@@ -239,7 +239,6 @@ export default function Builder({
           <ProductsCarousel
             products={stepProducts}
             selectedProducts={selectedProducts}
-            compatibilityData={compatibilityData}
             disabledProducts={disabledProducts}
             toggleProduct={toggleProduct}
             stepNumber={stepNumber}

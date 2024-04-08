@@ -17,7 +17,6 @@ export default function ProductsCarousel({
   className,
   products,
   selectedProducts,
-  compatibilityData,
   disabledProducts,
   toggleProduct,
   stepNumber,
