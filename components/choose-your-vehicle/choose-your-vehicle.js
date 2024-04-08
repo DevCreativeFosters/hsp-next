@@ -1,18 +1,24 @@
 'use client';
 
-import AnimateHeight from 'react-animate-height';
 import clsx from 'clsx';
-import constants from '@lib/constants';
-import { useVehicleSelection } from '@lib/use-vehicle-select';
+import AnimateHeight from 'react-animate-height';
+
 import { useVehicleContext } from '@contexts/vehicle';
+
 import { useIsMobile } from '@hooks/useIsMobile';
+
+import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
-import Select from '@components/form/select';
+import { useVehicleSelection } from '@lib/use-vehicle-select';
+
 import Button from '@components/button/button';
-import EditIcon from '@assets/icons/edit.svg';
-import CloseIcon from '@assets/icons/close.svg';
+import Select from '@components/form/select';
+
 import CancelIcon from '@assets/icons/cancel.svg';
+import CloseIcon from '@assets/icons/close.svg';
+import EditIcon from '@assets/icons/edit.svg';
 import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
+
 import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
@@ -74,11 +80,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         </Button>
 
         <div className={styles.resetButtonContainer}>
-          <button
-            className={styles.resetButton}
-            variant="primary"
-            onClick={handleVehicleReset}
-          >
+          <button className={styles.resetButton} onClick={handleVehicleReset}>
             <CancelIcon />
           </button>
         </div>
