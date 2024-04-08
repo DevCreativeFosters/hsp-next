@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { ReCaptchaProvider } from 'next-recaptcha-v3';
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 
@@ -61,9 +62,11 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
     >
       <body className="" data-rh="class">
-        <NextTopLoader color="#ed2935ff" />
-        {children}
-        <RootLayoutClient />
+        <ReCaptchaProvider useEnterprise>
+          <NextTopLoader color="#ed2935ff" />
+          {children}
+          <RootLayoutClient />
+        </ReCaptchaProvider>
       </body>
     </html>
   );

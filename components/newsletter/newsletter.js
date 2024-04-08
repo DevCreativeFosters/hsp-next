@@ -1,14 +1,19 @@
 'use client';
 
+import { useCallback, useRef, useState } from 'react';
+
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
 import Image from 'next/image';
+import ReCAPTCHA from 'react-google-recaptcha';
+
 import { sendBrevoNewsletterData } from '@lib/api/send-brevo-newsletter-data';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
+
 import IllustrationImage from '@assets/images/newsletter-illustration.webp';
+
 import styles from './newsletter.module.scss';
 
 export default function Newsletter({
@@ -20,51 +25,47 @@ export default function Newsletter({
   const [confirmationMessage, setConfirmationMessage] = useState(null);
   const [error, setError] = useState('');
   const [isBusy, setIsBusy] = useState(false);
-  const tokenRef = useRef(null);
+  const recaptchaRef = useRef(null);
   const formRef = useRef();
 
-  const onCaptchaSuccess = useCallback(token => {
-    tokenRef.current = token;
-    if (formRef.current?.checkValidity()) {
-      formRef.current.requestSubmit();
-    }
-  }, []);
-
-  const onFormSubmit = useCallback(
-    async ev => {
-      const token = tokenRef.current;
-      ev.preventDefault();
+  const handleSubmit = useCallback(
+    async token => {
       setIsBusy(true);
-      const response = await sendBrevoNewsletterData({
-        EMAIL: email,
-        locale: 'en',
-        'g-recaptcha-response': token,
-        // email_address_check: '',
-      });
+      try {
+        const response = await sendBrevoNewsletterData({
+          EMAIL: email,
+          locale: 'en',
+          'g-recaptcha-response': token,
+        });
 
-      if (response.success) {
-        setError(null);
-        setConfirmationMessage(response.message);
-        setEmail('');
-      } else if (response.errors) {
-        setConfirmationMessage(null);
-        setError(Object.values(response.errors).join(' '));
+        if (response.success) {
+          setError(null);
+          setConfirmationMessage(response.message);
+          setEmail('');
+        } else if (response.errors) {
+          setConfirmationMessage(null);
+          setError(Object.values(response.errors).join(' '));
+        }
+      } catch (err) {
+        console.error('Error submitting newsletter data:', err);
+        setError('Failed to submit form. Please try again.');
       }
       setIsBusy(false);
     },
     [email],
   );
 
-  useEffect(() => {
-    window.onCaptchaSuccess = onCaptchaSuccess;
-  }, [onCaptchaSuccess]);
+  const onCaptchaSuccess = useCallback(
+    token => {
+      if (formRef.current?.checkValidity()) {
+        handleSubmit(token);
+      }
+    },
+    [handleSubmit],
+  );
 
   return (
     <Container>
-      <Script
-        src={`https://www.google.com/recaptcha/enterprise.js?render=${googleRecaptchaSitekey}`}
-      />
-
       <div className={styles.wrapper}>
         {IllustrationImage && (
           <div className={styles.illustrationWrapper}>
@@ -91,7 +92,11 @@ export default function Newsletter({
             }}
           />
         )}
-        <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>
+        <form
+          ref={formRef}
+          onSubmit={e => e.preventDefault()}
+          className={styles.form}
+        >
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
               <div className={styles.confirmation}>{confirmationMessage}</div>
@@ -124,29 +129,31 @@ export default function Newsletter({
           ) : (
             <div>
               <Button
-                className={clsx(styles.button, 'g-recaptcha', {
-                  [styles.isBusy]: isBusy,
-                })}
-                type="submit"
+                type="button"
                 size="large"
-                data-sitekey={googleRecaptchaSitekey}
-                data-callback="onCaptchaSuccess"
-                data-action="requestSubmit"
-                onClick={ev => {
+                className={clsx(styles.button, { [styles.isBusy]: isBusy })}
+                disabled={isBusy}
+                isBusy={isBusy}
+                onClick={event => {
                   const isValid = formRef.current.reportValidity();
                   if (isValid) {
                     setIsBusy(true);
+                    recaptchaRef.current.execute();
                   } else {
-                    ev.preventDefault();
+                    event.preventDefault();
                   }
                 }}
-                disabled={isBusy}
-                isBusy={isBusy}
               >
                 Submit
               </Button>
             </div>
           )}
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            size="invisible"
+            sitekey={googleRecaptchaSitekey}
+            onChange={onCaptchaSuccess}
+          />
         </form>
       </div>
     </Container>

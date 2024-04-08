@@ -2,20 +2,26 @@
 
 import {
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import { ApolloClient, gql, InMemoryCache, useMutation } from '@apollo/client';
+
+import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
+import ReCAPTCHA from 'react-google-recaptcha';
+
+import useGravityForm from '@hooks/useGravityForm';
+
 import Button from '@components/button/button';
+import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
-import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
-import GravityFormsField from './field';
+
 import Confirmation from './confirmation';
-import useGravityForm from '@hooks/useGravityForm';
+import GravityFormsField from './field';
 import styles from './gform.module.scss';
 
 const SUBMIT_MUTATION = gql`
@@ -52,9 +58,12 @@ export default function GForm({
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
   const [fieldErrors, setFieldErrors] = useState([]);
+  const [captchaValue, setCaptchaValue] = useState(null);
+  const [captchaError, setCaptchaError] = useState('');
   const formFields = form.formFields?.nodes || [];
   const { state, dispatch } = useGravityForm();
   const submitRef = useRef(null);
+  const recaptchaRef = useRef(null);
 
   const resetForm = useCallback(() => {
     dispatch({
@@ -80,12 +89,28 @@ export default function GForm({
     client,
   });
 
+  const handleCaptcha = value => {
+    setCaptchaValue(value);
+  };
+
+  useEffect(() => {
+    if (captchaValue) {
+      setCaptchaError('');
+    } else {
+      setCaptchaError('Please confirm you are not a robot.');
+    }
+  }, [captchaValue]);
+
   const handleSubmit = async ev => {
     if (ev) ev.preventDefault();
-    if (isLoading) return;
+
+    if (isLoading || !captchaValue) {
+      return;
+    }
 
     setLoading(true);
     onSubmit();
+    setCaptchaError('');
 
     await formSubmitMutation({
       variables: {
@@ -160,21 +185,35 @@ export default function GForm({
             />
           ))}
 
+          <div className={styles.recaptcha}>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
+              onChange={handleCaptcha}
+              onExpired={() => setCaptchaValue(null)}
+            />
+            {captchaError && (
+              <div className={styles.errorMessage}>{captchaError}</div>
+            )}
+          </div>
+
           {attributes.withTermsAndConditions && (
             <DisclaimerTC fullWidth withBlockMargin />
           )}
 
-          <Button
-            ref={submitRef}
-            type="submit"
-            size="large"
-            className={styles.submitButton}
-            disabled={isLoading}
-            rightIcon={isLoading ? null : 'send'}
-            style={submitButton === false ? { display: 'none' } : {}}
-          >
-            {form?.button?.text || 'Submit'} {isLoading && <Loading />}
-          </Button>
+          <div className={styles.submitWrapper}>
+            <Button
+              ref={submitRef}
+              type="submit"
+              size="large"
+              className={styles.submitButton}
+              disabled={isLoading}
+              rightIcon={isLoading ? null : 'send'}
+              style={submitButton === false ? { display: 'none' } : {}}
+            >
+              {form?.button?.text || 'Submit'} {isLoading && <Loading />}
+            </Button>
+          </div>
         </>
       )}
     </Form>
