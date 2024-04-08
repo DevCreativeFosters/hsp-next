@@ -16,7 +16,6 @@ export default function MobileMenuItem({
   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const containerRef = useRef();
 
-  console.log(subItems);
   const renderSubItems = useCallback(subItems => {
     if (!subItems?.length) return null;
 
