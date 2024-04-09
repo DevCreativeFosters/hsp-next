@@ -33,8 +33,10 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   );
 
 const DEFAULT_OPEN_SECTION = 'products';
-const DEFAULT_STEP_NUMBER = 1;
-const DEFAULT_STEP_TITLE = 'Add your UTE covering';
+export const STEP_TITLES = {
+  1: 'Add your UTE covering',
+  2: 'Add your accessories',
+};
 
 export default function Builder({
   makes,
@@ -51,13 +53,19 @@ export default function Builder({
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [compatibilityData, setCompatibilityData] = useState(null);
-  const [stepNumber, setStepNumber] = useState(DEFAULT_STEP_NUMBER);
-  const [stepTitle, setStepTitle] = useState(DEFAULT_STEP_TITLE);
   const [showModal, setShowModal] = useState(false);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
-  const { maker: make, model, factoryOption } = useVehicleContext();
+  const {
+    maker: make,
+    model,
+    factoryOption,
+    stepNumber,
+    setStepNumber,
+    stepTitle,
+    setStepTitle,
+  } = useVehicleContext();
 
   useEffect(() => {
     if (
@@ -203,11 +211,11 @@ export default function Builder({
     if (coverSelected) {
       setStepProducts(products);
       setStepNumber(2);
-      setStepTitle('Add your accessories');
+      setStepTitle(STEP_TITLES[2]);
     } else {
       setStepProducts(covers);
-      setStepNumber(DEFAULT_STEP_NUMBER);
-      setStepTitle(DEFAULT_STEP_TITLE);
+      setStepNumber(1);
+      setStepTitle(STEP_TITLES[1]);
     }
   }, [selectedProducts, setStepProducts, products, covers]);
 
@@ -280,7 +288,7 @@ export default function Builder({
               height: selectedStore ? topHeight : null,
             }}
           />
-          {make && model ? (
+          {stepNumber > 0 ? (
             <Preview
               make={make}
               model={model}
@@ -301,7 +309,7 @@ export default function Builder({
             />
           )}
         </div>
-        {make && model && stepProducts.length > 0 && (
+        {stepNumber > 0 && stepProducts.length > 0 && (
           <ProductsCarousel
             products={stepProducts}
             selectedProducts={selectedProducts}
