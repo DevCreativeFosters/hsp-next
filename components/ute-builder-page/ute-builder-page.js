@@ -8,9 +8,6 @@ import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Builder from '@components/builder/builder';
-import Container from '@components/container/container';
-import Loading from '@components/loading/loading';
-import PageContainer from '@components/page-container/page-container';
 
 export default function UteBuilderPage({
   makes,
@@ -19,7 +16,6 @@ export default function UteBuilderPage({
   globalOptions,
   noCover,
 }) {
-  const [loaded, setLoaded] = useState(false);
   const [make, setMake] = useState(null);
   const [model, setModel] = useState(null);
   const [productVariants, setProductVariants] = useState(null);
@@ -54,35 +50,23 @@ export default function UteBuilderPage({
       setModel(null);
       setProductVariants(null);
     }
-
-    setLoaded(true);
   }, [finalSelection, savedVehicleGlobal]);
 
   const variantList = useMemo(() => {
     return normalizeUteBuilderProducts(productVariants);
   }, [productVariants]);
 
-  if (loaded) {
-    return (
-      <Builder
-        make={make}
-        model={model}
-        makes={makes}
-        products={variantList}
-        allLocations={allLocations}
-        factoryOptions={factoryOptions}
-        factoryOption={factoryOption}
-        globalOptions={globalOptions}
-        noCover={noCover}
-      />
-    );
-  }
-
   return (
-    <Container>
-      <PageContainer>
-        <Loading />
-      </PageContainer>
-    </Container>
+    <Builder
+      make={make}
+      model={model}
+      makes={makes}
+      products={variantList}
+      allLocations={allLocations}
+      factoryOptions={factoryOptions}
+      factoryOption={factoryOption}
+      globalOptions={globalOptions}
+      noCover={noCover}
+    />
   );
 }
