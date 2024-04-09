@@ -16,6 +16,8 @@ export const VehicleProvider = ({ children }) => {
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
+  const [stepNumber, setStepNumber] = useState(0);
+  const [stepTitle, setStepTitle] = useState('');
   const [factoryOption, setFactoryOption] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
@@ -58,6 +60,8 @@ export const VehicleProvider = ({ children }) => {
       });
 
       setDropdownOpened(false);
+      setStepNumber(1);
+      setStepTitle('Add your UTE covering');
 
       if (params) {
         const { mainCategorySlug, makeSlug, modelSlug } = params;
@@ -109,6 +113,10 @@ export const VehicleProvider = ({ children }) => {
         handleSave,
         factoryOption,
         setFactoryOption,
+        stepNumber,
+        setStepNumber,
+        stepTitle,
+        setStepTitle,
       }}
     >
       {children}
