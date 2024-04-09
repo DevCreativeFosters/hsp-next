@@ -13,11 +13,8 @@ import Select from '@components/form/select';
 
 import styles from './ute-choose-your-vehicle.module.scss';
 
-export default function UTEChooseYourVehicle({
-  makes: makersAndModels,
-  factoryOptions,
-}) {
-  const { maker, model, handleSave, setVehicleSelection, factoryOption } =
+export default function UTEChooseYourVehicle({ makes, factoryOptions }) {
+  const { maker, model, factoryOption, handleSave, setVehicleSelection } =
     useVehicleContext();
   const {
     handleMakerChange,
@@ -26,12 +23,7 @@ export default function UTEChooseYourVehicle({
     modelSelectOptions,
     factorySelectOptions,
     handleFactoryOptionsChange,
-  } = useVehicleSelection(
-    makersAndModels,
-    setVehicleSelection,
-    maker,
-    factoryOptions,
-  );
+  } = useVehicleSelection(makes, setVehicleSelection, maker, factoryOptions);
 
   return (
     <Container className={styles.container}>
@@ -51,7 +43,9 @@ export default function UTEChooseYourVehicle({
             options={makerSelectOptions}
             value={getValueOrSlug(maker) || null}
             dropdownInDocumentFlow
-            onChange={handleMakerChange}
+            onChange={(slug, name) => {
+              handleMakerChange(slug, name);
+            }}
             className={styles.select}
             name="maker"
           />
@@ -62,7 +56,9 @@ export default function UTEChooseYourVehicle({
             value={getValueOrSlug(model) || null}
             disabled={!modelSelectOptions.length}
             dropdownInDocumentFlow
-            onChange={handleModelChange}
+            onChange={(slug, name) => {
+              handleModelChange(slug, name);
+            }}
             className={styles.select}
             name="model"
           />
@@ -74,7 +70,9 @@ export default function UTEChooseYourVehicle({
               value={factoryOption?.slug || null}
               dropdownInDocumentFlow
               className={styles.select}
-              onChange={handleFactoryOptionsChange}
+              onChange={(value, label) => {
+                handleFactoryOptionsChange(value, label);
+              }}
               name="factoryOptions"
             />
           )}
