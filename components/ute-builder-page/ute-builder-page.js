@@ -16,11 +16,16 @@ export default function UteBuilderPage({
   globalOptions,
   noCover,
 }) {
-  const [make, setMake] = useState(null);
-  const [model, setModel] = useState(null);
   const [productVariants, setProductVariants] = useState(null);
-  const [factoryOption, setFactoryOption] = useState(null);
-  const { finalSelection, savedVehicleGlobal } = useVehicleContext();
+
+  const {
+    finalSelection,
+    savedVehicleGlobal,
+    setModel,
+    setMaker: setMake,
+    factoryOption,
+    setFactoryOption,
+  } = useVehicleContext();
 
   useEffect(() => {
     const fetchData = async (model, make) => {
@@ -58,8 +63,6 @@ export default function UteBuilderPage({
 
   return (
     <Builder
-      make={make}
-      model={model}
       makes={makes}
       products={variantList}
       allLocations={allLocations}
