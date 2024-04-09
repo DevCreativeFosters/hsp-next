@@ -61,6 +61,11 @@ export const VehicleProvider = ({ children }) => {
 
       if (params) {
         const { mainCategorySlug, makeSlug, modelSlug } = params;
+
+        if (!mainCategorySlug || !makeSlug || !modelSlug) {
+          return;
+        }
+
         const newRoute = routes.product(
           mainCategorySlug,
           makeSlug,
