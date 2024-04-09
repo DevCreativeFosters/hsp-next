@@ -13,10 +13,9 @@ import normalizeUteBuilderProducts, {
   normalizeCompatibilityData,
 } from '@lib/normalize-ute-builder-products';
 
+import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
-import Button from '@components/button/button';
 import Container from '@components/container/container';
-import Modal from '@components/modal/modal';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
@@ -239,107 +238,73 @@ export default function Builder({
     openSection === 'store' && !isMobile && isMapVisible,
   );
 
-  if (showModal) {
-    return (
-      <Modal
-        title="Factory Options Clash"
-        isVisible={true}
-        maxWidth={900}
-        onClose={() => {
-          setShowModal(false);
-        }}
-      >
-        <p>
-          For this selected HSP product to be installed, it requires the below
-          factory options to be removed.
-        </p>
-
-        <ol className={styles.list}>
-          <li>
-            <span className={styles.listItem}>{factoryOption.name}</span>
-          </li>
-        </ol>
-        <p>Do you want to proceed?</p>
-        <div className={styles.buttons}>
-          <Button
-            variant={'secondary'}
-            size={'large'}
-            onClick={() => {
-              setShowModal(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            size={'large'}
-            onClick={() => {
-              setFactoryOption(null);
-              setSelectedProducts([currentProduct]);
-              setShowModal(false);
-            }}
-          >
-            Accept
-          </Button>
-        </div>
-      </Modal>
-    );
-  }
-
   return (
-    <div className={styles.builder}>
-      <Container className={styles.container}>
-        <div className={styles.top} ref={topRef}>
-          <Sidebar
-            openSection={openSection}
-            setOpenSection={setOpenSection}
-            selectedProducts={selectedProducts}
-            removeProduct={removeProduct}
-            isMobile={isMobile}
-            allLocations={allLocations}
-          />
-          <StoreList
-            className={styles.results}
-            items={filteredLocations}
-            show={isInlineResultListVisible}
-            onSelect={item => {
-              setSelectedStore(item);
-            }}
-            style={{
-              height: selectedStore ? topHeight : null,
-            }}
-          />
-          {stepNumber > 0 ? (
-            <Preview
-              make={make}
-              model={model}
-              selectedProducts={selectedProducts}
-            >
-              {isInlineMapVisible && (
-                <StoreLocatorMap
-                  className={styles.map}
-                  locations={filteredLocations}
-                  onMarkerClick={setSelectedStore}
+    <>
+      {showModal ? (
+        <ClashModal
+          setShowModal={setShowModal}
+          factoryOption={factoryOption}
+          currentProduct={currentProduct}
+          setFactoryOption={setFactoryOption}
+          setSelectedProducts={setSelectedProducts}
+        />
+      ) : (
+        <div className={styles.builder}>
+          <Container className={styles.container}>
+            <div className={styles.top} ref={topRef}>
+              <Sidebar
+                openSection={openSection}
+                setOpenSection={setOpenSection}
+                selectedProducts={selectedProducts}
+                removeProduct={removeProduct}
+                isMobile={isMobile}
+                allLocations={allLocations}
+              />
+              <StoreList
+                className={styles.results}
+                items={filteredLocations}
+                show={isInlineResultListVisible}
+                onSelect={item => {
+                  setSelectedStore(item);
+                }}
+                style={{
+                  height: selectedStore ? topHeight : null,
+                }}
+              />
+              {stepNumber > 0 ? (
+                <Preview
+                  make={make}
+                  model={model}
+                  selectedProducts={selectedProducts}
+                >
+                  {isInlineMapVisible && (
+                    <StoreLocatorMap
+                      className={styles.map}
+                      locations={filteredLocations}
+                      onMarkerClick={setSelectedStore}
+                    />
+                  )}
+                </Preview>
+              ) : (
+                <UTEChooseYourVehicle
+                  makes={makes}
+                  factoryOptions={factoryOptions}
                 />
               )}
-            </Preview>
-          ) : (
-            <UTEChooseYourVehicle
-              makes={makes}
-              factoryOptions={factoryOptions}
-            />
-          )}
+            </div>
+            {stepNumber > 0 && stepProducts.length > 0 && (
+              <ProductsCarousel
+                products={stepProducts}
+                selectedProducts={selectedProducts}
+                disabledProducts={disabledProducts}
+                toggleProduct={toggleProduct}
+                stepNumber={stepNumber}
+                stepTitle={stepTitle}
+              />
+            )}
+          </Container>
         </div>
-        {stepNumber > 0 && stepProducts.length > 0 && (
-          <ProductsCarousel
-            products={stepProducts}
-            selectedProducts={selectedProducts}
-            disabledProducts={disabledProducts}
-            toggleProduct={toggleProduct}
-            stepNumber={stepNumber}
-            stepTitle={stepTitle}
-          />
-        )}
-      </Container>
-    </div>
+      )}
+    </>
   );
 }
