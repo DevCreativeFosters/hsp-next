@@ -8,6 +8,8 @@ import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
+import { STEP_TITLES } from '@components/builder/builder';
+
 const VehicleContext = createContext();
 
 export const VehicleProvider = ({ children }) => {
@@ -61,7 +63,7 @@ export const VehicleProvider = ({ children }) => {
 
       setDropdownOpened(false);
       setStepNumber(1);
-      setStepTitle('Add your UTE covering');
+      setStepTitle(STEP_TITLES[1]);
 
       if (params) {
         const { mainCategorySlug, makeSlug, modelSlug } = params;
