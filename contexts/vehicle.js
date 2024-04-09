@@ -40,6 +40,8 @@ export const VehicleProvider = ({ children }) => {
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
     setFactoryOption(null);
+    setStepNumber(0);
+    setStepTitle('');
 
     const slug = pathname.split('/products/')[1]?.split('/')[0];
     if (slug) {
