@@ -28,7 +28,7 @@ export default function UteBuilderPage({
   } = useVehicleContext();
 
   useEffect(() => {
-    const fetchData = async (model, make) => {
+    const setModelAndProducts = async (model, make) => {
       const response = await fetch(
         `/api/ute-builder?model=${model}&make=${make}`,
       );
@@ -48,7 +48,7 @@ export default function UteBuilderPage({
         setMake(vehicle?.maker);
         setFactoryOption(factoryOption);
 
-        fetchData(model, maker);
+        setModelAndProducts(model, maker);
       }
     } else {
       setMake(null);
