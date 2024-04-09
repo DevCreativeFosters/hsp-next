@@ -3,6 +3,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import StoreLocatorContext from '@contexts/store-locator';
+import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
@@ -36,14 +37,11 @@ const DEFAULT_STEP_NUMBER = 1;
 const DEFAULT_STEP_TITLE = 'Add your UTE covering';
 
 export default function Builder({
-  make,
-  model,
   makes,
   products,
   noCover,
   allLocations,
   factoryOptions,
-  factoryOption,
   globalOptions,
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
@@ -58,6 +56,8 @@ export default function Builder({
   const [showModal, setShowModal] = useState(false);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
+
+  const { maker: make, model, factoryOption } = useVehicleContext();
 
   useEffect(() => {
     if (
@@ -239,7 +239,6 @@ export default function Builder({
             className={styles.button}
             onClick={() => {
               setShowModal(false);
-              addProduct(selectedProducts[0]);
             }}
           >
             Cancel
