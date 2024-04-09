@@ -102,6 +102,7 @@ export const VehicleProvider = ({ children }) => {
         setDropdownOpened,
         handleVehicleReset,
         handleSave,
+        factoryOption,
         setFactoryOption,
       }}
     >
