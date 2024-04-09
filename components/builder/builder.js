@@ -54,6 +54,8 @@ export default function Builder({
   const [stepProducts, setStepProducts] = useState(products);
   const [compatibilityData, setCompatibilityData] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [coverSelected, setCoverSelected] = useState(false);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -62,10 +64,21 @@ export default function Builder({
     model,
     factoryOption,
     stepNumber,
-    setStepNumber,
     stepTitle,
+    setStepNumber,
     setStepTitle,
+    setFactoryOption,
   } = useVehicleContext();
+
+  const {
+    location,
+    searchGeolocation,
+    filteredLocations,
+    selectedStore,
+    setSelectedStore,
+    isMapVisible,
+    radius,
+  } = useContext(StoreLocatorContext);
 
   useEffect(() => {
     if (
@@ -74,8 +87,6 @@ export default function Builder({
       !globalOptions ||
       !globalOptions?.coversCategory
     ) {
-      setStepProducts(products);
-
       return;
     }
 
@@ -85,8 +96,6 @@ export default function Builder({
       globalOptions.coversCategory.nodes[0].slug,
     ).then(relatedCovers => {
       if (!relatedCovers) {
-        setStepProducts(products);
-
         return;
       }
 
@@ -107,24 +116,36 @@ export default function Builder({
         setCompatibilityData(normalizedData);
       },
     );
-  }, [make, model, globalOptions, products, noCover]);
+  }, [make, model, globalOptions, noCover]);
 
-  const {
-    location,
-    searchGeolocation,
-    filteredLocations,
-    selectedStore,
-    setSelectedStore,
-    isMapVisible,
-    radius,
-  } = useContext(StoreLocatorContext);
+  useEffect(() => {
+    if (stepNumber === 0) {
+      return;
+    }
 
-  const isInlineResultListVisible = Boolean(
-    openSection === 'store' && location && searchGeolocation && radius,
-  );
-  const isInlineMapVisible = Boolean(
-    openSection === 'store' && !isMobile && isMapVisible,
-  );
+    const newStep = coverSelected ? 2 : 1;
+
+    setStepNumber(newStep);
+    setStepTitle(STEP_TITLES[newStep]);
+  }, [stepNumber, coverSelected, setStepNumber, setStepTitle]);
+
+  useEffect(() => {
+    const coverSelected = selectedProducts.some(selectedProduct =>
+      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+    );
+
+    setCoverSelected(coverSelected);
+  }, [selectedProducts, covers, setCoverSelected]);
+
+  useEffect(() => {
+    if (stepNumber === 1) {
+      setStepProducts(covers);
+    }
+
+    if (stepNumber === 2) {
+      setStepProducts(products);
+    }
+  }, [stepNumber, products, setStepProducts, covers]);
 
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
@@ -140,6 +161,13 @@ export default function Builder({
       let newSelectedProducts = [...selectedProducts, product];
 
       if (covers.some(cover => cover.productSlug === product.productSlug)) {
+        if (!factoryOption) {
+          newSelectedProducts = [product, ...selectedProducts];
+          setSelectedProducts(newSelectedProducts);
+
+          return;
+        }
+
         const isCompatibleWithFactoryOptions = compatibilityData[
           product.productSlug
         ]?.factoryOptions.filter(option => option.slug === factoryOption.slug);
@@ -196,6 +224,7 @@ export default function Builder({
 
   const toggleProduct = useCallback(
     product => {
+      setCurrentProduct(product);
       selectedProducts.includes(product)
         ? removeProduct(product)
         : addProduct(product);
@@ -203,21 +232,12 @@ export default function Builder({
     [selectedProducts, addProduct, removeProduct],
   );
 
-  useEffect(() => {
-    const coverSelected = selectedProducts.some(selectedProduct =>
-      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
-    );
-
-    if (coverSelected) {
-      setStepProducts(products);
-      setStepNumber(2);
-      setStepTitle(STEP_TITLES[2]);
-    } else {
-      setStepProducts(covers);
-      setStepNumber(1);
-      setStepTitle(STEP_TITLES[1]);
-    }
-  }, [selectedProducts, setStepProducts, products, covers]);
+  const isInlineResultListVisible = Boolean(
+    openSection === 'store' && location && searchGeolocation && radius,
+  );
+  const isInlineMapVisible = Boolean(
+    openSection === 'store' && !isMobile && isMapVisible,
+  );
 
   if (showModal) {
     return (
@@ -244,7 +264,6 @@ export default function Builder({
           <Button
             variant={'secondary'}
             size={'large'}
-            className={styles.button}
             onClick={() => {
               setShowModal(false);
             }}
@@ -253,8 +272,9 @@ export default function Builder({
           </Button>
           <Button
             size={'large'}
-            className={styles.button}
             onClick={() => {
+              setFactoryOption(null);
+              setSelectedProducts([currentProduct]);
               setShowModal(false);
             }}
           >
