@@ -252,6 +252,7 @@ export default function Builder({
           currentProduct={currentProduct}
           setFactoryOption={setFactoryOption}
           setSelectedProducts={setSelectedProducts}
+          selectedProducts={selectedProducts}
         />
       ) : (
         <div className={styles.builder}>

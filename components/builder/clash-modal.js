@@ -6,6 +6,7 @@ export default function ClashModal({
   setShowModal,
   factoryOption,
   currentProduct,
+  selectedProducts,
   setFactoryOption,
   setSelectedProducts,
 }) {
@@ -43,7 +44,7 @@ export default function ClashModal({
           size={'large'}
           onClick={() => {
             setFactoryOption(null);
-            setSelectedProducts([currentProduct]);
+            setSelectedProducts([currentProduct, ...selectedProducts]);
             setShowModal(false);
           }}
         >
