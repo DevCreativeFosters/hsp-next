@@ -1,10 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import YouTube from 'react-youtube';
+
 import clsx from 'clsx';
+import YouTube from 'react-youtube';
+
 import { ArrowTriplet } from '@components/video-youtube/arrow-triplet';
 import { YoutubeCloseButton } from '@components/video-youtube/youtube-close-button';
+
 import styles from './video-youtube.module.scss';
 
 const SEEK_INTERVAL = 5; // [s]
@@ -93,7 +96,7 @@ export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
     rafHandler.current = requestAnimationFrame(() => {
       restorePreviouslyActiveElement();
     });
-  }, [isActive, iframeId]);
+  }, [iframeId, isActive]);
 
   useEffect(
     function bindKeyboardEvents() {
@@ -118,7 +121,7 @@ export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
         }
       } catch (err) {}
     },
-    [player, isActive],
+    [isActive, player],
   );
 
   useEffect(

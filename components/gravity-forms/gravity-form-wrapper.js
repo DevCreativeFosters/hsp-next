@@ -119,7 +119,7 @@ function GravityFormWrapperWithRef(
           }
         });
     },
-    [user, replaceFieldValue, replaceFieldValueWithSystemData],
+    [replaceFieldValue, replaceFieldValueWithSystemData, user],
   );
 
   const fetchGfForm = useCallback(async () => {

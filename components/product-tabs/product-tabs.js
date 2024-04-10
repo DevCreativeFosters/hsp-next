@@ -1,11 +1,15 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
-import Wysiwyg from '@components/wysiwyg/wysiwyg';
+import Image from 'next/image';
+
 import { scrollIntoViewHorizontally } from '@lib/helpers';
+
 import DownloadFileButton from '@components/download-file-button/download-file-button';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './product-tabs.module.scss';
 
 export default function ProductTabs({
@@ -29,11 +33,11 @@ export default function ProductTabs({
       ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
     }),
     [
-      featuresDescription,
       featuresBoxes,
-      specificationDescription,
-      specificationContent,
+      featuresDescription,
       manualsLinks,
+      specificationContent,
+      specificationDescription,
     ],
   );
 

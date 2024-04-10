@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
-import Radio from '@components/form/radio';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Radio from '@components/form/radio';
 
 const DEFAULT_VALUE = '';
 
@@ -12,7 +14,7 @@ export default function RadioField({ form, field, fieldErrors }) {
   const value = fieldValue?.value || DEFAULT_VALUE;
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   return (
     <Radio

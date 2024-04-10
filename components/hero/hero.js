@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { clsx } from 'clsx';
-import Container from '@components/container/container';
+import Image from 'next/image';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 
 import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
@@ -75,7 +77,7 @@ export default function Hero({ slides, transition = 'fade' }) {
         setPreloadedAssets(arr);
       }
     },
-    [preloadedAssets, currentSlideIndex, slides],
+    [currentSlideIndex, preloadedAssets, slides],
   );
 
   return (

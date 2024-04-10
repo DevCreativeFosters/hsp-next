@@ -1,11 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import Image from 'next/image';
+
 import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
+
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({ images }) {
@@ -31,7 +35,7 @@ export default function ProductImageCarousel({ images }) {
       backgroundPosition: backgroundPosition,
       backgroundRepeat: 'no-repeat',
     };
-  }, [selectedImage, zoomed, backgroundPosition]);
+  }, [backgroundPosition, selectedImage, zoomed]);
 
   const handleZoomEnter = useCallback(() => {
     setZoomed(true);
@@ -106,7 +110,7 @@ export default function ProductImageCarousel({ images }) {
       document.body.style.overflowY = 'auto';
       document.removeEventListener('touchmove', handleTouchMoveDocument);
     };
-  }, [isMobile, zoomed, handleTouchMoveDocument]);
+  }, [handleTouchMoveDocument, isMobile, zoomed]);
 
   const isNavigationVisible = images?.length > 4;
 
@@ -123,8 +127,9 @@ export default function ProductImageCarousel({ images }) {
         />
       </div>
     );
+
     return itemTemplate;
-  }, []);
+  }, [handleThumbnailClick]);
 
   return (
     <div className={styles.container}>

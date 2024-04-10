@@ -54,7 +54,6 @@ export default function Builder({
   const [compatibilityData, setCompatibilityData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
-  const [coverSelected, setCoverSelected] = useState(false);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -64,9 +63,11 @@ export default function Builder({
     factoryOption,
     stepNumber,
     stepTitle,
+    selectedCover,
     setStepNumber,
     setStepTitle,
     setFactoryOption,
+    setSelectedCover,
   } = useVehicleContext();
 
   const {
@@ -115,26 +116,26 @@ export default function Builder({
         setCompatibilityData(normalizedData);
       },
     );
-  }, [make, model, globalOptions, noCover]);
+  }, [globalOptions, make, model, noCover]);
 
   useEffect(() => {
     if (stepNumber === 0) {
       return;
     }
 
-    const newStep = coverSelected ? 2 : 1;
+    const newStep = selectedCover ? 2 : 1;
 
     setStepNumber(newStep);
     setStepTitle(STEP_TITLES[newStep]);
-  }, [stepNumber, coverSelected, setStepNumber, setStepTitle]);
+  }, [selectedCover, setStepNumber, setStepTitle, stepNumber]);
 
   useEffect(() => {
-    const coverSelected = selectedProducts.some(selectedProduct =>
+    const isCoverSelected = selectedProducts.some(selectedProduct =>
       covers.some(cover => cover.productSlug === selectedProduct.productSlug),
     );
 
-    setCoverSelected(coverSelected);
-  }, [selectedProducts, covers, setCoverSelected]);
+    setSelectedCover(isCoverSelected ? currentProduct : null);
+  }, [covers, currentProduct, selectedProducts, setSelectedCover]);
 
   useEffect(() => {
     if (stepNumber === 1) {
@@ -144,7 +145,7 @@ export default function Builder({
     if (stepNumber === 2) {
       setStepProducts(products);
     }
-  }, [stepNumber, products, setStepProducts, covers]);
+  }, [covers, products, setStepProducts, stepNumber]);
 
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
@@ -192,12 +193,12 @@ export default function Builder({
       setDisabledProducts(newDisabledProducts);
     },
     [
-      selectedProducts,
-      disabledProducts,
-      products,
-      factoryOption,
-      covers,
       compatibilityData,
+      covers,
+      disabledProducts,
+      factoryOption,
+      products,
+      selectedProducts,
     ],
   );
 
@@ -218,7 +219,7 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts, disabledProducts, products],
+    [disabledProducts, products, selectedProducts],
   );
 
   const toggleProduct = useCallback(
@@ -228,7 +229,7 @@ export default function Builder({
         ? removeProduct(product)
         : addProduct(product);
     },
-    [selectedProducts, addProduct, removeProduct],
+    [addProduct, removeProduct, selectedProducts],
   );
 
   const isInlineResultListVisible = Boolean(

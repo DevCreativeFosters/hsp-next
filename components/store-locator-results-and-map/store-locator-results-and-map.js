@@ -30,7 +30,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
       const locationList = normalizeStores(allLocations, searchGeolocation);
       setFilteredLocations(locationList);
     },
-    [allLocations, setFilteredLocations, searchGeolocation],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   useEffect(
@@ -60,7 +60,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         setFilteredLocations(locationList);
       }
     },
-    [searchGeolocation, allLocations, setFilteredLocations],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (

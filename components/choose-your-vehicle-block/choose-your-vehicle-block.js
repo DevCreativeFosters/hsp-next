@@ -1,16 +1,21 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
+
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
+
 import { useVehicleContext } from '@contexts/vehicle';
+
 import constants from '@lib/constants';
+import { getValueOrSlug } from '@lib/helpers';
 import { trimSlash } from '@lib/trim-slash';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
-import { getValueOrSlug } from '@lib/helpers';
+
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
-import Button from '@components/button/button';
+
 import styles from '../builder/ute-choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicleBlock({
@@ -51,7 +56,7 @@ export default function ChooseYourVehicleBlock({
         }
       });
     },
-    [variantSlug],
+    [setVariant, variantSlug, variantsNormalized],
   );
 
   return (

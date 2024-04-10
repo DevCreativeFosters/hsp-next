@@ -1,11 +1,14 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
+
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from './tile.module.scss';
+
 import routes from '@lib/routes';
+
+import styles from './tile.module.scss';
 
 export default function Tile({
   title,
@@ -54,7 +57,7 @@ export default function Tile({
         {children}
       </Link>
     ),
-    [urlNormalized, link],
+    [link, urlNormalized],
   );
 
   const TheImage = useMemo(

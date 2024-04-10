@@ -1,9 +1,12 @@
 'use client';
 
-import InputWrapper from '@components/gravity-forms/input-wrapper';
 import { useEffect, useMemo } from 'react';
-import Input from '@components/form/input';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Input from '@components/form/input';
+import InputWrapper from '@components/gravity-forms/input-wrapper';
+
 import { initializeState, onComplexFieldChange } from './_helpers';
 
 const DEFAULT_VALUE = '';
@@ -17,7 +20,7 @@ export default function NameField({ form, field, fieldErrors }) {
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 

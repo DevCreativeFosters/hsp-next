@@ -70,7 +70,7 @@ export default function StoreLocatorSearch({ allLocations }) {
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
     },
-    [setSearchGeolocation, sessionToken],
+    [sessionToken, setSearchGeolocation],
   );
 
   const goBack = useCallback(() => {
@@ -79,7 +79,7 @@ export default function StoreLocatorSearch({ allLocations }) {
     } else if (isFullScreen) {
       setIsFullScreen(false);
     }
-  }, [viewMode, isFullScreen]);
+  }, [isFullScreen, viewMode]);
 
   const isInlineResultListVisible = Boolean(
     location && searchGeolocation && isFullScreen && isMobile,
@@ -111,7 +111,7 @@ export default function StoreLocatorSearch({ allLocations }) {
         isMounted = false;
       };
     },
-    [locationInput, location, sessionToken],
+    [location, locationInput, sessionToken],
   );
 
   useEffect(
@@ -141,7 +141,7 @@ export default function StoreLocatorSearch({ allLocations }) {
       }
       return () => {};
     },
-    [searchGeolocation, allLocations],
+    [allLocations, searchGeolocation],
   );
 
   return (

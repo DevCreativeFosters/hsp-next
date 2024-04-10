@@ -1,19 +1,24 @@
 'use client';
 
-import { trimSlash } from '@lib/trim-slash';
-import { useCallback, useContext, useEffect, useState, useRef } from 'react';
-import useMobileVh from '@hooks/useMobileVh';
-import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import Select from '@components/form/select';
-import StoreList from '@components/store-list/store-list';
-import ResultsStoreTile from '@components/store-tile/result-store-tile';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import Button from '@components/button/button';
-import EnquiryModal from './enquiry-modal';
+
+import useMobileVh from '@hooks/useMobileVh';
+
 import { formatPrice } from '@lib/helpers';
 import { findLocationsInRadius } from '@lib/store-locations';
+import { trimSlash } from '@lib/trim-slash';
+
+import Button from '@components/button/button';
+import Select from '@components/form/select';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import ResultsStoreTile from '@components/store-tile/result-store-tile';
+
 import styles from './enquiry-form.module.scss';
+import EnquiryModal from './enquiry-modal';
 
 export default function EnquiryForm({
   enquiryFormId,
@@ -75,7 +80,7 @@ export default function EnquiryForm({
         );
       }
     },
-    [searchGeolocation, filteredLocations, setFilteredStores],
+    [filteredLocations, searchGeolocation, setFilteredStores],
   );
 
   useMobileVh();
@@ -90,7 +95,7 @@ export default function EnquiryForm({
         onVariantChangeCallback(trimSlash(variantSlug));
       }
     },
-    [variants, onVariantChangeCallback],
+    [onVariantChangeCallback, variants],
   );
 
   const handleOpenModal = () => {

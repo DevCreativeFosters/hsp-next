@@ -1,21 +1,25 @@
 'use client';
 
-import { useState, useContext, useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
+
+import StoreLocatorContext from '@contexts/store-locator';
+
 import {
-  getPlaceSuggestions,
   getPlaceGeoLocation,
+  getPlaceSuggestions,
   stringifySuggestion,
 } from '@lib/google-place';
-import StoreLocatorContext from '@contexts/store-locator';
+import normalizeStores from '@lib/normalize-stores';
 import { findLocationsInRadius } from '@lib/store-locations';
+
+import Switch from '@components/form/switch';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
-import Switch from '@components/form/switch';
 
 import styles from './store-search-controls.module.scss';
-import normalizeStores from '@lib/normalize-stores';
 
 export default function StoreSearchControls({
   label = 'Locate your store',
@@ -87,7 +91,7 @@ export default function StoreSearchControls({
         isMounted = false;
       };
     },
-    [locationInput, location],
+    [location, locationInput],
   );
 
   useEffect(
@@ -104,7 +108,7 @@ export default function StoreSearchControls({
         setFilteredLocations(locationList);
       };
     },
-    [searchGeolocation, setFilteredLocations, allLocations],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (

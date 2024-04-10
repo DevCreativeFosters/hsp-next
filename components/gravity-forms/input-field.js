@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react';
-import Input from '@components/form/input';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Input from '@components/form/input';
 
 const DEFAULT_VALUE = '';
 
@@ -65,7 +67,7 @@ export default function InputField({ form, field, fieldErrors }) {
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   useEffect(
     function syncFieldState() {

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
-import Textarea from '@components/form/textarea';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Textarea from '@components/form/textarea';
 
 const DEFAULT_VALUE = '';
 
@@ -12,7 +14,7 @@ export default function TextAreaField({ form, field, fieldErrors }) {
   const value = fieldValue?.value || DEFAULT_VALUE;
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   return (
     <Textarea

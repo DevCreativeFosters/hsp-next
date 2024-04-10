@@ -1,13 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { usePathname, useRouter } from 'next/navigation';
+
 import { useVehicleContext } from '@contexts/vehicle';
-import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
+
 import { setCookie } from '@lib/cookies';
 import { getValueOrSlug } from '@lib/helpers';
-import routes from '@lib/routes';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+import routes from '@lib/routes';
+
+import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
 export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const [currentSavedVehicle, setCurrentSavedVehicle] = useState({});
@@ -42,7 +46,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
         setCurrentSavedVehicle(JSON.parse(savedVehicle));
       }
     },
-    [savedVehicleGlobal, finalSelection],
+    [finalSelection, savedVehicleGlobal],
   );
 
   useEffect(
@@ -78,13 +82,13 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       }
     },
     [
-      currentSavedVehicle,
       currentProduct,
+      currentSavedVehicle,
       maker,
       model,
       pathname,
-      vehicleNotMatching,
       updateVehicleSelected,
+      vehicleNotMatching,
     ],
   );
 
@@ -117,7 +121,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
         }
       }
     }
-  }, [pathname, currentProduct, currentSavedVehicle, maker, model]);
+  }, [currentProduct, currentSavedVehicle, maker, model, pathname]);
 
   const applyChangedVehicle = useCallback(
     changeVehicle => {
@@ -171,12 +175,12 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
     [
       currentMakeList,
       currentModelList,
+      currentProduct,
       maker,
       model,
+      router,
       setSavedVehicleGlobal,
       setVehicleSelection,
-      currentProduct,
-      router,
     ],
   );
 
@@ -312,7 +316,7 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
         setRoute(productRoute);
       }
     },
-    [maker, model, currentProduct.mainCategory?.value],
+    [currentProduct.mainCategory?.value, maker, model],
   );
 
   const items = [

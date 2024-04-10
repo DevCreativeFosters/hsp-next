@@ -1,14 +1,18 @@
 'use client';
 
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+
+import Button from '@components/button/button';
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import { useCallback, useRef, useEffect, useMemo } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import Tile from '@components/tile/tile';
-import Container from '@components/container/container';
-import Button from '@components/button/button';
-import { useIsMobile } from '@hooks/useIsMobile';
-import 'swiper/css';
+
 import styles from './posts-carousel.module.scss';
 
 export default function PostsCarousel({ title, description, button, posts }) {
@@ -26,7 +30,7 @@ export default function PostsCarousel({ title, description, button, posts }) {
           return acc;
         }, [])
       : [];
-  }, [posts, groupSize]);
+  }, [groupSize, posts]);
 
   useEffect(
     function makeSlidesSameHeight() {

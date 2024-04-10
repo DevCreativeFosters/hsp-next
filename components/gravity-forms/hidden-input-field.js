@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import useGravityForm from '@hooks/useGravityForm';
 
 const DEFAULT_VALUE = '';
@@ -24,7 +25,7 @@ export default function HiddenInputField({ form, field, hiddenInputs }) {
         }
       });
     },
-    [hiddenInputs, id, inputName, dispatch],
+    [dispatch, hiddenInputs, id, inputName],
   );
 
   return (

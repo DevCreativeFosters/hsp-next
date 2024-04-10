@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
+
+import useGravityForm from '@hooks/useGravityForm';
+
 import Input from '@components/form/input';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
-import useGravityForm from '@hooks/useGravityForm';
+
 import styles from './date-field.module.scss';
 
 const DEFAULT_VALUE = '';
@@ -23,7 +26,7 @@ export default function DateField({
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   return (
     <InputWrapper oneOf={2}>

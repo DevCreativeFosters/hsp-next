@@ -1,8 +1,12 @@
-import useGravityForm from '@hooks/useGravityForm';
-import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import clsx from 'clsx';
+
+import useGravityForm from '@hooks/useGravityForm';
+
 import AttachmentIcon from '@assets/icons/attachment.svg';
 import DeleteIcon from '@assets/icons/delete.svg';
+
 import styles from './file-upload-field.module.scss';
 
 const MEGA_BYTE = Math.pow(1024, 2);
@@ -81,13 +85,13 @@ export default function FileUploadField({ form, field, fieldErrors }) {
     }
     return null;
   }, [
+    field,
+    fieldErrors,
+    files,
     maxFiles,
     maxSize,
-    files,
-    fieldErrors,
-    field,
-    tooManyFilesErrorMessage,
     tooBigFileErrorMessage,
+    tooManyFilesErrorMessage,
   ]);
 
   const acceptedTypesNormalized = useMemo(() => {
@@ -130,7 +134,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       }
       return errors;
     },
-    [maxSize, maxFiles, acceptedTypesNormalized, tooManyFilesErrorMessage],
+    [acceptedTypesNormalized, maxFiles, maxSize, tooManyFilesErrorMessage],
   );
 
   const addFiles = useCallback(
@@ -187,7 +191,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
         },
       });
     },
-    [files, dispatch, field.id],
+    [dispatch, field.id, files],
   );
 
   return (

@@ -1,9 +1,13 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import clsx from 'clsx';
+
 import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
+import clsx from 'clsx';
+
 import StoreLocatorContext from '@contexts/store-locator';
+
 import { googleMapsMarkerClusterRenderer } from '@lib/google-maps-marker-cluster-renderer';
+
 import styles from '@components/store-locator-map/store-locator-map.module.scss';
 
 const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
@@ -89,7 +93,7 @@ export default function StoreLocatorMap({
         setGoogleMap(map);
       });
     },
-    [handleMapChange, center],
+    [center, handleMapChange],
   );
 
   useEffect(

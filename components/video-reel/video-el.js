@@ -1,13 +1,16 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import clsx from 'clsx';
+
 import canAutoplay from 'can-autoplay';
-import { isVideoPlaying } from '@lib/media';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 import { getIcon } from '@lib/icons';
+import { isVideoPlaying } from '@lib/media';
 import routes from '@lib/routes';
+
 import Button from '@components/button/button';
 import styles from '@components/video-reel/video-el.module.scss';
 
@@ -59,7 +62,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
       }
       setCanAutoplayWithSound(true);
     }
-  }, [isActive, canAutoplayWithSound]);
+  }, [canAutoplayWithSound, isActive]);
 
   const onSoundButtonClick = useCallback(() => {
     setCanAutoplayWithSound(true);
@@ -105,7 +108,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         areEventsAttached.current = false;
       };
     },
-    [videoUrl, isActive, onCanPlay, onPlay, onPause, onEnd],
+    [isActive, onCanPlay, onEnd, onPause, onPlay, videoUrl],
   );
 
   useEffect(

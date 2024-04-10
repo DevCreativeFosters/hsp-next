@@ -1,15 +1,20 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { useRouter, useSearchParams } from 'next/navigation';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
+
 import { POST_TYPES } from '@lib/post-types';
 import routes from '@lib/routes';
-import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
-import { useIsMobile } from '@hooks/useIsMobile';
-import { VideoYoutube } from '@components/video-youtube/video-youtube';
-import Tag from '@components/tag/tag';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import Tag from '@components/tag/tag';
+import { VideoYoutube } from '@components/video-youtube/video-youtube';
+
 import styles from './featured-post.module.scss';
 
 export default function FeaturedPost({
@@ -60,7 +65,7 @@ export default function FeaturedPost({
     if (videoPreview) {
       router.push(routes.lifestyle);
     }
-  }, [videoPreview, router]);
+  }, [router, videoPreview]);
 
   useEffect(
     function monitorRoute() {
@@ -68,7 +73,7 @@ export default function FeaturedPost({
         handleCloseVideo();
       }
     },
-    [videoPreview, handleCloseVideo],
+    [handleCloseVideo, videoPreview],
   );
 
   return (

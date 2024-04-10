@@ -20,6 +20,7 @@ export const VehicleProvider = ({ children }) => {
   const [model, setModel] = useState(null);
   const [stepNumber, setStepNumber] = useState(0);
   const [stepTitle, setStepTitle] = useState('');
+  const [selectedCover, setSelectedCover] = useState(null);
   const [factoryOption, setFactoryOption] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
@@ -47,7 +48,7 @@ export const VehicleProvider = ({ children }) => {
     if (slug) {
       router.push(routes.product(slug));
     }
-  }, [router, pathname]);
+  }, [pathname, router]);
 
   const handleSave = useCallback(
     (params, reload) => {
@@ -95,7 +96,7 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [maker, model, variant, factoryOption, router],
+    [factoryOption, maker, model, router, variant],
   );
 
   return (
@@ -121,6 +122,8 @@ export const VehicleProvider = ({ children }) => {
         setStepNumber,
         stepTitle,
         setStepTitle,
+        selectedCover,
+        setSelectedCover,
       }}
     >
       {children}

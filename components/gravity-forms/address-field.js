@@ -1,13 +1,16 @@
 import { useEffect, useMemo } from 'react';
+
+import { COUNTRY_OPTIONS } from '@mockup/countries';
+
 import useGravityForm from '@hooks/useGravityForm';
-import InputWrapper from '@components/gravity-forms/input-wrapper';
+
+import Input from '@components/form/input';
 import Select from '@components/form/select';
 import {
   initializeState,
   onComplexFieldChange,
 } from '@components/gravity-forms/_helpers';
-import { COUNTRY_OPTIONS } from '@mockup/countries';
-import Input from '@components/form/input';
+import InputWrapper from '@components/gravity-forms/input-wrapper';
 
 const DEFAULT_VALUE = '';
 
@@ -19,7 +22,7 @@ export default function AddressField({ form, field, fieldErrors }) {
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 

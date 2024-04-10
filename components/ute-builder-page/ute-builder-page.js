@@ -55,7 +55,7 @@ export default function UteBuilderPage({
       setModel(null);
       setProductVariants(null);
     }
-  }, [finalSelection, savedVehicleGlobal]);
+  }, [finalSelection, savedVehicleGlobal, setFactoryOption, setMake, setModel]);
 
   const variantList = useMemo(() => {
     return normalizeUteBuilderProducts(productVariants);
