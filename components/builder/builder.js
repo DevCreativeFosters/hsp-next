@@ -34,7 +34,7 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
   1: 'Add your UTE covering',
-  2: 'Add your accessories',
+  2: 'Add products to your vehicle',
 };
 
 export default function Builder({
