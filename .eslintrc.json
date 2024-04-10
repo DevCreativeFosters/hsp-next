@@ -6,12 +6,19 @@
     "plugins": [
         "unused-imports",
         "sort-react-dependency-arrays",
-        "react-hooks"
+        "react-hooks",
+        "sort-keys-fix",
+        "react",
+        "sort-destructure-keys"
     ],
     "rules": {
         "unused-imports/no-unused-imports": "warn",
         "sort-react-dependency-arrays/sort": "warn",
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn"
+        "react-hooks/exhaustive-deps": "warn",
+        "sort-keys-fix/sort-keys-fix": "warn",
+        "react/sort-default-props": "warn",
+        "react/jsx-sort-props": "warn",
+        "sort-destructure-keys/sort-destructure-keys": "warn"
     }
 }
