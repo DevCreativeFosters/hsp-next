@@ -4,9 +4,14 @@
         "prettier"
     ],
     "plugins": [
-        "unused-imports"
+        "unused-imports",
+        "sort-react-dependency-arrays",
+        "react-hooks"
     ],
     "rules": {
-        "unused-imports/no-unused-imports": "warn"
+        "unused-imports/no-unused-imports": "warn",
+        "sort-react-dependency-arrays/sort": "warn",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
     }
 }
