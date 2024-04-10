@@ -15,7 +15,7 @@ import VideoReel from '@components/video-reel/video-reel';
 
 import styles from './page-client.module.scss';
 
-export default function PageClient({ title, description, posts = [] }) {
+export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
 
@@ -85,27 +85,27 @@ export default function PageClient({ title, description, posts = [] }) {
 
   return (
     <Container>
-      <SectionIntro title={title} description={description} fitInline>
+      <SectionIntro description={description} fitInline title={title}>
         <SectionButtons className={styles.buttons}>
           <Button
             className={styles.buttonPrev}
-            variant="secondary"
             leftIcon="arrow-previous"
             onClick={onPrev}
+            variant="secondary"
           />
 
           <Button
             className={styles.buttonNext}
-            variant="secondary"
-            rightIcon="arrow-next"
             onClick={onNext}
+            rightIcon="arrow-next"
+            variant="secondary"
           />
         </SectionButtons>
       </SectionIntro>
 
       <VideoReel
-        items={posts || []}
         currentIndex={currentIndex}
+        items={posts || []}
         setCurrentIndex={setCurrentIndex}
       />
     </Container>

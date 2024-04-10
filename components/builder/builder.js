@@ -38,12 +38,12 @@ export const STEP_TITLES = {
 };
 
 export default function Builder({
-  makes,
-  products,
-  noCover,
   allLocations,
   factoryOptions,
   globalOptions,
+  makes,
+  noCover,
+  products,
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -58,26 +58,26 @@ export default function Builder({
   const isMobile = useIsMobile(1280);
 
   const {
+    factoryOption,
     maker: make,
     model,
-    factoryOption,
-    stepNumber,
-    stepTitle,
     selectedCover,
-    setStepNumber,
-    setStepTitle,
     setFactoryOption,
     setSelectedCover,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+    stepTitle,
   } = useVehicleContext();
 
   const {
-    location,
-    searchGeolocation,
     filteredLocations,
+    isMapVisible,
+    location,
+    radius,
+    searchGeolocation,
     selectedStore,
     setSelectedStore,
-    isMapVisible,
-    radius,
   } = useContext(StoreLocatorContext);
 
   useEffect(() => {
@@ -247,32 +247,32 @@ export default function Builder({
     <>
       {showModal ? (
         <ClashModal
-          setShowModal={setShowModal}
-          factoryOption={factoryOption}
           currentProduct={currentProduct}
+          factoryOption={factoryOption}
+          selectedProducts={selectedProducts}
           setFactoryOption={setFactoryOption}
           setSelectedProducts={setSelectedProducts}
-          selectedProducts={selectedProducts}
+          setShowModal={setShowModal}
         />
       ) : (
         <div className={styles.builder}>
           <Container className={styles.container}>
             <div className={styles.top} ref={topRef}>
               <Sidebar
-                openSection={openSection}
-                setOpenSection={setOpenSection}
-                selectedProducts={selectedProducts}
-                removeProduct={removeProduct}
-                isMobile={isMobile}
                 allLocations={allLocations}
+                isMobile={isMobile}
+                openSection={openSection}
+                removeProduct={removeProduct}
+                selectedProducts={selectedProducts}
+                setOpenSection={setOpenSection}
               />
               <StoreList
                 className={styles.results}
                 items={filteredLocations}
-                show={isInlineResultListVisible}
                 onSelect={item => {
                   setSelectedStore(item);
                 }}
+                show={isInlineResultListVisible}
                 style={{
                   height: selectedStore ? topHeight : null,
                 }}
@@ -293,21 +293,21 @@ export default function Builder({
                 </Preview>
               ) : (
                 <UTEChooseYourVehicle
-                  makes={makes}
                   factoryOptions={factoryOptions}
+                  makes={makes}
                 />
               )}
             </div>
             {stepNumber > 0 && stepProducts.length > 0 && (
               <ProductsCarousel
-                products={stepProducts}
-                selectedProducts={selectedProducts}
                 disabledProducts={disabledProducts}
-                toggleProduct={toggleProduct}
+                isMobile={isMobile}
+                products={stepProducts}
+                selectedCover={selectedCover}
+                selectedProducts={selectedProducts}
                 stepNumber={stepNumber}
                 stepTitle={stepTitle}
-                selectedCover={selectedCover}
-                isMobile={isMobile}
+                toggleProduct={toggleProduct}
               />
             )}
           </Container>

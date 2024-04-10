@@ -52,16 +52,16 @@ export const VehicleProvider = ({ children }) => {
 
   const handleSave = useCallback(
     (params, reload) => {
-      const vehicleString = JSON.stringify({ maker, model, factoryOption });
+      const vehicleString = JSON.stringify({ factoryOption, maker, model });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ maker, model, factoryOption });
+      setSavedVehicleGlobal({ factoryOption, maker, model });
 
       setVehicleSelection({
+        factoryOption: factoryOption?.name || undefined,
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
-        factoryOption: factoryOption?.name || undefined,
       });
 
       setDropdownOpened(false);
@@ -102,28 +102,28 @@ export const VehicleProvider = ({ children }) => {
   return (
     <VehicleContext.Provider
       value={{
-        finalSelection,
-        setVehicleSelection,
-        savedVehicleGlobal,
-        setSavedVehicleGlobal,
-        maker,
-        setMaker,
-        model,
-        setModel,
-        variant,
-        setVariant,
         dropdownOpened,
-        setDropdownOpened,
-        handleVehicleReset,
-        handleSave,
         factoryOption,
-        setFactoryOption,
-        stepNumber,
-        setStepNumber,
-        stepTitle,
-        setStepTitle,
+        finalSelection,
+        handleSave,
+        handleVehicleReset,
+        maker,
+        model,
+        savedVehicleGlobal,
         selectedCover,
+        setDropdownOpened,
+        setFactoryOption,
+        setMaker,
+        setModel,
+        setSavedVehicleGlobal,
         setSelectedCover,
+        setStepNumber,
+        setStepTitle,
+        setVariant,
+        setVehicleSelection,
+        stepNumber,
+        stepTitle,
+        variant,
       }}
     >
       {children}

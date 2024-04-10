@@ -19,21 +19,20 @@ export const metadata = {
 };
 
 export const viewport = {
-  width: 'device-width',
   height: 'device-height',
   initialScale: 1,
   interactiveWidget: 'resizes-visual',
+  width: 'device-width',
 };
 
 export default async function StoreLocatorPage() {
   const allStores = await getStores();
 
   return (
-    <Layout withMap withFooter={false} reserveSpaceForVehicleSelection>
+    <Layout reserveSpaceForVehicleSelection withFooter={false} withMap>
       <FullscreenCollapse>
         <div className={styles.breadcrumbs}>
           <Breadcrumbs
-            withContainer={true}
             items={[
               {
                 label: 'Support',
@@ -41,6 +40,7 @@ export default async function StoreLocatorPage() {
               },
               {},
             ]}
+            withContainer={true}
           />
         </div>
         <StoreLocatorHero />

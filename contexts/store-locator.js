@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, createContext } from 'react';
+import { createContext, useState } from 'react';
 
 const StoreLocatorContext = createContext({});
 
@@ -15,18 +15,18 @@ export const StoreLocatorProvider = ({ children }) => {
   return (
     <StoreLocatorContext.Provider
       value={{
-        searchGeolocation,
-        setSearchGeolocation,
-        location,
-        setLocation,
         filteredLocations,
-        setFilteredLocations,
-        selectedStore,
-        setSelectedStore,
-        isMapVisible,
-        setMapVisible,
         filteredStores,
+        isMapVisible,
+        location,
+        searchGeolocation,
+        selectedStore,
+        setFilteredLocations,
         setFilteredStores,
+        setLocation,
+        setMapVisible,
+        setSearchGeolocation,
+        setSelectedStore,
       }}
     >
       {children}

@@ -6,9 +6,9 @@ import Radio from '@components/form/radio';
 
 const DEFAULT_VALUE = '';
 
-export default function RadioField({ form, field, fieldErrors }) {
-  const { databaseId: id, label, isRequired, choices } = field;
-  const { state, dispatch } = useGravityForm();
+export default function RadioField({ field, fieldErrors, form }) {
+  const { choices, databaseId: id, isRequired, label } = field;
+  const { dispatch, state } = useGravityForm();
   const formId = form.formId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
@@ -18,22 +18,22 @@ export default function RadioField({ form, field, fieldErrors }) {
 
   return (
     <Radio
+      errorMessage={fieldError?.message}
       id={`gform_${formId}_${id}`}
-      name={`gform_${formId}_${id}`}
       label={label}
-      value={value}
-      options={choices}
+      name={`gform_${formId}_${id}`}
       onChange={event => {
         dispatch({
-          type: 'updateFieldValue',
           payload: {
             id: id,
             value: event.target.value,
           },
+          type: 'updateFieldValue',
         });
       }}
+      options={choices}
       required={Boolean(isRequired)}
-      errorMessage={fieldError?.message}
+      value={value}
     />
   );
 }

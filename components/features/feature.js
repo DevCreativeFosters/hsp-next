@@ -1,7 +1,8 @@
 import clsx from 'clsx';
+
 import styles from './feature.module.scss';
 
-export default function Feature({ title, description, index, style }) {
+export default function Feature({ description, index, style, title }) {
   return (
     <div
       className={clsx(styles.featureTile, styles[`f${index + 1}`])}

@@ -1,16 +1,20 @@
 'use client';
 
-import replacePdfLinks from '@lib/replace-pdf-links';
-import { useCallback, useState, useRef, useEffect } from 'react';
-import AnimateHeight from 'react-animate-height';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import { getIcon } from '@lib/icons';
+import replacePdfLinks from '@lib/replace-pdf-links';
+
+import Button from '@components/button/button';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import Button from '@components/button/button';
+
 import styles from './faq.module.scss';
 
-export default function FAQ({ title, description, buttons, questions }) {
+export default function FAQ({ buttons, description, questions, title }) {
   const ExpandIcon = getIcon('expand-more-neutral');
 
   const [activeItemIndices, setActiveItemIndices] = useState([]);
@@ -30,7 +34,7 @@ export default function FAQ({ title, description, buttons, questions }) {
   const toggleShowAllItemsForMobile = useCallback(() => {
     setShowAllItemsForMobile(!showAllItemsForMobile);
 
-    listRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [showAllItemsForMobile]);
 
   const onKeyUp = useCallback(
@@ -52,11 +56,11 @@ export default function FAQ({ title, description, buttons, questions }) {
   return (
     <div className={styles.layout}>
       <div className={styles.intro}>
-        <SectionIntro title={title} description={description} noMargin />
+        <SectionIntro description={description} noMargin title={title} />
       </div>
 
       <div className={styles.buttonsContainer}>
-        <SectionButtons buttons={buttons} alternatingLayout />
+        <SectionButtons alternatingLayout buttons={buttons} />
       </div>
 
       {questions.length > 0 && (
@@ -66,20 +70,20 @@ export default function FAQ({ title, description, buttons, questions }) {
           })}
           ref={listRef}
         >
-          {questions.map(({ question, answer }, index) => (
+          {questions.map(({ answer, question }, index) => (
             <li
-              key={index}
               className={clsx(styles.item, {
                 [styles.active]: activeItemIndices.includes(index),
               })}
+              key={index}
             >
               <div
+                aria-pressed={activeItemIndices.includes(index)}
                 className={styles.question}
                 onClick={() => toggleItem(index)}
                 onKeyUp={ev => onKeyUp(ev, index)}
                 role="button"
                 tabIndex="0"
-                aria-pressed={activeItemIndices.includes(index)}
               >
                 <div className={styles.questionText}>{question}</div>
                 <div className={styles.questionIndicator}>
@@ -87,8 +91,8 @@ export default function FAQ({ title, description, buttons, questions }) {
                 </div>
               </div>
               <AnimateHeight
-                height={activeItemIndices.includes(index) ? 'auto' : 0}
                 duration={300}
+                height={activeItemIndices.includes(index) ? 'auto' : 0}
               >
                 <div
                   className={styles.answer}
@@ -105,8 +109,8 @@ export default function FAQ({ title, description, buttons, questions }) {
         })}
         onClick={toggleShowAllItemsForMobile}
         rightIcon={'arrow-forward'}
-        variant="quinary"
         type="button"
+        variant="quinary"
       >
         {showAllItemsForMobile ? 'Show less' : 'Show more'}
       </Button>

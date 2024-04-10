@@ -13,11 +13,11 @@ import BgPicture from '@assets/images/bg-concrete.webp';
 import styles from './preview.module.scss';
 
 export default function Preview({
+  children,
+  className,
   make,
   model,
   selectedProducts,
-  className,
-  children,
 }) {
   const modelName = model?.name;
   const modelImageDesktop =
@@ -49,26 +49,26 @@ export default function Preview({
   return (
     <div className={clsx(styles.preview, className)}>
       <Image
-        className={clsx(styles.base, styles.isDesktop)}
-        src={modelImageDesktop}
         alt={modelName}
-        width={864}
+        className={clsx(styles.base, styles.isDesktop)}
         height={538}
+        src={modelImageDesktop}
+        width={864}
       />
       <Image
-        className={clsx(styles.base, styles.isMobile)}
-        src={modelImageMobile}
         alt={modelName}
-        width={390}
+        className={clsx(styles.base, styles.isMobile)}
         height={535}
+        src={modelImageMobile}
+        width={390}
       />
       {!!mergeImages.length && (
         <DownloadButton
           className={styles.downloadButton}
-          images={mergeImages}
           fileName={`${
             make.name
           }_${modelName}_${new Date().toLocaleDateString()}`}
+          images={mergeImages}
         />
       )}
       {selectedProducts?.map(selectedProduct => {
@@ -82,34 +82,34 @@ export default function Preview({
         return (
           <Fragment key={productSlug}>
             <Image
-              className={clsx(styles.layer, styles.isDesktop)}
-              src={productImageDesktop}
               alt={productTitle}
-              width={864}
+              className={clsx(styles.layer, styles.isDesktop)}
               height={538}
+              src={productImageDesktop}
+              width={864}
             />
             <Image
-              className={clsx(styles.layer, styles.isMobile)}
-              src={productImageMobile}
               alt={productTitle}
-              width={390}
+              className={clsx(styles.layer, styles.isMobile)}
               height={535}
+              src={productImageMobile}
+              width={390}
             />
           </Fragment>
         );
       })}
       {children}
       <Image
-        className={styles.backgroundDesktop}
-        src={BgPicture}
         alt="Concrete grey floor"
+        className={styles.backgroundDesktop}
         fill={true}
+        src={BgPicture}
       />
       <Image
-        className={styles.backgroundMobile}
-        src={BgPictureMobile}
         alt="Concrete grey floor"
+        className={styles.backgroundMobile}
         fill={true}
+        src={BgPictureMobile}
       />
     </div>
   );

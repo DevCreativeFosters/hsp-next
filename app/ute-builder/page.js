@@ -30,10 +30,10 @@ export default async function UteBuilder() {
     <Layout withFooter={false}>
       <StoreLocatorProvider>
         <UteBuilderPage
-          makes={makes}
           allLocations={allLocations}
           factoryOptions={factoryOptions}
           globalOptions={globalOptions}
+          makes={makes}
           noCover={noCoverNormalized}
         />
       </StoreLocatorProvider>

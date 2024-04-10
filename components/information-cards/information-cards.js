@@ -1,7 +1,9 @@
-import TextElement from '@components/text-element/text-element';
 import clsx from 'clsx';
 import Image from 'next/image';
+
 import Container from '@components/container/container';
+import TextElement from '@components/text-element/text-element';
+
 import styles from './information-cards.module.scss';
 
 export default function InformationCards({ cards }) {
@@ -9,24 +11,24 @@ export default function InformationCards({ cards }) {
     <Container>
       <div className={styles.cards}>
         {cards.map(
-          ({ backgroundImage, size, icon, title, gap, description }, index) => {
+          ({ backgroundImage, description, gap, icon, size, title }, index) => {
             const arr = gap > 0 ? new Array(gap).fill(<br />) : [];
             const gapFragment = arr.map(el => el);
             return (
               <div
-                key={index}
                 className={clsx(styles.card, {
                   [styles.minor]: size === 'minor',
                   [styles.major]: size === 'major',
                 })}
+                key={index}
               >
                 {backgroundImage && (
                   <div className={styles.backgroundContainer}>
                     <Image
-                      className={styles.backgroundImage}
-                      src={backgroundImage.node?.sourceUrl}
                       alt={backgroundImage.node?.altText}
+                      className={styles.backgroundImage}
                       fill={true}
+                      src={backgroundImage.node?.sourceUrl}
                     />
                     <div className={styles.backgroundGradient} />
                   </div>
@@ -34,9 +36,9 @@ export default function InformationCards({ cards }) {
                 {icon && (
                   <div className={styles.iconContainer}>
                     <Image
-                      src={icon?.node?.sourceUrl}
                       alt={icon?.node?.altText}
                       fill={true}
+                      src={icon?.node?.sourceUrl}
                     />
                   </div>
                 )}

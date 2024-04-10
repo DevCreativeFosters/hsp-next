@@ -18,14 +18,14 @@ import { VideoYoutube } from '@components/video-youtube/video-youtube';
 import styles from './featured-post.module.scss';
 
 export default function FeaturedPost({
-  title,
+  date,
   excerpt,
-  video,
-  youtubeId,
+  postType,
   slug,
   tags,
-  date,
-  postType,
+  title,
+  video,
+  youtubeId,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -79,7 +79,7 @@ export default function FeaturedPost({
   return (
     <div className={styles.featuredPost}>
       {video && (
-        <video className={styles.video} ref={videoRef} loop muted>
+        <video className={styles.video} loop muted ref={videoRef}>
           <source src={video.mediaItemUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -116,15 +116,15 @@ export default function FeaturedPost({
               {youtubeId && (
                 <Button
                   onClick={handleWatchVideoButtonClick}
-                  variant="primary"
-                  size="large"
                   rightIcon="play-button"
+                  size="large"
+                  variant="primary"
                 >
                   Watch video
                 </Button>
               )}
               {moreUrl && (
-                <Button href={moreUrl} variant="secondary" size="large">
+                <Button href={moreUrl} size="large" variant="secondary">
                   Read more
                 </Button>
               )}
@@ -135,10 +135,10 @@ export default function FeaturedPost({
 
       {youtubeId && (
         <VideoYoutube
-          youtubeId={youtubeId}
           isActive={isPlayerActive}
-          onClose={handleCloseVideo}
           isModal
+          onClose={handleCloseVideo}
+          youtubeId={youtubeId}
         />
       )}
     </div>

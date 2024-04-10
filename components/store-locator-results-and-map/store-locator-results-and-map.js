@@ -17,12 +17,12 @@ import styles from './store-locator-results-and-map.module.scss';
 export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
-    searchGeolocation,
     filteredLocations,
-    setFilteredLocations,
-    selectedStore,
-    setSelectedStore,
     filteredStores,
+    searchGeolocation,
+    selectedStore,
+    setFilteredLocations,
+    setSelectedStore,
   } = useContext(StoreLocatorContext);
 
   useEffect(
@@ -40,8 +40,8 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         const item = resultsRef.current.querySelector(`#${geoHash}`);
         if (item) {
           resultsRef.current?.scrollTo({
-            top: item.offsetTop,
             behavior: 'smooth',
+            top: item.offsetTop,
           });
         }
       }

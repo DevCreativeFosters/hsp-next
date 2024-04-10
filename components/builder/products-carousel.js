@@ -18,14 +18,14 @@ const ArrowBackwardIcon = getIcon('arrow-backward');
 
 export default function ProductsCarousel({
   className,
-  products,
-  selectedProducts,
   disabledProducts,
-  toggleProduct,
+  isMobile,
+  products,
+  selectedCover,
+  selectedProducts,
   stepNumber,
   stepTitle,
-  selectedCover,
-  isMobile,
+  toggleProduct,
 }) {
   const slides = products?.map(product => {
     const productTitle = product.variantName;
@@ -38,17 +38,17 @@ export default function ProductsCarousel({
             [styles.isSelected]: selectedProducts.includes(product),
             [styles.isDisabled]: disabledProducts.includes(product),
           })}
-          type="button"
           onClick={() => toggleProduct(product)}
+          type="button"
         >
           <div className={styles.productImageContainer}>
             <Image
-              className={styles.productImage}
-              src={productImage}
               alt={productTitle}
-              width={168}
+              className={styles.productImage}
               height={Math.round(168 / 1.4)}
+              src={productImage}
               style={{ objectFit: 'contain' }}
+              width={168}
             />
           </div>
           <div className={styles.productIcon}>
@@ -73,7 +73,7 @@ export default function ProductsCarousel({
         <span className={styles.number}>Step {stepNumber}:</span>{' '}
         {currentStepTitle}
         {isMobile && stepNumber === 2 && selectedCover && (
-          <Button size="small" variant="secondary" className={styles.badge}>
+          <Button className={styles.badge} size="small" variant="secondary">
             {selectedCover.variantName}
             <CancelIcon className={styles.badgeIcon} />
           </Button>
@@ -83,18 +83,18 @@ export default function ProductsCarousel({
         {!isMobile && stepNumber === 2 && selectedCover && (
           <button
             className={clsx(styles.product, styles.isCover)}
-            type="button"
             onClick={() => toggleProduct(selectedCover)}
+            type="button"
           >
             <div className={styles.productImageContainer}>
               {productImage && (
                 <Image
-                  className={styles.productImage}
-                  src={productImage}
                   alt={productTitle}
-                  width={168}
+                  className={styles.productImage}
                   height={Math.round(168 / 1.4)}
+                  src={productImage}
                   style={{ objectFit: 'contain' }}
+                  width={168}
                 />
               )}
             </div>
@@ -109,14 +109,14 @@ export default function ProductsCarousel({
         <Carousel
           className={styles.carousel}
           settings={{
+            loop: false,
+            navigation: true,
             slidesPerView: 'auto',
             spaceBetween: 24,
-            navigation: true,
-            loop: false,
             watchSlidesProgress: true,
           }}
-          slides={slides}
           showNavigation={products?.length > 7}
+          slides={slides}
         />
       </div>
     </div>

@@ -17,15 +17,15 @@ export default async function LifestylePage() {
   return (
     <Layout title="HSP 4x4 - Lifestyle">
       <FeaturedPost
-        title={featuredPost?.title}
+        date={featuredPost?.date}
         excerpt={featuredPost?.hspTvPostCustomFields?.description}
-        uri={featuredPost?.uri}
+        postType={POST_TYPES.TV}
         slug={featuredPost?.slug}
+        tags={featuredPost?.tags}
+        title={featuredPost?.title}
+        uri={featuredPost?.uri}
         video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
         youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
-        tags={featuredPost?.tags}
-        date={featuredPost?.date}
-        postType={POST_TYPES.TV}
       />
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>

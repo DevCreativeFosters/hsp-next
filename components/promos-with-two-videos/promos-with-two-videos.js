@@ -1,10 +1,11 @@
-import VideoCard from './video-card';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+
 import styles from './promos-with-two-videos.module.scss';
+import VideoCard from './video-card';
 
 export default function PromoWithTwoVideos({ data }) {
-  const { sectionTitle, description, buttonLink, accessories } = data;
+  const { accessories, buttonLink, description, sectionTitle } = data;
 
   return (
     <Container>
@@ -29,12 +30,12 @@ export default function PromoWithTwoVideos({ data }) {
           <div className={styles.cards}>
             {accessories.map((accessory, idx) => (
               <VideoCard
-                key={idx}
                 idx={idx}
-                url={accessory?.videoFile?.node?.mediaItemUrl}
+                key={idx}
                 name={accessory?.accessoryName}
                 price={accessory?.price}
                 productUrl={accessory?.productLink?.url}
+                url={accessory?.videoFile?.node?.mediaItemUrl}
               />
             ))}
           </div>

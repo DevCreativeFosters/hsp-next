@@ -26,9 +26,9 @@ export default async function HSPCelebritiesPage() {
           />
         </Container>
         <PageClient
-          title={content?.title}
           description={content?.content}
           posts={posts?.celebrities?.nodes}
+          title={content?.title}
         />
         {/*<Newsletter />*/}
       </Background>

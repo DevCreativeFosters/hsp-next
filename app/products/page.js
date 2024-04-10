@@ -27,8 +27,8 @@ export default async function ProductsPage() {
       <Container>
         {mainProductCategories?.map(productCategory => (
           <ProductCategory
-            key={productCategory.databaseId}
             category={productCategory}
+            key={productCategory.databaseId}
           />
         ))}
       </Container>

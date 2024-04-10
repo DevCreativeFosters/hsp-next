@@ -2,21 +2,22 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { formatPrice } from '@lib/helpers';
 
 import styles from './product-item.module.scss';
 
-export default function ProductItem({ name, imageUrl, url = '', price }) {
+export default function ProductItem({ imageUrl, name, price, url = '' }) {
   const LinkOrDiv = url ? Link : 'div';
   return (
-    <LinkOrDiv href={url} className={styles.product}>
+    <LinkOrDiv className={styles.product} href={url}>
       <div className={styles.imageContainer}>
         {imageUrl && (
           <Image
-            className={styles.image}
-            src={imageUrl}
             alt={name}
+            className={styles.image}
             fill={true}
+            src={imageUrl}
           />
         )}
       </div>

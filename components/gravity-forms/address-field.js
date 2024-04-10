@@ -14,11 +14,11 @@ import InputWrapper from '@components/gravity-forms/input-wrapper';
 
 const DEFAULT_VALUE = '';
 
-export default function AddressField({ form, field, fieldErrors }) {
+export default function AddressField({ field, fieldErrors, form }) {
   const parentKey = 'addressValues';
-  const { databaseId: id, isRequired, inputs } = field;
+  const { databaseId: id, inputs, isRequired } = field;
   const formId = form.formId;
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
@@ -29,10 +29,10 @@ export default function AddressField({ form, field, fieldErrors }) {
   useEffect(
     function syncFieldState() {
       initializeState({
-        id,
-        visibleInputs,
-        parentKey,
         dispatch,
+        id,
+        parentKey,
+        visibleInputs,
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,12 +41,12 @@ export default function AddressField({ form, field, fieldErrors }) {
 
   return visibleInputs.map(
     ({
+      autocompleteAttribute,
+      customLabel,
       id: inputId,
       key: childKey,
       label,
-      customLabel,
       placeholder,
-      autocompleteAttribute,
       value,
     }) => {
       const stateValue = state.find(fieldValue => fieldValue.id === id)?.[
@@ -60,14 +60,14 @@ export default function AddressField({ form, field, fieldErrors }) {
         : 1;
 
       const sharedProps = {
-        size: 'large',
-        id: `gform_${formId}_${inputId}`,
-        name: `gform_${formId}_${inputId}`,
-        label: customLabel || label,
-        placeholder,
-        value: valueCalculated,
         errorMessage: fieldError?.message,
+        id: `gform_${formId}_${inputId}`,
+        label: customLabel || label,
+        name: `gform_${formId}_${inputId}`,
+        placeholder,
         required: Boolean(isRequired),
+        size: 'large',
+        value: valueCalculated,
         ...(field.hasAutocomplete && {
           autoComplete: autocompleteAttribute,
         }),
@@ -77,18 +77,18 @@ export default function AddressField({ form, field, fieldErrors }) {
               ? valueOrEvent
               : valueOrEvent.target.value;
           onComplexFieldChange({
+            childKey,
+            dispatch,
             id,
             parentKey,
-            childKey,
-            value: newValue,
             state,
-            dispatch,
+            value: newValue,
           });
         },
       };
 
       return (
-        <InputWrapper oneOf={oneOfValue} key={childKey}>
+        <InputWrapper key={childKey} oneOf={oneOfValue}>
           {childKey === 'country' ? (
             <Select {...sharedProps} options={COUNTRY_OPTIONS} />
           ) : (

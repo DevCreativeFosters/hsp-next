@@ -13,7 +13,7 @@ import routes from '@lib/routes';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
-export default function BreadcrumbsProduct({ currentProduct, categories }) {
+export default function BreadcrumbsProduct({ categories, currentProduct }) {
   const [currentSavedVehicle, setCurrentSavedVehicle] = useState({});
   const [maker, setMaker] = useState(currentProduct.make || {});
   const [model, setModel] = useState(currentProduct.model || {});
@@ -33,9 +33,9 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
   const pathname = usePathname();
   const router = useRouter();
   const {
-    setSavedVehicleGlobal,
-    savedVehicleGlobal,
     finalSelection,
+    savedVehicleGlobal,
+    setSavedVehicleGlobal,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -325,47 +325,46 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
       url: routes.products,
     },
     {
+      current: true,
       label: currentProduct.mainCategory.label,
       url: routes.product(currentProduct.mainCategory?.value),
-      current: true,
     },
     {
-      type: 'select',
       name: 'maker',
-      placeholder: 'Choose make',
-      selectedValue: getValueOrSlug(maker),
       onSelect: newMake => handleMakeSelect(newMake),
       onSelectOpenNext: false,
       options: currentMakeList,
+      placeholder: 'Choose make',
+      selectedValue: getValueOrSlug(maker),
       strong: Boolean(maker),
+      type: 'select',
     },
     {
-      type: 'select',
-      name: 'model',
-      placeholder: 'Choose model',
-      disabled: !getValueOrSlug(maker),
-      selectedValue: getValueOrSlug(model),
-      onSelect: newModel => handleModelSelect(newModel),
-      options: currentModelList,
-      strong: Boolean(model),
       checkbox: {
-        visible: displaySelectButton,
         checkboxLabel: 'Set as my vehicle',
         checked: updateVehicleSelected,
         onChange: () => setUpdateVehicleSelected(!updateVehicleSelected),
+        visible: displaySelectButton,
       },
+      disabled: !getValueOrSlug(maker),
+      name: 'model',
+      onSelect: newModel => handleModelSelect(newModel),
+      options: currentModelList,
+      placeholder: 'Choose model',
+      selectedValue: getValueOrSlug(model),
+      strong: Boolean(model),
+      type: 'select',
     },
     {
-      visible: displayApplyButton,
-      variant: 'primary',
       label: 'Apply',
-      type: 'button',
-      skipPrecedingSeparator: true,
-      url: applyRoute,
       onClick: () => applyChangedVehicle(updateVehicleSelected),
+      skipPrecedingSeparator: true,
+      type: 'button',
+      url: applyRoute,
+      variant: 'primary',
+      visible: displayApplyButton,
     },
     {
-      visible: isChangeProductPageButtonVisible,
       label: `Change to ${
         currentSavedVehicle?.maker?.name
           ? currentSavedVehicle?.maker?.name
@@ -379,13 +378,14 @@ export default function BreadcrumbsProduct({ currentProduct, categories }) {
             ? currentSavedVehicle?.model?.label
             : ''
       }`,
-      type: 'button',
       skipPrecedingSeparator: true,
+      type: 'button',
       url: routes.product(
         currentProduct.mainCategory.value,
         getValueOrSlug(currentSavedVehicle?.maker),
         getValueOrSlug(currentSavedVehicle?.model),
       ),
+      visible: isChangeProductPageButtonVisible,
     },
   ];
 

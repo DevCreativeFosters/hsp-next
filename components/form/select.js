@@ -1,31 +1,36 @@
 'use client';
 
-import Input from '@components/form/input';
-import { useState, useCallback, useMemo, useRef, useId } from 'react';
-import AnimateHeight from 'react-animate-height';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import { useClickOutside } from '@hooks/useClickOutside';
+
+import Input from '@components/form/input';
+
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
+
 import styles from './select.module.scss';
 
 const MIN_RESULTS_TO_ENABLE_SEARCH = 20;
 
 export default function Select({
-  className,
-  id = '',
-  size = 'small',
   background = 'dark',
-  label = '',
-  errorMessage = '',
-  placeholder = '',
-  options = [],
-  prefix = '',
-  suffix = '',
-  value,
-  required = null,
+  className,
   dropdownInDocumentFlow,
+  errorMessage = '',
+  id = '',
+  label = '',
   onChange = () => null,
   onClick = () => null,
+  options = [],
+  placeholder = '',
+  prefix = '',
+  required = null,
+  size = 'small',
+  suffix = '',
+  value,
   ...props
 }) {
   const searchInputRef = useRef();
@@ -76,27 +81,27 @@ export default function Select({
   return (
     <div className={clsx(styles.wrapperOuter, className)}>
       <div
-        ref={triggerRef}
         className={clsx(styles.wrapperInner, {
           [styles.small]: size === 'small',
           [styles.large]: size === 'large',
           [styles.isOpen]: isOpen,
         })}
+        ref={triggerRef}
       >
         {label && (
-          <label htmlFor={elementId} className={styles.label}>
+          <label className={styles.label} htmlFor={elementId}>
             {label}
           </label>
         )}
         <button
-          id={elementId}
-          type="button"
           className={clsx(styles.trigger, {
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
             [styles.filled]: value,
           })}
+          id={elementId}
+          type="button"
           {...props}
           onClick={ev => {
             toggleDropdown(ev);
@@ -124,8 +129,8 @@ export default function Select({
           {options.map(({ label, value }, index) => (
             <div
               className={clsx(styles.value, styles.forStretchOnly)}
-              key={index}
               data-value={value !== undefined ? value : label}
+              key={index}
             >
               {prefix && <span className={styles.prefixSuffix}>{prefix} </span>}
               {label || value}
@@ -147,23 +152,23 @@ export default function Select({
             }}
           >
             <Input
-              ref={searchInputRef}
-              placeholder="Search..."
               background="dark"
-              value={search}
               onChange={ev => {
                 setSearch(ev.target.value);
               }}
+              placeholder="Search..."
+              ref={searchInputRef}
+              value={search}
             />
           </div>
         )}
 
         <select
-          name={`fake_${props.name}`}
           className={styles.realSelect}
+          name={`fake_${props.name}`}
+          onChange={() => {}}
           required={required}
           value={value || ''}
-          onChange={() => {}}
         >
           {value ? <option>{value}</option> : null}
         </select>
@@ -174,9 +179,9 @@ export default function Select({
           })}
         >
           <AnimateHeight
-            height={isOpen ? 'auto' : 0}
-            duration={200}
             contentClassName={styles.animateHeightContainer}
+            duration={200}
+            height={isOpen ? 'auto' : 0}
           >
             <div
               className={clsx(styles.dropdown, {
@@ -200,14 +205,14 @@ export default function Select({
                 })
                 .map(({ label, value }, index) => (
                   <button
-                    key={index}
-                    className={styles.option}
-                    type="button"
-                    role="option"
                     aria-selected={Boolean(selectedOption)}
-                    onClick={() => handleSelectOption(value, label)}
-                    tabIndex={0}
+                    className={styles.option}
                     data-value={value !== undefined ? value : label}
+                    key={index}
+                    onClick={() => handleSelectOption(value, label)}
+                    role="option"
+                    tabIndex={0}
+                    type="button"
                   >
                     {prefix && (
                       <span className={styles.prefixSuffix}>{prefix} </span>

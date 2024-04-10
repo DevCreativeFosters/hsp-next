@@ -1,13 +1,16 @@
 import { useCallback } from 'react';
-import Image from 'next/image';
+
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
-import { getIcon } from '@lib/icons';
+import Image from 'next/image';
+
 import { getGeoHash } from '@lib/get-geo-hash';
+import { getIcon } from '@lib/icons';
+
 import Button from '@components/button/button';
 
-import TypeSuperImage from '@assets/images/type-super.webp';
 import TypeMajorImage from '@assets/images/type-major.webp';
+import TypeSuperImage from '@assets/images/type-super.webp';
 
 import styles from './store-tile.module.scss';
 
@@ -16,14 +19,14 @@ const PhoneIcon = getIcon('phone');
 
 export default function StoreTile({
   item: {
-    name,
-    location: { street, city, stateAbbr, postalCode, country },
     address,
-    tel,
-    geolocation,
-    type,
     displays,
+    geolocation,
     learnMoreButton,
+    location: { city, country, postalCode, stateAbbr, street },
+    name,
+    tel,
+    type,
   },
   selected,
 }) {
@@ -70,7 +73,7 @@ export default function StoreTile({
       <div className={styles.typeContainer}>
         {storeImage && (
           <div className={styles.imageWrapper}>
-            <Image className={styles.image} src={storeImage} alt={type} />
+            <Image alt={type} className={styles.image} src={storeImage} />
           </div>
         )}
         <p
@@ -114,12 +117,12 @@ export default function StoreTile({
         {directionsUrl && (
           <Button
             className={styles.link}
-            variant="quinary"
-            size="small"
-            rightIcon="external-link"
             href={directionsUrl}
-            target="_blank"
             rel="noopener noreferrer"
+            rightIcon="external-link"
+            size="small"
+            target="_blank"
+            variant="quinary"
           >
             Directions
           </Button>
@@ -127,12 +130,12 @@ export default function StoreTile({
         {learnMoreButton && (
           <Button
             className={styles.link}
-            variant="primary"
-            size="small"
-            rightIcon="external-link"
             href={learnMoreButton?.url}
-            target="_blank"
             rel="noopener noreferrer"
+            rightIcon="external-link"
+            size="small"
+            target="_blank"
+            variant="primary"
           >
             {learnMoreButton?.title && learnMoreButton?.title !== ''
               ? learnMoreButton?.title
@@ -155,11 +158,11 @@ export default function StoreTile({
                 if (imageUrl) {
                   return (
                     <Image
+                      alt={altText}
+                      height={40}
                       key={idx + altText}
                       src={imageUrl}
-                      alt={altText}
                       width={40}
-                      height={40}
                     />
                   );
                 }

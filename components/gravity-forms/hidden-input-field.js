@@ -4,9 +4,9 @@ import useGravityForm from '@hooks/useGravityForm';
 
 const DEFAULT_VALUE = '';
 
-export default function HiddenInputField({ form, field, hiddenInputs }) {
+export default function HiddenInputField({ field, form, hiddenInputs }) {
   const { databaseId: id, inputName } = field;
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const formId = form.formId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
@@ -16,11 +16,11 @@ export default function HiddenInputField({ form, field, hiddenInputs }) {
       hiddenInputs.map(hiddenInput => {
         if (hiddenInput.inputName === inputName) {
           dispatch({
-            type: 'updateFieldValue',
             payload: {
               id: id,
               value: hiddenInput.value,
             },
+            type: 'updateFieldValue',
           });
         }
       });
@@ -30,9 +30,9 @@ export default function HiddenInputField({ form, field, hiddenInputs }) {
 
   return (
     <input
-      type="hidden"
       id={`gform_${formId}_${id}`}
       name={`gform_${formId}_${id}`}
+      type="hidden"
       value={value}
     />
   );

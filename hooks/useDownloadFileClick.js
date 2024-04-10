@@ -37,7 +37,7 @@ export const useDownloadFileClick = () => {
         }
       }
     },
-    [downloadNow, href],
+    [downloadNow, href], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   useEffect(
@@ -54,15 +54,15 @@ export const useDownloadFileClick = () => {
   );
   const Modal = (
     <DownloadFileModal
-      href={href}
       fileName={fileName}
+      href={href}
       isVisible={isModalVisible}
       onClose={() => setIsModalVisible(false)}
     />
   );
 
   return {
-    onDownloadFileClick,
     Modal,
+    onDownloadFileClick,
   };
 };

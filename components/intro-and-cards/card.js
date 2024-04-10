@@ -1,16 +1,17 @@
 import Image from 'next/image';
+
 import styles from './card.module.scss';
 
-export default function Card({ title, description, icon, backgroundImage }) {
+export default function Card({ backgroundImage, description, icon, title }) {
   return (
     <div className={styles.card}>
       {icon && (
         <Image
+          alt={icon?.altText}
           className={styles.icon}
+          height={58}
           src={icon?.sourceUrl}
           width={58}
-          height={58}
-          alt={icon?.altText}
         />
       )}
       {title && <h3 className={styles.title}>{title}</h3>}
@@ -23,11 +24,11 @@ export default function Card({ title, description, icon, backgroundImage }) {
       {backgroundImage && (
         <div className={styles.imageContainer}>
           <Image
+            alt={backgroundImage?.sourceUrl}
             className={styles.image}
+            height={169}
             src={backgroundImage?.sourceUrl}
             width={636}
-            height={169}
-            alt={backgroundImage?.sourceUrl}
           />
         </div>
       )}

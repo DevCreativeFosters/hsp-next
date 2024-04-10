@@ -6,9 +6,9 @@ import Textarea from '@components/form/textarea';
 
 const DEFAULT_VALUE = '';
 
-export default function TextAreaField({ form, field, fieldErrors }) {
-  const { databaseId: id, label, isRequired, placeholder } = field;
-  const { state, dispatch } = useGravityForm();
+export default function TextAreaField({ field, fieldErrors, form }) {
+  const { databaseId: id, isRequired, label, placeholder } = field;
+  const { dispatch, state } = useGravityForm();
   const formId = form.formId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
@@ -18,22 +18,22 @@ export default function TextAreaField({ form, field, fieldErrors }) {
 
   return (
     <Textarea
-      id={`gform_${formId}_${id}`}
-      name={`gform_${formId}_${id}`}
-      placeholder={placeholder}
       errorMessage={fieldError?.message}
+      id={`gform_${formId}_${id}`}
       label={label}
-      required={Boolean(isRequired)}
-      value={value}
+      name={`gform_${formId}_${id}`}
       onChange={event => {
         dispatch({
-          type: 'updateFieldValue',
           payload: {
             id: id,
             value: event.target.value,
           },
+          type: 'updateFieldValue',
         });
       }}
+      placeholder={placeholder}
+      required={Boolean(isRequired)}
+      value={value}
     />
   );
 }

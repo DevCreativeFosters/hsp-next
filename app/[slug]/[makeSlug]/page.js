@@ -48,14 +48,14 @@ export default async function CategoryPage({ params }) {
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
   const productHeroData = {
-    image:
-      filteredData?.length > 1
-        ? filteredData[0].featuredImage?.node
-        : featuredImage,
     features:
       filteredData?.length > 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
+    image:
+      filteredData?.length > 1
+        ? filteredData[0].featuredImage?.node
+        : featuredImage,
     warrantyDescription:
       filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyDescription
@@ -89,18 +89,18 @@ export default async function CategoryPage({ params }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
           />
         </div>
         <ProductHero
-          make={makeData.name}
-          title={categoryData?.name}
           description={makeData?.description || categoryData?.description}
-          image={productHeroData.image}
           features={{
             content: productHeroData.features,
           }}
+          image={productHeroData.image}
+          make={makeData.name}
+          title={categoryData?.name}
           warranty={{
             content: productHeroData.warrantyDescription,
             years: productHeroData.warrantyTimePeriod,

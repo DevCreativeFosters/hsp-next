@@ -1,11 +1,11 @@
 'use client';
 
-import ProductCard from './product-card';
 import AllProductsLink from './all-products-link';
 import styles from './hero-product-row.module.scss';
+import ProductCard from './product-card';
 
 const MAX_PRODUCTS = 5;
-export default function HeroProductRow({ title, products, link }) {
+export default function HeroProductRow({ link, products, title }) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>

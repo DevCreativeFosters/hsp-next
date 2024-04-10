@@ -10,21 +10,21 @@ import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 import Builder from '@components/builder/builder';
 
 export default function UteBuilderPage({
-  makes,
   allLocations,
   factoryOptions,
   globalOptions,
+  makes,
   noCover,
 }) {
   const [productVariants, setProductVariants] = useState(null);
 
   const {
+    factoryOption,
     finalSelection,
     savedVehicleGlobal,
-    setModel,
-    setMaker: setMake,
-    factoryOption,
     setFactoryOption,
+    setMaker: setMake,
+    setModel,
   } = useVehicleContext();
 
   useEffect(() => {
@@ -63,13 +63,13 @@ export default function UteBuilderPage({
 
   return (
     <Builder
-      makes={makes}
-      products={variantList}
       allLocations={allLocations}
-      factoryOptions={factoryOptions}
       factoryOption={factoryOption}
+      factoryOptions={factoryOptions}
       globalOptions={globalOptions}
+      makes={makes}
       noCover={noCover}
+      products={variantList}
     />
   );
 }

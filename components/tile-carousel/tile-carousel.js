@@ -11,15 +11,15 @@ const ID_PREFIX = 'carousel';
 const MIN_SHIFT = 40;
 
 export default function TileCarousel({
-  items = [],
-  itemTemplate: ItemTemplate,
-  id = '',
-  buttonPrevRef,
   buttonNextRef,
+  buttonPrevRef,
+  children,
+  context,
+  id = '',
+  itemTemplate: ItemTemplate,
+  items = [],
   resetStyle,
   smallGaps,
-  context,
-  children,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
@@ -246,12 +246,12 @@ export default function TileCarousel({
           >
             <div
               className={styles.container}
-              ref={containerRef}
               id={carouselId}
+              ref={containerRef}
               style={{ '--offset': `${carouselPosition}px` }}
             >
               {items.map((props, index) => (
-                <ItemTemplate key={index} context={context} {...props} />
+                <ItemTemplate context={context} key={index} {...props} />
               ))}
             </div>
           </div>

@@ -160,20 +160,15 @@ export default function StoreLocatorSearch({ allLocations }) {
         <div className={styles.viewContent}>
           <form
             action="#"
+            autoComplete="off"
             className={styles.form}
             onChange={onAnyInputChange}
             ref={formRef}
-            autoComplete="off"
           >
             <div className={styles.searchPhraseWrapper}>
               <StoreLocatorInput
-                type="text"
-                name="location"
-                placeholder="Your location"
                 icon="search"
-                withResetButton
-                value={locationInput}
-                onClick={onFormInteraction}
+                name="location"
                 onChange={value => {
                   setLocationInput(value);
                   if (!value) {
@@ -182,7 +177,12 @@ export default function StoreLocatorSearch({ allLocations }) {
                     setIsFullScreen(false);
                   }
                 }}
+                onClick={onFormInteraction}
+                placeholder="Your location"
                 required
+                type="text"
+                value={locationInput}
+                withResetButton
               />
 
               <StoreLocatorSuggestions
@@ -194,19 +194,17 @@ export default function StoreLocatorSearch({ allLocations }) {
             <div className={styles.mobileOnly}>
               <StoreList
                 items={filteredLocations}
-                show={isInlineResultListVisible}
                 onSelect={item => {
                   setCurrentResult(item);
                   setViewMode('RESULT');
                 }}
+                show={isInlineResultListVisible}
               />
             </div>
 
             {isSearchButtonVisible && (
               <Button
-                type="button"
                 className={styles.button}
-                rightIcon="search"
                 href="#store-search"
                 onClick={() => {
                   if (isMobile && !isFullScreen) {
@@ -215,6 +213,8 @@ export default function StoreLocatorSearch({ allLocations }) {
                     formRef.current.reportValidity();
                   }
                 }}
+                rightIcon="search"
+                type="button"
               >
                 Search
               </Button>
@@ -227,9 +227,9 @@ export default function StoreLocatorSearch({ allLocations }) {
             {currentResult && <StoreTile item={currentResult} />}
             <div className={styles.buttonWrapper}>
               <Button
-                variant="quaternary"
-                onClick={goBack}
                 leftIcon="arrow-backward"
+                onClick={goBack}
+                variant="quaternary"
               >
                 Back to search
               </Button>

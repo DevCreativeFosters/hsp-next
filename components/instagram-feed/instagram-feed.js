@@ -1,21 +1,24 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import normalizeSocialMediaMenu from '@lib/normalize-social-media-menu';
+
 import Container from '@components/container/container';
+import Loading from '@components/loading/loading';
 import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
-import Loading from '@components/loading/loading';
-import InstagramTile from './instagram-tile';
+
 import InstagramFeedSocialMedia from './instagram-feed-social-media';
 import styles from './instagram-feed.module.scss';
+import InstagramTile from './instagram-tile';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;
 const IG_TOKEN = process.env.NEXT_PUBLIC_IG_TOKEN;
 const IG_URL = `https://graph.instagram.com/${IG_USER_ID}/media?access_token=${IG_TOKEN}&fields=media_type,media_url,thumbnail_url,permalink`;
 
-export default function InstagramFeed({ title, description }) {
+export default function InstagramFeed({ description, title }) {
   const [igFeed, setIgFeed] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [displayError, setDisplayError] = useState(false);
@@ -59,9 +62,9 @@ export default function InstagramFeed({ title, description }) {
     () =>
       igFeed.map(post => ({
         slug: post.permalink,
+        thumbnailUrl: post.thumbnail_url,
         type: post.media_type,
         url: post.media_url,
-        thumbnailUrl: post.thumbnail_url,
       })),
     [igFeed],
   );
@@ -70,11 +73,11 @@ export default function InstagramFeed({ title, description }) {
     <Container>
       <div className={styles.wrapper}>
         <SectionIntro
-          title={title}
           description={description}
           fitInline
           narrowDescription
           noBottomMargin
+          title={title}
         />
         <InstagramFeedSocialMedia socialMenu={socialMedia} />
       </div>
@@ -85,7 +88,7 @@ export default function InstagramFeed({ title, description }) {
       ) : displayError ? (
         <p> Error in fetching data. Please try again later.</p>
       ) : (
-        <TileCarousel items={transformedIgFeed} itemTemplate={InstagramTile} />
+        <TileCarousel itemTemplate={InstagramTile} items={transformedIgFeed} />
       )}
     </Container>
   );

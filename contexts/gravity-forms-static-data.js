@@ -5,9 +5,9 @@ import { createContext, useContext } from 'react';
 const GravityFormsStaticDataContext = createContext();
 
 export const GravityFormsStaticDataProvider = ({
+  children,
   productSubCategories,
   stores,
-  children,
 }) => {
   return (
     <GravityFormsStaticDataContext.Provider

@@ -20,12 +20,12 @@ const SELECT_OPTIONS = [
 ];
 
 const inputList = ({
-  header = '',
-  size,
   background,
-  placeholder = 'Input',
-  label = 'Label',
   errorMessage,
+  header = '',
+  label = 'Label',
+  placeholder = 'Input',
+  size,
 }) => {
   return (
     <>
@@ -33,42 +33,42 @@ const inputList = ({
       <div className={styles.inputs}>
         <div>
           <Input
-            size={size}
-            placeholder={placeholder}
             background={background}
+            placeholder={placeholder}
+            size={size}
           />
         </div>
         <div>
           <Input
-            size={size}
-            placeholder={placeholder}
             background={background}
             label={label}
+            placeholder={placeholder}
+            size={size}
           />
         </div>
         <div>
           <Input
-            size={size}
-            placeholder={placeholder}
             background={background}
             errorMessage={errorMessage}
+            placeholder={placeholder}
+            size={size}
           />
         </div>
         <div>
           <Select
-            size={size}
-            placeholder={placeholder}
             background={background}
             options={SELECT_OPTIONS}
+            placeholder={placeholder}
+            size={size}
           />
         </div>
         <div>
           <Select
-            size={size}
-            placeholder={placeholder}
             background={background}
             errorMessage={errorMessage}
             options={SELECT_OPTIONS}
+            placeholder={placeholder}
+            size={size}
           />
         </div>
       </div>
@@ -77,12 +77,12 @@ const inputList = ({
 };
 
 const buttonList = ({
-  groupName,
-  size,
   background,
+  groupName,
   label = 'Small',
-  rightIcon,
   leftIcon,
+  rightIcon,
+  size,
 }) => {
   return (
     <>
@@ -92,10 +92,10 @@ const buttonList = ({
           <div className={styles.buttonItem}>
             <div className={styles.header}>Primary</div>
             <Button
-              size={size}
               background={background}
-              rightIcon={rightIcon}
               leftIcon={leftIcon}
+              rightIcon={rightIcon}
+              size={size}
             >
               {label}
             </Button>
@@ -103,11 +103,11 @@ const buttonList = ({
           <div className={styles.buttonItem}>
             <div className={styles.header}>Secondary</div>
             <Button
-              size={size}
               background={background}
-              variant="secondary"
-              rightIcon={rightIcon}
               leftIcon={leftIcon}
+              rightIcon={rightIcon}
+              size={size}
+              variant="secondary"
             >
               {label}
             </Button>
@@ -115,11 +115,11 @@ const buttonList = ({
           <div className={styles.buttonItem}>
             <div className={styles.header}>Tertiary</div>
             <Button
-              size={size}
               background={background}
-              variant="tertiary"
-              rightIcon={rightIcon}
               leftIcon={leftIcon}
+              rightIcon={rightIcon}
+              size={size}
+              variant="tertiary"
             >
               {label}
             </Button>
@@ -128,11 +128,11 @@ const buttonList = ({
           <div className={styles.buttonItem}>
             <div className={styles.header}>Quaternary</div>
             <Button
-              size={size}
               background={background}
-              variant="quaternary"
-              rightIcon={rightIcon}
               leftIcon={leftIcon}
+              rightIcon={rightIcon}
+              size={size}
+              variant="quaternary"
             >
               {label}
             </Button>
@@ -141,11 +141,11 @@ const buttonList = ({
           <div className={styles.buttonItem}>
             <div className={styles.header}>Quinary</div>
             <Button
-              size={size}
               background={background}
-              variant="quinary"
-              rightIcon={rightIcon}
               leftIcon={leftIcon}
+              rightIcon={rightIcon}
+              size={size}
+              variant="quinary"
             >
               {label}
             </Button>
@@ -156,36 +156,36 @@ const buttonList = ({
   );
 };
 
-const buttonHalfBackground = ({ size, label, background }) => {
+const buttonHalfBackground = ({ background, label, size }) => {
   return (
     <>
       <div className={styles.header}>{background.toUpperCase()} Background</div>
       {buttonList({
+        background: background,
         groupName: 'No icon',
-        size: size,
         label: label,
-        background: background,
+        size: size,
       })}
       {buttonList({
+        background: background,
         groupName: 'Icon on the right',
-        size: size,
         label: label,
-        background: background,
         rightIcon: 'arrow_forward',
+        size: size,
       })}
       {buttonList({
+        background: background,
         groupName: 'Icon on the left',
-        size: size,
         label: label,
-        background: background,
         leftIcon: 'arrow_back',
+        size: size,
       })}
       {buttonList({
-        groupName: 'Only icon',
-        size: size,
-        label: label,
         background: background,
+        groupName: 'Only icon',
+        label: label,
         rightIcon: 'arrow_forward',
+        size: size,
       })}
     </>
   );
@@ -197,18 +197,18 @@ export default async function StyleGuidePage() {
       <div>
         <div className={styles.halfDark}>
           {inputList({
-            header: 'Inputs - Small',
-            size: 'small',
             background: 'dark',
             errorMessage: 'Error message',
+            header: 'Inputs - Small',
+            size: 'small',
           })}
         </div>
         <div className={styles.halfLight}>
           {inputList({
-            header: 'Inputs - Large',
-            size: 'large',
             background: 'light',
             errorMessage: 'Error message',
+            header: 'Inputs - Large',
+            size: 'large',
           })}
         </div>
       </div>
@@ -226,16 +226,16 @@ export default async function StyleGuidePage() {
         <div className={styles.header}>Large</div>
         <div className={styles.halfLight}>
           {buttonHalfBackground({
-            size: 'large',
-            label: 'Large',
             background: 'light',
+            label: 'Large',
+            size: 'large',
           })}
         </div>
         <div className={styles.halfDark}>
           {buttonHalfBackground({
-            size: 'large',
-            label: 'Large',
             background: 'dark',
+            label: 'Large',
+            size: 'large',
           })}
         </div>
       </div>

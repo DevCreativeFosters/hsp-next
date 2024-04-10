@@ -22,25 +22,25 @@ import StoreLocatorSuggestions from '@components/store-locator-suggestions/store
 import styles from './store-search-controls.module.scss';
 
 export default function StoreSearchControls({
-  label = 'Locate your store',
-  isWide,
-  isHidden,
-  interactWithDisabledForm,
   allLocations,
+  interactWithDisabledForm,
+  isHidden,
+  isWide,
+  label = 'Locate your store',
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
   const {
-    location,
-    setLocation,
-    searchGeolocation,
-    setSearchGeolocation,
-    setFilteredLocations,
-    selectedStore,
     isMapVisible,
+    location,
+    searchGeolocation,
+    selectedStore,
+    setFilteredLocations,
+    setLocation,
     setMapVisible,
+    setSearchGeolocation,
   } = useContext(StoreLocatorContext);
 
   const selectLocation = useCallback(
@@ -122,13 +122,10 @@ export default function StoreSearchControls({
     >
       <div className={styles.location}>
         <StoreLocatorInput
-          type="text"
-          name="location"
-          label={label}
-          placeholder="Your location"
+          disabled={selectedStore}
           icon="search"
-          withResetButton
-          value={locationInput}
+          label={label}
+          name="location"
           onChange={value => {
             setLocationInput(value);
             if (!value) {
@@ -136,8 +133,11 @@ export default function StoreSearchControls({
               setSearchGeolocation(null);
             }
           }}
+          placeholder="Your location"
           required
-          disabled={selectedStore}
+          type="text"
+          value={locationInput}
+          withResetButton
         />
         <StoreLocatorSuggestions
           items={suggestions}
@@ -146,12 +146,12 @@ export default function StoreSearchControls({
       </div>
       <div className={styles.mapToggler}>
         <Switch
-          label="Show map"
-          state={isMapVisible}
           disabled={selectedStore}
+          label="Show map"
           onChange={() => {
             setMapVisible(!isMapVisible);
           }}
+          state={isMapVisible}
         />
       </div>
     </div>

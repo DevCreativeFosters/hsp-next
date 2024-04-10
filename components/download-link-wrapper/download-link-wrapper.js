@@ -1,18 +1,20 @@
 'use client';
 
-import replacePdfLinks from '@lib/replace-pdf-links';
 import { useEffect, useRef } from 'react';
+
 import { useDownloadFileClick } from '@hooks/useDownloadFileClick';
 
-export default function DownloadLinkWrapper({ context, children }) {
+import replacePdfLinks from '@lib/replace-pdf-links';
+
+export default function DownloadLinkWrapper({ children, context }) {
   const containerRef = useRef();
   useEffect(function replaceLinks() {
     replacePdfLinks(containerRef.current);
   }, []);
 
-  const { onDownloadFileClick, Modal } = useDownloadFileClick(context);
+  const { Modal, onDownloadFileClick } = useDownloadFileClick(context);
   return (
-    <div ref={containerRef} onClick={onDownloadFileClick}>
+    <div onClick={onDownloadFileClick} ref={containerRef}>
       {children}
       {Modal}
     </div>

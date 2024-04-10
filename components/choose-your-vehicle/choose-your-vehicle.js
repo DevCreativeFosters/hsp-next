@@ -23,14 +23,14 @@ import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
   const {
-    maker,
-    model,
+    dropdownOpened,
+    finalSelection,
     handleSave,
     handleVehicleReset,
-    finalSelection,
-    setVehicleSelection,
-    dropdownOpened,
+    maker,
+    model,
     setDropdownOpened,
+    setVehicleSelection,
   } = useVehicleContext();
 
   const {
@@ -55,12 +55,12 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <div className={styles.container}>
       <div className={styles.containerTrigger}>
         <Button
-          variant="primary"
-          onClick={() => setDropdownOpened(!dropdownOpened)}
           className={clsx(styles.chooseButton, {
             [styles.opened]: dropdownOpened,
             [styles.nonEmpty]: finalSelection,
           })}
+          onClick={() => setDropdownOpened(!dropdownOpened)}
+          variant="primary"
         >
           {finalSelection ? (
             <span className={styles.fullName}>
@@ -88,37 +88,37 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
       <AnimateHeight
         className={styles.containerAnimateHeight}
-        height={dropdownOpened ? 'auto' : 0}
-        duration={300}
         contentClassName={clsx(styles.containerInner, {
           [styles.opened]: dropdownOpened,
         })}
+        duration={300}
+        height={dropdownOpened ? 'auto' : 0}
       >
         <div className={styles.dropdownOuter}>
           <div className={styles.dropdownInner}>
             <Select
-              size="large"
-              placeholder={constants.SELECT_LABELS.MAKER}
-              options={makerSelectOptions}
-              value={getValueOrSlug(maker) || null}
               dropdownInDocumentFlow
               onChange={handleMakerChange}
+              options={makerSelectOptions}
+              placeholder={constants.SELECT_LABELS.MAKER}
+              size="large"
+              value={getValueOrSlug(maker) || null}
             />
             <Select
-              size="large"
-              placeholder={constants.SELECT_LABELS.MODEL}
-              options={modelSelectOptions}
-              value={getValueOrSlug(model) || null}
               disabled={!modelSelectOptions.length}
               dropdownInDocumentFlow
               onChange={handleModelChange}
+              options={modelSelectOptions}
+              placeholder={constants.SELECT_LABELS.MODEL}
+              size="large"
+              value={getValueOrSlug(model) || null}
             />
             <Button
               className={styles.save}
-              variant="primary"
-              rightIcon="save"
-              onClick={handleSave}
               disabled={!maker && !model}
+              onClick={handleSave}
+              rightIcon="save"
+              variant="primary"
             >
               Save
             </Button>

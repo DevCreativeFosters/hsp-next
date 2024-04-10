@@ -13,11 +13,11 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './hsp-tv-post.module.scss';
 
 export function HspTvPost({
-  relatedPosts,
-  title,
   content,
-  slug,
   customFields,
+  relatedPosts,
+  slug,
+  title,
 }) {
   const informationRef = useRef(null);
 
@@ -25,12 +25,12 @@ export function HspTvPost({
     <Container>
       <div className={styles.breadcrumbs}>
         <BreadcrumbsLifestyle
-          initialContentTypeRoute={routes.tv()}
           exactBreadcrumb={{
             label: title,
-            url: routes.tv(slug),
             strong: true,
+            url: routes.tv(slug),
           }}
+          initialContentTypeRoute={routes.tv()}
         />
       </div>
       <div className={styles.header}>
@@ -47,7 +47,7 @@ export function HspTvPost({
         )}
       </div>
       <div className={styles.post}>
-        <div ref={informationRef} className={styles.information}>
+        <div className={styles.information} ref={informationRef}>
           <div className={styles.relatedPostsContainer}>
             <RelatedPosts
               posts={relatedPosts}

@@ -1,20 +1,25 @@
 'use client';
 
-import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
+
+import clsx from 'clsx';
 import Image from 'next/image';
+import Script from 'next/script';
+
 import { sendBrevoNewsletterData } from '@lib/api/send-brevo-newsletter-data';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
+
 import IllustrationImage from '@assets/images/newsletter-illustration.webp';
+
 import styles from './newsletter.module.scss';
 
 export default function Newsletter({
+  description,
   googleRecaptchaSitekey,
   title,
-  description,
 }) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
@@ -37,8 +42,8 @@ export default function Newsletter({
       setIsBusy(true);
       const response = await sendBrevoNewsletterData({
         EMAIL: email,
-        locale: 'en',
         'g-recaptcha-response': token,
+        locale: 'en',
         // email_address_check: '',
       });
 
@@ -69,16 +74,16 @@ export default function Newsletter({
         {IllustrationImage && (
           <div className={styles.illustrationWrapper}>
             <Image
+              alt="Ford Ranger"
               className={styles.illustration}
-              src={IllustrationImage.src}
-              width={IllustrationImage.width}
               height={IllustrationImage.height}
+              src={IllustrationImage.src}
               style={{
                 aspectRatio:
                   parseInt(IllustrationImage.width) /
                   parseInt(IllustrationImage.height),
               }}
-              alt="Ford Ranger"
+              width={IllustrationImage.width}
             />
           </div>
         )}
@@ -91,33 +96,33 @@ export default function Newsletter({
             }}
           />
         )}
-        <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>
+        <form className={styles.form} onSubmit={onFormSubmit} ref={formRef}>
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
               <div className={styles.confirmation}>{confirmationMessage}</div>
             ) : (
               <Input
-                className={styles.input}
-                type="email"
-                size="large"
-                placeholder="Enter your e-mail address"
                 background="dark"
-                value={email}
+                className={styles.input}
                 errorMessage={error}
-                required
                 onChange={ev => setEmail(ev.target.value)}
+                placeholder="Enter your e-mail address"
+                required
+                size="large"
+                type="email"
+                value={email}
               />
             )}
           </div>
           {confirmationMessage ? (
             <Button
               className={styles.button}
-              type="button"
-              size="large"
               onClick={ev => {
                 ev.preventDefault();
                 setConfirmationMessage(null);
               }}
+              size="large"
+              type="button"
             >
               Reset
             </Button>
@@ -127,11 +132,11 @@ export default function Newsletter({
                 className={clsx(styles.button, 'g-recaptcha', {
                   [styles.isBusy]: isBusy,
                 })}
-                type="submit"
-                size="large"
-                data-sitekey={googleRecaptchaSitekey}
-                data-callback="onCaptchaSuccess"
                 data-action="requestSubmit"
+                data-callback="onCaptchaSuccess"
+                data-sitekey={googleRecaptchaSitekey}
+                disabled={isBusy}
+                isBusy={isBusy}
                 onClick={ev => {
                   const isValid = formRef.current.reportValidity();
                   if (isValid) {
@@ -140,8 +145,8 @@ export default function Newsletter({
                     ev.preventDefault();
                   }
                 }}
-                disabled={isBusy}
-                isBusy={isBusy}
+                size="large"
+                type="submit"
               >
                 Submit
               </Button>

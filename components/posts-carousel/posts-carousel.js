@@ -15,7 +15,7 @@ import Tile from '@components/tile/tile';
 
 import styles from './posts-carousel.module.scss';
 
-export default function PostsCarousel({ title, description, button, posts }) {
+export default function PostsCarousel({ button, description, posts, title }) {
   const isMobile = useIsMobile();
   const swiperRef = useRef(null);
 
@@ -65,20 +65,20 @@ export default function PostsCarousel({ title, description, button, posts }) {
 
   return (
     <Container collapseMargin>
-      <SectionIntro title={title} description={description} fitInline>
+      <SectionIntro description={description} fitInline title={title}>
         <SectionButtons>
           <div className={styles.actionButtons}>
             {groupedPosts.length > 1 && (
               <div className={styles.swiperButtons}>
                 <Button
                   onClick={handlePrevClick}
-                  variant="secondary"
                   rightIcon="arrow-previous"
+                  variant="secondary"
                 />
                 <Button
                   onClick={handleNextClick}
-                  variant="secondary"
                   rightIcon="arrow-next"
+                  variant="secondary"
                 />
               </div>
             )}
@@ -91,12 +91,12 @@ export default function PostsCarousel({ title, description, button, posts }) {
 
       <Swiper
         className={styles.swiper}
-        slidesPerView={1}
-        spaceBetween={isMobile ? 0 : 24}
+        loop={false}
         navigation
         onSwiper={swiper => (swiperRef.current = swiper)}
-        loop={false}
         slidesPerGroup={1}
+        slidesPerView={1}
+        spaceBetween={isMobile ? 0 : 24}
         watchSlidesProgress
       >
         {groupedPosts.map((group, groupIndex) => (

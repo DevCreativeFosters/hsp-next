@@ -23,16 +23,16 @@ const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
 
 const DEFAULT_PRICE_SUMMARY = {
-  price: 0,
   installationCost: 0,
+  price: 0,
 };
 
 const Section = ({
-  id,
+  children,
   headerChildren,
   headerClick,
+  id,
   isOpen = false,
-  children,
 }) => {
   return (
     <div
@@ -42,8 +42,8 @@ const Section = ({
     >
       <button
         className={styles.sectionHeader}
-        type="button"
         onClick={() => headerClick(id)}
+        type="button"
       >
         {headerChildren}
         <ExpandIcon className={styles.sectionHeaderIcon} />
@@ -53,7 +53,7 @@ const Section = ({
   );
 };
 
-const NrCircle = ({ nr, isSmall, className }) => {
+const NrCircle = ({ className, isSmall, nr }) => {
   if (nr === 0) return null;
 
   return (
@@ -68,26 +68,26 @@ const NrCircle = ({ nr, isSmall, className }) => {
 };
 
 export default function Sidebar({
-  openSection,
-  setOpenSection,
-  selectedProducts,
-  removeProduct,
-  isMobile,
-  className,
   allLocations,
+  className,
+  isMobile,
+  openSection,
+  removeProduct,
+  selectedProducts,
+  setOpenSection,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const {
-    searchGeolocation,
-    location,
-    selectedStore,
-    setSelectedStore,
     filteredLocations,
     isMapVisible,
+    location,
     radius,
+    searchGeolocation,
+    selectedStore,
+    setSelectedStore,
   } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(
@@ -111,9 +111,9 @@ export default function Sidebar({
     function calculatePrice() {
       let newPriceSummary = selectedProducts.reduce(
         (accumulator, currentProduct) => ({
-          price: accumulator.price + currentProduct.price,
           installationCost:
             accumulator.installationCost + currentProduct.installationCost,
+          price: accumulator.price + currentProduct.price,
         }),
         DEFAULT_PRICE_SUMMARY,
       );
@@ -131,30 +131,30 @@ export default function Sidebar({
         })}
       >
         <Section
-          id="products"
           headerChildren={
             <>
               Your setup <NrCircle nr={selectedProducts.length} />
             </>
           }
           headerClick={setOpenSection}
+          id="products"
           isOpen={openSection === 'products'}
         >
           <ProductsList
-            selectedProducts={selectedProducts}
             removeProduct={removeProduct}
+            selectedProducts={selectedProducts}
           />
         </Section>
         <Section
-          id="store"
           headerChildren={<>Locate your store</>}
           headerClick={setOpenSection}
+          id="store"
           isOpen={openSection === 'store'}
         >
           <StoreSearchControls
-            label={null}
-            isHidden={selectedStore}
             allLocations={allLocations}
+            isHidden={selectedStore}
+            label={null}
           />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
@@ -170,10 +170,10 @@ export default function Sidebar({
               <StoreList
                 className={styles.results}
                 items={filteredLocations}
-                show={isInlineResultListVisible}
                 onSelect={item => {
                   setSelectedStore(item);
                 }}
+                show={isInlineResultListVisible}
               />
             </>
           )}
@@ -205,9 +205,9 @@ export default function Sidebar({
           </div>
           <Button
             className={styles.summaryButton}
-            size="large"
             disabled={selectedProducts.length === 0 || !selectedStore}
             onClick={handleOpenModal}
+            size="large"
           >
             Send enquiry
           </Button>
@@ -224,26 +224,26 @@ export default function Sidebar({
           type="button"
         >
           <ListIcon />
-          <NrCircle nr={selectedProducts.length} isSmall />
+          <NrCircle isSmall nr={selectedProducts.length} />
         </button>
         <div className={styles.sidebarMobileBarPrice}>
           {formatPrice(priceSummary.price)}
         </div>
         <Button
-          size="large"
           disabled={selectedProducts.length === 0 || !selectedStore}
           onClick={handleOpenModal}
+          size="large"
         >
           Send enquiry
         </Button>
       </div>
       {enquiryModalOpened && (
         <EnquiryModal
-          onClose={handleCloseModal}
-          store={selectedStore}
-          selectedProducts={selectedProducts}
-          productPrice={priceSummary.price}
           installationCost={priceSummary.installationCost}
+          onClose={handleCloseModal}
+          productPrice={priceSummary.price}
+          selectedProducts={selectedProducts}
+          store={selectedStore}
         />
       )}
     </>

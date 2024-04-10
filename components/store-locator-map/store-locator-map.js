@@ -30,9 +30,9 @@ function filterLocationsWithinBounds(bounds, locations) {
 }
 
 export default function StoreLocatorMap({
+  className,
   locations = [],
   onMarkerClick,
-  className,
 }) {
   const { searchGeolocation, setFilteredStores } =
     useContext(StoreLocatorContext);
@@ -65,23 +65,23 @@ export default function StoreLocatorMap({
         const map = new google.maps.Map(
           document.getElementById('store-locator-map'),
           {
-            center: center,
-            zoom: DEFAULT_MAP_ZOOM,
-            mapId: NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
-            minZoom: 1,
-            maxZoom: 17,
-            mapTypeControl: false,
-            streetViewControl: true,
             backgroundColor: '#000000',
+            center: center,
+            mapId: NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
+            mapTypeControl: false,
+            maxZoom: 17,
+            minZoom: 1,
+            streetViewControl: true,
+            zoom: DEFAULT_MAP_ZOOM,
           },
         );
 
         const circle = new google.maps.Circle({
-          strokeOpacity: 0,
+          center: center,
           fillOpacity: 0,
           map: map,
-          center: center,
           radius: RADIUS,
+          strokeOpacity: 0,
         });
 
         map.fitBounds(circle.getBounds());
@@ -101,15 +101,15 @@ export default function StoreLocatorMap({
       if (googleMap) {
         let markers = locations
           .map(location => {
-            const { name, geolocation, icon } = location;
+            const { geolocation, icon, name } = location;
             if (geolocation?.lat == null || geolocation?.lng == null) {
               return null;
             }
 
             const marker = new google.maps.Marker({
+              icon,
               position: geolocation,
               title: name,
-              icon,
             });
 
             marker.addListener('click', () => onMarkerClick(location));
@@ -133,11 +133,11 @@ export default function StoreLocatorMap({
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
         const circle = new google.maps.Circle({
-          map: googleMap,
           center: searchGeolocation,
+          fillOpacity: 0,
+          map: googleMap,
           radius: RADIUS,
           strokeOpacity: 0,
-          fillOpacity: 0,
         });
         googleMap.fitBounds(circle.getBounds());
       }

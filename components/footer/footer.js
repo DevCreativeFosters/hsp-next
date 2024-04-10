@@ -1,6 +1,8 @@
+import Logo from '@images/logo.svg';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
-import Logo from '@images/logo.svg';
+
 import styles from './footer.module.scss';
 
 export default function Footer({ menus, text }) {
@@ -21,21 +23,21 @@ export default function Footer({ menus, text }) {
               <div className={styles.column}>
                 <ul className={styles.menuList}>
                   {menus.hsp.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>
@@ -45,21 +47,21 @@ export default function Footer({ menus, text }) {
                 </ul>
                 <ul className={styles.menuList}>
                   {menus.lifestyle.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>
@@ -71,21 +73,21 @@ export default function Footer({ menus, text }) {
               <div className={styles.column}>
                 <ul className={styles.menuList}>
                   {menus.products.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>
@@ -97,21 +99,21 @@ export default function Footer({ menus, text }) {
               <div className={styles.column}>
                 <ul className={styles.menuList}>
                   {menus.services.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>
@@ -123,21 +125,21 @@ export default function Footer({ menus, text }) {
               <div className={styles.column}>
                 <ul className={styles.menuList}>
                   {menus.resources.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>
@@ -147,21 +149,21 @@ export default function Footer({ menus, text }) {
                 </ul>
                 <ul className={styles.menuList}>
                   {menus.legal.map((menu, idx) => (
-                    <li key={menu.label + idx} className={styles.menuItem}>
+                    <li className={styles.menuItem} key={menu.label + idx}>
                       {idx === 0 ? (
                         <Button
                           footer={true}
                           href={menu.url}
-                          variant="tertiary"
                           rightIcon="arrow-forward"
+                          variant="tertiary"
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
-                          variant="footer-item"
                           size="xsmall"
+                          variant="footer-item"
                         >
                           {menu.label}
                         </Button>

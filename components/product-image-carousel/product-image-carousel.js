@@ -31,9 +31,9 @@ export default function ProductImageCarousel({ images }) {
       backgroundImage: selectedImage
         ? `url(${selectedImage.sourceUrl})`
         : 'none',
-      backgroundSize: zoomed ? '250%' : 'cover',
       backgroundPosition: backgroundPosition,
       backgroundRepeat: 'no-repeat',
+      backgroundSize: zoomed ? '250%' : 'cover',
     };
   }, [backgroundPosition, selectedImage, zoomed]);
 
@@ -118,12 +118,12 @@ export default function ProductImageCarousel({ images }) {
     const itemTemplate = item => (
       <div className={styles.thumbnailWrapper}>
         <Image
-          className={styles.thumbnail}
-          src={item.sourceUrl}
           alt={item.alt}
-          width={141}
+          className={styles.thumbnail}
           height={141}
           onClick={() => handleThumbnailClick(item)}
+          src={item.sourceUrl}
+          width={141}
         />
       </div>
     );
@@ -137,41 +137,41 @@ export default function ProductImageCarousel({ images }) {
         className={clsx(styles.mainImageContainer, {
           [styles.zoomed]: zoomed,
         })}
-        ref={mainImageContainerRef}
         onMouseEnter={handleZoomEnter}
         onMouseLeave={handleZoomLeave}
         onMouseMove={handleMouseMove}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleMouseMove}
         onTouchEnd={handleTouchEnd}
+        onTouchMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        ref={mainImageContainerRef}
         style={containerStyle}
       />
       <TileCarousel
+        buttonNextRef={buttonNextRef}
+        buttonPrevRef={buttonPrevRef}
         containerClassName={styles.thumbnailCarouselContainer}
         id="product-gallery"
+        itemTemplate={itemTpl}
         items={images}
+        name="Product image carousel"
         resetStyle
         smallGaps
-        name="Product image carousel"
-        buttonPrevRef={buttonPrevRef}
-        buttonNextRef={buttonNextRef}
-        itemTemplate={itemTpl}
       >
         {isNavigationVisible && images.length && (
           <>
             <Button
-              ref={buttonPrevRef}
-              className={clsx(styles.navigationButton, styles.prevButton)}
-              variant="secondary"
               background="dark"
+              className={clsx(styles.navigationButton, styles.prevButton)}
+              ref={buttonPrevRef}
               rightIcon="arrow-previous"
+              variant="secondary"
             />
             <Button
-              ref={buttonNextRef}
-              className={clsx(styles.navigationButton, styles.nextButton)}
-              variant="secondary"
               background="dark"
+              className={clsx(styles.navigationButton, styles.nextButton)}
+              ref={buttonNextRef}
               rightIcon="arrow-next"
+              variant="secondary"
             />
           </>
         )}

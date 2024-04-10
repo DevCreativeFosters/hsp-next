@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+
 import clsx from 'clsx';
 import parse from 'html-react-parser';
+
 import Button from '@components/button/button';
+
 import styles from './tooltip.module.scss';
 
 export default function Tooltip({ attributes = {}, className }) {
@@ -24,9 +27,9 @@ export default function Tooltip({ attributes = {}, className }) {
       )}
       <Button
         className={styles.tooltipButton}
+        onClick={() => setIsVisible(!isVisible)}
         rightIcon="question-mark"
         variant="tertiary"
-        onClick={() => setIsVisible(!isVisible)}
       />
       {isVisible && (
         <div className={styles.tooltip}>{parse(attributes.content)}</div>

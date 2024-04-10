@@ -82,14 +82,14 @@ export default function Hero({ slides, transition = 'fade' }) {
 
   return (
     <div
-      ref={heroRef}
       className={clsx(styles.hero, {
         [styles.swipeTransition]: transition === 'swipe',
         [styles.fadeTransition]: transition === 'fade',
       })}
-      onTouchStart={handleSwipeStart}
-      onTouchMove={handleSwipeMove}
       onTouchEnd={handleSwipeEnd}
+      onTouchMove={handleSwipeMove}
+      onTouchStart={handleSwipeStart}
+      ref={heroRef}
     >
       <div className={styles.track} data-index={currentSlideIndex}>
         {slides.map(({ backgroundImage, backgroundImagePosition }, index) => {
@@ -105,10 +105,10 @@ export default function Hero({ slides, transition = 'fade' }) {
                   backgroundImage?.node?.sourceUrl,
               ) ? (
                 <Image
-                  className={styles.backgroundImage}
-                  src={backgroundImage?.node?.sourceUrl}
                   alt={backgroundImage?.node?.altText || ''}
+                  className={styles.backgroundImage}
                   fill={true}
+                  src={backgroundImage?.node?.sourceUrl}
                   style={{ objectPosition: backgroundImagePosition }}
                 />
               ) : (
@@ -130,8 +130,8 @@ export default function Hero({ slides, transition = 'fade' }) {
             {currentSlide.buttonLink?.url && currentSlide.buttonLink?.title ? (
               <Button
                 className={styles.actionButton}
-                size="large"
                 href={currentSlide.buttonLink.url}
+                size="large"
                 target={currentSlide.buttonLink?.target || null}
               >
                 {currentSlide.buttonLink.title}
@@ -143,8 +143,8 @@ export default function Hero({ slides, transition = 'fade' }) {
             <div className={styles.slideDots}>
               {slides.map((_, index) => (
                 <div
-                  key={index}
                   className={styles.dotContainer}
+                  key={index}
                   onClick={() => handleSlideChange(index)}
                 >
                   <span

@@ -123,10 +123,10 @@ export default async function CategoryPage({ params, searchParams }) {
           <Container>
             <PageContainer>
               <ErrorPage
-                title="Variant not found"
-                text="Sorry, we couldn't find the variant you are looking for."
                 buttonText="Back to Products"
                 product
+                text="Sorry, we couldn't find the variant you are looking for."
+                title="Variant not found"
               />
             </PageContainer>
           </Container>
@@ -140,21 +140,21 @@ export default async function CategoryPage({ params, searchParams }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
           />
         </div>
         <PageClientSidePartial
+          allLocations={allLocations}
+          downloadFileFormId={downloadFileFormId}
+          enquiryFormId={enquiryFormId}
+          firstMatchedProduct={firstMatchedProduct}
           mainCategory={mainCategory}
           make={make}
           modelName={modelName}
-          enquiryFormId={enquiryFormId}
-          firstMatchedProduct={firstMatchedProduct}
-          variantSlug={searchParams.variant}
-          allLocations={allLocations}
-          productHeroData={productHeroData}
-          downloadFileFormId={downloadFileFormId}
           pageParams={params}
+          productHeroData={productHeroData}
+          variantSlug={searchParams.variant}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (

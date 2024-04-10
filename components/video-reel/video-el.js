@@ -124,13 +124,13 @@ export default function VideoEl({ isActive, thumbnail, video }) {
     <>
       {isActive && (
         <video
-          muted={canAutoplayWithSound === false}
-          ref={videoRef}
+          autoPlay
           className={styles.video}
           controls
           disablePictureInPicture
+          muted={canAutoplayWithSound === false}
           playsInline
-          autoPlay
+          ref={videoRef}
         >
           <source
             src={videoUrl}
@@ -142,29 +142,29 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
       {thumbnail.sourceUrl && (
         <Image
+          alt={thumbnail.altText}
           className={clsx(styles.thumbnail, {
             [styles.isVisible]: !isActive,
           })}
-          src={thumbnail.sourceUrl}
           height={546}
+          src={thumbnail.sourceUrl}
           width={294}
-          alt={thumbnail.altText}
         />
       )}
 
       {isActive && isPlayButtonVisible && (
         <button
-          type="button"
           className={clsx(styles.button, styles.playButton)}
           onClick={onPlayButtonClick}
+          type="button"
         />
       )}
 
       {isActive && !isPlayButtonVisible && !canAutoplayWithSound && (
         <button
-          type="button"
           className={clsx(styles.button, styles.soundButton)}
           onClick={onSoundButtonClick}
+          type="button"
         >
           <SpeakerIcon />
         </button>
@@ -172,10 +172,10 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
       <Button
         className={styles.buttonBack}
-        variant="tertiary"
-        size="large"
         leftIcon="arrow-backward"
         onClick={onBackButtonClick}
+        size="large"
+        variant="tertiary"
       />
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />

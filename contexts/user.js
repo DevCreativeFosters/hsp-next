@@ -7,8 +7,10 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
+
 import { USER_EXAMPLE } from '@mockup/user';
+
+import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
 
 const UserContext = createContext();
 
@@ -31,15 +33,16 @@ export const UserProvider = ({ children }) => {
     sessionStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
   }, [user]);
 
-  useEffect(handleSave, []); // TODO: replace with actual authentication
-  useEffect(getUserFromStorage, []);
+  // TODO: replace with actual authentication
+  useEffect(handleSave, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(getUserFromStorage, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <UserContext.Provider
       value={{
-        user,
-        setUser,
         handleSave,
+        setUser,
+        user,
       }}
     >
       {children}

@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+
 import clsx from 'clsx';
+
 import styles from './radio.module.scss';
 
 export default function Radio({
-  type = 'text',
   background = 'dark',
   errorMessage = '',
-  label = '',
   halfWidth = false,
-  required,
-  options = [],
+  label = '',
   name,
+  options = [],
+  required,
+  type = 'text',
   ...props
 }) {
   const [internalValue, setInternalValue] = useState();
@@ -47,13 +49,13 @@ export default function Radio({
               key={optionValue}
             >
               <input
-                className={styles.realInputElement}
-                type="radio"
-                name={name}
                 checked={isChecked}
-                value={optionValue}
+                className={styles.realInputElement}
+                name={name}
                 onChange={props.onChange || handleInternalChange}
                 required={required}
+                type="radio"
+                value={optionValue}
               />
               <div className={styles.radioMark} />
               <span className={styles.label}>{text}</span>
