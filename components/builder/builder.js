@@ -301,6 +301,8 @@ export default function Builder({
                 toggleProduct={toggleProduct}
                 stepNumber={stepNumber}
                 stepTitle={stepTitle}
+                selectedCover={selectedCover}
+                isMobile={isMobile}
               />
             )}
           </Container>

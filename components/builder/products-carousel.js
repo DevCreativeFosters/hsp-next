@@ -6,12 +6,14 @@ import { SwiperSlide } from 'swiper/react';
 
 import { getIcon } from '@lib/icons';
 
+import Button from '@components/button/button';
 import Carousel from '@components/carousel/carousel';
 
 import styles from './products-carousel.module.scss';
 
 const PlusIcon = getIcon('plus');
 const CheckMarkIcon = getIcon('check-mark');
+const CancelIcon = getIcon('cancel');
 
 export default function ProductsCarousel({
   className,
@@ -21,6 +23,8 @@ export default function ProductsCarousel({
   toggleProduct,
   stepNumber,
   stepTitle,
+  selectedCover,
+  isMobile,
 }) {
   const slides = products?.map(product => {
     const productTitle = product.variantName;
@@ -56,23 +60,35 @@ export default function ProductsCarousel({
     );
   });
 
+  const currentStepTitle =
+    stepNumber === 2 && isMobile ? 'Add products to' : stepTitle;
+
   return (
     <div className={clsx(styles.productsCarousel, className)}>
       <h2 className={styles.title}>
-        <span className={styles.number}>Step {stepNumber}:</span> {stepTitle}
+        <span className={styles.number}>Step {stepNumber}:</span>{' '}
+        {currentStepTitle}
+        {isMobile && stepNumber === 2 && selectedCover && (
+          <Button size="small" variant="secondary" className={styles.badge}>
+            {selectedCover.variantName}
+            <CancelIcon className={styles.badgeIcon} />
+          </Button>
+        )}
       </h2>
-      <Carousel
-        className={styles.carousel}
-        settings={{
-          slidesPerView: 'auto',
-          spaceBetween: 24,
-          navigation: true,
-          loop: false,
-          watchSlidesProgress: true,
-        }}
-        slides={slides}
-        showNavigation={products?.length > 7}
-      />
+      <div className={styles.carouselWrapper}>
+        <Carousel
+          className={styles.carousel}
+          settings={{
+            slidesPerView: 'auto',
+            spaceBetween: 24,
+            navigation: true,
+            loop: false,
+            watchSlidesProgress: true,
+          }}
+          slides={slides}
+          showNavigation={products?.length > 7}
+        />
+      </div>
     </div>
   );
 }

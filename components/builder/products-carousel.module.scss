@@ -14,11 +14,33 @@
 
   font-weight: 400;
   margin-block: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .number {
   color: var(--color-primary-100);
   font-weight: 600;
+}
+
+.badge {
+  font-size: 16px;
+  gap: 14px;
+}
+
+.badgeIcon {
+  color: var(--color-primary-100);
+
+  .badge:hover &,
+  .badge:focus & {
+    color: var(--color-white);
+  }
+}
+
+.carouselWrapper {
+  display: flex;
+  gap: 48px;
 }
 
 .carousel {
