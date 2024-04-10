@@ -14,6 +14,7 @@ import styles from './products-carousel.module.scss';
 const PlusIcon = getIcon('plus');
 const CheckMarkIcon = getIcon('check-mark');
 const CancelIcon = getIcon('cancel');
+const ArrowBackwardIcon = getIcon('arrow-backward');
 
 export default function ProductsCarousel({
   className,
@@ -98,8 +99,7 @@ export default function ProductsCarousel({
               )}
             </div>
             <div className={styles.productIcon}>
-              <PlusIcon className={styles.plusIcon} />
-              <CheckMarkIcon className={styles.checkIcon} />
+              <ArrowBackwardIcon className={styles.arrowIcon} />
             </div>
             {productTitle && (
               <p className={styles.productName}>{productTitle}</p>
