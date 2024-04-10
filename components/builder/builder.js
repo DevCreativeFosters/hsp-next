@@ -119,25 +119,6 @@ export default function Builder({
   }, [globalOptions, make, model, noCover]);
 
   useEffect(() => {
-    if (stepNumber === 0) {
-      return;
-    }
-
-    const newStep = selectedCover ? 2 : 1;
-
-    setStepNumber(newStep);
-    setStepTitle(STEP_TITLES[newStep]);
-  }, [selectedCover, setStepNumber, setStepTitle, stepNumber]);
-
-  useEffect(() => {
-    const isCoverSelected = selectedProducts.some(selectedProduct =>
-      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
-    );
-
-    setSelectedCover(isCoverSelected ? currentProduct : null);
-  }, [covers, currentProduct, selectedProducts, setSelectedCover]);
-
-  useEffect(() => {
     if (stepNumber === 1) {
       setStepProducts(covers);
     }
@@ -146,6 +127,29 @@ export default function Builder({
       setStepProducts(products);
     }
   }, [covers, products, setStepProducts, stepNumber]);
+
+  useEffect(() => {
+    if (!make || !model || stepNumber === 0) {
+      return;
+    }
+
+    const selectedCover = selectedProducts.find(selectedProduct =>
+      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+    );
+
+    setStepNumber(selectedCover ? 2 : 1);
+    setStepTitle(STEP_TITLES[selectedCover ? 2 : 1]);
+    setSelectedCover(selectedCover);
+  }, [
+    covers,
+    make,
+    model,
+    selectedProducts,
+    setSelectedCover,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+  ]);
 
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
