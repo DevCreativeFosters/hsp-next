@@ -41,6 +41,12 @@
 .carouselWrapper {
   display: flex;
   gap: 48px;
+
+  --product-width: 134px;
+
+  @include bp(medium) {
+    --product-width: 168px;
+  }
 }
 
 .carousel {
@@ -57,13 +63,7 @@
 }
 
 .swiperSlide {
-  --product-width: 134px;
-
   width: var(--product-width);
-
-  @include bp(medium) {
-    --product-width: 168px;
-  }
 }
 
 .product {
@@ -80,6 +80,11 @@
   &.isDisabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  &.isCover {
+    flex-shrink: 0;
+    width: var(--product-width);
   }
 }
 

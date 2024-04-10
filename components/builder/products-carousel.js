@@ -62,6 +62,9 @@ export default function ProductsCarousel({
 
   const currentStepTitle =
     stepNumber === 2 && isMobile ? 'Add products to' : stepTitle;
+  const productTitle = selectedCover?.variantName;
+  const productImage =
+    selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
   return (
     <div className={clsx(styles.productsCarousel, className)}>
@@ -76,6 +79,33 @@ export default function ProductsCarousel({
         )}
       </h2>
       <div className={styles.carouselWrapper}>
+        {!isMobile && stepNumber === 2 && selectedCover && (
+          <button
+            className={clsx(styles.product, styles.isCover)}
+            type="button"
+            onClick={() => toggleProduct(selectedCover)}
+          >
+            <div className={styles.productImageContainer}>
+              {productImage && (
+                <Image
+                  className={styles.productImage}
+                  src={productImage}
+                  alt={productTitle}
+                  width={168}
+                  height={Math.round(168 / 1.4)}
+                  style={{ objectFit: 'contain' }}
+                />
+              )}
+            </div>
+            <div className={styles.productIcon}>
+              <PlusIcon className={styles.plusIcon} />
+              <CheckMarkIcon className={styles.checkIcon} />
+            </div>
+            {productTitle && (
+              <p className={styles.productName}>{productTitle}</p>
+            )}
+          </button>
+        )}
         <Carousel
           className={styles.carousel}
           settings={{
