@@ -14,8 +14,13 @@ import Select from '@components/form/select';
 import styles from './ute-choose-your-vehicle.module.scss';
 
 export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
-  const { factoryOption, handleSave, maker, model, setVehicleSelection } =
-    useVehicleContext();
+  const {
+    handleSave,
+    maker,
+    model,
+    selectedFactoryOptions,
+    setVehicleSelection,
+  } = useVehicleContext();
   const {
     factorySelectOptions,
     handleFactoryOptionsChange,
@@ -66,6 +71,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
             <Select
               className={styles.select}
               dropdownInDocumentFlow
+              multiple={true}
               name="factoryOptions"
               onChange={(value, label) => {
                 handleFactoryOptionsChange(value, label);
@@ -73,7 +79,11 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
               options={factorySelectOptions}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
-              value={factoryOption?.slug || null}
+              value={
+                selectedFactoryOptions
+                  ? selectedFactoryOptions.map(option => option.slug)
+                  : null
+              }
             />
           )}
           <Button

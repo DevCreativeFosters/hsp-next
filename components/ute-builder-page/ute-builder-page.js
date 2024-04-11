@@ -19,12 +19,12 @@ export default function UteBuilderPage({
   const [productVariants, setProductVariants] = useState(null);
 
   const {
-    factoryOption,
     finalSelection,
     savedVehicleGlobal,
-    setFactoryOption,
+    selectedFactoryOptions,
     setMaker: setMake,
     setModel,
+    setSelectedFactoryOptions,
   } = useVehicleContext();
 
   useEffect(() => {
@@ -44,9 +44,9 @@ export default function UteBuilderPage({
         const vehicle = JSON.parse(savedVehicle);
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
-        const factoryOption = vehicle?.factoryOption || null;
+        const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
         setMake(vehicle?.maker);
-        setFactoryOption(factoryOption);
+        setSelectedFactoryOptions(selectedFactoryOptions);
 
         setModelAndProducts(model, maker);
       }
@@ -55,7 +55,13 @@ export default function UteBuilderPage({
       setModel(null);
       setProductVariants(null);
     }
-  }, [finalSelection, savedVehicleGlobal, setFactoryOption, setMake, setModel]);
+  }, [
+    finalSelection,
+    savedVehicleGlobal,
+    setMake,
+    setModel,
+    setSelectedFactoryOptions,
+  ]);
 
   const variantList = useMemo(() => {
     return normalizeUteBuilderProducts(productVariants);
@@ -64,7 +70,7 @@ export default function UteBuilderPage({
   return (
     <Builder
       allLocations={allLocations}
-      factoryOption={factoryOption}
+      factoryOption={selectedFactoryOptions}
       factoryOptions={factoryOptions}
       globalOptions={globalOptions}
       makes={makes}

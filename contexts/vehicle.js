@@ -21,12 +21,13 @@ export const VehicleProvider = ({ children }) => {
   const [stepNumber, setStepNumber] = useState(0);
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
-  const [factoryOption, setFactoryOption] = useState(null);
+  const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
+    selectedFactoryOptions: [],
   });
 
   const setVehicleSelection = vehicle => {
@@ -40,7 +41,7 @@ export const VehicleProvider = ({ children }) => {
     setModel(null);
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
-    setFactoryOption(null);
+    setSelectedFactoryOptions(null);
     setStepNumber(0);
     setStepTitle('');
 
@@ -52,16 +53,20 @@ export const VehicleProvider = ({ children }) => {
 
   const handleSave = useCallback(
     (params, reload) => {
-      const vehicleString = JSON.stringify({ factoryOption, maker, model });
+      const vehicleString = JSON.stringify({
+        maker,
+        model,
+        selectedFactoryOptions,
+      });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ factoryOption, maker, model });
+      setSavedVehicleGlobal({ maker, model, selectedFactoryOptions });
 
       setVehicleSelection({
-        factoryOption: factoryOption?.name || undefined,
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
+        selectedFactoryOptions: selectedFactoryOptions || null,
       });
 
       setDropdownOpened(false);
@@ -96,14 +101,13 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [factoryOption, maker, model, router, variant],
+    [maker, model, router, selectedFactoryOptions, variant],
   );
 
   return (
     <VehicleContext.Provider
       value={{
         dropdownOpened,
-        factoryOption,
         finalSelection,
         handleSave,
         handleVehicleReset,
@@ -111,12 +115,13 @@ export const VehicleProvider = ({ children }) => {
         model,
         savedVehicleGlobal,
         selectedCover,
+        selectedFactoryOptions,
         setDropdownOpened,
-        setFactoryOption,
         setMaker,
         setModel,
         setSavedVehicleGlobal,
         setSelectedCover,
+        setSelectedFactoryOptions,
         setStepNumber,
         setStepTitle,
         setVariant,
