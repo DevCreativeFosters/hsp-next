@@ -8,6 +8,7 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Pagination from '@components/pagination/pagination';
 import PostsList from '@components/posts-list/posts-list';
+import SectionIntro from '@components/section-intro/section-intro';
 
 import styles from '../page.module.scss';
 
@@ -35,6 +36,11 @@ export default async function HspTVPage({ searchParams }) {
         <div className={styles.breadcrumbs}>
           <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
         </div>
+        <SectionIntro
+          description={content?.content}
+          fitInline
+          title={content?.title}
+        />
         {contentResolved}
         <PostsList perPage={POSTS_PER_PAGE} posts={posts} variant="hsp-tv" />
         {totalPosts > POSTS_PER_PAGE && (

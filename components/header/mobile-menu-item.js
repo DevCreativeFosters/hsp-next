@@ -15,6 +15,7 @@ export default function MobileMenuItem({
 }) {
   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const containerRef = useRef();
+
   const renderSubItems = useCallback(subItems => {
     if (!subItems?.length) return null;
 
@@ -33,7 +34,9 @@ export default function MobileMenuItem({
               <Button
                 background="dark"
                 className={
-                  subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
+                  subItem.subItems.length > 0
+                    ? styles.menuItemLabel
+                    : styles.menuSubItem
                 }
                 href={subItem.url}
                 size="small"

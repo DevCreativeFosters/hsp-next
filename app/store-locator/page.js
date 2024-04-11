@@ -29,7 +29,7 @@ export default async function StoreLocatorPage() {
   const allStores = await getStores();
 
   return (
-    <Layout reserveSpaceForVehicleSelection withFooter={false} withMap>
+    <Layout reserveSpaceForVehicleSelection withMap>
       <FullscreenCollapse>
         <div className={styles.breadcrumbs}>
           <Breadcrumbs
