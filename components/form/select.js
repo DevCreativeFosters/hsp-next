@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useId, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import AnimateHeight from 'react-animate-height';
@@ -8,6 +8,8 @@ import AnimateHeight from 'react-animate-height';
 import { useClickOutside } from '@hooks/useClickOutside';
 
 import Input from '@components/form/input';
+import SelectCheckbox from '@components/form/select-checkbox';
+import SelectOption from '@components/form/select-option';
 
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
 
@@ -22,6 +24,7 @@ export default function Select({
   errorMessage = '',
   id = '',
   label = '',
+  multiple = false,
   onChange = () => null,
   onClick = () => null,
   options = [],
@@ -37,8 +40,19 @@ export default function Select({
   const [isOpen, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const selectedOption = useMemo(
-    () => options.find(option => value !== undefined && option.value === value),
-    [options, value],
+    () =>
+      !multiple
+        ? options.find(option => value !== undefined && option.value === value)
+        : null,
+    [multiple, options, value],
+  );
+
+  const selectedCheckboxes = useMemo(
+    () =>
+      multiple && value
+        ? options.filter(option => value.includes(option.value))
+        : [],
+    [multiple, options, value],
   );
 
   const elementId = useId();
@@ -67,16 +81,19 @@ export default function Select({
   const handleSelectOption = useCallback(
     (value, label) => {
       onChange(value, label);
-      setOpen(false);
+      if (!multiple) {
+        setOpen(false);
+      }
     },
-    [onChange],
+    [multiple, onChange],
   );
 
   const isSearchVisible =
     options.length >= MIN_RESULTS_TO_ENABLE_SEARCH && isOpen;
 
-  const isPlaceholder =
-    !selectedOption?.label && selectedOption?.value === undefined;
+  const isPlaceholder = multiple
+    ? !value?.length
+    : !selectedOption?.label && selectedOption?.value === undefined;
 
   return (
     <div className={clsx(styles.wrapperOuter, className)}>
@@ -117,10 +134,19 @@ export default function Select({
                   {prefix && (
                     <span className={styles.prefixSuffix}>{prefix} </span>
                   )}
-                  {selectedOption.label || selectedOption.value}
-                  {suffix && (
-                    <span className={styles.prefixSuffix}> {suffix}</span>
-                  )}
+
+                  <>
+                    {multiple ? (
+                      selectedCheckboxes.map(({ label, value }, index) =>
+                        index > 0 ? `, ${label || value}` : label || value,
+                      )
+                    ) : (
+                      <>{selectedOption.label || selectedOption.value}</>
+                    )}
+                    {suffix && (
+                      <span className={styles.prefixSuffix}> {suffix}</span>
+                    )}
+                  </>
                 </div>
               )}
             </>
@@ -165,10 +191,11 @@ export default function Select({
 
         <select
           className={styles.realSelect}
+          multiple={multiple}
           name={`fake_${props.name}`}
           onChange={() => {}}
           required={required}
-          value={value || ''}
+          value={value || multiple ? [] : ''}
         >
           {value ? <option>{value}</option> : null}
         </select>
@@ -204,24 +231,26 @@ export default function Select({
                   return true;
                 })
                 .map(({ label, value }, index) => (
-                  <button
-                    aria-selected={Boolean(selectedOption)}
-                    className={styles.option}
-                    data-value={value !== undefined ? value : label}
-                    key={index}
-                    onClick={() => handleSelectOption(value, label)}
-                    role="option"
-                    tabIndex={0}
-                    type="button"
-                  >
-                    {prefix && (
-                      <span className={styles.prefixSuffix}>{prefix} </span>
+                  <Fragment key={index}>
+                    {multiple ? (
+                      <SelectCheckbox
+                        handleSelectCheckbox={handleSelectOption}
+                        index={index}
+                        label={label}
+                        selectedCheckboxes={selectedCheckboxes}
+                        value={value}
+                      />
+                    ) : (
+                      <SelectOption
+                        handleSelectOption={handleSelectOption}
+                        label={label}
+                        prefix={prefix}
+                        selectedOption={selectedOption}
+                        suffix={suffix}
+                        value={value}
+                      />
                     )}
-                    {label || value}
-                    {suffix && (
-                      <span className={styles.prefixSuffix}> {suffix}</span>
-                    )}
-                  </button>
+                  </Fragment>
                 ))}
             </div>
           </AnimateHeight>
