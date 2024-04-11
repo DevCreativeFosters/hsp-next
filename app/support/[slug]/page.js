@@ -35,8 +35,8 @@ export default async function SupportSubpage({ params }) {
                   <BreadcrumbsSupport
                     exactBreadcrumb={{
                       label: content?.title,
-                      url: routes.support(params.slug),
                       strong: true,
+                      url: routes.support(params.slug),
                     }}
                   />
                 </div>
@@ -50,9 +50,9 @@ export default async function SupportSubpage({ params }) {
                 )}
                 {content && (
                   <Wysiwyg
+                    accordions={accordions}
                     className={styles.content}
                     content={content?.content}
-                    accordions={accordions}
                   />
                 )}
               </div>

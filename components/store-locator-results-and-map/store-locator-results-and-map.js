@@ -1,24 +1,28 @@
 'use client';
 
 import { useContext, useEffect, useRef } from 'react';
-import { findLocationsInRadius } from '@lib/store-locations';
+
+import StoreLocatorContext from '@contexts/store-locator';
+
 import { getGeoHash } from '@lib/get-geo-hash';
 import normalizeStores from '@lib/normalize-stores';
-import StoreLocatorContext from '@contexts/store-locator';
+import { findLocationsInRadius } from '@lib/store-locations';
+
 import Container from '@components/container/container';
-import StoreTile from '@components/store-tile/store-tile';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import StoreTile from '@components/store-tile/store-tile';
+
 import styles from './store-locator-results-and-map.module.scss';
 
 export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
-    searchGeolocation,
     filteredLocations,
-    setFilteredLocations,
-    selectedStore,
-    setSelectedStore,
     filteredStores,
+    searchGeolocation,
+    selectedStore,
+    setFilteredLocations,
+    setSelectedStore,
   } = useContext(StoreLocatorContext);
 
   useEffect(
@@ -26,7 +30,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
       const locationList = normalizeStores(allLocations, searchGeolocation);
       setFilteredLocations(locationList);
     },
-    [allLocations, setFilteredLocations, searchGeolocation],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   useEffect(
@@ -36,8 +40,8 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         const item = resultsRef.current.querySelector(`#${geoHash}`);
         if (item) {
           resultsRef.current?.scrollTo({
-            top: item.offsetTop,
             behavior: 'smooth',
+            top: item.offsetTop,
           });
         }
       }
@@ -56,7 +60,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         setFilteredLocations(locationList);
       }
     },
-    [searchGeolocation, allLocations, setFilteredLocations],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (

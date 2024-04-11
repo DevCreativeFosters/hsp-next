@@ -1,16 +1,18 @@
 import Image from 'next/image';
+
 import Button from '@components/button/button';
 import ContentBox from '@components/content-box/content-box';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './product-hero.module.scss';
 
 export default function ProductHero({
+  button,
+  description,
+  features,
+  image,
   make,
   title,
-  description,
-  button,
-  image,
-  features,
   warranty,
 }) {
   const slogan = make ? `for ${make}` : '100% Australian';
@@ -35,9 +37,9 @@ export default function ProductHero({
       {image && (
         <div className={styles.image}>
           <Image
-            src={image.mediaItemUrl}
             alt=""
             height={image.mediaDetails.height}
+            src={image.mediaItemUrl}
             width={image.mediaDetails.width}
           />
         </div>

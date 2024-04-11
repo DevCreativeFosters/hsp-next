@@ -13,25 +13,17 @@ import Select from '@components/form/select';
 
 import styles from './ute-choose-your-vehicle.module.scss';
 
-export default function UTEChooseYourVehicle({
-  makes: makersAndModels,
-  factoryOptions,
-}) {
-  const { maker, model, handleSave, setVehicleSelection, factoryOption } =
+export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
+  const { factoryOption, handleSave, maker, model, setVehicleSelection } =
     useVehicleContext();
   const {
+    factorySelectOptions,
+    handleFactoryOptionsChange,
     handleMakerChange,
     handleModelChange,
     makerSelectOptions,
     modelSelectOptions,
-    factorySelectOptions,
-    handleFactoryOptionsChange,
-  } = useVehicleSelection(
-    makersAndModels,
-    setVehicleSelection,
-    maker,
-    factoryOptions,
-  );
+  } = useVehicleSelection(makes, setVehicleSelection, maker, factoryOptions);
 
   return (
     <Container className={styles.container}>
@@ -46,43 +38,49 @@ export default function UTEChooseYourVehicle({
         <h2 className={styles.chooseVehicleTitle}>Choose your vehicle</h2>
         <div className={styles.vehicleSelector}>
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MAKER}
-            options={makerSelectOptions}
-            value={getValueOrSlug(maker) || null}
-            dropdownInDocumentFlow
-            onChange={handleMakerChange}
             className={styles.select}
+            dropdownInDocumentFlow
             name="maker"
+            onChange={(slug, name) => {
+              handleMakerChange(slug, name);
+            }}
+            options={makerSelectOptions}
+            placeholder={constants.SELECT_LABELS.MAKER}
+            size="large"
+            value={getValueOrSlug(maker) || null}
           />
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MODEL}
-            options={modelSelectOptions}
-            value={getValueOrSlug(model) || null}
+            className={styles.select}
             disabled={!modelSelectOptions.length}
             dropdownInDocumentFlow
-            onChange={handleModelChange}
-            className={styles.select}
             name="model"
+            onChange={(slug, name) => {
+              handleModelChange(slug, name);
+            }}
+            options={modelSelectOptions}
+            placeholder={constants.SELECT_LABELS.MODEL}
+            size="large"
+            value={getValueOrSlug(model) || null}
           />
           {factoryOptions?.length && (
             <Select
-              size="large"
-              placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
-              options={factorySelectOptions}
-              value={factoryOption?.slug || null}
-              dropdownInDocumentFlow
               className={styles.select}
-              onChange={handleFactoryOptionsChange}
+              dropdownInDocumentFlow
               name="factoryOptions"
+              onChange={(value, label) => {
+                handleFactoryOptionsChange(value, label);
+              }}
+              options={factorySelectOptions}
+              placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
+              size="large"
+              value={factoryOption?.slug || null}
             />
           )}
           <Button
-            rightIcon="arrow-forward"
             className={styles.button}
-            onClick={handleSave}
             disabled={!model}
+            onClick={handleSave}
+            rightIcon="arrow-forward"
           >
             Start building
           </Button>

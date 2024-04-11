@@ -1,18 +1,20 @@
 import { useMemo } from 'react';
-import Link from 'next/link';
+
 import Image from 'next/image';
+import Link from 'next/link';
+
 import styles from '@components/lifestyle/featured-article.module.scss';
 
 export default function FeaturedArticle({
-  title,
   content,
   createdAt,
-  url,
   image,
+  title,
+  url,
 }) {
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    year: 'numeric',
     month: 'long',
+    year: 'numeric',
   });
 
   const imageWidth = image?.mediaDetails.width;
@@ -23,10 +25,10 @@ export default function FeaturedArticle({
     () =>
       image ? (
         <Image
-          className={styles.image}
-          src={image?.sourceUrl}
           alt={image?.altText || ''}
+          className={styles.image}
           fill={true}
+          src={image?.sourceUrl}
         />
       ) : (
         <span className={styles.imagePlaceholder} />

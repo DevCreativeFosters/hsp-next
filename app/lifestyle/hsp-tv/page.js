@@ -36,12 +36,12 @@ export default async function HspTVPage({ searchParams }) {
           <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
         </div>
         {contentResolved}
-        <PostsList variant="hsp-tv" posts={posts} perPage={POSTS_PER_PAGE} />
+        <PostsList perPage={POSTS_PER_PAGE} posts={posts} variant="hsp-tv" />
         {totalPosts > POSTS_PER_PAGE && (
           <Pagination
+            current={currentPage}
             perPage={POSTS_PER_PAGE}
             total={totalPosts}
-            current={currentPage}
             urlBase={routes.tv()}
           />
         )}

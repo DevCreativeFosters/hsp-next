@@ -1,5 +1,6 @@
-import styles from '@components/video-youtube/arrow-triplet.module.scss';
 import clsx from 'clsx';
+
+import styles from '@components/video-youtube/arrow-triplet.module.scss';
 
 export function ArrowTriplet({ reversed }) {
   return (
@@ -10,8 +11,8 @@ export function ArrowTriplet({ reversed }) {
     >
       {[...Array(3)].map((_, index) => (
         <span
-          key={index}
           className={clsx(styles.seekArrow, { [styles.isReversed]: reversed })}
+          key={index}
         />
       ))}
     </div>

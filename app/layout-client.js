@@ -8,6 +8,10 @@ export default function RootLayoutClient() {
   const pathname = usePathname();
 
   useEffect(() => {
+    document.body.scrollTop = 0;
+  }, [pathname]);
+
+  useEffect(() => {
     const sessionCurrentPathname = sessionStorage.getItem('currentPathname');
 
     if (pathname !== sessionCurrentPathname) {

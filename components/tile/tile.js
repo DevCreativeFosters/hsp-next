@@ -1,21 +1,24 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
+
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from './tile.module.scss';
+
 import routes from '@lib/routes';
 
+import styles from './tile.module.scss';
+
 export default function Tile({
-  title,
+  className,
   content,
   createdAt,
-  url,
-  link,
   image,
+  link,
+  title,
+  url,
   variant,
-  className,
 }) {
   const postUrl = url || link?.url || '#';
   const segments = postUrl.split('/').filter(Boolean);
@@ -36,8 +39,8 @@ export default function Tile({
   });
 
   const createdAtHuman = new Date(createdAt).toLocaleString('en-AU', {
-    year: 'numeric',
-    month: 'long', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
+    month: 'long',
+    year: 'numeric', // do not use 'medium' as it is returning inconsistent strings server- vs client-side
   });
 
   const imageWidth = imageNormalized?.width;
@@ -47,24 +50,24 @@ export default function Tile({
   const renderLink = useCallback(
     children => (
       <Link
-        href={urlNormalized || ''}
         className={styles.link}
+        href={urlNormalized || ''}
         target={link?.target || null}
       >
         {children}
       </Link>
     ),
-    [urlNormalized, link],
+    [link, urlNormalized],
   );
 
   const TheImage = useMemo(
     () =>
       imageNormalized?.sourceUrl ? (
         <Image
-          className={styles.image}
-          src={imageNormalized.sourceUrl}
           alt={imageNormalized.altText || ''}
+          className={styles.image}
           fill={true}
+          src={imageNormalized.sourceUrl}
         />
       ) : (
         <span className={styles.imagePlaceholder} />

@@ -4,10 +4,8 @@ import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
-import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
-import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -42,7 +40,7 @@ export default async function CategoryPage({ params }) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData || shouldBeExcluded) {
+  if (!makeData || !categoryData) {
     return notFound();
   }
 
@@ -50,14 +48,14 @@ export default async function CategoryPage({ params }) {
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
   const productHeroData = {
-    image:
-      filteredData?.length > 1
-        ? filteredData[0].featuredImage?.node
-        : featuredImage,
     features:
       filteredData?.length > 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
+    image:
+      filteredData?.length > 1
+        ? filteredData[0].featuredImage?.node
+        : featuredImage,
     warrantyDescription:
       filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyDescription
@@ -91,18 +89,18 @@ export default async function CategoryPage({ params }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
           />
         </div>
         <ProductHero
-          make={makeData.name}
-          title={categoryData?.name}
           description={makeData?.description || categoryData?.description}
-          image={productHeroData.image}
           features={{
             content: productHeroData.features,
           }}
+          image={productHeroData.image}
+          make={makeData.name}
+          title={categoryData?.name}
           warranty={{
             content: productHeroData.warrantyDescription,
             years: productHeroData.warrantyTimePeriod,

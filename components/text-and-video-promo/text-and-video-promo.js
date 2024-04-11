@@ -1,16 +1,16 @@
-import Container from '@components/container/container';
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
 import styles from './text-and-video-promo.module.scss';
 
 export default function TextAndImagePromo({
-  title,
   description,
-  videoUrl,
   linkText,
   linkUrl = '',
+  title,
+  videoUrl,
 }) {
   return (
     <Container>
@@ -28,14 +28,14 @@ export default function TextAndImagePromo({
             />
           )}
           {linkUrl && linkText && (
-            <Button className={styles.moreButton} size="large" href={linkUrl}>
+            <Button className={styles.moreButton} href={linkUrl} size="large">
               {linkText}
             </Button>
           )}
         </div>
         {videoUrl && (
           <div className={styles.video}>
-            <VideoCard variant="rectangle" url={videoUrl} />
+            <VideoCard url={videoUrl} variant="rectangle" />
           </div>
         )}
       </div>

@@ -12,7 +12,41 @@
 .title {
   @include paragraph-lg;
 
+  font-weight: 400;
   margin-block: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.number {
+  color: var(--color-primary-100);
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 16px;
+  gap: 14px;
+}
+
+.badgeIcon {
+  color: var(--color-primary-100);
+
+  .badge:hover &,
+  .badge:focus & {
+    color: var(--color-white);
+  }
+}
+
+.carouselWrapper {
+  display: flex;
+  gap: 48px;
+
+  --product-width: 134px;
+
+  @include bp(medium) {
+    --product-width: 168px;
+  }
 }
 
 .carousel {
@@ -29,13 +63,7 @@
 }
 
 .swiperSlide {
-  --product-width: 134px;
-
   width: var(--product-width);
-
-  @include bp(medium) {
-    --product-width: 168px;
-  }
 }
 
 .product {
@@ -53,6 +81,11 @@
     opacity: 0.5;
     pointer-events: none;
   }
+
+  &.isCover {
+    flex-shrink: 0;
+    width: var(--product-width);
+  }
 }
 
 .productIcon {
@@ -67,6 +100,7 @@
   border: 2px solid currentcolor;
   transition: all 150ms;
   color: var(--color-black-100);
+  background-color: rgb(255 255 255 / 80%);
 
   .checkIcon {
     display: none;
@@ -83,6 +117,10 @@
       display: none;
     }
   }
+}
+
+.arrowIcon {
+  color: var(--color-black-100);
 }
 
 .productImageContainer {

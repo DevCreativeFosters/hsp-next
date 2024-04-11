@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useClickOutside = (cb, refs = []) => {
   const singleRef = useRef();
@@ -17,5 +17,5 @@ export const useClickOutside = (cb, refs = []) => {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, [cb]);
+  }, [cb]); // eslint-disable-line react-hooks/exhaustive-deps
 };

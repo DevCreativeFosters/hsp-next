@@ -1,8 +1,10 @@
-import { getIcon } from '@lib/icons';
 import clsx from 'clsx';
+
+import { getIcon } from '@lib/icons';
+
 import styles from './alert.module.scss';
 
-export default function Alert({ icon = 'info', className = '', content }) {
+export default function Alert({ className = '', content, icon = 'info' }) {
   const Icon = getIcon(icon);
 
   return (

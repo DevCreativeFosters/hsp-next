@@ -1,19 +1,22 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+
 import { createPortal } from 'react-dom';
+
 import Button from '@components/button/button';
+
 import styles from './modal.module.scss';
 
 export const MODAL_PORTAL_ID = 'modal-portal';
 
 export default function Modal({
-  title,
+  children,
+  container: customContainer,
   isVisible,
   maxWidth,
-  container: customContainer,
-  children,
   onClose = () => {},
+  title,
 }) {
   const [doc, setDoc] = useState(null);
 
@@ -49,16 +52,16 @@ export default function Modal({
         <header className={styles.header}>
           <Button
             className={styles.backwardButton}
-            variant="tertiary"
-            rightIcon="arrow-backward-large"
             onClick={onCloseButtonClick}
+            rightIcon="arrow-backward-large"
+            variant="tertiary"
           />
           {title && <h3>{title}</h3>}
           <Button
             className={styles.closeButton}
+            onClick={onCloseButtonClick}
             rightIcon="close-large"
             variant="tertiary"
-            onClick={onCloseButtonClick}
           />
         </header>
         <div className={styles.content}>{children}</div>

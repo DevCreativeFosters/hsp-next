@@ -1,20 +1,22 @@
 'use client';
 
-import Container from '@components/container/container';
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import Tile from '@components/tile/tile';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
-import { useIsMobile } from '@hooks/useIsMobile';
+import Tile from '@components/tile/tile';
+
 import styles from './posts-masonry.module.scss';
 
-export default function PostsMasonry({ title, description, button, posts }) {
+export default function PostsMasonry({ button, description, posts, title }) {
   const isMobile = useIsMobile();
 
   return (
     <Container collapseMargin>
-      <SectionIntro title={title} description={description} fitInline>
+      <SectionIntro description={description} fitInline title={title}>
         {button && !isMobile && (
           <SectionButtons>
             <Button href={button.url} variant="primary">
@@ -27,8 +29,8 @@ export default function PostsMasonry({ title, description, button, posts }) {
       {isMobile ? (
         <div className={styles.carousel}>
           <TileCarousel
-            items={posts}
             itemTemplate={Tile}
+            items={posts}
             name="posts masonry"
           />
         </div>

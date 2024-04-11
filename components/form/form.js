@@ -1,13 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
+
 import styles from './form.module.scss';
 
 export default function Form({
-  withPadding = false,
-  withBackground = false,
-  isDirty = false,
   children,
+  isDirty = false,
+  withBackground = false,
+  withPadding = false,
   ...props
 }) {
   return (

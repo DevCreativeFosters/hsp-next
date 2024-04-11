@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { formatPrice } from '@lib/helpers';
+
 import styles from './product-card.module.scss';
 
 export default function ProductCard({ product }) {
@@ -10,14 +12,14 @@ export default function ProductCard({ product }) {
   const productImage = product.productImage?.node?.sourceUrl;
 
   return (
-    <Link href={productLink} className={styles.card}>
+    <Link className={styles.card} href={productLink}>
       <div className={styles.imageContainer}>
         <Image
-          className={styles.productImage}
-          src={productImage}
           alt={productTitle}
-          width={168}
+          className={styles.productImage}
           height={Math.round(168 / 1.4)}
+          src={productImage}
+          width={168}
         />
       </div>
       {productTitle && <p className={styles.productName}>{productTitle}</p>}

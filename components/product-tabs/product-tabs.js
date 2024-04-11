@@ -1,21 +1,25 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
-import Wysiwyg from '@components/wysiwyg/wysiwyg';
+import Image from 'next/image';
+
 import { scrollIntoViewHorizontally } from '@lib/helpers';
+
 import DownloadFileButton from '@components/download-file-button/download-file-button';
+import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
 import styles from './product-tabs.module.scss';
 
 export default function ProductTabs({
-  featuresDescription,
+  downloadFileFormId,
   featuresBoxes,
-  specificationDescription,
-  specificationContent,
+  featuresDescription,
   manualsDescription,
   manualsLinks,
-  downloadFileFormId,
+  specificationContent,
+  specificationDescription,
 }) {
   const headerRef = useRef(null);
   const tabs = useMemo(
@@ -29,11 +33,11 @@ export default function ProductTabs({
       ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
     }),
     [
-      featuresDescription,
       featuresBoxes,
-      specificationDescription,
-      specificationContent,
+      featuresDescription,
       manualsLinks,
+      specificationContent,
+      specificationDescription,
     ],
   );
 
@@ -57,13 +61,13 @@ export default function ProductTabs({
       <div className={styles.headers} ref={headerRef}>
         {Object.entries(tabs).map(([tabKey, tabTitle]) => (
           <button
-            id={tabKey}
-            key={tabKey}
             className={clsx(styles.tab, {
               [styles.activeTab]: activeTab === tabKey,
             })}
-            type="button"
+            id={tabKey}
+            key={tabKey}
             onClick={() => setActiveTab(tabKey)}
+            type="button"
           >
             {tabTitle}
           </button>
@@ -88,11 +92,11 @@ export default function ProductTabs({
                     <div>
                       {feature.icon && (
                         <Image
+                          alt="icon"
                           className={styles.icon}
+                          height={58}
                           src={feature.icon.node?.mediaItemUrl || ''}
                           width={58}
-                          height={58}
-                          alt="icon"
                         />
                       )}
                       <div className={styles.featureContent}>
@@ -105,11 +109,11 @@ export default function ProductTabs({
                     </div>
                     {feature.video && (
                       <video
-                        className={styles.video}
-                        width="230"
-                        height="443"
                         autoPlay
+                        className={styles.video}
+                        height="443"
                         muted
+                        width="230"
                       >
                         <source
                           src={feature.video?.node?.mediaItemUrl || ''}
@@ -120,11 +124,11 @@ export default function ProductTabs({
                     )}
                     {feature.image && (
                       <Image
+                        alt=""
                         className={styles.image}
+                        height={166}
                         src={feature.image?.node?.mediaItemUrl || ''}
                         width={636}
-                        height={166}
-                        alt=""
                       />
                     )}
                   </div>
@@ -151,17 +155,17 @@ export default function ProductTabs({
               <p className={styles.description}>{manualsDescription}</p>
             )}
             <div className={styles.manualsContainer}>
-              {manualsLinks.map(({ url, label }, index) => {
+              {manualsLinks.map(({ label, url }, index) => {
                 if (!url) return null;
                 return (
                   <DownloadFileButton
-                    key={`${url}-${index}`}
-                    href={url}
                     download
-                    variant="quinary"
+                    downloadFileFormId={downloadFileFormId}
+                    href={url}
+                    key={`${url}-${index}`}
                     rightIcon="download"
                     shortenable
-                    downloadFileFormId={downloadFileFormId}
+                    variant="quinary"
                   >
                     {label}
                   </DownloadFileButton>

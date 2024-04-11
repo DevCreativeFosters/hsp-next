@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+
 import styles from './tile-carousel.module.scss';
 
 const ID_PREFIX = 'carousel';
@@ -9,15 +11,15 @@ const ID_PREFIX = 'carousel';
 const MIN_SHIFT = 40;
 
 export default function TileCarousel({
-  items = [],
-  itemTemplate: ItemTemplate,
-  id = '',
-  buttonPrevRef,
   buttonNextRef,
+  buttonPrevRef,
+  children,
+  context,
+  id = '',
+  itemTemplate: ItemTemplate,
+  items = [],
   resetStyle,
   smallGaps,
-  context,
-  children,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
@@ -38,7 +40,7 @@ export default function TileCarousel({
     value => {
       return Math.min(positionMax, Math.max(positionMin, value));
     },
-    [positionMin, positionMax],
+    [positionMax, positionMin],
   );
 
   const getTileOffsets = useCallback(() => {
@@ -79,14 +81,14 @@ export default function TileCarousel({
       const prevNo = Math.max(currentIndex - 1, 0);
       setCurrentIndex(prevNo);
     }
-  }, [isDragging, currentIndex]);
+  }, [currentIndex, isDragging]);
 
   const goToNext = useCallback(() => {
     if (!isDragging) {
       const nextNo = Math.min(currentIndex + 1, maxIndex);
       setCurrentIndex(nextNo);
     }
-  }, [isDragging, currentIndex, maxIndex]);
+  }, [currentIndex, isDragging, maxIndex]);
 
   const onPointerDown = useCallback(
     ev => {
@@ -110,7 +112,7 @@ export default function TileCarousel({
       setCarouselPosition(normalize(newCarouselShift));
       setLastMovementDirection(Math.sign(ev.movementX));
     },
-    [pointerXSnapshot, carouselPositionSnapshot, normalize, currentIndex],
+    [carouselPositionSnapshot, currentIndex, normalize, pointerXSnapshot],
   );
 
   const onPointerUp = useCallback(
@@ -124,7 +126,7 @@ export default function TileCarousel({
       const direction = Math.sign(lastMovementDirection || deltaX);
       snap(direction);
     },
-    [pointerXSnapshot, lastMovementDirection, snap],
+    [lastMovementDirection, pointerXSnapshot, snap],
   );
 
   const onPointerCancel = useCallback(
@@ -190,7 +192,7 @@ export default function TileCarousel({
         el?.removeEventListener('pointercancel', onPointerCancel);
       };
     },
-    [onPointerDown, onPointerMove, onPointerUp, onPointerCancel],
+    [onPointerCancel, onPointerDown, onPointerMove, onPointerUp],
   );
 
   useEffect(
@@ -201,7 +203,7 @@ export default function TileCarousel({
       const newOffset = getTileOffsets()[currentIndex];
       setCarouselPosition(normalize(-newOffset));
     },
-    [currentIndex, isDragging, getTileOffsets, normalize, carouselPosition],
+    [carouselPosition, currentIndex, getTileOffsets, isDragging, normalize],
   );
 
   useEffect(
@@ -227,7 +229,7 @@ export default function TileCarousel({
         }
       };
     },
-    [buttonNextRef, buttonPrevRef, goToPrev, goToNext],
+    [buttonNextRef, buttonPrevRef, goToNext, goToPrev],
   );
 
   return (
@@ -244,12 +246,12 @@ export default function TileCarousel({
           >
             <div
               className={styles.container}
-              ref={containerRef}
               id={carouselId}
+              ref={containerRef}
               style={{ '--offset': `${carouselPosition}px` }}
             >
               {items.map((props, index) => (
-                <ItemTemplate key={index} context={context} {...props} />
+                <ItemTemplate context={context} key={index} {...props} />
               ))}
             </div>
           </div>

@@ -1,19 +1,24 @@
 'use client';
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
+
+import StoreLocatorContext from '@contexts/store-locator';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+import useMobileVh from '@hooks/useMobileVh';
+
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
-import { findLocationsInRadius } from '@lib/store-locations';
-import normalizeStores from '@lib/normalize-stores';
 import {
   getPlaceDetails,
   getPlaceSuggestions,
   stringifySuggestion,
 } from '@lib/google-place';
-import useMobileVh from '@hooks/useMobileVh';
-import { useIsMobile } from '@hooks/useIsMobile';
-import StoreLocatorContext from '@contexts/store-locator';
+import normalizeStores from '@lib/normalize-stores';
+import { findLocationsInRadius } from '@lib/store-locations';
+
 import Button from '@components/button/button';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
@@ -65,7 +70,7 @@ export default function StoreLocatorSearch({ allLocations }) {
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
     },
-    [setSearchGeolocation, sessionToken],
+    [sessionToken, setSearchGeolocation],
   );
 
   const goBack = useCallback(() => {
@@ -74,7 +79,7 @@ export default function StoreLocatorSearch({ allLocations }) {
     } else if (isFullScreen) {
       setIsFullScreen(false);
     }
-  }, [viewMode, isFullScreen]);
+  }, [isFullScreen, viewMode]);
 
   const isInlineResultListVisible = Boolean(
     location && searchGeolocation && isFullScreen && isMobile,
@@ -106,7 +111,7 @@ export default function StoreLocatorSearch({ allLocations }) {
         isMounted = false;
       };
     },
-    [locationInput, location, sessionToken],
+    [location, locationInput, sessionToken],
   );
 
   useEffect(
@@ -136,7 +141,7 @@ export default function StoreLocatorSearch({ allLocations }) {
       }
       return () => {};
     },
-    [searchGeolocation, allLocations],
+    [allLocations, searchGeolocation],
   );
 
   return (
@@ -155,20 +160,15 @@ export default function StoreLocatorSearch({ allLocations }) {
         <div className={styles.viewContent}>
           <form
             action="#"
+            autoComplete="off"
             className={styles.form}
             onChange={onAnyInputChange}
             ref={formRef}
-            autoComplete="off"
           >
             <div className={styles.searchPhraseWrapper}>
               <StoreLocatorInput
-                type="text"
-                name="location"
-                placeholder="Your location"
                 icon="search"
-                withResetButton
-                value={locationInput}
-                onClick={onFormInteraction}
+                name="location"
                 onChange={value => {
                   setLocationInput(value);
                   if (!value) {
@@ -177,7 +177,12 @@ export default function StoreLocatorSearch({ allLocations }) {
                     setIsFullScreen(false);
                   }
                 }}
+                onClick={onFormInteraction}
+                placeholder="Your location"
                 required
+                type="text"
+                value={locationInput}
+                withResetButton
               />
 
               <StoreLocatorSuggestions
@@ -189,19 +194,17 @@ export default function StoreLocatorSearch({ allLocations }) {
             <div className={styles.mobileOnly}>
               <StoreList
                 items={filteredLocations}
-                show={isInlineResultListVisible}
                 onSelect={item => {
                   setCurrentResult(item);
                   setViewMode('RESULT');
                 }}
+                show={isInlineResultListVisible}
               />
             </div>
 
             {isSearchButtonVisible && (
               <Button
-                type="button"
                 className={styles.button}
-                rightIcon="search"
                 href="#store-search"
                 onClick={() => {
                   if (isMobile && !isFullScreen) {
@@ -210,6 +213,8 @@ export default function StoreLocatorSearch({ allLocations }) {
                     formRef.current.reportValidity();
                   }
                 }}
+                rightIcon="search"
+                type="button"
               >
                 Search
               </Button>
@@ -222,9 +227,9 @@ export default function StoreLocatorSearch({ allLocations }) {
             {currentResult && <StoreTile item={currentResult} />}
             <div className={styles.buttonWrapper}>
               <Button
-                variant="quaternary"
-                onClick={goBack}
                 leftIcon="arrow-backward"
+                onClick={goBack}
+                variant="quaternary"
               >
                 Back to search
               </Button>

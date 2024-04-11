@@ -6,6 +6,7 @@ import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
@@ -15,7 +16,9 @@ import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
+import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
+import PageContainer from '@components/page-container/page-container';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
@@ -67,8 +70,7 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
-  const mainCategoryBlocks =
-    await getMainProductCategoryBlocks(mainCategorySlug);
+  const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
   const firstMatchedProduct = products.length ? products[0] : null;
@@ -105,8 +107,32 @@ export default async function CategoryPage({ params, searchParams }) {
     redirect(`/${slug}?compatible=false`);
   }
 
-  if (shouldBeExcluded) {
+  if (modelSlug.length > 2) {
     return notFound();
+  }
+
+  if (modelSlug.length === 2) {
+    const variantExists =
+      firstMatchedProduct?.productFields?.variants?.find(
+        ({ variantSlug }) => variantSlug === modelSlug[1].toLowerCase(),
+      ) || false;
+
+    if (!variantExists) {
+      return (
+        <Layout title="Product" withMap>
+          <Container>
+            <PageContainer>
+              <ErrorPage
+                buttonText="Back to Products"
+                product
+                text="Sorry, we couldn't find the variant you are looking for."
+                title="Variant not found"
+              />
+            </PageContainer>
+          </Container>
+        </Layout>
+      );
+    }
   }
 
   return (
@@ -114,21 +140,21 @@ export default async function CategoryPage({ params, searchParams }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
           />
         </div>
         <PageClientSidePartial
+          allLocations={allLocations}
+          downloadFileFormId={downloadFileFormId}
+          enquiryFormId={enquiryFormId}
+          firstMatchedProduct={firstMatchedProduct}
           mainCategory={mainCategory}
           make={make}
           modelName={modelName}
-          enquiryFormId={enquiryFormId}
-          firstMatchedProduct={firstMatchedProduct}
-          variantSlug={searchParams.variant}
-          allLocations={allLocations}
-          productHeroData={productHeroData}
-          downloadFileFormId={downloadFileFormId}
           pageParams={params}
+          productHeroData={productHeroData}
+          variantSlug={searchParams.variant}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (

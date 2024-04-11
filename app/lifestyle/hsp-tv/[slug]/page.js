@@ -18,11 +18,11 @@ export default async function HspTVPost({ params }) {
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
       <HspTvPost
-        relatedPosts={relatedPosts}
-        title={title}
         content={content}
-        slug={slug}
         customFields={customFields}
+        relatedPosts={relatedPosts}
+        slug={slug}
+        title={title}
       />
     </Layout>
   );

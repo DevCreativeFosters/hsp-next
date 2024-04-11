@@ -1,12 +1,13 @@
+import { useContext } from 'react';
+
 import clsx from 'clsx';
 
-import { useContext } from 'react';
-import StoreTile from './store-tile';
 import StoreLocatorContext from '@contexts/store-locator';
 
+import StoreTile from './store-tile';
 import styles from './store-tile.module.scss';
 
-export default function ResultsStoreTile({ item, isHighlighted }) {
+export default function ResultsStoreTile({ isHighlighted, item }) {
   const { setSelectedStore } = useContext(StoreLocatorContext);
 
   return (
@@ -15,12 +16,12 @@ export default function ResultsStoreTile({ item, isHighlighted }) {
         <StoreTile item={item} />
       </div>
       <button
-        type="button"
+        aria-label="Clear chosen store"
         className={clsx(styles.resultClearButton, {
           [styles.isHighlighted]: isHighlighted,
         })}
         onClick={() => setSelectedStore(null)}
-        aria-label="Clear chosen store"
+        type="button"
       >
         <span />
       </button>

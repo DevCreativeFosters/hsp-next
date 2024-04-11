@@ -1,22 +1,30 @@
 'use client';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import { SwiperSlide } from 'swiper/react';
-import clsx from 'clsx';
 
-import Carousel from '@components/carousel/carousel';
 import { getIcon } from '@lib/icons';
+
+import Button from '@components/button/button';
+import Carousel from '@components/carousel/carousel';
 
 import styles from './products-carousel.module.scss';
 
 const PlusIcon = getIcon('plus');
 const CheckMarkIcon = getIcon('check-mark');
+const CancelIcon = getIcon('cancel');
+const ArrowBackwardIcon = getIcon('arrow-backward');
 
 export default function ProductsCarousel({
   className,
-  products,
-  selectedProducts,
   disabledProducts,
+  isMobile,
+  products,
+  selectedCover,
+  selectedProducts,
+  stepNumber,
+  stepTitle,
   toggleProduct,
 }) {
   const slides = products?.map(product => {
@@ -30,17 +38,17 @@ export default function ProductsCarousel({
             [styles.isSelected]: selectedProducts.includes(product),
             [styles.isDisabled]: disabledProducts.includes(product),
           })}
-          type="button"
           onClick={() => toggleProduct(product)}
+          type="button"
         >
           <div className={styles.productImageContainer}>
             <Image
-              className={styles.productImage}
-              src={productImage}
               alt={productTitle}
-              width={168}
+              className={styles.productImage}
               height={Math.round(168 / 1.4)}
+              src={productImage}
               style={{ objectFit: 'contain' }}
+              width={168}
             />
           </div>
           <div className={styles.productIcon}>
@@ -53,21 +61,64 @@ export default function ProductsCarousel({
     );
   });
 
+  const currentStepTitle =
+    stepNumber === 2 && isMobile ? 'Add products to' : stepTitle;
+  const productTitle = selectedCover?.variantName;
+  const productImage =
+    selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+
   return (
     <div className={clsx(styles.productsCarousel, className)}>
-      <h2 className={styles.title}>Add products to your vehicle</h2>
-      <Carousel
-        className={styles.carousel}
-        settings={{
-          slidesPerView: 'auto',
-          spaceBetween: 24,
-          navigation: true,
-          loop: false,
-          watchSlidesProgress: true,
-        }}
-        slides={slides}
-        showNavigation={products?.length > 7}
-      />
+      <h2 className={styles.title}>
+        <span className={styles.number}>Step {stepNumber}:</span>{' '}
+        {currentStepTitle}
+        {isMobile && stepNumber === 2 && selectedCover && (
+          <Button className={styles.badge} size="small" variant="secondary">
+            {selectedCover.variantName}
+            <CancelIcon className={styles.badgeIcon} />
+          </Button>
+        )}
+      </h2>
+      <div className={styles.carouselWrapper}>
+        {!isMobile && stepNumber === 2 && selectedCover && (
+          <button
+            className={clsx(styles.product, styles.isCover)}
+            onClick={() => toggleProduct(selectedCover)}
+            type="button"
+          >
+            <div className={styles.productImageContainer}>
+              {productImage && (
+                <Image
+                  alt={productTitle}
+                  className={styles.productImage}
+                  height={Math.round(168 / 1.4)}
+                  src={productImage}
+                  style={{ objectFit: 'contain' }}
+                  width={168}
+                />
+              )}
+            </div>
+            <div className={styles.productIcon}>
+              <ArrowBackwardIcon className={styles.arrowIcon} />
+            </div>
+            {productTitle && (
+              <p className={styles.productName}>{productTitle}</p>
+            )}
+          </button>
+        )}
+        <Carousel
+          className={styles.carousel}
+          settings={{
+            loop: false,
+            navigation: true,
+            slidesPerView: 'auto',
+            spaceBetween: 24,
+            watchSlidesProgress: true,
+          }}
+          showNavigation={products?.length > 7}
+          slides={slides}
+        />
+      </div>
     </div>
   );
 }

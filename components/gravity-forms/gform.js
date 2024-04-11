@@ -7,15 +7,19 @@ import {
   useRef,
   useState,
 } from 'react';
-import { ApolloClient, gql, InMemoryCache, useMutation } from '@apollo/client';
+
+import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
+
+import useGravityForm from '@hooks/useGravityForm';
+
 import Button from '@components/button/button';
+import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
 import Form from '@components/form/form';
 import Loading from '@components/loading/loading';
-import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
-import GravityFormsField from './field';
+
 import Confirmation from './confirmation';
-import useGravityForm from '@hooks/useGravityForm';
+import GravityFormsField from './field';
 import styles from './gform.module.scss';
 
 const SUBMIT_MUTATION = gql`
@@ -35,25 +39,25 @@ const SUBMIT_MUTATION = gql`
 `;
 
 export default function GForm({
-  innerRef,
-  form,
-  isDirty,
-  hiddenInputs,
   attributes = {},
-  submitButton,
-  preventConfirmation,
+  form,
+  hiddenInputs,
+  innerRef,
+  isDirty,
   onChange,
-  onReset,
   onError,
+  onReset,
   onSubmit,
   onSuccess,
+  preventConfirmation,
+  submitButton,
 }) {
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
   const [fieldErrors, setFieldErrors] = useState([]);
   const formFields = form.formFields?.nodes || [];
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const submitRef = useRef(null);
 
   const resetForm = useCallback(() => {
@@ -90,8 +94,8 @@ export default function GForm({
     await formSubmitMutation({
       variables: {
         input: {
-          id: form.formId,
           fieldValues: state,
+          id: form.formId,
         },
       },
     })
@@ -132,15 +136,15 @@ export default function GForm({
 
   return (
     <Form
-      method="post"
-      onSubmit={handleSubmit}
-      withPadding={attributes.withPadding}
-      withBackground={attributes.withBackground}
       isDirty={isDirty}
+      method="post"
       onChange={onChange}
+      onSubmit={handleSubmit}
+      withBackground={attributes.withBackground}
+      withPadding={attributes.withPadding}
     >
       {isSubmitted && !preventConfirmation ? (
-        <Confirmation resetForm={resetForm} content={confirmation.message} />
+        <Confirmation content={confirmation.message} resetForm={resetForm} />
       ) : (
         <>
           {(isTitleVisible || form.description) && (
@@ -152,11 +156,11 @@ export default function GForm({
 
           {formFields.map((field, index) => (
             <GravityFormsField
-              key={`id-${field?.databaseId}-${index}`}
-              form={form}
               field={field}
               fieldErrors={fieldErrors}
+              form={form}
               hiddenInputs={hiddenInputs}
+              key={`id-${field?.databaseId}-${index}`}
             />
           ))}
 
@@ -165,13 +169,13 @@ export default function GForm({
           )}
 
           <Button
-            ref={submitRef}
-            type="submit"
-            size="large"
             className={styles.submitButton}
             disabled={isLoading}
+            ref={submitRef}
             rightIcon={isLoading ? null : 'send'}
+            size="large"
             style={submitButton === false ? { display: 'none' } : {}}
+            type="submit"
           >
             {form?.button?.text || 'Submit'} {isLoading && <Loading />}
           </Button>

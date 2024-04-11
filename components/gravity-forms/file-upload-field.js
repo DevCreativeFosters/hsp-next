@@ -1,13 +1,17 @@
-import useGravityForm from '@hooks/useGravityForm';
-import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import clsx from 'clsx';
+
+import useGravityForm from '@hooks/useGravityForm';
+
 import AttachmentIcon from '@assets/icons/attachment.svg';
 import DeleteIcon from '@assets/icons/delete.svg';
+
 import styles from './file-upload-field.module.scss';
 
 const MEGA_BYTE = Math.pow(1024, 2);
 
-function SingleFile({ file, errors, onRemove }) {
+function SingleFile({ errors, file, onRemove }) {
   const inputRef = useRef();
   const errorMessage = errors.filter(Boolean).join('. ');
 
@@ -24,26 +28,26 @@ function SingleFile({ file, errors, onRemove }) {
     >
       <span className={styles.fileName}>{file.name}</span>
       <button
-        type="button"
         className={styles.removeButton}
-        title="Click to remove"
         onClick={ev => onRemove(ev, file)}
+        title="Click to remove"
+        type="button"
       >
         <DeleteIcon />
       </button>
       <input
         className={styles.childInput}
-        ref={inputRef}
-        type="text"
-        required={Boolean(errors.length)}
         onInvalid={onInvalid}
+        ref={inputRef}
+        required={Boolean(errors.length)}
         tabIndex={-1}
+        type="text"
       />
     </div>
   );
 }
 
-export default function FileUploadField({ form, field, fieldErrors }) {
+export default function FileUploadField({ field, fieldErrors, form }) {
   const { formId } = form;
   const [files, setFiles] = useState([]);
   const inputRef = useRef();
@@ -81,13 +85,13 @@ export default function FileUploadField({ form, field, fieldErrors }) {
     }
     return null;
   }, [
+    field,
+    fieldErrors,
+    files,
     maxFiles,
     maxSize,
-    files,
-    fieldErrors,
-    field,
-    tooManyFilesErrorMessage,
     tooBigFileErrorMessage,
+    tooManyFilesErrorMessage,
   ]);
 
   const acceptedTypesNormalized = useMemo(() => {
@@ -130,15 +134,15 @@ export default function FileUploadField({ form, field, fieldErrors }) {
       }
       return errors;
     },
-    [maxSize, maxFiles, acceptedTypesNormalized, tooManyFilesErrorMessage],
+    [acceptedTypesNormalized, maxFiles, maxSize, tooManyFilesErrorMessage],
   );
 
   const addFiles = useCallback(
     inputElement => {
       const freshFiles = Array.from(inputElement.files).map((file, index) => {
         return {
-          fileHandle: file,
           errors: getValidationErrors(file, files.length + index),
+          fileHandle: file,
         };
       });
       setFiles(oldFiles => [...oldFiles, ...freshFiles]);
@@ -157,8 +161,8 @@ export default function FileUploadField({ form, field, fieldErrors }) {
             name !== file.name && size !== file.size,
         )
         .map(({ fileHandle }, index) => ({
-          fileHandle,
           errors: getValidationErrors(fileHandle, index),
+          fileHandle,
         }));
 
       setFiles(filteredFiles);
@@ -169,7 +173,7 @@ export default function FileUploadField({ form, field, fieldErrors }) {
   useEffect(
     function syncFiles() {
       const dt = new DataTransfer();
-      files.forEach(({ fileHandle: file, errors }) => {
+      files.forEach(({ errors, fileHandle: file }) => {
         if (errors.length === 0) {
           dt.items.add(file);
         }
@@ -180,42 +184,42 @@ export default function FileUploadField({ form, field, fieldErrors }) {
         inputRef.current.value = '';
       }
       dispatch({
-        type: 'updateFieldValue',
         payload: {
-          id: field.id,
           fileUploadValues: inputRef.current?.files || [],
+          id: field.id,
         },
+        type: 'updateFieldValue',
       });
     },
-    [files, dispatch, field.id],
+    [dispatch, field.id, files],
   );
 
   return (
     <>
       <label className={styles.labelWrapper}>
         <input
-          ref={inputRef}
-          type="file"
-          className={styles.nativeInput}
-          id={`gform_${formId}_${field.id}`}
-          name={`gform_${formId}_${field.id}`}
           accept={acceptedTypesNormalized.join() || null}
-          multiple={multiple}
+          className={styles.nativeInput}
           data-max-file-size={field.maxFileSize || null}
+          id={`gform_${formId}_${field.id}`}
+          multiple={multiple}
+          name={`gform_${formId}_${field.id}`}
           onChange={ev => {
             addFiles(ev.nativeEvent.target);
           }}
+          ref={inputRef}
+          type="file"
         />
         <div
           className={clsx(styles.customInput, {
             [styles.error]: fieldError?.message,
           })}
         >
-          {files.map(({ fileHandle: file, errors }, index) => (
+          {files.map(({ errors, fileHandle: file }, index) => (
             <SingleFile
-              key={`${file.name}-${index}`}
-              file={file}
               errors={errors}
+              file={file}
+              key={`${file.name}-${index}`}
               onRemove={onRemoveFileClick}
             />
           ))}

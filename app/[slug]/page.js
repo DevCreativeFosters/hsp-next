@@ -81,18 +81,18 @@ export default async function DynamicPage({ params }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            mainCategory={true}
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
+            mainCategory={true}
           />
         </div>
         <ProductHero
-          title={categoryData?.name}
           description={categoryData?.description}
-          image={featuredImage}
           features={{
             content: mainCategoryDetails?.features,
           }}
+          image={featuredImage}
+          title={categoryData?.name}
           warranty={{
             content: mainCategoryDetails?.warranty.warrantyDescription,
             years: mainCategoryDetails?.warranty.warrantyTimePeriod,

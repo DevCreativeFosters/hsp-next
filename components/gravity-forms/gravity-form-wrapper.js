@@ -1,26 +1,35 @@
 'use client';
 
-import { useCallback, useState, useEffect, forwardRef } from 'react';
-import GForm from './gform';
-import { getGravityForm } from '@lib/api/get-gravity-form';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
+
 import { GravityFormProvider } from '@contexts/gravity-form';
 import { useGravityFormsStaticData } from '@contexts/gravity-forms-static-data';
 import { useUserContext } from '@contexts/user';
+
+import { getGravityForm } from '@lib/api/get-gravity-form';
+
 import Loading from '@components/loading/loading';
+
+import GForm from './gform';
+
+const storeNotListed = {
+  text: 'My store is not listed',
+  value: 'store-not-listed',
+};
 
 function GravityFormWrapperWithRef(
   {
     attributes,
     hiddenInputs = [],
-    submitButton = true,
     isDirty = false,
-    preventConfirmation,
     onChange = () => null,
+    onError = () => null,
+    onLoad = () => null,
     onReset = () => null,
     onSubmit = () => null,
     onSuccess = () => null,
-    onLoad = () => null,
-    onError = () => null,
+    preventConfirmation,
+    submitButton = true,
   },
   ref,
 ) {
@@ -42,7 +51,7 @@ function GravityFormWrapperWithRef(
   }, []);
 
   const replaceFieldValueWithSystemData = useCallback(
-    ({ key, field }) => {
+    ({ field, key }) => {
       const data = gravityFormsStaticData[key];
       if (!data) return false;
 
@@ -54,10 +63,11 @@ function GravityFormWrapperWithRef(
           }));
           break;
         case 'stores':
-          field.choices = data.map(({ title, id }) => ({
+          field.choices = data.map(({ id, title }) => ({
             text: title,
             value: id,
           }));
+          field.choices.unshift(storeNotListed);
           break;
       }
     },
@@ -74,7 +84,7 @@ function GravityFormWrapperWithRef(
         .filter(([key]) => key !== 'id')
         .forEach(([attrKey, attrValue]) => {
           const field = formFields.find(
-            ({ inputName, canPrepopulate, inputs, value }) => {
+            ({ canPrepopulate, inputName, inputs, value }) => {
               if (inputs) {
                 return inputs.find(
                   ({ name }) =>
@@ -102,14 +112,14 @@ function GravityFormWrapperWithRef(
             if (systemRegexMatch) {
               const dataIdentifier = systemRegexMatch?.[2];
               replaceFieldValueWithSystemData({
-                key: dataIdentifier,
                 field,
+                key: dataIdentifier,
               });
             }
           }
         });
     },
-    [user, replaceFieldValue, replaceFieldValueWithSystemData],
+    [replaceFieldValue, replaceFieldValueWithSystemData, user],
   );
 
   const fetchGfForm = useCallback(async () => {
@@ -135,18 +145,18 @@ function GravityFormWrapperWithRef(
   return (
     <GravityFormProvider>
       <GForm
-        innerRef={ref}
+        attributes={attributes}
         form={gfForm}
-        isDirty={isDirty}
         hiddenInputs={hiddenInputs}
+        innerRef={ref}
+        isDirty={isDirty}
         onChange={onChange}
+        onError={onError}
         onReset={onReset}
         onSubmit={onSubmit}
         onSuccess={onSuccess}
-        onError={onError}
-        submitButton={submitButton}
-        attributes={attributes}
         preventConfirmation={preventConfirmation}
+        submitButton={submitButton}
       />
     </GravityFormProvider>
   );
