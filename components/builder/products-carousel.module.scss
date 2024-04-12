@@ -52,13 +52,16 @@
 .carousel {
   @include bp-below(medium) {
     overflow: hidden;
-    margin-inline: calc(-1 * var(--container-inline-padding));
 
     /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
     :global(.swiper) {
       overflow: visible;
-      padding-inline: var(--container-inline-padding);
     }
+  }
+
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+  :global(.swiper-slide) {
+    width: fit-content;
   }
 }
 
@@ -73,9 +76,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
   padding: 0;
   transition: opacity 200ms;
+  width: var(--product-width);
 
   &.isDisabled {
     opacity: 0.5;
@@ -84,7 +87,6 @@
 
   &.isCover {
     flex-shrink: 0;
-    width: var(--product-width);
   }
 }
 

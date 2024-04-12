@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 
 import clsx from 'clsx';
 import 'swiper/css';
-import { Swiper } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import Button from '@components/button/button';
 
@@ -31,12 +31,12 @@ export default function Carousel({
 
   return (
     <div className={clsx(styles.carousel, className)} ref={swiperHeightRef}>
-      <Swiper
-        className={styles.swiper}
-        onSwiper={swiper => (swiperRef.current = swiper)}
-        {...settings}
-      >
-        {slides}
+      <Swiper onSwiper={swiper => (swiperRef.current = swiper)} {...settings}>
+        {slides.map((slide, index) => (
+          <SwiperSlide className={styles.swiperSlide} key={index}>
+            {slide}
+          </SwiperSlide>
+        ))}
       </Swiper>
 
       {showNavigation && slides && (

@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import { SwiperSlide } from 'swiper/react';
 
 import { getIcon } from '@lib/icons';
 
@@ -32,7 +31,7 @@ export default function ProductsCarousel({
     const productImage = product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
     return (
-      <SwiperSlide className={styles.swiperSlide} key={product.variantSlug}>
+      <>
         <button
           className={clsx(styles.product, {
             [styles.isSelected]: selectedProducts.includes(product),
@@ -57,7 +56,7 @@ export default function ProductsCarousel({
           </div>
           {productTitle && <p className={styles.productName}>{productTitle}</p>}
         </button>
-      </SwiperSlide>
+      </>
     );
   });
 
@@ -112,10 +111,10 @@ export default function ProductsCarousel({
             loop: false,
             navigation: true,
             slidesPerView: 'auto',
-            spaceBetween: 24,
+            spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={products?.length > 7}
+          showNavigation={products?.length > 6}
           slides={slides}
         />
       </div>
