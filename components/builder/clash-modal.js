@@ -1,6 +1,7 @@
-import styles from '@components/builder/builder.module.scss';
 import Button from '@components/button/button';
 import Modal from '@components/modal/modal';
+
+import styles from './clash-modal.module.scss';
 
 export default function ClashModal({
   currentProduct,
