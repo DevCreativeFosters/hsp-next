@@ -4,7 +4,7 @@ import Modal from '@components/modal/modal';
 
 export default function ClashModal({
   currentProduct,
-  factoryOption,
+  incompatibleFactoryOptions,
   selectedProducts,
   setFactoryOption,
   setSelectedProducts,
@@ -25,9 +25,11 @@ export default function ClashModal({
       </p>
 
       <ol className={styles.list}>
-        <li>
-          <span className={styles.listItem}>{factoryOption.name}</span>
-        </li>
+        {incompatibleFactoryOptions.map((option, index) => (
+          <li key={index}>
+            <span className={styles.listItem}>{option}</span>
+          </li>
+        ))}
       </ol>
       <p>Do you want to proceed?</p>
       <div className={styles.buttons}>

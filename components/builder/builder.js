@@ -7,11 +7,8 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
-import getCompatibilityData from '@lib/api/get-compatibility-data';
 import getRelatedCovers from '@lib/api/get-related-covers';
-import normalizeUteBuilderProducts, {
-  normalizeCompatibilityData,
-} from '@lib/normalize-ute-builder-products';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -51,17 +48,18 @@ export default function Builder({
   const [topHeight, setHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
-  const [compatibilityData, setCompatibilityData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
+    useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
   const {
-    factoryOption,
     maker: make,
     model,
     selectedCover,
+    selectedFactoryOptions,
     setFactoryOption,
     setSelectedCover,
     setStepNumber,
@@ -105,17 +103,6 @@ export default function Builder({
       setStepProducts(covers);
       setCovers(covers);
     });
-
-    getCompatibilityData(globalOptions.coversCategory.nodes[0].databaseId).then(
-      data => {
-        if (!data) {
-          return;
-        }
-
-        const normalizedData = normalizeCompatibilityData(data);
-        setCompatibilityData(normalizedData);
-      },
-    );
   }, [globalOptions, make, model, noCover]);
 
   useEffect(() => {
@@ -165,19 +152,22 @@ export default function Builder({
       let newSelectedProducts = [...selectedProducts, product];
 
       if (covers.some(cover => cover.productSlug === product.productSlug)) {
-        if (!factoryOption) {
+        if (!selectedFactoryOptions) {
           newSelectedProducts = [product, ...selectedProducts];
           setSelectedProducts(newSelectedProducts);
 
           return;
         }
 
-        const isCompatibleWithFactoryOptions = compatibilityData[
-          product.productSlug
-        ]?.factoryOptions.filter(option => option.slug === factoryOption.slug);
+        const incompatibleFactoryOptions = selectedFactoryOptions
+          .filter(
+            option => !product.compatibleFactoryOptions.includes(option.slug),
+          )
+          .map(option => option.value);
 
-        if (!isCompatibleWithFactoryOptions) {
-          setShowModal(true);
+        if (incompatibleFactoryOptions.length) {
+          setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+
           return;
         }
 
@@ -197,14 +187,19 @@ export default function Builder({
       setDisabledProducts(newDisabledProducts);
     },
     [
-      compatibilityData,
       covers,
       disabledProducts,
-      factoryOption,
       products,
+      selectedFactoryOptions,
       selectedProducts,
     ],
   );
+
+  useEffect(() => {
+    if (incompatibleFactoryOptions && incompatibleFactoryOptions.length) {
+      setShowModal(true);
+    }
+  }, [incompatibleFactoryOptions, setShowModal]);
 
   const removeProduct = useCallback(
     product => {
@@ -248,7 +243,7 @@ export default function Builder({
       {showModal ? (
         <ClashModal
           currentProduct={currentProduct}
-          factoryOption={factoryOption}
+          incompatibleFactoryOptions={incompatibleFactoryOptions}
           selectedProducts={selectedProducts}
           setFactoryOption={setFactoryOption}
           setSelectedProducts={setSelectedProducts}
