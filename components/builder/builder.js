@@ -60,8 +60,8 @@ export default function Builder({
     model,
     selectedCover,
     selectedFactoryOptions,
-    setFactoryOption,
     setSelectedCover,
+    setSelectedFactoryOptions,
     setStepNumber,
     setStepTitle,
     stepNumber,
@@ -244,8 +244,9 @@ export default function Builder({
         <ClashModal
           currentProduct={currentProduct}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
+          selectedFactoryOptions={selectedFactoryOptions}
           selectedProducts={selectedProducts}
-          setFactoryOption={setFactoryOption}
+          setSelectedFactoryOptions={setSelectedFactoryOptions}
           setSelectedProducts={setSelectedProducts}
           setShowModal={setShowModal}
         />

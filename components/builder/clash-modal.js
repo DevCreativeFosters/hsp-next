@@ -6,8 +6,9 @@ import styles from './clash-modal.module.scss';
 export default function ClashModal({
   currentProduct,
   incompatibleFactoryOptions,
+  selectedFactoryOptions,
   selectedProducts,
-  setFactoryOption,
+  setSelectedFactoryOptions,
   setSelectedProducts,
   setShowModal,
 }) {
@@ -45,7 +46,11 @@ export default function ClashModal({
         </Button>
         <Button
           onClick={() => {
-            setFactoryOption(null);
+            setSelectedFactoryOptions(
+              selectedFactoryOptions.filter(
+                option => !incompatibleFactoryOptions.includes(option.value),
+              ),
+            );
             setSelectedProducts([currentProduct, ...selectedProducts]);
             setShowModal(false);
           }}
