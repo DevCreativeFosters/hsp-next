@@ -1,6 +1,7 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
+import getCategoriesToExclude from '@lib/api/get-categories-to-exclude';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import getNoCover from '@lib/api/get-no-cover';
 import { getStores } from '@lib/api/get-stores';
@@ -25,12 +26,14 @@ export default async function UteBuilder() {
 
   const noCover = await getNoCover(globalOptions.noCoverCategory.nodes[0].slug);
   const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+  const excludedCategories = await getCategoriesToExclude(globalOptions);
 
   return (
     <Layout withFooter={false}>
       <StoreLocatorProvider>
         <UteBuilderPage
           allLocations={allLocations}
+          excludedCategories={excludedCategories}
           factoryOptions={factoryOptions}
           globalOptions={globalOptions}
           makes={makes}

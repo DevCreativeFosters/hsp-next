@@ -11,6 +11,7 @@ import Builder from '@components/builder/builder';
 
 export default function UteBuilderPage({
   allLocations,
+  excludedCategories,
   factoryOptions,
   globalOptions,
   makes,
@@ -28,9 +29,9 @@ export default function UteBuilderPage({
   } = useVehicleContext();
 
   useEffect(() => {
-    const setModelAndProducts = async (model, make) => {
+    const setModelAndProducts = async (model, make, excludedCategories) => {
       const response = await fetch(
-        `/api/ute-builder?model=${model}&make=${make}`,
+        `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
       );
       const data = await response.json();
       setModel(data?.modelData);
@@ -45,10 +46,12 @@ export default function UteBuilderPage({
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
         const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
+        const excludedCategoriesString = excludedCategories.join(',');
+
         setMake(vehicle?.maker);
         setSelectedFactoryOptions(selectedFactoryOptions);
 
-        setModelAndProducts(model, maker);
+        setModelAndProducts(model, maker, excludedCategoriesString);
       }
     } else {
       setMake(null);
@@ -56,6 +59,7 @@ export default function UteBuilderPage({
       setProductVariants(null);
     }
   }, [
+    excludedCategories,
     finalSelection,
     savedVehicleGlobal,
     setMake,
