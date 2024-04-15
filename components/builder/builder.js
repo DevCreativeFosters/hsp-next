@@ -178,8 +178,8 @@ export default function Builder({
         ...disabledProducts,
         ...getOtherProductsWithSameParent(
           products,
-          products.productSlug,
-          products.variantSlug,
+          product.productSlug,
+          product.variantSlug,
         ),
       ];
 
