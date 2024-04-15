@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
-import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Builder from '@components/builder/builder';
 
@@ -17,7 +16,7 @@ export default function UteBuilderPage({
   makes,
   noCover,
 }) {
-  const [productVariants, setProductVariants] = useState(null);
+  const [productVariants, setProductVariants] = useState([]);
 
   const {
     finalSelection,
@@ -67,9 +66,9 @@ export default function UteBuilderPage({
     setSelectedFactoryOptions,
   ]);
 
-  const variantList = useMemo(() => {
-    return normalizeUteBuilderProducts(productVariants);
-  }, [productVariants]);
+  // const variantList = useMemo(() => {
+  //   return normalizeUteBuilderProducts(productVariants);
+  // }, [productVariants]);
 
   return (
     <Builder
@@ -79,7 +78,7 @@ export default function UteBuilderPage({
       globalOptions={globalOptions}
       makes={makes}
       noCover={noCover}
-      products={variantList}
+      products={productVariants}
     />
   );
 }

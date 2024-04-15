@@ -98,7 +98,8 @@ export default function Builder({
       }
 
       const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-      const covers = [...normalizedCovers, ...noCover];
+      const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+      const covers = [...normalizedCovers, ...noCoverNormalized];
 
       setStepProducts(covers);
       setCovers(covers);
@@ -111,7 +112,7 @@ export default function Builder({
     }
 
     if (stepNumber === 2) {
-      setStepProducts(products);
+      setStepProducts(normalizeUteBuilderProducts(products));
     }
   }, [covers, products, setStepProducts, stepNumber]);
 
@@ -121,7 +122,7 @@ export default function Builder({
     }
 
     const selectedCover = selectedProducts.find(selectedProduct =>
-      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+      covers.some(cover => cover.group === selectedProduct.productSlug),
     );
 
     setStepNumber(selectedCover ? 2 : 1);
@@ -151,7 +152,7 @@ export default function Builder({
     product => {
       let newSelectedProducts = [...selectedProducts, product];
 
-      if (covers.some(cover => cover.productSlug === product.productSlug)) {
+      if (covers.some(cover => cover.group === product.productSlug)) {
         if (!selectedFactoryOptions) {
           newSelectedProducts = [product, ...selectedProducts];
           setSelectedProducts(newSelectedProducts);
@@ -294,7 +295,7 @@ export default function Builder({
                 />
               )}
             </div>
-            {stepNumber > 0 && stepProducts.length > 0 && (
+            {stepNumber > 0 && Object.keys(stepProducts).length > 0 && (
               <ProductsCarousel
                 disabledProducts={disabledProducts}
                 isMobile={isMobile}

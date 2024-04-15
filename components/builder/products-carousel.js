@@ -1,5 +1,7 @@
 'use client';
 
+import { Fragment } from 'react';
+
 import clsx from 'clsx';
 import Image from 'next/image';
 
@@ -14,6 +16,7 @@ const PlusIcon = getIcon('plus');
 const CheckMarkIcon = getIcon('check-mark');
 const CancelIcon = getIcon('cancel');
 const ArrowBackwardIcon = getIcon('arrow-backward');
+const GroupIcon = getIcon('group');
 
 export default function ProductsCarousel({
   className,
@@ -26,38 +29,62 @@ export default function ProductsCarousel({
   stepTitle,
   toggleProduct,
 }) {
-  const slides = products?.map(product => {
-    const productTitle = product.variantName;
-    const productImage = product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+  const slides = products?.map(group => {
+    return group?.variants.map((product, index) => {
+      const productTitle = product.variantName;
+      const productImage =
+        product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
-    return (
-      <>
-        <button
-          className={clsx(styles.product, {
-            [styles.isSelected]: selectedProducts.includes(product),
-            [styles.isDisabled]: disabledProducts.includes(product),
-          })}
-          onClick={() => toggleProduct(product)}
-          type="button"
-        >
-          <div className={styles.productImageContainer}>
-            <Image
-              alt={productTitle}
-              className={styles.productImage}
-              height={Math.round(168 / 1.4)}
-              src={productImage}
-              style={{ objectFit: 'contain' }}
-              width={168}
-            />
-          </div>
-          <div className={styles.productIcon}>
-            <PlusIcon className={styles.plusIcon} />
-            <CheckMarkIcon className={styles.checkIcon} />
-          </div>
-          {productTitle && <p className={styles.productName}>{productTitle}</p>}
-        </button>
-      </>
-    );
+      return (
+        <Fragment key={index}>
+          <button
+            className={clsx(styles.product, {
+              [styles.isSelected]: selectedProducts.includes(product),
+              [styles.isDisabled]: disabledProducts.includes(product),
+              [styles.isHidden]: group.variants.length > 1 && index > 0,
+            })}
+            onClick={() => toggleProduct(product)}
+            type="button"
+          >
+            <div className={styles.productImageContainer}>
+              <Image
+                alt={productTitle}
+                className={styles.productImage}
+                height={Math.round(168 / 1.4)}
+                src={productImage}
+                style={{ objectFit: 'contain' }}
+                width={168}
+              />
+            </div>
+            <div className={styles.productIcon}>
+              {group.variants.length > 1 ? (
+                <>
+                  <GroupIcon />
+                </>
+              ) : (
+                <>
+                  <PlusIcon className={styles.plusIcon} />
+                  <CheckMarkIcon className={styles.checkIcon} />
+                </>
+              )}
+            </div>
+            {productTitle && (
+              <div className={styles.productMeta}>
+                <p className={styles.productName}>{productTitle}</p>
+                {group.minPrice && (
+                  <span className={styles.productPrice}>
+                    {new Intl.NumberFormat('en-AU', {
+                      currency: 'AUD',
+                      style: 'currency',
+                    }).format(group.minPrice)}
+                  </span>
+                )}
+              </div>
+            )}
+          </button>
+        </Fragment>
+      );
+    });
   });
 
   const currentStepTitle =
@@ -101,7 +128,17 @@ export default function ProductsCarousel({
               <ArrowBackwardIcon className={styles.arrowIcon} />
             </div>
             {productTitle && (
-              <p className={styles.productName}>{productTitle}</p>
+              <div className={styles.productMeta}>
+                <p className={styles.productName}>{productTitle}</p>
+                {selectedCover.price && (
+                  <span className={styles.productPrice}>
+                    {new Intl.NumberFormat('en-AU', {
+                      currency: 'AUD',
+                      style: 'currency',
+                    }).format(selectedCover.price)}
+                  </span>
+                )}
+              </div>
             )}
           </button>
         )}

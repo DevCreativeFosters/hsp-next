@@ -6,7 +6,6 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import getNoCover from '@lib/api/get-no-cover';
 import { getStores } from '@lib/api/get-stores';
 import { getTermChildren } from '@lib/api/get-term-children';
-import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Layout from '@components/layout/layout';
 import UteBuilderPage from '@components/ute-builder-page/ute-builder-page';
@@ -25,7 +24,6 @@ export default async function UteBuilder() {
   );
 
   const noCover = await getNoCover(globalOptions.noCoverCategory.nodes[0].slug);
-  const noCoverNormalized = normalizeUteBuilderProducts(noCover);
   const excludedCategories = await getCategoriesToExclude(globalOptions);
 
   return (
@@ -37,7 +35,7 @@ export default async function UteBuilder() {
           factoryOptions={factoryOptions}
           globalOptions={globalOptions}
           makes={makes}
-          noCover={noCoverNormalized}
+          noCover={noCover}
         />
       </StoreLocatorProvider>
     </Layout>
