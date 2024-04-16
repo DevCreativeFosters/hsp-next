@@ -238,6 +238,8 @@ export default function Builder({
       stepProducts.forEach(item => {
         if (item.variants.length > 1 && item.group !== group.slug) {
           item.variants.forEach((variant, index) => {
+            variant.isOpen = !variant.isOpen;
+
             if (index > 0) {
               variant.hidden = !variant.hidden;
             }

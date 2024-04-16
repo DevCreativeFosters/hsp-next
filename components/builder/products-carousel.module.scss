@@ -13,7 +13,7 @@
   @include paragraph-lg;
 
   font-weight: 400;
-  margin-block: 0 24px;
+  margin-block: 0 14px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -41,7 +41,7 @@
 .carouselWrapper {
   display: flex;
   gap: 48px;
-  align-items: start;
+  align-items: flex-start;
 
   --product-width: 134px;
 
@@ -80,6 +80,7 @@
   padding: 0;
   transition: opacity 200ms;
   width: var(--product-width);
+  padding-block: 10px;
 
   &.isDisabled {
     opacity: 0.5;
@@ -99,7 +100,7 @@
   @include center;
 
   position: absolute;
-  top: 12px;
+  top: 22px;
   right: 12px;
   width: 40px;
   border-radius: 8px;
@@ -169,4 +170,29 @@
   font-size: 12px;
   opacity: 0.8;
   text-transform: uppercase;
+}
+
+.isGroupItem {
+  position: relative;
+
+  &.isGroupItemOpen {
+    &::before {
+      z-index: -1;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -10px;
+      width: calc(100% + 19px);
+      height: 100%;
+      background-color: var(--color-white-10);
+    }
+  }
+
+  &.isGroupItemFirst::before {
+    border-radius: 8px 0 0 8px;
+  }
+
+  &.isGroupItemLast::before {
+    border-radius: 0 8px 8px 0;
+  }
 }

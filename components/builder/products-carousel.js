@@ -52,6 +52,10 @@ export default function ProductsCarousel({
             className={clsx(styles.product, {
               [styles.isSelected]: selectedProducts.includes(product),
               [styles.isDisabled]: disabledProducts.includes(product),
+              [styles.isGroupItem]: isGroup,
+              [styles.isGroupItemOpen]: isGroup && product.isOpen,
+              [styles.isGroupItemFirst]: index === 0,
+              [styles.isGroupItemLast]: index === group.variants.length - 1,
             })}
             onClick={() => {
               isGroup && index === 0
