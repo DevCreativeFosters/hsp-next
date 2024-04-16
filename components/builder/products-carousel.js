@@ -27,6 +27,7 @@ export default function ProductsCarousel({
   selectedProducts,
   stepNumber,
   stepTitle,
+  toggleGroup,
   toggleProduct,
 }) {
   const slides = products?.map(group => {
@@ -41,9 +42,13 @@ export default function ProductsCarousel({
             className={clsx(styles.product, {
               [styles.isSelected]: selectedProducts.includes(product),
               [styles.isDisabled]: disabledProducts.includes(product),
-              [styles.isHidden]: group.variants.length > 1 && index > 0,
+              [styles.isHidden]: product.hidden,
             })}
-            onClick={() => toggleProduct(product)}
+            onClick={() => {
+              group.variants.length > 1
+                ? toggleGroup(group)
+                : toggleProduct(product);
+            }}
             type="button"
           >
             <div className={styles.productImageContainer}>
