@@ -35,6 +35,7 @@ export default function ProductsCarousel({
       const productTitle = product.variantName;
       const productImage =
         product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+      const isGroup = group.variants.length > 1;
 
       return (
         <Fragment key={index}>
@@ -45,9 +46,7 @@ export default function ProductsCarousel({
               [styles.isHidden]: product.hidden,
             })}
             onClick={() => {
-              group.variants.length > 1
-                ? toggleGroup(group)
-                : toggleProduct(product);
+              isGroup ? toggleGroup(group) : toggleProduct(product);
             }}
             type="button"
           >
@@ -62,7 +61,7 @@ export default function ProductsCarousel({
               />
             </div>
             <div className={styles.productIcon}>
-              {group.variants.length > 1 ? (
+              {isGroup ? (
                 <>
                   <GroupIcon />
                 </>
@@ -78,7 +77,7 @@ export default function ProductsCarousel({
                 <p className={styles.productName}>{productTitle}</p>
                 {group.minPrice && (
                   <span className={styles.productPrice}>
-                    {group.variants.length > 1 && <>Starting from </>}
+                    {isGroup && <>Starting from </>}
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
                       style: 'currency',
