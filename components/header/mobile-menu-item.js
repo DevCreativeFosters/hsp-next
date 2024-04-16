@@ -15,6 +15,7 @@ export default function MobileMenuItem({
 }) {
   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const containerRef = useRef();
+
   const renderSubItems = useCallback(subItems => {
     if (!subItems?.length) return null;
 
@@ -37,7 +38,9 @@ export default function MobileMenuItem({
                 background="dark"
                 style={subItem.special ? (j === 0 ? { ...fontStyle } : {}) : {}}
                 className={
-                  subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
+                  subItem.subItems.length > 0
+                    ? styles.menuItemLabel
+                    : styles.menuSubItem
                 }
               >
                 {subItem.label}

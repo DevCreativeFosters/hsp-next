@@ -90,7 +90,7 @@ export default function Header({
                       variant="tertiary"
                       background="dark"
                       toggleable={
-                        subItems?.length > 0 && url === '/products/'
+                        subItems?.length > 0 && url.includes('/products/')
                           ? 'neutral'
                           : null
                       }
