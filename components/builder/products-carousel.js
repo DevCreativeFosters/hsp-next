@@ -30,20 +30,21 @@ export default function ProductsCarousel({
   toggleGroup,
   toggleProduct,
 }) {
-  const slides = products?.map(group => {
-    return group?.variants.map((product, index) => {
+  const slides = [];
+
+  products?.forEach(group => {
+    group?.variants.forEach((product, index) => {
       const productTitle = product.variantName;
       const productImage =
         product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
       const isGroup = group.variants.length > 1;
 
-      return (
+      const slide = (
         <Fragment key={index}>
           <button
             className={clsx(styles.product, {
               [styles.isSelected]: selectedProducts.includes(product),
               [styles.isDisabled]: disabledProducts.includes(product),
-              [styles.isHidden]: product.hidden,
             })}
             onClick={() => {
               isGroup ? toggleGroup(group) : toggleProduct(product);
@@ -89,6 +90,10 @@ export default function ProductsCarousel({
           </button>
         </Fragment>
       );
+
+      if (!product.hidden) {
+        slides.push(slide);
+      }
     });
   });
 
@@ -151,12 +156,11 @@ export default function ProductsCarousel({
           className={styles.carousel}
           settings={{
             loop: false,
-            navigation: true,
             slidesPerView: 'auto',
             spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={products?.length > 6}
+          showNavigation={products?.length > 5}
           slides={slides}
         />
       </div>
