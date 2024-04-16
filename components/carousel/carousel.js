@@ -42,14 +42,12 @@ export default function Carousel({
       {showNavigation && slides && (
         <>
           <Button
-            background="dark"
             className={clsx(styles.navigationButton, styles.prevButton)}
             onClick={handlePrevClick}
             rightIcon="arrow-previous"
             variant="secondary"
           />
           <Button
-            background="dark"
             className={clsx(styles.navigationButton, styles.nextButton)}
             onClick={handleNextClick}
             rightIcon="arrow-next"
