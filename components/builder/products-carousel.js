@@ -17,6 +17,7 @@ const CheckMarkIcon = getIcon('check-mark');
 const CancelIcon = getIcon('cancel');
 const ArrowBackwardIcon = getIcon('arrow-backward');
 const GroupIcon = getIcon('group');
+const UngroupIcon = getIcon('ungroup');
 
 export default function ProductsCarousel({
   className,
@@ -32,30 +33,51 @@ export default function ProductsCarousel({
 }) {
   const slides = [];
 
-  const defaultIcons = (
-    <>
-      <PlusIcon className={styles.plusIcon} />
-      <CheckMarkIcon className={styles.checkIcon} />
-    </>
-  );
-
   products?.forEach(group => {
     group?.variants.forEach((product, index) => {
-      const productTitle = product.variantName;
-      const productImage =
-        product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
-      const { isGroup } = product;
+      const { isGroup, uteBuilderImages, variantName } = product;
+      const productTitle = variantName;
+      const productImage = uteBuilderImages.imageDesktop?.node?.sourceUrl;
+      const isSelected = selectedProducts.includes(product);
+      const isDisabled = disabledProducts.includes(product);
+      const isGroupItemOpen = isGroup && product.isOpen;
+      const isGroupItemFirst = index === 0;
+      const isGroupItemLast = index === group.variants.length - 1;
+
+      const Icon = (
+        <>
+          {isGroup ? (
+            <>
+              {index === 0 ? (
+                isGroupItemOpen ? (
+                  <UngroupIcon />
+                ) : (
+                  <GroupIcon />
+                )
+              ) : isSelected ? (
+                <CheckMarkIcon />
+              ) : (
+                <PlusIcon />
+              )}
+            </>
+          ) : isSelected ? (
+            <CheckMarkIcon />
+          ) : (
+            <PlusIcon />
+          )}
+        </>
+      );
 
       const slide = (
         <Fragment key={index}>
           <button
             className={clsx(styles.product, {
-              [styles.isSelected]: selectedProducts.includes(product),
-              [styles.isDisabled]: disabledProducts.includes(product),
+              [styles.isSelected]: isSelected,
+              [styles.isDisabled]: isDisabled,
               [styles.isGroupItem]: isGroup,
-              [styles.isGroupItemOpen]: isGroup && product.isOpen,
-              [styles.isGroupItemFirst]: index === 0,
-              [styles.isGroupItemLast]: index === group.variants.length - 1,
+              [styles.isGroupItemOpen]: isGroupItemOpen,
+              [styles.isGroupItemFirst]: isGroupItemFirst,
+              [styles.isGroupItemLast]: isGroupItemLast,
             })}
             onClick={() => {
               isGroup && index === 0
@@ -74,13 +96,7 @@ export default function ProductsCarousel({
                 width={168}
               />
             </div>
-            <div className={styles.productIcon}>
-              {isGroup ? (
-                <>{index > 0 ? <>{defaultIcons}</> : <GroupIcon />}</>
-              ) : (
-                <>{defaultIcons}</>
-              )}
-            </div>
+            <div className={styles.productIcon}>{Icon}</div>
             {productTitle && (
               <div className={styles.productMeta}>
                 <p className={styles.productName}>{productTitle}</p>

@@ -90,10 +90,6 @@
   &.isCover {
     flex-shrink: 0;
   }
-
-  &.isHidden {
-    display: none;
-  }
 }
 
 .productIcon {
@@ -110,20 +106,8 @@
   color: var(--color-black-100);
   background-color: rgb(255 255 255 / 80%);
 
-  .checkIcon {
-    display: none;
-  }
-
   .isSelected & {
     color: var(--color-primary-100);
-
-    .checkIcon {
-      display: block;
-    }
-
-    .plusIcon {
-      display: none;
-    }
   }
 }
 
