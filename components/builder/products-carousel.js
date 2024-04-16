@@ -54,7 +54,9 @@ export default function ProductsCarousel({
               [styles.isDisabled]: disabledProducts.includes(product),
             })}
             onClick={() => {
-              isGroup ? toggleGroup(group) : toggleProduct(product);
+              isGroup && index === 0
+                ? toggleGroup(group)
+                : toggleProduct(product);
             }}
             type="button"
           >
