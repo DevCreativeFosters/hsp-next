@@ -37,7 +37,7 @@ export default function ProductsCarousel({
       const productTitle = product.variantName;
       const productImage =
         product.uteBuilderImages.imageDesktop?.node?.sourceUrl;
-      const isGroup = group.variants.length > 1;
+      const { isGroup } = product;
 
       const slide = (
         <Fragment key={index}>
