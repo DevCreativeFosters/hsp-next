@@ -32,6 +32,13 @@ export default function ProductsCarousel({
 }) {
   const slides = [];
 
+  const defaultIcons = (
+    <>
+      <PlusIcon className={styles.plusIcon} />
+      <CheckMarkIcon className={styles.checkIcon} />
+    </>
+  );
+
   products?.forEach(group => {
     group?.variants.forEach((product, index) => {
       const productTitle = product.variantName;
@@ -63,14 +70,9 @@ export default function ProductsCarousel({
             </div>
             <div className={styles.productIcon}>
               {isGroup ? (
-                <>
-                  <GroupIcon />
-                </>
+                <>{index > 0 ? <>{defaultIcons}</> : <GroupIcon />}</>
               ) : (
-                <>
-                  <PlusIcon className={styles.plusIcon} />
-                  <CheckMarkIcon className={styles.checkIcon} />
-                </>
+                <>{defaultIcons}</>
               )}
             </div>
             {productTitle && (
