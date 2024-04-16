@@ -127,6 +127,10 @@
   @include bp(medium) {
     aspect-ratio: 1.4;
   }
+
+  .isGroupItemFirst.isGroupItemOpen & {
+    opacity: 0.3;
+  }
 }
 
 .productImage {
@@ -148,12 +152,20 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+
+  .isGroupItemFirst.isGroupItemOpen & {
+    opacity: 0.3;
+  }
 }
 
 .productPrice {
   font-size: 12px;
   opacity: 0.8;
   text-transform: uppercase;
+
+  .isGroupItemFirst.isGroupItemOpen & {
+    opacity: 0.3;
+  }
 }
 
 .isGroupItem {
