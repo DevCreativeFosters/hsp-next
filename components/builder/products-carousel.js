@@ -142,7 +142,12 @@ export default function ProductsCarousel({
         <span className={styles.number}>Step {stepNumber}:</span>{' '}
         {currentStepTitle}
         {isMobile && stepNumber === 2 && selectedCover && (
-          <Button className={styles.badge} size="small" variant="secondary">
+          <Button
+            className={styles.badge}
+            onClick={() => toggleProduct(selectedCover)}
+            size="small"
+            variant="secondary"
+          >
             {selectedCover.variantName}
             <CancelIcon className={styles.badgeIcon} />
           </Button>
@@ -173,7 +178,7 @@ export default function ProductsCarousel({
             {productTitle && (
               <div className={styles.productMeta}>
                 <p className={styles.productName}>{productTitle}</p>
-                {selectedCover.price && (
+                {selectedCover.price && selectedCover.price > 0 && (
                   <span className={styles.productPrice}>
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
