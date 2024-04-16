@@ -73,6 +73,7 @@ export default function ProductsCarousel({
                 <p className={styles.productName}>{productTitle}</p>
                 {group.minPrice && (
                   <span className={styles.productPrice}>
+                    {group.variants.length > 1 && <>Starting from </>}
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
                       style: 'currency',
