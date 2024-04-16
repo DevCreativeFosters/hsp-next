@@ -1,17 +1,22 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import Link from 'next/link';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import { useClickOutside } from '@hooks/useClickOutside';
+
+import Button from '@components/button/button';
+import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
+import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+import HamburgerButton from '@components/hamburger-button/hamburger-button';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
-import Button from '@components/button/button';
-import HamburgerButton from '@components/hamburger-button/hamburger-button';
+
 import Logo from '@assets/images/logo.svg';
-import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
+
 import styles from './header.module.scss';
-import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
 
 export default function Header({
   mainMenu,
@@ -85,7 +90,7 @@ export default function Header({
                       variant="tertiary"
                       background="dark"
                       toggleable={
-                        subItems?.length > 0 && url === '/products/'
+                        subItems?.length > 0 && url.includes('/products/')
                           ? 'neutral'
                           : null
                       }

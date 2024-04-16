@@ -1,11 +1,16 @@
 'use client';
 
-import Input from '@components/form/input';
-import { useState, useCallback, useMemo, useRef, useId } from 'react';
-import AnimateHeight from 'react-animate-height';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import { useClickOutside } from '@hooks/useClickOutside';
+
+import Input from '@components/form/input';
+
 import ExpandMoreNeutral from '@assets/icons/expand-more-neutral.svg';
+
 import styles from './select.module.scss';
 
 const MIN_RESULTS_TO_ENABLE_SEARCH = 20;
@@ -159,7 +164,7 @@ export default function Select({
         )}
 
         <select
-          name={`fake_${props.name}`}
+          name={props.name ? `fake_${props.name}` : null}
           className={styles.realSelect}
           required={required}
           value={value || ''}
