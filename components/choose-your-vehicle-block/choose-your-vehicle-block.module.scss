@@ -26,15 +26,12 @@
     padding: 12px 24px;
     border-radius: 8px 8px 8px 0;
     transform: translateY(-50%);
-    transition:
-      transform 0.1s,
-      padding 0.1s;
+    transition: opacity 0.2s;
   }
 
   .isCloseToHeader & {
     @include bp(large) {
-      padding: 8px 24px;
-      transform: translateX(-24px) translateY(0);
+      opacity: 0;
     }
   }
 }
