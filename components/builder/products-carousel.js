@@ -160,7 +160,7 @@ export default function ProductsCarousel({
             spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={products?.length > 5}
+          showNavigation={slides.length > 6}
           slides={slides}
         />
       </div>
