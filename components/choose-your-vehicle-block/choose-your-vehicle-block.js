@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
-import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
+import { useWindowSize } from 'usehooks-ts';
 
 import { useVehicleContext } from '@contexts/vehicle';
+
+import { useIsMobile } from '@hooks/useIsMobile';
 
 import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
@@ -16,14 +18,15 @@ import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
 
-import styles from '../builder/ute-choose-your-vehicle.module.scss';
+import styles from './choose-your-vehicle-block.module.scss';
 
 export default function ChooseYourVehicleBlock({
   makes: makersAndModels,
   params,
-  style,
   variants,
 }) {
+  const wrapperRef = useRef();
+  const stickerRef = useRef();
   const variantsNormalized = variants?.map(variant => {
     return {
       label: variant.variantName,
@@ -42,6 +45,9 @@ export default function ChooseYourVehicleBlock({
 
   const path = usePathname();
 
+  const windowSize = useWindowSize();
+  const isMobile = useIsMobile();
+
   const variantSlug = useMemo(() => {
     return path.split('/').pop();
   }, [path]);
@@ -59,24 +65,58 @@ export default function ChooseYourVehicleBlock({
     [setVariant, variantSlug, variantsNormalized],
   );
 
+  useEffect(
+    function attachIntersectionObserver() {
+      const { width, height } = windowSize;
+      const el = wrapperRef.current;
+      const stickerEl = stickerRef.current;
+      const stickerHeight = stickerEl.clientHeight;
+      let io;
+      if (width && height && el) {
+        const headerHeight =
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              '--header-height',
+            ),
+          ) || 0;
+        const top = headerHeight + Math.floor(stickerHeight / 2);
+        const bottom = height - top;
+        const rootMargin = `-${top - 1}px 0px -${bottom}px 0px`;
+        io = new IntersectionObserver(
+          function (entries) {
+            const entry = entries[0];
+            const { isIntersecting } = entry;
+
+            el.classList.toggle(styles.isCloseToHeader, isIntersecting);
+          },
+          {
+            root: document.body,
+            rootMargin,
+            threshold: 0,
+          },
+        );
+        io.observe(el);
+      }
+
+      return () => {
+        if (io) {
+          io.disconnect();
+        }
+      };
+    },
+    [windowSize.width, windowSize.height],
+  );
+
   return (
-    <Container
-      className={clsx(styles.container, {
-        [styles.flexibleBlockContainer]: style === 'flexible',
-      })}
-    >
-      <div
-        className={clsx(styles.chooseVehicleContainer, {
-          [styles.flexibleChooseYourVehicleContainer]: style === 'flexible',
-        })}
-      >
-        <p className={styles.chooseVehiclePill}>
+    <div className={styles.wrapper} ref={wrapperRef}>
+      <Container>
+        <h3 className={styles.sticker} ref={stickerRef}>
           {constants.SELECT_LABELS.GENERIC_FULL}
-        </p>
-        <div className={styles.vehicleSelector}>
+        </h3>
+        <div className={styles.form}>
           <Select
             className={styles.select}
-            dropdownInDocumentFlow
+            dropdownInDocumentFlow={isMobile}
             onChange={handleMakerChange}
             options={makerSelectOptions}
             placeholder={constants.SELECT_LABELS.MAKER}
@@ -86,7 +126,7 @@ export default function ChooseYourVehicleBlock({
           <Select
             className={styles.select}
             disabled={!modelSelectOptions.length}
-            dropdownInDocumentFlow
+            dropdownInDocumentFlow={isMobile}
             onChange={handleModelChange}
             options={modelSelectOptions}
             placeholder={constants.SELECT_LABELS.MODEL}
@@ -97,7 +137,7 @@ export default function ChooseYourVehicleBlock({
             <Select
               className={styles.select}
               disabled={!variants.length}
-              dropdownInDocumentFlow
+              dropdownInDocumentFlow={isMobile}
               onChange={handleVariantChange}
               options={variantsNormalized}
               placeholder={constants.SELECT_LABELS.VARIANT}
@@ -107,6 +147,7 @@ export default function ChooseYourVehicleBlock({
           )}
           <Button
             className={styles.button}
+            size="large"
             disabled={!model}
             onClick={() => handleSave(params, reload)}
             rightIcon="arrow-forward"
@@ -114,7 +155,7 @@ export default function ChooseYourVehicleBlock({
             See details
           </Button>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }
