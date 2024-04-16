@@ -232,6 +232,25 @@ export default function Builder({
     [addProduct, removeProduct, selectedProducts],
   );
 
+  const toggleGroup = useCallback(
+    group => {
+      const products = [];
+      stepProducts.forEach(item => {
+        if (item.variants.length > 1 && item.group !== group.slug) {
+          item.variants.forEach((variant, index) => {
+            if (index > 0) {
+              variant.hidden = !variant.hidden;
+            }
+          });
+        }
+        products.push(item);
+      });
+
+      setStepProducts(products);
+    },
+    [setStepProducts, stepProducts],
+  );
+
   const isInlineResultListVisible = Boolean(
     openSection === 'store' && location && searchGeolocation && radius,
   );
@@ -295,7 +314,7 @@ export default function Builder({
                 />
               )}
             </div>
-            {stepNumber > 0 && Object.keys(stepProducts).length > 0 && (
+            {stepNumber > 0 && stepProducts.length > 0 && (
               <ProductsCarousel
                 disabledProducts={disabledProducts}
                 isMobile={isMobile}
@@ -304,6 +323,7 @@ export default function Builder({
                 selectedProducts={selectedProducts}
                 stepNumber={stepNumber}
                 stepTitle={stepTitle}
+                toggleGroup={toggleGroup}
                 toggleProduct={toggleProduct}
               />
             )}
