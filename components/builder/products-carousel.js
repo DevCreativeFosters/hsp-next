@@ -100,7 +100,7 @@ export default function ProductsCarousel({
             {productTitle && (
               <div className={styles.productMeta}>
                 <p className={styles.productName}>{productTitle}</p>
-                {index === 0 && group.minPrice && (
+                {index === 0 && group.minPrice > 0 && (
                   <span className={styles.productPrice}>
                     {isGroup && <>Starting from </>}
                     {new Intl.NumberFormat('en-AU', {
@@ -110,7 +110,7 @@ export default function ProductsCarousel({
                   </span>
                 )}
 
-                {index > 0 && product.price && (
+                {index > 0 && product.price > 0 && (
                   <span className={styles.productPrice}>
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
