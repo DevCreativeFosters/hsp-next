@@ -22,11 +22,10 @@ import ProductsCarousel from './products-carousel';
 import Sidebar from './sidebar';
 
 const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
-  products.filter(
-    product =>
-      product.productSlug === productSlug &&
-      product.variantSlug !== variantSlug,
-  );
+  products
+    .filter(product => product.group === productSlug)
+    .flatMap(product => product.variants)
+    .filter(variant => variant.variantSlug !== variantSlug);
 
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
@@ -178,7 +177,7 @@ export default function Builder({
       const newDisabledProducts = [
         ...disabledProducts,
         ...getOtherProductsWithSameParent(
-          products,
+          stepProducts,
           product.productSlug,
           product.variantSlug,
         ),
@@ -190,9 +189,9 @@ export default function Builder({
     [
       covers,
       disabledProducts,
-      products,
       selectedFactoryOptions,
       selectedProducts,
+      stepProducts,
     ],
   );
 
@@ -208,7 +207,7 @@ export default function Builder({
         selectedProduct => selectedProduct !== product,
       );
       const otherProductsWithSameParent = getOtherProductsWithSameParent(
-        products,
+        stepProducts,
         product.productSlug,
         product.variantSlug,
       );
@@ -219,7 +218,7 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [disabledProducts, products, selectedProducts],
+    [disabledProducts, selectedProducts, stepProducts],
   );
 
   const toggleProduct = useCallback(
