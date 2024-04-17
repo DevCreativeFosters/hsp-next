@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 import { getIcon } from '@lib/icons';
+import { isProductSelected } from '@lib/ute-helpers';
 
 import Button from '@components/button/button';
 import Carousel from '@components/carousel/carousel';
@@ -35,11 +36,11 @@ export default function ProductsCarousel({
 
   products?.forEach(group => {
     group?.variants.forEach((product, index) => {
-      const { isGroup, uteBuilderImages, variantName } = product;
+      const { isGroup, uteBuilderImages, variantName, variantSlug } = product;
       const productTitle = variantName;
       const productImage = uteBuilderImages.imageDesktop?.node?.sourceUrl;
-      const isSelected = selectedProducts.includes(product);
-      const isDisabled = disabledProducts.includes(product.variantSlug);
+      const isSelected = isProductSelected(selectedProducts, variantSlug);
+      const isDisabled = disabledProducts.includes(variantSlug);
       const isGroupItemOpen = isGroup && product.isOpen;
       const isGroupItemFirst = index === 0;
       const isGroupItemLast = index === group.variants.length - 1;

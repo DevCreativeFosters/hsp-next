@@ -9,6 +9,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+import { isProductSelected } from '@lib/ute-helpers';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -188,6 +189,7 @@ export default function Builder({
           selectedProduct =>
             !product.compatibleCovers.includes(selectedProduct.productSlug),
         )
+        .filter(cover => covers.some(c => c.group === cover.productSlug))
         .map(cover => cover.productName);
 
       setIncompatibleFactoryOptions(incompatibleFactoryOptions);
@@ -202,17 +204,19 @@ export default function Builder({
         return;
       }
 
-      const newDisabledProducts = [
-        ...disabledProducts,
-        ...getOtherProductsWithSameParent(
-          stepProducts,
-          product.productSlug,
-          product.variantSlug,
-        ),
-        ...getIncompatibleProducts(stepProducts, product, covers),
-      ];
+      if (stepNumber === 2) {
+        const newDisabledProducts = [
+          ...disabledProducts,
+          ...getOtherProductsWithSameParent(
+            stepProducts,
+            product.productSlug,
+            product.variantSlug,
+          ),
+          ...getIncompatibleProducts(stepProducts, product, covers),
+        ];
 
-      setDisabledProducts(newDisabledProducts);
+        setDisabledProducts(newDisabledProducts);
+      }
 
       setProductToAdd(product);
     },
@@ -221,6 +225,7 @@ export default function Builder({
       disabledProducts,
       selectedFactoryOptions,
       selectedProducts,
+      stepNumber,
       stepProducts,
     ],
   );
@@ -244,9 +249,13 @@ export default function Builder({
 
   const removeProduct = useCallback(
     product => {
-      const newSelectedProducts = selectedProducts.filter(
-        selectedProduct => selectedProduct !== product,
-      );
+      let newSelectedProducts = [];
+
+      selectedProducts.forEach(selectedProduct => {
+        if (selectedProduct.variantSlug !== product.variantSlug) {
+          newSelectedProducts.push(selectedProduct);
+        }
+      });
 
       const otherProductsWithSameParent = getOtherProductsWithSameParent(
         stepProducts,
@@ -270,10 +279,12 @@ export default function Builder({
 
   const toggleProduct = useCallback(
     product => {
+      const isSelected = isProductSelected(
+        selectedProducts,
+        product.variantSlug,
+      );
       setCurrentProduct(product);
-      selectedProducts.includes(product)
-        ? removeProduct(product)
-        : addProduct(product);
+      isSelected ? removeProduct(product) : addProduct(product);
     },
     [addProduct, removeProduct, selectedProducts],
   );
