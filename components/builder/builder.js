@@ -9,7 +9,11 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
-import { isProductSelected } from '@lib/ute-helpers';
+import {
+  getIncompatibleProducts,
+  getOtherProductsWithSameParent,
+  isProductSelected,
+} from '@lib/ute-helpers';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -21,35 +25,6 @@ import styles from './builder.module.scss';
 import Preview from './preview';
 import ProductsCarousel from './products-carousel';
 import Sidebar from './sidebar';
-
-const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
-  products
-    .filter(product => product.group === productSlug)
-    .flatMap(product => product.variants)
-    .filter(variant => variant.variantSlug !== variantSlug)
-    .filter(variant => variant.variantSlug)
-    .map(variant => {
-      return variant.variantSlug;
-    });
-
-const getIncompatibleProducts = (products, currentProduct, covers) =>
-  products
-    .filter(product => product.group !== currentProduct.productSlug)
-    .flatMap(product => product.variants)
-    .filter(variant => variant.productSlug !== currentProduct.productSlug)
-    .filter(
-      variant =>
-        covers &&
-        variant.productCategories &&
-        variant.productCategories.some(
-          category => !currentProduct.compatibleProducts.includes(category),
-        ),
-    )
-    .filter(variant => variant.variantSlug)
-    .filter(
-      variant => !covers.some(cover => cover.group === variant.productSlug),
-    )
-    .map(variant => variant.variantSlug);
 
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
