@@ -53,6 +53,7 @@ export default function Builder({
   const [productToAdd, setProductToAdd] = useState(null);
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
+  const [incompatibleCovers, setIncompatibleCovers] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -149,12 +150,6 @@ export default function Builder({
     return () => resizeObserver.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (incompatibleFactoryOptions && incompatibleFactoryOptions.length) {
-      setShowModal(true);
-    }
-  }, [incompatibleFactoryOptions, setShowModal]);
-
   const addProduct = useCallback(
     product => {
       setIsCover(covers.some(cover => cover.group === product.productSlug));
@@ -176,12 +171,24 @@ export default function Builder({
         )
         .map(option => option.value);
 
-      if (incompatibleFactoryOptions.length) {
-        setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      const incompatibleCovers = selectedProducts
+        .filter(
+          selectedProduct =>
+            !product.compatibleCovers.includes(selectedProduct.productSlug),
+        )
+        .map(cover => cover.productName);
+
+      setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      setIncompatibleCovers(incompatibleCovers);
+
+      if (
+        incompatibleFactoryOptions.length > 0 ||
+        incompatibleCovers.length > 0
+      ) {
+        setShowModal(true);
 
         return;
       }
-
       setProductToAdd(product);
     },
     [
@@ -194,7 +201,7 @@ export default function Builder({
   );
 
   useEffect(() => {
-    if (!productToAdd) {
+    if (!productToAdd || showModal) {
       return;
     }
 
@@ -208,7 +215,7 @@ export default function Builder({
 
     setSelectedProducts(products);
     setProductToAdd(null);
-  }, [isCover, productToAdd, selectedProducts]);
+  }, [isCover, productToAdd, selectedProducts, showModal]);
 
   const removeProduct = useCallback(
     product => {
@@ -273,8 +280,10 @@ export default function Builder({
       {showModal ? (
         <ClashModal
           currentProduct={currentProduct}
+          incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           selectedFactoryOptions={selectedFactoryOptions}
+          selectedProducts={selectedProducts}
           setProductToAdd={setProductToAdd}
           setSelectedFactoryOptions={setSelectedFactoryOptions}
           setShowModal={setShowModal}

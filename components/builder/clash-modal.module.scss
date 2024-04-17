@@ -7,6 +7,12 @@
   gap: 24px;
 }
 
+.listDivider {
+  border-bottom: 1px solid var(--color-white-20);
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+}
+
 .listItem {
   display: inline-block;
   padding: 8px 16px;
