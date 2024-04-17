@@ -25,7 +25,26 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   products
     .filter(product => product.group === productSlug)
     .flatMap(product => product.variants)
-    .filter(variant => variant.variantSlug !== variantSlug);
+    .filter(variant => variant.variantSlug !== variantSlug)
+    .filter(variant => variant.variantSlug)
+    .map(variant => {
+      return variant.variantSlug;
+    });
+
+const getIncompatibleProducts = (products, currentProduct) =>
+  products
+    .filter(product => product.group !== currentProduct.productSlug)
+    .flatMap(product => product.variants)
+    .filter(variant => variant.productSlug !== currentProduct.productSlug)
+    .filter(
+      variant =>
+        variant.productCategories &&
+        variant.productCategories.some(
+          category => !currentProduct.compatibleProducts.includes(category),
+        ),
+    )
+    .filter(variant => variant.variantSlug)
+    .map(variant => variant.variantSlug);
 
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
@@ -161,6 +180,7 @@ export default function Builder({
           product.productSlug,
           product.variantSlug,
         ),
+        ...getIncompatibleProducts(stepProducts, product),
       ];
 
       setDisabledProducts(newDisabledProducts);
@@ -227,9 +247,15 @@ export default function Builder({
         product.productSlug,
         product.variantSlug,
       );
-      const newDisabledProducts = disabledProducts.filter(
-        el => !otherProductsWithSameParent.includes(el),
+
+      const incompatibleProducts = getIncompatibleProducts(
+        stepProducts,
+        product,
       );
+
+      const newDisabledProducts = disabledProducts
+        .filter(el => !otherProductsWithSameParent.includes(el))
+        .filter(el => !incompatibleProducts.includes(el));
 
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);

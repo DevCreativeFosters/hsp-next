@@ -39,7 +39,7 @@ export default function ProductsCarousel({
       const productTitle = variantName;
       const productImage = uteBuilderImages.imageDesktop?.node?.sourceUrl;
       const isSelected = selectedProducts.includes(product);
-      const isDisabled = disabledProducts.includes(product);
+      const isDisabled = disabledProducts.includes(product.variantSlug);
       const isGroupItemOpen = isGroup && product.isOpen;
       const isGroupItemFirst = index === 0;
       const isGroupItemLast = index === group.variants.length - 1;
@@ -73,7 +73,8 @@ export default function ProductsCarousel({
           <button
             className={clsx(styles.product, {
               [styles.isSelected]: isSelected,
-              [styles.isDisabled]: isGroupItemFirst ? false : isDisabled,
+              [styles.isDisabled]:
+                isGroupItemFirst && isGroup ? false : isDisabled,
               [styles.isGroupItem]: isGroup,
               [styles.isGroupItemOpen]: isGroupItemOpen,
               [styles.isGroupItemFirst]: isGroupItemFirst,
