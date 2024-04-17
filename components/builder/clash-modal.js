@@ -15,6 +15,20 @@ export default function ClashModal({
   setSelectedFactoryOptions,
   setShowModal,
 }) {
+  let title = 'Factory Options Clash';
+
+  if (
+    incompatibleCovers.length > 0 &&
+    incompatibleFactoryOptions.length === 0
+  ) {
+    title = 'Cover Options Clash';
+  } else if (
+    incompatibleCovers.length > 0 &&
+    incompatibleFactoryOptions.length > 0
+  ) {
+    title = 'Cover & Factory Options Clash';
+  }
+
   return (
     <Modal
       isVisible={true}
@@ -22,7 +36,7 @@ export default function ClashModal({
       onClose={() => {
         setShowModal(false);
       }}
-      title="Factory Options Clash"
+      title={title}
     >
       <>
         {incompatibleCovers.length > 0 && (
