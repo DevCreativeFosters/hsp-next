@@ -173,18 +173,6 @@ export default function Builder({
     product => {
       setIsCover(covers.some(cover => cover.group === product.productSlug));
 
-      const newDisabledProducts = [
-        ...disabledProducts,
-        ...getOtherProductsWithSameParent(
-          stepProducts,
-          product.productSlug,
-          product.variantSlug,
-        ),
-        ...getIncompatibleProducts(stepProducts, product),
-      ];
-
-      setDisabledProducts(newDisabledProducts);
-
       const incompatibleFactoryOptions = selectedFactoryOptions
         .filter(
           option => !product.compatibleFactoryOptions.includes(option.slug),
@@ -209,6 +197,19 @@ export default function Builder({
 
         return;
       }
+
+      const newDisabledProducts = [
+        ...disabledProducts,
+        ...getOtherProductsWithSameParent(
+          stepProducts,
+          product.productSlug,
+          product.variantSlug,
+        ),
+        ...getIncompatibleProducts(stepProducts, product),
+      ];
+
+      setDisabledProducts(newDisabledProducts);
+
       setProductToAdd(product);
     },
     [
@@ -310,6 +311,7 @@ export default function Builder({
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           selectedFactoryOptions={selectedFactoryOptions}
           selectedProducts={selectedProducts}
+          setDisabledProducts={setDisabledProducts}
           setProductToAdd={setProductToAdd}
           setSelectedFactoryOptions={setSelectedFactoryOptions}
           setShowModal={setShowModal}
