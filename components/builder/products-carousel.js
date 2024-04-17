@@ -73,7 +73,7 @@ export default function ProductsCarousel({
           <button
             className={clsx(styles.product, {
               [styles.isSelected]: isSelected,
-              [styles.isDisabled]: isDisabled,
+              [styles.isDisabled]: isGroupItemFirst ? false : isDisabled,
               [styles.isGroupItem]: isGroup,
               [styles.isGroupItemOpen]: isGroupItemOpen,
               [styles.isGroupItemFirst]: isGroupItemFirst,

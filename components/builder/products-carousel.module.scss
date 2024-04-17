@@ -83,7 +83,6 @@
   padding-block: 10px;
 
   &.isDisabled {
-    opacity: 0.5;
     pointer-events: none;
   }
 
@@ -109,6 +108,10 @@
   .isSelected & {
     color: var(--color-primary-100);
   }
+
+  .isDisabled & {
+    opacity: 0.3;
+  }
 }
 
 .arrowIcon {
@@ -128,6 +131,7 @@
     aspect-ratio: 1.4;
   }
 
+  .isDisabled &,
   .isGroupItemFirst.isGroupItemOpen & {
     opacity: 0.3;
   }
@@ -153,6 +157,7 @@
   font-weight: 600;
   margin: 0;
 
+  .isDisabled &,
   .isGroupItemFirst.isGroupItemOpen & {
     opacity: 0.3;
   }
@@ -163,6 +168,7 @@
   opacity: 0.8;
   text-transform: uppercase;
 
+  .isDisabled &,
   .isGroupItemFirst.isGroupItemOpen & {
     opacity: 0.3;
   }
