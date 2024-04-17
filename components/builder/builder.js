@@ -49,6 +49,8 @@ export default function Builder({
   const [stepProducts, setStepProducts] = useState(products);
   const [showModal, setShowModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [isCover, setIsCover] = useState(false);
+  const [productToAdd, setProductToAdd] = useState(null);
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
   const topRef = useRef(null);
@@ -155,30 +157,7 @@ export default function Builder({
 
   const addProduct = useCallback(
     product => {
-      let newSelectedProducts = [...selectedProducts, product];
-
-      if (covers.some(cover => cover.group === product.productSlug)) {
-        if (!selectedFactoryOptions) {
-          newSelectedProducts = [product, ...selectedProducts];
-          setSelectedProducts(newSelectedProducts);
-
-          return;
-        }
-
-        const incompatibleFactoryOptions = selectedFactoryOptions
-          .filter(
-            option => !product.compatibleFactoryOptions.includes(option.slug),
-          )
-          .map(option => option.value);
-
-        if (incompatibleFactoryOptions.length) {
-          setIncompatibleFactoryOptions(incompatibleFactoryOptions);
-
-          return;
-        }
-
-        newSelectedProducts = [product, ...selectedProducts];
-      }
+      setIsCover(covers.some(cover => cover.group === product.productSlug));
 
       const newDisabledProducts = [
         ...disabledProducts,
@@ -189,8 +168,21 @@ export default function Builder({
         ),
       ];
 
-      setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
+
+      const incompatibleFactoryOptions = selectedFactoryOptions
+        .filter(
+          option => !product.compatibleFactoryOptions.includes(option.slug),
+        )
+        .map(option => option.value);
+
+      if (incompatibleFactoryOptions.length) {
+        setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+
+        return;
+      }
+
+      setProductToAdd(product);
     },
     [
       covers,
@@ -200,6 +192,23 @@ export default function Builder({
       stepProducts,
     ],
   );
+
+  useEffect(() => {
+    if (!productToAdd) {
+      return;
+    }
+
+    const products = [...selectedProducts];
+
+    if (isCover) {
+      products.unshift(productToAdd);
+    } else {
+      products.push(productToAdd);
+    }
+
+    setSelectedProducts(products);
+    setProductToAdd(null);
+  }, [isCover, productToAdd, selectedProducts]);
 
   const removeProduct = useCallback(
     product => {
@@ -266,9 +275,8 @@ export default function Builder({
           currentProduct={currentProduct}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           selectedFactoryOptions={selectedFactoryOptions}
-          selectedProducts={selectedProducts}
+          setProductToAdd={setProductToAdd}
           setSelectedFactoryOptions={setSelectedFactoryOptions}
-          setSelectedProducts={setSelectedProducts}
           setShowModal={setShowModal}
         />
       ) : (

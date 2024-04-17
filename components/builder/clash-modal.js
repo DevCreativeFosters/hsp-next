@@ -7,9 +7,8 @@ export default function ClashModal({
   currentProduct,
   incompatibleFactoryOptions,
   selectedFactoryOptions,
-  selectedProducts,
+  setProductToAdd,
   setSelectedFactoryOptions,
-  setSelectedProducts,
   setShowModal,
 }) {
   return (
@@ -51,7 +50,8 @@ export default function ClashModal({
                 option => !incompatibleFactoryOptions.includes(option.value),
               ),
             );
-            setSelectedProducts([currentProduct, ...selectedProducts]);
+
+            setProductToAdd(currentProduct);
             setShowModal(false);
           }}
           size={'large'}
