@@ -31,19 +31,23 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
       return variant.variantSlug;
     });
 
-const getIncompatibleProducts = (products, currentProduct) =>
+const getIncompatibleProducts = (products, currentProduct, covers) =>
   products
     .filter(product => product.group !== currentProduct.productSlug)
     .flatMap(product => product.variants)
     .filter(variant => variant.productSlug !== currentProduct.productSlug)
     .filter(
       variant =>
+        covers &&
         variant.productCategories &&
         variant.productCategories.some(
           category => !currentProduct.compatibleProducts.includes(category),
         ),
     )
     .filter(variant => variant.variantSlug)
+    .filter(
+      variant => !covers.some(cover => cover.group === variant.productSlug),
+    )
     .map(variant => variant.variantSlug);
 
 const DEFAULT_OPEN_SECTION = 'products';
@@ -205,7 +209,7 @@ export default function Builder({
           product.productSlug,
           product.variantSlug,
         ),
-        ...getIncompatibleProducts(stepProducts, product),
+        ...getIncompatibleProducts(stepProducts, product, covers),
       ];
 
       setDisabledProducts(newDisabledProducts);
@@ -243,16 +247,16 @@ export default function Builder({
       const newSelectedProducts = selectedProducts.filter(
         selectedProduct => selectedProduct !== product,
       );
+
       const otherProductsWithSameParent = getOtherProductsWithSameParent(
         stepProducts,
         product.productSlug,
         product.variantSlug,
       );
 
-      const incompatibleProducts = getIncompatibleProducts(
-        stepProducts,
-        product,
-      );
+      const incompatibleProducts = [
+        ...getIncompatibleProducts(stepProducts, product, covers),
+      ];
 
       const newDisabledProducts = disabledProducts
         .filter(el => !otherProductsWithSameParent.includes(el))
