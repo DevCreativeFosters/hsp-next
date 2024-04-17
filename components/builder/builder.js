@@ -147,6 +147,12 @@ export default function Builder({
     return () => resizeObserver.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (incompatibleFactoryOptions && incompatibleFactoryOptions.length) {
+      setShowModal(true);
+    }
+  }, [incompatibleFactoryOptions, setShowModal]);
+
   const addProduct = useCallback(
     product => {
       let newSelectedProducts = [...selectedProducts, product];
@@ -194,12 +200,6 @@ export default function Builder({
       stepProducts,
     ],
   );
-
-  useEffect(() => {
-    if (incompatibleFactoryOptions && incompatibleFactoryOptions.length) {
-      setShowModal(true);
-    }
-  }, [incompatibleFactoryOptions, setShowModal]);
 
   const removeProduct = useCallback(
     product => {
