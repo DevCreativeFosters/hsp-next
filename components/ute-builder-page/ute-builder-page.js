@@ -42,15 +42,16 @@ export default function UteBuilderPage({
     if (finalSelection) {
       if (savedVehicle) {
         const vehicle = JSON.parse(savedVehicle);
-        const model = vehicle?.model?.value || vehicle?.model?.slug;
-        const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
+        const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
+        const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
         const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
         const excludedCategoriesString = excludedCategories.join(',');
 
         setMake(vehicle?.maker);
+        setModel(vehicle?.model);
         setSelectedFactoryOptions(selectedFactoryOptions);
 
-        setModelAndProducts(model, maker, excludedCategoriesString);
+        setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
       }
     } else {
       setMake(null);
