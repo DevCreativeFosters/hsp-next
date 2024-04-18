@@ -41,13 +41,11 @@ export default function GoogleRecaptchaField({ form, field, fieldErrors }) {
   }, []);
 
   useEffect(
-    function setupRequiredProp() {
+    function syncValidity() {
       const fakeInputEl = fakeInputRef.current;
-      if (captchaValue) {
-        fakeInputEl.setCustomValidity('');
-      } else {
-        fakeInputEl.setCustomValidity(CAPTCHA_FE_ERROR_MESSAGE);
-      }
+      fakeInputEl.setCustomValidity(
+        captchaValue ? '' : CAPTCHA_FE_ERROR_MESSAGE,
+      );
     },
     [captchaValue],
   );
