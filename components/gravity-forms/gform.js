@@ -2,7 +2,6 @@
 
 import {
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -11,7 +10,6 @@ import {
 
 import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
-import ReCAPTCHA from 'react-google-recaptcha';
 
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -58,12 +56,10 @@ export default function GForm({
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
   const [fieldErrors, setFieldErrors] = useState([]);
-  const [captchaValue, setCaptchaValue] = useState(null);
-  const [captchaError, setCaptchaError] = useState('');
+
   const formFields = form.formFields?.nodes || [];
   const { dispatch, state } = useGravityForm();
   const submitRef = useRef(null);
-  const recaptchaRef = useRef(null);
 
   const resetForm = useCallback(() => {
     dispatch({
@@ -89,28 +85,15 @@ export default function GForm({
     client,
   });
 
-  const handleCaptcha = value => {
-    setCaptchaValue(value);
-  };
-
-  useEffect(() => {
-    if (captchaValue) {
-      setCaptchaError('');
-    } else {
-      setCaptchaError('Please confirm you are not a robot.');
-    }
-  }, [captchaValue]);
-
   const handleSubmit = async ev => {
     if (ev) ev.preventDefault();
 
-    if (isLoading || !captchaValue) {
+    if (isLoading) {
       return;
     }
 
     setLoading(true);
     onSubmit();
-    setCaptchaError('');
 
     await formSubmitMutation({
       variables: {
@@ -184,18 +167,6 @@ export default function GForm({
               key={`id-${field?.databaseId}-${index}`}
             />
           ))}
-
-          <div className={styles.recaptcha}>
-            <ReCAPTCHA
-              onChange={handleCaptcha}
-              onExpired={() => setCaptchaValue(null)}
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
-            />
-            {captchaError && (
-              <div className={styles.errorMessage}>{captchaError}</div>
-            )}
-          </div>
 
           {attributes.withTermsAndConditions && (
             <DisclaimerTC fullWidth withBlockMargin />

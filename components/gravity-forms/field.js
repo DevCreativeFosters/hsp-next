@@ -1,4 +1,5 @@
 import DateField from '@components/gravity-forms/date-field';
+import GoogleRecaptchaField from '@components/gravity-forms/google-recaptcha-field';
 import SelectField from '@components/gravity-forms/select-field';
 
 import AddressField from './address-field';
@@ -50,6 +51,8 @@ export default function GravityFormsField({
       return <DateField {...sharedProps} />;
     case 'FILEUPLOAD':
       return <FileUploadField {...sharedProps} />;
+    case 'CAPTCHA':
+      return <GoogleRecaptchaField {...sharedProps} />;
 
     default:
       return <p>{`Field type not supported: ${field.type}.`}</p>;
