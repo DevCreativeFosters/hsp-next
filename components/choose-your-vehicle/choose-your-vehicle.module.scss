@@ -47,7 +47,6 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transition: border-radius 50ms;
-    width: 100vw;
 
     @include bp(large) {
       padding-top: 8px;
