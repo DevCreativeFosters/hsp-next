@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-const { GOOGLE_MAPS_API_KEY } = process.env;
-
 export async function GET(request) {
   const query = request.nextUrl.searchParams.get('q');
   const sessionToken = request.nextUrl.searchParams.get('sessiontoken');
@@ -11,7 +9,7 @@ export async function GET(request) {
     'components=country:au',
     'types=(regions)',
     sessionToken ? `sessiontoken=${sessionToken}` : null,
-    `key=${GOOGLE_MAPS_API_KEY}`,
+    `key=${process.env.GOOGLE_PLACES_API_KEY}`,
   ]
     .filter(Boolean)
     .join('&');
