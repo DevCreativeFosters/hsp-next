@@ -111,7 +111,7 @@ export default function Builder({
         },
       });
     }
-  }, [selectedProducts, updateSettings]);
+  }, [selectedProducts]);
 
   useEffect(() => {
     if (
