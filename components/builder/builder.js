@@ -9,6 +9,11 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+import {
+  getIncompatibleProducts,
+  getOtherProductsWithSameParent,
+  isProductSelected,
+} from '@lib/ute-helpers';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -20,13 +25,6 @@ import styles from './builder.module.scss';
 import Preview from './preview';
 import ProductsCarousel from './products-carousel';
 import Sidebar from './sidebar';
-
-const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
-  products.filter(
-    product =>
-      product.productSlug === productSlug &&
-      product.variantSlug !== variantSlug,
-  );
 
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
@@ -50,8 +48,11 @@ export default function Builder({
   const [stepProducts, setStepProducts] = useState(products);
   const [showModal, setShowModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [isCover, setIsCover] = useState(false);
+  const [productToAdd, setProductToAdd] = useState(null);
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
+  const [incompatibleCovers, setIncompatibleCovers] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -98,7 +99,8 @@ export default function Builder({
       }
 
       const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-      const covers = [...normalizedCovers, ...noCover];
+      const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+      const covers = [...normalizedCovers, ...noCoverNormalized];
 
       setStepProducts(covers);
       setCovers(covers);
@@ -111,7 +113,7 @@ export default function Builder({
     }
 
     if (stepNumber === 2) {
-      setStepProducts(products);
+      setStepProducts(normalizeUteBuilderProducts(products));
     }
   }, [covers, products, setStepProducts, stepNumber]);
 
@@ -121,7 +123,7 @@ export default function Builder({
     }
 
     const selectedCover = selectedProducts.find(selectedProduct =>
-      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+      covers.some(cover => cover.group === selectedProduct.productSlug),
     );
 
     setStepNumber(selectedCover ? 2 : 1);
@@ -149,86 +151,138 @@ export default function Builder({
 
   const addProduct = useCallback(
     product => {
-      let newSelectedProducts = [...selectedProducts, product];
+      setIsCover(covers.some(cover => cover.group === product.productSlug));
 
-      if (covers.some(cover => cover.productSlug === product.productSlug)) {
-        if (!selectedFactoryOptions) {
-          newSelectedProducts = [product, ...selectedProducts];
-          setSelectedProducts(newSelectedProducts);
+      const incompatibleFactoryOptions = selectedFactoryOptions
+        .filter(
+          option => !product.compatibleFactoryOptions.includes(option.slug),
+        )
+        .map(option => option.value);
 
-          return;
-        }
+      const incompatibleCovers = selectedProducts
+        .filter(
+          selectedProduct =>
+            !product.compatibleCovers.includes(selectedProduct.productSlug),
+        )
+        .filter(cover => covers.some(c => c.group === cover.productSlug))
+        .map(cover => cover.productName);
 
-        const incompatibleFactoryOptions = selectedFactoryOptions
-          .filter(
-            option => !product.compatibleFactoryOptions.includes(option.slug),
-          )
-          .map(option => option.value);
+      setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      setIncompatibleCovers(incompatibleCovers);
 
-        if (incompatibleFactoryOptions.length) {
-          setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      if (
+        incompatibleFactoryOptions.length > 0 ||
+        incompatibleCovers.length > 0
+      ) {
+        setShowModal(true);
 
-          return;
-        }
-
-        newSelectedProducts = [product, ...selectedProducts];
+        return;
       }
 
-      const newDisabledProducts = [
-        ...disabledProducts,
-        ...getOtherProductsWithSameParent(
-          products,
-          products.productSlug,
-          products.variantSlug,
-        ),
-      ];
+      if (stepNumber === 2) {
+        const newDisabledProducts = [
+          ...disabledProducts,
+          ...getOtherProductsWithSameParent(
+            stepProducts,
+            product.productSlug,
+            product.variantSlug,
+          ),
+          ...getIncompatibleProducts(stepProducts, product, covers),
+        ];
 
-      setSelectedProducts(newSelectedProducts);
-      setDisabledProducts(newDisabledProducts);
+        setDisabledProducts(newDisabledProducts);
+      }
+
+      setProductToAdd(product);
     },
     [
       covers,
       disabledProducts,
-      products,
       selectedFactoryOptions,
       selectedProducts,
+      stepNumber,
+      stepProducts,
     ],
   );
 
   useEffect(() => {
-    if (incompatibleFactoryOptions && incompatibleFactoryOptions.length) {
-      setShowModal(true);
+    if (!productToAdd || showModal) {
+      return;
     }
-  }, [incompatibleFactoryOptions, setShowModal]);
+
+    const products = [...selectedProducts];
+
+    if (isCover) {
+      products.unshift(productToAdd);
+    } else {
+      products.push(productToAdd);
+    }
+
+    setSelectedProducts(products);
+    setProductToAdd(null);
+  }, [isCover, productToAdd, selectedProducts, showModal]);
 
   const removeProduct = useCallback(
     product => {
-      const newSelectedProducts = selectedProducts.filter(
-        selectedProduct => selectedProduct !== product,
-      );
+      let newSelectedProducts = [];
+
+      selectedProducts.forEach(selectedProduct => {
+        if (selectedProduct.variantSlug !== product.variantSlug) {
+          newSelectedProducts.push(selectedProduct);
+        }
+      });
+
       const otherProductsWithSameParent = getOtherProductsWithSameParent(
-        products,
+        stepProducts,
         product.productSlug,
         product.variantSlug,
       );
-      const newDisabledProducts = disabledProducts.filter(
-        el => !otherProductsWithSameParent.includes(el),
-      );
+
+      const incompatibleProducts = [
+        ...getIncompatibleProducts(stepProducts, product, covers),
+      ];
+
+      const newDisabledProducts = disabledProducts
+        .filter(el => !otherProductsWithSameParent.includes(el))
+        .filter(el => !incompatibleProducts.includes(el));
 
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [disabledProducts, products, selectedProducts],
+    [disabledProducts, selectedProducts, stepProducts],
   );
 
   const toggleProduct = useCallback(
     product => {
+      const isSelected = isProductSelected(
+        selectedProducts,
+        product.variantSlug,
+      );
       setCurrentProduct(product);
-      selectedProducts.includes(product)
-        ? removeProduct(product)
-        : addProduct(product);
+      isSelected ? removeProduct(product) : addProduct(product);
     },
     [addProduct, removeProduct, selectedProducts],
+  );
+
+  const toggleGroup = useCallback(
+    group => {
+      const products = [];
+      stepProducts.forEach(item => {
+        if (item.variants.length > 1 && item.group !== group.slug) {
+          item.variants.forEach((variant, index) => {
+            variant.isOpen = !variant.isOpen;
+
+            if (index > 0) {
+              variant.hidden = !variant.hidden;
+            }
+          });
+        }
+        products.push(item);
+      });
+
+      setStepProducts(products);
+    },
+    [setStepProducts, stepProducts],
   );
 
   const isInlineResultListVisible = Boolean(
@@ -243,11 +297,13 @@ export default function Builder({
       {showModal ? (
         <ClashModal
           currentProduct={currentProduct}
+          incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           selectedFactoryOptions={selectedFactoryOptions}
           selectedProducts={selectedProducts}
+          setDisabledProducts={setDisabledProducts}
+          setProductToAdd={setProductToAdd}
           setSelectedFactoryOptions={setSelectedFactoryOptions}
-          setSelectedProducts={setSelectedProducts}
           setShowModal={setShowModal}
         />
       ) : (
@@ -303,6 +359,7 @@ export default function Builder({
                 selectedProducts={selectedProducts}
                 stepNumber={stepNumber}
                 stepTitle={stepTitle}
+                toggleGroup={toggleGroup}
                 toggleProduct={toggleProduct}
               />
             )}

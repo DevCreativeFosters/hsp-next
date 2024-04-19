@@ -1,22 +1,22 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
-import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 
 import Builder from '@components/builder/builder';
 
 export default function UteBuilderPage({
   allLocations,
+  excludedCategories,
   factoryOptions,
   globalOptions,
   makes,
   noCover,
 }) {
-  const [productVariants, setProductVariants] = useState(null);
+  const [productVariants, setProductVariants] = useState([]);
 
   const {
     finalSelection,
@@ -28,9 +28,9 @@ export default function UteBuilderPage({
   } = useVehicleContext();
 
   useEffect(() => {
-    const setModelAndProducts = async (model, make) => {
+    const setModelAndProducts = async (model, make, excludedCategories) => {
       const response = await fetch(
-        `/api/ute-builder?model=${model}&make=${make}`,
+        `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
       );
       const data = await response.json();
       setModel(data?.modelData);
@@ -42,13 +42,16 @@ export default function UteBuilderPage({
     if (finalSelection) {
       if (savedVehicle) {
         const vehicle = JSON.parse(savedVehicle);
-        const model = vehicle?.model?.value || vehicle?.model?.slug;
-        const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
+        const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
+        const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
         const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
+        const excludedCategoriesString = excludedCategories.join(',');
+
         setMake(vehicle?.maker);
+        setModel(vehicle?.model);
         setSelectedFactoryOptions(selectedFactoryOptions);
 
-        setModelAndProducts(model, maker);
+        setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
       }
     } else {
       setMake(null);
@@ -56,6 +59,7 @@ export default function UteBuilderPage({
       setProductVariants(null);
     }
   }, [
+    excludedCategories,
     finalSelection,
     savedVehicleGlobal,
     setMake,
@@ -63,9 +67,9 @@ export default function UteBuilderPage({
     setSelectedFactoryOptions,
   ]);
 
-  const variantList = useMemo(() => {
-    return normalizeUteBuilderProducts(productVariants);
-  }, [productVariants]);
+  // const variantList = useMemo(() => {
+  //   return normalizeUteBuilderProducts(productVariants);
+  // }, [productVariants]);
 
   return (
     <Builder
@@ -75,7 +79,7 @@ export default function UteBuilderPage({
       globalOptions={globalOptions}
       makes={makes}
       noCover={noCover}
-      products={variantList}
+      products={productVariants}
     />
   );
 }
