@@ -22,6 +22,7 @@ export const VehicleProvider = ({ children }) => {
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
   const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
@@ -116,12 +117,14 @@ export const VehicleProvider = ({ children }) => {
         savedVehicleGlobal,
         selectedCover,
         selectedFactoryOptions,
+        selectedProducts,
         setDropdownOpened,
         setMaker,
         setModel,
         setSavedVehicleGlobal,
         setSelectedCover,
         setSelectedFactoryOptions,
+        setSelectedProducts,
         setStepNumber,
         setStepTitle,
         setVariant,

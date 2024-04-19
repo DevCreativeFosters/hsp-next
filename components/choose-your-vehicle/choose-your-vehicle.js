@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 
 import { useVehicleContext } from '@contexts/vehicle';
@@ -22,6 +25,8 @@ import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
 import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
+  const pathname = usePathname();
+
   const {
     dropdownOpened,
     finalSelection,
@@ -29,6 +34,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     handleVehicleReset,
     maker,
     model,
+    selectedProducts,
     setDropdownOpened,
     setVehicleSelection,
   } = useVehicleContext();
@@ -39,6 +45,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
+
+  const [showModal, setShowModal] = useState(false);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
@@ -53,6 +61,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
   return (
     <div className={styles.container}>
+      {showModal && <div className={styles.modal}>hi</div>};
       <div className={styles.containerTrigger}>
         <Button
           className={clsx(styles.chooseButton, {
@@ -80,12 +89,20 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         </Button>
 
         <div className={styles.resetButtonContainer}>
-          <button className={styles.resetButton} onClick={handleVehicleReset}>
+          <button
+            className={styles.resetButton}
+            onClick={() => {
+              if (selectedProducts.length && pathname === '/ute-builder') {
+                setShowModal(true);
+              } else {
+                handleVehicleReset();
+              }
+            }}
+          >
             <CancelIcon />
           </button>
         </div>
       </div>
-
       <AnimateHeight
         className={styles.containerAnimateHeight}
         contentClassName={clsx(styles.containerInner, {

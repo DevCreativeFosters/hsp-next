@@ -41,7 +41,6 @@ export default function Builder({
   products,
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
   const [covers, setCovers] = useState([]);
@@ -61,8 +60,10 @@ export default function Builder({
     model,
     selectedCover,
     selectedFactoryOptions,
+    selectedProducts,
     setSelectedCover,
     setSelectedFactoryOptions,
+    setSelectedProducts,
     setStepNumber,
     setStepTitle,
     stepNumber,
