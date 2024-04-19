@@ -13,6 +13,7 @@ export default function UTEBuilderModal({
 }) {
   return (
     <Modal
+      darkBackdrop={true}
       isVisible={isVisible}
       maxWidth={maxWidth}
       onClose={onClose}
