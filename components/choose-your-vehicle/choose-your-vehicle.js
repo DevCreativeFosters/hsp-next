@@ -15,6 +15,7 @@ import { getValueOrSlug } from '@lib/helpers';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
 import Button from '@components/button/button';
+import ResetModal from '@components/choose-your-vehicle/reset-modal';
 import Select from '@components/form/select';
 
 import CancelIcon from '@assets/icons/cancel.svg';
@@ -59,9 +60,20 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <ExpandMoreNeutralIcon />
   );
 
+  const handleOnAccept = () => {
+    handleVehicleReset();
+    setShowModal(false);
+  };
+
+  const handleOnClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className={styles.container}>
-      {showModal && <div className={styles.modal}>hi</div>};
+      {showModal && (
+        <ResetModal onAccept={handleOnAccept} onClose={handleOnClose} />
+      )}
       <div className={styles.containerTrigger}>
         <Button
           className={clsx(styles.chooseButton, {
