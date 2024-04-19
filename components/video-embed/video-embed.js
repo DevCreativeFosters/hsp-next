@@ -1,4 +1,5 @@
 import { convertToEmbedUrl } from '@lib/convert-video-embed-url';
+
 import styles from './video-embed.module.scss';
 
 export default function VideoEmbed({ videoUrl }) {
@@ -7,7 +8,7 @@ export default function VideoEmbed({ videoUrl }) {
   if (embedUrl) {
     return (
       <div className={styles.embed}>
-        <iframe src={embedUrl} frameBorder="0" allowFullScreen />
+        <iframe allowFullScreen frameBorder="0" src={embedUrl} />
       </div>
     );
   }

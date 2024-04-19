@@ -44,21 +44,21 @@ export default async function BlogPage({ searchParams }) {
             <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
           </div>
           <SectionIntro
-            title={content?.title}
             description={content?.content}
             fitInline
+            title={content?.title}
           />
         </Container>
         {contentBlocks?.map((contentBlock, index) => (
           <Fragment key={index}>{contentBlock}</Fragment>
         ))}
         <Container collapseMargin>
-          <PostsList variant="blog" posts={posts} currentPage={currentPage} />
+          <PostsList currentPage={currentPage} posts={posts} variant="blog" />
           {totalPosts > POSTS_PER_PAGE && (
             <Pagination
+              current={currentPage}
               perPage={POSTS_PER_PAGE}
               total={totalPosts}
-              current={currentPage}
               urlBase={routes.blog()}
             />
           )}

@@ -1,11 +1,13 @@
-import Select from '@components/form/select';
-import InputWrapper from '@components/gravity-forms/input-wrapper';
-import useGravityForm from '@hooks/useGravityForm';
 import { useMemo } from 'react';
 
-export default function SelectField({ form, field, fieldErrors }) {
+import useGravityForm from '@hooks/useGravityForm';
+
+import Select from '@components/form/select';
+import InputWrapper from '@components/gravity-forms/input-wrapper';
+
+export default function SelectField({ field, fieldErrors, form }) {
   const { formId } = form;
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const options = field.choices.map(({ text, value }) => ({
     label: text,
     // value, // use this to match by unique value
@@ -25,25 +27,25 @@ export default function SelectField({ form, field, fieldErrors }) {
   return (
     <InputWrapper oneOf={1}>
       <Select
-        size="large"
-        id={`gform_${formId}_${field.id}`}
-        name={`gform_${formId}_${field.id}`}
-        label={field.label}
-        placeholder={field.placeholder}
-        options={options}
-        value={valueCalculated}
         errorMessage={fieldError?.message}
-        required={Boolean(field.isRequired)}
+        id={`gform_${formId}_${field.id}`}
+        label={field.label}
+        name={`gform_${formId}_${field.id}`}
         onChange={value =>
           dispatch({
-            type: 'updateFieldValue',
             payload: {
               id: field.id,
               value: options.find(o => o.value === value)?.label, // use this to match by label
               // value: value, // use this to match by value
             },
+            type: 'updateFieldValue',
           })
         }
+        options={options}
+        placeholder={field.placeholder}
+        required={Boolean(field.isRequired)}
+        size="large"
+        value={valueCalculated}
       />
     </InputWrapper>
   );

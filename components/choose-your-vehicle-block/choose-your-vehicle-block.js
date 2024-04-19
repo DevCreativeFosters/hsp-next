@@ -1,23 +1,28 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
+
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
+
 import { useVehicleContext } from '@contexts/vehicle';
+
 import constants from '@lib/constants';
+import { getValueOrSlug } from '@lib/helpers';
 import { trimSlash } from '@lib/trim-slash';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
-import { getValueOrSlug } from '@lib/helpers';
+
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
-import Button from '@components/button/button';
+
 import styles from '../builder/ute-choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicleBlock({
   makes: makersAndModels,
-  variants,
-  style,
   params,
+  style,
+  variants,
 }) {
   const variantsNormalized = variants?.map(variant => {
     return {
@@ -25,7 +30,7 @@ export default function ChooseYourVehicleBlock({
       value: variant.variantSlug,
     };
   });
-  const { maker, model, variant, setVariant, handleSave, setVehicleSelection } =
+  const { handleSave, maker, model, setVariant, setVehicleSelection, variant } =
     useVehicleContext();
   const {
     handleMakerChange,
@@ -51,7 +56,7 @@ export default function ChooseYourVehicleBlock({
         }
       });
     },
-    [variantSlug],
+    [setVariant, variantSlug, variantsNormalized],
   );
 
   return (
@@ -70,41 +75,41 @@ export default function ChooseYourVehicleBlock({
         </p>
         <div className={styles.vehicleSelector}>
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MAKER}
-            options={makerSelectOptions}
-            value={getValueOrSlug(maker) || null}
+            className={styles.select}
             dropdownInDocumentFlow
             onChange={handleMakerChange}
-            className={styles.select}
+            options={makerSelectOptions}
+            placeholder={constants.SELECT_LABELS.MAKER}
+            size="large"
+            value={getValueOrSlug(maker) || null}
           />
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MODEL}
-            options={modelSelectOptions}
-            value={getValueOrSlug(model) || null}
+            className={styles.select}
             disabled={!modelSelectOptions.length}
             dropdownInDocumentFlow
             onChange={handleModelChange}
-            className={styles.select}
+            options={modelSelectOptions}
+            placeholder={constants.SELECT_LABELS.MODEL}
+            size="large"
+            value={getValueOrSlug(model) || null}
           />
           {variants?.length > 0 && (
             <Select
-              size="large"
-              placeholder={constants.SELECT_LABELS.VARIANT}
-              options={variantsNormalized}
-              value={getValueOrSlug(variant) || null}
-              disabled={!variants.length}
-              onChange={handleVariantChange}
-              dropdownInDocumentFlow
               className={styles.select}
+              disabled={!variants.length}
+              dropdownInDocumentFlow
+              onChange={handleVariantChange}
+              options={variantsNormalized}
+              placeholder={constants.SELECT_LABELS.VARIANT}
+              size="large"
+              value={getValueOrSlug(variant) || null}
             />
           )}
           <Button
-            rightIcon="arrow-forward"
             className={styles.button}
-            onClick={() => handleSave(params, reload)}
             disabled={!model}
+            onClick={() => handleSave(params, reload)}
+            rightIcon="arrow-forward"
           >
             See details
           </Button>

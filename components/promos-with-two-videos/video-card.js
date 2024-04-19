@@ -1,11 +1,13 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
 import clsx from 'clsx';
-import styles from './video-card.module.scss';
 import Link from 'next/link';
 
-export default function VideoCard({ idx, url, name, price, productUrl }) {
+import styles from './video-card.module.scss';
+
+export default function VideoCard({ idx, name, price, productUrl, url }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -31,13 +33,13 @@ export default function VideoCard({ idx, url, name, price, productUrl }) {
 
   return (
     <Link
-      href={productUrl || ''}
       className={clsx(styles.videoCard, {
         [styles.videoCardA]: idx === 0,
         [styles.videoCardB]: idx === 1,
       })}
+      href={productUrl || ''}
     >
-      <video className={styles.video} ref={videoRef} loop muted>
+      <video className={styles.video} loop muted ref={videoRef}>
         <source src={url} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

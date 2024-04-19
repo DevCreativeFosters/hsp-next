@@ -1,12 +1,14 @@
 import clsx from 'clsx';
+
 import Button from '@components/button/button';
+
 import styles from './section-buttons.module.scss';
 
 export default function SectionButtons({
-  buttons = [],
   alternatingLayout,
-  className,
+  buttons = [],
   children,
+  className,
 }) {
   const breakRow = Math.ceil(buttons?.length / 2);
 
@@ -23,8 +25,8 @@ export default function SectionButtons({
     >
       {buttons.map(({ label, link, withArrowForwardIcon, ...props }, index) => (
         <Button
-          key={index}
           href={link?.url || link}
+          key={index}
           target={link?.target || null}
           {...props}
           rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}

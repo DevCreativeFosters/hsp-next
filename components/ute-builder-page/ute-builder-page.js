@@ -1,29 +1,34 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
 import { useVehicleContext } from '@contexts/vehicle';
+
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+
 import Builder from '@components/builder/builder';
-import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
-import Container from '@components/container/container';
-import PageContainer from '@components/page-container/page-container';
-import Loading from '@components/loading/loading';
 
 export default function UteBuilderPage({
-  makes,
   allLocations,
   factoryOptions,
-  uteCovers,
+  globalOptions,
+  makes,
+  noCover,
 }) {
-  const [vehicleSelected, setVehicleSelected] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [makeName, setMakeName] = useState('');
-  const [model, setModel] = useState({});
-  const [productVariants, setProductVariants] = useState([]);
-  const { finalSelection, savedVehicleGlobal } = useVehicleContext();
+  const [productVariants, setProductVariants] = useState(null);
+
+  const {
+    finalSelection,
+    savedVehicleGlobal,
+    selectedFactoryOptions,
+    setMaker: setMake,
+    setModel,
+    setSelectedFactoryOptions,
+  } = useVehicleContext();
 
   useEffect(() => {
-    const fetchData = async (model, make) => {
+    const setModelAndProducts = async (model, make) => {
       const response = await fetch(
         `/api/ute-builder?model=${model}&make=${make}`,
       );
@@ -39,70 +44,38 @@ export default function UteBuilderPage({
         const vehicle = JSON.parse(savedVehicle);
         const model = vehicle?.model?.value || vehicle?.model?.slug;
         const maker = vehicle?.maker?.value || vehicle?.maker?.slug;
-        setMakeName(vehicle?.make?.label);
-        fetchData(model, maker);
-        if (model) {
-          setVehicleSelected(true);
-        } else {
-          setVehicleSelected(false);
-        }
+        const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
+        setMake(vehicle?.maker);
+        setSelectedFactoryOptions(selectedFactoryOptions);
+
+        setModelAndProducts(model, maker);
       }
     } else {
-      setVehicleSelected(false);
-      setMakeName('');
-      setModel({});
-      setProductVariants([]);
+      setMake(null);
+      setModel(null);
+      setProductVariants(null);
     }
-
-    setLoaded(true);
-  }, [finalSelection, savedVehicleGlobal]);
+  }, [
+    finalSelection,
+    savedVehicleGlobal,
+    setMake,
+    setModel,
+    setSelectedFactoryOptions,
+  ]);
 
   const variantList = useMemo(() => {
-    const variants = [];
-
-    productVariants?.forEach(product => {
-      if (product.productFields.variants) {
-        product.productFields.variants.forEach(productVariant => {
-          const parentInherit = productVariant.parentInherit;
-
-          variants.push({
-            ...productVariant,
-            price:
-              productVariant.variantDetails.price ||
-              (parentInherit && product.productFields.price),
-            installationCost: product.productFields.installationCost,
-            productSlug: product.slug,
-          });
-        });
-      }
-    });
-
-    return variants;
+    return normalizeUteBuilderProducts(productVariants);
   }, [productVariants]);
 
-  if (!vehicleSelected && loaded) {
-    return (
-      <UTEChooseYourVehicle makes={makes} factoryOptions={factoryOptions} />
-    );
-  }
-
-  if (model !== null && model !== undefined && productVariants.length > 0) {
-    return (
-      <Builder
-        makeName={makeName}
-        model={model}
-        products={variantList}
-        allLocations={allLocations}
-        uteCovers={uteCovers}
-      />
-    );
-  }
-
   return (
-    <Container>
-      <PageContainer>
-        <Loading />
-      </PageContainer>
-    </Container>
+    <Builder
+      allLocations={allLocations}
+      factoryOption={selectedFactoryOptions}
+      factoryOptions={factoryOptions}
+      globalOptions={globalOptions}
+      makes={makes}
+      noCover={noCover}
+      products={variantList}
+    />
   );
 }

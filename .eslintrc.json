@@ -4,9 +4,21 @@
         "prettier"
     ],
     "plugins": [
-        "unused-imports"
+        "unused-imports",
+        "sort-react-dependency-arrays",
+        "react-hooks",
+        "sort-keys-fix",
+        "react",
+        "sort-destructure-keys"
     ],
     "rules": {
-        "unused-imports/no-unused-imports": "warn"
+        "unused-imports/no-unused-imports": "warn",
+        "sort-react-dependency-arrays/sort": "warn",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "sort-keys-fix/sort-keys-fix": "warn",
+        "react/sort-default-props": "warn",
+        "react/jsx-sort-props": "warn",
+        "sort-destructure-keys/sort-destructure-keys": "warn"
     }
 }

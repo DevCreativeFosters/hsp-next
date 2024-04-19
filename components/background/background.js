@@ -1,4 +1,4 @@
-export default function Background({ colorStops, containMargins, children }) {
+export default function Background({ children, colorStops, containMargins }) {
   if (!colorStops?.length) return children;
 
   const stopsString = colorStops

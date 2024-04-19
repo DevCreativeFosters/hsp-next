@@ -41,18 +41,18 @@ const SUBMIT_MUTATION = gql`
 `;
 
 export default function GForm({
-  innerRef,
-  form,
-  isDirty,
-  hiddenInputs,
   attributes = {},
-  submitButton,
-  preventConfirmation,
+  form,
+  hiddenInputs,
+  innerRef,
+  isDirty,
   onChange,
-  onReset,
   onError,
+  onReset,
   onSubmit,
   onSuccess,
+  preventConfirmation,
+  submitButton,
 }) {
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
@@ -61,7 +61,7 @@ export default function GForm({
   const [captchaValue, setCaptchaValue] = useState(null);
   const [captchaError, setCaptchaError] = useState('');
   const formFields = form.formFields?.nodes || [];
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const submitRef = useRef(null);
   const recaptchaRef = useRef(null);
 
@@ -115,8 +115,8 @@ export default function GForm({
     await formSubmitMutation({
       variables: {
         input: {
-          id: form.formId,
           fieldValues: state,
+          id: form.formId,
         },
       },
     })
@@ -157,15 +157,15 @@ export default function GForm({
 
   return (
     <Form
-      method="post"
-      onSubmit={handleSubmit}
-      withPadding={attributes.withPadding}
-      withBackground={attributes.withBackground}
       isDirty={isDirty}
+      method="post"
       onChange={onChange}
+      onSubmit={handleSubmit}
+      withBackground={attributes.withBackground}
+      withPadding={attributes.withPadding}
     >
       {isSubmitted && !preventConfirmation ? (
-        <Confirmation resetForm={resetForm} content={confirmation.message} />
+        <Confirmation content={confirmation.message} resetForm={resetForm} />
       ) : (
         <>
           {(isTitleVisible || form.description) && (
@@ -177,20 +177,20 @@ export default function GForm({
 
           {formFields.map((field, index) => (
             <GravityFormsField
-              key={`id-${field?.databaseId}-${index}`}
-              form={form}
               field={field}
               fieldErrors={fieldErrors}
+              form={form}
               hiddenInputs={hiddenInputs}
+              key={`id-${field?.databaseId}-${index}`}
             />
           ))}
 
           <div className={styles.recaptcha}>
             <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
               onChange={handleCaptcha}
               onExpired={() => setCaptchaValue(null)}
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
             />
             {captchaError && (
               <div className={styles.errorMessage}>{captchaError}</div>
@@ -203,13 +203,13 @@ export default function GForm({
 
           <div className={styles.submitWrapper}>
             <Button
-              ref={submitRef}
-              type="submit"
-              size="large"
               className={styles.submitButton}
               disabled={isLoading}
+              ref={submitRef}
               rightIcon={isLoading ? null : 'send'}
+              size="large"
               style={submitButton === false ? { display: 'none' } : {}}
+              type="submit"
             >
               {form?.button?.text || 'Submit'} {isLoading && <Loading />}
             </Button>

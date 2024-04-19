@@ -17,9 +17,9 @@ import IllustrationImage from '@assets/images/newsletter-illustration.webp';
 import styles from './newsletter.module.scss';
 
 export default function Newsletter({
+  description,
   googleRecaptchaSitekey,
   title,
-  description,
 }) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
@@ -34,8 +34,8 @@ export default function Newsletter({
       try {
         const response = await sendBrevoNewsletterData({
           EMAIL: email,
-          locale: 'en',
           'g-recaptcha-response': token,
+          locale: 'en',
         });
 
         if (response.success) {
@@ -70,16 +70,16 @@ export default function Newsletter({
         {IllustrationImage && (
           <div className={styles.illustrationWrapper}>
             <Image
+              alt="Ford Ranger"
               className={styles.illustration}
-              src={IllustrationImage.src}
-              width={IllustrationImage.width}
               height={IllustrationImage.height}
+              src={IllustrationImage.src}
               style={{
                 aspectRatio:
                   parseInt(IllustrationImage.width) /
                   parseInt(IllustrationImage.height),
               }}
-              alt="Ford Ranger"
+              width={IllustrationImage.width}
             />
           </div>
         )}
@@ -93,44 +93,42 @@ export default function Newsletter({
           />
         )}
         <form
-          ref={formRef}
-          onSubmit={e => e.preventDefault()}
           className={styles.form}
+          onSubmit={e => e.preventDefault()}
+          ref={formRef}
         >
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
               <div className={styles.confirmation}>{confirmationMessage}</div>
             ) : (
               <Input
-                className={styles.input}
-                type="email"
-                size="large"
-                placeholder="Enter your e-mail address"
                 background="dark"
-                value={email}
+                className={styles.input}
                 errorMessage={error}
-                required
                 onChange={ev => setEmail(ev.target.value)}
+                placeholder="Enter your e-mail address"
+                required
+                size="large"
+                type="email"
+                value={email}
               />
             )}
           </div>
           {confirmationMessage ? (
             <Button
               className={styles.button}
-              type="button"
-              size="large"
               onClick={ev => {
                 ev.preventDefault();
                 setConfirmationMessage(null);
               }}
+              size="large"
+              type="button"
             >
               Reset
             </Button>
           ) : (
             <div>
               <Button
-                type="button"
-                size="large"
                 className={clsx(styles.button, { [styles.isBusy]: isBusy })}
                 disabled={isBusy}
                 isBusy={isBusy}
@@ -143,16 +141,18 @@ export default function Newsletter({
                     event.preventDefault();
                   }
                 }}
+                size="large"
+                type="button"
               >
                 Submit
               </Button>
             </div>
           )}
           <ReCAPTCHA
-            ref={recaptchaRef}
-            size="invisible"
-            sitekey={googleRecaptchaSitekey}
             onChange={onCaptchaSuccess}
+            ref={recaptchaRef}
+            sitekey={googleRecaptchaSitekey}
+            size="invisible"
           />
         </form>
       </div>

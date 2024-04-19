@@ -9,6 +9,7 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
+import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -46,19 +47,8 @@ export default async function DynamicPage({ params }) {
   const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
-  const excludeTree = [];
-
-  if (globalOptions?.coversCategory?.databaseId) {
-    excludeTree.push(globalOptions.coversCategory.databaseId);
-  }
-
-  if (globalOptions?.compatibleFactoryOptions?.databaseId) {
-    excludeTree.push(globalOptions.compatibleFactoryOptions.databaseId);
-  }
-
-  const shouldBeExcluded = excludeTree.includes(
-    categoryData?.parent?.node?.databaseId,
-  );
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
   if (!categoryData || shouldBeExcluded) {
     return notFound();
@@ -91,18 +81,18 @@ export default async function DynamicPage({ params }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            mainCategory={true}
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
+            mainCategory={true}
           />
         </div>
         <ProductHero
-          title={categoryData?.name}
           description={categoryData?.description}
-          image={featuredImage}
           features={{
             content: mainCategoryDetails?.features,
           }}
+          image={featuredImage}
+          title={categoryData?.name}
           warranty={{
             content: mainCategoryDetails?.warranty.warrantyDescription,
             years: mainCategoryDetails?.warranty.warrantyTimePeriod,

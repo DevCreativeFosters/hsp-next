@@ -1,13 +1,14 @@
 import { useCallback } from 'react';
+
 import Button from '@components/button/button';
 
 import styles from './pagination.module.scss';
 
 export default function Pagination({
+  current = 1,
+  maxPagesToShow = 3,
   perPage,
   total,
-  maxPagesToShow = 3,
-  current = 1,
   urlBase,
 }) {
   const totalPages = Math.ceil(total / perPage);
@@ -61,11 +62,11 @@ export default function Pagination({
   return (
     <div className={styles.pagination}>
       <Button
+        disabled={current === 1}
         href={getPaginatedUrl(current - 1)}
+        rightIcon="arrow-previous"
         size="mixed"
         variant="secondary"
-        rightIcon="arrow-previous"
-        disabled={current === 1}
       />
 
       {pageButtons.map((value, index) => {
@@ -78,11 +79,11 @@ export default function Pagination({
             : 'ternary';
         return (
           <Button
+            disabled={!isNumber || isCurrent}
             href={getPaginatedUrl(value)}
             key={`${value}-${index}`}
             size="mixed"
             variant={variant}
-            disabled={!isNumber || isCurrent}
           >
             {value}
           </Button>
@@ -90,11 +91,11 @@ export default function Pagination({
       })}
 
       <Button
+        disabled={current === totalPages}
         href={getPaginatedUrl(current + 1)}
+        rightIcon="arrow-next"
         size="mixed"
         variant="secondary"
-        rightIcon="arrow-next"
-        disabled={current === totalPages}
       />
     </div>
   );

@@ -1,19 +1,23 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+
 import clsx from 'clsx';
+import Link from 'next/link';
+
 import { LOCAL_STORAGE_DOWNLOAD_FILE_EMAIL } from '@lib/local-storage';
-import Modal from '@components/modal/modal';
-import Loading from '@components/loading/loading';
+
 import Button from '@components/button/button';
-import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
+import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
+import Loading from '@components/loading/loading';
+import Modal from '@components/modal/modal';
+
 import styles from './download-file-modal.module.scss';
 
 export default function DownloadFileModal({
-  href,
   fileName,
+  href,
   isVisible,
   onClose = () => {},
 }) {
@@ -82,10 +86,10 @@ export default function DownloadFileModal({
 
   return (
     <Modal
-      title="Download"
       isVisible={isVisible}
       maxWidth={900}
       onClose={onClose}
+      title="Download"
     >
       <div
         className={clsx(styles.contentGrid, {
@@ -107,21 +111,21 @@ export default function DownloadFileModal({
           </div>
           <div className={styles.gravityForm}>
             <GravityFormWrapper
-              ref={gravityFormRef}
               attributes={{ id: formId }}
-              submitButton={false}
-              preventConfirmation
-              onLoad={onGravityFormLoad}
-              onChange={onGravityFormChange}
-              onSubmit={onGravityFormSubmit}
-              onSuccess={onGravityFormSuccess}
-              onError={onGravityFormError}
               hiddenInputs={[
                 {
                   inputName: 'filename',
                   value: fileName,
                 },
               ]}
+              onChange={onGravityFormChange}
+              onError={onGravityFormError}
+              onLoad={onGravityFormLoad}
+              onSubmit={onGravityFormSubmit}
+              onSuccess={onGravityFormSuccess}
+              preventConfirmation
+              ref={gravityFormRef}
+              submitButton={false}
             />
           </div>
         </div>
@@ -132,12 +136,12 @@ export default function DownloadFileModal({
 
         <Button
           className={styles.button}
-          type="button"
+          disabled={isFormBusy}
+          isBusy={isFormBusy}
+          onClick={() => gravityFormRef.current?.handleSubmit?.()}
           rightIcon="download"
           size="large"
-          isBusy={isFormBusy}
-          disabled={isFormBusy}
-          onClick={() => gravityFormRef.current?.handleSubmit?.()}
+          type="button"
         >
           Download
         </Button>
@@ -145,9 +149,9 @@ export default function DownloadFileModal({
         {downloadNow && href && (
           <Link
             className={styles.hiddenLink}
+            download={fileName}
             href={href}
             ref={fileLinkRef}
-            download={fileName}
             target="_blank"
           >
             {fileName}

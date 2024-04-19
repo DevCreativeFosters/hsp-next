@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { clsx } from 'clsx';
-import Container from '@components/container/container';
+import Image from 'next/image';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 
 import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
@@ -75,19 +77,19 @@ export default function Hero({ slides, transition = 'fade' }) {
         setPreloadedAssets(arr);
       }
     },
-    [preloadedAssets, currentSlideIndex, slides],
+    [currentSlideIndex, preloadedAssets, slides],
   );
 
   return (
     <div
-      ref={heroRef}
       className={clsx(styles.hero, {
         [styles.swipeTransition]: transition === 'swipe',
         [styles.fadeTransition]: transition === 'fade',
       })}
-      onTouchStart={handleSwipeStart}
-      onTouchMove={handleSwipeMove}
       onTouchEnd={handleSwipeEnd}
+      onTouchMove={handleSwipeMove}
+      onTouchStart={handleSwipeStart}
+      ref={heroRef}
     >
       <div className={styles.track} data-index={currentSlideIndex}>
         {slides.map(({ backgroundImage, backgroundImagePosition }, index) => {
@@ -103,10 +105,10 @@ export default function Hero({ slides, transition = 'fade' }) {
                   backgroundImage?.node?.sourceUrl,
               ) ? (
                 <Image
-                  className={styles.backgroundImage}
-                  src={backgroundImage?.node?.sourceUrl}
                   alt={backgroundImage?.node?.altText || ''}
+                  className={styles.backgroundImage}
                   fill={true}
+                  src={backgroundImage?.node?.sourceUrl}
                   style={{ objectPosition: backgroundImagePosition }}
                 />
               ) : (
@@ -128,8 +130,8 @@ export default function Hero({ slides, transition = 'fade' }) {
             {currentSlide.buttonLink?.url && currentSlide.buttonLink?.title ? (
               <Button
                 className={styles.actionButton}
-                size="large"
                 href={currentSlide.buttonLink.url}
+                size="large"
                 target={currentSlide.buttonLink?.target || null}
               >
                 {currentSlide.buttonLink.title}
@@ -141,8 +143,8 @@ export default function Hero({ slides, transition = 'fade' }) {
             <div className={styles.slideDots}>
               {slides.map((_, index) => (
                 <div
-                  key={index}
                   className={styles.dotContainer}
+                  key={index}
                   onClick={() => handleSlideChange(index)}
                 >
                   <span

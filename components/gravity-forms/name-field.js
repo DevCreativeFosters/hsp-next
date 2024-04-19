@@ -1,33 +1,36 @@
 'use client';
 
-import InputWrapper from '@components/gravity-forms/input-wrapper';
 import { useEffect, useMemo } from 'react';
-import Input from '@components/form/input';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Input from '@components/form/input';
+import InputWrapper from '@components/gravity-forms/input-wrapper';
+
 import { initializeState, onComplexFieldChange } from './_helpers';
 
 const DEFAULT_VALUE = '';
 
-export default function NameField({ form, field, fieldErrors }) {
+export default function NameField({ field, fieldErrors, form }) {
   const parentKey = 'nameValues';
-  const { databaseId: id, isRequired, inputs } = field;
+  const { databaseId: id, inputs, isRequired } = field;
 
   const formId = form.formId;
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   const visibleInputs = inputs.filter(({ isHidden }) => !isHidden);
 
   useEffect(
     function syncFieldState() {
       initializeState({
-        id,
-        visibleInputs,
-        parentKey,
         dispatch,
+        id,
+        parentKey,
+        visibleInputs,
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,10 +39,10 @@ export default function NameField({ form, field, fieldErrors }) {
 
   return visibleInputs.map(
     ({
+      customLabel,
       id: inputId,
       key: childKey,
       label,
-      customLabel,
       placeholder,
       value,
     }) => {
@@ -50,29 +53,29 @@ export default function NameField({ form, field, fieldErrors }) {
         stateValue !== undefined ? stateValue : value || DEFAULT_VALUE;
 
       return (
-        <InputWrapper oneOf={visibleInputs.length} key={inputId}>
+        <InputWrapper key={inputId} oneOf={visibleInputs.length}>
           <Input
-            type="text"
-            id={`gform_${formId}_${inputId}`}
-            name={`gform_${formId}_${inputId}`}
             autoComplete={
               field.hasAutocomplete ? field.autocompleteAttribute : null
             }
-            label={customLabel || label}
-            placeholder={placeholder}
             errorMessage={fieldError?.message}
-            required={Boolean(isRequired)}
-            value={valueCalculated}
+            id={`gform_${formId}_${inputId}`}
+            label={customLabel || label}
+            name={`gform_${formId}_${inputId}`}
             onChange={ev => {
               onComplexFieldChange({
+                childKey,
+                dispatch,
                 id,
                 parentKey,
-                childKey,
-                value: ev.target.value,
                 state,
-                dispatch,
+                value: ev.target.value,
               });
             }}
+            placeholder={placeholder}
+            required={Boolean(isRequired)}
+            type="text"
+            value={valueCalculated}
           />
         </InputWrapper>
       );

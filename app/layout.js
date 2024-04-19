@@ -10,9 +10,7 @@ import '@styles/main.scss';
 import RootLayoutClient from './layout-client';
 
 const hind = localFont({
-  variable: '--font-hind',
-  subsets: ['latin'],
-  style: 'normal',
+  display: 'block',
   src: [
     {
       path: '../assets/fonts/Hind-400-Regular.woff2',
@@ -23,14 +21,14 @@ const hind = localFont({
       weight: '600',
     },
   ],
-  display: 'block',
+  style: 'normal',
+  subsets: ['latin'],
+  variable: '--font-hind',
   weight: '400 600',
 });
 
 const khand = localFont({
-  variable: '--font-khand',
-  subsets: ['latin'],
-  style: 'normal',
+  display: 'block',
   src: [
     {
       path: '../assets/fonts/Khand-400-Regular.woff2',
@@ -41,13 +39,15 @@ const khand = localFont({
       weight: '600',
     },
   ],
-  display: 'block',
+  style: 'normal',
+  subsets: ['latin'],
+  variable: '--font-khand',
   weight: '400 600',
 });
 
 export const metadata = {
-  title: 'HSP 4x4',
   description: 'HSP',
+  title: 'HSP 4x4',
 };
 
 export const revalidate = 30;
@@ -57,9 +57,9 @@ export default async function RootLayout({ children }) {
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   return (
     <html
-      lang="en"
       className={clsx(hind.variable, khand.variable)}
       data-download-file-form-id={downloadFileFormId}
+      lang="en"
     >
       <body className="" data-rh="class">
         <ReCaptchaProvider useEnterprise>

@@ -1,7 +1,9 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import routes from '@lib/routes';
+import Link from 'next/link';
+
 import { formatPrice } from '@lib/helpers';
+import routes from '@lib/routes';
+
 import styles from './category-card.module.scss';
 
 export default function CategoryCard({ category }) {
@@ -10,14 +12,14 @@ export default function CategoryCard({ category }) {
   const productUrl = routes.product(category.slug);
 
   return (
-    <Link href={productUrl} className={styles.categoryCard}>
+    <Link className={styles.categoryCard} href={productUrl}>
       {productImageUrl && (
         <div className={styles.imageContainer}>
           <Image
-            className={styles.categoryImage}
-            src={productImageUrl}
             alt={category.name}
+            className={styles.categoryImage}
             fill
+            src={productImageUrl}
           />
         </div>
       )}

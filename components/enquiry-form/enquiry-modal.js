@@ -1,28 +1,33 @@
-import Image from 'next/image';
 import { useCallback, useRef, useState } from 'react';
-import Link from 'next/link';
+
 import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { formatPrice } from '@lib/helpers';
+import { getIcon } from '@lib/icons';
+import routes from '@lib/routes';
+
 import Button from '@components/button/button';
-import Tooltip from '@components/tooltip/tooltip';
-import StoreTile from '@components/store-tile/store-tile';
 import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import Loading from '@components/loading/loading';
-import EnquiryProduct from './enquiry-product';
-import { getIcon } from '@lib/icons';
-import { formatPrice } from '@lib/helpers';
+import StoreTile from '@components/store-tile/store-tile';
+import Tooltip from '@components/tooltip/tooltip';
+
 import DecorationImage from '@assets/images/bg-offroad.webp';
-import routes from '@lib/routes';
+
 import styles from './enquiry-modal.module.scss';
+import EnquiryProduct from './enquiry-product';
 
 const InfoIcon = getIcon('info');
 
 export default function EnquiryModal({
   enquiryFormId,
-  onClose,
-  store,
-  selectedProducts,
-  productPrice,
   installationCost,
+  onClose,
+  productPrice,
+  selectedProducts,
+  store,
 }) {
   const [isLoading, setLoading] = useState(true);
   const [formIsSending, setFormIsSending] = useState(false);
@@ -74,27 +79,27 @@ export default function EnquiryModal({
           <div className={styles.header}>
             <div className={styles.decorativeBackground}>
               <Image
+                alt="Ford Raptor off-roading through the mud"
+                height={406}
                 src={DecorationImage.src}
                 width={230}
-                height={406}
-                alt="Ford Raptor off-roading through the mud"
               />
             </div>
 
             <Button
-              rightIcon="arrow-backward-large"
-              onClick={onClose}
-              variant="tertiary"
               className={styles.backwardButton}
+              onClick={onClose}
+              rightIcon="arrow-backward-large"
+              variant="tertiary"
             />
             <h3 className={styles.title}>
               {formIsSent ? 'Enquiry sent!' : 'Send enquiry'}
             </h3>
             <Button
-              rightIcon="close-large"
-              onClick={onClose}
-              variant="tertiary"
               className={styles.closeButton}
+              onClick={onClose}
+              rightIcon="close-large"
+              variant="tertiary"
             />
           </div>
           <div className={styles.scrollContainer}>
@@ -109,15 +114,7 @@ export default function EnquiryModal({
                 })}
               >
                 <GravityFormWrapper
-                  ref={formRef}
                   attributes={{ id: enquiryFormId }}
-                  isDirty={isFormDirty}
-                  onLoad={onLoad}
-                  onSubmit={onSubmit}
-                  onSuccess={onSuccess}
-                  onError={onError}
-                  onReset={onReset}
-                  submitButton={false}
                   hiddenInputs={[
                     {
                       inputName: 'storeId',
@@ -130,6 +127,14 @@ export default function EnquiryModal({
                         .join(','), // TODO: Maybe product IDs? Depends on needs
                     },
                   ]}
+                  isDirty={isFormDirty}
+                  onError={onError}
+                  onLoad={onLoad}
+                  onReset={onReset}
+                  onSubmit={onSubmit}
+                  onSuccess={onSuccess}
+                  ref={formRef}
+                  submitButton={false}
                 />
               </div>
 
@@ -139,20 +144,20 @@ export default function EnquiryModal({
                   <div className={styles.products}>
                     {selectedProducts?.map(
                       ({
+                        uteBuilderImages,
                         variantName: productName,
                         variantSlug: productSlug,
-                        uteBuilderImages,
                       }) => {
                         const productImage =
                           uteBuilderImages?.imageDesktop?.node?.sourceUrl;
 
                         return (
                           <EnquiryProduct
-                            name={productName}
                             imageUrl={productImage}
-                            price={productPrice}
                             installationCost={installationCost}
                             key={productSlug}
+                            name={productName}
+                            price={productPrice}
                           />
                         );
                       },
@@ -162,8 +167,8 @@ export default function EnquiryModal({
                     Total cost:
                     <Tooltip
                       attributes={{
-                        title: '*Installation cost may vary',
                         content: `Installation costs may vary. For a complete breakdown, please refer to our <a href="${routes.privacyAndTerms}">Terms & Conditions.</a>`,
+                        title: '*Installation cost may vary',
                       }}
                     />
                   </div>
@@ -208,12 +213,12 @@ export default function EnquiryModal({
                 </div>
               </div>
               <Button
-                type="submit"
-                rightIcon={formIsSending ? '' : 'send'}
-                size="large"
-                onClick={handleSubmitClick}
                 className={styles.footerButton}
                 disabled={formIsSending}
+                onClick={handleSubmitClick}
+                rightIcon={formIsSending ? '' : 'send'}
+                size="large"
+                type="submit"
               >
                 Submit {formIsSending && <Loading />}
               </Button>

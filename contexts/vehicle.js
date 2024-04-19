@@ -1,10 +1,14 @@
 'use client';
 
 import { createContext, useCallback, useContext, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { setCookie, deleteCookie } from '@lib/cookies';
+
+import { usePathname, useRouter } from 'next/navigation';
+
+import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
+
+import { STEP_TITLES } from '@components/builder/builder';
 
 const VehicleContext = createContext();
 
@@ -14,11 +18,16 @@ export const VehicleProvider = ({ children }) => {
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
+  const [stepNumber, setStepNumber] = useState(0);
+  const [stepTitle, setStepTitle] = useState('');
+  const [selectedCover, setSelectedCover] = useState(null);
+  const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
+    selectedFactoryOptions: [],
   });
 
   const setVehicleSelection = vehicle => {
@@ -32,28 +41,45 @@ export const VehicleProvider = ({ children }) => {
     setModel(null);
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
+    setSelectedFactoryOptions(null);
+    setStepNumber(0);
+    setStepTitle('');
 
     const slug = pathname.split('/products/')[1]?.split('/')[0];
     if (slug) {
       router.push(routes.product(slug));
     }
-  }, [router, pathname]);
+  }, [pathname, router]);
 
   const handleSave = useCallback(
     (params, reload) => {
-      const vehicleString = JSON.stringify({ maker, model });
+      const vehicleString = JSON.stringify({
+        maker,
+        model,
+        selectedFactoryOptions,
+      });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ maker, model });
+      setSavedVehicleGlobal({ maker, model, selectedFactoryOptions });
+
       setVehicleSelection({
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
+        selectedFactoryOptions: selectedFactoryOptions || null,
       });
+
       setDropdownOpened(false);
+      setStepNumber(1);
+      setStepTitle(STEP_TITLES[1]);
 
       if (params) {
         const { mainCategorySlug, makeSlug, modelSlug } = params;
+
+        if (!mainCategorySlug || !makeSlug || !modelSlug) {
+          return;
+        }
+
         const newRoute = routes.product(
           mainCategorySlug,
           makeSlug,
@@ -75,26 +101,34 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [maker, model, variant],
+    [maker, model, router, selectedFactoryOptions, variant],
   );
 
   return (
     <VehicleContext.Provider
       value={{
-        finalSelection,
-        setVehicleSelection,
-        savedVehicleGlobal,
-        setSavedVehicleGlobal,
-        maker,
-        setMaker,
-        model,
-        setModel,
-        variant,
-        setVariant,
         dropdownOpened,
-        setDropdownOpened,
-        handleVehicleReset,
+        finalSelection,
         handleSave,
+        handleVehicleReset,
+        maker,
+        model,
+        savedVehicleGlobal,
+        selectedCover,
+        selectedFactoryOptions,
+        setDropdownOpened,
+        setMaker,
+        setModel,
+        setSavedVehicleGlobal,
+        setSelectedCover,
+        setSelectedFactoryOptions,
+        setStepNumber,
+        setStepTitle,
+        setVariant,
+        setVehicleSelection,
+        stepNumber,
+        stepTitle,
+        variant,
       }}
     >
       {children}

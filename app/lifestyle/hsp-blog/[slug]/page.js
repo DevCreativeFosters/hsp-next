@@ -19,12 +19,12 @@ export default async function BlogPostPage({ params }) {
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
       <BlogPost
-        title={title}
         content={content}
         excerpt={excerpt}
         image={image}
-        slug={slug}
         relatedPosts={relatedPosts}
+        slug={slug}
+        title={title}
       />
     </Layout>
   );

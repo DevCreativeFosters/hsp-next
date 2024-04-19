@@ -11,6 +11,7 @@ import { getMake } from '@lib/api/get-make';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
+import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -28,11 +29,13 @@ export default async function CategoryPage({ params, searchParams }) {
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug; // array of model and optional variant
+  const modelSlug = params.modelSlug;
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(mainCategory?.databaseId);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
@@ -92,7 +95,7 @@ export default async function CategoryPage({ params, searchParams }) {
     },
     model: {
       label: firstMatchedProduct?.title,
-      value: modelSlug[0],
+      value: modelSlug,
     },
   };
 
@@ -120,10 +123,10 @@ export default async function CategoryPage({ params, searchParams }) {
           <Container>
             <PageContainer>
               <ErrorPage
-                title="Variant not found"
-                text="Sorry, we couldn't find the variant you are looking for."
                 buttonText="Back to Products"
                 product
+                text="Sorry, we couldn't find the variant you are looking for."
+                title="Variant not found"
               />
             </PageContainer>
           </Container>
@@ -137,21 +140,21 @@ export default async function CategoryPage({ params, searchParams }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
           />
         </div>
         <PageClientSidePartial
+          allLocations={allLocations}
+          downloadFileFormId={downloadFileFormId}
+          enquiryFormId={enquiryFormId}
+          firstMatchedProduct={firstMatchedProduct}
           mainCategory={mainCategory}
           make={make}
           modelName={modelName}
-          enquiryFormId={enquiryFormId}
-          firstMatchedProduct={firstMatchedProduct}
-          variantSlug={modelSlug[1]}
-          allLocations={allLocations}
-          productHeroData={productHeroData}
-          downloadFileFormId={downloadFileFormId}
           pageParams={params}
+          productHeroData={productHeroData}
+          variantSlug={searchParams.variant}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (

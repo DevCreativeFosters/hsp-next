@@ -1,16 +1,28 @@
 'use client';
 
-import { useState, useCallback, useContext, useRef, useEffect } from 'react';
-import Container from '@components/container/container';
-import ProductsCarousel from './products-carousel';
-import Preview from './preview';
-import Sidebar from './sidebar';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import StoreList from '@components/store-list/store-list';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import { useVehicleContext } from '@contexts/vehicle';
+
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import getCompatibilityData from '@lib/api/get-compatibility-data';
+import getRelatedCovers from '@lib/api/get-related-covers';
+import normalizeUteBuilderProducts, {
+  normalizeCompatibilityData,
+} from '@lib/normalize-ute-builder-products';
+
+import ClashModal from '@components/builder/clash-modal';
+import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
+import Container from '@components/container/container';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+
 import styles from './builder.module.scss';
+import Preview from './preview';
+import ProductsCarousel from './products-carousel';
+import Sidebar from './sidebar';
 
 const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   products.filter(
@@ -20,34 +32,124 @@ const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
   );
 
 const DEFAULT_OPEN_SECTION = 'products';
+export const STEP_TITLES = {
+  1: 'Add your UTE covering',
+  2: 'Add products to your vehicle',
+};
 
-export default function Builder({ makeName, model, products, allLocations, uteCovers }) {
+export default function Builder({
+  allLocations,
+  factoryOptions,
+  globalOptions,
+  makes,
+  noCover,
+  products,
+}) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [topHeight, setHeight] = useState(0);
+  const [covers, setCovers] = useState([]);
+  const [stepProducts, setStepProducts] = useState(products);
+  const [compatibilityData, setCompatibilityData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
-  // @todo: get covers media based on model, make and uteCovers child slug
-  const coversWithMedia = [];
+  const {
+    factoryOption,
+    maker: make,
+    model,
+    selectedCover,
+    setFactoryOption,
+    setSelectedCover,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+    stepTitle,
+  } = useVehicleContext();
 
   const {
-    location,
-    searchGeolocation,
     filteredLocations,
+    isMapVisible,
+    location,
+    radius,
+    searchGeolocation,
     selectedStore,
     setSelectedStore,
-    isMapVisible,
-    radius,
   } = useContext(StoreLocatorContext);
 
-  const isInlineResultListVisible = Boolean(
-    openSection === 'store' && location && searchGeolocation && radius,
-  );
-  const isInlineMapVisible = Boolean(
-    openSection === 'store' && !isMobile && isMapVisible,
-  );
+  useEffect(() => {
+    if (
+      !make?.slug ||
+      !model?.slug ||
+      !globalOptions ||
+      !globalOptions?.coversCategory
+    ) {
+      return;
+    }
+
+    getRelatedCovers(
+      make.slug,
+      model.slug,
+      globalOptions.coversCategory.nodes[0].slug,
+    ).then(relatedCovers => {
+      if (!relatedCovers) {
+        return;
+      }
+
+      const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+      const covers = [...normalizedCovers, ...noCover];
+
+      setStepProducts(covers);
+      setCovers(covers);
+    });
+
+    getCompatibilityData(globalOptions.coversCategory.nodes[0].databaseId).then(
+      data => {
+        if (!data) {
+          return;
+        }
+
+        const normalizedData = normalizeCompatibilityData(data);
+        setCompatibilityData(normalizedData);
+      },
+    );
+  }, [globalOptions, make, model, noCover]);
+
+  useEffect(() => {
+    if (stepNumber === 1) {
+      setStepProducts(covers);
+    }
+
+    if (stepNumber === 2) {
+      setStepProducts(products);
+    }
+  }, [covers, products, setStepProducts, stepNumber]);
+
+  useEffect(() => {
+    if (!make || !model || stepNumber === 0) {
+      return;
+    }
+
+    const selectedCover = selectedProducts.find(selectedProduct =>
+      covers.some(cover => cover.productSlug === selectedProduct.productSlug),
+    );
+
+    setStepNumber(selectedCover ? 2 : 1);
+    setStepTitle(STEP_TITLES[selectedCover ? 2 : 1]);
+    setSelectedCover(selectedCover);
+  }, [
+    covers,
+    make,
+    model,
+    selectedProducts,
+    setSelectedCover,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+  ]);
 
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
@@ -60,7 +162,28 @@ export default function Builder({ makeName, model, products, allLocations, uteCo
 
   const addProduct = useCallback(
     product => {
-      const newSelectedProducts = [...selectedProducts, product];
+      let newSelectedProducts = [...selectedProducts, product];
+
+      if (covers.some(cover => cover.productSlug === product.productSlug)) {
+        if (!factoryOption) {
+          newSelectedProducts = [product, ...selectedProducts];
+          setSelectedProducts(newSelectedProducts);
+
+          return;
+        }
+
+        const isCompatibleWithFactoryOptions = compatibilityData[
+          product.productSlug
+        ]?.factoryOptions.filter(option => option.slug === factoryOption.slug);
+
+        if (!isCompatibleWithFactoryOptions) {
+          setShowModal(true);
+          return;
+        }
+
+        newSelectedProducts = [product, ...selectedProducts];
+      }
+
       const newDisabledProducts = [
         ...disabledProducts,
         ...getOtherProductsWithSameParent(
@@ -73,7 +196,14 @@ export default function Builder({ makeName, model, products, allLocations, uteCo
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts, disabledProducts, products],
+    [
+      compatibilityData,
+      covers,
+      disabledProducts,
+      factoryOption,
+      products,
+      selectedProducts,
+    ],
   );
 
   const removeProduct = useCallback(
@@ -93,64 +223,96 @@ export default function Builder({ makeName, model, products, allLocations, uteCo
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts, disabledProducts, products],
+    [disabledProducts, products, selectedProducts],
   );
 
   const toggleProduct = useCallback(
     product => {
+      setCurrentProduct(product);
       selectedProducts.includes(product)
         ? removeProduct(product)
         : addProduct(product);
     },
-    [selectedProducts, addProduct, removeProduct],
+    [addProduct, removeProduct, selectedProducts],
+  );
+
+  const isInlineResultListVisible = Boolean(
+    openSection === 'store' && location && searchGeolocation && radius,
+  );
+  const isInlineMapVisible = Boolean(
+    openSection === 'store' && !isMobile && isMapVisible,
   );
 
   return (
-    <div className={styles.builder}>
-      <Container className={styles.container}>
-        <div className={styles.top} ref={topRef}>
-          <Sidebar
-            openSection={openSection}
-            setOpenSection={setOpenSection}
-            selectedProducts={selectedProducts}
-            removeProduct={removeProduct}
-            isMobile={isMobile}
-            allLocations={allLocations}
-          />
-
-          <StoreList
-            className={styles.results}
-            items={filteredLocations}
-            show={isInlineResultListVisible}
-            onSelect={item => {
-              setSelectedStore(item);
-            }}
-            style={{
-              height: selectedStore ? topHeight : null,
-            }}
-          />
-
-          <Preview
-            makeName={makeName}
-            model={model}
-            selectedProducts={selectedProducts}
-          >
-            {isInlineMapVisible && (
-              <StoreLocatorMap
-                className={styles.map}
-                locations={filteredLocations}
-                onMarkerClick={setSelectedStore}
+    <>
+      {showModal ? (
+        <ClashModal
+          currentProduct={currentProduct}
+          factoryOption={factoryOption}
+          selectedProducts={selectedProducts}
+          setFactoryOption={setFactoryOption}
+          setSelectedProducts={setSelectedProducts}
+          setShowModal={setShowModal}
+        />
+      ) : (
+        <div className={styles.builder}>
+          <Container className={styles.container}>
+            <div className={styles.top} ref={topRef}>
+              <Sidebar
+                allLocations={allLocations}
+                isMobile={isMobile}
+                openSection={openSection}
+                removeProduct={removeProduct}
+                selectedProducts={selectedProducts}
+                setOpenSection={setOpenSection}
+              />
+              <StoreList
+                className={styles.results}
+                items={filteredLocations}
+                onSelect={item => {
+                  setSelectedStore(item);
+                }}
+                show={isInlineResultListVisible}
+                style={{
+                  height: selectedStore ? topHeight : null,
+                }}
+              />
+              {stepNumber > 0 ? (
+                <Preview
+                  make={make}
+                  model={model}
+                  selectedProducts={selectedProducts}
+                >
+                  {isInlineMapVisible && (
+                    <StoreLocatorMap
+                      className={styles.map}
+                      locations={filteredLocations}
+                      onMarkerClick={setSelectedStore}
+                    />
+                  )}
+                </Preview>
+              ) : (
+                <UTEChooseYourVehicle
+                  factoryOptions={factoryOptions}
+                  makes={makes}
+                />
+              )}
+            </div>
+            {stepNumber > 0 && stepProducts.length > 0 && (
+              <ProductsCarousel
+                disabledProducts={disabledProducts}
+                isMobile={isMobile}
+                products={stepProducts}
+                selectedCover={selectedCover}
+                selectedProducts={selectedProducts}
+                stepNumber={stepNumber}
+                stepTitle={stepTitle}
+                toggleProduct={toggleProduct}
               />
             )}
-          </Preview>
+          </Container>
         </div>
-        <ProductsCarousel
-          products={products}
-          selectedProducts={selectedProducts}
-          disabledProducts={disabledProducts}
-          toggleProduct={toggleProduct}
-        />
-      </Container>
-    </div>
+      )}
+    </>
   );
 }

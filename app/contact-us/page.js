@@ -29,9 +29,9 @@ export default async function ContactUs() {
       <Container>
         <PageContainer>
           <SectionIntro
-            title={content.title}
             description={content.content}
             fitInline
+            title={content.title}
           />
           <PageGrid>
             <Sidebar>
@@ -51,11 +51,11 @@ export default async function ContactUs() {
                       if (link) {
                         return (
                           <Button
-                            key={index}
                             href={link?.url || ''}
+                            key={index}
+                            rightIcon="arrow-forward"
                             target={link?.target}
                             variant="senary"
-                            rightIcon="arrow-forward"
                           >
                             {link?.title}
                           </Button>

@@ -1,16 +1,19 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import YouTube from 'react-youtube';
+
 import clsx from 'clsx';
+import YouTube from 'react-youtube';
+
 import { ArrowTriplet } from '@components/video-youtube/arrow-triplet';
 import { YoutubeCloseButton } from '@components/video-youtube/youtube-close-button';
+
 import styles from './video-youtube.module.scss';
 
 const SEEK_INTERVAL = 5; // [s]
 const ANIMATION_DURATION = 500 + 100; // CSS animation duration + a bit of margin
 
-export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
+export function VideoYoutube({ isActive, isModal, onClose, youtubeId }) {
   const [player, setPlayer] = useState(null);
   const [playbackIcon, setPlaybackIcon] = useState(null);
   const [seekIcon, setSeekIcon] = useState(null);
@@ -93,7 +96,7 @@ export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
     rafHandler.current = requestAnimationFrame(() => {
       restorePreviouslyActiveElement();
     });
-  }, [isActive, iframeId]);
+  }, [iframeId, isActive]);
 
   useEffect(
     function bindKeyboardEvents() {
@@ -118,7 +121,7 @@ export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
         }
       } catch (err) {}
     },
-    [player, isActive],
+    [isActive, player],
   );
 
   useEffect(
@@ -168,23 +171,23 @@ export function VideoYoutube({ youtubeId, isActive, isModal, onClose }) {
       })}
     >
       <YouTube
-        videoId={youtubeId}
         className={styles.iframeInnerWrapper}
-        iframeClassName={styles.iframe}
         id={iframeId}
+        iframeClassName={styles.iframe}
+        onReady={onYoutubePlayerReady}
         opts={{
           playerVars: {
-            enablejsapi: 1,
-            controls: 1,
             autohide: 1,
             autoplay: 0,
+            controls: 1,
+            enablejsapi: 1,
             mute: 0,
-            rel: 0,
             playsinline: 1,
+            rel: 0,
             showinfo: 0,
           },
         }}
-        onReady={onYoutubePlayerReady}
+        videoId={youtubeId}
       />
 
       <div className={styles.ui}>

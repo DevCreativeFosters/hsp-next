@@ -26,7 +26,7 @@ export function GravityFormProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, []);
 
   return (
-    <GravityFormContext.Provider value={{ state, dispatch }}>
+    <GravityFormContext.Provider value={{ dispatch, state }}>
       {children}
     </GravityFormContext.Provider>
   );

@@ -1,7 +1,8 @@
 import clsx from 'clsx';
+
 import styles from './tag.module.scss';
 
-export default function Tag({ name, variant, size }) {
+export default function Tag({ name, size, variant }) {
   if (!name) {
     return null;
   }

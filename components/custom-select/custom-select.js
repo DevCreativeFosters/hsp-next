@@ -1,23 +1,28 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import AnimateHeight from 'react-animate-height';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import { useClickOutside } from '@hooks/useClickOutside';
-import Button from '@components/button/button';
+
 import { getIcon } from '@lib/icons';
+
+import Button from '@components/button/button';
+
 import styles from './custom-select.module.scss';
 
 const MAX_ITEMS_IN_ONE_COL_LAYOUT = 5; // keep in sync with SCSS
 
 export default function CustomSelect({
-  options,
-  selectedValue,
-  placeholder,
   disabled,
-  strong,
-  onSelect,
   fRef,
+  onSelect,
+  options,
+  placeholder,
+  selectedValue,
+  strong,
 }) {
   const ExpandIcon = getIcon('expand-more-neutral');
   const [isOpen, setIsOpen] = useState(false);
@@ -97,7 +102,7 @@ export default function CustomSelect({
       </div>
 
       <div className={styles.dropdownContainer} ref={dropdownRef}>
-        <AnimateHeight height={isOpen ? 'auto' : 0} duration={150}>
+        <AnimateHeight duration={150} height={isOpen ? 'auto' : 0}>
           <div
             className={clsx(
               styles.dropdownInner,
@@ -108,9 +113,9 @@ export default function CustomSelect({
             {options.map(({ label, value }, index) => (
               <Button
                 key={value + index}
+                onClick={() => onOptionSelect(value)}
                 size="xsmall"
                 variant="tertiary"
-                onClick={() => onOptionSelect(value)}
               >
                 {label || value}
               </Button>

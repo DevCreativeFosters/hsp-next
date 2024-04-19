@@ -1,7 +1,7 @@
-import StarRating from './star-rating';
 import styles from './review.module.scss';
+import StarRating from './star-rating';
 
-export default function Review({ score, name, text }) {
+export default function Review({ name, score, text }) {
   return (
     <div className={styles.review}>
       <StarRating score={score} />
