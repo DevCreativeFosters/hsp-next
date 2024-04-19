@@ -145,6 +145,7 @@ export default function GForm({
       onChange={onChange}
       onSubmit={handleSubmit}
       withBackground={attributes.withBackground}
+      withCustomStyle01={attributes.withCustomStyle01}
       withPadding={attributes.withPadding}
     >
       {isSubmitted && !preventConfirmation ? (

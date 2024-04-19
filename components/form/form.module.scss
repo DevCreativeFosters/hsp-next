@@ -22,6 +22,19 @@
   }
 }
 
+.withCustomStyle01 {
+  @include bp-below(medium) {
+    width: auto;
+    margin: var(--container-inline-padding);
+  }
+
+  @include bp(medium) {
+    width: calc(100% - 2 * var(--container-inline-padding));
+    max-width: 1320px;
+    margin-block: var(--container-inline-padding);
+  }
+}
+
 .withPadding {
   @include bp(medium) {
     padding: 48px;
