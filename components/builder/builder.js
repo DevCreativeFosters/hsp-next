@@ -17,6 +17,7 @@ import {
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
+import ResetModal from '@components/choose-your-vehicle/reset-modal';
 import Container from '@components/container/container';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
@@ -46,6 +47,7 @@ export default function Builder({
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [isCover, setIsCover] = useState(false);
   const [productToAdd, setProductToAdd] = useState(null);
@@ -226,6 +228,13 @@ export default function Builder({
   const removeProduct = useCallback(
     product => {
       let newSelectedProducts = [];
+      const isCover = covers.some(cover => cover.group === product.productSlug);
+
+      if (isCover) {
+        setShowResetModal(true);
+
+        return;
+      }
 
       selectedProducts.forEach(selectedProduct => {
         if (selectedProduct.variantSlug !== product.variantSlug) {
@@ -250,7 +259,7 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [disabledProducts, selectedProducts, stepProducts],
+    [covers, disabledProducts, selectedProducts, stepProducts],
   );
 
   const toggleProduct = useCallback(
@@ -312,6 +321,17 @@ export default function Builder({
     setShowClashModal(false);
   };
 
+  const handleResetModalClose = event => {
+    setShowResetModal(false);
+    event.stopPropagation();
+  };
+
+  const handleResetModalAccept = () => {
+    setSelectedProducts([]);
+    setDisabledProducts([]);
+    setShowResetModal(false);
+  };
+
   return (
     <>
       {showClashModal && (
@@ -320,6 +340,12 @@ export default function Builder({
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           onAccept={handleClashModalAccept}
           onClose={handleClashModalClose}
+        />
+      )}
+      {showResetModal && (
+        <ResetModal
+          onAccept={handleResetModalAccept}
+          onClose={handleResetModalClose}
         />
       )}
       <div className={styles.builder}>
