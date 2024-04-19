@@ -9,11 +9,6 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
-import {
-  getIncompatibleProducts,
-  getOtherProductsWithSameParent,
-  isProductSelected,
-} from '@lib/ute-helpers';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -23,6 +18,11 @@ import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
+import {
+  getIncompatibleProducts,
+  getOtherProductsWithSameParent,
+  isProductSelected,
+} from './helpers';
 import Preview from './preview';
 import ProductsCarousel from './products-carousel';
 import Sidebar from './sidebar';

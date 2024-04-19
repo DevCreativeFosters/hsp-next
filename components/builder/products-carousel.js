@@ -6,11 +6,11 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 import { getIcon } from '@lib/icons';
-import { isProductSelected } from '@lib/ute-helpers';
 
 import Button from '@components/button/button';
 import Carousel from '@components/carousel/carousel';
 
+import { isProductSelected } from './helpers';
 import styles from './products-carousel.module.scss';
 
 const PlusIcon = getIcon('plus');
