@@ -37,6 +37,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     model,
     selectedProducts,
     setDropdownOpened,
+    setSelectedProducts,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -62,6 +63,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
   const handleOnAccept = () => {
     handleVehicleReset();
+    setSelectedProducts([]);
     setShowModal(false);
   };
 
