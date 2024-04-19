@@ -71,25 +71,3 @@
     min-height: unset !important;
   }
 }
-
-.list {
-  margin: 0;
-  padding: 16px;
-  color: var(--color-primary-100);
-}
-
-.listItem {
-  color: white;
-  font-family: var(--font-secondary);
-  border-radius: 8px;
-  border: 1px solid var(--color-white-20);
-  padding: 8px 16px;
-  margin-left: 32px;
-}
-
-.buttons {
-  display: flex;
-  gap: 24px;
-  justify-content: flex-end;
-  margin-top: 48px;
-}

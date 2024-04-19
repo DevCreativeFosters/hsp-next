@@ -1,12 +1,14 @@
-import styles from '@components/builder/builder.module.scss';
 import Button from '@components/button/button';
 import Modal from '@components/modal/modal';
 
+import styles from './clash-modal.module.scss';
+
 export default function ClashModal({
   currentProduct,
-  factoryOption,
+  incompatibleFactoryOptions,
+  selectedFactoryOptions,
   selectedProducts,
-  setFactoryOption,
+  setSelectedFactoryOptions,
   setSelectedProducts,
   setShowModal,
 }) {
@@ -25,9 +27,11 @@ export default function ClashModal({
       </p>
 
       <ol className={styles.list}>
-        <li>
-          <span className={styles.listItem}>{factoryOption.name}</span>
-        </li>
+        {incompatibleFactoryOptions.map((option, index) => (
+          <li key={index}>
+            <span className={styles.listItem}>{option}</span>
+          </li>
+        ))}
       </ol>
       <p>Do you want to proceed?</p>
       <div className={styles.buttons}>
@@ -42,7 +46,11 @@ export default function ClashModal({
         </Button>
         <Button
           onClick={() => {
-            setFactoryOption(null);
+            setSelectedFactoryOptions(
+              selectedFactoryOptions.filter(
+                option => !incompatibleFactoryOptions.includes(option.value),
+              ),
+            );
             setSelectedProducts([currentProduct, ...selectedProducts]);
             setShowModal(false);
           }}
