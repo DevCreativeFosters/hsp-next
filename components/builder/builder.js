@@ -293,11 +293,11 @@ export default function Builder({
     openSection === 'store' && !isMobile && isMapVisible,
   );
 
-  const handleCloseModal = () => {
+  const handleClashModalClose = () => {
     setShowClashModal(false);
   };
 
-  const handleAcceptModal = () => {
+  const handleClashModalAccept = () => {
     setSelectedFactoryOptions(
       selectedFactoryOptions.filter(
         option => !incompatibleFactoryOptions.includes(option.value),
@@ -318,8 +318,8 @@ export default function Builder({
         <ClashModal
           incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
-          onAccept={handleAcceptModal}
-          onClose={handleCloseModal}
+          onAccept={handleClashModalAccept}
+          onClose={handleClashModalClose}
         />
       )}
       <div className={styles.builder}>
