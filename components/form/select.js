@@ -192,7 +192,7 @@ export default function Select({
         <select
           className={styles.realSelect}
           multiple={multiple}
-          name={`fake_${props.name}`}
+          name={props.name ? `fake_${props.name}` : null}
           onChange={() => {}}
           required={required}
           value={value || multiple ? [] : ''}
