@@ -45,7 +45,7 @@ export default function Builder({
   const [topHeight, setHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
-  const [showModal, setShowModal] = useState(false);
+  const [showClashModal, setShowClashModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [isCover, setIsCover] = useState(false);
   const [productToAdd, setProductToAdd] = useState(null);
@@ -175,7 +175,7 @@ export default function Builder({
         incompatibleFactoryOptions.length > 0 ||
         incompatibleCovers.length > 0
       ) {
-        setShowModal(true);
+        setShowClashModal(true);
 
         return;
       }
@@ -207,7 +207,7 @@ export default function Builder({
   );
 
   useEffect(() => {
-    if (!productToAdd || showModal) {
+    if (!productToAdd || showClashModal) {
       return;
     }
 
@@ -221,7 +221,7 @@ export default function Builder({
 
     setSelectedProducts(products);
     setProductToAdd(null);
-  }, [isCover, productToAdd, selectedProducts, showModal]);
+  }, [isCover, productToAdd, selectedProducts, showClashModal]);
 
   const removeProduct = useCallback(
     product => {
@@ -294,7 +294,7 @@ export default function Builder({
   );
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowClashModal(false);
   };
 
   const handleAcceptModal = () => {
@@ -309,12 +309,12 @@ export default function Builder({
     }
 
     setProductToAdd(currentProduct);
-    setShowModal(false);
+    setShowClashModal(false);
   };
 
   return (
     <>
-      {showModal && (
+      {showClashModal && (
         <ClashModal
           incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
