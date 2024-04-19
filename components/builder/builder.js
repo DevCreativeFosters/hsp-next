@@ -314,73 +314,72 @@ export default function Builder({
 
   return (
     <>
-      {showModal ? (
+      {showModal && (
         <ClashModal
           incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           onAccept={handleAcceptModal}
           onClose={handleCloseModal}
         />
-      ) : (
-        <div className={styles.builder}>
-          <Container className={styles.container}>
-            <div className={styles.top} ref={topRef}>
-              <Sidebar
-                allLocations={allLocations}
-                isMobile={isMobile}
-                openSection={openSection}
-                removeProduct={removeProduct}
+      )}
+      <div className={styles.builder}>
+        <Container className={styles.container}>
+          <div className={styles.top} ref={topRef}>
+            <Sidebar
+              allLocations={allLocations}
+              isMobile={isMobile}
+              openSection={openSection}
+              removeProduct={removeProduct}
+              selectedProducts={selectedProducts}
+              setOpenSection={setOpenSection}
+            />
+            <StoreList
+              className={styles.results}
+              items={filteredLocations}
+              onSelect={item => {
+                setSelectedStore(item);
+              }}
+              show={isInlineResultListVisible}
+              style={{
+                height: selectedStore ? topHeight : null,
+              }}
+            />
+            {stepNumber > 0 ? (
+              <Preview
+                make={make}
+                model={model}
                 selectedProducts={selectedProducts}
-                setOpenSection={setOpenSection}
-              />
-              <StoreList
-                className={styles.results}
-                items={filteredLocations}
-                onSelect={item => {
-                  setSelectedStore(item);
-                }}
-                show={isInlineResultListVisible}
-                style={{
-                  height: selectedStore ? topHeight : null,
-                }}
-              />
-              {stepNumber > 0 ? (
-                <Preview
-                  make={make}
-                  model={model}
-                  selectedProducts={selectedProducts}
-                >
-                  {isInlineMapVisible && (
-                    <StoreLocatorMap
-                      className={styles.map}
-                      locations={filteredLocations}
-                      onMarkerClick={setSelectedStore}
-                    />
-                  )}
-                </Preview>
-              ) : (
-                <UTEChooseYourVehicle
-                  factoryOptions={factoryOptions}
-                  makes={makes}
-                />
-              )}
-            </div>
-            {stepNumber > 0 && stepProducts.length > 0 && (
-              <ProductsCarousel
-                disabledProducts={disabledProducts}
-                isMobile={isMobile}
-                products={stepProducts}
-                selectedCover={selectedCover}
-                selectedProducts={selectedProducts}
-                stepNumber={stepNumber}
-                stepTitle={stepTitle}
-                toggleGroup={toggleGroup}
-                toggleProduct={toggleProduct}
+              >
+                {isInlineMapVisible && (
+                  <StoreLocatorMap
+                    className={styles.map}
+                    locations={filteredLocations}
+                    onMarkerClick={setSelectedStore}
+                  />
+                )}
+              </Preview>
+            ) : (
+              <UTEChooseYourVehicle
+                factoryOptions={factoryOptions}
+                makes={makes}
               />
             )}
-          </Container>
-        </div>
-      )}
+          </div>
+          {stepNumber > 0 && stepProducts.length > 0 && (
+            <ProductsCarousel
+              disabledProducts={disabledProducts}
+              isMobile={isMobile}
+              products={stepProducts}
+              selectedCover={selectedCover}
+              selectedProducts={selectedProducts}
+              stepNumber={stepNumber}
+              stepTitle={stepTitle}
+              toggleGroup={toggleGroup}
+              toggleProduct={toggleProduct}
+            />
+          )}
+        </Container>
+      </div>
     </>
   );
 }
