@@ -293,19 +293,33 @@ export default function Builder({
     openSection === 'store' && !isMobile && isMapVisible,
   );
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleAcceptModal = () => {
+    setSelectedFactoryOptions(
+      selectedFactoryOptions.filter(
+        option => !incompatibleFactoryOptions.includes(option.value),
+      ),
+    );
+
+    if (incompatibleCovers.length > 0) {
+      selectedProducts.shift();
+    }
+
+    setProductToAdd(currentProduct);
+    setShowModal(false);
+  };
+
   return (
     <>
       {showModal ? (
         <ClashModal
-          currentProduct={currentProduct}
           incompatibleCovers={incompatibleCovers}
           incompatibleFactoryOptions={incompatibleFactoryOptions}
-          selectedFactoryOptions={selectedFactoryOptions}
-          selectedProducts={selectedProducts}
-          setDisabledProducts={setDisabledProducts}
-          setProductToAdd={setProductToAdd}
-          setSelectedFactoryOptions={setSelectedFactoryOptions}
-          setShowModal={setShowModal}
+          onAccept={handleAcceptModal}
+          onClose={handleCloseModal}
         />
       ) : (
         <div className={styles.builder}>
