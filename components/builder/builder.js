@@ -321,9 +321,8 @@ export default function Builder({
     setShowClashModal(false);
   };
 
-  const handleResetModalClose = event => {
+  const handleResetModalClose = () => {
     setShowResetModal(false);
-    event.stopPropagation();
   };
 
   const handleResetModalAccept = () => {
