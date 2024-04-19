@@ -152,6 +152,23 @@ export default function Builder({
     return () => resizeObserver.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!productToAdd || showClashModal) {
+      return;
+    }
+
+    const products = [...selectedProducts];
+
+    if (isCover) {
+      products.unshift(productToAdd);
+    } else {
+      products.push(productToAdd);
+    }
+
+    setSelectedProducts(products);
+    setProductToAdd(null);
+  }, [isCover, productToAdd, selectedProducts, showClashModal]);
+
   const addProduct = useCallback(
     product => {
       setIsCover(covers.some(cover => cover.group === product.productSlug));
@@ -207,23 +224,6 @@ export default function Builder({
       stepProducts,
     ],
   );
-
-  useEffect(() => {
-    if (!productToAdd || showClashModal) {
-      return;
-    }
-
-    const products = [...selectedProducts];
-
-    if (isCover) {
-      products.unshift(productToAdd);
-    } else {
-      products.push(productToAdd);
-    }
-
-    setSelectedProducts(products);
-    setProductToAdd(null);
-  }, [isCover, productToAdd, selectedProducts, showClashModal]);
 
   const removeProduct = useCallback(
     product => {
