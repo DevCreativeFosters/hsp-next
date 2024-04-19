@@ -19,18 +19,6 @@
   --only-icon-padding: 16px;
 }
 
-.recaptcha {
-  display: flex;
-  flex-direction: column;
-}
-
-.errorMessage {
-  font-size: 14px;
-  padding-top: 7px;
-  padding-left: 10px;
-  color: var(--color-error);
-}
-
 .submitWrapper {
   width: 100%;
 }
