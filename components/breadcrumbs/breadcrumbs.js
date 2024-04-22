@@ -1,10 +1,11 @@
 'use client';
 
-import { Fragment, createRef, useEffect, useState } from 'react';
+import { Fragment, createRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+
+import { useVehicleContext } from '@contexts/vehicle';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -27,7 +28,6 @@ function addSeparators(items) {
 
 function Breadcrumbs({ items, product }) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [showIncompatibleNote, setShowIncompatibleNote] = useState(false);
   const itemsNormalized = items
     .map(item => ({
       ...item,
@@ -43,7 +43,6 @@ function Breadcrumbs({ items, product }) {
         if (item.onSelectOpenNext && nextRef) {
           nextRef.current.dispatchEvent(new Event('open-custom-select'));
         }
-        setShowIncompatibleNote(false);
       },
     }));
 
@@ -58,13 +57,10 @@ function Breadcrumbs({ items, product }) {
     : itemsLength > 1
       ? itemsNormalized[itemsLength - 2]
       : null;
-  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    searchParams.get('compatible') === 'false'
-      ? setShowIncompatibleNote(true)
-      : setShowIncompatibleNote(false);
-  }, [searchParams, setShowIncompatibleNote]);
+  const { productNotCompatible } = useVehicleContext();
+
+  console.log(productNotCompatible);
 
   return (
     <>
@@ -208,7 +204,7 @@ function Breadcrumbs({ items, product }) {
             );
           }
         })}
-        {showIncompatibleNote && (
+        {productNotCompatible && (
           <div className={styles.incompatible}>
             <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
             product is not available for your selected vehicle.

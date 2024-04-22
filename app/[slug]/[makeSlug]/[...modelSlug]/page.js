@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
@@ -17,6 +17,7 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
+import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
 
 import PageClientSidePartial from './page-client-side-partial';
@@ -101,7 +102,11 @@ export default async function Product({ params, searchParams }) {
   modelName = modelName || firstMatchedProduct?.title;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
-    redirect(`/${slug}?compatible=false`);
+    return (
+      <Layout title="Product">
+        <NotCompatible slug={slug} />
+      </Layout>
+    );
   }
 
   if (modelSlug.length > 2) {

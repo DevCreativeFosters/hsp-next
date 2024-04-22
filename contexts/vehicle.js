@@ -25,6 +25,7 @@ export const VehicleProvider = ({ children }) => {
   const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
+  const [productNotCompatible, setProductNotCompatible] = useState(false);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
@@ -133,12 +134,14 @@ export const VehicleProvider = ({ children }) => {
         handleVehicleReset,
         maker,
         model,
+        productNotCompatible,
         savedVehicleGlobal,
         selectedCover,
         selectedFactoryOptions,
         setDropdownOpened,
         setMaker,
         setModel,
+        setProductNotCompatible,
         setSavedVehicleGlobal,
         setSelectedCover,
         setSelectedFactoryOptions,
