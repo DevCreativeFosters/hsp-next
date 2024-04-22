@@ -11,7 +11,6 @@ import { getMake } from '@lib/api/get-make';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
-import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -34,8 +33,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
-  const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(mainCategory?.databaseId);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
