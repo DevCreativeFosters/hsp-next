@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useVehicleContext } from '@contexts/vehicle';
+
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 import routes from '@lib/routes';
@@ -34,6 +36,16 @@ export default function EnquiryModal({
   const [formIsSent, setFormIsSent] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
+
+  const { selectedFactoryOptions } = useVehicleContext();
+  const factoryOptions = selectedFactoryOptions
+    .map(option => option.value)
+    .join(', ');
+  const products = selectedProducts
+    ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
+    .join(', ');
+
+  const allSelectedProducts = `Product: ${products} ::: Factory Options: ${factoryOptions}`;
 
   const handleSubmitClick = () => {
     if (formRef.current) {
@@ -124,12 +136,7 @@ export default function EnquiryModal({
                         },
                         {
                           inputName: 'products',
-                          value: selectedProducts
-                            ?.map(
-                              ({ productName, variantName }) =>
-                                `${productName}: ${variantName}`,
-                            )
-                            .join(', '),
+                          value: allSelectedProducts,
                         },
                       ]}
                       isDirty={isFormDirty}
