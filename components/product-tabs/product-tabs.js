@@ -59,13 +59,13 @@ export default function ProductTabs({
   return (
     <div className={styles.tabs}>
       <div className={styles.headers} ref={headerRef}>
-        {Object.entries(tabs).map(([tabKey, tabTitle]) => (
+        {Object.entries(tabs).map(([tabKey, tabTitle], index) => (
           <button
             className={clsx(styles.tab, {
               [styles.activeTab]: activeTab === tabKey,
             })}
             id={tabKey}
-            key={tabKey}
+            key={tabKey + index}
             onClick={() => setActiveTab(tabKey)}
             type="button"
           >
@@ -81,13 +81,13 @@ export default function ProductTabs({
             )}
             <div className={styles.featuresContainer}>
               {featuresBoxes?.length > 0 &&
-                featuresBoxes.map(feature => (
+                featuresBoxes.map((feature, index) => (
                   <div
                     className={clsx(styles.featureItem, {
                       [styles.videoFeature]: feature.video,
                       [styles.imageFeature]: feature.image,
                     })}
-                    key={feature.title}
+                    key={feature.title + index}
                   >
                     <div>
                       {feature.icon && (
