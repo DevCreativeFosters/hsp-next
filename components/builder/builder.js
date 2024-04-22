@@ -2,8 +2,6 @@
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import { useExitIntent } from 'use-exit-intent';
-
 import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -83,35 +81,6 @@ export default function Builder({
     selectedStore,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
-
-  const { registerHandler, updateSettings } = useExitIntent({
-    desktop: {
-      triggerOnMouseLeave: false,
-    },
-  });
-
-  registerHandler({
-    handler: () => {},
-    id: 'openModal',
-  });
-
-  useEffect(() => {
-    if (!selectedProducts.length) {
-      updateSettings({
-        desktop: {
-          triggerOnMouseLeave: false,
-          useBeforeUnload: false,
-        },
-      });
-    } else {
-      updateSettings({
-        desktop: {
-          triggerOnMouseLeave: false,
-          useBeforeUnload: true,
-        },
-      });
-    }
-  }, [selectedProducts]);
 
   useEffect(() => {
     if (
