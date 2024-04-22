@@ -70,6 +70,7 @@ const NrCircle = ({ className, isSmall, nr }) => {
 export default function Sidebar({
   allLocations,
   className,
+  globalOptions,
   isMobile,
   openSection,
   removeProduct,
@@ -239,6 +240,7 @@ export default function Sidebar({
       </div>
       {enquiryModalOpened && (
         <EnquiryModal
+          enquiryFormId={globalOptions?.enquiryFormId}
           installationCost={priceSummary.installationCost}
           onClose={handleCloseModal}
           productPrice={priceSummary.price}

@@ -113,29 +113,33 @@ export default function EnquiryModal({
                   [styles.onSuccess]: formIsSent,
                 })}
               >
-                <GravityFormWrapper
-                  attributes={{ id: enquiryFormId }}
-                  hiddenInputs={[
-                    {
-                      inputName: 'storeId',
-                      value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
-                    },
-                    {
-                      inputName: 'products',
-                      value: selectedProducts
-                        ?.map(({ variantName }) => variantName)
-                        .join(','), // TODO: Maybe product IDs? Depends on needs
-                    },
-                  ]}
-                  isDirty={isFormDirty}
-                  onError={onError}
-                  onLoad={onLoad}
-                  onReset={onReset}
-                  onSubmit={onSubmit}
-                  onSuccess={onSuccess}
-                  ref={formRef}
-                  submitButton={false}
-                />
+                <>
+                  {enquiryFormId && (
+                    <GravityFormWrapper
+                      attributes={{ id: enquiryFormId }}
+                      hiddenInputs={[
+                        {
+                          inputName: 'storeId',
+                          value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
+                        },
+                        {
+                          inputName: 'products',
+                          value: selectedProducts
+                            ?.map(({ variantName }) => variantName)
+                            .join(', '),
+                        },
+                      ]}
+                      isDirty={isFormDirty}
+                      onError={onError}
+                      onLoad={onLoad}
+                      onReset={onReset}
+                      onSubmit={onSubmit}
+                      onSuccess={onSuccess}
+                      ref={formRef}
+                      submitButton={false}
+                    />
+                  )}
+                </>
               </div>
 
               {!formIsSent && (
