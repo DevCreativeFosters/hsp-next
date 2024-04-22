@@ -15,8 +15,8 @@ import { getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
+import ResetModal from '@components/builder/reset-modal';
 import Button from '@components/button/button';
-import ResetModal from '@components/choose-your-vehicle/reset-modal';
 import Select from '@components/form/select';
 
 import CancelIcon from '@assets/icons/cancel.svg';

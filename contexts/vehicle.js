@@ -16,7 +16,7 @@ import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
 import { STEP_TITLES } from '@components/builder/builder';
-import ResetModal from '@components/choose-your-vehicle/reset-modal';
+import ResetModal from '@components/builder/reset-modal';
 
 const VehicleContext = createContext();
 
