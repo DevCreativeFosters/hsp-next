@@ -19,6 +19,7 @@ import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
 import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
+import ProductHero from '@components/product-hero';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
@@ -37,6 +38,12 @@ export default async function Product({ params, searchParams }) {
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
+  );
+  const categoryData = await getMainProductCategory(slug);
+  const featuredImage = mainCategoryDetails?.featuredImage?.node;
+  const blocks = await getMainProductCategoryBlocks(slug);
+  const categoryContentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
+    renderBlock(block, makes, [], params),
   );
 
   let modelName;
@@ -100,11 +107,40 @@ export default async function Product({ params, searchParams }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
+  const showNotCompatible = false;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
     return (
       <Layout title="Product">
-        <NotCompatible slug={slug} />
+        <Container>
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsProduct
+              categories={categories}
+              currentProduct={{
+                mainCategory: {
+                  label: mainCategory?.name,
+                  value: slug,
+                },
+              }}
+            />
+          </div>
+          <ProductHero
+            description={categoryData?.description}
+            features={{
+              content: mainCategoryDetails?.features,
+            }}
+            image={featuredImage}
+            title={categoryData?.name}
+            warranty={{
+              content: mainCategoryDetails?.warranty.warrantyDescription,
+              years: mainCategoryDetails?.warranty.warrantyTimePeriod,
+            }}
+          />
+          <NotCompatible slug={slug} />
+        </Container>
+        {categoryContentBlocks?.map((contentBlock, index) => (
+          <Fragment key={index}>{contentBlock}</Fragment>
+        ))}
       </Layout>
     );
   }
@@ -144,6 +180,7 @@ export default async function Product({ params, searchParams }) {
           <BreadcrumbsProduct
             categories={categories}
             currentProduct={currentProduct}
+            showNotCompatible={showNotCompatible}
           />
         </div>
         <PageClientSidePartial

@@ -14,8 +14,6 @@ export default function NotCompatible({ slug }) {
   const router = useRouter();
   const { productNotCompatible, setProductNotCompatible } = useVehicleContext();
 
-  console.log(productNotCompatible);
-
   useEffect(() => {
     if (setProductNotCompatible === undefined) {
       return;
@@ -29,12 +27,18 @@ export default function NotCompatible({ slug }) {
       return;
     }
 
-    router.replace(`/${slug}`);
+    const path = `/${slug}`;
+
+    window.history.replaceState(null, '', path);
   }, [productNotCompatible, router, slug]);
 
   return (
-    <div className={styles.container}>
-      <Loading color="white" />
-    </div>
+    <>
+      {!productNotCompatible && (
+        <div className={styles.container}>
+          <Loading color="white" />
+        </div>
+      )}
+    </>
   );
 }

@@ -26,7 +26,7 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items, product }) {
+function Breadcrumbs({ items, product, showNotCompatible }) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const itemsNormalized = items
     .map(item => ({
@@ -59,8 +59,6 @@ function Breadcrumbs({ items, product }) {
       : null;
 
   const { productNotCompatible } = useVehicleContext();
-
-  console.log(productNotCompatible);
 
   return (
     <>
