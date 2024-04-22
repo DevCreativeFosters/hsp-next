@@ -48,7 +48,6 @@ export default function Builder({
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
-  const [isCover, setIsCover] = useState(false);
   const [productToAdd, setProductToAdd] = useState(null);
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
@@ -157,22 +156,14 @@ export default function Builder({
       return;
     }
 
-    const products = [...selectedProducts];
-
-    if (isCover) {
-      products.unshift(productToAdd);
-    } else {
-      products.push(productToAdd);
-    }
+    const products = [...selectedProducts, productToAdd];
 
     setSelectedProducts(products);
     setProductToAdd(null);
-  }, [isCover, productToAdd, selectedProducts, showClashModal]);
+  }, [productToAdd, selectedProducts, showClashModal]);
 
   const addProduct = useCallback(
     product => {
-      setIsCover(covers.some(cover => cover.group === product.productSlug));
-
       const incompatibleFactoryOptions = selectedFactoryOptions
         .filter(
           option => !product.compatibleFactoryOptions.includes(option.slug),
