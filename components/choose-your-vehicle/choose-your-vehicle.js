@@ -12,6 +12,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
+import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
 import Button from '@components/button/button';
@@ -106,7 +107,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
           <button
             className={styles.resetButton}
             onClick={() => {
-              if (selectedProducts.length && pathname === '/ute-builder') {
+              if (selectedProducts.length && pathname === routes.uteBuilder) {
                 setShowModal(true);
               } else {
                 handleVehicleReset();
