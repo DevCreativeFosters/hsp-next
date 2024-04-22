@@ -11,10 +11,10 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+import routes from '@lib/routes';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
-import ResetModal from '@components/choose-your-vehicle/reset-modal';
 import Container from '@components/container/container';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
@@ -49,7 +49,6 @@ export default function Builder({
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
-  const [showResetModal, setShowResetModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [isCover, setIsCover] = useState(false);
   const [productToAdd, setProductToAdd] = useState(null);
@@ -65,6 +64,7 @@ export default function Builder({
     selectedCover,
     selectedFactoryOptions,
     selectedProducts,
+    setGoToLink,
     setSelectedCover,
     setSelectedFactoryOptions,
     setSelectedProducts,
@@ -262,7 +262,7 @@ export default function Builder({
       const isCover = covers.some(cover => cover.group === product.productSlug);
 
       if (isCover) {
-        setShowResetModal(true);
+        setGoToLink(routes.uteBuilder);
 
         return;
       }
@@ -352,16 +352,6 @@ export default function Builder({
     setShowClashModal(false);
   };
 
-  const handleResetModalClose = () => {
-    setShowResetModal(false);
-  };
-
-  const handleResetModalAccept = () => {
-    setSelectedProducts([]);
-    setDisabledProducts([]);
-    setShowResetModal(false);
-  };
-
   return (
     <>
       {showClashModal && (
@@ -370,12 +360,6 @@ export default function Builder({
           incompatibleFactoryOptions={incompatibleFactoryOptions}
           onAccept={handleClashModalAccept}
           onClose={handleClashModalClose}
-        />
-      )}
-      {showResetModal && (
-        <ResetModal
-          onAccept={handleResetModalAccept}
-          onClose={handleResetModalClose}
         />
       )}
       <div className={styles.builder}>
