@@ -125,7 +125,10 @@ export default function EnquiryModal({
                         {
                           inputName: 'products',
                           value: selectedProducts
-                            ?.map(({ variantName }) => variantName)
+                            ?.map(
+                              ({ productName, variantName }) =>
+                                `${productName}: ${variantName}`,
+                            )
                             .join(', '),
                         },
                       ]}
