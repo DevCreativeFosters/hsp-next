@@ -22,7 +22,7 @@ import PageContainer from '@components/page-container/page-container';
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
-export default async function CategoryPage({ params, searchParams }) {
+export default async function Product({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
