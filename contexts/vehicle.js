@@ -2,8 +2,9 @@
 
 import { createContext, useCallback, useContext, useState } from 'react';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
@@ -14,7 +15,7 @@ const VehicleContext = createContext();
 
 export const VehicleProvider = ({ children }) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const params = useParams();
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
@@ -34,7 +35,7 @@ export const VehicleProvider = ({ children }) => {
     setFinalSelection(vehicle);
   };
 
-  const handleVehicleReset = useCallback(() => {
+  const resetVehicleSelection = () => {
     localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
     deleteCookie(LOCAL_STORAGE_VEHICLE);
     setMaker(null);
@@ -44,12 +45,31 @@ export const VehicleProvider = ({ children }) => {
     setSelectedFactoryOptions(null);
     setStepNumber(0);
     setStepTitle('');
+  };
 
-    const slug = pathname.split('/products/')[1]?.split('/')[0];
-    if (slug) {
-      router.push(routes.product(slug));
+  const handleVehicleReset = useCallback(() => {
+    const { makeSlug, modelSlug, slug } = params;
+
+    if (!makeSlug && !modelSlug && !slug) {
+      resetVehicleSelection();
+
+      return;
     }
-  }, [pathname, router]);
+
+    const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
+    products
+      .then(products => {
+        console.log('Products:', products);
+        resetVehicleSelection();
+
+        if (products.length && slug && typeof slug === 'string') {
+          router.push(`/${slug}`);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, [params, router]);
 
   const handleSave = useCallback(
     (params, reload) => {

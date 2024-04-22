@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import clsx from 'clsx';
 import AnimateHeight from 'react-animate-height';
 
@@ -13,6 +15,7 @@ import { useVehicleSelection } from '@lib/use-vehicle-select';
 
 import Button from '@components/button/button';
 import Select from '@components/form/select';
+import Loading from '@components/loading/loading';
 
 import CancelIcon from '@assets/icons/cancel.svg';
 import CloseIcon from '@assets/icons/close.svg';
@@ -40,6 +43,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
 
@@ -51,80 +56,103 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <ExpandMoreNeutralIcon />
   );
 
+  useEffect(() => {
+    if (!maker && !model) {
+      setIsLoading(false);
+    }
+  }, [maker, model]);
+
   return (
-    <div className={styles.container}>
-      <div className={styles.containerTrigger}>
-        <Button
-          className={clsx(styles.chooseButton, {
-            [styles.opened]: dropdownOpened,
-            [styles.nonEmpty]: finalSelection,
-          })}
-          onClick={() => setDropdownOpened(!dropdownOpened)}
-          variant="primary"
-        >
-          {finalSelection ? (
-            <span className={styles.fullName}>
-              {finalSelection.makerName}{' '}
-              <span className={styles.modelAndVariantText}>
-                {finalSelection.modelName}
-              </span>
-            </span>
-          ) : isMobile ? (
-            <span className={styles.placeholder}>
-              {constants.SELECT_LABELS.GENERIC_FULL}
-            </span>
-          ) : (
-            constants.SELECT_LABELS.GENERIC_SHORT
-          )}
-          <div className={styles.iconWrapper}>{Icon}</div>
-        </Button>
+    <>
+      {isLoading ? (
+        <>
+          <Loading color="white" />
+        </>
+      ) : (
+        <>
+          <span className={styles.vehicleText}>My vehicle:</span>
+          <div className={styles.container}>
+            <div className={styles.containerTrigger}>
+              <Button
+                className={clsx(styles.chooseButton, {
+                  [styles.opened]: dropdownOpened,
+                  [styles.nonEmpty]: finalSelection,
+                })}
+                onClick={() => setDropdownOpened(!dropdownOpened)}
+                variant="primary"
+              >
+                {finalSelection ? (
+                  <span className={styles.fullName}>
+                    {finalSelection.makerName}{' '}
+                    <span className={styles.modelAndVariantText}>
+                      {finalSelection.modelName}
+                    </span>
+                  </span>
+                ) : isMobile ? (
+                  <span className={styles.placeholder}>
+                    {constants.SELECT_LABELS.GENERIC_FULL}
+                  </span>
+                ) : (
+                  constants.SELECT_LABELS.GENERIC_SHORT
+                )}
+                <div className={styles.iconWrapper}>{Icon}</div>
+              </Button>
 
-        <div className={styles.resetButtonContainer}>
-          <button className={styles.resetButton} onClick={handleVehicleReset}>
-            <CancelIcon />
-          </button>
-        </div>
-      </div>
+              <div className={styles.resetButtonContainer}>
+                <button
+                  className={styles.resetButton}
+                  onClick={() => {
+                    handleVehicleReset();
+                    setIsLoading(true);
+                  }}
+                >
+                  <CancelIcon />
+                </button>
+              </div>
+            </div>
 
-      <AnimateHeight
-        className={styles.containerAnimateHeight}
-        contentClassName={clsx(styles.containerInner, {
-          [styles.opened]: dropdownOpened,
-        })}
-        duration={300}
-        height={dropdownOpened ? 'auto' : 0}
-      >
-        <div className={styles.dropdownOuter}>
-          <div className={styles.dropdownInner}>
-            <Select
-              dropdownInDocumentFlow
-              onChange={handleMakerChange}
-              options={makerSelectOptions}
-              placeholder={constants.SELECT_LABELS.MAKER}
-              size="large"
-              value={getValueOrSlug(maker) || null}
-            />
-            <Select
-              disabled={!modelSelectOptions.length}
-              dropdownInDocumentFlow
-              onChange={handleModelChange}
-              options={modelSelectOptions}
-              placeholder={constants.SELECT_LABELS.MODEL}
-              size="large"
-              value={getValueOrSlug(model) || null}
-            />
-            <Button
-              className={styles.save}
-              disabled={!maker && !model}
-              onClick={handleSave}
-              rightIcon="save"
-              variant="primary"
+            <AnimateHeight
+              className={styles.containerAnimateHeight}
+              contentClassName={clsx(styles.containerInner, {
+                [styles.opened]: dropdownOpened,
+              })}
+              duration={300}
+              height={dropdownOpened ? 'auto' : 0}
             >
-              Save
-            </Button>
+              <div className={styles.dropdownOuter}>
+                <div className={styles.dropdownInner}>
+                  <Select
+                    dropdownInDocumentFlow
+                    onChange={handleMakerChange}
+                    options={makerSelectOptions}
+                    placeholder={constants.SELECT_LABELS.MAKER}
+                    size="large"
+                    value={getValueOrSlug(maker) || null}
+                  />
+                  <Select
+                    disabled={!modelSelectOptions.length}
+                    dropdownInDocumentFlow
+                    onChange={handleModelChange}
+                    options={modelSelectOptions}
+                    placeholder={constants.SELECT_LABELS.MODEL}
+                    size="large"
+                    value={getValueOrSlug(model) || null}
+                  />
+                  <Button
+                    className={styles.save}
+                    disabled={!maker && !model}
+                    onClick={handleSave}
+                    rightIcon="save"
+                    variant="primary"
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </AnimateHeight>
           </div>
-        </div>
-      </AnimateHeight>
-    </div>
+        </>
+      )}
+    </>
   );
 }

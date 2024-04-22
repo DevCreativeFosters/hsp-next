@@ -140,7 +140,6 @@ export default function Header({
             <MobileMenu isMenuActive={isMobileMenuActive} items={mobileMenu} />
 
             <div className={styles.vehicleSelection}>
-              <span className={styles.vehicleText}>My vehicle:</span>
               <ChooseYourVehicle makes={makes} />
             </div>
           </div>
