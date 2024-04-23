@@ -27,3 +27,13 @@ export default async function HspTVPost({ params }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  const posts = await getRecentHspTvPosts(9999);
+
+  return (
+    posts.map(post => ({
+      slug: `${post.slug}`,
+    })) || []
+  );
+}
