@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 
 import { useVehicleContext } from '@contexts/vehicle';
@@ -9,8 +12,10 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
+import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
+import ResetModal from '@components/builder/reset-modal';
 import Button from '@components/button/button';
 import Select from '@components/form/select';
 
@@ -22,6 +27,8 @@ import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
 import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
+  const pathname = usePathname();
+
   const {
     dropdownOpened,
     finalSelection,
@@ -29,7 +36,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     handleVehicleReset,
     maker,
     model,
+    selectedProducts,
     setDropdownOpened,
+    setSelectedProducts,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -39,6 +48,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
+
+  const [showModal, setShowModal] = useState(false);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
@@ -51,8 +62,21 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <ExpandMoreNeutralIcon />
   );
 
+  const handleOnAccept = () => {
+    handleVehicleReset();
+    setSelectedProducts([]);
+    setShowModal(false);
+  };
+
+  const handleOnClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className={styles.container}>
+      {showModal && (
+        <ResetModal onAccept={handleOnAccept} onClose={handleOnClose} />
+      )}
       <div className={styles.containerTrigger}>
         <Button
           className={clsx(styles.chooseButton, {
@@ -80,12 +104,20 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         </Button>
 
         <div className={styles.resetButtonContainer}>
-          <button className={styles.resetButton} onClick={handleVehicleReset}>
+          <button
+            className={styles.resetButton}
+            onClick={() => {
+              if (selectedProducts.length && pathname === routes.uteBuilder) {
+                setShowModal(true);
+              } else {
+                handleVehicleReset();
+              }
+            }}
+          >
             <CancelIcon />
           </button>
         </div>
       </div>
-
       <AnimateHeight
         className={styles.containerAnimateHeight}
         contentClassName={clsx(styles.containerInner, {

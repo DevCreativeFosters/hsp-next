@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 
+import clsx from 'clsx';
+
 import Button from '@components/button/button';
 
 import styles from './modal.module.scss';
@@ -13,6 +15,7 @@ export const MODAL_PORTAL_ID = 'modal-portal';
 export default function Modal({
   children,
   container: customContainer,
+  darkBackdrop = false,
   isVisible,
   maxWidth,
   onClose = () => {},
@@ -38,7 +41,11 @@ export default function Modal({
   }
 
   return createPortal(
-    <div className={styles.backdrop}>
+    <div
+      className={clsx(styles.backdrop, {
+        [styles.darkBackdrop]: darkBackdrop,
+      })}
+    >
       <div
         className={styles.modal}
         style={

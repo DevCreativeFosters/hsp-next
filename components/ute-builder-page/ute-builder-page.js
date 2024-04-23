@@ -67,10 +67,6 @@ export default function UteBuilderPage({
     setSelectedFactoryOptions,
   ]);
 
-  // const variantList = useMemo(() => {
-  //   return normalizeUteBuilderProducts(productVariants);
-  // }, [productVariants]);
-
   return (
     <Builder
       allLocations={allLocations}

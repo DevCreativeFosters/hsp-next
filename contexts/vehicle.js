@@ -1,6 +1,13 @@
 'use client';
 
-import { createContext, useCallback, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -9,6 +16,7 @@ import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
 import { STEP_TITLES } from '@components/builder/builder';
+import ResetModal from '@components/builder/reset-modal';
 
 const VehicleContext = createContext();
 
@@ -22,6 +30,7 @@ export const VehicleProvider = ({ children }) => {
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
   const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
@@ -29,6 +38,45 @@ export const VehicleProvider = ({ children }) => {
     model: '',
     selectedFactoryOptions: [],
   });
+  const [goToLink, setGoToLink] = useState('');
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const { current: wrapper } = wrapperRef;
+
+    function handleClickEvent(event) {
+      if (pathname === routes.uteBuilder && selectedProducts.length > 0) {
+        event.preventDefault();
+        document.body.classList.add('hideProgressBar');
+
+        setGoToLink(event.currentTarget.href);
+      }
+    }
+
+    wrapper?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', handleClickEvent);
+    });
+
+    return () => {
+      wrapper?.querySelectorAll('a').forEach(link => {
+        link.removeEventListener('click', handleClickEvent);
+      });
+    };
+  }, [goToLink, pathname, selectedProducts, wrapperRef]);
+
+  const handleResetModalClose = () => {
+    setGoToLink('');
+  };
+
+  const handleResetModalAccept = () => {
+    document.body.classList.remove('hideProgressBar');
+    router.push(goToLink);
+
+    if (goToLink === routes.uteBuilder) {
+      setSelectedProducts([]);
+      setGoToLink('');
+    }
+  };
 
   const setVehicleSelection = vehicle => {
     setFinalSelection(vehicle);
@@ -109,6 +157,7 @@ export const VehicleProvider = ({ children }) => {
       value={{
         dropdownOpened,
         finalSelection,
+        goToLink,
         handleSave,
         handleVehicleReset,
         maker,
@@ -116,12 +165,15 @@ export const VehicleProvider = ({ children }) => {
         savedVehicleGlobal,
         selectedCover,
         selectedFactoryOptions,
+        selectedProducts,
         setDropdownOpened,
+        setGoToLink,
         setMaker,
         setModel,
         setSavedVehicleGlobal,
         setSelectedCover,
         setSelectedFactoryOptions,
+        setSelectedProducts,
         setStepNumber,
         setStepTitle,
         setVariant,
@@ -131,7 +183,13 @@ export const VehicleProvider = ({ children }) => {
         variant,
       }}
     >
-      {children}
+      {goToLink && (
+        <ResetModal
+          onAccept={handleResetModalAccept}
+          onClose={handleResetModalClose}
+        />
+      )}
+      <div ref={wrapperRef}>{children}</div>
     </VehicleContext.Provider>
   );
 };

@@ -1,19 +1,13 @@
 import clsx from 'clsx';
 
-import Button from '@components/button/button';
-import Modal from '@components/modal/modal';
-
 import styles from './clash-modal.module.scss';
+import UTEBuilderModal from './modal';
 
 export default function ClashModal({
-  currentProduct,
   incompatibleCovers,
   incompatibleFactoryOptions,
-  selectedFactoryOptions,
-  selectedProducts,
-  setProductToAdd,
-  setSelectedFactoryOptions,
-  setShowModal,
+  onAccept,
+  onClose,
 }) {
   let title = 'Factory Options Clash';
 
@@ -30,12 +24,11 @@ export default function ClashModal({
   }
 
   return (
-    <Modal
+    <UTEBuilderModal
       isVisible={true}
       maxWidth={900}
-      onClose={() => {
-        setShowModal(false);
-      }}
+      onAccept={onAccept}
+      onClose={onClose}
       title={title}
     >
       <>
@@ -71,38 +64,7 @@ export default function ClashModal({
             </ol>
           </>
         )}
-        <p>Do you want to proceed?</p>
-        <div className={styles.buttons}>
-          <Button
-            onClick={() => {
-              setShowModal(false);
-            }}
-            size={'large'}
-            variant={'secondary'}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              setSelectedFactoryOptions(
-                selectedFactoryOptions.filter(
-                  option => !incompatibleFactoryOptions.includes(option.value),
-                ),
-              );
-
-              if (incompatibleCovers.length > 0) {
-                selectedProducts.shift();
-              }
-
-              setProductToAdd(currentProduct);
-              setShowModal(false);
-            }}
-            size={'large'}
-          >
-            Accept
-          </Button>
-        </div>
       </>
-    </Modal>
+    </UTEBuilderModal>
   );
 }

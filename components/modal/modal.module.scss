@@ -13,6 +13,12 @@
   @include bp(medium) {
     background-color: var(--color-black-60);
   }
+
+  &.darkBackdrop {
+    @include bp(medium) {
+      background-color: var(--color-black-90);
+    }
+  }
 }
 
 .modal {

@@ -61,7 +61,7 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
       lang="en"
     >
-      <body className="" data-rh="class">
+      <body data-rh="class">
         <ReCaptchaProvider useEnterprise>
           <NextTopLoader color="#ed2935ff" />
           {children}
