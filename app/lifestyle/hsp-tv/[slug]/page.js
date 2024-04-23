@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
 
@@ -17,13 +19,15 @@ export default async function HspTVPost({ params }) {
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
-      <HspTvPost
-        content={content}
-        customFields={customFields}
-        relatedPosts={relatedPosts}
-        slug={slug}
-        title={title}
-      />
+      <Suspense fallback={null}>
+        <HspTvPost
+          content={content}
+          customFields={customFields}
+          relatedPosts={relatedPosts}
+          slug={slug}
+          title={title}
+        />
+      </Suspense>
     </Layout>
   );
 }
