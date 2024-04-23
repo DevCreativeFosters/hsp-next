@@ -160,7 +160,7 @@ export default function StoreTile({
                     <Image
                       alt={altText}
                       height={40}
-                      key={idx + altText}
+                      key={idx}
                       src={imageUrl}
                       width={40}
                     />
