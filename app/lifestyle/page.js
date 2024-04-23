@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
@@ -16,17 +16,19 @@ export default async function LifestylePage() {
 
   return (
     <Layout title="HSP 4x4 - Lifestyle">
-      <FeaturedPost
-        date={featuredPost?.date}
-        excerpt={featuredPost?.hspTvPostCustomFields?.description}
-        postType={POST_TYPES.TV}
-        slug={featuredPost?.slug}
-        tags={featuredPost?.tags}
-        title={featuredPost?.title}
-        uri={featuredPost?.uri}
-        video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
-        youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
-      />
+      <Suspense fallback={null}>
+        <FeaturedPost
+          date={featuredPost?.date}
+          excerpt={featuredPost?.hspTvPostCustomFields?.description}
+          postType={POST_TYPES.TV}
+          slug={featuredPost?.slug}
+          tags={featuredPost?.tags}
+          title={featuredPost?.title}
+          uri={featuredPost?.uri}
+          video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
+          youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
+        />
+      </Suspense>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}
