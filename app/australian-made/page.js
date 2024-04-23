@@ -3,11 +3,12 @@ import { Fragment } from 'react';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
+import routes from '@lib/routes';
 
 import Layout from '@components/layout/layout';
 
 export async function generateMetadata() {
-  const data = await getSeoData('australian-made');
+  const data = await getSeoData(routes.australianMade);
 
   return {
     ...data,

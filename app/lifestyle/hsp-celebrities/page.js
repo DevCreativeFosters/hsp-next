@@ -11,7 +11,7 @@ import Layout from '@components/layout/layout';
 import PageClient from './page-client';
 
 export async function generateMetadata() {
-  const data = await getSeoData('/lifestyle/hsp-celebrities');
+  const data = await getSeoData(routes.lifestyleCelebrities);
 
   return {
     ...data,

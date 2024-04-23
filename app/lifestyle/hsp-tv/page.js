@@ -16,7 +16,7 @@ import styles from '../page.module.scss';
 const POSTS_PER_PAGE = 12;
 
 export async function generateMetadata() {
-  const data = await getSeoData('/lifestyle/hsp-tv');
+  const data = await getSeoData(routes.lifestyleTv);
 
   return {
     ...data,

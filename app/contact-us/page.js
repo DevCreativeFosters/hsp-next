@@ -6,6 +6,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
+import routes from '@lib/routes';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -19,7 +20,7 @@ import Sidebar from '@components/sidebar/sidebar';
 import Logo from '@assets/images/logo.svg';
 
 export async function generateMetadata() {
-  const data = await getSeoData('contact-us');
+  const data = await getSeoData(routes.contact);
 
   return {
     ...data,
