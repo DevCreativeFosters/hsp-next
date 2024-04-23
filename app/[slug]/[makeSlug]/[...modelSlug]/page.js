@@ -19,7 +19,7 @@ import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
 import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
-import ProductHero from '@components/product-hero';
+import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
@@ -38,12 +38,6 @@ export default async function Product({ params, searchParams }) {
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
-  );
-  const categoryData = await getMainProductCategory(slug);
-  const featuredImage = mainCategoryDetails?.featuredImage?.node;
-  const blocks = await getMainProductCategoryBlocks(slug);
-  const categoryContentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, makes, [], params),
   );
 
   let modelName;
@@ -111,37 +105,9 @@ export default async function Product({ params, searchParams }) {
 
   if (!firstMatchedProduct || !mainCategory || !make) {
     return (
-      <Layout title="Product">
-        <Container>
-          <div className={styles.breadcrumbs}>
-            <BreadcrumbsProduct
-              categories={categories}
-              currentProduct={{
-                mainCategory: {
-                  label: mainCategory?.name,
-                  value: slug,
-                },
-              }}
-            />
-          </div>
-          <ProductHero
-            description={categoryData?.description}
-            features={{
-              content: mainCategoryDetails?.features,
-            }}
-            image={featuredImage}
-            title={categoryData?.name}
-            warranty={{
-              content: mainCategoryDetails?.warranty.warrantyDescription,
-              years: mainCategoryDetails?.warranty.warrantyTimePeriod,
-            }}
-          />
-          <NotCompatible slug={slug} />
-        </Container>
-        {categoryContentBlocks?.map((contentBlock, index) => (
-          <Fragment key={index}>{contentBlock}</Fragment>
-        ))}
-      </Layout>
+      <ProductHeroPage params={params} slug={slug}>
+        <NotCompatible slug={slug} />
+      </ProductHeroPage>
     );
   }
 

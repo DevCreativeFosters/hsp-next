@@ -18,7 +18,7 @@ import ProductHero from '@components/product-hero';
 
 import styles from './product-hero-page.module.scss';
 
-export default async function ProductHeroPage({ params, slug }) {
+export default async function ProductHeroPage({ children, params, slug }) {
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
@@ -68,6 +68,7 @@ export default async function ProductHeroPage({ params, slug }) {
             years: mainCategoryDetails?.warranty.warrantyTimePeriod,
           }}
         />
+        {children}
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
