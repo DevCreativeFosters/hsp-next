@@ -327,6 +327,7 @@ export default function Builder({
           <div className={styles.top} ref={topRef}>
             <Sidebar
               allLocations={allLocations}
+              globalOptions={globalOptions}
               isMobile={isMobile}
               openSection={openSection}
               removeProduct={removeProduct}

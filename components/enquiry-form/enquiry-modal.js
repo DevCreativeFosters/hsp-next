@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useVehicleContext } from '@contexts/vehicle';
+
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 import routes from '@lib/routes';
@@ -34,6 +36,16 @@ export default function EnquiryModal({
   const [formIsSent, setFormIsSent] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
+
+  const { selectedFactoryOptions } = useVehicleContext();
+  const factoryOptions = selectedFactoryOptions
+    .map(option => option.value)
+    .join(', ');
+  const products = selectedProducts
+    ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
+    .join(', ');
+
+  const allSelectedProducts = `Product: ${products} ::: Factory Options: ${factoryOptions}`;
 
   const handleSubmitClick = () => {
     if (formRef.current) {
@@ -113,29 +125,31 @@ export default function EnquiryModal({
                   [styles.onSuccess]: formIsSent,
                 })}
               >
-                <GravityFormWrapper
-                  attributes={{ id: enquiryFormId }}
-                  hiddenInputs={[
-                    {
-                      inputName: 'storeId',
-                      value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
-                    },
-                    {
-                      inputName: 'products',
-                      value: selectedProducts
-                        ?.map(({ variantName }) => variantName)
-                        .join(','), // TODO: Maybe product IDs? Depends on needs
-                    },
-                  ]}
-                  isDirty={isFormDirty}
-                  onError={onError}
-                  onLoad={onLoad}
-                  onReset={onReset}
-                  onSubmit={onSubmit}
-                  onSuccess={onSuccess}
-                  ref={formRef}
-                  submitButton={false}
-                />
+                <>
+                  {enquiryFormId && (
+                    <GravityFormWrapper
+                      attributes={{ id: enquiryFormId }}
+                      hiddenInputs={[
+                        {
+                          inputName: 'storeId',
+                          value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
+                        },
+                        {
+                          inputName: 'products',
+                          value: allSelectedProducts,
+                        },
+                      ]}
+                      isDirty={isFormDirty}
+                      onError={onError}
+                      onLoad={onLoad}
+                      onReset={onReset}
+                      onSubmit={onSubmit}
+                      onSuccess={onSuccess}
+                      ref={formRef}
+                      submitButton={false}
+                    />
+                  )}
+                </>
               </div>
 
               {!formIsSent && (
