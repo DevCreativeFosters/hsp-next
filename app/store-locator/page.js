@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getStores } from '@lib/api/get-stores';
@@ -30,29 +32,31 @@ export default async function StoreLocatorPage() {
 
   return (
     <Layout reserveSpaceForVehicleSelection withMap>
-      <FullscreenCollapse>
-        <div className={styles.breadcrumbs}>
-          <Breadcrumbs
-            items={[
-              {
-                label: 'Support',
-                url: routes.support(),
-              },
-              {},
-            ]}
-            withContainer={true}
-          />
-        </div>
-        <StoreLocatorHero />
-      </FullscreenCollapse>
+      <Suspense fallback={null}>
+        <FullscreenCollapse>
+          <div className={styles.breadcrumbs}>
+            <Breadcrumbs
+              items={[
+                {
+                  label: 'Support',
+                  url: routes.support(),
+                },
+                {},
+              ]}
+              withContainer={true}
+            />
+          </div>
+          <StoreLocatorHero />
+        </FullscreenCollapse>
 
-      <StoreLocatorProvider>
-        <StoreLocatorSearch allLocations={allStores} />
-        <StoreLocatorResultsAndMap allLocations={allStores} />
-      </StoreLocatorProvider>
-      <FullscreenCollapse>
-        <InformationBox hideOn="desktop" />
-      </FullscreenCollapse>
+        <StoreLocatorProvider>
+          <StoreLocatorSearch allLocations={allStores} />
+          <StoreLocatorResultsAndMap allLocations={allStores} />
+        </StoreLocatorProvider>
+        <FullscreenCollapse>
+          <InformationBox hideOn="desktop" />
+        </FullscreenCollapse>
+      </Suspense>
     </Layout>
   );
 }
