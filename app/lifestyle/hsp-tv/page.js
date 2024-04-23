@@ -1,5 +1,6 @@
 import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -14,10 +15,13 @@ import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
-export const metadata = {
-  title: 'HSP 4x4 - HSP TV',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData('/lifestyle/hsp-tv');
+
+  return {
+    ...data,
+  };
+}
 
 export default async function HspTVPage({ searchParams }) {
   const currentPage = Number(searchParams.page) || 1;
