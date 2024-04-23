@@ -3,6 +3,7 @@ import { Fragment, Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
+import getAllPagesSlugs from '@lib/api/get-all-pages-slugs';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
@@ -119,9 +120,14 @@ export async function generateStaticParams() {
     excludeChildren,
   );
 
-  return (
+  const pages = await getAllPagesSlugs();
+
+  let slugs =
     mainProductCategories.flatMap(category =>
       category.children.nodes.map(child => ({ slug: `${child.slug}` })),
-    ) || []
-  );
+    ) || [];
+
+  slugs = slugs.concat(pages.map(page => ({ slug: `${page.slug}` })));
+
+  return slugs;
 }
