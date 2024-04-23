@@ -28,9 +28,10 @@ export default function CustomSelect({
   const [isOpen, setIsOpen] = useState(false);
   const [localValue, setLocalValue] = useState(selectedValue);
   const selectedOption = options.find(({ value }) => {
-    const comparedValue =
-      selectedValue === undefined ? localValue : selectedValue;
-    return value === comparedValue;
+    const comparedValue = selectedValue || localValue;
+    const isArray = Array.isArray(comparedValue);
+
+    return isArray ? comparedValue.includes(value) : value === comparedValue;
   });
 
   const onOptionSelect = useCallback(
