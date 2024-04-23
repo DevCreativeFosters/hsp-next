@@ -1,6 +1,7 @@
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getStores } from '@lib/api/get-stores';
+import { getSeoData } from '@lib/api/getSeoData';
 import routes from '@lib/routes';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
@@ -13,10 +14,13 @@ import StoreLocatorSearch from '@components/store-locator-search/store-locator-s
 
 import styles from './page.module.scss';
 
-export const metadata = {
-  title: 'HSP 4x4 - Store locator',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.storeLocator);
+
+  return {
+    ...data,
+  };
+}
 
 export const viewport = {
   height: 'device-height',
