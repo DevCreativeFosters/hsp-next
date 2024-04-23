@@ -26,7 +26,7 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items, product, showNotCompatible }) {
+function Breadcrumbs({ items, product }) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const itemsNormalized = items
     .map(item => ({
