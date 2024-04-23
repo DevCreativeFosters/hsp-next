@@ -24,17 +24,15 @@ export default function RelatedPosts({ posts, type = 'hsp_tv', url }) {
       )}
       <ul className={styles.list}>
         {posts.map(post => {
-          const parts = post.uri.split('/');
-          const slug = parts[parts.length - 2];
           return (
-            <li key={slug}>
+            <li key={post.id}>
               <Link
                 className={styles.link}
                 href={
                   type === 'blog'
-                    ? routes.blog(slug)
+                    ? routes.blog(post.slug)
                     : type === 'hsp-tv'
-                      ? routes.tv(slug)
+                      ? routes.tv(post.slug)
                       : '#'
                 }
               >
