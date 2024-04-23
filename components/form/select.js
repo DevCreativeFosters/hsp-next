@@ -195,7 +195,7 @@ export default function Select({
           name={props.name ? `fake_${props.name}` : null}
           onChange={() => {}}
           required={required}
-          value={value || multiple ? [] : ''}
+          value={multiple ? [] : value || ''}
         >
           {value ? <option>{value}</option> : null}
         </select>
