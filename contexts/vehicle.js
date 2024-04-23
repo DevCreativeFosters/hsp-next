@@ -60,7 +60,6 @@ export const VehicleProvider = ({ children }) => {
     const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
     products
       .then(products => {
-        console.log('Products:', products);
         resetVehicleSelection();
 
         if (products.length && slug && typeof slug === 'string') {
