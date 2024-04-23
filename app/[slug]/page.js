@@ -1,10 +1,11 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getPageData } from '@lib/api/get-page-data';
@@ -79,29 +80,48 @@ export default async function DynamicPage({ params }) {
   return (
     <Layout title="Product">
       <Container>
-        <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct
-            categories={categories}
-            currentProduct={currentProduct}
-            mainCategory={true}
+        <Suspense fallback={null}>
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsProduct
+              categories={categories}
+              currentProduct={currentProduct}
+              mainCategory={true}
+            />
+          </div>
+          <ProductHero
+            description={categoryData?.description}
+            features={{
+              content: mainCategoryDetails?.features,
+            }}
+            image={featuredImage}
+            title={categoryData?.name}
+            warranty={{
+              content: mainCategoryDetails?.warranty.warrantyDescription,
+              years: mainCategoryDetails?.warranty.warrantyTimePeriod,
+            }}
           />
-        </div>
-        <ProductHero
-          description={categoryData?.description}
-          features={{
-            content: mainCategoryDetails?.features,
-          }}
-          image={featuredImage}
-          title={categoryData?.name}
-          warranty={{
-            content: mainCategoryDetails?.warranty.warrantyDescription,
-            years: mainCategoryDetails?.warranty.warrantyTimePeriod,
-          }}
-        />
+        </Suspense>
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}
     </Layout>
+  );
+}
+
+export async function generateStaticParams() {
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = getExcludeTree(globalOptions);
+  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+
+  const mainProductCategories = await getMainProductCategories(
+    excludeTree,
+    excludeChildren,
+  );
+
+  return (
+    mainProductCategories.flatMap(category =>
+      category.children.nodes.map(child => ({ slug: `${child.slug}` })),
+    ) || []
   );
 }
