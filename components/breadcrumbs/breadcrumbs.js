@@ -27,6 +27,7 @@ function addSeparators(items) {
 }
 
 function Breadcrumbs({ items, product }) {
+  const { productNotCompatible, setProductNotCompatible } = useVehicleContext();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const itemsNormalized = items
     .map(item => ({
@@ -57,8 +58,6 @@ function Breadcrumbs({ items, product }) {
     : itemsLength > 1
       ? itemsNormalized[itemsLength - 2]
       : null;
-
-  const { productNotCompatible } = useVehicleContext();
 
   return (
     <>
@@ -178,7 +177,10 @@ function Breadcrumbs({ items, product }) {
                 <CustomSelect
                   disabled={item.disabled}
                   fRef={item.ref}
-                  onSelect={item.onSelectCallbackAndActivateNext}
+                  onSelect={value => {
+                    item.onSelectCallbackAndActivateNext(value);
+                    setProductNotCompatible(false);
+                  }}
                   options={item.options}
                   placeholder={item.placeholder}
                   selectedValue={item.selectedValue}
