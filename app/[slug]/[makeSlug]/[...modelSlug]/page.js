@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
@@ -11,19 +11,20 @@ import { getMake } from '@lib/api/get-make';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
-import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
+import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
+import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
-export default async function CategoryPage({ params, searchParams }) {
+export default async function Product({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
@@ -34,8 +35,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
-  const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(mainCategory?.databaseId);
   const details = make?.detailsFields.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
@@ -102,9 +101,14 @@ export default async function CategoryPage({ params, searchParams }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
+  const showNotCompatible = false;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
-    redirect(`/${slug}?compatible=false`);
+    return (
+      <ProductHeroPage params={params} slug={slug}>
+        <NotCompatible slug={slug} />
+      </ProductHeroPage>
+    );
   }
 
   if (modelSlug.length > 2) {
@@ -142,6 +146,7 @@ export default async function CategoryPage({ params, searchParams }) {
           <BreadcrumbsProduct
             categories={categories}
             currentProduct={currentProduct}
+            showNotCompatible={showNotCompatible}
           />
         </div>
         <PageClientSidePartial

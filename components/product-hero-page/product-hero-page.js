@@ -7,7 +7,6 @@ import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-m
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
-import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -16,70 +15,31 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
-import ProductNotFound from '@components/product-not-found/product-not-found';
 
-import styles from '../page.module.scss';
+import styles from './product-hero-page.module.scss';
 
-export default async function CategoryPage({ params }) {
-  const slug = params.slug;
+export default async function ProductHeroPage({ children, params, slug }) {
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
-  const blocks = await getMainProductCategoryBlocks(slug);
   const makes = await getAllMakes();
-  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, makes, [], params),
-  );
-  const makeSlug = params.makeSlug;
-  const makeData = await getMake(makeSlug);
-  const mainCategory = await getMainProductCategory(slug);
-  const details = makeData?.detailsFields.details;
+
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
   const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
-  if (!makeData && categoryData && !shouldBeExcluded) {
-    return <ProductNotFound />;
-  }
-
-  if (!makeData || !categoryData) {
+  if (!categoryData || shouldBeExcluded) {
     return notFound();
   }
 
-  const filteredData = details?.filter(
-    data => data.relatedProductCategory?.[0]?.slug === slug,
+  const blocks = await getMainProductCategoryBlocks(slug);
+  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
+    renderBlock(block, makes, [], params),
   );
-  const productHeroData = {
-    features:
-      filteredData?.length > 1
-        ? filteredData[0]?.features
-        : mainCategoryDetails?.features,
-    image:
-      filteredData?.length > 1
-        ? filteredData[0].featuredImage?.node
-        : featuredImage,
-    warrantyDescription:
-      filteredData?.length > 1
-        ? filteredData[0]?.warranty.warrantyDescription
-        : mainCategoryDetails?.warranty.warrantyDescription,
-    warrantyTimePeriod:
-      filteredData?.length > 1
-        ? filteredData[0]?.warranty.warrantyTimePeriod
-        : mainCategoryDetails?.warranty.warrantyTimePeriod,
-  };
-
   const currentProduct = {
     mainCategory: {
-      label: mainCategory.name,
+      label: categoryData.name,
       value: slug,
-    },
-    make: {
-      label: makeData.name,
-      value: makeSlug,
-    },
-    model: {
-      label: '',
-      value: '',
     },
   };
 
@@ -93,21 +53,22 @@ export default async function CategoryPage({ params }) {
           <BreadcrumbsProduct
             categories={categories}
             currentProduct={currentProduct}
+            mainCategory={true}
           />
         </div>
         <ProductHero
-          description={makeData?.description || categoryData?.description}
+          description={categoryData?.description}
           features={{
-            content: productHeroData.features,
+            content: mainCategoryDetails?.features,
           }}
-          image={productHeroData.image}
-          make={makeData.name}
+          image={featuredImage}
           title={categoryData?.name}
           warranty={{
-            content: productHeroData.warrantyDescription,
-            years: productHeroData.warrantyTimePeriod,
+            content: mainCategoryDetails?.warranty.warrantyDescription,
+            years: mainCategoryDetails?.warranty.warrantyTimePeriod,
           }}
         />
+        {children}
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
