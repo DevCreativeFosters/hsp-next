@@ -9,6 +9,9 @@
   width: 100%;
   height: 100%;
   max-width: 1320px;
+  scroll-margin-top: calc(
+    var(--header-height) + 40px + 24px
+  ); // 40px extra for occasional fixed `Choose your vehicle` button + 24px as gap
 
   p {
     line-height: 1.6;

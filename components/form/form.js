@@ -7,6 +7,7 @@ import styles from './form.module.scss';
 export default function Form({
   children,
   isDirty = false,
+  scrollRef,
   withBackground = false,
   withCustomStyle01 = false,
   withPadding = false,
@@ -21,6 +22,7 @@ export default function Form({
         'is-dirty': isDirty,
       })}
       {...props}
+      ref={scrollRef}
     >
       {children}
     </form>

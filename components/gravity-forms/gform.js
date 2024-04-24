@@ -2,6 +2,7 @@
 
 import {
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -138,12 +139,31 @@ export default function GForm({
 
   const isTitleVisible = attributes.title && form.title;
 
+  const [isConfirmationDirty, setIsConfirmationDirty] = useState(false);
+
+  const scrollRef = useRef();
+
+  useEffect(
+    function scrollOnModeChange() {
+      if (!preventConfirmation) {
+        if (isSubmitted) {
+          setIsConfirmationDirty(true);
+          scrollRef.current?.scrollIntoView(true);
+        } else if (isConfirmationDirty) {
+          scrollRef.current?.scrollIntoView(true);
+        }
+      }
+    },
+    [isConfirmationDirty, isSubmitted, preventConfirmation],
+  );
+
   return (
     <Form
       isDirty={isDirty}
       method="post"
       onChange={onChange}
       onSubmit={handleSubmit}
+      scrollRef={scrollRef}
       withBackground={attributes.withBackground}
       withCustomStyle01={attributes.withCustomStyle01}
       withPadding={attributes.withPadding}
