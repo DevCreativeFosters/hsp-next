@@ -42,7 +42,7 @@ export function HspTvPost({
             )}
           </div>
         )}
-        {customFields.videoId && customFields?.backgroundVideo && (
+        {customFields?.videoId && customFields?.backgroundVideo && (
           <VideoContainer youtubeId={customFields.videoId} />
         )}
       </div>
