@@ -163,6 +163,10 @@ export function VideoYoutube({ isActive, isModal, onClose, youtubeId }) {
     [seekIcon],
   );
 
+  if (!youtubeId) {
+    return null;
+  }
+
   return (
     <div
       className={clsx(styles.iframeOuterWrapper, {

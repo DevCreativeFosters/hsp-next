@@ -27,7 +27,7 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage({ searchParams }) {
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1;
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
   const postsResponse = await getBlogPosts(POSTS_PER_PAGE, offset);
   const posts = postsResponse?.posts.nodes || [];

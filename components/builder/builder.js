@@ -262,7 +262,14 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [covers, disabledProducts, selectedProducts, stepProducts],
+    [
+      covers,
+      disabledProducts,
+      selectedProducts,
+      setGoToLink,
+      setSelectedProducts,
+      stepProducts,
+    ],
   );
 
   const toggleProduct = useCallback(

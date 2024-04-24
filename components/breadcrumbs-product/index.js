@@ -265,9 +265,9 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
           (accumulator, category) => accumulator.concat(category.makes),
           [],
         )
-        .map(makeObj => ({
-          label: makeObj.make,
-          value: makeObj.make.toLowerCase(),
+        .map(make => ({
+          label: make.name,
+          value: make.slug,
         }))
         .filter(
           (make, index, self) =>
@@ -279,7 +279,7 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
       const modelList = categories
         .reduce((accumulator, category) => {
           const foundMake = category.makes.find(
-            make => make.make.toLowerCase() === getValueOrSlug(maker),
+            make => make.slug === getValueOrSlug(maker),
           );
           if (foundMake) {
             accumulator.push(...foundMake.models);
@@ -288,8 +288,8 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
         }, [])
         .map(modelObj => {
           return {
-            label: modelObj.label,
-            value: modelObj.value?.toLowerCase(),
+            label: modelObj.name,
+            value: modelObj.slug,
           };
         })
         .filter(

@@ -67,7 +67,7 @@ export default function ChooseYourVehicleBlock({
 
   useEffect(
     function attachIntersectionObserver() {
-      const { width, height } = windowSize;
+      const { height, width } = windowSize;
       const el = wrapperRef.current;
       const stickerEl = stickerRef.current;
       const stickerHeight = stickerEl.clientHeight;
@@ -104,7 +104,7 @@ export default function ChooseYourVehicleBlock({
         }
       };
     },
-    [windowSize.width, windowSize.height],
+    [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (
@@ -147,10 +147,10 @@ export default function ChooseYourVehicleBlock({
           )}
           <Button
             className={styles.button}
-            size="large"
             disabled={!model}
             onClick={() => handleSave(params, reload)}
             rightIcon="arrow-forward"
+            size="large"
           >
             See details
           </Button>
