@@ -127,20 +127,3 @@ export default async function CategoryPage({ params }) {
     </Layout>
   );
 }
-
-export async function generateStaticParams() {
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
-
-  const slugs = [];
-  categories.forEach(category => {
-    category.makes.forEach(make => {
-      slugs.push({
-        makeSlug: make.slug,
-        slug: category.slug,
-      });
-    });
-  });
-
-  return slugs;
-}
