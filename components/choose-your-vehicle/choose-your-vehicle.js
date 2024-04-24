@@ -131,6 +131,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                     } else {
                       handleVehicleReset();
                     }
+                    setIsLoading(true);
                   }}
                 >
                   <CancelIcon />
