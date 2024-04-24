@@ -348,6 +348,7 @@ export default function Builder({
               removeProduct={removeProduct}
               selectedProducts={selectedProducts}
               setOpenSection={setOpenSection}
+              stepNumber={stepNumber}
             />
             {stepNumber > 0 ? (
               <Preview

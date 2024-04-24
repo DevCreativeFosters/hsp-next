@@ -76,6 +76,7 @@ export default function Sidebar({
   removeProduct,
   selectedProducts,
   setOpenSection,
+  stepNumber,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
@@ -171,6 +172,9 @@ export default function Sidebar({
                   setSelectedStore(item);
                 }}
                 show={isInlineResultListVisible}
+                style={{
+                  maxHeight: stepNumber > 0 ? 150 : null,
+                }}
               />
             </>
           )}
