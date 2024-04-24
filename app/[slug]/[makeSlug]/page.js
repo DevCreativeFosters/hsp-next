@@ -1,11 +1,13 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
+import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -84,32 +86,61 @@ export default async function CategoryPage({ params }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      slugs.push({
+        makeSlug: make.slug,
+        slug: category.slug,
+      });
+    });
+  });
+
   return (
     <Layout title="Product">
       <Container>
-        <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct
-            categories={categories}
-            currentProduct={currentProduct}
+        <Suspense fallback={null}>
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsProduct
+              categories={categories}
+              currentProduct={currentProduct}
+            />
+          </div>
+          <ProductHero
+            description={makeData?.description || categoryData?.description}
+            features={{
+              content: productHeroData.features,
+            }}
+            image={productHeroData.image}
+            make={makeData.name}
+            title={categoryData?.name}
+            warranty={{
+              content: productHeroData.warrantyDescription,
+              years: productHeroData.warrantyTimePeriod,
+            }}
           />
-        </div>
-        <ProductHero
-          description={makeData?.description || categoryData?.description}
-          features={{
-            content: productHeroData.features,
-          }}
-          image={productHeroData.image}
-          make={makeData.name}
-          title={categoryData?.name}
-          warranty={{
-            content: productHeroData.warrantyDescription,
-            years: productHeroData.warrantyTimePeriod,
-          }}
-        />
+        </Suspense>
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}
     </Layout>
   );
+}
+
+export async function generateStaticParams() {
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      slugs.push({
+        makeSlug: make.slug,
+        slug: category.slug,
+      });
+    });
+  });
+
+  return slugs;
 }
