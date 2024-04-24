@@ -1,3 +1,4 @@
+import getAllPagesSlugs from '@lib/api/get-all-pages-slugs';
 import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 
