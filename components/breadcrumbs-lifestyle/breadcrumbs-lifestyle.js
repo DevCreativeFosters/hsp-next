@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
-import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
+
 import routes, { lifestyleRoutes } from '@lib/routes';
 
+import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
+
 export default function BreadcrumbsLifestyle({
-  initialContentTypeRoute,
-  exactBreadcrumb,
   className,
+  exactBreadcrumb,
+  initialContentTypeRoute,
 }) {
   const [contentTypeRoute, setContentTypeRoute] = useState(
     initialContentTypeRoute,
@@ -28,15 +31,15 @@ export default function BreadcrumbsLifestyle({
         url: contentTypeRoute,
       }
     : {
-        type: 'select',
         name: 'lifestyle',
-        strong: true,
-        selectedValue: contentTypeRoute,
         onSelect: value => {
           setContentTypeRoute(value);
           router.push(value);
         },
         options: lifestyleRoutes,
+        selectedValue: contentTypeRoute,
+        strong: true,
+        type: 'select',
       };
   const breadcrumbs = [
     lifestyleBreadcrumb,

@@ -11,4 +11,8 @@
     right: auto;
     z-index: var(--z-index-loading-spinner);
   }
+
+  .hideProgressBar & {
+    display: none;
+  }
 }

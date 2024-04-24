@@ -1,12 +1,16 @@
 'use client';
 
 import { useMemo } from 'react';
+
 import clsx from 'clsx';
+
 import { replaceShortcodes } from '@lib/replace-shortcodes';
-import DownloadLinkWrapper from '@components/download-link-wrapper/download-link-wrapper';
-import styles from './wysiwyg.module.scss';
+
 import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
+import DownloadLinkWrapper from '@components/download-link-wrapper/download-link-wrapper';
+
+import styles from './wysiwyg.module.scss';
 
 function formatTinyMCETables(htmlString) {
   // Remove inline styles from table
@@ -27,7 +31,7 @@ function formatTinyMCETables(htmlString) {
   return htmlString;
 }
 
-export default function Wysiwyg({ className, content, accordions }) {
+export default function Wysiwyg({ accordions, className, content }) {
   const parsedContent = useMemo(() => replaceShortcodes(content), [content]);
 
   return (

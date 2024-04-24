@@ -1,10 +1,21 @@
+import { Suspense } from 'react';
+
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
+import { getSeoData } from '@lib/api/getSeoData';
 
 import { BlogPost } from '@components/blog-post';
 import Layout from '@components/layout/layout';
 
 const NUMBER_OF_RELATED_POSTS = 5;
+
+export async function generateMetadata({ params }) {
+  const data = await getSeoData(`${params.slug}`);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function BlogPostPage({ params }) {
   const post = await getBlogPost(params.slug);
@@ -18,14 +29,26 @@ export default async function BlogPostPage({ params }) {
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
-      <BlogPost
-        title={title}
-        content={content}
-        excerpt={excerpt}
-        image={image}
-        slug={slug}
-        relatedPosts={relatedPosts}
-      />
+      <Suspense fallback={null}>
+        <BlogPost
+          content={content}
+          excerpt={excerpt}
+          image={image}
+          relatedPosts={relatedPosts}
+          slug={slug}
+          title={title}
+        />
+      </Suspense>
     </Layout>
+  );
+}
+
+export async function generateStaticParams() {
+  const posts = await getRecentBlogPosts(9999);
+
+  return (
+    posts.map(post => ({
+      slug: `${post.slug}`,
+    })) || []
   );
 }

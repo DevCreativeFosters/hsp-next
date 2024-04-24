@@ -1,35 +1,38 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+
 import clsx from 'clsx';
 import { decode } from 'html-entities';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { getIcon } from '@lib/icons';
+
 import styles from './button.module.scss';
 
 function ButtonWithRef(
   {
-    size = 'small',
-    variant = 'primary',
     background = 'dark',
+    children,
+    className,
     download,
     fontStyle = null,
-    leftIcon = null,
-    rightIcon = null,
-    leftIconUrl = null,
-    rightIconUrl = null,
-    toggleable,
-    shortenable,
-    isToggled = false,
-    onToggleIconClick = null,
-    isBusy,
-    href = '',
-    target = null,
-    type = 'button',
-    children,
     footer,
-    className,
+    href = '',
+    isBusy,
+    isToggled = false,
+    leftIcon = null,
+    leftIconUrl = null,
+    onToggleIconClick = null,
+    rightIcon = null,
+    rightIconUrl = null,
+    shortenable,
+    size = 'small',
+    target = null,
+    toggleable,
+    type = 'button',
+    variant = 'primary',
     ...props
   },
   ref,
@@ -71,7 +74,7 @@ function ButtonWithRef(
     <>
       {LeftIconSvg && <LeftIconSvg />}
       {leftIconUrl && (
-        <Image src={leftIconUrl} alt={''} width={20} height={20} />
+        <Image alt={''} height={20} src={leftIconUrl} width={20} />
       )}
 
       {shortenable ? (
@@ -83,7 +86,7 @@ function ButtonWithRef(
       )}
 
       {rightIconUrl && (
-        <Image src={rightIconUrl} alt={''} width={20} height={20} />
+        <Image alt={''} height={20} src={rightIconUrl} width={20} />
       )}
       {RightIconSvg && <RightIconSvg />}
     </>
@@ -130,12 +133,12 @@ function ButtonWithRef(
       )}
 
       <LinkOrButton
-        ref={ref}
-        href={href || null}
-        type={href ? null : type}
         className={buttonClassNames}
         fontStyle={fontStyle}
+        href={href || null}
+        ref={ref}
         target={target}
+        type={href ? null : type}
         {...props}
       >
         {buttonBodyWithOptionalSpinner}

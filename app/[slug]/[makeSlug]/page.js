@@ -1,13 +1,15 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
+import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
+import { getExcludeTree } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -32,8 +34,11 @@ export default async function CategoryPage({ params }) {
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(slug);
   const details = makeData?.detailsFields.details;
+  const globalOptions = await getGlobalOptions();
+  const excludeTree = getExcludeTree(globalOptions);
+  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
 
-  if (!makeData && categoryData) {
+  if (!makeData && categoryData && !shouldBeExcluded) {
     return <ProductNotFound />;
   }
 
@@ -45,14 +50,14 @@ export default async function CategoryPage({ params }) {
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
   const productHeroData = {
-    image:
-      filteredData?.length > 1
-        ? filteredData[0].featuredImage?.node
-        : featuredImage,
     features:
       filteredData?.length > 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
+    image:
+      filteredData?.length > 1
+        ? filteredData[0].featuredImage?.node
+        : featuredImage,
     warrantyDescription:
       filteredData?.length > 1
         ? filteredData[0]?.warranty.warrantyDescription
@@ -81,28 +86,40 @@ export default async function CategoryPage({ params }) {
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
 
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      slugs.push({
+        makeSlug: make.slug,
+        slug: category.slug,
+      });
+    });
+  });
+
   return (
     <Layout title="Product">
       <Container>
-        <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct
-            currentProduct={currentProduct}
-            categories={categories}
+        <Suspense fallback={null}>
+          <div className={styles.breadcrumbs}>
+            <BreadcrumbsProduct
+              categories={categories}
+              currentProduct={currentProduct}
+            />
+          </div>
+          <ProductHero
+            description={makeData?.description || categoryData?.description}
+            features={{
+              content: productHeroData.features,
+            }}
+            image={productHeroData.image}
+            make={makeData.name}
+            title={categoryData?.name}
+            warranty={{
+              content: productHeroData.warrantyDescription,
+              years: productHeroData.warrantyTimePeriod,
+            }}
           />
-        </div>
-        <ProductHero
-          make={makeData.name}
-          title={categoryData?.name}
-          description={makeData?.description || categoryData?.description}
-          image={productHeroData.image}
-          features={{
-            content: productHeroData.features,
-          }}
-          warranty={{
-            content: productHeroData.warrantyDescription,
-            years: productHeroData.warrantyTimePeriod,
-          }}
-        />
+        </Suspense>
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>

@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 
 import { getBlogPosts } from '@lib/api/get-blog-posts';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -11,18 +12,22 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Pagination from '@components/pagination/pagination';
 import PostsList from '@components/posts-list/posts-list';
+import SectionIntro from '@components/section-intro/section-intro';
 
 import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
-export const metadata = {
-  title: 'HSP 4x4 - HSP Blog',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyleBlog);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function BlogPage({ searchParams }) {
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1;
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
   const postsResponse = await getBlogPosts(POSTS_PER_PAGE, offset);
   const posts = postsResponse?.posts.nodes || [];
@@ -42,17 +47,22 @@ export default async function BlogPage({ searchParams }) {
           <div className={styles.breadcrumbs}>
             <BreadcrumbsLifestyle initialContentTypeRoute={routes.blog()} />
           </div>
+          <SectionIntro
+            description={content?.content}
+            fitInline
+            title={content?.title}
+          />
         </Container>
         {contentBlocks?.map((contentBlock, index) => (
           <Fragment key={index}>{contentBlock}</Fragment>
         ))}
         <Container collapseMargin>
-          <PostsList variant="blog" posts={posts} currentPage={currentPage} />
+          <PostsList currentPage={currentPage} posts={posts} variant="blog" />
           {totalPosts > POSTS_PER_PAGE && (
             <Pagination
+              current={currentPage}
               perPage={POSTS_PER_PAGE}
               total={totalPosts}
-              current={currentPage}
               urlBase={routes.blog()}
             />
           )}

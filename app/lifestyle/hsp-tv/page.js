@@ -1,5 +1,6 @@
 import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -8,18 +9,22 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Pagination from '@components/pagination/pagination';
 import PostsList from '@components/posts-list/posts-list';
+import SectionIntro from '@components/section-intro/section-intro';
 
 import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
-export const metadata = {
-  title: 'HSP 4x4 - HSP TV',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyleTv);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function HspTVPage({ searchParams }) {
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1;
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
   const postsResponse = await getHspTvPosts(POSTS_PER_PAGE, offset);
   const posts = postsResponse?.hspTvPosts.nodes || [];
@@ -35,13 +40,18 @@ export default async function HspTVPage({ searchParams }) {
         <div className={styles.breadcrumbs}>
           <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />
         </div>
+        <SectionIntro
+          description={content?.content}
+          fitInline
+          title={content?.title}
+        />
         {contentResolved}
-        <PostsList variant="hsp-tv" posts={posts} perPage={POSTS_PER_PAGE} />
+        <PostsList perPage={POSTS_PER_PAGE} posts={posts} variant="hsp-tv" />
         {totalPosts > POSTS_PER_PAGE && (
           <Pagination
+            current={currentPage}
             perPage={POSTS_PER_PAGE}
             total={totalPosts}
-            current={currentPage}
             urlBase={routes.tv()}
           />
         )}

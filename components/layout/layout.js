@@ -43,31 +43,33 @@ async function getLayoutData() {
   const allStores = await getStores();
   const excludeTree = getExcludeTree(globalOptions);
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes[0].id];
   const mainProductCategories = await getMainProductCategories(
     excludeTree,
     excludeChildren,
   );
 
   return {
-    globalOptions,
+    allStores,
+    excludeChildrenId,
     footerMenus,
+    globalOptions,
     mainMenu,
-    mobileMenu,
     mainProductCategories,
+    makes,
+    mobileMenu,
     productCategories,
     products,
-    makes,
-    allStores,
   };
 }
 
 const data = await getLayoutData();
 
 export default function Layout({
-  withMap,
-  withFooter = true,
-  reserveSpaceForVehicleSelection,
   children,
+  reserveSpaceForVehicleSelection,
+  withFooter = true,
+  withMap,
 }) {
   const normalizedFooterMenus = {
     hsp: [],
@@ -115,8 +117,10 @@ export default function Layout({
     }
   });
   const mainProductCategoryIds = data.mainProductCategories.map(({ id }) => id);
-  const productSubCategories = data.productCategories.filter(({ parent }) =>
-    mainProductCategoryIds.includes(parent?.node?.id),
+  const productSubCategories = data.productCategories.filter(
+    ({ id, parent }) =>
+      mainProductCategoryIds.includes(parent?.node?.id) &&
+      !data.excludeChildrenId.includes(id),
   );
 
   return (
@@ -128,21 +132,21 @@ export default function Layout({
         <VehicleProvider>
           <Header
             mainMenu={normalizedMainMenu}
-            secondaryMenu={topNavigationMenu}
-            mobileMenu={normalizedMobileMenu}
             mainProductCategories={data.mainProductCategories}
-            products={normalizedProductData}
             makes={data.makes}
+            mobileMenu={normalizedMobileMenu}
+            products={normalizedProductData}
+            secondaryMenu={topNavigationMenu}
           />
           <main className={styles.main}>
             {withMap && (
               <div className={styles.background}>
                 <Image
-                  className={styles.backgroundImage}
-                  src={BgContinent}
                   alt="Shape of Australia continent"
+                  className={styles.backgroundImage}
                   fill={true}
                   quality={80}
+                  src={BgContinent}
                 />
               </div>
             )}
@@ -159,9 +163,9 @@ export default function Layout({
             <div className={styles.bottomSticky}>
               <FullscreenCollapse>
                 <Newsletter
+                  description={newsletterDescription}
                   googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
                   title={newsletterTitle}
-                  description={newsletterDescription}
                 />
                 <Footer menus={normalizedFooterMenus} text={footerText} />
               </FullscreenCollapse>

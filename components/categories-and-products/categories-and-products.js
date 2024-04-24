@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, Fragment } from 'react';
-import clsx from 'clsx';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Fragment, useState } from 'react';
+
 import ArrowForward from '@images/arrow-forward.svg';
+import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import styles from './categories-and-products.module.scss';
 
 export default function CategoriesAndProducts({ data }) {
@@ -25,9 +27,9 @@ export default function CategoriesAndProducts({ data }) {
               >
                 <Link
                   className={styles.link}
+                  dangerouslySetInnerHTML={{ __html: link.title }}
                   href={link.url || ''}
                   onMouseEnter={() => setHoveredIndex(index)}
-                  dangerouslySetInnerHTML={{ __html: link.title }}
                 />
                 <ArrowForward />
               </div>
@@ -44,14 +46,14 @@ export default function CategoriesAndProducts({ data }) {
           >
             <div className={styles.imageContainer}>
               <Image
+                alt={product.productImage?.node?.altText || ''}
                 className={clsx(styles.image, {
                   [styles.objectFitContain]:
                     product.imageCoverContain === 'contain',
                 })}
-                src={product.productImage?.node?.sourceUrl}
-                alt={product.productImage?.node?.altText || ''}
-                width={570}
                 height={162}
+                src={product.productImage?.node?.sourceUrl}
+                width={570}
               />
             </div>
             <div>

@@ -1,10 +1,12 @@
-import Container from '@components/container/container';
 import Image from 'next/image';
-import Button from '@components/button/button';
-import styles from './product-grid.module.scss';
 import Link from 'next/link';
 
-export default function ProductGrid({ title, products }) {
+import Button from '@components/button/button';
+import Container from '@components/container/container';
+
+import styles from './product-grid.module.scss';
+
+export default function ProductGrid({ products, title }) {
   return (
     <Container collapseMargin>
       <div className={styles.container}>
@@ -12,28 +14,28 @@ export default function ProductGrid({ title, products }) {
         <div className={styles.grid}>
           {products?.map((product, index) => {
             return (
-              <div key={`${product.title}-${index}`} className={styles.product}>
+              <div className={styles.product} key={`${product.title}-${index}`}>
                 <div className={styles.buttonContainer}>
                   <Button
+                    className={styles.link}
                     href={product.link?.url || '#'}
                     rightIcon="arrow-forward"
                     size="small"
                     variant="tertiary"
-                    className={styles.link}
                   >
                     {product.title}
                   </Button>
                 </div>
                 <Link
+                  className={styles.imageContainer}
                   href={product.link?.url || '#'}
                   tabIndex="-1"
-                  className={styles.imageContainer}
                 >
                   <Image
-                    src={product.productImage?.node?.mediaItemUrl}
-                    fill
                     alt={product.title}
                     className={styles.image}
+                    fill
+                    src={product.productImage?.node?.mediaItemUrl}
                   />
                 </Link>
               </div>

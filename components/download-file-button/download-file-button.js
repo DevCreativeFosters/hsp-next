@@ -1,6 +1,5 @@
 'use client';
 
-import { getFileName } from '@lib/get-file-name';
 import {
   Fragment,
   useCallback,
@@ -9,16 +8,19 @@ import {
   useRef,
   useState,
 } from 'react';
+
+import { getFileName } from '@lib/get-file-name';
 import { LOCAL_STORAGE_DOWNLOAD_FILE_EMAIL } from '@lib/local-storage';
+
 import Button from '@components/button/button';
 import DownloadFileModal from '@components/download-file-modal/download-file-modal';
 
 export default function DownloadFileButton({
-  href,
-  fileName,
-  label,
   children,
   downloadFileFormId,
+  fileName,
+  href,
+  label,
   ...props
 }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -60,10 +62,10 @@ export default function DownloadFileButton({
   return (
     <Fragment>
       <Button
-        ref={buttonRef}
+        download={fileNameNormalized}
         href={buttonHref}
         onClick={onDownloadButtonClick}
-        download={fileNameNormalized}
+        ref={buttonRef}
         target="_blank"
         {...props}
       >
@@ -71,10 +73,10 @@ export default function DownloadFileButton({
       </Button>
 
       <DownloadFileModal
-        href={href}
-        fileName={fileNameNormalized}
-        isVisible={isModalVisible}
         downloadFileFormId={downloadFileFormId}
+        fileName={fileNameNormalized}
+        href={href}
+        isVisible={isModalVisible}
         onClose={onClose}
       />
     </Fragment>

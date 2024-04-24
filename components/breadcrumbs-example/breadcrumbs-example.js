@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
 const MAKERS = [
@@ -161,37 +162,39 @@ export default function BreadcrumbsExample() {
       url: '#',
     },
     {
+      current: true,
       label: 'Premium Hard Lid',
       url: '#',
-      current: true,
     },
     {
-      type: 'select',
       name: 'maker',
-      placeholder: 'Choose make',
-      selectedValue: maker,
       onSelect: setMaker,
       onSelectOpenNext: true,
       options: MAKERS,
+      placeholder: 'Choose make',
+      selectedValue: maker,
+      type: 'select',
     },
     {
-      type: 'select',
-      name: 'model',
-      placeholder: 'Choose model',
       disabled: !maker,
-      selectedValue: model,
+      name: 'model',
       onSelect: setModel,
       options: currentModelList,
+      placeholder: 'Choose model',
+      selectedValue: model,
+      type: 'select',
     },
     {
-      label: 'Go',
-      type: 'button',
       disabled: !model,
-      skipPrecedingSeparator: true,
+      label: 'Go',
       // url: '/go-somewhere-or-execute-onClick',
       onClick: () => {
         console.log('Go action!');
       },
+
+      skipPrecedingSeparator: true,
+
+      type: 'button',
     },
   ];
 

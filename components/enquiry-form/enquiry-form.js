@@ -1,26 +1,31 @@
 'use client';
 
-import { trimSlash } from '@lib/trim-slash';
-import { useCallback, useContext, useEffect, useState, useRef } from 'react';
-import useMobileVh from '@hooks/useMobileVh';
-import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import Select from '@components/form/select';
-import StoreList from '@components/store-list/store-list';
-import ResultsStoreTile from '@components/store-tile/result-store-tile';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import Button from '@components/button/button';
-import EnquiryModal from './enquiry-modal';
+
+import useMobileVh from '@hooks/useMobileVh';
+
 import { formatPrice } from '@lib/helpers';
 import { findLocationsInRadius } from '@lib/store-locations';
+import { trimSlash } from '@lib/trim-slash';
+
+import Button from '@components/button/button';
+import Select from '@components/form/select';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import ResultsStoreTile from '@components/store-tile/result-store-tile';
+
 import styles from './enquiry-form.module.scss';
+import EnquiryModal from './enquiry-modal';
 
 export default function EnquiryForm({
-  enquiryFormId,
-  productData,
   allLocations,
-  variantSlug,
+  enquiryFormId,
   onVariantChange: onVariantChangeCallback = slug => {},
+  productData,
+  variantSlug,
 }) {
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
@@ -57,14 +62,14 @@ export default function EnquiryForm({
       : null;
 
   const {
-    location,
-    searchGeolocation,
     filteredLocations,
     filteredStores,
-    setFilteredStores,
-    selectedStore,
-    setSelectedStore,
     isMapVisible,
+    location,
+    searchGeolocation,
+    selectedStore,
+    setFilteredStores,
+    setSelectedStore,
   } = useContext(StoreLocatorContext);
 
   useEffect(
@@ -75,7 +80,7 @@ export default function EnquiryForm({
         );
       }
     },
-    [searchGeolocation, filteredLocations, setFilteredStores],
+    [filteredLocations, searchGeolocation, setFilteredStores],
   );
 
   useMobileVh();
@@ -90,7 +95,7 @@ export default function EnquiryForm({
         onVariantChangeCallback(trimSlash(variantSlug));
       }
     },
-    [variants, onVariantChangeCallback],
+    [onVariantChangeCallback, variants],
   );
 
   const handleOpenModal = () => {
@@ -132,18 +137,18 @@ export default function EnquiryForm({
     <section className={styles.wrapper} ref={wrapperOuterRef}>
       <form
         action="#"
+        autoComplete="off"
         className={styles.form}
         onChange={onAnyInputChange}
         ref={formRef}
-        autoComplete="off"
       >
         <Select
           id="product-variant"
-          size="large"
-          placeholder="Variant"
           label="Variant"
           onChange={onVariantChange}
           options={variantOptions}
+          placeholder="Variant"
+          size="large"
           value={
             selectedVariant?.variantSlug ||
             (variantOptions?.length ? variantOptions?.value : '')
@@ -151,13 +156,13 @@ export default function EnquiryForm({
         />
 
         <StoreSearchControls
-          isWide
-          interactWithDisabledForm={interactWithDisabledForm}
           allLocations={allLocations}
+          interactWithDisabledForm={interactWithDisabledForm}
+          isWide
         />
 
         {selectedStore ? (
-          <ResultsStoreTile item={selectedStore} isHighlighted={highlight} />
+          <ResultsStoreTile isHighlighted={highlight} item={selectedStore} />
         ) : (
           <>
             {isMapVisible && (
@@ -170,21 +175,21 @@ export default function EnquiryForm({
             <StoreList
               className={styles.results}
               items={filteredStores}
-              show={isInlineResultListVisible}
-              showMoreResults={showMoreResults}
               onSelect={item => {
                 setSelectedStore(item);
               }}
+              show={isInlineResultListVisible}
+              showMoreResults={showMoreResults}
             />
             {!showMoreResults &&
               isInlineResultListVisible &&
               filteredStores.length > 5 && (
                 <div className={styles.showMoreWrapper}>
                   <Button
+                    className={styles.showMoreButton}
+                    onClick={() => setShowMoreResults(true)}
                     size="small"
                     variant="septenary"
-                    onClick={() => setShowMoreResults(true)}
-                    className={styles.showMoreButton}
                   >
                     Load more results
                   </Button>
@@ -209,9 +214,9 @@ export default function EnquiryForm({
         <div className={styles.buttonWrapper}>
           <Button
             className={styles.submitButton}
-            size="large"
             disabled={!selectedStore}
             onClick={handleOpenModal}
+            size="large"
           >
             Make an enquiry
           </Button>
@@ -220,8 +225,9 @@ export default function EnquiryForm({
       {enquiryModalOpened && (
         <EnquiryModal
           enquiryFormId={enquiryFormId}
+          installationCost={variantInstallationPrice}
           onClose={handleCloseModal}
-          store={selectedStore}
+          productPrice={productPrice}
           selectedProducts={
             selectedVariant
               ? [selectedVariant]
@@ -229,8 +235,7 @@ export default function EnquiryForm({
                 ? [variants[0]]
                 : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
           }
-          productPrice={productPrice}
-          installationCost={variantInstallationPrice}
+          store={selectedStore}
         />
       )}
     </section>

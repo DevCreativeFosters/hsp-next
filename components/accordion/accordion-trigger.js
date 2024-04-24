@@ -1,26 +1,27 @@
-import styles from './accordion-trigger.module.scss';
 import clsx from 'clsx';
 
+import styles from './accordion-trigger.module.scss';
+
 export default function AccordionTrigger({
+  children,
   className,
-  resetStyling,
   isOpen,
   onClick,
   onKeyUp,
-  children,
+  resetStyling,
 }) {
   return (
     <div
+      aria-expanded={isOpen}
       className={clsx(
         styles.button,
         { [styles.reset]: resetStyling },
         className,
       )}
+      onClick={onClick}
+      onKeyUp={onKeyUp}
       role="button"
       tabIndex={0}
-      onKeyUp={onKeyUp}
-      onClick={onClick}
-      aria-expanded={isOpen}
     >
       {children}
     </div>

@@ -1,16 +1,22 @@
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
+import routes from '@lib/routes';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductCategory from '@components/product-category/product-category';
 
-export const metadata = {
-  title: 'HSP 4x4 - Products',
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.products);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function ProductsPage() {
   const content = await getPageData('products');
@@ -27,8 +33,8 @@ export default async function ProductsPage() {
       <Container>
         {mainProductCategories?.map(productCategory => (
           <ProductCategory
-            key={productCategory.databaseId}
             category={productCategory}
+            key={productCategory.databaseId}
           />
         ))}
       </Container>

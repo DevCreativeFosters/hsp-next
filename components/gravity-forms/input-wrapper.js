@@ -1,7 +1,8 @@
 import clsx from 'clsx';
+
 import styles from './input-wrapper.module.scss';
 
-export default function InputWrapper({ oneOf, children }) {
+export default function InputWrapper({ children, oneOf }) {
   return (
     <div
       className={clsx(styles.wrapper, {

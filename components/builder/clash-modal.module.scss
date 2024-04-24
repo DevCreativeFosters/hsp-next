@@ -1,0 +1,24 @@
+.list {
+  margin: 0;
+  padding: 16px;
+  color: var(--color-primary-100);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.listDivider {
+  border-bottom: 1px solid var(--color-white-20);
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+}
+
+.listItem {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-left: 32px;
+  color: white;
+  font-family: var(--font-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--color-white-20);
+}

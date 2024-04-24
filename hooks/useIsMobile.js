@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export function useIsMobile(breakpointWidth) {
   const [isMobile, setIsMobile] = useState(undefined);
@@ -10,7 +10,7 @@ export function useIsMobile(breakpointWidth) {
 
   useEffect(() => {
     handleResize();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(
     function syncIsMobile() {

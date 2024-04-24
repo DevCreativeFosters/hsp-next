@@ -1,16 +1,21 @@
-import { useRef, useState, useCallback } from 'react';
-import AnimateHeight from 'react-animate-height';
+import { useCallback, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
 import Button from '@components/button/button';
+
 import styles from './mobile-menu-item.module.scss';
+
 export default function MobileMenuItem({
   label,
-  url,
-  subItems,
   subItemGroups,
+  subItems,
+  url,
 }) {
   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const containerRef = useRef();
+
   const renderSubItems = useCallback(subItems => {
     if (!subItems?.length) return null;
 
@@ -27,14 +32,16 @@ export default function MobileMenuItem({
           return (
             <li key={subItem.url + j}>
               <Button
+                background="dark"
+                className={
+                  subItem.subItems.length > 0
+                    ? styles.menuItemLabel
+                    : styles.menuSubItem
+                }
                 href={subItem.url}
                 size="small"
-                variant="tertiary"
-                background="dark"
                 style={subItem.special ? (j === 0 ? { ...fontStyle } : {}) : {}}
-                className={
-                  subItem.subItems ? styles.menuItemLabel : styles.menuSubItem
-                }
+                variant="tertiary"
               >
                 {subItem.label}
               </Button>
@@ -44,11 +51,11 @@ export default function MobileMenuItem({
                   key={item.url + index}
                 >
                   <Button
+                    background="dark"
                     href={item.url}
                     size="small"
-                    variant="senary"
-                    background="dark"
                     style={{ ...fontStyle }}
+                    variant="senary"
                   >
                     {item.label}
                   </Button>
@@ -75,18 +82,18 @@ export default function MobileMenuItem({
       )}
     >
       <Button
-        href={url}
-        size="large"
-        variant="tertiary"
         background="dark"
-        toggleable={hasChildren ? 'primary' : null}
+        href={url}
         isToggled={isSubMenuVisible}
         onClick={url ? null : toggleSubItems}
+        size="large"
+        toggleable={hasChildren ? 'primary' : null}
+        variant="tertiary"
       >
         {label}
       </Button>
       {hasChildren && (
-        <AnimateHeight height={isSubMenuVisible ? 'auto' : 0} duration={300}>
+        <AnimateHeight duration={300} height={isSubMenuVisible ? 'auto' : 0}>
           <div ref={containerRef}>
             {renderSubItems(subItems)}
             {subItemGroups?.map(({ label, subItems }, index) => (

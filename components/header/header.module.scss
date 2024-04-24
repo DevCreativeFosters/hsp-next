@@ -11,7 +11,10 @@
 .headerInner {
   @include center;
 
-  height: var(--header-height);
+  height: var(
+    --header-height
+  ); // height variable referenced in choose-you-vehicle-block
+
   padding-inline: var(--container-inline-padding);
   background: var(--color-black-100);
 }
@@ -185,13 +188,5 @@
 
   @include bp(full) {
     gap: 16px;
-  }
-}
-
-.vehicleText {
-  display: none;
-
-  @include bp(large) {
-    display: block;
   }
 }

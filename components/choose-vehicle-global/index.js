@@ -1,8 +1,10 @@
 'use client';
 
-import Button from '@components/button/button';
-import { getModelsByMakeSlug } from '@lib/api/get-models-by-make-slug';
 import { useCallback, useEffect, useState } from 'react';
+
+import { getModelsByMakeSlug } from '@lib/api/get-models-by-make-slug';
+
+import Button from '@components/button/button';
 
 // Example component
 
@@ -37,7 +39,7 @@ export default function ChooseVehicleGlobal({ makes }) {
         setModelList([]);
       }
     },
-    [makeSlug, fetchModelsByMake],
+    [fetchModelsByMake, makeSlug],
   );
 
   return (
