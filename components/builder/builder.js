@@ -14,7 +14,6 @@ import routes from '@lib/routes';
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
-import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -43,7 +42,6 @@ export default function Builder({
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
-  const [topHeight, setHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
@@ -71,53 +69,52 @@ export default function Builder({
     stepTitle,
   } = useVehicleContext();
 
-  const {
-    filteredLocations,
-    isMapVisible,
-    location,
-    radius,
-    searchGeolocation,
-    selectedStore,
-    setSelectedStore,
-  } = useContext(StoreLocatorContext);
+  const { filteredLocations, isMapVisible, setSelectedStore } =
+    useContext(StoreLocatorContext);
 
-  useEffect(() => {
-    if (
-      !make?.slug ||
-      !model?.slug ||
-      !globalOptions ||
-      !globalOptions?.coversCategory
-    ) {
-      return;
-    }
-
-    getRelatedCovers(
-      make.slug,
-      model.slug,
-      globalOptions.coversCategory.nodes[0].slug,
-    ).then(relatedCovers => {
-      if (!relatedCovers) {
+  useEffect(
+    function setRelatedCovers() {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions ||
+        !globalOptions?.coversCategory
+      ) {
         return;
       }
 
-      const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-      const noCoverNormalized = normalizeUteBuilderProducts(noCover);
-      const covers = [...normalizedCovers, ...noCoverNormalized];
+      getRelatedCovers(
+        make.slug,
+        model.slug,
+        globalOptions.coversCategory.nodes[0].slug,
+      ).then(relatedCovers => {
+        if (!relatedCovers) {
+          return;
+        }
 
-      setStepProducts(covers);
-      setCovers(covers);
-    });
-  }, [globalOptions, make, model, noCover]);
+        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const covers = [...normalizedCovers, ...noCoverNormalized];
 
-  useEffect(() => {
-    if (stepNumber === 1) {
-      setStepProducts(covers);
-    }
+        setStepProducts(covers);
+        setCovers(covers);
+      });
+    },
+    [globalOptions, make, model, noCover],
+  );
 
-    if (stepNumber === 2) {
-      setStepProducts(normalizeUteBuilderProducts(products));
-    }
-  }, [covers, products, setStepProducts, stepNumber]);
+  useEffect(
+    function setCurrentStepProducts() {
+      if (stepNumber === 1) {
+        setStepProducts(covers);
+      }
+
+      if (stepNumber === 2) {
+        setStepProducts(normalizeUteBuilderProducts(products));
+      }
+    },
+    [covers, products, setStepProducts, stepNumber],
+  );
 
   useEffect(() => {
     if (!make || !model || stepNumber === 0) {
@@ -148,15 +145,6 @@ export default function Builder({
     setStepTitle,
     stepNumber,
   ]);
-
-  useEffect(function setTopHeightObserver() {
-    if (!topRef.current) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setHeight(topRef.current?.getBoundingClientRect().height);
-    });
-    resizeObserver.observe(topRef.current);
-    return () => resizeObserver.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!productToAdd || showClashModal) {
@@ -305,9 +293,6 @@ export default function Builder({
     [setStepProducts, stepProducts],
   );
 
-  const isInlineResultListVisible = Boolean(
-    openSection === 'store' && location && searchGeolocation && radius,
-  );
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -363,17 +348,6 @@ export default function Builder({
               removeProduct={removeProduct}
               selectedProducts={selectedProducts}
               setOpenSection={setOpenSection}
-            />
-            <StoreList
-              className={styles.results}
-              items={filteredLocations}
-              onSelect={item => {
-                setSelectedStore(item);
-              }}
-              show={isInlineResultListVisible}
-              style={{
-                height: selectedStore ? topHeight : null,
-              }}
             />
             {stepNumber > 0 ? (
               <Preview
