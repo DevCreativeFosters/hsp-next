@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
@@ -42,6 +42,7 @@ export default function Builder({
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
+
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
@@ -50,7 +51,6 @@ export default function Builder({
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
   const [incompatibleCovers, setIncompatibleCovers] = useState(null);
-  const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
   const {
@@ -339,7 +339,7 @@ export default function Builder({
       )}
       <div className={styles.builder}>
         <Container className={styles.container}>
-          <div className={styles.top} ref={topRef}>
+          <div className={styles.top}>
             <Sidebar
               allLocations={allLocations}
               globalOptions={globalOptions}
