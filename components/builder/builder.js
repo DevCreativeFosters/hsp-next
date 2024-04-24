@@ -160,7 +160,7 @@ export default function Builder({
 
     setSelectedProducts(products);
     setProductToAdd(null);
-  }, [productToAdd, selectedProducts, showClashModal]);
+  }, [productToAdd, selectedProducts, setSelectedProducts, showClashModal]);
 
   const addProduct = useCallback(
     product => {
@@ -250,7 +250,14 @@ export default function Builder({
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [covers, disabledProducts, selectedProducts, stepProducts],
+    [
+      covers,
+      disabledProducts,
+      selectedProducts,
+      setGoToLink,
+      setSelectedProducts,
+      stepProducts,
+    ],
   );
 
   const toggleProduct = useCallback(

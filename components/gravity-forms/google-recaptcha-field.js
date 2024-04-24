@@ -8,7 +8,7 @@ import styles from './google-recaptcha-field.module.scss';
 
 const CAPTCHA_FE_ERROR_MESSAGE = 'Please take this test';
 
-export default function GoogleRecaptchaField({ form, field, fieldErrors }) {
+export default function GoogleRecaptchaField({ field, fieldErrors, form }) {
   const [captchaValue, setCaptchaValue] = useState(null);
 
   const recaptchaRef = useRef(null);
@@ -19,20 +19,20 @@ export default function GoogleRecaptchaField({ form, field, fieldErrors }) {
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   const handleChange = useCallback(
     value => {
       setCaptchaValue(value);
       dispatch({
-        type: 'updateFieldValue',
         payload: {
           id,
           value,
         },
+        type: 'updateFieldValue',
       });
     },
-    [id, dispatch],
+    [dispatch, id],
   );
 
   const handleInvalid = useCallback(() => {
@@ -53,19 +53,19 @@ export default function GoogleRecaptchaField({ form, field, fieldErrors }) {
   return (
     <div className={styles.recaptcha}>
       <ReCAPTCHA
+        onChange={handleChange}
+        onExpired={() => setCaptchaValue(null)}
         ref={recaptchaRef}
         sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
         size="normal"
-        onChange={handleChange}
-        onExpired={() => setCaptchaValue(null)}
       />
       <div className={styles.fakeInputContainer}>
         <input
           className={styles.fakeInput}
-          ref={fakeInputRef}
-          type="text"
-          required={!captchaValue}
           onInvalid={handleInvalid}
+          ref={fakeInputRef}
+          required={!captchaValue}
+          type="text"
         />
       </div>
       {fieldError && (
