@@ -1,11 +1,13 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
 import clsx from 'clsx';
 import Link from 'next/link';
+
 import styles from './video-card.module.scss';
 
-export default function VideoCard({ url, variant, productUrl }) {
+export default function VideoCard({ productUrl, url, variant }) {
   const videoCardClassNames = clsx(styles.videoCard, {
     [styles.portrait]: variant === 'portrait',
     [styles.rectangle]: variant === 'rectangle',
@@ -35,7 +37,7 @@ export default function VideoCard({ url, variant, productUrl }) {
   }, []);
 
   const videoElement = (
-    <video className={styles.video} ref={videoRef} loop muted playsInline>
+    <video className={styles.video} loop muted playsInline ref={videoRef}>
       <source src={url} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
@@ -46,7 +48,7 @@ export default function VideoCard({ url, variant, productUrl }) {
   }
 
   return (
-    <Link href={productUrl} className={videoCardClassNames}>
+    <Link className={videoCardClassNames} href={productUrl}>
       {videoElement}
     </Link>
   );

@@ -1,18 +1,20 @@
 'use client';
 
 import AnimateHeight from 'react-animate-height';
-import { useIsMobile } from '@hooks/useIsMobile';
+
 import useHasClass from '@hooks/useHasClass';
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 
-export default function FullscreenCollapse({ className, children }) {
+export default function FullscreenCollapse({ children, className }) {
   const isFullScreen = useHasClass(STORE_LOCATOR_FULLSCREEN);
   const isMobile = useIsMobile();
   return (
     <AnimateHeight
-      height={isFullScreen && isMobile ? 0 : 'auto'}
-      duration={300}
       contentClassName={className}
+      duration={300}
+      height={isFullScreen && isMobile ? 0 : 'auto'}
     >
       {children}
     </AnimateHeight>

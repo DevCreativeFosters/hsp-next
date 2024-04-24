@@ -8,10 +8,15 @@ export async function GET(req) {
   const params = url.searchParams;
   const model = params.get('model');
   const make = params.get('make');
+  const excludedCategories = params.get('excludedCategories');
 
   try {
     const modelData = await getModelBySlug(model);
-    const productData = await getProductsWithVariants(make, model);
+    const productData = await getProductsWithVariants(
+      make,
+      model,
+      excludedCategories,
+    );
     return NextResponse.json({ modelData, productData });
   } catch (error) {
     return NextResponse.json(

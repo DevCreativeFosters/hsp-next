@@ -1,0 +1,23 @@
+.recaptcha {
+  display: flex;
+  flex-direction: column;
+}
+
+.errorMessage {
+  font-size: 14px;
+  padding-top: 7px;
+  padding-left: 10px;
+  color: var(--color-error);
+}
+
+.fakeInputContainer {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+}
+
+.fakeInput {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}

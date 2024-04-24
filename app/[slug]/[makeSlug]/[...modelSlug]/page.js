@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
@@ -17,18 +17,20 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
+import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
+import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
-export default async function CategoryPage({ params, searchParams }) {
+export default async function Product({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug; // array of model and optional variant
+  const modelSlug = params.modelSlug;
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
@@ -37,8 +39,6 @@ export default async function CategoryPage({ params, searchParams }) {
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
-
-  console.log(modelSlug);
 
   let modelName;
   makes?.some(make => {
@@ -72,7 +72,7 @@ export default async function CategoryPage({ params, searchParams }) {
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
-  const firstMatchedProduct = products.length ? products[0] : null;
+  const firstMatchedProduct = products?.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
       renderBlock(
@@ -94,16 +94,21 @@ export default async function CategoryPage({ params, searchParams }) {
     },
     model: {
       label: firstMatchedProduct?.title,
-      value: modelSlug[0],
+      value: modelSlug,
     },
   };
 
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
+  const showNotCompatible = false;
 
   if (!firstMatchedProduct || !mainCategory || !make) {
-    redirect(`/${slug}?compatible=false`);
+    return (
+      <ProductHeroPage params={params} slug={slug}>
+        <NotCompatible slug={slug} />
+      </ProductHeroPage>
+    );
   }
 
   if (modelSlug.length > 2) {
@@ -122,10 +127,10 @@ export default async function CategoryPage({ params, searchParams }) {
           <Container>
             <PageContainer>
               <ErrorPage
-                title="Variant not found"
-                text="Sorry, we couldn't find the variant you are looking for."
                 buttonText="Back to Products"
                 product
+                text="Sorry, we couldn't find the variant you are looking for."
+                title="Variant not found"
               />
             </PageContainer>
           </Container>
@@ -139,21 +144,22 @@ export default async function CategoryPage({ params, searchParams }) {
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct
-            currentProduct={currentProduct}
             categories={categories}
+            currentProduct={currentProduct}
+            showNotCompatible={showNotCompatible}
           />
         </div>
         <PageClientSidePartial
+          allLocations={allLocations}
+          downloadFileFormId={downloadFileFormId}
+          enquiryFormId={enquiryFormId}
+          firstMatchedProduct={firstMatchedProduct}
           mainCategory={mainCategory}
           make={make}
           modelName={modelName}
-          enquiryFormId={enquiryFormId}
-          firstMatchedProduct={firstMatchedProduct}
-          variantSlug={modelSlug[1]}
-          allLocations={allLocations}
-          productHeroData={productHeroData}
-          downloadFileFormId={downloadFileFormId}
           pageParams={params}
+          productHeroData={productHeroData}
+          variantSlug={searchParams.variant}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
@@ -162,3 +168,23 @@ export default async function CategoryPage({ params, searchParams }) {
     </Layout>
   );
 }
+
+// export async function generateStaticParams() {
+//   const categoryMakesAndModels = await getCategoriesMakesAndModels();
+//   const categories = formatCategories(categoryMakesAndModels);
+//
+//   const slugs = [];
+//   categories.forEach(category => {
+//     category.makes.forEach(make => {
+//       make.models.forEach(model => {
+//         slugs.push({
+//           makeSlug: make.slug,
+//           modelSlug: [model.slug],
+//           slug: category.slug,
+//         });
+//       });
+//     });
+//   });
+//
+//   return slugs;
+// }

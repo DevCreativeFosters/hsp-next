@@ -1,18 +1,21 @@
-import AnimateHeight from 'react-animate-height';
-import { getIcon } from '@lib/icons';
 import { useCallback } from 'react';
-import AccordionTrigger from './accordion-trigger';
-import styles from './accordion-item.module.scss';
+
 import clsx from 'clsx';
+import AnimateHeight from 'react-animate-height';
+
+import { getIcon } from '@lib/icons';
+
+import styles from './accordion-item.module.scss';
+import AccordionTrigger from './accordion-trigger';
 
 export default function AccordionItem({
+  animationDuration = 300,
+  children,
+  className,
   isOpen,
   onToggle,
-  className,
   resetStyling = false,
-  animationDuration = 300,
   triggerContent,
-  children,
 }) {
   const ExpandIcon = getIcon('expand-more-neutral');
 
@@ -35,9 +38,9 @@ export default function AccordionItem({
       )}
     >
       <AccordionTrigger
+        isOpen={isOpen}
         onClick={onToggle}
         onKeyUp={handleKeyUp}
-        isOpen={isOpen}
         resetStyling={resetStyling}
       >
         {triggerContent}

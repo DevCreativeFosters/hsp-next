@@ -1,12 +1,13 @@
 import Container from '@components/container/container';
-import Certification from './certification';
+
 import styles from './accreditations.module.scss';
+import Certification from './certification';
 
 export default function Accreditations({
-  title,
-  description,
   certificates,
+  description,
   group,
+  title,
 }) {
   return (
     <Container>
@@ -25,9 +26,9 @@ export default function Accreditations({
           <div className={styles.certificates}>
             {certificates.map((certification, idx) => (
               <Certification
+                image={certification.image?.node}
                 key={certification.certificateName + idx}
                 name={certification.certificateName}
-                image={certification.image?.node}
               />
             ))}
           </div>

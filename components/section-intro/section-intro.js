@@ -1,16 +1,18 @@
 import clsx from 'clsx';
+
 import TextElement from '@components/text-element/text-element';
+
 import styles from './section-intro.module.scss';
 
 export default function SectionIntro({
-  title,
+  children,
   description = null,
   fitInline,
   narrowDescription,
+  noBottomMargin,
   noMargin,
   noTopMargin,
-  noBottomMargin,
-  children,
+  title,
 }) {
   return (
     <div

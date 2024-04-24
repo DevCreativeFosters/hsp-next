@@ -1,18 +1,21 @@
 'use client';
 
-import routes from '@lib/routes';
 import { useRef } from 'react';
+
 import clsx from 'clsx';
-import SectionButtons from '@components/section-buttons/section-buttons';
-import TileCarousel from '@components/tile-carousel/tile-carousel';
-import Container from '@components/container/container';
-import SectionIntro from '@components/section-intro/section-intro';
-import ProductItem from '@components/product-addons/product-item';
+
+import routes from '@lib/routes';
+
 import Button from '@components/button/button';
+import Container from '@components/container/container';
+import ProductItem from '@components/product-addons/product-item';
+import SectionButtons from '@components/section-buttons/section-buttons';
+import SectionIntro from '@components/section-intro/section-intro';
+import TileCarousel from '@components/tile-carousel/tile-carousel';
 
 import styles from './product-addons.module.scss';
 
-export default function ProductAddons({ title, description, products }) {
+export default function ProductAddons({ description, products, title }) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
 
@@ -46,39 +49,39 @@ export default function ProductAddons({ title, description, products }) {
     }
 
     return {
-      url,
       imageUrl,
       name: product.title,
       price: product.lowestPrice,
+      url,
     };
   });
 
   return (
     <Container collapseMargin>
-      <SectionIntro title={title} description={description}>
+      <SectionIntro description={description} title={title}>
         <SectionButtons>
           <div className={styles.buttons}>
             <Button
-              ref={buttonPrevRef}
               className={clsx(styles.button, styles.prev)}
-              variant="secondary"
               leftIcon="expand-more-neutral"
+              ref={buttonPrevRef}
+              variant="secondary"
             />
             <Button
-              ref={buttonNextRef}
               className={clsx(styles.button, styles.next)}
-              variant="secondary"
               leftIcon="expand-more-neutral"
+              ref={buttonNextRef}
+              variant="secondary"
             />
           </div>
         </SectionButtons>
       </SectionIntro>
 
       <TileCarousel
-        items={productsNormalized}
-        itemTemplate={ProductItem}
-        buttonPrevRef={buttonPrevRef}
         buttonNextRef={buttonNextRef}
+        buttonPrevRef={buttonPrevRef}
+        itemTemplate={ProductItem}
+        items={productsNormalized}
         name="Addons"
       />
     </Container>

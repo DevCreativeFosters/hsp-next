@@ -1,9 +1,11 @@
 'use client';
 
-import Button from '@components/button/button';
-import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
-import { getModelsByMakeSlug } from '@lib/api/get-models-by-make-slug';
 import { useCallback, useEffect, useState } from 'react';
+
+import { getModelsByMakeSlug } from '@lib/api/get-models-by-make-slug';
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
+
+import Button from '@components/button/button';
 
 // Example component
 
@@ -31,7 +33,8 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
       makeSlug,
       modelSlug,
     );
-    const firstMatch = products.length ? products[0] : null;
+
+    const firstMatch = products?.length ? products[0] : null;
 
     if (firstMatch) {
       setVariantsList(firstMatch.productFields?.variants);
@@ -54,7 +57,7 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
         setModelList([]);
       }
     },
-    [makeSlug, fetchModelsByMake],
+    [fetchModelsByMake, makeSlug],
   );
 
   useEffect(
@@ -63,7 +66,7 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
         fetchVariantsByCategories();
       }
     },
-    [modelSlug, fetchVariantsByCategories],
+    [fetchVariantsByCategories, modelSlug],
   );
 
   return (

@@ -1,10 +1,21 @@
+import { Suspense } from 'react';
+
 import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
+import { getSeoData } from '@lib/api/getSeoData';
 
 import { HspTvPost } from '@components/hsp-tv-post';
 import Layout from '@components/layout/layout';
 
 const NUMBER_OF_RELATED_POSTS = 5;
+
+export async function generateMetadata({ params }) {
+  const data = await getSeoData(`/hsp_tv/${params.slug}`);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function HspTVPost({ params }) {
   const post = await getHspTvPost(params.slug);
@@ -17,13 +28,25 @@ export default async function HspTVPost({ params }) {
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
-      <HspTvPost
-        relatedPosts={relatedPosts}
-        title={title}
-        content={content}
-        slug={slug}
-        customFields={customFields}
-      />
+      <Suspense fallback={null}>
+        <HspTvPost
+          content={content}
+          customFields={customFields}
+          relatedPosts={relatedPosts}
+          slug={slug}
+          title={title}
+        />
+      </Suspense>
     </Layout>
+  );
+}
+
+export async function generateStaticParams() {
+  const posts = await getRecentHspTvPosts(9999);
+
+  return (
+    posts.map(post => ({
+      slug: `${post.slug}`,
+    })) || []
   );
 }

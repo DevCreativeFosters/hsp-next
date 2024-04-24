@@ -69,6 +69,12 @@
   @include bp(large) {
     display: none;
   }
+
+  @include bp-below(large) {
+    &.isHidden {
+      display: none;
+    }
+  }
 }
 
 .mobileSidebarToggle {

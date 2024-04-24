@@ -1,19 +1,23 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+
 import { SwiperSlide } from 'swiper/react';
+
 import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
 import Carousel from '@components/carousel/carousel';
+
 import Feature from './feature';
 import styles from './features.module.scss';
 
 export default function Features({
-  title: leadingTitle,
-  description: leadingDescription,
   cta,
-  video,
+  description: leadingDescription,
   features,
+  title: leadingTitle,
+  video,
 }) {
   const videoRef = useRef(null);
   const isMobile = useIsMobile();
@@ -63,9 +67,9 @@ export default function Features({
         <Carousel
           className={styles.featuresCarousel}
           settings={{
+            loop: false,
             slidesPerView: 1.17,
             spaceBetween: 16,
-            loop: false,
           }}
           slides={features.map((feature, index) => (
             <SwiperSlide className={styles.slide} key={index}>
@@ -87,11 +91,11 @@ export default function Features({
         <div className={styles.videoTile}>
           <video
             className={styles.video}
-            title={video.title || null}
-            poster={video.poster || null}
-            ref={videoRef}
             loop
             muted
+            poster={video.poster || null}
+            ref={videoRef}
+            title={video.title || null}
           >
             <source src={video.src} type={video.type} />
             Your browser does not support the video tag.

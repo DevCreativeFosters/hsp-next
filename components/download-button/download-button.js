@@ -1,15 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import mergeImages from 'merge-images';
+
 import clsx from 'clsx';
-import Loading from '@components/loading/loading';
-import styles from './download-button.module.scss';
+import mergeImages from 'merge-images';
+
 import { getIcon } from '@lib/icons';
+
+import Loading from '@components/loading/loading';
+
+import styles from './download-button.module.scss';
 
 const DownloadIcon = getIcon('download');
 
-export default function DownloadButton({ images, fileName, className }) {
+export default function DownloadButton({ className, fileName, images }) {
   const [isLoading, setIsLoading] = useState(false);
 
   function downloadPreview() {

@@ -61,9 +61,9 @@ export default function Reviews({ data }) {
   return (
     <Container collapseTopMargin>
       <SectionIntro
-        title={data?.title}
         description={data?.description}
         fitInline
+        title={data?.title}
       >
         <SectionButtons>
           <div className={styles.actionButtons}>
@@ -71,19 +71,19 @@ export default function Reviews({ data }) {
               <div className={styles.swiperButtons}>
                 <Button
                   onClick={handlePrevClick}
-                  variant="secondary"
                   rightIcon="arrow-previous"
+                  variant="secondary"
                 />
                 <Button
                   onClick={handleNextClick}
-                  variant="secondary"
                   rightIcon="arrow-next"
+                  variant="secondary"
                 />
               </div>
             )}
             <Button
-              href={data?.allReviewsLink?.link?.url}
               className={styles.allReviewsButton}
+              href={data?.allReviewsLink?.link?.url}
               rightIcon="external-link"
             >
               {data?.allReviewsLink?.link?.title}
@@ -94,12 +94,12 @@ export default function Reviews({ data }) {
 
       <Swiper
         className={styles.swiper}
-        slidesPerView={1}
-        spaceBetween={isMobile ? 0 : 24}
+        loop={false}
         navigation
         onSwiper={swiper => (swiperRef.current = swiper)}
-        loop={false}
         slidesPerGroup={1}
+        slidesPerView={1}
+        spaceBetween={isMobile ? 0 : 24}
         watchSlidesProgress
       >
         {groupedReviews.map((group, groupIndex) => (
@@ -108,8 +108,8 @@ export default function Reviews({ data }) {
               {group.map((review, index) => (
                 <Review
                   key={index}
-                  score={review.score}
                   name={review.reviewerName}
+                  score={review.score}
                   text={review.reviewText}
                 />
               ))}

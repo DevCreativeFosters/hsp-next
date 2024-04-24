@@ -1,15 +1,17 @@
 import parse from 'html-react-parser';
+
 import Button from '@components/button/button';
+
 import styles from './confirmation.module.scss';
 
 export default function Confirmation({
-  resetForm = () => null,
   content = null,
+  resetForm = () => null,
 }) {
   return (
     <div className={styles.confirmation}>
       {parse(content)}
-      <Button size="large" leftIcon="arrow-backward" onClick={resetForm}>
+      <Button leftIcon="arrow-backward" onClick={resetForm} size="large">
         Back to the form
       </Button>
     </div>

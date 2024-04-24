@@ -1,9 +1,10 @@
 'use client';
 
 import Tile from '@components/tile/tile';
+
 import styles from './posts-list.module.scss';
 
-export default function PostsList({ posts, variant, currentPage }) {
+export default function PostsList({ currentPage, posts, variant }) {
   return (
     <div className={styles.posts}>
       {posts?.map((post, idx) => {
@@ -11,13 +12,13 @@ export default function PostsList({ posts, variant, currentPage }) {
 
         return (
           <Tile
-            key={post.title + idx}
-            title={post.title}
             content={post.excerpt}
             createdAt={post.date}
-            url={post.uri}
-            tags={tags}
             image={post.featuredImage?.node}
+            key={post.title + idx}
+            tags={tags}
+            title={post.title}
+            url={post.uri}
             variant={variant}
           />
         );

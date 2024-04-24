@@ -13,9 +13,9 @@ export default function NotFound() {
       <Container>
         <PageContainer>
           <ErrorPage
-            title="Page not found"
-            text="Sorry, we couldn't find the page you requested."
             buttonText="Back to Homepage"
+            text="Sorry, we couldn't find the page you requested."
+            title="Page not found"
           />
         </PageContainer>
       </Container>

@@ -1,24 +1,26 @@
 import DateField from '@components/gravity-forms/date-field';
+import GoogleRecaptchaField from '@components/gravity-forms/google-recaptcha-field';
 import SelectField from '@components/gravity-forms/select-field';
-import HtmlField from './html-field';
-import InputField from './input-field';
-import TextAreaField from './textarea-field';
-import HiddenInputField from './hidden-input-field';
-import RadioField from './radio-field';
-import NameField from './name-field';
+
 import AddressField from './address-field';
 import FileUploadField from './file-upload-field';
+import HiddenInputField from './hidden-input-field';
+import HtmlField from './html-field';
+import InputField from './input-field';
+import NameField from './name-field';
+import RadioField from './radio-field';
+import TextAreaField from './textarea-field';
 
 export default function GravityFormsField({
-  form,
   field,
   fieldErrors,
+  form,
   hiddenInputs,
 }) {
   const sharedProps = {
-    form,
     field,
     fieldErrors,
+    form,
   };
   switch (field.type) {
     case 'EMAIL':
@@ -32,8 +34,8 @@ export default function GravityFormsField({
     case 'HIDDEN':
       return (
         <HiddenInputField
-          form={form}
           field={field}
+          form={form}
           hiddenInputs={hiddenInputs}
         />
       );
@@ -49,6 +51,8 @@ export default function GravityFormsField({
       return <DateField {...sharedProps} />;
     case 'FILEUPLOAD':
       return <FileUploadField {...sharedProps} />;
+    case 'CAPTCHA':
+      return <GoogleRecaptchaField {...sharedProps} />;
 
     default:
       return <p>{`Field type not supported: ${field.type}.`}</p>;

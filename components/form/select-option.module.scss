@@ -1,0 +1,18 @@
+.option {
+  display: block;
+  font-size: 20px;
+  width: 100%;
+  padding: 12px 24px;
+  transition: var(--transition);
+  text-align: left;
+  color: var(--color-white-100);
+
+  &:hover,
+  &:focus {
+    background: var(--color-white-10);
+  }
+
+  .prefixSuffix {
+    color: var(--color-white-80);
+  }
+}

@@ -1,16 +1,18 @@
-import { useRef, useCallback } from 'react';
-import { Swiper } from 'swiper/react';
+import { useCallback, useRef } from 'react';
+
 import clsx from 'clsx';
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import Button from '@components/button/button';
-import 'swiper/css';
+
 import styles from './carousel.module.scss';
 
 export default function Carousel({
-  settings,
-  slides,
-  showNavigation,
   className,
+  settings,
+  showNavigation,
+  slides,
 }) {
   const swiperRef = useRef(null);
   const swiperHeightRef = useRef(null);
@@ -29,12 +31,12 @@ export default function Carousel({
 
   return (
     <div className={clsx(styles.carousel, className)} ref={swiperHeightRef}>
-      <Swiper
-        className={styles.swiper}
-        onSwiper={swiper => (swiperRef.current = swiper)}
-        {...settings}
-      >
-        {slides}
+      <Swiper onSwiper={swiper => (swiperRef.current = swiper)} {...settings}>
+        {slides.map((slide, index) => (
+          <SwiperSlide className={styles.swiperSlide} key={index}>
+            {slide}
+          </SwiperSlide>
+        ))}
       </Swiper>
 
       {showNavigation && slides && (
@@ -42,16 +44,14 @@ export default function Carousel({
           <Button
             className={clsx(styles.navigationButton, styles.prevButton)}
             onClick={handlePrevClick}
-            variant="secondary"
-            background="dark"
             rightIcon="arrow-previous"
+            variant="secondary"
           />
           <Button
             className={clsx(styles.navigationButton, styles.nextButton)}
             onClick={handleNextClick}
-            variant="secondary"
-            background="dark"
             rightIcon="arrow-next"
+            variant="secondary"
           />
         </>
       )}

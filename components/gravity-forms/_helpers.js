@@ -1,25 +1,25 @@
-export function initializeState({ id, visibleInputs, parentKey, dispatch }) {
+export function initializeState({ dispatch, id, parentKey, visibleInputs }) {
   const updatedDataModel = {};
   visibleInputs.forEach(({ key, value }) => {
     updatedDataModel[key] = value;
   });
 
   dispatch({
-    type: 'updateFieldValue',
     payload: {
       id,
       [parentKey]: updatedDataModel,
     },
+    type: 'updateFieldValue',
   });
 }
 
 export function onComplexFieldChange({
+  childKey,
+  dispatch,
   id,
   parentKey,
-  childKey,
-  value,
   state,
-  dispatch,
+  value,
 }) {
   const stateObject = state.find(fieldValue => fieldValue.id === id)?.[
     parentKey
@@ -32,10 +32,10 @@ export function onComplexFieldChange({
   });
 
   dispatch({
-    type: 'updateFieldValue',
     payload: {
       id,
       [parentKey]: updatedDataModel,
     },
+    type: 'updateFieldValue',
   });
 }

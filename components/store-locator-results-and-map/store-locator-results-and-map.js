@@ -17,12 +17,12 @@ import styles from './store-locator-results-and-map.module.scss';
 export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
-    searchGeolocation,
     filteredLocations,
-    setFilteredLocations,
-    selectedStore,
-    setSelectedStore,
     filteredStores,
+    searchGeolocation,
+    selectedStore,
+    setFilteredLocations,
+    setSelectedStore,
   } = useContext(StoreLocatorContext);
 
   useEffect(
@@ -30,7 +30,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
       const locationList = normalizeStores(allLocations, searchGeolocation);
       setFilteredLocations(locationList);
     },
-    [allLocations, setFilteredLocations, searchGeolocation],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   useEffect(
@@ -40,8 +40,8 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         const item = resultsRef.current.querySelector(`#${geoHash}`);
         if (item) {
           resultsRef.current?.scrollTo({
-            top: item.offsetTop,
             behavior: 'smooth',
+            top: item.offsetTop,
           });
         }
       }
@@ -60,7 +60,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
         setFilteredLocations(locationList);
       }
     },
-    [searchGeolocation, allLocations, setFilteredLocations],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (

@@ -1,17 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+
 import clsx from 'clsx';
+
 import styles from './textarea.module.scss';
 
 export default function Textarea({
-  size = 'large',
   background = 'dark',
   errorMessage = '',
-  placeholder = '',
-  label = '',
-  required,
   halfWidth = false,
+  label = '',
+  placeholder = '',
+  required,
+  size = 'large',
   ...props
 }) {
   // Internal values are used for demos purposes to make component work with basic props
@@ -41,10 +43,10 @@ export default function Textarea({
             [styles.error]: errorMessage,
             [styles.filled]: props.value || internalValue,
           })}
-          placeholder={label ? '' : placeholder}
           onChange={props.onChange || handleInternalChange}
-          value={props.value || internalValue}
+          placeholder={label ? '' : placeholder}
           required={required}
+          value={props.value || internalValue}
           {...props}
         />
         {label && (

@@ -1,12 +1,22 @@
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import { POST_TYPES } from '@lib/post-types';
+import routes from '@lib/routes';
 
 import FeaturedPost from '@components/featured-post/featured-post';
 import Layout from '@components/layout/layout';
+
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyle);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
@@ -16,17 +26,19 @@ export default async function LifestylePage() {
 
   return (
     <Layout title="HSP 4x4 - Lifestyle">
-      <FeaturedPost
-        title={featuredPost?.title}
-        excerpt={featuredPost?.hspTvPostCustomFields?.description}
-        uri={featuredPost?.uri}
-        slug={featuredPost?.slug}
-        video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
-        youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
-        tags={featuredPost?.tags}
-        date={featuredPost?.date}
-        postType={POST_TYPES.TV}
-      />
+      <Suspense fallback={null}>
+        <FeaturedPost
+          date={featuredPost?.date}
+          excerpt={featuredPost?.hspTvPostCustomFields?.description}
+          postType={POST_TYPES.TV}
+          slug={featuredPost?.slug}
+          tags={featuredPost?.tags}
+          title={featuredPost?.title}
+          uri={featuredPost?.uri}
+          video={featuredPost?.hspTvPostCustomFields?.backgroundVideo?.node}
+          youtubeId={featuredPost?.hspTvPostCustomFields?.videoId}
+        />
+      </Suspense>
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}

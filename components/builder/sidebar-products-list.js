@@ -2,13 +2,14 @@
 
 import clsx from 'clsx';
 
-import { getIcon } from '@lib/icons';
 import { formatPrice } from '@lib/helpers';
+import { getIcon } from '@lib/icons';
+
 import styles from './sidebar.module.scss';
 
 const CancelIcon = getIcon('cancel');
 
-export default function ProductsList({ selectedProducts, removeProduct }) {
+export default function ProductsList({ removeProduct, selectedProducts }) {
   return (
     <>
       {selectedProducts.length !== 0 ? (

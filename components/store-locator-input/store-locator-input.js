@@ -1,26 +1,30 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+
 import useHasClass from '@hooks/useHasClass';
 import { useIsMobile } from '@hooks/useIsMobile';
+
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { getIcon } from '@lib/icons';
+
 import styles from './store-locator-input.module.scss';
 
 export default function Input({
-  type,
   className,
-  value = '',
-  placeholder,
+  disabled,
+  icon,
   label = '',
   name,
-  required,
-  icon,
-  withResetButton,
-  disabled,
-  onClick,
   onChange = () => null,
+  onClick,
+  placeholder,
+  required,
+  type,
+  value = '',
+  withResetButton,
   ...props
 }) {
   const Icon = getIcon(icon);
@@ -45,9 +49,8 @@ export default function Input({
       )}
       <div className={clsx(styles.wrapper, className)}>
         <input
-          type="text"
-          id={`fake-input-${name}`}
           className={styles.highInput}
+          id={`fake-input-${name}`}
           onFocus={() => {
             if (isFullScreen || !isMobile) {
               mainInputRef.current.focus();
@@ -60,26 +63,27 @@ export default function Input({
               onClick();
             }
           }}
+          type="text"
         />
         <input
-          ref={mainInputRef}
-          id={`input-${name}`}
           className={clsx(styles.input, {
             [styles.withIcon]: Icon,
             [styles.withReset]: withResetButton,
           })}
-          type={type || 'text'}
-          name={name}
-          placeholder={placeholder}
-          value={localValue}
-          onChange={ev => onChange(ev.target.value)}
-          required={required}
           disabled={disabled}
+          id={`input-${name}`}
+          name={name}
+          onChange={ev => onChange(ev.target.value)}
+          placeholder={placeholder}
+          ref={mainInputRef}
+          required={required}
+          type={type || 'text'}
+          value={localValue}
           {...props}
         />
         <label
-          htmlFor={`fake-input-${name}`}
           className={styles.highInputLabel}
+          htmlFor={`fake-input-${name}`}
         />
         {Icon && (
           <div className={styles.iconWrapper}>

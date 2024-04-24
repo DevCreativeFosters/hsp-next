@@ -1,21 +1,23 @@
 'use client';
 
 import { forwardRef, useState } from 'react';
+
 import clsx from 'clsx';
+
 import styles from './input.module.scss';
 
 function InputWithRef(
   {
-    className,
-    type = 'text',
-    size = 'large',
     background = 'dark',
-    errorMessage = '',
-    placeholder = '',
-    label = '',
-    halfWidth = false,
-    required,
+    className,
     customRef,
+    errorMessage = '',
+    halfWidth = false,
+    label = '',
+    placeholder = '',
+    required,
+    size = 'large',
+    type = 'text',
     ...props
   },
   ref,
@@ -45,8 +47,6 @@ function InputWithRef(
         )}
       >
         <input
-          ref={ref}
-          type={type}
           className={clsx(styles.input, {
             [styles.textarea]: type === 'textarea',
             [styles.darkBackground]: background === 'dark',
@@ -54,10 +54,12 @@ function InputWithRef(
             [styles.error]: errorMessage,
             [styles.filled]: props.value || internalValue,
           })}
-          placeholder={label ? '' : placeholder}
           onChange={props.onChange || handleInternalChange}
-          value={props.value || internalValue}
+          placeholder={label ? '' : placeholder}
+          ref={ref}
           required={required}
+          type={type}
+          value={props.value || internalValue}
           {...props}
         />
         {label && (

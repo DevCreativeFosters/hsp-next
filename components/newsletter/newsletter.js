@@ -1,84 +1,85 @@
 'use client';
 
+import { useCallback, useRef, useState } from 'react';
+
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
 import Image from 'next/image';
+import ReCAPTCHA from 'react-google-recaptcha';
+
 import { sendBrevoNewsletterData } from '@lib/api/send-brevo-newsletter-data';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Input from '@components/form/input';
+
 import IllustrationImage from '@assets/images/newsletter-illustration.webp';
+
 import styles from './newsletter.module.scss';
 
 export default function Newsletter({
+  description,
   googleRecaptchaSitekey,
   title,
-  description,
 }) {
   const [email, setEmail] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState(null);
   const [error, setError] = useState('');
   const [isBusy, setIsBusy] = useState(false);
-  const tokenRef = useRef(null);
+  const recaptchaRef = useRef(null);
   const formRef = useRef();
 
-  const onCaptchaSuccess = useCallback(token => {
-    tokenRef.current = token;
-    if (formRef.current?.checkValidity()) {
-      formRef.current.requestSubmit();
-    }
-  }, []);
-
-  const onFormSubmit = useCallback(
-    async ev => {
-      const token = tokenRef.current;
-      ev.preventDefault();
+  const handleSubmit = useCallback(
+    async token => {
       setIsBusy(true);
-      const response = await sendBrevoNewsletterData({
-        EMAIL: email,
-        locale: 'en',
-        'g-recaptcha-response': token,
-        // email_address_check: '',
-      });
+      try {
+        const response = await sendBrevoNewsletterData({
+          EMAIL: email,
+          'g-recaptcha-response': token,
+          locale: 'en',
+        });
 
-      if (response.success) {
-        setError(null);
-        setConfirmationMessage(response.message);
-        setEmail('');
-      } else if (response.errors) {
-        setConfirmationMessage(null);
-        setError(Object.values(response.errors).join(' '));
+        if (response.success) {
+          setError(null);
+          setConfirmationMessage(response.message);
+          setEmail('');
+        } else if (response.errors) {
+          setConfirmationMessage(null);
+          setError(Object.values(response.errors).join(' '));
+        }
+      } catch (err) {
+        console.error('Error submitting newsletter data:', err);
+        setError('Failed to submit form. Please try again.');
       }
       setIsBusy(false);
     },
     [email],
   );
 
-  useEffect(() => {
-    window.onCaptchaSuccess = onCaptchaSuccess;
-  }, [onCaptchaSuccess]);
+  const onCaptchaSuccess = useCallback(
+    token => {
+      if (formRef.current?.checkValidity()) {
+        handleSubmit(token);
+      }
+    },
+    [handleSubmit],
+  );
 
   return (
     <Container>
-      <Script
-        src={`https://www.google.com/recaptcha/enterprise.js?render=${googleRecaptchaSitekey}`}
-      />
-
       <div className={styles.wrapper}>
         {IllustrationImage && (
           <div className={styles.illustrationWrapper}>
             <Image
+              alt="Ford Ranger"
               className={styles.illustration}
-              src={IllustrationImage.src}
-              width={IllustrationImage.width}
               height={IllustrationImage.height}
+              src={IllustrationImage.src}
               style={{
                 aspectRatio:
                   parseInt(IllustrationImage.width) /
                   parseInt(IllustrationImage.height),
               }}
-              alt="Ford Ranger"
+              width={IllustrationImage.width}
             />
           </div>
         )}
@@ -91,62 +92,68 @@ export default function Newsletter({
             }}
           />
         )}
-        <form className={styles.form} ref={formRef} onSubmit={onFormSubmit}>
+        <form
+          className={styles.form}
+          onSubmit={e => e.preventDefault()}
+          ref={formRef}
+        >
           <div className={styles.emailWrapper}>
             {confirmationMessage ? (
               <div className={styles.confirmation}>{confirmationMessage}</div>
             ) : (
               <Input
-                className={styles.input}
-                type="email"
-                size="large"
-                placeholder="Enter your e-mail address"
                 background="dark"
-                value={email}
+                className={styles.input}
                 errorMessage={error}
-                required
                 onChange={ev => setEmail(ev.target.value)}
+                placeholder="Enter your e-mail address"
+                required
+                size="large"
+                type="email"
+                value={email}
               />
             )}
           </div>
           {confirmationMessage ? (
             <Button
               className={styles.button}
-              type="button"
-              size="large"
               onClick={ev => {
                 ev.preventDefault();
                 setConfirmationMessage(null);
               }}
+              size="large"
+              type="button"
             >
               Reset
             </Button>
           ) : (
             <div>
               <Button
-                className={clsx(styles.button, 'g-recaptcha', {
-                  [styles.isBusy]: isBusy,
-                })}
-                type="submit"
-                size="large"
-                data-sitekey={googleRecaptchaSitekey}
-                data-callback="onCaptchaSuccess"
-                data-action="requestSubmit"
-                onClick={ev => {
+                className={clsx(styles.button, { [styles.isBusy]: isBusy })}
+                disabled={isBusy}
+                isBusy={isBusy}
+                onClick={event => {
                   const isValid = formRef.current.reportValidity();
                   if (isValid) {
                     setIsBusy(true);
+                    recaptchaRef.current.execute();
                   } else {
-                    ev.preventDefault();
+                    event.preventDefault();
                   }
                 }}
-                disabled={isBusy}
-                isBusy={isBusy}
+                size="large"
+                type="button"
               >
                 Submit
               </Button>
             </div>
           )}
+          <ReCAPTCHA
+            onChange={onCaptchaSuccess}
+            ref={recaptchaRef}
+            sitekey={googleRecaptchaSitekey}
+            size="invisible"
+          />
         </form>
       </div>
     </Container>
