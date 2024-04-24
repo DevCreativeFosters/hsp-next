@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 
 import { getBlogPosts } from '@lib/api/get-blog-posts';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -17,10 +18,13 @@ import styles from '../page.module.scss';
 
 const POSTS_PER_PAGE = 12;
 
-export const metadata = {
-  title: 'HSP 4x4 - HSP Blog',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyleBlog);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function BlogPage({ searchParams }) {
   const currentPage = Number(searchParams.page) || 1;

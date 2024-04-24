@@ -4,7 +4,9 @@ import parse from 'html-react-parser';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
+import routes from '@lib/routes';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -16,6 +18,14 @@ import SectionIntro from '@components/section-intro/section-intro';
 import Sidebar from '@components/sidebar/sidebar';
 
 import Logo from '@assets/images/logo.svg';
+
+export async function generateMetadata() {
+  const data = await getSeoData(routes.contact);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function ContactUs() {
   const content = await getPageData('contact-us');

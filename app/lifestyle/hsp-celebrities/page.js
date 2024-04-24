@@ -1,5 +1,6 @@
 import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number-of-HSP-celebrities-posts';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import routes from '@lib/routes';
 
 import Background from '@components/background/background';
@@ -9,10 +10,13 @@ import Layout from '@components/layout/layout';
 
 import PageClient from './page-client';
 
-export const metadata = {
-  title: 'HSP 4x4 - HSP Celebrities',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyleCelebrities);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function HSPCelebritiesPage() {
   const posts = await getLatestNumberOfHSPCelebritiesPosts(9999);

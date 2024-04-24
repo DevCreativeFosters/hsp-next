@@ -2,11 +2,21 @@ import { Fragment } from 'react';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 import { POST_TYPES } from '@lib/post-types';
+import routes from '@lib/routes';
 
 import FeaturedPost from '@components/featured-post/featured-post';
 import Layout from '@components/layout/layout';
+
+export async function generateMetadata() {
+  const data = await getSeoData(routes.lifestyle);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function LifestylePage() {
   const content = await getPageData('lifestyle');
