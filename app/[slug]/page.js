@@ -114,6 +114,21 @@ export async function generateStaticParams() {
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
+  const parents = ['support'];
+
+  let excludeSlugs = [
+    'australian-made',
+    'contact-us',
+    'lifestyle',
+    'hsp-blog',
+    'hsp-celebrities',
+    'hsp-tv',
+    'products',
+    'store-locator',
+    'support',
+    'ute-builder',
+    'home',
+  ];
 
   const mainProductCategories = await getMainProductCategories(
     excludeTree,
@@ -122,12 +137,21 @@ export async function generateStaticParams() {
 
   const pages = await getAllPagesSlugs();
 
+  const excludeChildPages = pages
+    .filter(page => parents.includes(page.slug))
+    .flatMap(page => page.children.nodes.map(child => child.slug));
+
   let slugs =
     mainProductCategories.flatMap(category =>
       category.children.nodes.map(child => ({ slug: `${child.slug}` })),
     ) || [];
 
-  slugs = slugs.concat(pages.map(page => ({ slug: `${page.slug}` })));
+  slugs = slugs.concat(
+    pages
+      .filter(page => !excludeSlugs.includes(page.slug))
+      .filter(page => !excludeChildPages.includes(page.slug))
+      .map(page => ({ slug: page.slug })),
+  );
 
   return slugs;
 }
