@@ -70,6 +70,10 @@ export default async function CategoryPage({ params, searchParams }) {
     modelSlug,
   );
 
+  if (!products) {
+    return notFound();
+  }
+
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
@@ -162,4 +166,24 @@ export default async function CategoryPage({ params, searchParams }) {
       ))}
     </Layout>
   );
+}
+
+export async function generateStaticParams() {
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      make.models.forEach(model => {
+        slugs.push({
+          makeSlug: make.slug,
+          modelSlug: [model.slug],
+          slug: category.slug,
+        });
+      });
+    });
+  });
+
+  return slugs;
 }
