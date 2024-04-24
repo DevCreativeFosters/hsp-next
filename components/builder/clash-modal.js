@@ -11,14 +11,11 @@ export default function ClashModal({
 }) {
   let title = 'Factory Options Clash';
 
-  if (
-    incompatibleCovers.length > 0 &&
-    incompatibleFactoryOptions.length === 0
-  ) {
+  if (incompatibleCovers.length > 0 && !incompatibleFactoryOptions) {
     title = 'Cover Options Clash';
   } else if (
     incompatibleCovers.length > 0 &&
-    incompatibleFactoryOptions.length > 0
+    incompatibleFactoryOptions?.length > 0
   ) {
     title = 'Cover & Factory Options Clash';
   }
@@ -36,11 +33,12 @@ export default function ClashModal({
           <>
             <p>
               For this selected HSP product to be installed, it requires the
-              below covers to be removed.
+              below covers to be removed. Be aware that removing these covers
+              will reset your build.
             </p>
             <ol
               className={clsx(styles.list, {
-                [styles.listDivider]: incompatibleFactoryOptions.length > 0,
+                [styles.listDivider]: incompatibleFactoryOptions?.length > 0,
               })}
             >
               {incompatibleCovers.map((option, index) => (
@@ -51,7 +49,7 @@ export default function ClashModal({
             </ol>
           </>
         )}
-        {incompatibleFactoryOptions.length > 0 && (
+        {incompatibleFactoryOptions?.length > 0 && (
           <>
             For this selected HSP product to be installed, it requires the below
             factory options to be removed.

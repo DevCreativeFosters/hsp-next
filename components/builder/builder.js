@@ -128,8 +128,15 @@ export default function Builder({
       covers.some(cover => cover.group === selectedProduct.productSlug),
     );
 
-    setStepNumber(selectedCover ? 2 : 1);
-    setStepTitle(STEP_TITLES[selectedCover ? 2 : 1]);
+    if (!selectedCover) {
+      setStepNumber(1);
+      setStepTitle(STEP_TITLES[1]);
+
+      return;
+    }
+
+    setStepNumber(2);
+    setStepTitle(STEP_TITLES[2]);
     setSelectedCover(selectedCover);
   }, [
     covers,
@@ -160,15 +167,21 @@ export default function Builder({
 
     setSelectedProducts(products);
     setProductToAdd(null);
-  }, [productToAdd, selectedProducts, showClashModal]);
+  }, [productToAdd, selectedProducts, setSelectedProducts, showClashModal]);
 
   const addProduct = useCallback(
     product => {
-      const incompatibleFactoryOptions = selectedFactoryOptions
-        .filter(
-          option => !product.compatibleFactoryOptions.includes(option.slug),
-        )
-        .map(option => option.value);
+      let incompatibleFactoryOptions = [];
+
+      if (selectedFactoryOptions?.length > 0) {
+        incompatibleFactoryOptions = selectedFactoryOptions
+          .filter(
+            option => !product.compatibleFactoryOptions.includes(option.slug),
+          )
+          .map(option => option.value);
+
+        setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      }
 
       const incompatibleCovers = selectedProducts
         .filter(
@@ -178,7 +191,6 @@ export default function Builder({
         .filter(cover => covers.some(c => c.group === cover.productSlug))
         .map(cover => cover.productName);
 
-      setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       setIncompatibleCovers(incompatibleCovers);
 
       if (
@@ -298,17 +310,28 @@ export default function Builder({
   };
 
   const handleClashModalAccept = () => {
-    setSelectedFactoryOptions(
-      selectedFactoryOptions.filter(
-        option => !incompatibleFactoryOptions.includes(option.value),
-      ),
-    );
+    if (selectedFactoryOptions?.length > 0) {
+      setSelectedFactoryOptions(
+        selectedFactoryOptions.filter(
+          option => !incompatibleFactoryOptions.includes(option.value),
+        ),
+      );
+    }
 
-    if (incompatibleCovers.length > 0) {
+    if (incompatibleCovers?.length > 0) {
       selectedProducts.shift();
     }
 
-    setProductToAdd(currentProduct);
+    const isCover = covers.some(
+      cover => cover.group === currentProduct.productSlug,
+    );
+
+    if (isCover) {
+      setProductToAdd(currentProduct);
+    } else {
+      setSelectedProducts([]);
+    }
+
     setShowClashModal(false);
   };
 
