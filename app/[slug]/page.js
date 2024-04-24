@@ -6,7 +6,6 @@ import { getAllMakes } from '@lib/api/get-all-makes';
 import getAllPagesSlugs from '@lib/api/get-all-pages-slugs';
 import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
-import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getPageData } from '@lib/api/get-page-data';
@@ -111,12 +110,9 @@ export default async function DynamicPage({ params }) {
 }
 
 export async function generateStaticParams() {
-  const globalOptions = await getGlobalOptions();
-  const excludeTree = getExcludeTree(globalOptions);
-  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
   const parents = ['support'];
 
-  let excludeSlugs = [
+  let excludedMainSlugs = [
     'australian-made',
     'contact-us',
     'lifestyle',
@@ -130,28 +126,14 @@ export async function generateStaticParams() {
     'home',
   ];
 
-  const mainProductCategories = await getMainProductCategories(
-    excludeTree,
-    excludeChildren,
-  );
-
   const pages = await getAllPagesSlugs();
 
-  const excludeChildPages = pages
+  const excludedChildSlugs = pages
     .filter(page => parents.includes(page.slug))
     .flatMap(page => page.children.nodes.map(child => child.slug));
 
-  let slugs =
-    mainProductCategories.flatMap(category =>
-      category.children.nodes.map(child => ({ slug: `${child.slug}` })),
-    ) || [];
-
-  slugs = slugs.concat(
-    pages
-      .filter(page => !excludeSlugs.includes(page.slug))
-      .filter(page => !excludeChildPages.includes(page.slug))
-      .map(page => ({ slug: page.slug })),
-  );
-
-  return slugs;
+  return pages
+    .filter(page => !excludedMainSlugs.includes(page.slug))
+    .filter(page => !excludedChildSlugs.includes(page.slug))
+    .map(page => ({ slug: page.slug }));
 }
