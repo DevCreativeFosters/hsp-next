@@ -1,14 +1,18 @@
 import { Fragment } from 'react';
 
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoData } from '@lib/api/getSeoData';
 import { renderBlock } from '@lib/block';
 
 import Layout from '@components/layout/layout';
 
-export const metadata = {
-  title: 'HSP 4x4 - Homepage',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData('/');
+
+  return {
+    ...data,
+  };
+}
 
 export default async function HomePage() {
   const content = await getPageData('');
