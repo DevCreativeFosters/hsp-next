@@ -33,7 +33,8 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
       makeSlug,
       modelSlug,
     );
-    const firstMatch = products.length ? products[0] : null;
+
+    const firstMatch = products?.length ? products[0] : null;
 
     if (firstMatch) {
       setVariantsList(firstMatch.productFields?.variants);

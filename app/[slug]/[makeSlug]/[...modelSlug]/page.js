@@ -69,14 +69,10 @@ export default async function Product({ params, searchParams }) {
     modelSlug,
   );
 
-  if (!products) {
-    return notFound();
-  }
-
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
-  const firstMatchedProduct = products.length ? products[0] : null;
+  const firstMatchedProduct = products?.length ? products[0] : null;
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
       renderBlock(

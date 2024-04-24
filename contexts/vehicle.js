@@ -108,6 +108,13 @@ export const VehicleProvider = ({ children }) => {
     }
 
     const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
+
+    if (!products) {
+      resetVehicleSelection();
+
+      return;
+    }
+
     products
       .then(products => {
         resetVehicleSelection();
