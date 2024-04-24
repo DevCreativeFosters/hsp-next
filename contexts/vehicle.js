@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { deleteCookie, setCookie } from '@lib/cookies';
@@ -42,6 +42,8 @@ export const VehicleProvider = ({ children }) => {
   });
   const [goToLink, setGoToLink] = useState('');
   const wrapperRef = useRef(null);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     const { current: wrapper } = wrapperRef;
