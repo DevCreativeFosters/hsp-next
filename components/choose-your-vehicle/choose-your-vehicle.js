@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 
 import { useVehicleContext } from '@contexts/vehicle';
@@ -11,8 +12,10 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
+import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
+import ResetModal from '@components/builder/reset-modal';
 import Button from '@components/button/button';
 import Select from '@components/form/select';
 import Loading from '@components/loading/loading';
@@ -25,6 +28,8 @@ import ExpandMoreNeutralIcon from '@assets/icons/expand-more-neutral.svg';
 import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
+  const pathname = usePathname();
+
   const {
     dropdownOpened,
     finalSelection,
@@ -32,7 +37,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     handleVehicleReset,
     maker,
     model,
+    selectedProducts,
     setDropdownOpened,
+    setSelectedProducts,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -44,6 +51,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
@@ -62,6 +70,16 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     }
   }, [maker, model]);
 
+  const handleOnAccept = () => {
+    handleVehicleReset();
+    setSelectedProducts([]);
+    setShowModal(false);
+  };
+
+  const handleOnClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -70,6 +88,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         </>
       ) : (
         <>
+          {showModal && (
+            <ResetModal onAccept={handleOnAccept} onClose={handleOnClose} />
+          )}
           <span className={styles.vehicleText}>My vehicle:</span>
           <div className={styles.container}>
             <div className={styles.containerTrigger}>
@@ -102,8 +123,14 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                 <button
                   className={styles.resetButton}
                   onClick={() => {
-                    handleVehicleReset();
-                    setIsLoading(true);
+                    if (
+                      selectedProducts.length &&
+                      pathname === routes.uteBuilder
+                    ) {
+                      setShowModal(true);
+                    } else {
+                      handleVehicleReset();
+                    }
                   }}
                 >
                   <CancelIcon />
