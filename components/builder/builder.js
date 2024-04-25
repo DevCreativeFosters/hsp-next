@@ -171,29 +171,15 @@ export default function Builder({
         setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       }
 
-      const incompatibleCovers = selectedProducts
-        .filter(
-          selectedProduct =>
-            !product.compatibleCovers.includes(selectedProduct.databaseId),
-        )
-        .filter(cover => covers.some(c => c.group === cover.productSlug))
-        .map(cover => cover.productName);
+      let incompatibleCovers = [];
 
       if (selectedProducts.length > 0) {
-        const selectedCover = selectedProducts[0];
-        console.log(selectedCover.productCategories);
-        // selectedCover.productCategories are intersected with product.compatibleCovers
-        let incompatible = true;
-        console.log(selectedCover.productCategories.indexOf(48));
+        incompatibleCovers.push(selectedProducts[0].productName);
         product.compatibleCovers.forEach(category => {
-          console.log(category);
           if (selectedCover.productCategories.includes(category)) {
-            console.log('compatible');
-            incompatible = false;
+            incompatibleCovers = [];
           }
         });
-
-        console.log(incompatible);
       }
 
       setIncompatibleCovers(incompatibleCovers);
