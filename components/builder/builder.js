@@ -171,13 +171,16 @@ export default function Builder({
         setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       }
 
-      const incompatibleCovers = selectedProducts
-        .filter(
-          selectedProduct =>
-            !product.compatibleCovers.includes(selectedProduct.productSlug),
-        )
-        .filter(cover => covers.some(c => c.group === cover.productSlug))
-        .map(cover => cover.productName);
+      let incompatibleCovers = [];
+
+      if (selectedProducts.length > 0) {
+        incompatibleCovers.push(selectedProducts[0].productName);
+        product.compatibleCovers.forEach(category => {
+          if (selectedCover.productCategories.includes(category)) {
+            incompatibleCovers = [];
+          }
+        });
+      }
 
       setIncompatibleCovers(incompatibleCovers);
 
