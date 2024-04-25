@@ -94,7 +94,7 @@ export default function Header({
                       }}
                       size="small"
                       toggleable={
-                        subItems?.length > 0 && url === '/products/'
+                        subItems?.length > 0 && url.includes('/products/')
                           ? 'neutral'
                           : null
                       }

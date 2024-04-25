@@ -19,7 +19,6 @@ export default function DownloadLinkWrapper({ blockName, children, context }) {
   if (excludedBlocks.includes(blockName)) {
     return children;
   }
-
   return (
     <div onClick={onDownloadFileClick} ref={containerRef}>
       {children}
