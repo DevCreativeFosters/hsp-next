@@ -14,12 +14,12 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './blog-post.module.scss';
 
 export function BlogPost({
-  title,
   content,
   excerpt,
   image,
-  slug,
   relatedPosts,
+  slug,
+  title,
 }) {
   const informationRef = useRef(null);
 
@@ -29,21 +29,21 @@ export function BlogPost({
         <div className={styles.contentArea}>
           <div className={styles.breadcrumbsMobile}>
             <BreadcrumbsLifestyle
-              initialContentTypeRoute={routes.blog()}
               exactBreadcrumb={{
                 label: title,
-                url: routes.blog(slug),
                 strong: true,
+                url: routes.blog(slug),
               }}
+              initialContentTypeRoute={routes.blog()}
             />
           </div>
           {image && (
             <div className={styles.featuredImageContainer}>
               <Image
-                className={styles.featuredImage}
-                src={image?.sourceUrl}
-                fill={true}
                 alt={image?.altText}
+                className={styles.featuredImage}
+                fill={true}
+                src={image?.sourceUrl}
               />
             </div>
           )}
@@ -62,14 +62,14 @@ export function BlogPost({
             )}
           </div>
         </div>
-        <div ref={informationRef} className={styles.information}>
+        <div className={styles.information} ref={informationRef}>
           <BreadcrumbsLifestyle
-            initialContentTypeRoute={routes.blog()}
             exactBreadcrumb={{
               label: title,
-              url: routes.blog(slug),
               strong: true,
+              url: routes.blog(slug),
             }}
+            initialContentTypeRoute={routes.blog()}
           />
           {title && <h1 className={styles.title}>{title}</h1>}
           {excerpt && (

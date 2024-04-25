@@ -50,26 +50,26 @@ async function getLayoutData() {
   );
 
   return {
-    globalOptions,
-    footerMenus,
-    mainMenu,
-    mobileMenu,
-    mainProductCategories,
-    productCategories,
-    products,
-    makes,
     allStores,
     excludeChildrenId,
+    footerMenus,
+    globalOptions,
+    mainMenu,
+    mainProductCategories,
+    makes,
+    mobileMenu,
+    productCategories,
+    products,
   };
 }
 
 const data = await getLayoutData();
 
 export default function Layout({
-  withMap,
-  withFooter = true,
-  reserveSpaceForVehicleSelection,
   children,
+  reserveSpaceForVehicleSelection,
+  withFooter = true,
+  withMap,
 }) {
   const normalizedFooterMenus = {
     hsp: [],
@@ -132,21 +132,21 @@ export default function Layout({
         <VehicleProvider>
           <Header
             mainMenu={normalizedMainMenu}
-            secondaryMenu={topNavigationMenu}
-            mobileMenu={normalizedMobileMenu}
             mainProductCategories={data.mainProductCategories}
-            products={normalizedProductData}
             makes={data.makes}
+            mobileMenu={normalizedMobileMenu}
+            products={normalizedProductData}
+            secondaryMenu={topNavigationMenu}
           />
           <main className={styles.main}>
             {withMap && (
               <div className={styles.background}>
                 <Image
-                  className={styles.backgroundImage}
-                  src={BgContinent}
                   alt="Shape of Australia continent"
+                  className={styles.backgroundImage}
                   fill={true}
                   quality={80}
+                  src={BgContinent}
                 />
               </div>
             )}
@@ -163,9 +163,9 @@ export default function Layout({
             <div className={styles.bottomSticky}>
               <FullscreenCollapse>
                 <Newsletter
+                  description={newsletterDescription}
                   googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
                   title={newsletterTitle}
-                  description={newsletterDescription}
                 />
                 <Footer menus={normalizedFooterMenus} text={footerText} />
               </FullscreenCollapse>

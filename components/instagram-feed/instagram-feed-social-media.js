@@ -5,16 +5,16 @@ import styles from './instagram-feed-social-media.module.scss';
 export default function InstagramFeedSocialMedia({ socialMenu }) {
   return (
     <ul className={styles.socialMedia}>
-      {socialMenu?.map(({ url, iconPredefined, icon }, index) => (
+      {socialMenu?.map(({ icon, iconPredefined, url }, index) => (
         <li key={url + index}>
           <Button
-            href={url || '#'}
-            target="_blank"
-            size="small"
-            variant="tertiary"
             background="dark"
+            href={url || '#'}
             leftIcon={iconPredefined !== 'CUSTOM' ? iconPredefined : false}
             leftIconUrl={iconPredefined === 'CUSTOM' ? icon : false}
+            size="small"
+            target="_blank"
+            variant="tertiary"
           />
         </li>
       ))}

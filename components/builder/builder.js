@@ -1,156 +1,394 @@
 'use client';
 
-import { useState, useCallback, useContext, useRef, useEffect } from 'react';
-import Container from '@components/container/container';
-import ProductsCarousel from './products-carousel';
-import Preview from './preview';
-import Sidebar from './sidebar';
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import StoreLocatorContext from '@contexts/store-locator';
-import StoreList from '@components/store-list/store-list';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import { useVehicleContext } from '@contexts/vehicle';
+
 import { useIsMobile } from '@hooks/useIsMobile';
 
-import styles from './builder.module.scss';
+import getRelatedCovers from '@lib/api/get-related-covers';
+import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
+import routes from '@lib/routes';
 
-const getOtherProductsWithSameParent = (products, productSlug, variantSlug) =>
-  products.filter(
-    product =>
-      product.productSlug === productSlug &&
-      product.variantSlug !== variantSlug,
-  );
+import ClashModal from '@components/builder/clash-modal';
+import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
+import Container from '@components/container/container';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+
+import styles from './builder.module.scss';
+import {
+  getIncompatibleProducts,
+  getOtherProductsWithSameParent,
+  isProductSelected,
+} from './helpers';
+import Preview from './preview';
+import ProductsCarousel from './products-carousel';
+import Sidebar from './sidebar';
 
 const DEFAULT_OPEN_SECTION = 'products';
+export const STEP_TITLES = {
+  1: 'Add your UTE covering',
+  2: 'Add products to your vehicle',
+};
 
-export default function Builder({ makeName, model, products, allLocations, uteCovers }) {
+export default function Builder({
+  allLocations,
+  factoryOptions,
+  globalOptions,
+  makes,
+  noCover,
+  products,
+}) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const [disabledProducts, setDisabledProducts] = useState([]);
-  const [topHeight, setHeight] = useState(0);
-  const topRef = useRef(null);
+
+  const [covers, setCovers] = useState([]);
+  const [stepProducts, setStepProducts] = useState(products);
+  const [showClashModal, setShowClashModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [productToAdd, setProductToAdd] = useState(null);
+  const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
+    useState(null);
+  const [incompatibleCovers, setIncompatibleCovers] = useState(null);
   const isMobile = useIsMobile(1280);
 
-  // @todo: get covers media based on model, make and uteCovers child slug
-  const coversWithMedia = [];
-
   const {
-    location,
-    searchGeolocation,
-    filteredLocations,
-    selectedStore,
-    setSelectedStore,
-    isMapVisible,
-    radius,
-  } = useContext(StoreLocatorContext);
+    maker: make,
+    model,
+    selectedCover,
+    selectedFactoryOptions,
+    selectedProducts,
+    setGoToLink,
+    setSelectedCover,
+    setSelectedFactoryOptions,
+    setSelectedProducts,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+    stepTitle,
+  } = useVehicleContext();
 
-  const isInlineResultListVisible = Boolean(
-    openSection === 'store' && location && searchGeolocation && radius,
-  );
-  const isInlineMapVisible = Boolean(
-    openSection === 'store' && !isMobile && isMapVisible,
+  const { filteredLocations, isMapVisible, setSelectedStore } =
+    useContext(StoreLocatorContext);
+
+  useEffect(
+    function setRelatedCovers() {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions ||
+        !globalOptions?.coversCategory
+      ) {
+        return;
+      }
+
+      getRelatedCovers(
+        make.slug,
+        model.slug,
+        globalOptions.coversCategory.nodes[0].slug,
+      ).then(relatedCovers => {
+        if (!relatedCovers) {
+          return;
+        }
+
+        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const covers = [...normalizedCovers, ...noCoverNormalized];
+
+        setStepProducts(covers);
+        setCovers(covers);
+      });
+    },
+    [globalOptions, make, model, noCover],
   );
 
-  useEffect(function setTopHeightObserver() {
-    if (!topRef.current) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setHeight(topRef.current?.getBoundingClientRect().height);
-    });
-    resizeObserver.observe(topRef.current);
-    return () => resizeObserver.disconnect();
-  }, []);
+  useEffect(
+    function setCurrentStepProducts() {
+      if (stepNumber === 1) {
+        setStepProducts(covers);
+      }
+
+      if (stepNumber === 2) {
+        setStepProducts(normalizeUteBuilderProducts(products));
+      }
+    },
+    [covers, products, setStepProducts, stepNumber],
+  );
+
+  useEffect(() => {
+    if (!make || !model || stepNumber === 0) {
+      return;
+    }
+
+    const selectedCover = selectedProducts.find(selectedProduct =>
+      covers.some(cover => cover.group === selectedProduct.productSlug),
+    );
+
+    if (!selectedCover) {
+      setStepNumber(1);
+      setStepTitle(STEP_TITLES[1]);
+
+      return;
+    }
+
+    setStepNumber(2);
+    setStepTitle(STEP_TITLES[2]);
+    setSelectedCover(selectedCover);
+  }, [
+    covers,
+    make,
+    model,
+    selectedProducts,
+    setSelectedCover,
+    setStepNumber,
+    setStepTitle,
+    stepNumber,
+  ]);
+
+  useEffect(() => {
+    if (!productToAdd || showClashModal) {
+      return;
+    }
+
+    const products = [...selectedProducts, productToAdd];
+
+    setSelectedProducts(products);
+    setProductToAdd(null);
+  }, [productToAdd, selectedProducts, setSelectedProducts, showClashModal]);
 
   const addProduct = useCallback(
     product => {
-      const newSelectedProducts = [...selectedProducts, product];
-      const newDisabledProducts = [
-        ...disabledProducts,
-        ...getOtherProductsWithSameParent(
-          products,
-          products.productSlug,
-          products.variantSlug,
-        ),
-      ];
+      let incompatibleFactoryOptions = [];
 
-      setSelectedProducts(newSelectedProducts);
-      setDisabledProducts(newDisabledProducts);
+      if (selectedFactoryOptions?.length > 0) {
+        incompatibleFactoryOptions = selectedFactoryOptions
+          .filter(
+            option => !product.compatibleFactoryOptions.includes(option.slug),
+          )
+          .map(option => option.value);
+
+        setIncompatibleFactoryOptions(incompatibleFactoryOptions);
+      }
+
+      let incompatibleCovers = [];
+
+      if (selectedProducts.length > 0) {
+        incompatibleCovers.push(selectedProducts[0].productName);
+        product.compatibleCovers.forEach(category => {
+          if (selectedCover.productCategories.includes(category)) {
+            incompatibleCovers = [];
+          }
+        });
+      }
+
+      setIncompatibleCovers(incompatibleCovers);
+
+      if (
+        incompatibleFactoryOptions.length > 0 ||
+        incompatibleCovers.length > 0
+      ) {
+        setShowClashModal(true);
+
+        return;
+      }
+
+      if (stepNumber === 2) {
+        const newDisabledProducts = [
+          ...disabledProducts,
+          ...getOtherProductsWithSameParent(
+            stepProducts,
+            product.productSlug,
+            product.variantSlug,
+          ),
+          ...getIncompatibleProducts(stepProducts, product, covers),
+        ];
+
+        setDisabledProducts(newDisabledProducts);
+      }
+
+      setProductToAdd(product);
     },
-    [selectedProducts, disabledProducts, products],
+    [
+      covers,
+      disabledProducts,
+      selectedFactoryOptions,
+      selectedProducts,
+      stepNumber,
+      stepProducts,
+    ],
   );
 
   const removeProduct = useCallback(
     product => {
-      const newSelectedProducts = selectedProducts.filter(
-        selectedProduct => selectedProduct !== product,
-      );
+      let newSelectedProducts = [];
+      const isCover = covers.some(cover => cover.group === product.productSlug);
+
+      if (isCover) {
+        setGoToLink(routes.uteBuilder);
+
+        return;
+      }
+
+      selectedProducts.forEach(selectedProduct => {
+        if (selectedProduct.variantSlug !== product.variantSlug) {
+          newSelectedProducts.push(selectedProduct);
+        }
+      });
+
       const otherProductsWithSameParent = getOtherProductsWithSameParent(
-        products,
+        stepProducts,
         product.productSlug,
         product.variantSlug,
       );
-      const newDisabledProducts = disabledProducts.filter(
-        el => !otherProductsWithSameParent.includes(el),
-      );
+
+      const incompatibleProducts = [
+        ...getIncompatibleProducts(stepProducts, product, covers),
+      ];
+
+      const newDisabledProducts = disabledProducts
+        .filter(el => !otherProductsWithSameParent.includes(el))
+        .filter(el => !incompatibleProducts.includes(el));
 
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
-    [selectedProducts, disabledProducts, products],
+    [
+      covers,
+      disabledProducts,
+      selectedProducts,
+      setGoToLink,
+      setSelectedProducts,
+      stepProducts,
+    ],
   );
 
   const toggleProduct = useCallback(
     product => {
-      selectedProducts.includes(product)
-        ? removeProduct(product)
-        : addProduct(product);
+      const isSelected = isProductSelected(
+        selectedProducts,
+        product.variantSlug,
+      );
+      setCurrentProduct(product);
+      isSelected ? removeProduct(product) : addProduct(product);
     },
-    [selectedProducts, addProduct, removeProduct],
+    [addProduct, removeProduct, selectedProducts],
   );
 
+  const toggleGroup = useCallback(
+    group => {
+      const products = [];
+      stepProducts.forEach(item => {
+        if (item.variants.length > 1 && item.group !== group.slug) {
+          item.variants.forEach((variant, index) => {
+            variant.isOpen = !variant.isOpen;
+
+            if (index > 0) {
+              variant.hidden = !variant.hidden;
+            }
+          });
+        }
+        products.push(item);
+      });
+
+      setStepProducts(products);
+    },
+    [setStepProducts, stepProducts],
+  );
+
+  const isInlineMapVisible = Boolean(
+    openSection === 'store' && !isMobile && isMapVisible,
+  );
+
+  const handleClashModalClose = () => {
+    setShowClashModal(false);
+  };
+
+  const handleClashModalAccept = () => {
+    if (selectedFactoryOptions?.length > 0) {
+      setSelectedFactoryOptions(
+        selectedFactoryOptions.filter(
+          option => !incompatibleFactoryOptions.includes(option.value),
+        ),
+      );
+    }
+
+    if (incompatibleCovers?.length > 0) {
+      selectedProducts.shift();
+    }
+
+    const isCover = covers.some(
+      cover => cover.group === currentProduct.productSlug,
+    );
+
+    if (isCover) {
+      setProductToAdd(currentProduct);
+    } else {
+      setSelectedProducts([]);
+    }
+
+    setShowClashModal(false);
+  };
+
   return (
-    <div className={styles.builder}>
-      <Container className={styles.container}>
-        <div className={styles.top} ref={topRef}>
-          <Sidebar
-            openSection={openSection}
-            setOpenSection={setOpenSection}
-            selectedProducts={selectedProducts}
-            removeProduct={removeProduct}
-            isMobile={isMobile}
-            allLocations={allLocations}
-          />
-
-          <StoreList
-            className={styles.results}
-            items={filteredLocations}
-            show={isInlineResultListVisible}
-            onSelect={item => {
-              setSelectedStore(item);
-            }}
-            style={{
-              height: selectedStore ? topHeight : null,
-            }}
-          />
-
-          <Preview
-            makeName={makeName}
-            model={model}
-            selectedProducts={selectedProducts}
-          >
-            {isInlineMapVisible && (
-              <StoreLocatorMap
-                className={styles.map}
-                locations={filteredLocations}
-                onMarkerClick={setSelectedStore}
+    <>
+      {showClashModal && (
+        <ClashModal
+          incompatibleCovers={incompatibleCovers}
+          incompatibleFactoryOptions={incompatibleFactoryOptions}
+          onAccept={handleClashModalAccept}
+          onClose={handleClashModalClose}
+        />
+      )}
+      <div className={styles.builder}>
+        <Container className={styles.container}>
+          <div className={styles.top}>
+            <Sidebar
+              allLocations={allLocations}
+              globalOptions={globalOptions}
+              isMobile={isMobile}
+              openSection={openSection}
+              removeProduct={removeProduct}
+              selectedProducts={selectedProducts}
+              setOpenSection={setOpenSection}
+              stepNumber={stepNumber}
+            />
+            {stepNumber > 0 ? (
+              <Preview
+                make={make}
+                model={model}
+                selectedProducts={selectedProducts}
+              >
+                {isInlineMapVisible && (
+                  <StoreLocatorMap
+                    className={styles.map}
+                    locations={filteredLocations}
+                    onMarkerClick={setSelectedStore}
+                  />
+                )}
+              </Preview>
+            ) : (
+              <UTEChooseYourVehicle
+                factoryOptions={factoryOptions}
+                makes={makes}
               />
             )}
-          </Preview>
-        </div>
-        <ProductsCarousel
-          products={products}
-          selectedProducts={selectedProducts}
-          disabledProducts={disabledProducts}
-          toggleProduct={toggleProduct}
-        />
-      </Container>
-    </div>
+          </div>
+          {stepNumber > 0 && stepProducts.length > 0 && (
+            <ProductsCarousel
+              disabledProducts={disabledProducts}
+              isMobile={isMobile}
+              products={stepProducts}
+              selectedCover={selectedCover}
+              selectedProducts={selectedProducts}
+              stepNumber={stepNumber}
+              stepTitle={stepTitle}
+              toggleGroup={toggleGroup}
+              toggleProduct={toggleProduct}
+            />
+          )}
+        </Container>
+      </div>
+    </>
   );
 }

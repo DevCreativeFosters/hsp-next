@@ -1,17 +1,21 @@
 'use client';
 
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useIsMobile } from '@hooks/useIsMobile';
+
+import Button from '@components/button/button';
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
-import { useCallback, useRef, useEffect, useMemo } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import Tile from '@components/tile/tile';
-import Container from '@components/container/container';
-import Button from '@components/button/button';
-import { useIsMobile } from '@hooks/useIsMobile';
-import 'swiper/css';
+
 import styles from './posts-carousel.module.scss';
 
-export default function PostsCarousel({ title, description, button, posts }) {
+export default function PostsCarousel({ button, description, posts, title }) {
   const isMobile = useIsMobile();
   const swiperRef = useRef(null);
 
@@ -26,7 +30,7 @@ export default function PostsCarousel({ title, description, button, posts }) {
           return acc;
         }, [])
       : [];
-  }, [posts, groupSize]);
+  }, [groupSize, posts]);
 
   useEffect(
     function makeSlidesSameHeight() {
@@ -61,20 +65,20 @@ export default function PostsCarousel({ title, description, button, posts }) {
 
   return (
     <Container collapseMargin>
-      <SectionIntro title={title} description={description} fitInline>
+      <SectionIntro description={description} fitInline title={title}>
         <SectionButtons>
           <div className={styles.actionButtons}>
             {groupedPosts.length > 1 && (
               <div className={styles.swiperButtons}>
                 <Button
                   onClick={handlePrevClick}
-                  variant="secondary"
                   rightIcon="arrow-previous"
+                  variant="secondary"
                 />
                 <Button
                   onClick={handleNextClick}
-                  variant="secondary"
                   rightIcon="arrow-next"
+                  variant="secondary"
                 />
               </div>
             )}
@@ -87,12 +91,12 @@ export default function PostsCarousel({ title, description, button, posts }) {
 
       <Swiper
         className={styles.swiper}
-        slidesPerView={1}
-        spaceBetween={isMobile ? 0 : 24}
+        loop={false}
         navigation
         onSwiper={swiper => (swiperRef.current = swiper)}
-        loop={false}
         slidesPerGroup={1}
+        slidesPerView={1}
+        spaceBetween={isMobile ? 0 : 24}
         watchSlidesProgress
       >
         {groupedPosts.map((group, groupIndex) => (

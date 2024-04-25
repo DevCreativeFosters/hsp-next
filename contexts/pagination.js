@@ -9,8 +9,8 @@ export const PaginationContextProvider = ({ children }) => {
   return (
     <PaginationContext.Provider
       value={{
-        value,
         setValue,
+        value,
       }}
     >
       {children}
@@ -20,7 +20,7 @@ export const PaginationContextProvider = ({ children }) => {
 
 export function usePaginationContext(scopeKey) {
   const ctx = useContext(PaginationContext);
-  const { value, setValue } = ctx;
+  const { setValue, value } = ctx;
 
   useEffect(function () {
     setValue(currentValue => {
@@ -28,7 +28,7 @@ export function usePaginationContext(scopeKey) {
       obj[scopeKey] = 1;
       return { ...currentValue, ...obj };
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return ctx;
 }

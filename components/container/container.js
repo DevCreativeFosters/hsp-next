@@ -1,13 +1,14 @@
 import clsx from 'clsx';
+
 import styles from './container.module.scss';
 
 export default function Container({
-  relative,
+  children,
+  className,
+  collapseBottomMargin,
   collapseMargin,
   collapseTopMargin,
-  collapseBottomMargin,
-  className,
-  children,
+  relative,
 }) {
   return (
     <div

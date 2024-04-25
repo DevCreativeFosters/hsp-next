@@ -1,8 +1,11 @@
 import Link from 'next/link';
+
+import { getIcon } from '@lib/icons';
+
 import CategoryCard from '@components/category-card/category-card';
 import TitleAndDescription from '@components/title-and-description/title-and-description';
+
 import styles from './product-category.module.scss';
-import { getIcon } from '@lib/icons';
 
 export default function ProductCategory({ category }) {
   const subCategories = category?.children?.nodes || [];
@@ -10,8 +13,8 @@ export default function ProductCategory({ category }) {
   return (
     <div className={styles.productCategory}>
       <TitleAndDescription
-        title={category?.name}
         description={category?.description}
+        title={category?.name}
       />
       <div
         className={styles.subCategories}
@@ -21,9 +24,9 @@ export default function ProductCategory({ category }) {
         data-total-tiles-mod-4={(subCategories.length + 1) % 4}
       >
         {subCategories.map(subCategory => (
-          <CategoryCard key={subCategory.databaseId} category={subCategory} />
+          <CategoryCard category={subCategory} key={subCategory.databaseId} />
         ))}
-        <Link href="#" className={styles.ctaLink}>
+        <Link className={styles.ctaLink} href="#">
           <span>Build your setup</span>
           <ArrowIcon />
         </Link>

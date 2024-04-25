@@ -1,17 +1,20 @@
 'use client';
 
-import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+
 import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import routes from '@lib/routes';
+
 import styles from './video-tile.module.scss';
 
 export default function VideoTile({
-  title,
-  slug,
   celebrityPostsCustomFields,
   context,
+  slug,
+  title,
 }) {
   const isFullscreenRef = useRef(false);
   const thumbnail = celebrityPostsCustomFields?.thumbnail?.node;
@@ -115,23 +118,23 @@ export default function VideoTile({
     <Link className={styles.tile} href={href}>
       {thumbnail?.sourceUrl ? (
         <Image
+          alt={thumbnail.altText || title}
           className={clsx(styles.thumbnail, {
             [styles.isVisible]: isThumbnailVisible,
           })}
-          src={thumbnail.sourceUrl}
           height={546}
+          src={thumbnail.sourceUrl}
           width={294}
-          alt={thumbnail.altText || title}
         />
       ) : null}
       <video
-        ref={videoRef}
         className={styles.video}
         muted
-        onPlay={handleVideoPlay}
-        onPause={handleVideoPause}
         onEnded={handleOnEnded}
+        onPause={handleVideoPause}
+        onPlay={handleVideoPlay}
         poster={thumbnail?.sourceUrl}
+        ref={videoRef}
       >
         <source
           src={videoUrl}

@@ -1,13 +1,16 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import clsx from 'clsx';
+
 import canAutoplay from 'can-autoplay';
-import { isVideoPlaying } from '@lib/media';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 import { getIcon } from '@lib/icons';
+import { isVideoPlaying } from '@lib/media';
 import routes from '@lib/routes';
+
 import Button from '@components/button/button';
 import styles from '@components/video-reel/video-el.module.scss';
 
@@ -59,7 +62,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
       }
       setCanAutoplayWithSound(true);
     }
-  }, [isActive, canAutoplayWithSound]);
+  }, [canAutoplayWithSound, isActive]);
 
   const onSoundButtonClick = useCallback(() => {
     setCanAutoplayWithSound(true);
@@ -105,7 +108,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         areEventsAttached.current = false;
       };
     },
-    [videoUrl, isActive, onCanPlay, onPlay, onPause, onEnd],
+    [isActive, onCanPlay, onEnd, onPause, onPlay, videoUrl],
   );
 
   useEffect(
@@ -121,13 +124,13 @@ export default function VideoEl({ isActive, thumbnail, video }) {
     <>
       {isActive && (
         <video
-          muted={canAutoplayWithSound === false}
-          ref={videoRef}
+          autoPlay
           className={styles.video}
           controls
           disablePictureInPicture
+          muted={canAutoplayWithSound === false}
           playsInline
-          autoPlay
+          ref={videoRef}
         >
           <source
             src={videoUrl}
@@ -139,29 +142,29 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
       {thumbnail.sourceUrl && (
         <Image
+          alt={thumbnail.altText}
           className={clsx(styles.thumbnail, {
             [styles.isVisible]: !isActive,
           })}
-          src={thumbnail.sourceUrl}
           height={546}
+          src={thumbnail.sourceUrl}
           width={294}
-          alt={thumbnail.altText}
         />
       )}
 
       {isActive && isPlayButtonVisible && (
         <button
-          type="button"
           className={clsx(styles.button, styles.playButton)}
           onClick={onPlayButtonClick}
+          type="button"
         />
       )}
 
       {isActive && !isPlayButtonVisible && !canAutoplayWithSound && (
         <button
-          type="button"
           className={clsx(styles.button, styles.soundButton)}
           onClick={onSoundButtonClick}
+          type="button"
         >
           <SpeakerIcon />
         </button>
@@ -169,10 +172,10 @@ export default function VideoEl({ isActive, thumbnail, video }) {
 
       <Button
         className={styles.buttonBack}
-        variant="tertiary"
-        size="large"
         leftIcon="arrow-backward"
         onClick={onBackButtonClick}
+        size="large"
+        variant="tertiary"
       />
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />

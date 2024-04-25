@@ -64,7 +64,6 @@
 .trigger {
   display: flex;
   flex-direction: column;
-  align-items: space-between;
   justify-content: center;
   width: 100%;
   min-height: var(--min-height);
@@ -238,24 +237,5 @@
 
   .isInDocumentFlow & {
     padding-bottom: 0;
-  }
-}
-
-.option {
-  display: block;
-  font-size: 20px;
-  width: 100%;
-  padding: 12px 24px;
-  transition: var(--transition);
-  text-align: left;
-  color: var(--color-white-100);
-
-  &:hover,
-  &:focus {
-    background: var(--color-white-10);
-  }
-
-  .prefixSuffix {
-    color: var(--color-white-80);
   }
 }

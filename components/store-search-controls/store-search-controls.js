@@ -1,42 +1,46 @@
 'use client';
 
-import { useState, useContext, useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import clsx from 'clsx';
 import { v4 as uuidv4 } from 'uuid';
+
+import StoreLocatorContext from '@contexts/store-locator';
+
 import {
-  getPlaceSuggestions,
   getPlaceGeoLocation,
+  getPlaceSuggestions,
   stringifySuggestion,
 } from '@lib/google-place';
-import StoreLocatorContext from '@contexts/store-locator';
+import normalizeStores from '@lib/normalize-stores';
 import { findLocationsInRadius } from '@lib/store-locations';
+
+import Switch from '@components/form/switch';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
-import Switch from '@components/form/switch';
 
 import styles from './store-search-controls.module.scss';
-import normalizeStores from '@lib/normalize-stores';
 
 export default function StoreSearchControls({
-  label = 'Locate your store',
-  isWide,
-  isHidden,
-  interactWithDisabledForm,
   allLocations,
+  interactWithDisabledForm,
+  isHidden,
+  isWide,
+  label = 'Locate your store',
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
   const {
-    location,
-    setLocation,
-    searchGeolocation,
-    setSearchGeolocation,
-    setFilteredLocations,
-    selectedStore,
     isMapVisible,
+    location,
+    searchGeolocation,
+    selectedStore,
+    setFilteredLocations,
+    setLocation,
     setMapVisible,
+    setSearchGeolocation,
   } = useContext(StoreLocatorContext);
 
   const selectLocation = useCallback(
@@ -87,7 +91,7 @@ export default function StoreSearchControls({
         isMounted = false;
       };
     },
-    [locationInput, location],
+    [location, locationInput],
   );
 
   useEffect(
@@ -104,7 +108,7 @@ export default function StoreSearchControls({
         setFilteredLocations(locationList);
       };
     },
-    [searchGeolocation, setFilteredLocations, allLocations],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (
@@ -118,13 +122,10 @@ export default function StoreSearchControls({
     >
       <div className={styles.location}>
         <StoreLocatorInput
-          type="text"
-          name="location"
-          label={label}
-          placeholder="Your location"
+          disabled={selectedStore}
           icon="search"
-          withResetButton
-          value={locationInput}
+          label={label}
+          name="location"
           onChange={value => {
             setLocationInput(value);
             if (!value) {
@@ -132,8 +133,11 @@ export default function StoreSearchControls({
               setSearchGeolocation(null);
             }
           }}
+          placeholder="Your location"
           required
-          disabled={selectedStore}
+          type="text"
+          value={locationInput}
+          withResetButton
         />
         <StoreLocatorSuggestions
           items={suggestions}
@@ -142,12 +146,12 @@ export default function StoreSearchControls({
       </div>
       <div className={styles.mapToggler}>
         <Switch
-          label="Show map"
-          state={isMapVisible}
           disabled={selectedStore}
+          label="Show map"
           onChange={() => {
             setMapVisible(!isMapVisible);
           }}
+          state={isMapVisible}
         />
       </div>
     </div>

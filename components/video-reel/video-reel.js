@@ -1,14 +1,16 @@
 import clsx from 'clsx';
+
 import VideoEl from '@components/video-reel/video-el';
+
 import styles from './video-reel.module.scss';
 
-export default function VideoReel({ items, currentIndex, setCurrentIndex }) {
+export default function VideoReel({ currentIndex, items, setCurrentIndex }) {
   return (
     <div className={styles.track} data-current={currentIndex} id="video-reel">
       <span className={styles.placeholderFrontTile} />
       <span className={styles.placeholderFrontTile} />
       <span className={styles.placeholderFrontTile} />
-      {items.map(({ title, celebrityPostsCustomFields }, index) => (
+      {items.map(({ celebrityPostsCustomFields, title }, index) => (
         <div
           className={styles.tileContainer}
           key={index}
@@ -21,9 +23,9 @@ export default function VideoReel({ items, currentIndex, setCurrentIndex }) {
           >
             <VideoEl
               index={index}
-              title={title}
               isActive={index === currentIndex}
               thumbnail={celebrityPostsCustomFields?.thumbnail?.node}
+              title={title}
               video={celebrityPostsCustomFields?.video?.node}
             />
             <h5 className={styles.title}>{title}</h5>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
@@ -22,8 +22,8 @@ import styles from './choose-your-vehicle-block.module.scss';
 
 export default function ChooseYourVehicleBlock({
   makes: makersAndModels,
-  variants,
   params,
+  variants,
 }) {
   const wrapperRef = useRef();
   const stickerRef = useRef();
@@ -33,7 +33,7 @@ export default function ChooseYourVehicleBlock({
       value: variant.variantSlug,
     };
   });
-  const { maker, model, variant, setVariant, handleSave, setVehicleSelection } =
+  const { handleSave, maker, model, setVariant, setVehicleSelection, variant } =
     useVehicleContext();
   const {
     handleMakerChange,
@@ -42,6 +42,8 @@ export default function ChooseYourVehicleBlock({
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
+
+  const [localParams, setLocalParams] = useState(params);
 
   const path = usePathname();
 
@@ -53,6 +55,16 @@ export default function ChooseYourVehicleBlock({
   }, [path]);
 
   const reload = !getValueOrSlug(variant);
+
+  useEffect(() => {
+    if (maker && model && path) {
+      setLocalParams({
+        mainCategorySlug: path.slice(1),
+        makeSlug: getValueOrSlug(maker),
+        modelSlug: getValueOrSlug(model),
+      });
+    }
+  }, [maker, model, path]);
 
   useEffect(
     function setGlobalVariantStateBySlug() {
@@ -67,7 +79,7 @@ export default function ChooseYourVehicleBlock({
 
   useEffect(
     function attachIntersectionObserver() {
-      const { width, height } = windowSize;
+      const { height, width } = windowSize;
       const el = wrapperRef.current;
       const stickerEl = stickerRef.current;
       const stickerHeight = stickerEl.clientHeight;
@@ -104,7 +116,7 @@ export default function ChooseYourVehicleBlock({
         }
       };
     },
-    [windowSize.width, windowSize.height],
+    [windowSize.height, windowSize.width],
   );
 
   return (
@@ -115,42 +127,42 @@ export default function ChooseYourVehicleBlock({
         </h3>
         <div className={styles.form}>
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MAKER}
-            options={makerSelectOptions}
-            value={getValueOrSlug(maker) || null}
+            className={styles.select}
             dropdownInDocumentFlow={isMobile}
             onChange={handleMakerChange}
-            className={styles.select}
+            options={makerSelectOptions}
+            placeholder={constants.SELECT_LABELS.MAKER}
+            size="large"
+            value={getValueOrSlug(maker) || null}
           />
           <Select
-            size="large"
-            placeholder={constants.SELECT_LABELS.MODEL}
-            options={modelSelectOptions}
-            value={getValueOrSlug(model) || null}
+            className={styles.select}
             disabled={!modelSelectOptions.length}
             dropdownInDocumentFlow={isMobile}
             onChange={handleModelChange}
-            className={styles.select}
+            options={modelSelectOptions}
+            placeholder={constants.SELECT_LABELS.MODEL}
+            size="large"
+            value={getValueOrSlug(model) || null}
           />
           {variants?.length > 0 && (
             <Select
-              size="large"
-              placeholder={constants.SELECT_LABELS.VARIANT}
-              options={variantsNormalized}
-              value={getValueOrSlug(variant) || null}
-              disabled={!variants.length}
-              onChange={handleVariantChange}
-              dropdownInDocumentFlow={isMobile}
               className={styles.select}
+              disabled={!variants.length}
+              dropdownInDocumentFlow={isMobile}
+              onChange={handleVariantChange}
+              options={variantsNormalized}
+              placeholder={constants.SELECT_LABELS.VARIANT}
+              size="large"
+              value={getValueOrSlug(variant) || null}
             />
           )}
           <Button
-            rightIcon="arrow-forward"
             className={styles.button}
-            size="large"
-            onClick={() => handleSave(params, reload)}
             disabled={!model}
+            onClick={() => handleSave(localParams, reload)}
+            rightIcon="arrow-forward"
+            size="large"
           >
             See details
           </Button>

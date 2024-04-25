@@ -1,10 +1,11 @@
-import styles from './title-and-description.module.scss';
 import clsx from 'clsx';
 
+import styles from './title-and-description.module.scss';
+
 export default function TitleAndDescription({
+  description,
   layoutVariant,
   title,
-  description,
 }) {
   if (title || description) {
     return (

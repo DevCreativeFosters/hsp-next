@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 
-import Container from '@components/container/container';
 import { ConditionalWrapper } from '@lib/helpers';
+
+import Container from '@components/container/container';
+
 import styles from './information-box.module.scss';
 
-export default function InformationBox({ isSidebar, hideOn, className }) {
+export default function InformationBox({ className, hideOn, isSidebar }) {
   const Element = isSidebar ? 'aside' : 'div';
 
   return (

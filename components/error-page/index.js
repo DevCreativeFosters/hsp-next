@@ -1,8 +1,10 @@
 import routes from '@lib/routes';
+
 import Button from '@components/button/button';
+
 import styles from './index.module.scss';
 
-export default function ErrorPage({ title, text, buttonText, product }) {
+export default function ErrorPage({ buttonText, product, text, title }) {
   return (
     <div className={styles.container}>
       <div className={styles.main}>

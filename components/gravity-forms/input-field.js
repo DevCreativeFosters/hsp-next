@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react';
-import Input from '@components/form/input';
+
 import useGravityForm from '@hooks/useGravityForm';
+
+import Input from '@components/form/input';
 
 const DEFAULT_VALUE = '';
 
@@ -8,10 +10,10 @@ function getPayload(type, id, value) {
   switch (type) {
     case 'EMAIL':
       return {
-        id: id,
         emailValues: {
           value: value,
         },
+        id: id,
       };
     default:
       return {
@@ -41,20 +43,20 @@ function getValue(type, fieldValue) {
   }
 }
 
-export default function InputField({ form, field, fieldErrors }) {
+export default function InputField({ field, fieldErrors, form }) {
   const {
     databaseId: id,
-    type,
+    defaultValue,
+    isRequired,
     label,
     layoutGridColumnSpan,
-    isRequired,
     placeholder,
+    type,
     value,
-    defaultValue,
   } = field;
 
   const formId = form.formId;
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
 
   const stateValue = getValue(type, fieldValue);
@@ -65,14 +67,14 @@ export default function InputField({ form, field, fieldErrors }) {
 
   const fieldError = useMemo(() => {
     return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [id, fieldErrors]);
+  }, [fieldErrors, id]);
 
   useEffect(
     function syncFieldState() {
       if (valueCalculated) {
         dispatch({
-          type: 'updateFieldValue',
           payload: getPayload(type, id, valueCalculated),
+          type: 'updateFieldValue',
         });
       }
     },
@@ -82,22 +84,22 @@ export default function InputField({ form, field, fieldErrors }) {
 
   return (
     <Input
-      type={getType(type)}
-      id={`gform_${formId}_${id}`}
-      name={`gform_${formId}_${id}`}
       autoComplete={field.hasAutocomplete ? field.autocompleteAttribute : null}
-      placeholder={placeholder}
       errorMessage={fieldError?.message}
       halfWidth={layoutGridColumnSpan === 6}
+      id={`gform_${formId}_${id}`}
       label={label}
-      required={Boolean(isRequired)}
-      value={valueCalculated}
+      name={`gform_${formId}_${id}`}
       onChange={ev => {
         dispatch({
-          type: 'updateFieldValue',
           payload: getPayload(type, id, ev.target.value),
+          type: 'updateFieldValue',
         });
       }}
+      placeholder={placeholder}
+      required={Boolean(isRequired)}
+      type={getType(type)}
+      value={valueCalculated}
     />
   );
 }

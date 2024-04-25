@@ -1,0 +1,14 @@
+.alert {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-white-5);
+}
+
+.icon {
+  color: var(--color-white-100);
+}

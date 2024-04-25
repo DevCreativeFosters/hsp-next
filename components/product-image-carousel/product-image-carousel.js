@@ -1,11 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import clsx from 'clsx';
+import Image from 'next/image';
+
 import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
+
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({ images }) {
@@ -27,11 +31,11 @@ export default function ProductImageCarousel({ images }) {
       backgroundImage: selectedImage
         ? `url(${selectedImage.sourceUrl})`
         : 'none',
-      backgroundSize: zoomed ? '250%' : 'cover',
       backgroundPosition: backgroundPosition,
       backgroundRepeat: 'no-repeat',
+      backgroundSize: zoomed ? '250%' : 'cover',
     };
-  }, [selectedImage, zoomed, backgroundPosition]);
+  }, [backgroundPosition, selectedImage, zoomed]);
 
   const handleZoomEnter = useCallback(() => {
     setZoomed(true);
@@ -106,7 +110,7 @@ export default function ProductImageCarousel({ images }) {
       document.body.style.overflowY = 'auto';
       document.removeEventListener('touchmove', handleTouchMoveDocument);
     };
-  }, [isMobile, zoomed, handleTouchMoveDocument]);
+  }, [handleTouchMoveDocument, isMobile, zoomed]);
 
   const isNavigationVisible = images?.length > 4;
 
@@ -114,17 +118,18 @@ export default function ProductImageCarousel({ images }) {
     const itemTemplate = item => (
       <div className={styles.thumbnailWrapper}>
         <Image
-          className={styles.thumbnail}
-          src={item.sourceUrl}
           alt={item.alt}
-          width={141}
+          className={styles.thumbnail}
           height={141}
           onClick={() => handleThumbnailClick(item)}
+          src={item.sourceUrl}
+          width={141}
         />
       </div>
     );
+
     return itemTemplate;
-  }, []);
+  }, [handleThumbnailClick]);
 
   return (
     <div className={styles.container}>
@@ -132,41 +137,41 @@ export default function ProductImageCarousel({ images }) {
         className={clsx(styles.mainImageContainer, {
           [styles.zoomed]: zoomed,
         })}
-        ref={mainImageContainerRef}
         onMouseEnter={handleZoomEnter}
         onMouseLeave={handleZoomLeave}
         onMouseMove={handleMouseMove}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleMouseMove}
         onTouchEnd={handleTouchEnd}
+        onTouchMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        ref={mainImageContainerRef}
         style={containerStyle}
       />
       <TileCarousel
+        buttonNextRef={buttonNextRef}
+        buttonPrevRef={buttonPrevRef}
         containerClassName={styles.thumbnailCarouselContainer}
         id="product-gallery"
+        itemTemplate={itemTpl}
         items={images}
+        name="Product image carousel"
         resetStyle
         smallGaps
-        name="Product image carousel"
-        buttonPrevRef={buttonPrevRef}
-        buttonNextRef={buttonNextRef}
-        itemTemplate={itemTpl}
       >
         {isNavigationVisible && images.length && (
           <>
             <Button
-              ref={buttonPrevRef}
-              className={clsx(styles.navigationButton, styles.prevButton)}
-              variant="secondary"
               background="dark"
+              className={clsx(styles.navigationButton, styles.prevButton)}
+              ref={buttonPrevRef}
               rightIcon="arrow-previous"
+              variant="secondary"
             />
             <Button
-              ref={buttonNextRef}
-              className={clsx(styles.navigationButton, styles.nextButton)}
-              variant="secondary"
               background="dark"
+              className={clsx(styles.navigationButton, styles.nextButton)}
+              ref={buttonNextRef}
               rightIcon="arrow-next"
+              variant="secondary"
             />
           </>
         )}

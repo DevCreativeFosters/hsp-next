@@ -2,6 +2,7 @@
 
 import Container from '@components/container/container';
 import InformationBox from '@components/information-box/information-box';
+
 import styles from './store-locator-hero.module.scss';
 
 export default function StoreLocatorHero() {
@@ -17,7 +18,7 @@ export default function StoreLocatorHero() {
             </p>
           </div>
         </main>
-        <InformationBox className={styles.aside} isSidebar hideOn="mobile" />
+        <InformationBox className={styles.aside} hideOn="mobile" isSidebar />
       </section>
     </Container>
   );

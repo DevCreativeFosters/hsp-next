@@ -5,28 +5,28 @@ import TileCarousel from '@components/tile-carousel/tile-carousel';
 import VideoTile from '@components/video-tile/video-tile';
 
 export default function VideoCarousel({
-  title,
-  description,
-  videos,
   buttons,
   context,
+  description,
+  title,
+  videos,
 }) {
   return (
     <Container collapseMargin>
       <SectionIntro
-        title={title}
         description={description}
         fitInline
         narrowDescription
+        title={title}
       >
         <SectionButtons buttons={buttons} />
       </SectionIntro>
 
       <TileCarousel
-        items={videos}
+        context={context}
         itemTemplate={VideoTile}
         itemTemplateType="celebrities"
-        context={context}
+        items={videos}
         name="Video carousel a.k.a Celebrities"
       />
     </Container>

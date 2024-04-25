@@ -20,11 +20,11 @@ import styles from './header.module.scss';
 
 export default function Header({
   mainMenu,
-  secondaryMenu,
-  mobileMenu,
   mainProductCategories,
-  products,
   makes,
+  mobileMenu,
+  products,
+  secondaryMenu,
 }) {
   const headerRef = useRef(null);
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
@@ -55,8 +55,8 @@ export default function Header({
           <div className={styles.grid}>
             <div className={styles.hamburgerContainer}>
               <HamburgerButton
-                onClick={toggleMenu}
                 isActive={isMobileMenuActive}
+                onClick={toggleMenu}
               />
             </div>
 
@@ -69,11 +69,11 @@ export default function Header({
                 if (item.mobileDisplay === true) {
                   return (
                     <Button
+                      background="dark"
                       key={item.url}
+                      rightIcon={item.iconPredefined[0] || item.icon}
                       size="small"
                       variant="tertiary"
-                      background="dark"
-                      rightIcon={item.iconPredefined[0] || item.icon}
                     />
                   );
                 }
@@ -82,23 +82,23 @@ export default function Header({
 
             <nav className={styles.mainMenu} ref={mainMenuRef}>
               <ul className={styles.mainMenuList}>
-                {mainMenu?.map(({ label, url, subItems, name }, index) => (
+                {mainMenu?.map(({ label, name, subItems, url }, index) => (
                   <li key={label + index}>
                     <Button
-                      href={url}
-                      size="small"
-                      variant="tertiary"
                       background="dark"
-                      toggleable={
-                        subItems?.length > 0 && url.includes('/products/')
-                          ? 'neutral'
-                          : null
-                      }
+                      href={url}
                       isToggled={currentSubmenu === name}
                       onToggleIconClick={() => {
                         const newValue = currentSubmenu === name ? null : name;
                         setCurrentSubmenu(newValue);
                       }}
+                      size="small"
+                      toggleable={
+                        subItems?.length > 0 && url.includes('/products/')
+                          ? 'neutral'
+                          : null
+                      }
+                      variant="tertiary"
                     >
                       {label}
                     </Button>
@@ -110,16 +110,14 @@ export default function Header({
             <nav className={styles.secondaryMenu}>
               <ul className={styles.secondaryMenuList}>
                 {secondaryMenu?.map(
-                  ({ label, url, iconPredefined, icon, variant }, index) => (
+                  ({ icon, iconPredefined, label, url, variant }, index) => (
                     <li
-                      key={label + index}
                       className={styles.secondaryMenuItem}
+                      key={label + index}
                     >
                       <Button
-                        href={url}
-                        size="xsmall"
-                        variant={variant}
                         background="dark"
+                        href={url}
                         leftIcon={
                           iconPredefined[0] !== 'CUSTOM'
                             ? iconPredefined[0]
@@ -128,6 +126,8 @@ export default function Header({
                         leftIconUrl={
                           iconPredefined[0] === 'CUSTOM' ? icon : false
                         }
+                        size="xsmall"
+                        variant={variant}
                       >
                         {label}
                       </Button>
@@ -137,17 +137,16 @@ export default function Header({
               </ul>
             </nav>
 
-            <MobileMenu items={mobileMenu} isMenuActive={isMobileMenuActive} />
+            <MobileMenu isMenuActive={isMobileMenuActive} items={mobileMenu} />
 
             <div className={styles.vehicleSelection}>
-              <span className={styles.vehicleText}>My vehicle:</span>
               <ChooseYourVehicle makes={makes} />
             </div>
           </div>
 
           <Products
-            isActive={currentSubmenu === 'products'}
             categories={mainProductCategories}
+            isActive={currentSubmenu === 'products'}
             products={products}
             ref={productsRef}
           />

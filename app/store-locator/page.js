@@ -1,6 +1,9 @@
+import { Suspense } from 'react';
+
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getStores } from '@lib/api/get-stores';
+import { getSeoData } from '@lib/api/getSeoData';
 import routes from '@lib/routes';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
@@ -13,46 +16,51 @@ import StoreLocatorSearch from '@components/store-locator-search/store-locator-s
 
 import styles from './page.module.scss';
 
-export const metadata = {
-  title: 'HSP 4x4 - Store locator',
-  // description: ''
-};
+export async function generateMetadata() {
+  const data = await getSeoData(routes.storeLocator);
+
+  return {
+    ...data,
+  };
+}
 
 export const viewport = {
-  width: 'device-width',
   height: 'device-height',
   initialScale: 1,
   interactiveWidget: 'resizes-visual',
+  width: 'device-width',
 };
 
 export default async function StoreLocatorPage() {
   const allStores = await getStores();
 
   return (
-    <Layout withMap reserveSpaceForVehicleSelection>
-      <FullscreenCollapse>
-        <div className={styles.breadcrumbs}>
-          <Breadcrumbs
-            withContainer={true}
-            items={[
-              {
-                label: 'Support',
-                url: routes.support(),
-              },
-              {},
-            ]}
-          />
-        </div>
-        <StoreLocatorHero />
-      </FullscreenCollapse>
+    <Layout reserveSpaceForVehicleSelection withMap>
+      <Suspense fallback={null}>
+        <FullscreenCollapse>
+          <div className={styles.breadcrumbs}>
+            <Breadcrumbs
+              items={[
+                {
+                  label: 'Support',
+                  url: routes.support(),
+                },
+                {},
+              ]}
+              withContainer={true}
+            />
+          </div>
+          <StoreLocatorHero />
+        </FullscreenCollapse>
 
-      <StoreLocatorProvider>
-        <StoreLocatorSearch allLocations={allStores} />
-        <StoreLocatorResultsAndMap allLocations={allStores} />
-      </StoreLocatorProvider>
-      <FullscreenCollapse>
-        <InformationBox hideOn="desktop" />
-      </FullscreenCollapse>
+        <StoreLocatorProvider>
+          <StoreLocatorSearch allLocations={allStores} />
+          <StoreLocatorResultsAndMap allLocations={allStores} />
+        </StoreLocatorProvider>
+        <FullscreenCollapse>
+          <InformationBox hideOn="desktop" />
+        </FullscreenCollapse>
+      </Suspense>
     </Layout>
   );
 }

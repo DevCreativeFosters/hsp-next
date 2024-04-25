@@ -1,8 +1,9 @@
 import Container from '@components/container/container';
+
 import Card from './card';
 import styles from './intro-and-cards.module.scss';
 
-export default function IntroAndCards({ title, description, cards }) {
+export default function IntroAndCards({ cards, description, title }) {
   return (
     <Container>
       <div className={styles.container}>
@@ -19,11 +20,11 @@ export default function IntroAndCards({ title, description, cards }) {
           cards?.map((card, idx) => {
             return (
               <Card
-                key={card?.title + idx}
-                title={card?.title}
+                backgroundImage={card?.backgroundImage?.node}
                 description={card?.description}
                 icon={card?.image?.node}
-                backgroundImage={card?.backgroundImage?.node}
+                key={card?.title + idx}
+                title={card?.title}
               />
             );
           })}

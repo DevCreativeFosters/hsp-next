@@ -25,6 +25,12 @@ import styles from './page.module.scss';
 
 // This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
 const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   if (variant && variant.variantDetails[property]) {
     return variant.variantDetails[property];
@@ -41,13 +47,13 @@ const getVariantDataForProperties = (variant, parent, properties) =>
   }, {});
 
 export default function PageClientSidePartial({
+  allLocations,
+  downloadFileFormId,
+  enquiryFormId,
+  firstMatchedProduct,
   mainCategory,
   make,
   modelName,
-  enquiryFormId,
-  firstMatchedProduct,
-  allLocations,
-  downloadFileFormId,
   pageParams,
   variantSlug,
 }) {
@@ -76,13 +82,13 @@ export default function PageClientSidePartial({
 
   const {
     description,
-    warrantyTimePeriod,
-    warrantyDescription,
-    featuresDescription,
     featuresBoxes,
-    specificationDescription,
-    specification,
+    featuresDescription,
     manualsDescription,
+    specification,
+    specificationDescription,
+    warrantyDescription,
+    warrantyTimePeriod,
   } = variantData;
 
   const manualPdfItems =
@@ -99,15 +105,15 @@ export default function PageClientSidePartial({
   const carouselImages =
     variant?.variantDetails.images?.nodes?.length > 0
       ? variant.variantDetails?.images?.nodes?.map((image, index) => ({
-          sourceUrl: image?.mediaItemUrl,
           alt: image?.altText ? image?.altText : 'Product variant image',
           mainImage: index === 0,
+          sourceUrl: image?.mediaItemUrl,
         }))
       : firstMatchedProduct?.productFields?.images?.nodes?.map(
           (image, index) => ({
-            sourceUrl: image?.mediaItemUrl,
             alt: image?.altText ? image?.altText : 'Main product image',
             mainImage: index === 0,
+            sourceUrl: image?.mediaItemUrl,
           }),
         );
 
@@ -115,7 +121,7 @@ export default function PageClientSidePartial({
 
   const onVariantChange = useCallback(
     newVariantSlug => {
-      const { slug, makeSlug, modelSlug } = pageParams;
+      const { makeSlug, modelSlug, slug } = pageParams;
       const newRoute = routes.product(
         slug,
         makeSlug,
@@ -149,11 +155,11 @@ export default function PageClientSidePartial({
           </div>
           <StoreLocatorProvider>
             <EnquiryForm
+              allLocations={allLocations}
               enquiryFormId={enquiryFormId}
+              onVariantChange={onVariantChange}
               productData={firstMatchedProduct}
               variantSlug={variantSlug}
-              onVariantChange={onVariantChange}
-              allLocations={allLocations}
             />
           </StoreLocatorProvider>
           {warrantyTimePeriod && (
@@ -172,13 +178,13 @@ export default function PageClientSidePartial({
         </div>
       </div>
       <ProductTabs
-        featuresDescription={featuresDescription}
+        downloadFileFormId={downloadFileFormId}
         featuresBoxes={featuresBoxes}
-        specificationDescription={specificationDescription}
-        specificationContent={specification}
+        featuresDescription={featuresDescription}
         manualsDescription={manualsDescription}
         manualsLinks={manualPdfItems}
-        downloadFileFormId={downloadFileFormId}
+        specificationContent={specification}
+        specificationDescription={specificationDescription}
       />
     </>
   );

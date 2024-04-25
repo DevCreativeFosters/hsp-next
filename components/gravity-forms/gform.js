@@ -11,7 +11,6 @@ import {
 
 import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
-import ReCAPTCHA from 'react-google-recaptcha';
 
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -41,29 +40,27 @@ const SUBMIT_MUTATION = gql`
 `;
 
 export default function GForm({
-  innerRef,
-  form,
-  isDirty,
-  hiddenInputs,
   attributes = {},
-  submitButton,
-  preventConfirmation,
+  form,
+  hiddenInputs,
+  innerRef,
+  isDirty,
   onChange,
-  onReset,
   onError,
+  onReset,
   onSubmit,
   onSuccess,
+  preventConfirmation,
+  submitButton,
 }) {
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
   const [fieldErrors, setFieldErrors] = useState([]);
-  const [captchaValue, setCaptchaValue] = useState(null);
-  const [captchaError, setCaptchaError] = useState('');
+
   const formFields = form.formFields?.nodes || [];
-  const { state, dispatch } = useGravityForm();
+  const { dispatch, state } = useGravityForm();
   const submitRef = useRef(null);
-  const recaptchaRef = useRef(null);
 
   const resetForm = useCallback(() => {
     dispatch({
@@ -89,34 +86,21 @@ export default function GForm({
     client,
   });
 
-  const handleCaptcha = value => {
-    setCaptchaValue(value);
-  };
-
-  useEffect(() => {
-    if (captchaValue) {
-      setCaptchaError('');
-    } else {
-      setCaptchaError('Please confirm you are not a robot.');
-    }
-  }, [captchaValue]);
-
   const handleSubmit = async ev => {
     if (ev) ev.preventDefault();
 
-    if (isLoading || !captchaValue) {
+    if (isLoading) {
       return;
     }
 
     setLoading(true);
     onSubmit();
-    setCaptchaError('');
 
     await formSubmitMutation({
       variables: {
         input: {
-          id: form.formId,
           fieldValues: state,
+          id: form.formId,
         },
       },
     })
@@ -155,17 +139,37 @@ export default function GForm({
 
   const isTitleVisible = attributes.title && form.title;
 
+  const [isConfirmationDirty, setIsConfirmationDirty] = useState(false);
+
+  const scrollRef = useRef();
+
+  useEffect(
+    function scrollOnModeChange() {
+      if (!preventConfirmation) {
+        if (isSubmitted) {
+          setIsConfirmationDirty(true);
+          scrollRef.current?.scrollIntoView(true);
+        } else if (isConfirmationDirty) {
+          scrollRef.current?.scrollIntoView(true);
+        }
+      }
+    },
+    [isConfirmationDirty, isSubmitted, preventConfirmation],
+  );
+
   return (
     <Form
-      method="post"
-      onSubmit={handleSubmit}
-      withPadding={attributes.withPadding}
-      withBackground={attributes.withBackground}
       isDirty={isDirty}
+      method="post"
       onChange={onChange}
+      onSubmit={handleSubmit}
+      scrollRef={scrollRef}
+      withBackground={attributes.withBackground}
+      withCustomStyle01={attributes.withCustomStyle01}
+      withPadding={attributes.withPadding}
     >
       {isSubmitted && !preventConfirmation ? (
-        <Confirmation resetForm={resetForm} content={confirmation.message} />
+        <Confirmation content={confirmation.message} resetForm={resetForm} />
       ) : (
         <>
           {(isTitleVisible || form.description) && (
@@ -177,25 +181,13 @@ export default function GForm({
 
           {formFields.map((field, index) => (
             <GravityFormsField
-              key={`id-${field?.databaseId}-${index}`}
-              form={form}
               field={field}
               fieldErrors={fieldErrors}
+              form={form}
               hiddenInputs={hiddenInputs}
+              key={`id-${field?.databaseId}-${index}`}
             />
           ))}
-
-          <div className={styles.recaptcha}>
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY}
-              onChange={handleCaptcha}
-              onExpired={() => setCaptchaValue(null)}
-            />
-            {captchaError && (
-              <div className={styles.errorMessage}>{captchaError}</div>
-            )}
-          </div>
 
           {attributes.withTermsAndConditions && (
             <DisclaimerTC fullWidth withBlockMargin />
@@ -203,13 +195,13 @@ export default function GForm({
 
           <div className={styles.submitWrapper}>
             <Button
-              ref={submitRef}
-              type="submit"
-              size="large"
               className={styles.submitButton}
               disabled={isLoading}
+              ref={submitRef}
               rightIcon={isLoading ? null : 'send'}
+              size="large"
               style={submitButton === false ? { display: 'none' } : {}}
+              type="submit"
             >
               {form?.button?.text || 'Submit'} {isLoading && <Loading />}
             </Button>
