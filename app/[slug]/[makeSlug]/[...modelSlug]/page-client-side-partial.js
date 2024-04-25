@@ -27,6 +27,8 @@ import styles from './page.module.scss';
 
 // This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
+// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
+
 const getVariantDataOrFallbackToParent = (variant, parent, property) => {
   if (variant && variant.variantDetails[property]) {
     return variant.variantDetails[property];
