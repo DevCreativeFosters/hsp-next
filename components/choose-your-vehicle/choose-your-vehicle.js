@@ -64,6 +64,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <ExpandMoreNeutralIcon />
   );
 
+  console.log(maker, model);
+
   useEffect(() => {
     if (!maker && !model) {
       setIsLoading(false);
@@ -128,10 +130,11 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       pathname === routes.uteBuilder
                     ) {
                       setShowModal(true);
+                      setIsLoading(false);
                     } else {
                       handleVehicleReset();
+                      setIsLoading(true);
                     }
-                    setIsLoading(true);
                   }}
                 >
                   <CancelIcon />
