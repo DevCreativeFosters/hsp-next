@@ -212,6 +212,7 @@ export default function Builder({
     [
       covers,
       disabledProducts,
+      selectedCover.productCategories,
       selectedFactoryOptions,
       selectedProducts,
       stepNumber,

@@ -75,7 +75,7 @@ export default function ChooseYourVehicleBlock({
         }
       });
     },
-    [variantSlug],
+    [setVariant, variantSlug, variantsNormalized],
   );
 
   useEffect(
@@ -117,7 +117,7 @@ export default function ChooseYourVehicleBlock({
         }
       };
     },
-    [windowSize.height, windowSize.width],
+    [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (
