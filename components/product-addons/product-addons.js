@@ -25,7 +25,7 @@ export default function ProductAddons({ description, products, title }) {
     }
 
     const imageUrl = product?.featuredImage?.sourceUrl || null;
-    const categories = product.productCategories.nodes;
+    const categories = product?.productCategories.nodes;
     const makesAndModels = product.makesAndModels.nodes.map(el => ({
       ...el,
       parent: el.parent?.node || null,
