@@ -64,8 +64,6 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     <ExpandMoreNeutralIcon />
   );
 
-  console.log(maker, model);
-
   useEffect(() => {
     if (!maker && !model) {
       setIsLoading(false);
