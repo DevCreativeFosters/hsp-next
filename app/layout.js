@@ -47,6 +47,7 @@ const khand = localFont({
 
 export const metadata = {
   description: 'HSP',
+  metadataBase: new URL(process.env.VERCEL_URL),
   title: 'HSP 4x4',
 };
 
