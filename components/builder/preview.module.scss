@@ -4,6 +4,9 @@
   flex: 1;
   overflow: clip;
   background: var(--color-black-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @include bp(large) {
     aspect-ratio: 864/538;
@@ -22,6 +25,8 @@
   object-position: center;
   max-width: 100%;
   max-height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 
   @include bp(large) {
     left: auto;
@@ -29,6 +34,10 @@
     max-width: unset;
     max-height: unset;
     transform: translateY(-50%);
+  }
+
+  &.isLoaded {
+    opacity: 1;
   }
 }
 

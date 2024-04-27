@@ -176,7 +176,7 @@ export default function Builder({
       if (selectedProducts.length > 0) {
         incompatibleCovers.push(selectedProducts[0].productName);
         product.compatibleCovers.forEach(category => {
-          if (selectedCover.productCategories.includes(category)) {
+          if (selectedCover?.productCategories?.includes(category)) {
             incompatibleCovers = [];
           }
         });

@@ -46,8 +46,8 @@ export function getIncompatibleProducts(products, currentProduct, covers) {
     .filter(
       variant =>
         covers &&
-        variant.productCategories &&
-        variant.productCategories.some(
+        variant?.productCategories &&
+        variant?.productCategories.some(
           category => !currentProduct.compatibleProducts.includes(category),
         ),
     )

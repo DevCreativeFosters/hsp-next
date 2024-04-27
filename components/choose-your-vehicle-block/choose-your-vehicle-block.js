@@ -44,6 +44,7 @@ export default function ChooseYourVehicleBlock({
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const [localParams, setLocalParams] = useState(params);
+  const [isLoading, setIsLoading] = useState(false);
 
   const path = usePathname();
 
@@ -74,7 +75,7 @@ export default function ChooseYourVehicleBlock({
         }
       });
     },
-    [variantSlug],
+    [setVariant, variantSlug, variantsNormalized],
   );
 
   useEffect(
@@ -116,7 +117,7 @@ export default function ChooseYourVehicleBlock({
         }
       };
     },
-    [windowSize.height, windowSize.width],
+    [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (
@@ -160,7 +161,11 @@ export default function ChooseYourVehicleBlock({
           <Button
             className={styles.button}
             disabled={!model}
-            onClick={() => handleSave(localParams, reload)}
+            isBusy={isLoading}
+            onClick={() => {
+              handleSave(localParams, reload);
+              setIsLoading(true);
+            }}
             rightIcon="arrow-forward"
             size="large"
           >
