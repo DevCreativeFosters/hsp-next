@@ -12,6 +12,7 @@ import { getSlides } from './helpers';
 import styles from './products-carousel.module.scss';
 
 const ArrowBackwardIcon = getIcon('arrow-backward');
+const MIN_SLIDES_TO_SHOW_NAVIGATION = 6;
 
 export default function ProductsCarousel({
   className,
@@ -97,7 +98,7 @@ export default function ProductsCarousel({
             spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={slides.length > 6}
+          showNavigation={slides.length > MIN_SLIDES_TO_SHOW_NAVIGATION}
           slides={slides}
         />
       </div>
