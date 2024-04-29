@@ -67,7 +67,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
             size="large"
             value={getValueOrSlug(model) || null}
           />
-          {factoryOptions?.length && (
+          {factoryOptions?.length > 0 && (
             <Select
               className={styles.select}
               dropdownInDocumentFlow
