@@ -81,106 +81,6 @@ export default function Builder({
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  useEffect(
-    function getBuilderRelatedCovers() {
-      if (
-        !make?.slug ||
-        !model?.slug ||
-        !globalOptions ||
-        !globalOptions?.coversCategory
-      ) {
-        return;
-      }
-
-      getRelatedCovers(
-        make.slug,
-        model.slug,
-        globalOptions.coversCategory.nodes[0].slug,
-      ).then(relatedCovers => {
-        if (!relatedCovers) {
-          return;
-        }
-
-        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
-        const covers = [...normalizedCovers, ...noCoverNormalized];
-
-        setStepProducts(covers);
-        setCovers(covers);
-      });
-    },
-    [globalOptions, make, model, noCover],
-  );
-
-  useEffect(
-    function setBuilderStepProducts() {
-      if (stepNumber === 1) {
-        setStepProducts(covers);
-      }
-
-      if (stepNumber === 2) {
-        setStepProducts(normalizeUteBuilderProducts(products));
-      }
-    },
-    [covers, products, setStepProducts, stepNumber],
-  );
-
-  useEffect(
-    function setBuilderSelectedCover() {
-      if (!make || !model || stepNumber === 0) {
-        return;
-      }
-
-      const selectedCover = selectedProducts.find(selectedProduct =>
-        covers.some(cover => cover.group === selectedProduct.productSlug),
-      );
-
-      if (!selectedCover) {
-        setStepNumber(1);
-        setStepTitle(STEP_TITLES[1]);
-
-        return;
-      }
-
-      setStepNumber(2);
-      setStepTitle(STEP_TITLES[2]);
-      setSelectedCover(selectedCover);
-    },
-    [
-      covers,
-      make,
-      model,
-      selectedProducts,
-      setSelectedCover,
-      setStepNumber,
-      setStepTitle,
-      stepNumber,
-    ],
-  );
-
-  useEffect(function setTopHeightObserver() {
-    if (!topRef.current) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setHeight(topRef.current?.getBoundingClientRect().height);
-    });
-    resizeObserver.observe(topRef.current);
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  useEffect(
-    function addProduct() {
-      if (!productToAdd || showClashModal) {
-        return;
-      }
-
-      const products = [...selectedProducts, productToAdd];
-
-      setSelectedProducts(products);
-      setProductToAdd(null);
-    },
-    [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
-  );
-
   const addProduct = useCallback(
     product => {
       let incompatibleFactoryOptions = [];
@@ -315,6 +215,106 @@ export default function Builder({
       setStepProducts(products);
     },
     [setStepProducts, stepProducts],
+  );
+
+  useEffect(
+    function getBuilderRelatedCovers() {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions ||
+        !globalOptions?.coversCategory
+      ) {
+        return;
+      }
+
+      getRelatedCovers(
+        make.slug,
+        model.slug,
+        globalOptions.coversCategory.nodes[0].slug,
+      ).then(relatedCovers => {
+        if (!relatedCovers) {
+          return;
+        }
+
+        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const covers = [...normalizedCovers, ...noCoverNormalized];
+
+        setStepProducts(covers);
+        setCovers(covers);
+      });
+    },
+    [globalOptions, make, model, noCover],
+  );
+
+  useEffect(
+    function setBuilderStepProducts() {
+      if (stepNumber === 1) {
+        setStepProducts(covers);
+      }
+
+      if (stepNumber === 2) {
+        setStepProducts(normalizeUteBuilderProducts(products));
+      }
+    },
+    [covers, products, setStepProducts, stepNumber],
+  );
+
+  useEffect(
+    function setBuilderSelectedCover() {
+      if (!make || !model || stepNumber === 0) {
+        return;
+      }
+
+      const selectedCover = selectedProducts.find(selectedProduct =>
+        covers.some(cover => cover.group === selectedProduct.productSlug),
+      );
+
+      if (!selectedCover) {
+        setStepNumber(1);
+        setStepTitle(STEP_TITLES[1]);
+
+        return;
+      }
+
+      setStepNumber(2);
+      setStepTitle(STEP_TITLES[2]);
+      setSelectedCover(selectedCover);
+    },
+    [
+      covers,
+      make,
+      model,
+      selectedProducts,
+      setSelectedCover,
+      setStepNumber,
+      setStepTitle,
+      stepNumber,
+    ],
+  );
+
+  useEffect(function setTopHeightObserver() {
+    if (!topRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      setHeight(topRef.current?.getBoundingClientRect().height);
+    });
+    resizeObserver.observe(topRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(
+    function addProduct() {
+      if (!productToAdd || showClashModal) {
+        return;
+      }
+
+      const products = [...selectedProducts, productToAdd];
+
+      setSelectedProducts(products);
+      setProductToAdd(null);
+    },
+    [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
   );
 
   const isInlineResultListVisible = Boolean(
