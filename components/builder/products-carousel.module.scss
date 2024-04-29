@@ -103,7 +103,7 @@
   border: 2px solid currentcolor;
   transition: all 150ms;
   color: var(--color-black-100);
-  background-color: rgb(255 255 255 / 80%);
+  background-color: var(--color-white-80);
 
   .isSelected & {
     color: var(--color-primary-100);
