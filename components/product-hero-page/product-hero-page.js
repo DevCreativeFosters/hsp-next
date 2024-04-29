@@ -26,7 +26,11 @@ export default async function ProductHeroPage({ children, params, slug }) {
 
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
+  let shouldBeExcluded = false;
+
+  if (excludeTree && Array.isArray(excludeTree)) {
+    shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
+  }
 
   if (!categoryData || shouldBeExcluded) {
     return notFound();
