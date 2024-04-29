@@ -379,9 +379,7 @@ export default function Builder({
             <StoreList
               className={styles.results}
               items={filteredLocations}
-              onSelect={item => {
-                setSelectedStore(item);
-              }}
+              onSelect={setSelectedStore}
               show={isInlineResultListVisible}
               style={{
                 height: selectedStore ? topHeight : null,
