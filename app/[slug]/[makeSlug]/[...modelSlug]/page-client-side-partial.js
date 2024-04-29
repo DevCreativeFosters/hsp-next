@@ -1,4 +1,3 @@
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 'use client';
 
 import { useCallback } from 'react';
@@ -16,14 +15,6 @@ import ProductImageCarousel from '@components/product-image-carousel/product-ima
 import ProductTabs from '@components/product-tabs/product-tabs';
 
 import styles from './page.module.scss';
-
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
-
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
-
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
-
-// This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
 // This component encapsulates client-side portion of the page (where `variant` state needs to be tracked)
 
