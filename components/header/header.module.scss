@@ -183,7 +183,7 @@
     justify-self: flex-end;
     gap: 8px;
     white-space: nowrap;
-    color: white;
+    color: var(--color-white-100);
   }
 
   @include bp(full) {
