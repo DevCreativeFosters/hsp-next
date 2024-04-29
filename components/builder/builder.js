@@ -69,15 +69,8 @@ export default function Builder({
     stepTitle,
   } = useVehicleContext();
 
-  const {
-    filteredLocations,
-    isMapVisible,
-    location,
-    radius,
-    searchGeolocation,
-    selectedStore,
-    setSelectedStore,
-  } = useContext(StoreLocatorContext);
+  const { filteredLocations, isMapVisible, setSelectedStore } =
+    useContext(StoreLocatorContext);
 
   const addProduct = useCallback(
     product => {
