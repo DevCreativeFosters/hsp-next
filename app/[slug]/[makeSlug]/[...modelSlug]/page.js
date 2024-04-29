@@ -8,6 +8,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
+import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
@@ -23,6 +24,20 @@ import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
+
+export async function generateMetadata({ params }) {
+  if (!params?.modelSlug) {
+    return;
+  }
+
+  const modelSlug = params.modelSlug[0];
+
+  const data = await getMakeModelSeo(modelSlug);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function Product({ params, searchParams }) {
   const globalOptions = await getGlobalOptions();
