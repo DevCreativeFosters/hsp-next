@@ -27,14 +27,14 @@
 .badge {
   font-size: 16px;
   gap: 14px;
-}
 
-.badgeIcon {
-  color: var(--color-primary-100);
+  svg {
+    color: var(--color-primary-100);
 
-  .badge:hover &,
-  .badge:focus & {
-    color: var(--color-white);
+    .badge:hover &,
+    .badge:focus & {
+      color: var(--color-white);
+    }
   }
 }
 

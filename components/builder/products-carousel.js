@@ -11,7 +11,6 @@ import Carousel from '@components/carousel/carousel';
 import { getSlides } from './helpers';
 import styles from './products-carousel.module.scss';
 
-const CancelIcon = getIcon('cancel');
 const ArrowBackwardIcon = getIcon('arrow-backward');
 
 export default function ProductsCarousel({
@@ -45,11 +44,11 @@ export default function ProductsCarousel({
           <Button
             className={styles.badge}
             onClick={() => toggleProduct(selectedCover)}
+            rightIcon="cancel"
             size="small"
             variant="secondary"
           >
             {selectedCover.variantName}
-            <CancelIcon className={styles.badgeIcon} />
           </Button>
         )}
       </h2>
