@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
+import getModelWithVariants from '@lib/api/get-model-with-variants';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 
 import Builder from '@components/builder/builder';
@@ -29,15 +30,6 @@ export default function UteBuilderPage({
 
   useEffect(
     function saveUserSelection() {
-      const setModelAndProducts = async (model, make, excludedCategories) => {
-        const response = await fetch(
-          `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
-        );
-        const data = await response.json();
-        setModel(data?.modelData);
-        setProductVariants(data?.productData);
-      };
-
       const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
 
       if (finalSelection) {
@@ -53,7 +45,16 @@ export default function UteBuilderPage({
           setModel(vehicle?.model);
           setSelectedFactoryOptions(selectedFactoryOptions);
 
-          setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
+          const response = getModelWithVariants(
+            modelSlug,
+            makerSlug,
+            excludedCategoriesString,
+          );
+
+          response.then(data => {
+            setModel(data?.modelData);
+            setProductVariants(data?.productData);
+          });
         }
       } else {
         setMake(null);
