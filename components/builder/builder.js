@@ -43,7 +43,7 @@ export default function Builder({
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
-  const [topHeight, setHeight] = useState(0);
+  const [topHeight, setTopHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
@@ -297,7 +297,7 @@ export default function Builder({
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      setHeight(topRef.current?.getBoundingClientRect().height);
+      setTopHeight(topRef.current?.getBoundingClientRect().height);
     });
     resizeObserver.observe(topRef.current);
     return () => resizeObserver.disconnect();
