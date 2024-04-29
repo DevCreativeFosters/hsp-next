@@ -9,6 +9,7 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
+import { shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -26,13 +27,9 @@ export default async function ProductHeroPage({ children, params, slug }) {
 
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
-  let shouldBeExcluded = false;
+  const isExcluded = shouldBeExcluded(excludeTree, categoryData);
 
-  if (excludeTree && Array.isArray(excludeTree)) {
-    shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
-  }
-
-  if (!categoryData || shouldBeExcluded) {
+  if (!categoryData || isExcluded) {
     return notFound();
   }
 

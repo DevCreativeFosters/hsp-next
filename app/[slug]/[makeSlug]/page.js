@@ -9,7 +9,7 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { renderBlock } from '@lib/block';
-import { getExcludeTree } from '@lib/helpers';
+import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -36,9 +36,13 @@ export default async function CategoryPage({ params }) {
   const details = makeData?.detailsFields.details;
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
+  const isExcluded = shouldBeExcluded(excludeTree, categoryData);
 
-  if (!makeData && categoryData && !shouldBeExcluded) {
+  if (!categoryData || isExcluded) {
+    return notFound();
+  }
+
+  if (!makeData && categoryData && !isExcluded) {
     return <ProductNotFound />;
   }
 
