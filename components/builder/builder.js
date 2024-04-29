@@ -14,7 +14,6 @@ import routes from '@lib/routes';
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
-import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -43,7 +42,6 @@ export default function Builder({
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
-  const [topHeight, setTopHeight] = useState(0);
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
@@ -294,15 +292,6 @@ export default function Builder({
     ],
   );
 
-  useEffect(function setTopHeightObserver() {
-    if (!topRef.current) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setTopHeight(topRef.current?.getBoundingClientRect().height);
-    });
-    resizeObserver.observe(topRef.current);
-    return () => resizeObserver.disconnect();
-  }, []);
-
   useEffect(
     function addProduct() {
       if (!productToAdd || showClashModal) {
@@ -317,9 +306,6 @@ export default function Builder({
     [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
   );
 
-  const isInlineResultListVisible = Boolean(
-    openSection === 'store' && location && searchGeolocation && radius,
-  );
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -375,15 +361,6 @@ export default function Builder({
               removeProduct={removeProduct}
               selectedProducts={selectedProducts}
               setOpenSection={setOpenSection}
-            />
-            <StoreList
-              className={styles.results}
-              items={filteredLocations}
-              onSelect={setSelectedStore}
-              show={isInlineResultListVisible}
-              style={{
-                height: selectedStore ? topHeight : null,
-              }}
             />
             {stepNumber > 0 ? (
               <Preview
