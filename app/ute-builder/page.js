@@ -3,7 +3,7 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 import { getAllMakes } from '@lib/api/get-all-makes';
 import getCategoriesToExclude from '@lib/api/get-categories-to-exclude';
 import { getGlobalOptions } from '@lib/api/get-global-options';
-import getNoCover from '@lib/api/get-no-cover';
+import getNoCoverProduct from '@lib/api/get-no-cover-product';
 import { getStores } from '@lib/api/get-stores';
 import { getTermChildren } from '@lib/api/get-term-children';
 import { getSeoData } from '@lib/api/getSeoData';
@@ -28,7 +28,9 @@ export default async function UteBuilder() {
     globalOptions?.compatibleFactoryOptions?.nodes[0].slug || '',
   );
 
-  const noCover = await getNoCover(globalOptions.noCoverCategory.nodes[0].slug);
+  const noCoverProduct = await getNoCoverProduct(
+    globalOptions.noCoverCategory.nodes[0].slug,
+  );
   const excludedCategories = await getCategoriesToExclude(globalOptions);
 
   return (
@@ -40,7 +42,7 @@ export default async function UteBuilder() {
           factoryOptions={factoryOptions}
           globalOptions={globalOptions}
           makes={makes}
-          noCover={noCover}
+          noCover={noCoverProduct}
         />
       </StoreLocatorProvider>
     </Layout>
