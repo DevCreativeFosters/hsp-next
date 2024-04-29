@@ -42,11 +42,11 @@ export default async function CategoryPage({ params }) {
     return notFound();
   }
 
-  if (!makeData && categoryData && !isExcluded) {
+  if (categoryData && !makeData && !isExcluded) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData) {
+  if (!categoryData || !makeData) {
     return notFound();
   }
 
