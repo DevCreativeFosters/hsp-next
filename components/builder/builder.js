@@ -81,73 +81,82 @@ export default function Builder({
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  useEffect(() => {
-    if (
-      !make?.slug ||
-      !model?.slug ||
-      !globalOptions ||
-      !globalOptions?.coversCategory
-    ) {
-      return;
-    }
-
-    getRelatedCovers(
-      make.slug,
-      model.slug,
-      globalOptions.coversCategory.nodes[0].slug,
-    ).then(relatedCovers => {
-      if (!relatedCovers) {
+  useEffect(
+    function getBuilderRelatedCovers() {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions ||
+        !globalOptions?.coversCategory
+      ) {
         return;
       }
 
-      const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-      const noCoverNormalized = normalizeUteBuilderProducts(noCover);
-      const covers = [...normalizedCovers, ...noCoverNormalized];
+      getRelatedCovers(
+        make.slug,
+        model.slug,
+        globalOptions.coversCategory.nodes[0].slug,
+      ).then(relatedCovers => {
+        if (!relatedCovers) {
+          return;
+        }
 
-      setStepProducts(covers);
-      setCovers(covers);
-    });
-  }, [globalOptions, make, model, noCover]);
+        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const covers = [...normalizedCovers, ...noCoverNormalized];
 
-  useEffect(() => {
-    if (stepNumber === 1) {
-      setStepProducts(covers);
-    }
+        setStepProducts(covers);
+        setCovers(covers);
+      });
+    },
+    [globalOptions, make, model, noCover],
+  );
 
-    if (stepNumber === 2) {
-      setStepProducts(normalizeUteBuilderProducts(products));
-    }
-  }, [covers, products, setStepProducts, stepNumber]);
+  useEffect(
+    function setBuilderStepProducts() {
+      if (stepNumber === 1) {
+        setStepProducts(covers);
+      }
 
-  useEffect(() => {
-    if (!make || !model || stepNumber === 0) {
-      return;
-    }
+      if (stepNumber === 2) {
+        setStepProducts(normalizeUteBuilderProducts(products));
+      }
+    },
+    [covers, products, setStepProducts, stepNumber],
+  );
 
-    const selectedCover = selectedProducts.find(selectedProduct =>
-      covers.some(cover => cover.group === selectedProduct.productSlug),
-    );
+  useEffect(
+    function setBuilderSelectedCover() {
+      if (!make || !model || stepNumber === 0) {
+        return;
+      }
 
-    if (!selectedCover) {
-      setStepNumber(1);
-      setStepTitle(STEP_TITLES[1]);
+      const selectedCover = selectedProducts.find(selectedProduct =>
+        covers.some(cover => cover.group === selectedProduct.productSlug),
+      );
 
-      return;
-    }
+      if (!selectedCover) {
+        setStepNumber(1);
+        setStepTitle(STEP_TITLES[1]);
 
-    setStepNumber(2);
-    setStepTitle(STEP_TITLES[2]);
-    setSelectedCover(selectedCover);
-  }, [
-    covers,
-    make,
-    model,
-    selectedProducts,
-    setSelectedCover,
-    setStepNumber,
-    setStepTitle,
-    stepNumber,
-  ]);
+        return;
+      }
+
+      setStepNumber(2);
+      setStepTitle(STEP_TITLES[2]);
+      setSelectedCover(selectedCover);
+    },
+    [
+      covers,
+      make,
+      model,
+      selectedProducts,
+      setSelectedCover,
+      setStepNumber,
+      setStepTitle,
+      stepNumber,
+    ],
+  );
 
   useEffect(function setTopHeightObserver() {
     if (!topRef.current) return;
@@ -158,16 +167,19 @@ export default function Builder({
     return () => resizeObserver.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!productToAdd || showClashModal) {
-      return;
-    }
+  useEffect(
+    function addProduct() {
+      if (!productToAdd || showClashModal) {
+        return;
+      }
 
-    const products = [...selectedProducts, productToAdd];
+      const products = [...selectedProducts, productToAdd];
 
-    setSelectedProducts(products);
-    setProductToAdd(null);
-  }, [productToAdd, selectedProducts, setSelectedProducts, showClashModal]);
+      setSelectedProducts(products);
+      setProductToAdd(null);
+    },
+    [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
+  );
 
   const addProduct = useCallback(
     product => {

@@ -27,45 +27,49 @@ export default function UteBuilderPage({
     setSelectedFactoryOptions,
   } = useVehicleContext();
 
-  useEffect(() => {
-    const setModelAndProducts = async (model, make, excludedCategories) => {
-      const response = await fetch(
-        `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
-      );
-      const data = await response.json();
-      setModel(data?.modelData);
-      setProductVariants(data?.productData);
-    };
+  useEffect(
+    function saveUserSelection() {
+      const setModelAndProducts = async (model, make, excludedCategories) => {
+        const response = await fetch(
+          `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
+        );
+        const data = await response.json();
+        setModel(data?.modelData);
+        setProductVariants(data?.productData);
+      };
 
-    const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
+      const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
 
-    if (finalSelection) {
-      if (savedVehicle) {
-        const vehicle = JSON.parse(savedVehicle);
-        const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
-        const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
-        const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
-        const excludedCategoriesString = excludedCategories.join(',');
+      if (finalSelection) {
+        if (savedVehicle) {
+          const vehicle = JSON.parse(savedVehicle);
+          const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
+          const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
+          const selectedFactoryOptions =
+            vehicle?.selectedFactoryOptions || null;
+          const excludedCategoriesString = excludedCategories.join(',');
 
-        setMake(vehicle?.maker);
-        setModel(vehicle?.model);
-        setSelectedFactoryOptions(selectedFactoryOptions);
+          setMake(vehicle?.maker);
+          setModel(vehicle?.model);
+          setSelectedFactoryOptions(selectedFactoryOptions);
 
-        setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
+          setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
+        }
+      } else {
+        setMake(null);
+        setModel(null);
+        setProductVariants(null);
       }
-    } else {
-      setMake(null);
-      setModel(null);
-      setProductVariants(null);
-    }
-  }, [
-    excludedCategories,
-    finalSelection,
-    savedVehicleGlobal,
-    setMake,
-    setModel,
-    setSelectedFactoryOptions,
-  ]);
+    },
+    [
+      excludedCategories,
+      finalSelection,
+      savedVehicleGlobal,
+      setMake,
+      setModel,
+      setSelectedFactoryOptions,
+    ],
+  );
 
   return (
     <Builder
