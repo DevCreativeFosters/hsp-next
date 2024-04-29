@@ -29,7 +29,10 @@ import Sidebar from './sidebar';
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
   1: 'Add your UTE covering',
-  2: 'Add products to your vehicle',
+  2: {
+    desktop: 'Add products to your vehicle',
+    mobile: 'Add products to',
+  },
 };
 
 export default function Builder({
@@ -269,12 +272,15 @@ export default function Builder({
         return;
       }
 
+      const key = isMobile ? 'mobile' : 'desktop';
+
       setStepNumber(2);
-      setStepTitle(STEP_TITLES[2]);
+      setStepTitle(STEP_TITLES[2][key]);
       setSelectedCover(selectedCover);
     },
     [
       covers,
+      isMobile,
       make,
       model,
       selectedProducts,
