@@ -1,7 +1,7 @@
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import routes from '@lib/routes';
@@ -11,7 +11,7 @@ import Layout from '@components/layout/layout';
 import ProductCategory from '@components/product-category/product-category';
 
 export async function generateMetadata() {
-  const data = await getSeoData(routes.products);
+  const data = await getSeoByUri(routes.products);
 
   return {
     ...data,

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 
 import { BlogPost } from '@components/blog-post';
 import Layout from '@components/layout/layout';
@@ -10,7 +10,7 @@ import Layout from '@components/layout/layout';
 const NUMBER_OF_RELATED_POSTS = 5;
 
 export async function generateMetadata({ params }) {
-  const data = await getSeoData(`${params.slug}`);
+  const data = await getSeoByUri(`${params.slug}`);
 
   return {
     ...data,

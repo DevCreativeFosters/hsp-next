@@ -1,6 +1,6 @@
 import { getHspTvPosts } from '@lib/api/get-hsp-tv-posts';
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -16,7 +16,7 @@ import styles from '../page.module.scss';
 const POSTS_PER_PAGE = 12;
 
 export async function generateMetadata() {
-  const data = await getSeoData(routes.lifestyleTv);
+  const data = await getSeoByUri(routes.lifestyleTv);
 
   return {
     ...data,

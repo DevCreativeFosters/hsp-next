@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
-import { getSeoData } from '@lib/api/getSeoData';
 import routes from '@lib/routes';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
@@ -17,7 +17,7 @@ import StoreLocatorSearch from '@components/store-locator-search/store-locator-s
 import styles from './page.module.scss';
 
 export async function generateMetadata() {
-  const data = await getSeoData(routes.storeLocator);
+  const data = await getSeoByUri(routes.storeLocator);
 
   return {
     ...data,
