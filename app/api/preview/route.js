@@ -1,7 +1,7 @@
 import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { getPreviewPost } from '@lib/api/get-preview-post';
+import { getPostTypePreview } from '@lib/api/get-post-type-preview';
 import routes from '@lib/routes';
 
 export async function GET(request) {
@@ -35,7 +35,7 @@ export async function GET(request) {
   }
 
   // Fetch WordPress to check if the provided `id` exists
-  const post = await getPreviewPost(id, postType);
+  const post = await getPostTypePreview(id, postType);
 
   // If the post doesn't exist prevent preview mode from being enabled
   if (!post) {
