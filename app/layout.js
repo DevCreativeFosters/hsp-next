@@ -5,6 +5,8 @@ import NextTopLoader from 'nextjs-toploader';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 
+import PreviewAlert from '@components/preview-alert/preview-alert';
+
 import '@styles/main.scss';
 
 import RootLayoutClient from './layout-client';
@@ -65,6 +67,7 @@ export default async function RootLayout({ children }) {
         <ReCaptchaProvider useEnterprise>
           <NextTopLoader color="#ed2935ff" />
           {children}
+          <PreviewAlert />
           <RootLayoutClient />
         </ReCaptchaProvider>
       </body>
