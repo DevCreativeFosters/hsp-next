@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 
+import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
@@ -8,6 +9,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
+import { getProductPreview } from '@lib/api/get-product-preview';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
@@ -25,12 +27,19 @@ import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
 export default async function Product({ params, searchParams }) {
+  const { isEnabled: isDraftEnabled } = draftMode();
+  let firstMatchedProduct = null;
+
+  if (isDraftEnabled) {
+    firstMatchedProduct = await getProductPreview(1901); // todo: use dynamic data
+  }
+
   const globalOptions = await getGlobalOptions();
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug;
+  const modelSlug = params.modelSlug; // todo: get model slug from the URL
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
@@ -76,7 +85,8 @@ export default async function Product({ params, searchParams }) {
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
-  const firstMatchedProduct = products.length ? products[0] : null;
+  firstMatchedProduct = products.length ? products[0] : null;
+
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
       renderBlock(
