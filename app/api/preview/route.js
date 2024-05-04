@@ -12,6 +12,8 @@ export async function GET(request) {
   const make = searchParams.get('make');
   const model = searchParams.get('model');
   const postType = searchParams.get('post_type') || 'post';
+  let graphQLType = postType;
+
   let routeBase = '';
 
   switch (postType) {
@@ -20,6 +22,7 @@ export async function GET(request) {
       break;
     case 'hsp_tv':
       routeBase = routes.tv();
+      graphQLType = 'hspTvPost';
       break;
     default:
       routeBase = '/';
@@ -34,7 +37,7 @@ export async function GET(request) {
     return new Response('Invalid token', { status: 401 });
   }
 
-  const post = await getPostTypePreview(id, postType);
+  const post = await getPostTypePreview(id, graphQLType);
 
   if (!post) {
     return new Response(`No preview for given ID: ${id}`, { status: 401 });
