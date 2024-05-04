@@ -15,8 +15,6 @@ export default function Alert() {
     headersList.get('next-url') || headersList.get('x-invoke-path') || ''
   }/`.replace(/\/\//, '/');
 
-  console.log(pathname);
-
   if (!isEnabled) {
     return;
   }
