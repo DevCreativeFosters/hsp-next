@@ -5,10 +5,12 @@ import { getPostTypePreview } from '@lib/api/get-post-type-preview';
 import routes from '@lib/routes';
 
 export async function GET(request) {
-  // Parse query string parameters
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get('secret');
   const id = searchParams.get('id'); // always use ID to find the preview version - simplifies the logic
+  const category = searchParams.get('category');
+  const make = searchParams.get('make');
+  const model = searchParams.get('model');
   const postType = searchParams.get('post_type') || 'post';
   let routeBase = '';
 
@@ -24,8 +26,6 @@ export async function GET(request) {
       break;
   }
 
-  // Check the secret and next parameters
-  // This secret should only be known by this API route
   if (
     !process.env.WORDPRESS_PREVIEW_SECRET ||
     secret !== process.env.WORDPRESS_PREVIEW_SECRET ||
@@ -34,15 +34,12 @@ export async function GET(request) {
     return new Response('Invalid token', { status: 401 });
   }
 
-  // Fetch WordPress to check if the provided `id` exists
   const post = await getPostTypePreview(id, postType);
 
-  // If the post doesn't exist prevent preview mode from being enabled
   if (!post) {
     return new Response(`No preview for given ID: ${id}`, { status: 401 });
   }
 
-  // Enable Draft Mode by setting the cookie
   draftMode().enable();
 
   // Redirect to the path from the fetched post.
@@ -52,6 +49,9 @@ export async function GET(request) {
   // (and only on pages that support it).
   if (postType === 'page') {
     redirect(`/${post.revisionOf?.node?.slug || post.slug}/`);
+  } else if (postType === 'product') {
+    const modelPreview = `${model}:${post.databaseId}`;
+    redirect(`${routes.product(category, make, modelPreview)}/`);
   } else {
     redirect(`${routeBase}/${post.databaseId}/`);
   }

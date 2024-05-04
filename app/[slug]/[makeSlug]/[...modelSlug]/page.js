@@ -9,6 +9,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
+import { resolvePreview } from '@lib/api/get-post-type-preview';
 import { getProductPreview } from '@lib/api/get-product-preview';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
@@ -29,9 +30,17 @@ import styles from './page.module.scss';
 export default async function Product({ params, searchParams }) {
   const { isEnabled: isDraftEnabled } = draftMode();
   let firstMatchedProduct = null;
+  let modelSlug = params.modelSlug;
 
   if (isDraftEnabled) {
-    firstMatchedProduct = await getProductPreview(1901); // todo: use dynamic data
+    const [model, id] = decodeURIComponent(modelSlug[0]).split(':');
+    const [asPreview, databaseId] = await resolvePreview(id, true, 'product');
+
+    modelSlug = [model];
+
+    if (asPreview && databaseId) {
+      firstMatchedProduct = await getProductPreview(databaseId);
+    }
   }
 
   const globalOptions = await getGlobalOptions();
@@ -39,7 +48,6 @@ export default async function Product({ params, searchParams }) {
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug; // todo: get model slug from the URL
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
@@ -72,11 +80,14 @@ export default async function Product({ params, searchParams }) {
 
   const allLocations = await getStores();
 
-  const products = await getProductsByCategoriesSlugs(
-    slug,
-    makeSlug,
-    modelSlug,
-  );
+  let products;
+
+  if (isDraftEnabled && firstMatchedProduct) {
+    products = [firstMatchedProduct];
+  } else {
+    products = await getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
+    firstMatchedProduct = products.length ? products[0] : null;
+  }
 
   if (!products) {
     return notFound();
@@ -84,8 +95,6 @@ export default async function Product({ params, searchParams }) {
 
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
-
-  firstMatchedProduct = products.length ? products[0] : null;
 
   const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
     block =>
