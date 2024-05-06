@@ -25,7 +25,7 @@ export async function GET(request) {
       graphQLType = 'hspTvPost';
       break;
     default:
-      routeBase = '/';
+      routeBase = '';
       break;
   }
 
@@ -45,14 +45,7 @@ export async function GET(request) {
 
   draftMode().enable();
 
-  // Redirect to the path from the fetched post.
-  // We don't redirect to searchParams.id as that might lead to open redirect vulnerabilities.
-  // Also, preview mode works best when using IDs, since draft/autosave slugs differ from published ones.
-  // The only exception is pages, where we enter preview mode but force the latest revision
-  // (and only on pages that support it).
-  if (postType === 'page') {
-    redirect(`/${post.revisionOf?.node?.slug || post.slug}/`);
-  } else if (postType === 'product') {
+  if (postType === 'product') {
     const modelPreview = `${model}:${post.databaseId}`;
     redirect(`${routes.product(category, make, modelPreview)}/`);
   } else {
