@@ -22,10 +22,10 @@ export default function UteBuilderPage({
   const {
     finalSelection,
     savedVehicleGlobal,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     setMaker: setMake,
     setModel,
-    setSelectedFactoryOptions,
+    setSelectedFactoryOption,
   } = useVehicleContext();
 
   useEffect(
@@ -37,13 +37,12 @@ export default function UteBuilderPage({
           const vehicle = JSON.parse(savedVehicle);
           const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
           const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
-          const selectedFactoryOptions =
-            vehicle?.selectedFactoryOptions || null;
+          const selectedFactoryOption = vehicle?.selectedFactoryOption || null;
           const excludedCategoriesString = excludedCategories.join(',');
 
           setMake(vehicle?.maker);
           setModel(vehicle?.model);
-          setSelectedFactoryOptions(selectedFactoryOptions);
+          setSelectedFactoryOption(selectedFactoryOption);
 
           const response = getModelWithVariants(
             modelSlug,
@@ -68,14 +67,14 @@ export default function UteBuilderPage({
       savedVehicleGlobal,
       setMake,
       setModel,
-      setSelectedFactoryOptions,
+      setSelectedFactoryOption,
     ],
   );
 
   return (
     <Builder
       allLocations={allLocations}
-      factoryOption={selectedFactoryOptions}
+      factoryOption={selectedFactoryOption}
       factoryOptions={factoryOptions}
       globalOptions={globalOptions}
       makes={makes}

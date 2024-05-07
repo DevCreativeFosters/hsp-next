@@ -60,11 +60,11 @@ export default function Builder({
     maker: make,
     model,
     selectedCover,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     selectedProducts,
     setGoToLink,
     setSelectedCover,
-    setSelectedFactoryOptions,
+    setSelectedFactoryOption,
     setSelectedProducts,
     setStepNumber,
     setStepTitle,
@@ -79,8 +79,8 @@ export default function Builder({
     product => {
       let incompatibleFactoryOptions = [];
 
-      if (selectedFactoryOptions?.length > 0) {
-        incompatibleFactoryOptions = selectedFactoryOptions
+      if (selectedFactoryOption?.length > 0) {
+        incompatibleFactoryOptions = selectedFactoryOption
           .filter(
             option => !product.compatibleFactoryOptions.includes(option.slug),
           )
@@ -127,7 +127,7 @@ export default function Builder({
     [
       covers,
       disabledProducts,
-      selectedFactoryOptions,
+      selectedFactoryOption,
       selectedProducts,
       stepNumber,
       stepProducts,
@@ -314,9 +314,9 @@ export default function Builder({
   };
 
   const handleClashModalAccept = () => {
-    if (selectedFactoryOptions?.length > 0) {
-      setSelectedFactoryOptions(
-        selectedFactoryOptions.filter(
+    if (selectedFactoryOption?.length > 0) {
+      setSelectedFactoryOption(
+        selectedFactoryOption.filter(
           option => !incompatibleFactoryOptions.includes(option.value),
         ),
       );

@@ -30,7 +30,7 @@ export const VehicleProvider = ({ children }) => {
   const [stepNumber, setStepNumber] = useState(0);
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
-  const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
+  const [selectedFactoryOption, setSelectedFactoryOption] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
@@ -38,7 +38,7 @@ export const VehicleProvider = ({ children }) => {
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
-    selectedFactoryOptions: [],
+    selectedFactoryOption: [],
   });
   const [goToLink, setGoToLink] = useState('');
   const wrapperRef = useRef(null);
@@ -93,7 +93,7 @@ export const VehicleProvider = ({ children }) => {
     setModel(null);
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
-    setSelectedFactoryOptions(null);
+    setSelectedFactoryOption(null);
     setStepNumber(0);
     setStepTitle('');
   };
@@ -126,17 +126,17 @@ export const VehicleProvider = ({ children }) => {
       const vehicleString = JSON.stringify({
         maker,
         model,
-        selectedFactoryOptions,
+        selectedFactoryOption,
       });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ maker, model, selectedFactoryOptions });
+      setSavedVehicleGlobal({ maker, model, selectedFactoryOption });
 
       setVehicleSelection({
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
-        selectedFactoryOptions: selectedFactoryOptions || null,
+        selectedFactoryOption: selectedFactoryOption || null,
       });
 
       setDropdownOpened(false);
@@ -171,7 +171,7 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [maker, model, router, selectedFactoryOptions, variant],
+    [maker, model, router, selectedFactoryOption, variant],
   );
 
   return (
@@ -187,7 +187,7 @@ export const VehicleProvider = ({ children }) => {
         productNotCompatible,
         savedVehicleGlobal,
         selectedCover,
-        selectedFactoryOptions,
+        selectedFactoryOption,
         selectedProducts,
         setDropdownOpened,
         setGoToLink,
@@ -196,7 +196,7 @@ export const VehicleProvider = ({ children }) => {
         setProductNotCompatible,
         setSavedVehicleGlobal,
         setSelectedCover,
-        setSelectedFactoryOptions,
+        setSelectedFactoryOption,
         setSelectedProducts,
         setStepNumber,
         setStepTitle,

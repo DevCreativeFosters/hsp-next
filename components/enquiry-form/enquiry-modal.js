@@ -37,8 +37,8 @@ export default function EnquiryModal({
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
 
-  const { selectedFactoryOptions } = useVehicleContext();
-  const factoryOptions = selectedFactoryOptions
+  const { selectedFactoryOption } = useVehicleContext();
+  const factoryOptions = selectedFactoryOption
     .map(option => option.value)
     .join(', ');
   const products = selectedProducts

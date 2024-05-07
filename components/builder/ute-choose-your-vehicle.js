@@ -18,7 +18,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
     handleSave,
     maker,
     model,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     setVehicleSelection,
   } = useVehicleContext();
   const {
@@ -71,7 +71,6 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
             <Select
               className={styles.select}
               dropdownInDocumentFlow
-              multiple={true}
               name="factoryOptions"
               onChange={(value, label) => {
                 handleFactoryOptionsChange(value, label);
@@ -79,11 +78,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
               options={factorySelectOptions}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
-              value={
-                selectedFactoryOptions
-                  ? selectedFactoryOptions.map(option => option.slug)
-                  : null
-              }
+              value={getValueOrSlug(selectedFactoryOption) || null}
             />
           )}
           <Button
