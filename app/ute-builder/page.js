@@ -24,7 +24,7 @@ export default async function UteBuilder() {
   const allLocations = await getStores();
   const globalOptions = await getGlobalOptions();
   const noCoverProduct = await getNoCoverProduct(
-    globalOptions.noCoverCategory.nodes[0].slug,
+    globalOptions?.noCoverCategory.nodes[0].slug,
   );
   const excludedCategories = await getCategoriesToExclude(globalOptions);
 
