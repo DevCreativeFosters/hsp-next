@@ -130,6 +130,7 @@ export default function Sidebar({
       <div
         className={clsx(styles.sidebar, className, {
           [styles.isOpen]: isOpen,
+          [styles.isDisabled]: stepNumber === 0,
         })}
       >
         <Section
@@ -157,7 +158,6 @@ export default function Sidebar({
             allLocations={allLocations}
             isHidden={selectedStore}
             label={null}
-            showMapToggleSwitch={stepNumber > 0}
           />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
