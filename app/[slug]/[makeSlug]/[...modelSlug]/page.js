@@ -192,22 +192,22 @@ export default async function Product({ params, searchParams }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const categoryMakesAndModels = await getCategoriesMakesAndModels();
-//   const categories = formatCategories(categoryMakesAndModels);
-//
-//   const slugs = [];
-//   categories.forEach(category => {
-//     category.makes.forEach(make => {
-//       make.models.forEach(model => {
-//         slugs.push({
-//           makeSlug: make.slug,
-//           modelSlug: [model.slug],
-//           slug: category.slug,
-//         });
-//       });
-//     });
-//   });
-//
-//   return slugs;
-// }
+export async function generateStaticParams() {
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      make.models.forEach(model => {
+        slugs.push({
+          makeSlug: make.slug,
+          modelSlug: [model.slug],
+          slug: category.slug,
+        });
+      });
+    });
+  });
+
+  return slugs;
+}

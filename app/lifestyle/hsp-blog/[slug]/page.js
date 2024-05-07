@@ -46,12 +46,12 @@ export default async function BlogPostPage({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const posts = await getRecentBlogPosts(9999);
-//
-//   return (
-//     posts.map(post => ({
-//       slug: `${post.slug}`,
-//     })) || []
-//   );
-// }
+export async function generateStaticParams() {
+  const posts = await getRecentBlogPosts(9999);
+
+  return (
+    posts.map(post => ({
+      slug: `${post.slug}`,
+    })) || []
+  );
+}
