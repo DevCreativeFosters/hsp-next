@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
@@ -43,6 +43,9 @@ export default function ChooseYourVehicleBlock({
     modelSelectOptions,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
+  const [localParams, setLocalParams] = useState(params);
+  const [isLoading, setIsLoading] = useState(false);
+
   const path = usePathname();
 
   const windowSize = useWindowSize();
@@ -53,6 +56,16 @@ export default function ChooseYourVehicleBlock({
   }, [path]);
 
   const reload = !getValueOrSlug(variant);
+
+  useEffect(() => {
+    if (maker && model && path) {
+      setLocalParams({
+        mainCategorySlug: path.slice(1),
+        makeSlug: getValueOrSlug(maker),
+        modelSlug: getValueOrSlug(model),
+      });
+    }
+  }, [maker, model, path]);
 
   useEffect(
     function setGlobalVariantStateBySlug() {
@@ -148,7 +161,11 @@ export default function ChooseYourVehicleBlock({
           <Button
             className={styles.button}
             disabled={!model}
-            onClick={() => handleSave(params, reload)}
+            isBusy={isLoading}
+            onClick={() => {
+              handleSave(localParams, reload);
+              setIsLoading(true);
+            }}
             rightIcon="arrow-forward"
             size="large"
           >

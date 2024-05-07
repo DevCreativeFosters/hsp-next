@@ -128,10 +128,11 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       pathname === routes.uteBuilder
                     ) {
                       setShowModal(true);
+                      setIsLoading(false);
                     } else {
                       handleVehicleReset();
+                      setIsLoading(true);
                     }
-                    setIsLoading(true);
                   }}
                 >
                   <CancelIcon />

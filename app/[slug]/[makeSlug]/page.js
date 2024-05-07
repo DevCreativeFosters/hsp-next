@@ -8,6 +8,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
+import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -19,6 +20,18 @@ import ProductHero from '@components/product-hero';
 import ProductNotFound from '@components/product-not-found/product-not-found';
 
 import styles from '../page.module.scss';
+
+export async function generateMetadata({ params }) {
+  if (!params?.makeSlug) {
+    return;
+  }
+
+  const data = await getMakeModelSeo(params.makeSlug);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function CategoryPage({ params }) {
   const slug = params.slug;
@@ -120,4 +133,24 @@ export default async function CategoryPage({ params }) {
       ))}
     </Layout>
   );
+}
+
+export async function generateStaticParams() {
+  const categoryMakesAndModels = await getCategoriesMakesAndModels();
+  const categories = formatCategories(categoryMakesAndModels);
+
+  const slugs = [];
+  categories.forEach(category => {
+    category.makes.forEach(make => {
+      // make.models.forEach(model => {
+      slugs.push({
+        makeSlug: make.slug,
+        // modelSlug: [model.slug],
+        slug: category.slug,
+        // });
+      });
+    });
+  });
+
+  return slugs;
 }

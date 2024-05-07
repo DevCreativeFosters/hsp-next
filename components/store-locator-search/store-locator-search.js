@@ -20,6 +20,7 @@ import normalizeStores from '@lib/normalize-stores';
 import { findLocationsInRadius } from '@lib/store-locations';
 
 import Button from '@components/button/button';
+import Container from '@components/container/container';
 import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
@@ -151,92 +152,93 @@ export default function StoreLocatorSearch({ allLocations }) {
       })}
       ref={wrapperOuterRef}
     >
-      <div
-        className={clsx(styles.viewContainer, {
-          [styles.listMode]: viewMode === 'LIST',
-          [styles.resultMode]: viewMode === 'RESULT',
-        })}
-      >
-        <div className={styles.viewContent}>
-          <form
-            action="#"
-            autoComplete="off"
-            className={styles.form}
-            onChange={onAnyInputChange}
-            ref={formRef}
-          >
-            <div className={styles.searchPhraseWrapper}>
-              <StoreLocatorInput
-                icon="search"
-                name="location"
-                onChange={value => {
-                  setLocationInput(value);
-                  if (!value) {
-                    setLocation(null);
-                    setSearchGeolocation(null);
-                    setIsFullScreen(false);
-                  }
-                }}
-                onClick={onFormInteraction}
-                placeholder="Your location"
-                required
-                type="text"
-                value={locationInput}
-                withResetButton
-              />
+      <Container>
+        <div
+          className={clsx(styles.viewContainer, {
+            [styles.listMode]: viewMode === 'LIST',
+            [styles.resultMode]: viewMode === 'RESULT',
+          })}
+        >
+          <div className={styles.viewContent}>
+            <form
+              action="#"
+              autoComplete="off"
+              className={styles.form}
+              onChange={onAnyInputChange}
+              ref={formRef}
+            >
+              <div className={styles.searchPhraseWrapper}>
+                <StoreLocatorInput
+                  icon="search"
+                  name="location"
+                  onChange={value => {
+                    setLocationInput(value);
+                    if (!value) {
+                      setLocation(null);
+                      setSearchGeolocation(null);
+                      setIsFullScreen(false);
+                    }
+                  }}
+                  onClick={onFormInteraction}
+                  placeholder="Your location"
+                  required
+                  type="text"
+                  value={locationInput}
+                  withResetButton
+                />
 
-              <StoreLocatorSuggestions
-                items={suggestions}
-                selectLocation={selectLocation}
-              />
-            </div>
+                <StoreLocatorSuggestions
+                  items={suggestions}
+                  selectLocation={selectLocation}
+                />
+              </div>
 
-            <div className={styles.mobileOnly}>
-              <StoreList
-                items={filteredLocations}
-                onSelect={item => {
-                  setCurrentResult(item);
-                  setViewMode('RESULT');
-                }}
-                show={isInlineResultListVisible}
-              />
-            </div>
+              <div className={styles.mobileOnly}>
+                <StoreList
+                  items={filteredLocations}
+                  onSelect={item => {
+                    setCurrentResult(item);
+                    setViewMode('RESULT');
+                  }}
+                  show={isInlineResultListVisible}
+                />
+              </div>
 
-            {isSearchButtonVisible && (
-              <Button
-                className={styles.button}
-                href="#store-search"
-                onClick={() => {
-                  if (isMobile && !isFullScreen) {
-                    setIsFullScreen(true);
-                  } else {
-                    formRef.current.reportValidity();
-                  }
-                }}
-                rightIcon="search"
-                type="button"
-              >
-                Search
-              </Button>
-            )}
-          </form>
-        </div>
-
-        <div className={styles.viewContent}>
-          <div className={styles.singleResult}>
-            {currentResult && <StoreTile item={currentResult} />}
-            <div className={styles.buttonWrapper}>
-              <Button
-                leftIcon="arrow-backward"
-                onClick={goBack}
-                variant="quaternary"
-              >
-                Back to search
-              </Button>
+              {isSearchButtonVisible && (
+                <Button
+                  className={styles.button}
+                  href="#store-search"
+                  onClick={() => {
+                    if (isMobile && !isFullScreen) {
+                      setIsFullScreen(true);
+                    } else {
+                      formRef.current.reportValidity();
+                    }
+                  }}
+                  rightIcon="search"
+                  type="button"
+                >
+                  Search
+                </Button>
+              )}
+            </form>
+          </div>
+          <div className={styles.viewContent}>
+            <div className={styles.singleResult}>
+              {currentResult && <StoreTile item={currentResult} />}
+              <div className={styles.buttonWrapper}>
+                <Button
+                  leftIcon="arrow-backward"
+                  onClick={goBack}
+                  variant="quaternary"
+                >
+                  Back to search
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

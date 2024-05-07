@@ -117,7 +117,7 @@ export default function Layout({
     }
   });
   const mainProductCategoryIds = data.mainProductCategories.map(({ id }) => id);
-  const productSubCategories = data.productCategories.filter(
+  const productSubCategories = data?.productCategories.filter(
     ({ id, parent }) =>
       mainProductCategoryIds.includes(parent?.node?.id) &&
       !data.excludeChildrenId.includes(id),

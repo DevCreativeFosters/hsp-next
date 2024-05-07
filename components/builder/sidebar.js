@@ -86,15 +86,12 @@ export default function Sidebar({
     filteredLocations,
     isMapVisible,
     location,
-    radius,
     searchGeolocation,
     selectedStore,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  const isInlineResultListVisible = Boolean(
-    location && searchGeolocation && radius,
-  );
+  const isInlineResultListVisible = Boolean(location && searchGeolocation);
   const isInlineMapVisible = Boolean(isMobile && isMapVisible);
 
   const toggleOpen = useCallback(() => {
@@ -171,12 +168,14 @@ export default function Sidebar({
                 />
               )}
               <StoreList
-                className={styles.results}
                 items={filteredLocations}
                 onSelect={item => {
                   setSelectedStore(item);
                 }}
                 show={isInlineResultListVisible}
+                style={{
+                  maxHeight: stepNumber > 0 ? 150 : null,
+                }}
               />
             </>
           )}

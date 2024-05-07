@@ -20,8 +20,12 @@ export default function ProductAddons({ description, products, title }) {
   const buttonNextRef = useRef();
 
   const productsNormalized = products.map(product => {
-    const imageUrl = product.featuredImage?.sourceUrl;
-    const categories = product.productCategories.nodes;
+    if (!product) {
+      return null;
+    }
+
+    const imageUrl = product?.featuredImage?.sourceUrl || null;
+    const categories = product?.productCategories.nodes;
     const makesAndModels = product.makesAndModels.nodes.map(el => ({
       ...el,
       parent: el.parent?.node || null,

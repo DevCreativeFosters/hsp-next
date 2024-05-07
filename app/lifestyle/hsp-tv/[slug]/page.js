@@ -4,7 +4,7 @@ import { draftMode } from 'next/headers';
 
 import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 
 import { HspTvPost } from '@components/hsp-tv-post';
 import Layout from '@components/layout/layout';
@@ -12,7 +12,7 @@ import Layout from '@components/layout/layout';
 const NUMBER_OF_RELATED_POSTS = 5;
 
 export async function generateMetadata({ params }) {
-  const data = await getSeoData(`/hsp_tv/${params.slug}`);
+  const data = await getSeoByUri(`/hsp_tv/${params.slug}`);
 
   return {
     ...data,

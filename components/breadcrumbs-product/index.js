@@ -25,10 +25,6 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
   const [vehicleNotMatching, setVehicleNotMatching] = useState(false);
   const [displaySelectButton, setDisplaySelectButton] = useState(false);
   const [displayApplyButton, setDisplayApplyButton] = useState(false);
-  const [
-    isChangeProductPageButtonVisible,
-    setIsChangeProductPageButtonVisible,
-  ] = useState(false);
   const isFirstLoad = useRef(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -91,37 +87,6 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
       vehicleNotMatching,
     ],
   );
-
-  useEffect(() => {
-    const savedMake = getValueOrSlug(currentSavedVehicle?.maker);
-    const savedModel = getValueOrSlug(currentSavedVehicle?.model);
-    const currentMake = getValueOrSlug(maker);
-    const currentModel = getValueOrSlug(model);
-
-    const route = routes.product(
-      currentProduct.mainCategory.value,
-      savedMake,
-      savedModel,
-    );
-
-    if (savedMake !== undefined || savedModel !== undefined) {
-      if (pathname === route) {
-        if (savedMake === currentMake && savedModel === currentModel) {
-          setIsChangeProductPageButtonVisible(false);
-        } else if (savedMake !== currentMake || savedModel !== currentModel) {
-          setIsChangeProductPageButtonVisible(false);
-        }
-      } else {
-        if (savedMake === currentMake && savedModel === currentModel) {
-          setIsChangeProductPageButtonVisible(true);
-        } else if (savedMake !== currentMake || savedModel !== currentModel) {
-          setIsChangeProductPageButtonVisible(true);
-        } else {
-          setIsChangeProductPageButtonVisible(false);
-        }
-      }
-    }
-  }, [currentProduct, currentSavedVehicle, maker, model, pathname]);
 
   const applyChangedVehicle = useCallback(
     changeVehicle => {
@@ -363,29 +328,6 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
       url: applyRoute,
       variant: 'primary',
       visible: displayApplyButton,
-    },
-    {
-      label: `Change to ${
-        currentSavedVehicle?.maker?.name
-          ? currentSavedVehicle?.maker?.name
-          : '' || currentSavedVehicle?.maker?.label
-            ? currentSavedVehicle?.maker?.label
-            : ''
-      } ${
-        currentSavedVehicle?.model?.name
-          ? currentSavedVehicle?.model?.name
-          : '' || currentSavedVehicle?.model?.label
-            ? currentSavedVehicle?.model?.label
-            : ''
-      }`,
-      skipPrecedingSeparator: true,
-      type: 'button',
-      url: routes.product(
-        currentProduct.mainCategory.value,
-        getValueOrSlug(currentSavedVehicle?.maker),
-        getValueOrSlug(currentSavedVehicle?.model),
-      ),
-      visible: isChangeProductPageButtonVisible,
     },
   ];
 

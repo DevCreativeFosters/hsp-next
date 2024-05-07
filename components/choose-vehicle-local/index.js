@@ -7,24 +7,22 @@ import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categorie
 
 import Button from '@components/button/button';
 
-// Example component
-
 export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
   const [makeSlug, setMakeSlug] = useState(null);
   const [modelSlug, setModelSlug] = useState(null);
   const [modelList, setModelList] = useState([]);
   const [variantsList, setVariantsList] = useState([]);
 
-  const handleMakeChange = useCallback(ev => {
-    ev.preventDefault;
+  const handleMakeChange = useCallback(event => {
+    event.preventDefault();
 
-    setMakeSlug(ev.currentTarget.value);
+    setMakeSlug(event.currentTarget.value);
   }, []);
 
-  const handleModelChange = useCallback(ev => {
-    ev.preventDefault;
+  const handleModelChange = useCallback(event => {
+    event.preventDefault();
 
-    setModelSlug(ev.currentTarget.value);
+    setModelSlug(event.currentTarget.value);
   }, []);
 
   const fetchVariantsByCategories = useCallback(async () => {
@@ -33,7 +31,8 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
       makeSlug,
       modelSlug,
     );
-    const firstMatch = products.length ? products[0] : null;
+
+    const firstMatch = products?.length ? products[0] : null;
 
     if (firstMatch) {
       setVariantsList(firstMatch.productFields?.variants);
@@ -84,7 +83,7 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
       <div>
         <h2>Model</h2>
         <select
-          disabled={makeSlug && modelList.length ? false : true}
+          disabled={!(makeSlug && modelList.length)}
           onChange={handleModelChange}
         >
           <option value="">Choose Model</option>
@@ -98,9 +97,7 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
 
       <div>
         <h2>Variant</h2>
-        <select
-          disabled={makeSlug && modelSlug && variantsList.length ? false : true}
-        >
+        <select disabled={!(makeSlug && modelSlug && variantsList.length)}>
           <option value="">Choose Variant</option>
           {variantsList.map(({ variantName, variantSlug }, index) => (
             <option key={index} value={variantSlug}>

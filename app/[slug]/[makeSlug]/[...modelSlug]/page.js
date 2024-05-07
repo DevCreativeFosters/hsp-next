@@ -9,6 +9,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
+import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { resolvePreview } from '@lib/api/get-post-type-preview';
 import { getProductPreview } from '@lib/api/get-product-preview';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
@@ -26,6 +27,20 @@ import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
+
+export async function generateMetadata({ params }) {
+  if (!params?.modelSlug) {
+    return;
+  }
+
+  const modelSlug = params.modelSlug[0];
+
+  const data = await getMakeModelSeo(modelSlug);
+
+  return {
+    ...data,
+  };
+}
 
 export default async function Product({ params, searchParams }) {
   const { isEnabled: isDraftEnabled } = draftMode();
@@ -87,10 +102,6 @@ export default async function Product({ params, searchParams }) {
   } else {
     products = await getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
     firstMatchedProduct = products.length ? products[0] : null;
-  }
-
-  if (!products) {
-    return notFound();
   }
 
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
@@ -190,24 +201,4 @@ export default async function Product({ params, searchParams }) {
       ))}
     </Layout>
   );
-}
-
-export async function generateStaticParams() {
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
-
-  const slugs = [];
-  categories.forEach(category => {
-    category.makes.forEach(make => {
-      make.models.forEach(model => {
-        slugs.push({
-          makeSlug: make.slug,
-          modelSlug: [model.slug],
-          slug: category.slug,
-        });
-      });
-    });
-  });
-
-  return slugs;
 }

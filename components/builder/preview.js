@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 import DownloadButton from '@components/download-button/download-button';
+import Loading from '@components/loading/loading';
 
 import BgPictureMobile from '@assets/images/bg-concrete-mobile.webp';
 import BgPicture from '@assets/images/bg-concrete.webp';
@@ -25,6 +26,8 @@ export default function Preview({
   const modelImageMobile =
     model?.uteBuilderImages?.imageMobile?.node?.sourceUrl;
   const [mergeImages, setMergeImages] = useState([]);
+  const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
+  const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
 
   useEffect(() => {
     let newMergeImages = [];
@@ -48,20 +51,34 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
-      <Image
-        alt={modelName}
-        className={clsx(styles.base, styles.isDesktop)}
-        height={538}
-        src={modelImageDesktop}
-        width={864}
-      />
-      <Image
-        alt={modelName}
-        className={clsx(styles.base, styles.isMobile)}
-        height={535}
-        src={modelImageMobile}
-        width={390}
-      />
+      <div className={styles.isDesktop}>
+        {!desktopImageLoaded && <Loading color="white" size="large" />}
+        <Image
+          alt={modelName}
+          className={clsx(styles.base, styles.isDesktop)}
+          height={538}
+          onLoad={image => {
+            image?.currentTarget?.classList?.add(styles.isLoaded);
+            setDesktopImageLoaded(true);
+          }}
+          src={modelImageDesktop}
+          width={864}
+        />
+      </div>
+      <div className={styles.isMobile}>
+        {!mobileImageLoaded && <Loading color="white" size="large" />}
+        <Image
+          alt={modelName}
+          className={clsx(styles.base, styles.isMobile)}
+          height={535}
+          onLoad={image => {
+            image?.currentTarget?.classList?.add(styles.isLoaded);
+            setMobileImageLoaded(true);
+          }}
+          src={modelImageMobile}
+          width={390}
+        />
+      </div>
       {!!mergeImages.length && (
         <DownloadButton
           className={styles.downloadButton}
@@ -85,6 +102,9 @@ export default function Preview({
               alt={productTitle}
               className={clsx(styles.layer, styles.isDesktop)}
               height={538}
+              onLoad={image => {
+                image?.currentTarget?.classList?.add(styles.isLoaded);
+              }}
               src={productImageDesktop}
               width={864}
             />
@@ -92,6 +112,9 @@ export default function Preview({
               alt={productTitle}
               className={clsx(styles.layer, styles.isMobile)}
               height={535}
+              onLoad={image => {
+                image?.currentTarget?.classList?.add(styles.isLoaded);
+              }}
               src={productImageMobile}
               width={390}
             />
