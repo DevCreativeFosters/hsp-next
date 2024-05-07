@@ -45,7 +45,7 @@ export default function UTEChooseYourVehicle({ makes }) {
 
       setCompatibleFactoryOptions(compatibleFactoryOptions);
     },
-    [maker, model, setCompatibleFactoryOptions],
+    [maker, makes, model, setCompatibleFactoryOptions],
   );
 
   return (
