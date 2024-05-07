@@ -1,0 +1,26 @@
+.alert {
+  position: fixed;
+  z-index: 1000;
+  bottom: 1rem;
+  left: 1rem;
+  padding: 1.5rem;
+  width: 18rem;
+  background: var(--color-primary-100);
+  color: var(--color-white-100);
+  font-size: 1rem;
+}
+
+.heading {
+  font-size: 24px;
+}
+
+.exitLink {
+  color: var(--color-white-100);
+  text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    color: var(--color-white-100);
+    text-decoration: none;
+  }
+}
