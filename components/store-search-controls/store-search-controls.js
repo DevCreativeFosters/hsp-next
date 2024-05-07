@@ -27,6 +27,7 @@ export default function StoreSearchControls({
   isHidden,
   isWide,
   label = 'Locate your store',
+  showMapToggleSwitch = true,
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
@@ -144,16 +145,18 @@ export default function StoreSearchControls({
           selectLocation={selectLocation}
         />
       </div>
-      <div className={styles.mapToggler}>
-        <Switch
-          disabled={selectedStore}
-          label="Show map"
-          onChange={() => {
-            setMapVisible(!isMapVisible);
-          }}
-          state={isMapVisible}
-        />
-      </div>
+      {showMapToggleSwitch && (
+        <div className={styles.mapToggler}>
+          <Switch
+            disabled={selectedStore}
+            label="Show map"
+            onChange={() => {
+              setMapVisible(!isMapVisible);
+            }}
+            state={isMapVisible}
+          />
+        </div>
+      )}
     </div>
   );
 }

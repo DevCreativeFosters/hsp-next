@@ -76,6 +76,7 @@ export default function Sidebar({
   removeProduct,
   selectedProducts,
   setOpenSection,
+  stepNumber,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
@@ -156,6 +157,7 @@ export default function Sidebar({
             allLocations={allLocations}
             isHidden={selectedStore}
             label={null}
+            showMapToggleSwitch={stepNumber > 0}
           />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
