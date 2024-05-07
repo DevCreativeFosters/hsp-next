@@ -5,7 +5,6 @@ import getCategoriesToExclude from '@lib/api/get-categories-to-exclude';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import getNoCoverProduct from '@lib/api/get-no-cover-product';
 import { getStores } from '@lib/api/get-stores';
-import { getTermChildren } from '@lib/api/get-term-children';
 import { getSeoData } from '@lib/api/getSeoData';
 import routes from '@lib/routes';
 
@@ -24,10 +23,6 @@ export default async function UteBuilder() {
   const makes = await getAllMakes();
   const allLocations = await getStores();
   const globalOptions = await getGlobalOptions();
-  const factoryOptions = await getTermChildren(
-    globalOptions?.compatibleFactoryOptions?.nodes[0].slug || '',
-  );
-
   const noCoverProduct = await getNoCoverProduct(
     globalOptions.noCoverCategory.nodes[0].slug,
   );
@@ -39,7 +34,6 @@ export default async function UteBuilder() {
         <UteBuilderPage
           allLocations={allLocations}
           excludedCategories={excludedCategories}
-          factoryOptions={factoryOptions}
           globalOptions={globalOptions}
           makes={makes}
           noCover={noCoverProduct}

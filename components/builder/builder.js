@@ -37,7 +37,6 @@ export const STEP_TITLES = {
 
 export default function Builder({
   allLocations,
-  factoryOptions,
   globalOptions,
   makes,
   noCover,
@@ -377,10 +376,7 @@ export default function Builder({
                 )}
               </Preview>
             ) : (
-              <UTEChooseYourVehicle
-                factoryOptions={factoryOptions}
-                makes={makes}
-              />
+              <UTEChooseYourVehicle makes={makes} />
             )}
           </div>
           {stepNumber > 0 && stepProducts.length > 0 && (

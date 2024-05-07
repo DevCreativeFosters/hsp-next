@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { useVehicleContext } from '@contexts/vehicle';
 
 import constants from '@lib/constants';
@@ -13,7 +15,7 @@ import Select from '@components/form/select';
 
 import styles from './ute-choose-your-vehicle.module.scss';
 
-export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
+export default function UTEChooseYourVehicle({ makes }) {
   const {
     handleSave,
     maker,
@@ -28,7 +30,24 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
     handleModelChange,
     makerSelectOptions,
     modelSelectOptions,
-  } = useVehicleSelection(makes, setVehicleSelection, maker, factoryOptions);
+  } = useVehicleSelection(makes, setVehicleSelection, maker);
+
+  const [compatibleFactoryOptions, setCompatibleFactoryOptions] = useState([]);
+
+  useEffect(
+    function getCompatibleFactoryOptions() {
+      if (!maker || !model) {
+        return;
+      }
+
+      const compatibleFactoryOptions = makes
+        .find(make => make.name === maker.name)
+        ?.models.find(m => m.name === model.name).compatibleFactoryOptions;
+
+      setCompatibleFactoryOptions(compatibleFactoryOptions);
+    },
+    [maker, model, setCompatibleFactoryOptions],
+  );
 
   return (
     <Container className={styles.container}>
@@ -67,7 +86,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
             size="large"
             value={getValueOrSlug(model) || null}
           />
-          {factoryOptions?.length > 0 && (
+          {compatibleFactoryOptions?.length > 0 && (
             <Select
               className={styles.select}
               dropdownInDocumentFlow
@@ -75,7 +94,7 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
               onChange={(value, label) => {
                 handleFactoryOptionsChange(value, label);
               }}
-              options={factorySelectOptions}
+              options={compatibleFactoryOptions}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
               value={getValueOrSlug(selectedFactoryOption) || null}

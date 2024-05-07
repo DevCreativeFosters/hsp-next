@@ -12,7 +12,6 @@ import Builder from '@components/builder/builder';
 export default function UteBuilderPage({
   allLocations,
   excludedCategories,
-  factoryOptions,
   globalOptions,
   makes,
   noCover,
@@ -75,7 +74,6 @@ export default function UteBuilderPage({
     <Builder
       allLocations={allLocations}
       factoryOption={selectedFactoryOption}
-      factoryOptions={factoryOptions}
       globalOptions={globalOptions}
       makes={makes}
       noCover={noCover}
