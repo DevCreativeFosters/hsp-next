@@ -152,7 +152,8 @@ export default async function Product({ params, searchParams }) {
   if (modelSlug.length === 2) {
     const variantExists =
       firstMatchedProduct?.productFields?.variants?.find(
-        ({ variantSlug }) => variantSlug === modelSlug[1].toLowerCase(),
+        ({ variantSlug }) =>
+          variantSlug.toLocaleLowerCase() === modelSlug[1].toLowerCase(),
       ) || false;
 
     if (!variantExists) {
@@ -193,7 +194,7 @@ export default async function Product({ params, searchParams }) {
           modelName={modelName}
           pageParams={params}
           productHeroData={productHeroData}
-          variantSlug={searchParams.variant}
+          variantSlug={modelSlug[1]}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
