@@ -33,7 +33,7 @@ export default function ProductsCarousel({
     toggleGroup,
     toggleProduct,
   );
-  const productTitle = selectedCover?.variantName;
+  const productTitle = selectedCover?.productName;
   const productImage =
     selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
@@ -49,7 +49,7 @@ export default function ProductsCarousel({
             size="small"
             variant="secondary"
           >
-            {selectedCover.variantName}
+            {selectedCover.productName}
           </Button>
         )}
       </h2>

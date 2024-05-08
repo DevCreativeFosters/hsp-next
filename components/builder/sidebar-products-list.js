@@ -15,7 +15,7 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
       {selectedProducts.length !== 0 ? (
         <ol className={styles.productsList}>
           {selectedProducts?.map(selectedProduct => {
-            const productTitle = selectedProduct.variantName;
+            const productTitle = selectedProduct.productName;
             const productPrice = selectedProduct.price;
             const productSlug = selectedProduct.variantSlug;
 

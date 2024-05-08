@@ -38,8 +38,8 @@ export default function EnquiryForm({
   const productPrice = productFields?.price;
   const productInstallationPrice = productFields?.installationCost;
   const variants = productFields?.variants;
-  const variantOptions = variants?.map(({ variantName, variantSlug }) => ({
-    label: variantName,
+  const variantOptions = variants?.map(({ productName, variantSlug }) => ({
+    label: productName,
     value: variantSlug,
   }));
 

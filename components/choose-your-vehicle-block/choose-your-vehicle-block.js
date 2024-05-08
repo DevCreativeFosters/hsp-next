@@ -29,7 +29,7 @@ export default function ChooseYourVehicleBlock({
   const stickerRef = useRef();
   const variantsNormalized = variants?.map(variant => {
     return {
-      label: variant.variantName,
+      label: variant.productName,
       value: variant.variantSlug,
     };
   });

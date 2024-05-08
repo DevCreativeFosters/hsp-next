@@ -89,7 +89,7 @@ export default function Preview({
         />
       )}
       {selectedProducts?.map(selectedProduct => {
-        const productTitle = selectedProduct.variantName;
+        const productTitle = selectedProduct.productName;
         const productSlug = selectedProduct.variantSlug;
         const productImageDesktop =
           selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
