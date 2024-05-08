@@ -41,7 +41,13 @@ export default function UTEChooseYourVehicle({ makes }) {
 
       const compatibleFactoryOptions = makes
         .find(make => make.name === maker.name)
-        ?.models.find(m => m.name === model.name).compatibleFactoryOptions;
+        ?.models.find(m => m.name === model.name)
+        .compatibleFactoryOptions.map(option => {
+          return {
+            label: option.title,
+            value: option.slug,
+          };
+        });
 
       setCompatibleFactoryOptions(compatibleFactoryOptions);
     },
