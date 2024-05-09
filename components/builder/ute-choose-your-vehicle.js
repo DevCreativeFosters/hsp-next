@@ -25,7 +25,7 @@ export default function UTEChooseYourVehicle({ makes }) {
     setCompatibleFactoryOptions,
     setVehicleSelection,
   } = useVehicleContext();
-  s;
+
   const {
     handleFactoryOptionsChange,
     handleMakerChange,
