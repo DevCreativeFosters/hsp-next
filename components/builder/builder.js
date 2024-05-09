@@ -381,6 +381,7 @@ export default function Builder({
               <Preview
                 make={make}
                 model={model}
+                selectedFactoryOption={selectedFactoryOption}
                 selectedProducts={selectedProducts}
               >
                 {isInlineMapVisible && (

@@ -73,7 +73,7 @@ export default function UTEChooseYourVehicle({ makes }) {
               className={styles.select}
               dropdownInDocumentFlow
               name="factoryOptions"
-              onChange={(value, compatibleFactoryOptions) => {
+              onChange={value => {
                 handleFactoryOptionsChange(value, compatibleFactoryOptions);
               }}
               options={compatibleFactoryOptions.map(({ slug, title }) => ({
@@ -82,7 +82,7 @@ export default function UTEChooseYourVehicle({ makes }) {
               }))}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
-              value={getValueOrSlug(selectedFactoryOption) || null}
+              value={selectedFactoryOption?.slug || null}
             />
           )}
           <Button

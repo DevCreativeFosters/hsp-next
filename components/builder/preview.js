@@ -18,6 +18,7 @@ export default function Preview({
   className,
   make,
   model,
+  selectedFactoryOption,
   selectedProducts,
 }) {
   const modelName = model?.name;
@@ -28,15 +29,41 @@ export default function Preview({
   const [mergeImages, setMergeImages] = useState([]);
   const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
   const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
+  const [localSelectedProducts, setLocalSelectedProducts] =
+    useState(selectedProducts);
+
+  useEffect(
+    function setupSelectedFactoryOptionImage() {
+      if (!selectedFactoryOption) {
+        return;
+      }
+
+      const images =
+        selectedFactoryOption?.productFields?.variants[0]?.uteBuilderImages ||
+        {};
+
+      if (!Object.keys(images).length) {
+        return;
+      }
+
+      const newSelectedProducts = [
+        selectedFactoryOption?.productFields?.variants[0],
+        ...selectedProducts,
+      ];
+
+      setLocalSelectedProducts(newSelectedProducts);
+    },
+    [selectedFactoryOption, selectedProducts],
+  );
 
   useEffect(() => {
     let newMergeImages = [];
 
-    if (selectedProducts?.length > 0) {
+    if (localSelectedProducts?.length > 0) {
       newMergeImages.push(BgPicture);
       newMergeImages.push(modelImageDesktop);
 
-      selectedProducts.forEach(selectedProduct => {
+      localSelectedProducts.forEach(selectedProduct => {
         const productImageDesktop =
           selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
@@ -47,7 +74,7 @@ export default function Preview({
     setMergeImages(newMergeImages);
 
     return () => {};
-  }, [modelImageDesktop, selectedProducts]);
+  }, [localSelectedProducts, modelImageDesktop]);
 
   return (
     <div className={clsx(styles.preview, className)}>
@@ -88,7 +115,7 @@ export default function Preview({
           images={mergeImages}
         />
       )}
-      {selectedProducts?.map(selectedProduct => {
+      {localSelectedProducts?.map(selectedProduct => {
         const productTitle = selectedProduct.productName;
         const productSlug = selectedProduct.variantSlug;
         const productImageDesktop =
