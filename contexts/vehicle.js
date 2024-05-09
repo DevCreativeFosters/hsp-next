@@ -95,6 +95,8 @@ export const VehicleProvider = ({ children }) => {
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
     setSelectedFactoryOption(null);
+    setSelectedFactoryOption(null);
+    setCompatibleFactoryOptions([]);
     setStepNumber(0);
     setStepTitle('');
   };
