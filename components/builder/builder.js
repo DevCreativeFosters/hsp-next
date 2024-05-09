@@ -385,6 +385,7 @@ export default function Builder({
               isMobile={isMobile}
               products={stepProducts}
               selectedCover={selectedCover}
+              selectedFactoryOption={selectedFactoryOption}
               selectedProducts={selectedProducts}
               stepNumber={stepNumber}
               stepTitle={stepTitle}

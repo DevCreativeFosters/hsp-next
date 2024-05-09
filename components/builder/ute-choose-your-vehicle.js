@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -17,12 +17,15 @@ import styles from './ute-choose-your-vehicle.module.scss';
 
 export default function UTEChooseYourVehicle({ makes }) {
   const {
+    compatibleFactoryOptions,
     handleSave,
     maker,
     model,
     selectedFactoryOption,
+    setCompatibleFactoryOptions,
     setVehicleSelection,
   } = useVehicleContext();
+  s;
   const {
     handleFactoryOptionsChange,
     handleMakerChange,
@@ -31,11 +34,9 @@ export default function UTEChooseYourVehicle({ makes }) {
     modelSelectOptions,
   } = useVehicleSelection(makes, setVehicleSelection, maker);
 
-  const [compatibleFactoryOptions, setCompatibleFactoryOptions] = useState([]);
-
   useEffect(
     function getCompatibleFactoryOptions() {
-      if (!maker || !model) {
+      if (!maker || !model || !makes.length) {
         return;
       }
 
