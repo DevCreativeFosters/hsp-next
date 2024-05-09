@@ -127,6 +127,7 @@ export default function Sidebar({
       <div
         className={clsx(styles.sidebar, className, {
           [styles.isOpen]: isOpen,
+          [styles.isDisabled]: stepNumber === 0,
         })}
       >
         <Section

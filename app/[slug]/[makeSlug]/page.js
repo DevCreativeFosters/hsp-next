@@ -10,7 +10,7 @@ import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category
 import { getMake } from '@lib/api/get-make';
 import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { renderBlock } from '@lib/block';
-import { getExcludeTree } from '@lib/helpers';
+import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -49,13 +49,17 @@ export default async function CategoryPage({ params }) {
   const details = makeData?.detailsFields.details;
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
-  const shouldBeExcluded = excludeTree.includes(categoryData?.databaseId);
+  const isExcluded = shouldBeExcluded(excludeTree, categoryData);
 
-  if (!makeData && categoryData && !shouldBeExcluded) {
+  if (!categoryData || isExcluded) {
+    return notFound();
+  }
+
+  if (categoryData && !makeData && !isExcluded) {
     return <ProductNotFound />;
   }
 
-  if (!makeData || !categoryData) {
+  if (!categoryData || !makeData) {
     return notFound();
   }
 
@@ -98,16 +102,6 @@ export default async function CategoryPage({ params }) {
 
   const categoryMakesAndModels = await getCategoriesMakesAndModels();
   const categories = formatCategories(categoryMakesAndModels);
-
-  const slugs = [];
-  categories.forEach(category => {
-    category.makes.forEach(make => {
-      slugs.push({
-        makeSlug: make.slug,
-        slug: category.slug,
-      });
-    });
-  });
 
   return (
     <Layout title="Product">

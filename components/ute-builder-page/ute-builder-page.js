@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
+import getModelWithVariants from '@lib/api/get-model-with-variants';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 
 import Builder from '@components/builder/builder';
@@ -11,7 +12,6 @@ import Builder from '@components/builder/builder';
 export default function UteBuilderPage({
   allLocations,
   excludedCategories,
-  factoryOptions,
   globalOptions,
   makes,
   noCover,
@@ -21,57 +21,59 @@ export default function UteBuilderPage({
   const {
     finalSelection,
     savedVehicleGlobal,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     setMaker: setMake,
     setModel,
-    setSelectedFactoryOptions,
+    setSelectedFactoryOption,
   } = useVehicleContext();
 
-  useEffect(() => {
-    const setModelAndProducts = async (model, make, excludedCategories) => {
-      const response = await fetch(
-        `/api/ute-builder?model=${model}&make=${make}&excludedCategories=${excludedCategories}`,
-      );
-      const data = await response.json();
-      setModel(data?.modelData);
-      setProductVariants(data?.productData);
-    };
+  useEffect(
+    function saveUserSelection() {
+      const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
 
-    const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
+      if (finalSelection) {
+        if (savedVehicle) {
+          const vehicle = JSON.parse(savedVehicle);
+          const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
+          const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
+          const selectedFactoryOption = vehicle?.selectedFactoryOption || null;
+          const excludedCategoriesString = excludedCategories.join(',');
 
-    if (finalSelection) {
-      if (savedVehicle) {
-        const vehicle = JSON.parse(savedVehicle);
-        const modelSlug = vehicle?.model?.value || vehicle?.model?.slug;
-        const makerSlug = vehicle?.maker?.value || vehicle?.maker?.slug;
-        const selectedFactoryOptions = vehicle?.selectedFactoryOptions || null;
-        const excludedCategoriesString = excludedCategories.join(',');
+          setMake(vehicle?.maker);
+          setModel(vehicle?.model);
+          setSelectedFactoryOption(selectedFactoryOption);
 
-        setMake(vehicle?.maker);
-        setModel(vehicle?.model);
-        setSelectedFactoryOptions(selectedFactoryOptions);
+          const response = getModelWithVariants(
+            modelSlug,
+            makerSlug,
+            excludedCategoriesString,
+          );
 
-        setModelAndProducts(modelSlug, makerSlug, excludedCategoriesString);
+          response.then(data => {
+            setModel(data?.modelData);
+            setProductVariants(data?.productData);
+          });
+        }
+      } else {
+        setMake(null);
+        setModel(null);
+        setProductVariants(null);
       }
-    } else {
-      setMake(null);
-      setModel(null);
-      setProductVariants(null);
-    }
-  }, [
-    excludedCategories,
-    finalSelection,
-    savedVehicleGlobal,
-    setMake,
-    setModel,
-    setSelectedFactoryOptions,
-  ]);
+    },
+    [
+      excludedCategories,
+      finalSelection,
+      savedVehicleGlobal,
+      setMake,
+      setModel,
+      setSelectedFactoryOption,
+    ],
+  );
 
   return (
     <Builder
       allLocations={allLocations}
-      factoryOption={selectedFactoryOptions}
-      factoryOptions={factoryOptions}
+      factoryOption={selectedFactoryOption}
       globalOptions={globalOptions}
       makes={makes}
       noCover={noCover}

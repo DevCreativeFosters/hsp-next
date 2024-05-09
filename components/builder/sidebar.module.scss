@@ -20,6 +20,11 @@
     display: flex;
   }
 
+  &.isDisabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
   @include bp(large) {
     display: flex;
     position: static;
