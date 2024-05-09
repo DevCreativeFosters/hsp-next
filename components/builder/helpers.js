@@ -69,9 +69,9 @@ export function getSlides(
 
   products?.forEach(group => {
     group?.variants.forEach((product, index) => {
-      const { isGroup, productName, uteBuilderImages, variantSlug } = product;
+      const { image, isGroup, productName, variantSlug } = product;
       const productTitle = productName;
-      const productImage = uteBuilderImages.imageDesktop?.node?.sourceUrl;
+      const productImage = image;
       const isSelected = isProductSelected(selectedProducts, variantSlug);
       const isDisabled = disabledProducts.includes(variantSlug);
       const isGroupItemOpen = isGroup && product.isOpen;

@@ -34,8 +34,7 @@ export default function ProductsCarousel({
     toggleProduct,
   );
   const productTitle = selectedCover?.productName;
-  const productImage =
-    selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+  const productImage = selectedCover?.image;
 
   return (
     <div className={clsx(styles.productsCarousel, className)}>
