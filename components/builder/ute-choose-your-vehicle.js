@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import { useVehicleContext } from '@contexts/vehicle';
 
 import constants from '@lib/constants';
@@ -22,7 +20,6 @@ export default function UTEChooseYourVehicle({ makes }) {
     maker,
     model,
     selectedFactoryOption,
-    setCompatibleFactoryOptions,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -33,27 +30,6 @@ export default function UTEChooseYourVehicle({ makes }) {
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makes, setVehicleSelection, maker);
-
-  useEffect(
-    function getCompatibleFactoryOptions() {
-      if (!maker || !model || !makes.length) {
-        return;
-      }
-
-      const compatibleFactoryOptions = makes
-        .find(make => make.name === maker.name)
-        ?.models.find(m => m.name === model.name)
-        .compatibleFactoryOptions.map(option => {
-          return {
-            label: option.title,
-            value: option.slug,
-          };
-        });
-
-      setCompatibleFactoryOptions(compatibleFactoryOptions);
-    },
-    [maker, makes, model, setCompatibleFactoryOptions],
-  );
 
   return (
     <Container className={styles.container}>
@@ -97,10 +73,13 @@ export default function UTEChooseYourVehicle({ makes }) {
               className={styles.select}
               dropdownInDocumentFlow
               name="factoryOptions"
-              onChange={(value, label) => {
-                handleFactoryOptionsChange(value, label);
+              onChange={(value, compatibleFactoryOptions) => {
+                handleFactoryOptionsChange(value, compatibleFactoryOptions);
               }}
-              options={compatibleFactoryOptions}
+              options={compatibleFactoryOptions.map(({ slug, title }) => ({
+                label: title,
+                value: slug,
+              }))}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
               value={getValueOrSlug(selectedFactoryOption) || null}

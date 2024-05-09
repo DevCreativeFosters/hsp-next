@@ -61,6 +61,7 @@ export default function Builder({
     selectedCover,
     selectedFactoryOption,
     selectedProducts,
+    setCompatibleFactoryOptions,
     setGoToLink,
     setSelectedCover,
     setSelectedFactoryOption,
@@ -208,6 +209,21 @@ export default function Builder({
       setStepProducts(products);
     },
     [setStepProducts, stepProducts],
+  );
+
+  useEffect(
+    function getCompatibleFactoryOptions() {
+      if (!make || !model || !makes.length) {
+        return;
+      }
+
+      const compatibleFactoryOptions = makes
+        .find(i => i.name === make.name)
+        ?.models.find(j => j.name === model.name)?.compatibleFactoryOptions;
+
+      setCompatibleFactoryOptions(compatibleFactoryOptions);
+    },
+    [make, makes, model, setCompatibleFactoryOptions],
   );
 
   useEffect(
