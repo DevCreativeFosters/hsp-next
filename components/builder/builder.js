@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
@@ -29,12 +29,14 @@ import Sidebar from './sidebar';
 const DEFAULT_OPEN_SECTION = 'products';
 export const STEP_TITLES = {
   1: 'Add your UTE covering',
-  2: 'Add products to your vehicle',
+  2: {
+    desktop: 'Add products to your vehicle',
+    mobile: 'Add products to',
+  },
 };
 
 export default function Builder({
   allLocations,
-  factoryOptions,
   globalOptions,
   makes,
   noCover,
@@ -42,7 +44,6 @@ export default function Builder({
 }) {
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
-
   const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
@@ -51,17 +52,18 @@ export default function Builder({
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
   const [incompatibleCovers, setIncompatibleCovers] = useState(null);
+  const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
   const {
     maker: make,
     model,
     selectedCover,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     selectedProducts,
     setGoToLink,
     setSelectedCover,
-    setSelectedFactoryOptions,
+    setSelectedFactoryOption,
     setSelectedProducts,
     setStepNumber,
     setStepTitle,
@@ -72,97 +74,12 @@ export default function Builder({
   const { filteredLocations, isMapVisible, setSelectedStore } =
     useContext(StoreLocatorContext);
 
-  useEffect(
-    function setRelatedCovers() {
-      if (
-        !make?.slug ||
-        !model?.slug ||
-        !globalOptions ||
-        !globalOptions?.coversCategory
-      ) {
-        return;
-      }
-
-      getRelatedCovers(
-        make.slug,
-        model.slug,
-        globalOptions.coversCategory.nodes[0].slug,
-      ).then(relatedCovers => {
-        if (!relatedCovers) {
-          return;
-        }
-
-        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
-        const covers = [...normalizedCovers, ...noCoverNormalized];
-
-        setStepProducts(covers);
-        setCovers(covers);
-      });
-    },
-    [globalOptions, make, model, noCover],
-  );
-
-  useEffect(
-    function setCurrentStepProducts() {
-      if (stepNumber === 1) {
-        setStepProducts(covers);
-      }
-
-      if (stepNumber === 2) {
-        setStepProducts(normalizeUteBuilderProducts(products));
-      }
-    },
-    [covers, products, setStepProducts, stepNumber],
-  );
-
-  useEffect(() => {
-    if (!make || !model || stepNumber === 0) {
-      return;
-    }
-
-    const selectedCover = selectedProducts.find(selectedProduct =>
-      covers.some(cover => cover.group === selectedProduct.productSlug),
-    );
-
-    if (!selectedCover) {
-      setStepNumber(1);
-      setStepTitle(STEP_TITLES[1]);
-
-      return;
-    }
-
-    setStepNumber(2);
-    setStepTitle(STEP_TITLES[2]);
-    setSelectedCover(selectedCover);
-  }, [
-    covers,
-    make,
-    model,
-    selectedProducts,
-    setSelectedCover,
-    setStepNumber,
-    setStepTitle,
-    stepNumber,
-  ]);
-
-  useEffect(() => {
-    if (!productToAdd || showClashModal) {
-      return;
-    }
-
-    const products = [...selectedProducts, productToAdd];
-
-    setSelectedProducts(products);
-    setProductToAdd(null);
-  }, [productToAdd, selectedProducts, setSelectedProducts, showClashModal]);
-
   const addProduct = useCallback(
     product => {
       let incompatibleFactoryOptions = [];
 
-      if (selectedFactoryOptions?.length > 0) {
-        incompatibleFactoryOptions = selectedFactoryOptions
+      if (selectedFactoryOption?.length > 0) {
+        incompatibleFactoryOptions = selectedFactoryOption
           .filter(
             option => !product.compatibleFactoryOptions.includes(option.slug),
           )
@@ -171,16 +88,13 @@ export default function Builder({
         setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       }
 
-      let incompatibleCovers = [];
-
-      if (selectedProducts.length > 0) {
-        incompatibleCovers.push(selectedProducts[0].productName);
-        product.compatibleCovers.forEach(category => {
-          if (selectedCover?.productCategories?.includes(category)) {
-            incompatibleCovers = [];
-          }
-        });
-      }
+      const incompatibleCovers = selectedProducts
+        .filter(
+          selectedProduct =>
+            !product.compatibleCovers.includes(selectedProduct.productSlug),
+        )
+        .filter(cover => covers.some(c => c.group === cover.productSlug))
+        .map(cover => cover.productName);
 
       setIncompatibleCovers(incompatibleCovers);
 
@@ -212,7 +126,7 @@ export default function Builder({
     [
       covers,
       disabledProducts,
-      selectedFactoryOptions,
+      selectedFactoryOption,
       selectedProducts,
       stepNumber,
       stepProducts,
@@ -296,6 +210,100 @@ export default function Builder({
     [setStepProducts, stepProducts],
   );
 
+  useEffect(
+    function getBuilderRelatedCovers() {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions ||
+        !globalOptions?.coversCategory
+      ) {
+        return;
+      }
+
+      getRelatedCovers(
+        make.slug,
+        model.slug,
+        globalOptions.coversCategory.nodes[0].slug,
+      ).then(relatedCovers => {
+        if (!relatedCovers) {
+          return;
+        }
+
+        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const covers = [...normalizedCovers, ...noCoverNormalized];
+
+        setStepProducts(covers);
+        setCovers(covers);
+      });
+    },
+    [globalOptions, make, model, noCover],
+  );
+
+  useEffect(
+    function setBuilderStepProducts() {
+      if (stepNumber === 1) {
+        setStepProducts(covers);
+      }
+
+      if (stepNumber === 2) {
+        setStepProducts(normalizeUteBuilderProducts(products));
+      }
+    },
+    [covers, products, setStepProducts, stepNumber],
+  );
+
+  useEffect(
+    function setBuilderSelectedCover() {
+      if (!make || !model || stepNumber === 0) {
+        return;
+      }
+
+      const selectedCover = selectedProducts.find(selectedProduct =>
+        covers.some(cover => cover.group === selectedProduct.productSlug),
+      );
+
+      if (!selectedCover) {
+        setStepNumber(1);
+        setStepTitle(STEP_TITLES[1]);
+
+        return;
+      }
+
+      const key = isMobile ? 'mobile' : 'desktop';
+
+      setStepNumber(2);
+      setStepTitle(STEP_TITLES[2][key]);
+      setSelectedCover(selectedCover);
+    },
+    [
+      covers,
+      isMobile,
+      make,
+      model,
+      selectedProducts,
+      setSelectedCover,
+      setStepNumber,
+      setStepTitle,
+      stepNumber,
+    ],
+  );
+
+  useEffect(
+    function addProduct() {
+      if (!productToAdd || showClashModal) {
+        return;
+      }
+
+      const products = [...selectedProducts, productToAdd];
+
+      setSelectedProducts(products);
+      setProductToAdd(null);
+    },
+    [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
+  );
+
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -305,9 +313,9 @@ export default function Builder({
   };
 
   const handleClashModalAccept = () => {
-    if (selectedFactoryOptions?.length > 0) {
-      setSelectedFactoryOptions(
-        selectedFactoryOptions.filter(
+    if (selectedFactoryOption?.length > 0) {
+      setSelectedFactoryOption(
+        selectedFactoryOption.filter(
           option => !incompatibleFactoryOptions.includes(option.value),
         ),
       );
@@ -342,7 +350,7 @@ export default function Builder({
       )}
       <div className={styles.builder}>
         <Container className={styles.container}>
-          <div className={styles.top}>
+          <div className={styles.top} ref={topRef}>
             <Sidebar
               allLocations={allLocations}
               globalOptions={globalOptions}
@@ -368,10 +376,7 @@ export default function Builder({
                 )}
               </Preview>
             ) : (
-              <UTEChooseYourVehicle
-                factoryOptions={factoryOptions}
-                makes={makes}
-              />
+              <UTEChooseYourVehicle makes={makes} />
             )}
           </div>
           {stepNumber > 0 && stepProducts.length > 0 && (

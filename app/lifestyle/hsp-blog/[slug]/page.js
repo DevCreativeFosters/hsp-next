@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 
+import { draftMode } from 'next/headers';
+
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
@@ -18,7 +20,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPostPage({ params }) {
-  const post = await getBlogPost(params.slug);
+  const { isEnabled: isDraftEnabled } = draftMode();
+  const post = await getBlogPost(params.slug, isDraftEnabled);
   const title = post?.title;
   const content = post?.content;
   const excerpt = post?.excerpt;

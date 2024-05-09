@@ -79,15 +79,15 @@ export default function Layout({
     resources: [],
     services: [],
   };
-  const footerText = data.globalOptions?.footerText;
-  const topNavigationMenu = normalizeTopNavigationMenu(data.globalOptions);
+  const footerText = data?.globalOptions?.footerText;
+  const topNavigationMenu = normalizeTopNavigationMenu(data?.globalOptions);
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
   const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
   const normalizedProductData = normalizeProductData(
     data.mainProductCategories,
   );
-  const newsletterTitle = data.globalOptions?.newsletterTitle;
-  const newsletterDescription = data.globalOptions?.newsletterDescription;
+  const newsletterTitle = data?.globalOptions?.newsletterTitle;
+  const newsletterDescription = data?.globalOptions?.newsletterDescription;
 
   data.footerMenus?.forEach(menu => {
     const menuLocation = menu?.node?.locations[0];

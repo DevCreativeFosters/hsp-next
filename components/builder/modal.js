@@ -23,10 +23,10 @@ export default function UTEBuilderModal({
         {children}
         <p>Do you want to proceed?</p>
         <div className={styles.buttons}>
-          <Button onClick={onClose} size={'large'} variant={'secondary'}>
+          <Button onClick={onClose} size="large" variant="secondary">
             Cancel
           </Button>
-          <Button onClick={onAccept} size={'large'}>
+          <Button onClick={onAccept} size="large">
             Accept
           </Button>
         </div>

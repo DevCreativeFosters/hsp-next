@@ -1,8 +1,9 @@
-import routes from '@lib/routes';
 import { NextResponse } from 'next/server';
-import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
-import { getValueOrSlug } from '@lib/helpers';
+
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getValueOrSlug } from '@lib/helpers';
+import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+import routes from '@lib/routes';
 
 const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
 
@@ -41,7 +42,7 @@ export async function middleware(request) {
   if (pathSegments.length === 1 && pathSegments[0] !== 'favicon.ico') {
     const categoryData = await getMainProductCategory(pathSegments[0]);
 
-    if (categoryData && hspMyVehicle) {
+    if (Object.keys(categoryData).length && hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
 
       if (maker && getValueOrSlug(maker)) {

@@ -11,8 +11,8 @@ import Carousel from '@components/carousel/carousel';
 import { getSlides } from './helpers';
 import styles from './products-carousel.module.scss';
 
-const CancelIcon = getIcon('cancel');
 const ArrowBackwardIcon = getIcon('arrow-backward');
+const MIN_SLIDES_TO_SHOW_NAVIGATION = 6;
 
 export default function ProductsCarousel({
   className,
@@ -33,8 +33,6 @@ export default function ProductsCarousel({
     toggleGroup,
     toggleProduct,
   );
-  const currentStepTitle =
-    stepNumber === 2 && isMobile ? 'Add products to' : stepTitle;
   const productTitle = selectedCover?.variantName;
   const productImage =
     selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
@@ -42,17 +40,16 @@ export default function ProductsCarousel({
   return (
     <div className={clsx(styles.productsCarousel, className)}>
       <h2 className={styles.title}>
-        <span className={styles.number}>Step {stepNumber}:</span>{' '}
-        {currentStepTitle}
+        <span className={styles.number}>Step {stepNumber}:</span> {stepTitle}
         {isMobile && stepNumber === 2 && selectedCover && (
           <Button
             className={styles.badge}
             onClick={() => toggleProduct(selectedCover)}
+            rightIcon="cancel"
             size="small"
             variant="secondary"
           >
             {selectedCover.variantName}
-            <CancelIcon className={styles.badgeIcon} />
           </Button>
         )}
       </h2>
@@ -101,7 +98,7 @@ export default function ProductsCarousel({
             spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={slides.length > 6}
+          showNavigation={slides.length > MIN_SLIDES_TO_SHOW_NAVIGATION}
           slides={slides}
         />
       </div>
