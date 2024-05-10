@@ -1,14 +1,15 @@
+import { useId } from 'react';
+
 import styles from './select-checkbox.module.scss';
 
 export default function SelectCheckbox({
   handleSelectCheckbox,
-  index,
   label,
   selectedCheckboxes,
   value,
 }) {
   const selected = selectedCheckboxes.map(selected => selected.value);
-  const id = `${index}_${label}_${value}`;
+  const id = useId();
 
   return (
     <div className={styles.wrapper}>

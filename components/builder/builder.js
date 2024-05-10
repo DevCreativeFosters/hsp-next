@@ -228,12 +228,7 @@ export default function Builder({
 
   useEffect(
     function getBuilderRelatedCovers() {
-      if (
-        !make?.slug ||
-        !model?.slug ||
-        !globalOptions ||
-        !globalOptions?.coversCategory
-      ) {
+      if (!make?.slug || !model?.slug || !globalOptions?.coversCategory) {
         return;
       }
 
