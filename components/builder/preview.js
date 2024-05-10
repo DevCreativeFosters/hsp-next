@@ -116,7 +116,6 @@ export default function Preview({
         />
       )}
       {localSelectedProducts?.map(selectedProduct => {
-        console.log(selectedProduct);
         if (selectedProduct.isNoCover) {
           return null;
         }
