@@ -116,6 +116,11 @@ export default function Preview({
         />
       )}
       {localSelectedProducts?.map(selectedProduct => {
+        console.log(selectedProduct);
+        if (selectedProduct.isNoCover) {
+          return null;
+        }
+
         const productTitle = selectedProduct.productName;
         const productSlug = selectedProduct.variantSlug;
         const productImageDesktop =

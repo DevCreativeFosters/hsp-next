@@ -247,8 +247,9 @@ export default function Builder({
         }
 
         const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover, true);
         const covers = [...normalizedCovers, ...noCoverNormalized];
+        console.log(covers);
 
         setStepProducts(covers);
         setCovers(covers);
