@@ -10,14 +10,15 @@ export default function Alert() {
    * Exit link is NOT a <Link> on purpose, to ensure full page reload.
    */
   const { isEnabled } = draftMode();
-  const headersList = headers();
-  const pathname = `${
-    headersList.get('next-url') || headersList.get('x-invoke-path') || ''
-  }/`.replace(/\/\//, '/');
 
   if (!isEnabled) {
     return;
   }
+
+  const headersList = headers();
+  const pathname = `${
+    headersList.get('next-url') || headersList.get('x-invoke-path') || ''
+  }/`.replace(/\/\//, '/');
 
   return (
     <div className={styles.alert}>
