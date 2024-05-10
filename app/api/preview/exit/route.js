@@ -7,5 +7,9 @@ export async function GET(request) {
   const { origin, searchParams } = new URL(request.url);
   const redirectUrl = `${origin}${searchParams.get('redirect') || '/'}`;
 
+  if (!redirectUrl.startsWith(origin)) {
+    return new Response('Invalid redirect URL', { status: 400 });
+  }
+
   redirect(redirectUrl);
 }

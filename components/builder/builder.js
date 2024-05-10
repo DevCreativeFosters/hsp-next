@@ -61,6 +61,7 @@ export default function Builder({
     selectedCover,
     selectedFactoryOption,
     selectedProducts,
+    setCompatibleFactoryOptions,
     setGoToLink,
     setSelectedCover,
     setSelectedFactoryOption,
@@ -211,13 +212,23 @@ export default function Builder({
   );
 
   useEffect(
+    function getCompatibleFactoryOptions() {
+      if (!make || !model || !makes.length) {
+        return;
+      }
+
+      const compatibleFactoryOptions = makes
+        .find(i => i.name === make.name)
+        ?.models.find(j => j.name === model.name)?.compatibleFactoryOptions;
+
+      setCompatibleFactoryOptions(compatibleFactoryOptions);
+    },
+    [make, makes, model, setCompatibleFactoryOptions],
+  );
+
+  useEffect(
     function getBuilderRelatedCovers() {
-      if (
-        !make?.slug ||
-        !model?.slug ||
-        !globalOptions ||
-        !globalOptions?.coversCategory
-      ) {
+      if (!make?.slug || !model?.slug || !globalOptions?.coversCategory) {
         return;
       }
 
@@ -231,7 +242,7 @@ export default function Builder({
         }
 
         const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-        const noCoverNormalized = normalizeUteBuilderProducts(noCover);
+        const noCoverNormalized = normalizeUteBuilderProducts(noCover, true);
         const covers = [...normalizedCovers, ...noCoverNormalized];
 
         setStepProducts(covers);
@@ -365,6 +376,7 @@ export default function Builder({
               <Preview
                 make={make}
                 model={model}
+                selectedFactoryOption={selectedFactoryOption}
                 selectedProducts={selectedProducts}
               >
                 {isInlineMapVisible && (
@@ -385,6 +397,7 @@ export default function Builder({
               isMobile={isMobile}
               products={stepProducts}
               selectedCover={selectedCover}
+              selectedFactoryOption={selectedFactoryOption}
               selectedProducts={selectedProducts}
               stepNumber={stepNumber}
               stepTitle={stepTitle}

@@ -40,7 +40,7 @@ export async function GET(request) {
   const post = await getPostTypePreview(id, graphQLType);
 
   if (!post) {
-    return new Response(`No preview for given ID: ${id}`, { status: 401 });
+    return new Response(`No preview for given ID: ${id}`, { status: 404 });
   }
 
   draftMode().enable();

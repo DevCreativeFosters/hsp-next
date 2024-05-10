@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -17,12 +16,14 @@ import styles from './ute-choose-your-vehicle.module.scss';
 
 export default function UTEChooseYourVehicle({ makes }) {
   const {
+    compatibleFactoryOptions,
     handleSave,
     maker,
     model,
     selectedFactoryOption,
     setVehicleSelection,
   } = useVehicleContext();
+
   const {
     handleFactoryOptionsChange,
     handleMakerChange,
@@ -30,23 +31,6 @@ export default function UTEChooseYourVehicle({ makes }) {
     makerSelectOptions,
     modelSelectOptions,
   } = useVehicleSelection(makes, setVehicleSelection, maker);
-
-  const [compatibleFactoryOptions, setCompatibleFactoryOptions] = useState([]);
-
-  useEffect(
-    function getCompatibleFactoryOptions() {
-      if (!maker || !model) {
-        return;
-      }
-
-      const compatibleFactoryOptions = makes
-        .find(make => make.name === maker.name)
-        ?.models.find(m => m.name === model.name).compatibleFactoryOptions;
-
-      setCompatibleFactoryOptions(compatibleFactoryOptions);
-    },
-    [maker, makes, model, setCompatibleFactoryOptions],
-  );
 
   return (
     <Container className={styles.container}>
@@ -90,13 +74,16 @@ export default function UTEChooseYourVehicle({ makes }) {
               className={styles.select}
               dropdownInDocumentFlow
               name="factoryOptions"
-              onChange={(value, label) => {
-                handleFactoryOptionsChange(value, label);
+              onChange={value => {
+                handleFactoryOptionsChange(value, compatibleFactoryOptions);
               }}
-              options={compatibleFactoryOptions}
+              options={compatibleFactoryOptions.map(({ slug, title }) => ({
+                label: title,
+                value: slug,
+              }))}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
-              value={getValueOrSlug(selectedFactoryOption) || null}
+              value={selectedFactoryOption?.slug || null}
             />
           )}
           <Button

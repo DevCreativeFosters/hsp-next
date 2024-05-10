@@ -18,6 +18,7 @@ export default function Preview({
   className,
   make,
   model,
+  selectedFactoryOption,
   selectedProducts,
 }) {
   const modelName = model?.name;
@@ -28,15 +29,41 @@ export default function Preview({
   const [mergeImages, setMergeImages] = useState([]);
   const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
   const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
+  const [localSelectedProducts, setLocalSelectedProducts] =
+    useState(selectedProducts);
+
+  useEffect(
+    function setupSelectedFactoryOptionImage() {
+      if (!selectedFactoryOption) {
+        return;
+      }
+
+      const images =
+        selectedFactoryOption?.productFields?.variants[0]?.uteBuilderImages ||
+        {};
+
+      if (!Object.keys(images).length) {
+        return;
+      }
+
+      const newSelectedProducts = [
+        selectedFactoryOption?.productFields?.variants[0],
+        ...selectedProducts,
+      ];
+
+      setLocalSelectedProducts(newSelectedProducts);
+    },
+    [selectedFactoryOption, selectedProducts],
+  );
 
   useEffect(() => {
     let newMergeImages = [];
 
-    if (selectedProducts?.length > 0) {
+    if (localSelectedProducts?.length > 0) {
       newMergeImages.push(BgPicture);
       newMergeImages.push(modelImageDesktop);
 
-      selectedProducts.forEach(selectedProduct => {
+      localSelectedProducts.forEach(selectedProduct => {
         const productImageDesktop =
           selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
 
@@ -47,7 +74,18 @@ export default function Preview({
     setMergeImages(newMergeImages);
 
     return () => {};
-  }, [modelImageDesktop, selectedProducts]);
+  }, [localSelectedProducts, modelImageDesktop]);
+
+  const imageSizes = {
+    desktop: {
+      height: 538,
+      width: 864,
+    },
+    mobile: {
+      height: 535,
+      width: 390,
+    },
+  };
 
   return (
     <div className={clsx(styles.preview, className)}>
@@ -56,13 +94,13 @@ export default function Preview({
         <Image
           alt={modelName}
           className={clsx(styles.base, styles.isDesktop)}
-          height={538}
+          height={imageSizes.desktop.height}
           onLoad={image => {
             image?.currentTarget?.classList?.add(styles.isLoaded);
             setDesktopImageLoaded(true);
           }}
           src={modelImageDesktop}
-          width={864}
+          width={imageSizes.desktop.width}
         />
       </div>
       <div className={styles.isMobile}>
@@ -70,7 +108,7 @@ export default function Preview({
         <Image
           alt={modelName}
           className={clsx(styles.base, styles.isMobile)}
-          height={535}
+          height={imageSizes.mobile.height}
           onLoad={image => {
             image?.currentTarget?.classList?.add(styles.isLoaded);
             setMobileImageLoaded(true);
@@ -88,8 +126,12 @@ export default function Preview({
           images={mergeImages}
         />
       )}
-      {selectedProducts?.map(selectedProduct => {
-        const productTitle = selectedProduct.variantName;
+      {localSelectedProducts?.map(selectedProduct => {
+        if (selectedProduct.isNoCover) {
+          return null;
+        }
+
+        const productTitle = selectedProduct.productName;
         const productSlug = selectedProduct.variantSlug;
         const productImageDesktop =
           selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
@@ -101,22 +143,22 @@ export default function Preview({
             <Image
               alt={productTitle}
               className={clsx(styles.layer, styles.isDesktop)}
-              height={538}
+              height={imageSizes.desktop.height}
               onLoad={image => {
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageDesktop}
-              width={864}
+              width={imageSizes.desktop.width}
             />
             <Image
               alt={productTitle}
               className={clsx(styles.layer, styles.isMobile)}
-              height={535}
+              height={imageSizes.mobile.height}
               onLoad={image => {
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageMobile}
-              width={390}
+              width={imageSizes.mobile.width}
             />
           </Fragment>
         );
