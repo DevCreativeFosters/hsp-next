@@ -49,10 +49,14 @@ export default function UteBuilderPage({
             excludedCategoriesString,
           );
 
-          response.then(data => {
-            setModel(data?.modelData);
-            setProductVariants(data?.productData);
-          });
+          response
+            .then(data => {
+              setModel(data?.modelData);
+              setProductVariants(data?.productData);
+            })
+            .catch(error => {
+              console.log('err', error);
+            });
         }
       } else {
         setMake(null);
