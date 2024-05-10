@@ -76,6 +76,17 @@ export default function Preview({
     return () => {};
   }, [localSelectedProducts, modelImageDesktop]);
 
+  const imageSizes = {
+    desktop: {
+      height: 538,
+      width: 864,
+    },
+    mobile: {
+      height: 535,
+      width: 390,
+    },
+  };
+
   return (
     <div className={clsx(styles.preview, className)}>
       <div className={styles.isDesktop}>
@@ -83,13 +94,13 @@ export default function Preview({
         <Image
           alt={modelName}
           className={clsx(styles.base, styles.isDesktop)}
-          height={538}
+          height={imageSizes.desktop.height}
           onLoad={image => {
             image?.currentTarget?.classList?.add(styles.isLoaded);
             setDesktopImageLoaded(true);
           }}
           src={modelImageDesktop}
-          width={864}
+          width={imageSizes.desktop.width}
         />
       </div>
       <div className={styles.isMobile}>
@@ -97,7 +108,7 @@ export default function Preview({
         <Image
           alt={modelName}
           className={clsx(styles.base, styles.isMobile)}
-          height={535}
+          height={imageSizes.mobile.height}
           onLoad={image => {
             image?.currentTarget?.classList?.add(styles.isLoaded);
             setMobileImageLoaded(true);
@@ -132,22 +143,22 @@ export default function Preview({
             <Image
               alt={productTitle}
               className={clsx(styles.layer, styles.isDesktop)}
-              height={538}
+              height={imageSizes.desktop.height}
               onLoad={image => {
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageDesktop}
-              width={864}
+              width={imageSizes.desktop.width}
             />
             <Image
               alt={productTitle}
               className={clsx(styles.layer, styles.isMobile)}
-              height={535}
+              height={imageSizes.mobile.height}
               onLoad={image => {
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageMobile}
-              width={390}
+              width={imageSizes.mobile.width}
             />
           </Fragment>
         );
