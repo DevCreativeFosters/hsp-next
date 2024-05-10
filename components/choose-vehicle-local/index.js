@@ -99,9 +99,9 @@ export default function ChooseVehicleLocal({ mainCategorySlug, makes }) {
         <h2>Variant</h2>
         <select disabled={!(makeSlug && modelSlug && variantsList.length)}>
           <option value="">Choose Variant</option>
-          {variantsList.map(({ variantName, variantSlug }, index) => (
+          {variantsList.map(({ productName, variantSlug }, index) => (
             <option key={index} value={variantSlug}>
-              {variantName}
+              {productName}
             </option>
           ))}
         </select>

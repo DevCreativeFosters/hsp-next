@@ -31,6 +31,7 @@ export const VehicleProvider = ({ children }) => {
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
   const [selectedFactoryOption, setSelectedFactoryOption] = useState(null);
+  const [compatibleFactoryOptions, setCompatibleFactoryOptions] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
@@ -186,6 +187,7 @@ export const VehicleProvider = ({ children }) => {
   return (
     <VehicleContext.Provider
       value={{
+        compatibleFactoryOptions,
         dropdownOpened,
         finalSelection,
         goToLink,
@@ -198,6 +200,7 @@ export const VehicleProvider = ({ children }) => {
         selectedCover,
         selectedFactoryOption,
         selectedProducts,
+        setCompatibleFactoryOptions,
         setDropdownOpened,
         setGoToLink,
         setMaker,

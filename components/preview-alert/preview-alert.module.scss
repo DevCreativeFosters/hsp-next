@@ -1,17 +1,17 @@
 .alert {
   position: fixed;
   z-index: 1000;
-  bottom: 1rem;
-  left: 1rem;
-  padding: 1.5rem;
-  width: 18rem;
+  bottom: 16px;
+  left: 16px;
+  padding: 24px;
+  width: 290px;
   background: var(--color-primary-100);
   color: var(--color-white-100);
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .heading {
-  font-size: 1.5rem;
+  font-size: 24px;
 }
 
 .exitLink {
