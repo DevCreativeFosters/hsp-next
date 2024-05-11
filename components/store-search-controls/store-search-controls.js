@@ -24,7 +24,7 @@ import styles from './store-search-controls.module.scss';
 export default function StoreSearchControls({
   allLocations,
   interactWithDisabledForm,
-  isHidden,
+  isSearchHidden,
   isWide,
   label = 'Locate your store',
 }) {
@@ -118,34 +118,32 @@ export default function StoreSearchControls({
       })}
       onClick={interactWithDisabledForm}
     >
-      <div
-        className={clsx(styles.location, {
-          [styles.isHidden]: isHidden,
-        })}
-      >
-        <StoreLocatorInput
-          disabled={selectedStore}
-          icon="search"
-          label={label}
-          name="location"
-          onChange={value => {
-            setLocationInput(value);
-            if (!value) {
-              setLocation(null);
-              setSearchGeolocation(null);
-            }
-          }}
-          placeholder="Your location"
-          required
-          type="text"
-          value={locationInput}
-          withResetButton
-        />
-        <StoreLocatorSuggestions
-          items={suggestions}
-          selectLocation={selectLocation}
-        />
-      </div>
+      {!isSearchHidden && (
+        <div className={styles.location}>
+          <StoreLocatorInput
+            disabled={selectedStore}
+            icon="search"
+            label={label}
+            name="location"
+            onChange={value => {
+              setLocationInput(value);
+              if (!value) {
+                setLocation(null);
+                setSearchGeolocation(null);
+              }
+            }}
+            placeholder="Your location"
+            required
+            type="text"
+            value={locationInput}
+            withResetButton
+          />
+          <StoreLocatorSuggestions
+            items={suggestions}
+            selectLocation={selectLocation}
+          />
+        </div>
+      )}
       <div className={styles.mapToggler}>
         <Switch
           label="Show map"

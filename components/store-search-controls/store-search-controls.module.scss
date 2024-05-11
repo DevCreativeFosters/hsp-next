@@ -1,12 +1,10 @@
 .searchControls {
-  display: grid;
+  display: flex;
   grid-gap: 16px;
-  grid-template-areas:
-    'location'
-    'mapToggler';
 
   @include bp(medium) {
     &.isWide {
+      display: grid;
       grid-template-areas:
         'location'
         'mapToggler';
@@ -23,10 +21,6 @@
   grid-area: location;
   position: relative;
   flex-grow: 1;
-
-  &.isHidden {
-    display: none;
-  }
 }
 
 .mapToggler {
@@ -34,4 +28,5 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
+  margin-bottom: 16px;
 }
