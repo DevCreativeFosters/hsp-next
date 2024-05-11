@@ -17,16 +17,16 @@
   &.isDisabled {
     opacity: 0.25;
   }
-
-  &.isHidden {
-    display: none;
-  }
 }
 
 .location {
   grid-area: location;
   position: relative;
   flex-grow: 1;
+
+  &.isHidden {
+    display: none;
+  }
 }
 
 .mapToggler {

@@ -115,12 +115,14 @@ export default function StoreSearchControls({
     <div
       className={clsx(styles.searchControls, {
         [styles.isWide]: isWide,
-        [styles.isDisabled]: selectedStore,
-        [styles.isHidden]: isHidden,
       })}
       onClick={interactWithDisabledForm}
     >
-      <div className={styles.location}>
+      <div
+        className={clsx(styles.location, {
+          [styles.isHidden]: isHidden,
+        })}
+      >
         <StoreLocatorInput
           disabled={selectedStore}
           icon="search"
@@ -146,7 +148,6 @@ export default function StoreSearchControls({
       </div>
       <div className={styles.mapToggler}>
         <Switch
-          disabled={selectedStore}
           label="Show map"
           onChange={() => {
             setMapVisible(!isMapVisible);
