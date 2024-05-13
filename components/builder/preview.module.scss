@@ -10,8 +10,10 @@
 
   @include bp(large) {
     aspect-ratio: 864/538;
-    border-radius: var(--border-radius-md);
+    max-width: 864px;
+    max-height: 538px;
     margin-left: var(--gap);
+    border-radius: var(--border-radius-md);
   }
 }
 
