@@ -92,7 +92,7 @@ export default function Builder({
       const incompatibleCovers = selectedProducts
         .filter(
           selectedProduct =>
-            !selectedProduct.productCategories.some(category =>
+            !selectedProduct.productCategories?.some(category =>
               product.compatibleCovers.includes(category),
             ),
         )
