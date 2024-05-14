@@ -153,7 +153,7 @@ export default function Sidebar({
         >
           <StoreSearchControls
             allLocations={allLocations}
-            isHidden={selectedStore}
+            isSearchHidden={selectedStore}
             label={null}
           />
           {selectedStore ? (
