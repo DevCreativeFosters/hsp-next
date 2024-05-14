@@ -93,10 +93,9 @@ export default function ChooseYourVehicleBlock({
           imageNodes && imageNodes[0]
             ? {
                 alt: imageNodes[0].altText || 'Default Vehicle Image',
-                height: imageNodes[0].mediaDetails.height, 
+                height: imageNodes[0].mediaDetails.height,
                 url: imageNodes[0].mediaItemUrl,
-                // Provide default alt text if none provided
-width: imageNodes[0].mediaDetails.width,
+                width: imageNodes[0].mediaDetails.width,
               }
             : null;
 
@@ -105,7 +104,9 @@ width: imageNodes[0].mediaDetails.width,
           image: image,
         });
       } else {
-        throw new Error('No vehicle data available for the selected options.');
+        throw new Error(
+          'No vehicle data available. Please try different selections.',
+        );
       }
     } catch (error) {
       setError(error.message || 'Failed to fetch vehicle data.');
