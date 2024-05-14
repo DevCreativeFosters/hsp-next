@@ -53,10 +53,6 @@ export default function ChooseYourVehicleBlock({
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleIsOpen = () => {
-    setIsOpen(!isOpen);
-  };
-
   const path = usePathname();
 
   const windowSize = useWindowSize();
@@ -65,6 +61,13 @@ export default function ChooseYourVehicleBlock({
   const mainCategorySlug = useMemo(() => path.split('/')[1], [path]);
   const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
   const modelSlug = useMemo(() => getValueOrSlug(model), [model]);
+
+  const errorMessage =
+    'No vehicle data available. Please try different selections.';
+
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
   const variantSlug = useMemo(() => {
     return path.split('/').pop();
@@ -92,7 +95,7 @@ export default function ChooseYourVehicleBlock({
         const image =
           imageNodes && imageNodes[0]
             ? {
-                alt: imageNodes[0].altText || 'Default Vehicle Image',
+                alt: imageNodes[0].altText || 'Vehicle Preview',
                 height: imageNodes[0].mediaDetails.height,
                 url: imageNodes[0].mediaItemUrl,
                 width: imageNodes[0].mediaDetails.width,
@@ -104,9 +107,7 @@ export default function ChooseYourVehicleBlock({
           image: image,
         });
       } else {
-        throw new Error(
-          'No vehicle data available. Please try different selections.',
-        );
+        throw new Error(errorMessage);
       }
     } catch (error) {
       setError(error.message || 'Failed to fetch vehicle data.');
@@ -262,7 +263,7 @@ export default function ChooseYourVehicleBlock({
             />
           ) : (
             <div className={styles.error}>
-              <p>No vehicle data available. Please try different selections.</p>
+              <p>{errorMessage}</p>
             </div>
           )}
         </AnimateHeight>
