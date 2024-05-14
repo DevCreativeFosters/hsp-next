@@ -55,7 +55,7 @@ export default function UteBuilderPage({
               setProductVariants(data?.productData);
             })
             .catch(error => {
-              console.log('err', error);
+              console.log('Error: ', error);
             });
         }
       } else {

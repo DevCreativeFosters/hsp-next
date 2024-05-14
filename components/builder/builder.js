@@ -92,7 +92,9 @@ export default function Builder({
       const incompatibleCovers = selectedProducts
         .filter(
           selectedProduct =>
-            !product.compatibleCovers.includes(selectedProduct.productSlug),
+            !selectedProduct.productCategories.some(category =>
+              product.compatibleCovers.includes(category),
+            ),
         )
         .filter(cover => covers.some(c => c.group === cover.productSlug))
         .map(cover => cover.productName);

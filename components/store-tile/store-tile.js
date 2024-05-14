@@ -59,8 +59,8 @@ export default function StoreTile({
   const copyAddressToClipboard = useCallback(() => {
     try {
       copy(addressStringPure);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log('Error: ', error);
     }
   }, [addressStringPure]);
 
