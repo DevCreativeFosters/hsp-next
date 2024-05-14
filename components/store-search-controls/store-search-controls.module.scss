@@ -1,5 +1,6 @@
 .searchControls {
   display: flex;
+  flex-direction: column;
   grid-gap: 16px;
 
   @include bp(medium) {
