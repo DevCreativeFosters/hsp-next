@@ -70,21 +70,26 @@ export default function StoreTile({
       id={geoHash}
     >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
-      <div className={styles.typeContainer}>
-        {storeImage && (
-          <div className={styles.imageWrapper}>
-            <Image alt={type} className={styles.image} src={storeImage} />
+      {storeImage ||
+        (storeTypeLabel && (
+          <div className={styles.typeContainer}>
+            {storeImage && (
+              <div className={styles.imageWrapper}>
+                <Image alt={type} className={styles.image} src={storeImage} />
+              </div>
+            )}
+            {storeTypeLabel && (
+              <p
+                className={clsx(styles.storeTypeLabel, {
+                  [styles.major]: type === 'MAJOR',
+                  [styles.super]: type === 'SUPER',
+                })}
+              >
+                {storeTypeLabel}
+              </p>
+            )}
           </div>
-        )}
-        <p
-          className={clsx(styles.storeTypeLabel, {
-            [styles.major]: type === 'MAJOR',
-            [styles.super]: type === 'SUPER',
-          })}
-        >
-          {storeTypeLabel}
-        </p>
-      </div>
+        ))}
       <div className={styles.location}>
         <div className={styles.icon}>
           <LocationIcon />
