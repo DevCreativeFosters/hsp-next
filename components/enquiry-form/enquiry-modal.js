@@ -38,14 +38,11 @@ export default function EnquiryModal({
   const formRef = useRef();
 
   const { selectedFactoryOption } = useVehicleContext();
-  const factoryOptions = selectedFactoryOption
-    ?.map(option => option.value)
-    .join(', ');
   const products = selectedProducts
     ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
     .join(', ');
 
-  const allSelectedProducts = `Product: ${products} ::: Factory Options: ${factoryOptions}`;
+  const allSelectedProducts = `Product: ${products} ::: Factory Option: ${selectedFactoryOption.title}`;
 
   const handleSubmitClick = () => {
     if (formRef.current) {
@@ -158,20 +155,33 @@ export default function EnquiryModal({
                   <div className={styles.products}>
                     {selectedProducts?.map(
                       ({
+                        installationCost: itemInstallationCost,
+                        price: itemPrice,
+                        productName,
+                        sku,
                         uteBuilderImages,
-                        variantName: productName,
+                        variantName,
                         variantSlug: productSlug,
                       }) => {
                         const productImage =
                           uteBuilderImages?.imageDesktop?.node?.sourceUrl;
+                        let name = `${productName} / ${variantName}`;
+
+                        if (sku) {
+                          name = `${name} (${sku})`;
+                        }
+
+                        const price = itemPrice || productPrice;
+                        const installCost =
+                          itemInstallationCost || installationCost;
 
                         return (
                           <EnquiryProduct
                             imageUrl={productImage}
-                            installationCost={installationCost}
+                            installationCost={installCost}
                             key={productSlug}
-                            name={productName}
-                            price={productPrice}
+                            name={name}
+                            price={price}
                           />
                         );
                       },
