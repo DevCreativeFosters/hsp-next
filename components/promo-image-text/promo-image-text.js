@@ -26,7 +26,10 @@ export default function PromoImageText({ description, image, title }) {
         </div>
         <div className={styles.text}>
           <h2 className={styles.title}>{title}</h2>
-          <p className={styles.description}>{description}</p>
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
         </div>
       </div>
     </Container>
