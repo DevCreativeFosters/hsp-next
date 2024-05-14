@@ -20,10 +20,6 @@ export default function Alert() {
     headersList.get('next-url') || headersList.get('x-invoke-path') || ''
   }/`.replace(/\/\//, '/');
 
-  if (!isEnabled) {
-    return;
-  }
-
   return (
     <div className={styles.alert}>
       <h2 className={styles.heading}>Heads up</h2>
