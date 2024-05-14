@@ -48,6 +48,8 @@ export default function EnquiryForm({
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
     ) || variants?.[0];
 
+  selectedVariant.productName = productData.title;
+
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant?.variantDetails.price
     : selectedVariant?.parentInherit
