@@ -42,7 +42,10 @@ export default function EnquiryModal({
     ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
     .join(', ');
 
-  const allSelectedProducts = `Product: ${products} ::: Factory Option: ${selectedFactoryOption.title}`;
+  const factoryOptions =
+    selectedFactoryOption?.title || 'No factory option selected';
+
+  const allSelectedProducts = `Product: ${products} ::: Factory Option: ${factoryOptions}`;
 
   const handleSubmitClick = () => {
     if (formRef.current) {
