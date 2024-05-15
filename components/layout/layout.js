@@ -142,7 +142,7 @@ export default function Layout({
             {withMap && (
               <div className={styles.background}>
                 <Image
-                  alt="Shape of Australia continent"
+                  alt="Shape of the Australian continent"
                   className={styles.backgroundImage}
                   fill={true}
                   quality={80}
