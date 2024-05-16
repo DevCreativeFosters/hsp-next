@@ -51,7 +51,7 @@ export default function ChooseYourVehicleBlockPreview({
         )}
 
         <Button className={styles.button} onClick={onEnquire} size="large">
-          Make an enquiry
+          Go to product details page
         </Button>
       </div>
     </div>
