@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { getIcon } from '@lib/icons';
+import routes from '@lib/routes';
 
 import CategoryCard from '@components/category-card/category-card';
 import TitleAndDescription from '@components/title-and-description/title-and-description';
@@ -26,7 +27,7 @@ export default function ProductCategory({ category }) {
         {subCategories.map(subCategory => (
           <CategoryCard category={subCategory} key={subCategory.databaseId} />
         ))}
-        <Link className={styles.ctaLink} href="#">
+        <Link className={styles.ctaLink} href={routes.uteBuilder}>
           <span>Build your setup</span>
           <ArrowIcon />
         </Link>

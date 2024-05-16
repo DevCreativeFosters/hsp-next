@@ -132,7 +132,7 @@ export default function EnquiryModal({
                       hiddenInputs={[
                         {
                           inputName: 'storeId',
-                          value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
+                          value: store?.storeId || store?.name || 'Not set',
                         },
                         {
                           inputName: 'products',
