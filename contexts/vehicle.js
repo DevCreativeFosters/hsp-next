@@ -110,6 +110,12 @@ export const VehicleProvider = ({ children }) => {
       return;
     }
 
+    if (makeSlug && modelSlug && slug) {
+      resetVehicleSelection();
+
+      router.push(`/${slug}`);
+    }
+
     const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
 
     if (!products) {

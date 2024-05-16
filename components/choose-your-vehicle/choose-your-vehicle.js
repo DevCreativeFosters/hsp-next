@@ -170,7 +170,13 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                   <Button
                     className={styles.save}
                     disabled={!maker && !model}
-                    onClick={handleSave}
+                    onClick={() => {
+                      handleSave({
+                        mainCategorySlug: pathname.split('/')[1],
+                        makeSlug: maker?.slug,
+                        modelSlug: model?.slug,
+                      });
+                    }}
                     rightIcon="save"
                     variant="primary"
                   >
