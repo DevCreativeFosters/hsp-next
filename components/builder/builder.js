@@ -193,11 +193,11 @@ export default function Builder({
   );
 
   const toggleGroup = useCallback(
-    group => {
+    item => {
       const products = [];
-      stepProducts.forEach(item => {
-        if (item.variants.length > 1 && item.group !== group.slug) {
-          item.variants.forEach((variant, index) => {
+      stepProducts.forEach(product => {
+        if (product.variants.length > 1 && product.group === item.group) {
+          product.variants.forEach((variant, index) => {
             variant.isOpen = !variant.isOpen;
 
             if (index > 0) {
@@ -205,7 +205,8 @@ export default function Builder({
             }
           });
         }
-        products.push(item);
+
+        products.push(product);
       });
 
       setStepProducts(products);
