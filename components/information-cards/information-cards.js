@@ -17,8 +17,8 @@ export default function InformationCards({ cards }) {
             return (
               <div
                 className={clsx(styles.card, {
-                  [styles.minor]: size === 'minor',
-                  [styles.major]: size === 'major',
+                  [styles.minor]: size[0] === 'minor',
+                  [styles.major]: size[0] === 'major',
                 })}
                 key={index}
               >
