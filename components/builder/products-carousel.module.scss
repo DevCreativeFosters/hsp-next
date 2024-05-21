@@ -52,6 +52,8 @@
 }
 
 .carousel {
+  margin-left: -10px;
+
   @include bp-below(medium) {
     overflow: hidden;
 
@@ -64,6 +66,7 @@
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :global(.swiper-slide) {
     width: fit-content;
+    height: auto;
   }
 }
 
@@ -76,7 +79,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+  height: 100%;
   gap: 8px;
   padding: 0;
   transition: opacity 200ms;
@@ -149,6 +153,9 @@
 }
 
 .productMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   color: var(--color-white-100);
 }
 
@@ -173,6 +180,12 @@
   .isGroupItemFirst.isGroupItemOpen & {
     opacity: 0.3;
   }
+}
+
+.incompatible {
+  font-size: 12px;
+  color: var(--color-primary-100);
+  opacity: 0.6;
 }
 
 .isGroupItem {

@@ -124,6 +124,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  .tel & {
+    top: 2px;
+  }
 }
 
 .separator {
