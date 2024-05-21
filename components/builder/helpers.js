@@ -13,14 +13,9 @@ const GroupIcon = getIcon('group');
 const UngroupIcon = getIcon('ungroup');
 
 export function isProductSelected(selectedProducts, slug) {
-  let isSelected = false;
-  selectedProducts.forEach(selectedProduct => {
-    if (selectedProduct.variantSlug === slug) {
-      isSelected = true;
-    }
-  });
-
-  return isSelected;
+  return selectedProducts.some(
+    selectedProduct => selectedProduct.variantSlug === slug,
+  );
 }
 
 export function getOtherProductsWithSameParent(
@@ -60,6 +55,7 @@ export function getIncompatibleProducts(products, currentProduct, covers) {
 
 export function getSlides(
   products,
+  selectedCover,
   selectedProducts,
   disabledProducts,
   toggleGroup,
@@ -67,16 +63,17 @@ export function getSlides(
 ) {
   const slides = [];
 
-  products?.forEach(group => {
-    group?.variants.forEach((product, index) => {
-      const { image, isGroup, productName, variantName, variantSlug } = product;
-      const productTitle = isGroup && index === 0 ? productName : variantName;
+  products?.forEach(product => {
+    product?.variants.forEach((variant, index) => {
+      const { image, isGroup, productName, variantName, variantSlug } = variant;
+
+      const productTitle = isGroup && index > 0 ? variantName : productName;
       const productImage = image;
       const isSelected = isProductSelected(selectedProducts, variantSlug);
       const isDisabled = disabledProducts.includes(variantSlug);
-      const isGroupItemOpen = isGroup && product.isOpen;
+      const isGroupItemOpen = isGroup && variant.isOpen;
       const isGroupItemFirst = index === 0;
-      const isGroupItemLast = index === group.variants.length - 1;
+      const isGroupItemLast = index === product.variants.length - 1;
 
       const Icon = (
         <>
@@ -118,8 +115,8 @@ export function getSlides(
             })}
             onClick={() => {
               isGroup && index === 0
-                ? toggleGroup(group)
-                : toggleProduct(product);
+                ? toggleGroup(product)
+                : toggleProduct(variant);
             }}
             type="button"
           >
@@ -137,23 +134,28 @@ export function getSlides(
             {productTitle && (
               <div className={styles.productMeta}>
                 <p className={styles.productName}>{productTitle}</p>
-                {index === 0 && group.minPrice > 0 && (
+                {index === 0 && product.minPrice > 0 && (
                   <span className={styles.productPrice}>
                     {isGroup && <>Starting from </>}
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
                       style: 'currency',
-                    }).format(group.minPrice)}
+                    }).format(product.minPrice)}
                   </span>
                 )}
 
-                {index > 0 && product.price > 0 && (
+                {index > 0 && variant.price > 0 && (
                   <span className={styles.productPrice}>
                     {new Intl.NumberFormat('en-AU', {
                       currency: 'AUD',
                       style: 'currency',
-                    }).format(product.price)}
+                    }).format(variant.price)}
                   </span>
+                )}
+                {isDisabled && (
+                  <div className={styles.incompatible}>
+                    Incompatible with current configuration
+                  </div>
                 )}
               </div>
             )}
@@ -161,11 +163,119 @@ export function getSlides(
         </Fragment>
       );
 
-      if (!product.hidden) {
+      if (!variant.hidden) {
         slides.push(slide);
       }
     });
   });
 
   return slides;
+}
+
+export function filterOutIncompatibleProducts(products, selectedCover) {
+  const filteredProducts = [];
+
+  products?.forEach((product, index) => {
+    if (!filteredProducts[index]) {
+      filteredProducts[index] = product;
+    }
+
+    const variants = product?.productFields?.variants?.filter(variant => {
+      const compatibleCoversVariants =
+        variant?.compatibleCoversVariants?.nodes?.map(
+          category => category.slug,
+        ) || [];
+
+      return compatibleCoversVariants.some(category =>
+        selectedCover?.productCategories?.includes(category),
+      );
+    });
+
+    if (variants && variants.length > 0) {
+      filteredProducts[index]['productFields']['variants'] = variants;
+    }
+  });
+
+  return filteredProducts;
+}
+
+export function getIncompatibleFactoryOptions(
+  selectedFactoryOption,
+  product,
+  currentStep,
+) {
+  const incompatibleFactoryOptions = [];
+
+  if (currentStep !== 2) {
+    return incompatibleFactoryOptions;
+  }
+
+  if (
+    selectedFactoryOption &&
+    product.compatibleFactoryOptions.every(option => {
+      const productCategories =
+        selectedFactoryOption.productCategories.nodes.map(
+          category => category.slug,
+        );
+
+      return !productCategories.includes(option);
+    })
+  ) {
+    incompatibleFactoryOptions.push(selectedFactoryOption.title);
+  }
+
+  return incompatibleFactoryOptions;
+}
+
+export function getIncompatibleCovers(selectedProducts, product, covers) {
+  return (
+    selectedProducts
+      ?.filter(
+        selectedProduct =>
+          !selectedProduct.productCategories?.some(category =>
+            product.compatibleCovers.includes(category),
+          ),
+      )
+      ?.filter(cover => covers.some(c => c.group === cover.productSlug))
+      ?.map(cover => cover.productName) || []
+  );
+}
+
+export function updateSelectedCoverVariant(
+  covers,
+  selectedCover,
+  selectedProducts,
+  currentProduct,
+) {
+  const selectedCoverIndex =
+    covers.findIndex(cover => cover.group === selectedCover.productSlug) || 0;
+  let newVariant = covers[selectedCoverIndex].variants[0];
+
+  covers.forEach(cover => {
+    cover.variants.forEach(variant => {
+      const isCompatible = currentProduct?.productCategories?.some(category =>
+        variant.compatibleCategoriesVariants.includes(category),
+      );
+
+      if (isCompatible) {
+        newVariant = {
+          ...variant,
+          image: selectedCover.image,
+        };
+      }
+    });
+  });
+
+  const newSelectedProducts = selectedProducts.map((product, index) => {
+    if (index === 0) {
+      return newVariant;
+    }
+
+    return product;
+  });
+
+  return {
+    cover: newVariant,
+    products: newSelectedProducts,
+  };
 }

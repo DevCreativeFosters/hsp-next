@@ -39,7 +39,10 @@ export default function EnquiryModal({
 
   const { selectedFactoryOption } = useVehicleContext();
   const products = selectedProducts
-    ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
+    ?.map(
+      ({ productName, sku, variantName }) =>
+        `${productName}: ${variantName} (SKU: ${sku})`,
+    )
     .join(', ');
 
   const factoryOptions =

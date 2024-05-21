@@ -15,13 +15,13 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
       {selectedProducts.length !== 0 ? (
         <ol className={styles.productsList}>
           {selectedProducts?.map((selectedProduct, index) => {
-            const { price, slug, variantName: title } = selectedProduct;
+            const { price, productName, slug } = selectedProduct;
 
             return (
               <li className={styles.productsListItem} key={`${slug}_${index}`}>
                 <div className={styles.productBox}>
                   {formatPrice(price)}
-                  <span className={styles.productBoxName}>{title}</span>
+                  <span className={styles.productBoxName}>{productName}</span>
                 </div>
                 <button
                   className={styles.productRemove}
