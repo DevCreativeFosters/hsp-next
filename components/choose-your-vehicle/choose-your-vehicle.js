@@ -15,7 +15,7 @@ import { getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
-import ResetModal from '@components/builder/reset-modal';
+import ActionModal from '@components/builder/action-modal';
 import Button from '@components/button/button';
 import Select from '@components/form/select';
 import Loading from '@components/loading/loading';
@@ -40,6 +40,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     selectedProducts,
     setDropdownOpened,
     setSelectedProducts,
+    setStepNumber,
     setVehicleSelection,
   } = useVehicleContext();
 
@@ -51,7 +52,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
@@ -70,14 +72,23 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     }
   }, [maker, model]);
 
-  const handleOnAccept = () => {
+  const handleOnResetAccept = () => {
     handleVehicleReset();
     setSelectedProducts([]);
-    setShowModal(false);
+    setShowResetModal(false);
   };
 
-  const handleOnClose = () => {
-    setShowModal(false);
+  const handleOnResetClose = () => {
+    setShowResetModal(false);
+  };
+
+  const handleOnUpdateAccept = () => {
+    setStepNumber(0);
+    setShowUpdateModal(false);
+  };
+
+  const handleOnUpdateClose = () => {
+    setShowUpdateModal(false);
   };
 
   return (
@@ -88,8 +99,18 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
         </>
       ) : (
         <>
-          {showModal && (
-            <ResetModal onAccept={handleOnAccept} onClose={handleOnClose} />
+          {showResetModal && (
+            <ActionModal
+              onAccept={handleOnResetAccept}
+              onClose={handleOnResetClose}
+            />
+          )}
+          {showUpdateModal && (
+            <ActionModal
+              actionText={'update'}
+              onAccept={handleOnUpdateAccept}
+              onClose={handleOnUpdateClose}
+            />
           )}
           <span className={styles.vehicleText}>My vehicle:</span>
           <div className={styles.container}>
@@ -127,7 +148,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       selectedProducts.length &&
                       pathname === routes.uteBuilder
                     ) {
-                      setShowModal(true);
+                      setShowResetModal(true);
                       setIsLoading(false);
                     } else {
                       handleVehicleReset();
@@ -171,11 +192,23 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                     className={styles.save}
                     disabled={!maker && !model}
                     onClick={() => {
-                      handleSave({
-                        mainCategorySlug: pathname.split('/')[1],
-                        makeSlug: maker?.slug,
-                        modelSlug: model?.slug,
-                      });
+                      if (pathname === routes.uteBuilder) {
+                        if (
+                          finalSelection &&
+                          finalSelection?.makerName !== maker?.name &&
+                          finalSelection?.modelName !== model?.name
+                        ) {
+                          setShowUpdateModal(true);
+                        } else {
+                          handleSave();
+                        }
+                      } else {
+                        handleSave({
+                          mainCategorySlug: pathname.split('/')[1],
+                          makeSlug: maker?.slug,
+                          modelSlug: model?.slug,
+                        });
+                      }
                     }}
                     rightIcon="save"
                     variant="primary"

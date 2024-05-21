@@ -18,9 +18,13 @@ import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
 import {
+  filterOutIncompatibleProducts,
+  getIncompatibleCovers,
+  getIncompatibleFactoryOptions,
   getIncompatibleProducts,
   getOtherProductsWithSameParent,
   isProductSelected,
+  updateSelectedCoverVariant,
 } from './helpers';
 import Preview from './preview';
 import ProductsCarousel from './products-carousel';
@@ -52,6 +56,7 @@ export default function Builder({
   const [incompatibleFactoryOptions, setIncompatibleFactoryOptions] =
     useState(null);
   const [incompatibleCovers, setIncompatibleCovers] = useState(null);
+  const [lastProductSlug, setLastProductSlug] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -77,28 +82,19 @@ export default function Builder({
 
   const addProduct = useCallback(
     product => {
-      let incompatibleFactoryOptions = [];
+      const incompatibleFactoryOptions = getIncompatibleFactoryOptions(
+        selectedFactoryOption,
+        product,
+        stepNumber,
+      );
 
-      if (selectedFactoryOption?.length > 0) {
-        incompatibleFactoryOptions = selectedFactoryOption
-          .filter(
-            option => !product.compatibleFactoryOptions.includes(option.slug),
-          )
-          .map(option => option.value);
+      const incompatibleCovers = getIncompatibleCovers(
+        selectedProducts,
+        product,
+        covers,
+      );
 
-        setIncompatibleFactoryOptions(incompatibleFactoryOptions);
-      }
-
-      const incompatibleCovers = selectedProducts
-        .filter(
-          selectedProduct =>
-            !selectedProduct.productCategories?.some(category =>
-              product.compatibleCovers.includes(category),
-            ),
-        )
-        .filter(cover => covers.some(c => c.group === cover.productSlug))
-        .map(cover => cover.productName);
-
+      setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       setIncompatibleCovers(incompatibleCovers);
 
       if (
@@ -123,6 +119,8 @@ export default function Builder({
 
         setDisabledProducts(newDisabledProducts);
       }
+
+      setLastProductSlug(product.productSlug);
 
       setProductToAdd(product);
     },
@@ -167,6 +165,24 @@ export default function Builder({
         .filter(el => !otherProductsWithSameParent.includes(el))
         .filter(el => !incompatibleProducts.includes(el));
 
+      if (
+        newSelectedProducts.length === 1 &&
+        !newSelectedProducts[0].isNoCover
+      ) {
+        const selectedCoverIndex =
+          covers.findIndex(
+            cover => cover.group === newSelectedProducts[0].productSlug,
+          ) || 0;
+        const newVariant = covers[selectedCoverIndex].variants[0];
+
+        setSelectedCover(newVariant);
+        newSelectedProducts[0] = newVariant;
+      }
+
+      setLastProductSlug(prevState => {
+        return prevState;
+      });
+
       setSelectedProducts(newSelectedProducts);
       setDisabledProducts(newDisabledProducts);
     },
@@ -175,6 +191,7 @@ export default function Builder({
       disabledProducts,
       selectedProducts,
       setGoToLink,
+      setSelectedCover,
       setSelectedProducts,
       stepProducts,
     ],
@@ -199,6 +216,10 @@ export default function Builder({
         if (product.variants.length > 1 && product.group === item.group) {
           product.variants.forEach((variant, index) => {
             variant.isOpen = !variant.isOpen;
+
+            if (!variant.isOpen) {
+              setLastProductSlug(null);
+            }
 
             if (index > 0) {
               variant.hidden = !variant.hidden;
@@ -244,8 +265,15 @@ export default function Builder({
           return;
         }
 
-        const normalizedCovers = normalizeUteBuilderProducts(relatedCovers);
-        const noCoverNormalized = normalizeUteBuilderProducts(noCover, true);
+        const normalizedCovers = normalizeUteBuilderProducts(
+          relatedCovers,
+          true,
+        );
+        const noCoverNormalized = normalizeUteBuilderProducts(
+          noCover,
+          true,
+          true,
+        );
         const covers = [...normalizedCovers, ...noCoverNormalized];
 
         setStepProducts(covers);
@@ -262,10 +290,30 @@ export default function Builder({
       }
 
       if (stepNumber === 2) {
-        setStepProducts(normalizeUteBuilderProducts(products));
+        const filteredOutProducts = filterOutIncompatibleProducts(
+          products,
+          selectedCover,
+        );
+
+        setStepProducts(
+          normalizeUteBuilderProducts(
+            filteredOutProducts,
+            false,
+            false,
+            lastProductSlug,
+          ),
+        );
       }
     },
-    [covers, products, setStepProducts, stepNumber],
+    [
+      covers,
+      lastProductSlug,
+      products,
+      selectedCover,
+      selectedProducts,
+      setStepProducts,
+      stepNumber,
+    ],
   );
 
   useEffect(
@@ -274,9 +322,26 @@ export default function Builder({
         return;
       }
 
-      const selectedCover = selectedProducts.find(selectedProduct =>
+      let selectedCover = selectedProducts.find(selectedProduct =>
         covers.some(cover => cover.group === selectedProduct.productSlug),
       );
+
+      if (selectedFactoryOption && selectedCover && !selectedCover.isNoCover) {
+        covers.forEach(cover => {
+          cover.variants.forEach(variant => {
+            const isCompatible =
+              variant?.compatibleFactoryOptionsVariants?.includes(
+                selectedFactoryOption.slug,
+              ) || false;
+
+            if (isCompatible) {
+              variant.image = selectedCover.image;
+              selectedCover = variant;
+              selectedProducts[0] = variant;
+            }
+          });
+        });
+      }
 
       if (!selectedCover) {
         setStepNumber(1);
@@ -296,6 +361,7 @@ export default function Builder({
       isMobile,
       make,
       model,
+      selectedFactoryOption,
       selectedProducts,
       setSelectedCover,
       setStepNumber,
@@ -310,12 +376,33 @@ export default function Builder({
         return;
       }
 
-      const products = [...selectedProducts, productToAdd];
+      let products = [...selectedProducts, productToAdd];
+
+      if (selectedCover && !selectedCover.isNoCover) {
+        const data = updateSelectedCoverVariant(
+          covers,
+          selectedCover,
+          products,
+          productToAdd,
+        );
+
+        products = data.products;
+
+        setSelectedCover(data.cover);
+      }
 
       setSelectedProducts(products);
       setProductToAdd(null);
     },
-    [productToAdd, selectedProducts, setSelectedProducts, showClashModal],
+    [
+      covers,
+      productToAdd,
+      selectedCover,
+      selectedProducts,
+      setSelectedCover,
+      setSelectedProducts,
+      showClashModal,
+    ],
   );
 
   const isInlineMapVisible = Boolean(
@@ -327,28 +414,24 @@ export default function Builder({
   };
 
   const handleClashModalAccept = () => {
-    if (selectedFactoryOption?.length > 0) {
-      setSelectedFactoryOption(
-        selectedFactoryOption.filter(
-          option => !incompatibleFactoryOptions.includes(option.value),
-        ),
+    setSelectedFactoryOption(null);
+
+    if (!selectedCover?.isNoCover) {
+      const data = updateSelectedCoverVariant(
+        covers,
+        selectedCover,
+        selectedProducts,
+        currentProduct,
       );
+
+      setSelectedCover(data.cover);
+      setSelectedProducts(data.products);
     }
 
-    if (incompatibleCovers?.length > 0) {
-      selectedProducts.shift();
-    }
-
-    const isCover = covers.some(
-      cover => cover.group === currentProduct.productSlug,
-    );
-
-    if (isCover) {
-      setProductToAdd(currentProduct);
-    } else {
-      setSelectedProducts([]);
-    }
-
+    setProductToAdd(currentProduct);
+    setDisabledProducts([
+      ...getIncompatibleProducts(stepProducts, currentProduct, covers),
+    ]);
     setShowClashModal(false);
   };
 
@@ -399,6 +482,7 @@ export default function Builder({
               disabledProducts={disabledProducts}
               isMobile={isMobile}
               products={stepProducts}
+              removeProduct={removeProduct}
               selectedCover={selectedCover}
               selectedFactoryOption={selectedFactoryOption}
               selectedProducts={selectedProducts}

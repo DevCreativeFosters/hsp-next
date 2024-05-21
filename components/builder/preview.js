@@ -34,22 +34,16 @@ export default function Preview({
 
   useEffect(
     function setupSelectedFactoryOptionImage() {
-      if (!selectedFactoryOption) {
-        return;
+      const newSelectedProducts = [...selectedProducts];
+
+      if (selectedFactoryOption) {
+        const variant = selectedFactoryOption.productFields.variants[0];
+        variant.imageLayerPosition =
+          selectedFactoryOption?.productCategories?.nodes[0]?.categoryRelations
+            ?.imageLayerPosition || 1;
+
+        newSelectedProducts.unshift(variant);
       }
-
-      const images =
-        selectedFactoryOption?.productFields?.variants[0]?.uteBuilderImages ||
-        {};
-
-      if (!Object.keys(images).length) {
-        return;
-      }
-
-      const newSelectedProducts = [
-        selectedFactoryOption?.productFields?.variants[0],
-        ...selectedProducts,
-      ];
 
       setLocalSelectedProducts(newSelectedProducts);
     },
@@ -148,6 +142,9 @@ export default function Preview({
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageDesktop}
+              style={{
+                zIndex: selectedProduct.imageLayerPosition,
+              }}
               width={imageSizes.desktop.width}
             />
             <Image
@@ -158,6 +155,9 @@ export default function Preview({
                 image?.currentTarget?.classList?.add(styles.isLoaded);
               }}
               src={productImageMobile}
+              style={{
+                zIndex: selectedProduct.imageLayerPosition,
+              }}
               width={imageSizes.mobile.width}
             />
           </Fragment>

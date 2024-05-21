@@ -16,8 +16,8 @@ import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
+import ActionModal from '@components/builder/action-modal';
 import { STEP_TITLES } from '@components/builder/builder';
-import ResetModal from '@components/builder/reset-modal';
 
 const VehicleContext = createContext();
 
@@ -226,7 +226,7 @@ export const VehicleProvider = ({ children }) => {
       }}
     >
       {goToLink && (
-        <ResetModal
+        <ActionModal
           onAccept={handleResetModalAccept}
           onClose={handleResetModalClose}
         />
