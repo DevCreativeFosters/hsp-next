@@ -1,6 +1,6 @@
 import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number-of-HSP-celebrities-posts';
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import routes from '@lib/routes';
 
 import Background from '@components/background/background';
@@ -11,7 +11,7 @@ import Layout from '@components/layout/layout';
 import PageClient from './page-client';
 
 export async function generateMetadata() {
-  const data = await getSeoData(routes.lifestyleCelebrities);
+  const data = await getSeoByUri(routes.lifestyleCelebrities);
 
   return {
     ...data,

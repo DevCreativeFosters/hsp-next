@@ -6,7 +6,7 @@ import StoreLocatorContext from '@contexts/store-locator';
 
 import useMobileVh from '@hooks/useMobileVh';
 
-import { formatPrice } from '@lib/helpers';
+import { formatPrice, getProductImage } from '@lib/helpers';
 import { findLocationsInRadius } from '@lib/store-locations';
 import { trimSlash } from '@lib/trim-slash';
 
@@ -47,6 +47,9 @@ export default function EnquiryForm({
     variants?.find(
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
     ) || variants?.[0];
+
+  selectedVariant.productName = productData.title;
+  selectedVariant.image = getProductImage(selectedVariant, productData);
 
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant?.variantDetails.price

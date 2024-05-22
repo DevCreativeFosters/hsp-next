@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
+import AnimateHeight from 'react-animate-height';
 import { useWindowSize } from 'usehooks-ts';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import constants from '@lib/constants';
 import { getValueOrSlug } from '@lib/helpers';
 import { trimSlash } from '@lib/trim-slash';
@@ -17,7 +19,9 @@ import { useVehicleSelection } from '@lib/use-vehicle-select';
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Select from '@components/form/select';
+import Loading from '@components/loading/loading';
 
+import VehiclePreview from './choose-your-vehicle-block-preview';
 import styles from './choose-your-vehicle-block.module.scss';
 
 export default function ChooseYourVehicleBlock({
@@ -29,7 +33,7 @@ export default function ChooseYourVehicleBlock({
   const stickerRef = useRef();
   const variantsNormalized = variants?.map(variant => {
     return {
-      label: variant.variantName,
+      label: variant.productName,
       value: variant.variantSlug,
     };
   });
@@ -44,18 +48,73 @@ export default function ChooseYourVehicleBlock({
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const [localParams, setLocalParams] = useState(params);
+  const [vehicleData, setVehicleData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const path = usePathname();
 
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
 
+  const mainCategorySlug = useMemo(() => path.split('/')[1], [path]);
+  const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
+  const modelSlug = useMemo(() => getValueOrSlug(model), [model]);
+
+  const errorMessage =
+    'No vehicle data available. Please try different selections.';
+
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   const variantSlug = useMemo(() => {
     return path.split('/').pop();
   }, [path]);
 
   const reload = !getValueOrSlug(variant);
+
+  const mainCategory = mainCategorySlug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  const fetchVehicleData = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const products = await getProductsByCategoriesSlugs(
+        mainCategorySlug,
+        makeSlug,
+        modelSlug,
+      );
+      const firstMatch = products?.length ? products[0] : null;
+      if (firstMatch) {
+        const imageNodes = firstMatch.productFields.images?.nodes;
+        const image =
+          imageNodes && imageNodes[0]
+            ? {
+                alt: imageNodes[0].altText || 'Vehicle Preview',
+                height: imageNodes[0].mediaDetails.height,
+                url: imageNodes[0].mediaItemUrl,
+                width: imageNodes[0].mediaDetails.width,
+              }
+            : null;
+
+        setVehicleData({
+          ...firstMatch,
+          image: image,
+        });
+      } else {
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      setError(error.message || 'Failed to fetch vehicle data.');
+      setVehicleData(null);
+    }
+    setIsLoading(false);
+  }, [mainCategorySlug, makeSlug, modelSlug]);
 
   useEffect(() => {
     if (maker && model && path) {
@@ -66,6 +125,12 @@ export default function ChooseYourVehicleBlock({
       });
     }
   }, [maker, model, path]);
+
+  useEffect(() => {
+    if (makeSlug && modelSlug) {
+      fetchVehicleData();
+    }
+  }, [fetchVehicleData, makeSlug, modelSlug]);
 
   useEffect(
     function setGlobalVariantStateBySlug() {
@@ -162,16 +227,46 @@ export default function ChooseYourVehicleBlock({
             className={styles.button}
             disabled={!model}
             isBusy={isLoading}
-            onClick={() => {
-              handleSave(localParams, reload);
-              setIsLoading(true);
-            }}
+            onClick={handleIsOpen}
             rightIcon="arrow-forward"
             size="large"
           >
             See details
           </Button>
         </div>
+
+        <AnimateHeight
+          contentClassName={styles.animateHeightContainer}
+          duration={200}
+          height={isOpen ? 'auto' : 0}
+        >
+          {isLoading ? (
+            <div className={styles.loader}>
+              <Loading color="white" size="large" />
+            </div>
+          ) : error ? (
+            <div className={styles.error}>
+              <p>{error}</p>
+            </div>
+          ) : vehicleData ? (
+            <VehiclePreview
+              category={mainCategory}
+              description={vehicleData?.productFields.description}
+              image={vehicleData?.image}
+              make={maker?.name}
+              model={model?.name}
+              onEnquire={() => {
+                handleSave(localParams, reload);
+                setIsLoading(true);
+              }}
+              price={vehicleData?.productFields.price}
+            />
+          ) : (
+            <div className={styles.error}>
+              <p>{errorMessage}</p>
+            </div>
+          )}
+        </AnimateHeight>
       </Container>
     </div>
   );

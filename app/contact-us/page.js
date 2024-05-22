@@ -4,7 +4,7 @@ import parse from 'html-react-parser';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -20,7 +20,7 @@ import Sidebar from '@components/sidebar/sidebar';
 import Logo from '@assets/images/logo.svg';
 
 export async function generateMetadata() {
-  const data = await getSeoData(routes.contact);
+  const data = await getSeoByUri(routes.contact);
 
   return {
     ...data,

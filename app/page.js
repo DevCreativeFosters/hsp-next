@@ -1,13 +1,13 @@
 import { Fragment } from 'react';
 
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 
 import Layout from '@components/layout/layout';
 
 export async function generateMetadata() {
-  const data = await getSeoData('/');
+  const data = await getSeoByUri('/');
 
   return {
     ...data,

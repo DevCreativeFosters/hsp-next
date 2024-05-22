@@ -82,3 +82,21 @@
   color: var(--color-primary-100);
   text-decoration: underline;
 }
+
+.animateHeightContainer {
+  margin: 24px 0 32px;
+  padding: 24px;
+  background: linear-gradient(
+    180deg,
+    rgb(24 22 22 / 0%) 0%,
+    rgb(24 22 22 / 49%) 9.72%,
+    rgb(24 22 22 / 93%) 31.08%,
+    #181616 57.12%,
+    #181616 100%
+  );
+  border-radius: 0 0 16px 16px;
+
+  @include bp(large) {
+    padding: 96px 112px;
+  }
+}

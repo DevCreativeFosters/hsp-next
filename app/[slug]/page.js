@@ -1,13 +1,29 @@
+import { draftMode } from 'next/headers';
+
 import getAllPagesSlugs from '@lib/api/get-all-pages-slugs';
 import { getPageData } from '@lib/api/get-page-data';
+import { getProductCategorySeo } from '@lib/api/get-product-category-seo';
 import { renderBlock } from '@lib/block';
 
 import ContentBlocksPage from '@components/content-blocks-page/content-blocks-page';
 import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
+export async function generateMetadata({ params }) {
+  if (!params?.slug) {
+    return;
+  }
+
+  const data = await getProductCategorySeo(params.slug);
+
+  return {
+    ...data,
+  };
+}
+
 export default async function DynamicPage({ params }) {
+  const { isEnabled: isDraftEnabled } = draftMode();
   const slug = params?.slug;
-  const content = await getPageData(slug);
+  const content = await getPageData(slug, isDraftEnabled);
   const block = content?.flexibleContent?.blocks?.map(renderBlock);
   const title = content?.title;
   const pageContent = content?.content;

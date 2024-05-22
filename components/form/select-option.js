@@ -10,7 +10,7 @@ export default function SelectOption({
 }) {
   return (
     <button
-      aria-selected={Boolean(selectedOption === value)}
+      aria-selected={selectedOption === value}
       className={styles.option}
       data-value={value !== undefined ? value : label}
       onClick={() => handleSelectOption(value, label)}
