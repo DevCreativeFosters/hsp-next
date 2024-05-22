@@ -161,27 +161,23 @@ export default function EnquiryModal({
                   <div className={styles.products}>
                     {selectedProducts?.map(
                       ({
+                        image,
                         installationCost: itemInstallationCost,
                         price: itemPrice,
                         productName,
                         sku,
-                        uteBuilderImages,
                         variantSlug: productSlug,
                       }) => {
-                        const productImage =
-                          uteBuilderImages?.imageDesktop?.node?.sourceUrl;
-                        let name = `${productName}`;
-
                         const price = itemPrice || productPrice;
                         const installCost =
                           itemInstallationCost || installationCost;
 
                         return (
                           <EnquiryProduct
-                            imageUrl={productImage}
+                            imageUrl={image}
                             installationCost={installCost}
                             key={productSlug}
-                            name={name}
+                            name={productName}
                             price={price}
                             sku={sku}
                           />
