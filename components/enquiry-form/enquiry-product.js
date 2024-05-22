@@ -9,6 +9,7 @@ export default function EnquiryProduct({
   installationCost,
   name,
   price,
+  sku,
 }) {
   return (
     <div className={styles.product}>
@@ -21,7 +22,12 @@ export default function EnquiryProduct({
           width={67}
         />
       )}
-      {name && <p className={styles.name}>{name}</p>}
+      {name && (
+        <p className={styles.name}>
+          {name}
+          {sku && <span className={styles.sku}>SKU: {sku}</span>}
+        </p>
+      )}
       {price && (
         <div className={styles.price}>
           {formatPrice(price)}{' '}

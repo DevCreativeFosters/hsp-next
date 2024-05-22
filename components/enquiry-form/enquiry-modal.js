@@ -37,15 +37,18 @@ export default function EnquiryModal({
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
 
-  const { selectedFactoryOptions } = useVehicleContext();
-  const factoryOptions = selectedFactoryOptions
-    ?.map(option => option.value)
-    .join(', ');
+  const { selectedFactoryOption } = useVehicleContext();
   const products = selectedProducts
-    ?.map(({ productName, variantName }) => `${productName}: ${variantName}`)
+    ?.map(
+      ({ productName, sku, variantName }) =>
+        `${productName}: ${variantName} (SKU: ${sku})`,
+    )
     .join(', ');
 
-  const allSelectedProducts = `Product: ${products} ::: Factory Options: ${factoryOptions}`;
+  const factoryOptions =
+    selectedFactoryOption?.title || 'No factory option selected';
+
+  const allSelectedProducts = `Product: ${products} ::: Factory Option: ${factoryOptions}`;
 
   const handleSubmitClick = () => {
     if (formRef.current) {
@@ -132,7 +135,7 @@ export default function EnquiryModal({
                       hiddenInputs={[
                         {
                           inputName: 'storeId',
-                          value: store?.name, // TODO: It has to be updated to store ID once the stores are imported into WordPress.
+                          value: store?.storeId || store?.name || 'Not set',
                         },
                         {
                           inputName: 'products',
@@ -158,20 +161,25 @@ export default function EnquiryModal({
                   <div className={styles.products}>
                     {selectedProducts?.map(
                       ({
-                        uteBuilderImages,
-                        variantName: productName,
+                        image,
+                        installationCost: itemInstallationCost,
+                        price: itemPrice,
+                        productName,
+                        sku,
                         variantSlug: productSlug,
                       }) => {
-                        const productImage =
-                          uteBuilderImages?.imageDesktop?.node?.sourceUrl;
+                        const price = itemPrice || productPrice;
+                        const installCost =
+                          itemInstallationCost || installationCost;
 
                         return (
                           <EnquiryProduct
-                            imageUrl={productImage}
-                            installationCost={installationCost}
+                            imageUrl={image}
+                            installationCost={installCost}
                             key={productSlug}
                             name={productName}
-                            price={productPrice}
+                            price={price}
+                            sku={sku}
                           />
                         );
                       },
@@ -223,7 +231,9 @@ export default function EnquiryModal({
                 <InfoIcon />
                 <div>
                   By submitting the form you agree to our{' '}
-                  <Link href={routes.privacyAndTerms}>Terms & Conditions.</Link>
+                  <Link href={routes.privacyAndTerms} target="_blank">
+                    Terms & Conditions.
+                  </Link>
                 </div>
               </div>
               <Button

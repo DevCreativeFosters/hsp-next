@@ -1,0 +1,83 @@
+.wrapper {
+  @include bp(large) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include bp(large) {
+    gap: 48px;
+  }
+}
+
+.name {
+  line-height: 1.25;
+
+  @include bp(large) {
+    font-size: 48px;
+  }
+}
+
+.variant {
+  color: var(--color-primary-100);
+}
+
+.description {
+  color: var(--color-white-80);
+  font-size: 20px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.productsPrice {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.price {
+  color: var(--color-white-100);
+  font-size: 36px;
+  line-height: 1.33;
+  font-family: var(--font-secondary);
+  font-weight: bold;
+
+  @include bp(medium) {
+    font-size: 48px;
+  }
+}
+
+.installationPrice {
+  color: var(--color-primary-100);
+  font-size: 24px;
+  line-height: 1.33;
+  font-family: var(--font-secondary);
+  font-weight: bold;
+
+  @include bp(medium) {
+    font-size: 36px;
+  }
+}
+
+.image img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 24px;
+
+  @include bp(large) {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.button {
+  width: 100%;
+}

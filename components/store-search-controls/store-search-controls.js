@@ -24,7 +24,7 @@ import styles from './store-search-controls.module.scss';
 export default function StoreSearchControls({
   allLocations,
   interactWithDisabledForm,
-  isHidden,
+  isSearchHidden,
   isWide,
   label = 'Locate your store',
 }) {
@@ -115,38 +115,37 @@ export default function StoreSearchControls({
     <div
       className={clsx(styles.searchControls, {
         [styles.isWide]: isWide,
-        [styles.isDisabled]: selectedStore,
-        [styles.isHidden]: isHidden,
       })}
       onClick={interactWithDisabledForm}
     >
-      <div className={styles.location}>
-        <StoreLocatorInput
-          disabled={selectedStore}
-          icon="search"
-          label={label}
-          name="location"
-          onChange={value => {
-            setLocationInput(value);
-            if (!value) {
-              setLocation(null);
-              setSearchGeolocation(null);
-            }
-          }}
-          placeholder="Your location"
-          required
-          type="text"
-          value={locationInput}
-          withResetButton
-        />
-        <StoreLocatorSuggestions
-          items={suggestions}
-          selectLocation={selectLocation}
-        />
-      </div>
+      {!isSearchHidden && (
+        <div className={styles.location}>
+          <StoreLocatorInput
+            disabled={selectedStore}
+            icon="search"
+            label={label}
+            name="location"
+            onChange={value => {
+              setLocationInput(value);
+              if (!value) {
+                setLocation(null);
+                setSearchGeolocation(null);
+              }
+            }}
+            placeholder="Your location"
+            required
+            type="text"
+            value={locationInput}
+            withResetButton
+          />
+          <StoreLocatorSuggestions
+            items={suggestions}
+            selectLocation={selectLocation}
+          />
+        </div>
+      )}
       <div className={styles.mapToggler}>
         <Switch
-          disabled={selectedStore}
           label="Show map"
           onChange={() => {
             setMapVisible(!isMapVisible);

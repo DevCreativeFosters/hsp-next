@@ -23,6 +23,14 @@
   }
 }
 
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:global(.uteBuilder) {
+  .navigationButton {
+    top: 44px;
+    transform: none;
+  }
+}
+
 .prevButton {
   left: var(--side-space);
   border-top-right-radius: 0;

@@ -1,7 +1,9 @@
 .price {
   display: flex;
+  justify-content: flex-end;
   align-items: flex-end;
   gap: 4px;
+  min-width: 110px;
   color: var(--color-white-100);
   font-family: var(--font-secondary);
   font-size: 24px;
@@ -49,8 +51,16 @@
   position: relative;
 
   @include bp(large) {
+    display: grid;
+    grid-template-columns: 1fr 4fr 2fr;
     padding: 16px 24px;
     justify-content: flex-start;
     gap: 20px;
   }
+}
+
+.sku {
+  display: block;
+  font-size: 14px;
+  color: var(--color-white-40);
 }

@@ -11,14 +11,15 @@ import Carousel from '@components/carousel/carousel';
 import { getSlides } from './helpers';
 import styles from './products-carousel.module.scss';
 
-const CancelIcon = getIcon('cancel');
 const ArrowBackwardIcon = getIcon('arrow-backward');
+const MIN_SLIDES_TO_SHOW_NAVIGATION = 6;
 
 export default function ProductsCarousel({
   className,
   disabledProducts,
   isMobile,
   products,
+  removeProduct,
   selectedCover,
   selectedProducts,
   stepNumber,
@@ -28,31 +29,28 @@ export default function ProductsCarousel({
 }) {
   const slides = getSlides(
     products,
+    selectedCover,
     selectedProducts,
     disabledProducts,
     toggleGroup,
     toggleProduct,
   );
-  const currentStepTitle =
-    stepNumber === 2 && isMobile ? 'Add products to' : stepTitle;
-  const productTitle = selectedCover?.variantName;
-  const productImage =
-    selectedCover?.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+  const productTitle = selectedCover?.productName;
+  const productImage = selectedCover?.image;
 
   return (
     <div className={clsx(styles.productsCarousel, className)}>
       <h2 className={styles.title}>
-        <span className={styles.number}>Step {stepNumber}:</span>{' '}
-        {currentStepTitle}
+        <span className={styles.number}>Step {stepNumber}:</span> {stepTitle}
         {isMobile && stepNumber === 2 && selectedCover && (
           <Button
             className={styles.badge}
-            onClick={() => toggleProduct(selectedCover)}
+            onClick={() => removeProduct(selectedCover)}
+            rightIcon="cancel"
             size="small"
             variant="secondary"
           >
-            {selectedCover.variantName}
-            <CancelIcon className={styles.badgeIcon} />
+            {productTitle}
           </Button>
         )}
       </h2>
@@ -60,7 +58,7 @@ export default function ProductsCarousel({
         {!isMobile && stepNumber === 2 && selectedCover && (
           <button
             className={clsx(styles.product, styles.isCover)}
-            onClick={() => toggleProduct(selectedCover)}
+            onClick={() => removeProduct(selectedCover)}
             type="button"
           >
             <div className={styles.productImageContainer}>
@@ -97,11 +95,12 @@ export default function ProductsCarousel({
           className={styles.carousel}
           settings={{
             loop: false,
+            slidesOffsetBefore: 10,
             slidesPerView: 'auto',
             spaceBetween: 19,
             watchSlidesProgress: true,
           }}
-          showNavigation={slides.length > 6}
+          showNavigation={slides.length > MIN_SLIDES_TO_SHOW_NAVIGATION}
           slides={slides}
         />
       </div>

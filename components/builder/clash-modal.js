@@ -11,7 +11,7 @@ export default function ClashModal({
 }) {
   let title = 'Factory Options Clash';
 
-  if (incompatibleCovers.length > 0 && !incompatibleFactoryOptions) {
+  if (incompatibleCovers.length > 0 && !incompatibleFactoryOptions.length) {
     title = 'Cover Options Clash';
   } else if (
     incompatibleCovers.length > 0 &&

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { getPageData } from '@lib/api/get-page-data';
-import { getSeoData } from '@lib/api/getSeoData';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
 
@@ -16,7 +16,7 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './page.module.scss';
 
 export async function generateMetadata({ params }) {
-  const data = await getSeoData(`${routes.support()}/${params.slug}`);
+  const data = await getSeoByUri(`${routes.support()}/${params.slug}`);
 
   return {
     ...data,

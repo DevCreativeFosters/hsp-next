@@ -13,22 +13,23 @@ import Select from '@components/form/select';
 
 import styles from './ute-choose-your-vehicle.module.scss';
 
-export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
+export default function UTEChooseYourVehicle({ makes }) {
   const {
+    compatibleFactoryOptions,
     handleSave,
     maker,
     model,
-    selectedFactoryOptions,
+    selectedFactoryOption,
     setVehicleSelection,
   } = useVehicleContext();
+
   const {
-    factorySelectOptions,
     handleFactoryOptionsChange,
     handleMakerChange,
     handleModelChange,
     makerSelectOptions,
     modelSelectOptions,
-  } = useVehicleSelection(makes, setVehicleSelection, maker, factoryOptions);
+  } = useVehicleSelection(makes, setVehicleSelection, maker);
 
   return (
     <Container className={styles.container}>
@@ -67,23 +68,21 @@ export default function UTEChooseYourVehicle({ factoryOptions, makes }) {
             size="large"
             value={getValueOrSlug(model) || null}
           />
-          {factoryOptions?.length && (
+          {compatibleFactoryOptions?.length > 0 && (
             <Select
               className={styles.select}
               dropdownInDocumentFlow
-              multiple={true}
               name="factoryOptions"
-              onChange={(value, label) => {
-                handleFactoryOptionsChange(value, label);
+              onChange={value => {
+                handleFactoryOptionsChange(value, compatibleFactoryOptions);
               }}
-              options={factorySelectOptions}
+              options={compatibleFactoryOptions.map(({ slug, title }) => ({
+                label: title,
+                value: slug,
+              }))}
               placeholder={constants.SELECT_LABELS.FACTORY_OPTIONS}
               size="large"
-              value={
-                selectedFactoryOptions
-                  ? selectedFactoryOptions.map(option => option.slug)
-                  : null
-              }
+              value={selectedFactoryOption?.slug || null}
             />
           )}
           <Button

@@ -16,8 +16,8 @@ import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
+import ActionModal from '@components/builder/action-modal';
 import { STEP_TITLES } from '@components/builder/builder';
-import ResetModal from '@components/builder/reset-modal';
 
 const VehicleContext = createContext();
 
@@ -30,7 +30,8 @@ export const VehicleProvider = ({ children }) => {
   const [stepNumber, setStepNumber] = useState(0);
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
-  const [selectedFactoryOptions, setSelectedFactoryOptions] = useState(null);
+  const [selectedFactoryOption, setSelectedFactoryOption] = useState(null);
+  const [compatibleFactoryOptions, setCompatibleFactoryOptions] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
@@ -38,7 +39,7 @@ export const VehicleProvider = ({ children }) => {
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
-    selectedFactoryOptions: [],
+    selectedFactoryOption: [],
   });
   const [goToLink, setGoToLink] = useState('');
   const wrapperRef = useRef(null);
@@ -78,6 +79,7 @@ export const VehicleProvider = ({ children }) => {
 
     if (goToLink === routes.uteBuilder) {
       setSelectedProducts([]);
+      setSelectedCover(null);
       setGoToLink('');
     }
   };
@@ -93,7 +95,9 @@ export const VehicleProvider = ({ children }) => {
     setModel(null);
     setVehicleSelection(null);
     setSavedVehicleGlobal(null);
-    setSelectedFactoryOptions(null);
+    setSelectedFactoryOption(null);
+    setSelectedFactoryOption(null);
+    setCompatibleFactoryOptions([]);
     setStepNumber(0);
     setStepTitle('');
   };
@@ -105,6 +109,12 @@ export const VehicleProvider = ({ children }) => {
       resetVehicleSelection();
 
       return;
+    }
+
+    if (makeSlug && modelSlug && slug) {
+      resetVehicleSelection();
+
+      router.push(`/${slug}`);
     }
 
     const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
@@ -133,17 +143,17 @@ export const VehicleProvider = ({ children }) => {
       const vehicleString = JSON.stringify({
         maker,
         model,
-        selectedFactoryOptions,
+        selectedFactoryOption,
       });
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
-      setSavedVehicleGlobal({ maker, model, selectedFactoryOptions });
+      setSavedVehicleGlobal({ maker, model, selectedFactoryOption });
 
       setVehicleSelection({
         makerName: maker?.name || undefined,
         modelName: model?.name || undefined,
-        selectedFactoryOptions: selectedFactoryOptions || null,
+        selectedFactoryOption: selectedFactoryOption || null,
       });
 
       setDropdownOpened(false);
@@ -178,12 +188,13 @@ export const VehicleProvider = ({ children }) => {
         router.push(newRoute);
       }
     },
-    [maker, model, router, selectedFactoryOptions, variant],
+    [maker, model, router, selectedFactoryOption, variant],
   );
 
   return (
     <VehicleContext.Provider
       value={{
+        compatibleFactoryOptions,
         dropdownOpened,
         finalSelection,
         goToLink,
@@ -194,8 +205,9 @@ export const VehicleProvider = ({ children }) => {
         productNotCompatible,
         savedVehicleGlobal,
         selectedCover,
-        selectedFactoryOptions,
+        selectedFactoryOption,
         selectedProducts,
+        setCompatibleFactoryOptions,
         setDropdownOpened,
         setGoToLink,
         setMaker,
@@ -203,7 +215,7 @@ export const VehicleProvider = ({ children }) => {
         setProductNotCompatible,
         setSavedVehicleGlobal,
         setSelectedCover,
-        setSelectedFactoryOptions,
+        setSelectedFactoryOption,
         setSelectedProducts,
         setStepNumber,
         setStepTitle,
@@ -215,7 +227,7 @@ export const VehicleProvider = ({ children }) => {
       }}
     >
       {goToLink && (
-        <ResetModal
+        <ActionModal
           onAccept={handleResetModalAccept}
           onClose={handleResetModalClose}
         />
