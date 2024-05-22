@@ -79,6 +79,7 @@ export const VehicleProvider = ({ children }) => {
 
     if (goToLink === routes.uteBuilder) {
       setSelectedProducts([]);
+      setSelectedCover(null);
       setGoToLink('');
     }
   };
