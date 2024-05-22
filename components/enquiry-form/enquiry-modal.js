@@ -235,7 +235,9 @@ export default function EnquiryModal({
                 <InfoIcon />
                 <div>
                   By submitting the form you agree to our{' '}
-                  <Link href={routes.privacyAndTerms}>Terms & Conditions.</Link>
+                  <Link href={routes.privacyAndTerms} target="_blank">
+                    Terms & Conditions.
+                  </Link>
                 </div>
               </div>
               <Button
