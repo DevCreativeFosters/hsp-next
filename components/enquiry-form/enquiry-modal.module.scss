@@ -183,6 +183,7 @@ $desktop-height: 1160px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  align-self: start;
   width: 100%;
 
   &.onSuccess {
