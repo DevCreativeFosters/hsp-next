@@ -14,7 +14,6 @@ export default function UteBuilderPage({
   excludedCategories,
   globalOptions,
   makes,
-  noCover,
 }) {
   const [productVariants, setProductVariants] = useState([]);
 
@@ -80,7 +79,6 @@ export default function UteBuilderPage({
       factoryOption={selectedFactoryOption}
       globalOptions={globalOptions}
       makes={makes}
-      noCover={noCover}
       products={productVariants}
     />
   );

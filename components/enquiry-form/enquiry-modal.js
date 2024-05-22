@@ -166,16 +166,11 @@ export default function EnquiryModal({
                         productName,
                         sku,
                         uteBuilderImages,
-                        variantName,
                         variantSlug: productSlug,
                       }) => {
                         const productImage =
                           uteBuilderImages?.imageDesktop?.node?.sourceUrl;
-                        let name = `${productName} / ${variantName}`;
-
-                        if (sku) {
-                          name = `${name} (${sku})`;
-                        }
+                        let name = `${productName}`;
 
                         const price = itemPrice || productPrice;
                         const installCost =
@@ -188,6 +183,7 @@ export default function EnquiryModal({
                             key={productSlug}
                             name={name}
                             price={price}
+                            sku={sku}
                           />
                         );
                       },

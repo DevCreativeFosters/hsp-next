@@ -1,9 +1,11 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
+
+import { useIsMobile } from '@hooks/useIsMobile';
 
 import DownloadButton from '@components/download-button/download-button';
 import Loading from '@components/loading/loading';
@@ -21,6 +23,8 @@ export default function Preview({
   selectedFactoryOption,
   selectedProducts,
 }) {
+  const partImageWrapperRef = useRef(null);
+  const carImageWrapperRef = useRef(null);
   const modelName = model?.name;
   const modelImageDesktop =
     model?.uteBuilderImages?.imageDesktop?.node?.sourceUrl;
@@ -31,6 +35,7 @@ export default function Preview({
   const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
   const [localSelectedProducts, setLocalSelectedProducts] =
     useState(selectedProducts);
+  const isMobile = useIsMobile();
 
   useEffect(
     function setupSelectedFactoryOptionImage() {
@@ -83,33 +88,40 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
-      <div className={styles.isDesktop}>
-        {!desktopImageLoaded && <Loading color="white" size="large" />}
-        <Image
-          alt={modelName}
-          className={clsx(styles.base, styles.isDesktop)}
-          height={imageSizes.desktop.height}
-          onLoad={image => {
-            image?.currentTarget?.classList?.add(styles.isLoaded);
-            setDesktopImageLoaded(true);
-          }}
-          src={modelImageDesktop}
-          width={imageSizes.desktop.width}
-        />
-      </div>
-      <div className={styles.isMobile}>
-        {!mobileImageLoaded && <Loading color="white" size="large" />}
-        <Image
-          alt={modelName}
-          className={clsx(styles.base, styles.isMobile)}
-          height={imageSizes.mobile.height}
-          onLoad={image => {
-            image?.currentTarget?.classList?.add(styles.isLoaded);
-            setMobileImageLoaded(true);
-          }}
-          src={modelImageMobile}
-          width={390}
-        />
+      <div className={styles.imageWrapper} ref={carImageWrapperRef}>
+        <div className={styles.isDesktop}>
+          {!desktopImageLoaded && <Loading color="white" size="large" />}
+          <Image
+            alt={modelName}
+            className={clsx(styles.base, styles.isDesktop)}
+            height={imageSizes.desktop.height}
+            onLoad={() => {
+              if (!isMobile) {
+                carImageWrapperRef.current.style.opacity = '1';
+              }
+
+              setDesktopImageLoaded(true);
+            }}
+            src={modelImageDesktop}
+            width={imageSizes.desktop.width}
+          />
+        </div>
+        <div className={styles.isMobile}>
+          {!mobileImageLoaded && <Loading color="white" size="large" />}
+          <Image
+            alt={modelName}
+            className={clsx(styles.base, styles.isMobile)}
+            height={imageSizes.mobile.height}
+            onLoad={() => {
+              if (isMobile) {
+                carImageWrapperRef.current.style.opacity = '1';
+              }
+              setMobileImageLoaded(true);
+            }}
+            src={modelImageMobile}
+            width={390}
+          />
+        </div>
       </div>
       {!!mergeImages.length && (
         <DownloadButton
@@ -133,13 +145,19 @@ export default function Preview({
           selectedProduct.uteBuilderImages.imageMobile?.node?.sourceUrl;
 
         return (
-          <Fragment key={productSlug}>
+          <div
+            className={styles.imageWrapper}
+            key={productSlug}
+            ref={partImageWrapperRef}
+          >
             <Image
               alt={productTitle}
               className={clsx(styles.layer, styles.isDesktop)}
               height={imageSizes.desktop.height}
-              onLoad={image => {
-                image?.currentTarget?.classList?.add(styles.isLoaded);
+              onLoad={() => {
+                if (!isMobile) {
+                  partImageWrapperRef.current.style.opacity = '1';
+                }
               }}
               src={productImageDesktop}
               style={{
@@ -151,8 +169,10 @@ export default function Preview({
               alt={productTitle}
               className={clsx(styles.layer, styles.isMobile)}
               height={imageSizes.mobile.height}
-              onLoad={image => {
-                image?.currentTarget?.classList?.add(styles.isLoaded);
+              onLoad={() => {
+                if (isMobile) {
+                  partImageWrapperRef.current.style.opacity = '1';
+                }
               }}
               src={productImageMobile}
               style={{
@@ -160,7 +180,7 @@ export default function Preview({
               }}
               width={imageSizes.mobile.width}
             />
-          </Fragment>
+          </div>
         );
       })}
       {children}

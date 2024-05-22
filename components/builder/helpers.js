@@ -3,14 +3,8 @@ import { Fragment } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
-import { getIcon } from '@lib/icons';
-
 import styles from '@components/builder/products-carousel.module.scss';
-
-const PlusIcon = getIcon('plus');
-const CheckMarkIcon = getIcon('check-mark');
-const GroupIcon = getIcon('group');
-const UngroupIcon = getIcon('ungroup');
+import SlideIcon from '@components/builder/slide-icon';
 
 export function isProductSelected(selectedProducts, slug) {
   return selectedProducts.some(
@@ -75,30 +69,6 @@ export function getSlides(
       const isGroupItemFirst = index === 0;
       const isGroupItemLast = index === product.variants.length - 1;
 
-      const Icon = (
-        <>
-          {isGroup ? (
-            <>
-              {index === 0 ? (
-                isGroupItemOpen ? (
-                  <UngroupIcon />
-                ) : (
-                  <GroupIcon />
-                )
-              ) : isSelected ? (
-                <CheckMarkIcon />
-              ) : (
-                <PlusIcon />
-              )}
-            </>
-          ) : isSelected ? (
-            <CheckMarkIcon />
-          ) : (
-            <PlusIcon />
-          )}
-        </>
-      );
-
       const slide = (
         <Fragment key={index}>
           <button
@@ -130,7 +100,14 @@ export function getSlides(
                 width={168}
               />
             </div>
-            <div className={styles.productIcon}>{Icon}</div>
+            <div className={styles.productIcon}>
+              <SlideIcon
+                index={index}
+                isGroup={isGroup}
+                isGroupItemOpen={isGroupItemOpen}
+                isSelected={isSelected}
+              />
+            </div>
             {productTitle && (
               <div className={styles.productMeta}>
                 <p className={styles.productName}>{productTitle}</p>
@@ -176,22 +153,40 @@ export function filterOutIncompatibleProducts(products, selectedCover) {
   const filteredProducts = [];
 
   products?.forEach((product, index) => {
-    if (!filteredProducts[index]) {
-      filteredProducts[index] = product;
+    const variants = [];
+
+    const isCoverCompatible = product.compatibleCovers.find(cover => {
+      return selectedCover?.productCategories?.includes(cover);
+    });
+
+    if (isCoverCompatible) {
+      if (!filteredProducts[index]) {
+        filteredProducts[index] = product;
+      }
     }
 
-    const variants = product?.productFields?.variants?.filter(variant => {
+    product?.productFields?.variants?.forEach(variant => {
       const compatibleCoversVariants =
         variant?.compatibleCoversVariants?.nodes?.map(
           category => category.slug,
         ) || [];
 
-      return compatibleCoversVariants.some(category =>
-        selectedCover?.productCategories?.includes(category),
+      const isCoverVariantCompatible = compatibleCoversVariants.some(
+        category => {
+          return selectedCover?.productCategories?.includes(category);
+        },
       );
+
+      if (isCoverVariantCompatible) {
+        if (!filteredProducts[index]) {
+          filteredProducts[index] = product;
+        }
+
+        variants.push(variant);
+      }
     });
 
-    if (variants && variants.length > 0) {
+    if (variants.length > 0) {
       filteredProducts[index]['productFields']['variants'] = variants;
     }
   });
