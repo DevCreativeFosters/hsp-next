@@ -24,7 +24,6 @@ export default function Preview({
   selectedProducts,
 }) {
   const partImageWrapperRef = useRef(null);
-  const carImageWrapperRef = useRef(null);
   const modelName = model?.name;
   const modelImageDesktop =
     model?.uteBuilderImages?.imageDesktop?.node?.sourceUrl;
@@ -88,41 +87,45 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
-      <div className={styles.imageWrapper} ref={carImageWrapperRef}>
+      {(!desktopImageLoaded || !mobileImageLoaded) && (
+        <Loading color="white" size="large" />
+      )}
+
+      {!isMobile && modelImageDesktop && (
         <div className={styles.isDesktop}>
-          {!desktopImageLoaded && <Loading color="white" size="large" />}
           <Image
-            alt={modelName}
-            className={clsx(styles.base, styles.isDesktop)}
+            alt={`${modelName} desktop`}
+            className={clsx(styles.base, styles.isDesktop, {
+              [styles.isLoaded]: desktopImageLoaded,
+            })}
             height={imageSizes.desktop.height}
             onLoad={() => {
-              if (!isMobile) {
-                carImageWrapperRef.current.style.opacity = '1';
-              }
-
               setDesktopImageLoaded(true);
             }}
             src={modelImageDesktop}
+            unoptimized
             width={imageSizes.desktop.width}
           />
         </div>
+      )}
+
+      {isMobile && modelImageMobile && (
         <div className={styles.isMobile}>
-          {!mobileImageLoaded && <Loading color="white" size="large" />}
           <Image
-            alt={modelName}
-            className={clsx(styles.base, styles.isMobile)}
+            alt={`${modelName} mobile`}
+            className={clsx(styles.base, styles.isMobile, {
+              [styles.isLoaded]: mobileImageLoaded,
+            })}
             height={imageSizes.mobile.height}
             onLoad={() => {
-              if (isMobile) {
-                carImageWrapperRef.current.style.opacity = '1';
-              }
               setMobileImageLoaded(true);
             }}
             src={modelImageMobile}
+            unoptimized
             width={390}
           />
         </div>
-      </div>
+      )}
       {!!mergeImages.length && (
         <DownloadButton
           className={styles.downloadButton}

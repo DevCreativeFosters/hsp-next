@@ -17,11 +17,6 @@
   }
 }
 
-.imageWrapper {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
 .base,
 .layer {
   position: absolute;
@@ -32,6 +27,8 @@
   object-position: center;
   max-width: 100%;
   max-height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 
   @include bp(large) {
     left: auto;
