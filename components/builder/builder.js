@@ -17,6 +17,7 @@ import routes from '@lib/routes';
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
+import Loading from '@components/loading/loading';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -495,6 +496,10 @@ export default function Builder({
               <UTEChooseYourVehicle makes={makes} />
             )}
           </div>
+          {stepNumber > 0 && !stepProducts && (
+            <Loading color="white" size="large" />
+          )}
+
           {stepNumber > 0 && stepProducts.length > 0 && (
             <ProductsCarousel
               disabledProducts={disabledProducts}
