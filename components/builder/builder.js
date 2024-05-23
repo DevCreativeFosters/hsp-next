@@ -17,7 +17,6 @@ import routes from '@lib/routes';
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
-import Loading from '@components/loading/loading';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -335,6 +334,10 @@ export default function Builder({
     ],
   );
 
+  useEffect(() => {
+    setStepProducts([]);
+  }, [products]);
+
   useEffect(
     function setBuilderSelectedCover() {
       if (!make || !model || stepNumber === 0) {
@@ -496,25 +499,19 @@ export default function Builder({
               <UTEChooseYourVehicle makes={makes} />
             )}
           </div>
-          {stepNumber > 0 && !stepProducts && (
-            <Loading color="white" size="large" />
-          )}
-
-          {stepNumber > 0 && stepProducts.length > 0 && (
-            <ProductsCarousel
-              disabledProducts={disabledProducts}
-              isMobile={isMobile}
-              products={stepProducts}
-              removeProduct={removeProduct}
-              selectedCover={selectedCover}
-              selectedFactoryOption={selectedFactoryOption}
-              selectedProducts={selectedProducts}
-              stepNumber={stepNumber}
-              stepTitle={stepTitle}
-              toggleGroup={toggleGroup}
-              toggleProduct={toggleProduct}
-            />
-          )}
+          <ProductsCarousel
+            disabledProducts={disabledProducts}
+            isMobile={isMobile}
+            products={stepProducts}
+            removeProduct={removeProduct}
+            selectedCover={selectedCover}
+            selectedFactoryOption={selectedFactoryOption}
+            selectedProducts={selectedProducts}
+            stepNumber={stepNumber}
+            stepTitle={stepTitle}
+            toggleGroup={toggleGroup}
+            toggleProduct={toggleProduct}
+          />
         </Container>
       </div>
     </>
