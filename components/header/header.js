@@ -70,6 +70,7 @@ export default function Header({
                   return (
                     <Button
                       background="dark"
+                      href={item.url || '#'}
                       key={item.url}
                       rightIcon={item.iconPredefined[0] || item.icon}
                       size="small"
