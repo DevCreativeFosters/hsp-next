@@ -11,7 +11,6 @@ import { useVehicleContext } from '@contexts/vehicle';
 import { useIsMobile } from '@hooks/useIsMobile';
 
 import constants from '@lib/constants';
-import { getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
@@ -42,13 +41,18 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     setSelectedProducts,
     setStepNumber,
     setVehicleSelection,
+    stepNumber,
   } = useVehicleContext();
 
   const {
     handleMakerChange,
     handleModelChange,
+    localMaker,
+    localModel,
     makerSelectOptions,
     modelSelectOptions,
+    setLocalMaker,
+    setLocalModel,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +61,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
   const isMobile = useIsMobile(1280);
   const nonEmptySelection = maker && model && finalSelection;
+
+  const internalMaker = localMaker || maker;
+  const internalModel = localModel || model;
 
   const Icon = dropdownOpened ? (
     <CloseIcon />
@@ -72,6 +79,30 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     }
   }, [maker, model]);
 
+  useEffect(() => {
+    if (maker && localMaker && maker?.slug === localMaker?.slug) {
+      handleSave();
+      setLocalMaker(null);
+      setLocalModel(null);
+      setStepNumber(0);
+      setShowUpdateModal(false);
+      setDropdownOpened(false);
+    }
+  }, [
+    handleSave,
+    localMaker,
+    maker,
+    setDropdownOpened,
+    setLocalMaker,
+    setLocalModel,
+    setStepNumber,
+  ]);
+
+  const handleInternalSave = () => {
+    handleMakerChange(internalMaker?.slug, internalMaker?.name);
+    handleModelChange(internalModel?.slug, internalModel?.name);
+  };
+
   const handleOnResetAccept = () => {
     handleVehicleReset();
     setSelectedProducts([]);
@@ -83,8 +114,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   };
 
   const handleOnUpdateAccept = () => {
-    setStepNumber(0);
-    setShowUpdateModal(false);
+    handleInternalSave();
   };
 
   const handleOnUpdateClose = () => {
@@ -173,34 +203,53 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                 <div className={styles.dropdownInner}>
                   <Select
                     dropdownInDocumentFlow
-                    onChange={handleMakerChange}
+                    onChange={(value, label) => {
+                      if (pathname === routes.uteBuilder) {
+                        setLocalMaker({
+                          name: label,
+                          slug: value,
+                        });
+                      } else {
+                        handleMakerChange(value, label);
+                      }
+                    }}
                     options={makerSelectOptions}
                     placeholder={constants.SELECT_LABELS.MAKER}
                     size="large"
-                    value={getValueOrSlug(maker) || null}
+                    value={internalMaker?.slug || null}
                   />
                   <Select
                     disabled={!modelSelectOptions.length}
                     dropdownInDocumentFlow
-                    onChange={handleModelChange}
+                    onChange={(value, label) => {
+                      if (pathname === routes.uteBuilder) {
+                        setLocalModel({
+                          name: label,
+                          slug: value,
+                        });
+                      } else {
+                        handleModelChange(value, label);
+                      }
+                    }}
                     options={modelSelectOptions}
                     placeholder={constants.SELECT_LABELS.MODEL}
                     size="large"
-                    value={getValueOrSlug(model) || null}
+                    value={internalModel?.slug || null}
                   />
                   <Button
                     className={styles.save}
-                    disabled={!maker && !model}
+                    disabled={!internalMaker && !internalModel}
                     onClick={() => {
                       if (pathname === routes.uteBuilder) {
                         if (
                           finalSelection &&
-                          finalSelection?.makerName !== maker?.name &&
-                          finalSelection?.modelName !== model?.name
+                          finalSelection?.makerName !== internalMaker?.name &&
+                          finalSelection?.modelName !== internalModel?.name &&
+                          stepNumber > 0
                         ) {
                           setShowUpdateModal(true);
                         } else {
-                          handleSave();
+                          handleInternalSave();
                         }
                       } else {
                         handleSave({
