@@ -43,20 +43,6 @@
   }
 }
 
-.isMobile {
-  @media (orientation: landscape) or (width >= 480px) {
-    display: none;
-  }
-}
-
-.isDesktop {
-  display: none;
-
-  @media (orientation: landscape) or (width >= 480px) {
-    display: block;
-  }
-}
-
 .downloadButton {
   position: absolute;
   right: 24px;
