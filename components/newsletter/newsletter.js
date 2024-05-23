@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -28,8 +28,15 @@ export default function Newsletter({
   const recaptchaRef = useRef(null);
   const formRef = useRef();
 
+  useEffect(() => {
+    if (!googleRecaptchaSitekey) {
+      console.error('ReCAPTCHA site key is missing');
+    }
+  }, [googleRecaptchaSitekey]);
+
   const handleSubmit = useCallback(
     async token => {
+      console.log('Handling submit, token:', token);
       setIsBusy(true);
       try {
         const response = await sendBrevoNewsletterData({
@@ -37,6 +44,8 @@ export default function Newsletter({
           'g-recaptcha-response': token,
           locale: 'en',
         });
+
+        console.log('Response from Brevo:', response);
 
         if (response.success) {
           setError(null);
@@ -57,12 +66,28 @@ export default function Newsletter({
 
   const onCaptchaSuccess = useCallback(
     token => {
+      console.log('Captcha success, token:', token);
       if (formRef.current?.checkValidity()) {
         handleSubmit(token);
       }
     },
     [handleSubmit],
   );
+
+  const onRecaptchaErrored = useCallback(() => {
+    console.error('ReCAPTCHA errored');
+    setIsBusy(false);
+  }, []);
+
+  const onRecaptchaExpired = useCallback(() => {
+    console.error('ReCAPTCHA expired');
+    setIsBusy(false);
+  }, []);
+
+  const onRecaptchaError = useCallback(() => {
+    console.error('ReCAPTCHA error callback');
+    setIsBusy(false);
+  }, []);
 
   return (
     <Container>
@@ -133,10 +158,18 @@ export default function Newsletter({
                 disabled={isBusy}
                 isBusy={isBusy}
                 onClick={event => {
+                  console.log('Button clicked');
                   const isValid = formRef.current.reportValidity();
+                  console.log('Form is valid:', isValid);
                   if (isValid) {
                     setIsBusy(true);
-                    recaptchaRef.current.execute();
+                    console.log('Executing ReCAPTCHA');
+                    if (recaptchaRef.current) {
+                      recaptchaRef.current.execute();
+                    } else {
+                      console.error('ReCAPTCHA ref is not available');
+                      setIsBusy(false);
+                    }
                   } else {
                     event.preventDefault();
                   }
@@ -150,6 +183,9 @@ export default function Newsletter({
           )}
           <ReCAPTCHA
             onChange={onCaptchaSuccess}
+            onError={onRecaptchaError}
+            onErrored={onRecaptchaErrored}
+            onExpired={onRecaptchaExpired}
             ref={recaptchaRef}
             sitekey={googleRecaptchaSitekey}
             size="invisible"
