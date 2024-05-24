@@ -430,6 +430,15 @@ export default function Builder({
     ],
   );
 
+  useEffect(
+    function resetDisabledProducts() {
+      if (stepNumber < 2) {
+        setDisabledProducts([]);
+      }
+    },
+    [stepNumber],
+  );
+
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
