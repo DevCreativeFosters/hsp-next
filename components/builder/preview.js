@@ -97,7 +97,7 @@ export default function Preview({
         />
       )}
       `
-      {localSelectedProducts?.map(product => {
+      {localSelectedProducts?.map((product, index) => {
         if (product.isNoCover) {
           return null;
         }
@@ -118,7 +118,7 @@ export default function Preview({
             alt={productTitle}
             imageLayerPosition={imageLayerPosition}
             imageSizes={imageSizes}
-            key={product.id}
+            key={index}
             srcDesktop={productImageDesktop}
             srcMobile={productImageMobile}
           />
