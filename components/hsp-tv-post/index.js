@@ -38,7 +38,10 @@ export function HspTvPost({
           <div className={styles.headerIntroduction}>
             <h1 className={styles.title}>{title}</h1>
             {customFields?.description && (
-              <p className={styles.description}>{customFields?.description}</p>
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: customFields?.description }}
+              />
             )}
           </div>
         )}
