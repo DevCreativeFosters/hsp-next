@@ -239,20 +239,6 @@ export default function Builder({
     [setStepProducts, stepProducts],
   );
 
-  useEffect(() => {
-    if (!make || !model || !noCoverSlug) {
-      return;
-    }
-
-    getNoCoverProduct(noCoverSlug, make.slug, model.slug).then(product => {
-      if (!product) {
-        return;
-      }
-
-      setNoCoverProduct(product);
-    });
-  }, [make, model, noCoverSlug]);
-
   useEffect(
     function getCompatibleFactoryOptions() {
       if (!make || !model || !makes.length) {
@@ -267,6 +253,20 @@ export default function Builder({
     },
     [make, makes, model, setCompatibleFactoryOptions],
   );
+
+  useEffect(() => {
+    if (!make || !model || !noCoverSlug) {
+      return;
+    }
+
+    getNoCoverProduct(noCoverSlug, make.slug, model.slug).then(product => {
+      if (!product) {
+        return;
+      }
+
+      setNoCoverProduct(product);
+    });
+  }, [make, model, noCoverSlug]);
 
   useEffect(
     function getBuilderRelatedCovers() {
