@@ -9,7 +9,6 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
-import getNoCoverProduct from '@lib/api/get-no-cover-product';
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 import routes from '@lib/routes';
@@ -51,7 +50,6 @@ export default function Builder({
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [covers, setCovers] = useState([]);
-  const [noCoverProduct, setNoCoverProduct] = useState(null);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -62,7 +60,6 @@ export default function Builder({
   const [lastProductSlug, setLastProductSlug] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
-  const noCoverSlug = globalOptions?.noCoverCategory?.nodes[0]?.slug || null;
 
   const {
     maker: make,
@@ -254,20 +251,6 @@ export default function Builder({
     [make, makes, model, setCompatibleFactoryOptions],
   );
 
-  useEffect(() => {
-    if (!make || !model || !noCoverSlug) {
-      return;
-    }
-
-    getNoCoverProduct(noCoverSlug, make.slug, model.slug).then(product => {
-      if (!product) {
-        return;
-      }
-
-      setNoCoverProduct(product);
-    });
-  }, [make, model, noCoverSlug]);
-
   useEffect(
     function getBuilderRelatedCovers() {
       if (!make?.slug || !model?.slug || !globalOptions?.coversCategory) {
@@ -287,18 +270,11 @@ export default function Builder({
           relatedCovers,
           true,
         );
-        const noCoverNormalized = normalizeUteBuilderProducts(
-          noCoverProduct,
-          true,
-          true,
-        );
-        const covers = [...normalizedCovers, ...noCoverNormalized];
 
-        setStepProducts(covers);
-        setCovers(covers);
+        setCovers(normalizedCovers);
       });
     },
-    [globalOptions, make, model, noCoverProduct],
+    [globalOptions, make, model],
   );
 
   useEffect(
@@ -316,7 +292,6 @@ export default function Builder({
         setStepProducts(
           normalizeUteBuilderProducts(
             filteredOutProducts,
-            false,
             false,
             lastProductSlug,
           ),
