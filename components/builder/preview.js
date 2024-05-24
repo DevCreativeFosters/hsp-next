@@ -5,11 +5,8 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
-import { useIsMobile } from '@hooks/useIsMobile';
-
 import FadeInImage from '@components/builder/fade-in-image';
 import DownloadButton from '@components/download-button/download-button';
-import Loading from '@components/loading/loading';
 
 import BgPictureMobile from '@assets/images/bg-concrete-mobile.webp';
 import BgPicture from '@assets/images/bg-concrete.webp';
@@ -30,11 +27,8 @@ export default function Preview({
   const modelImageMobile =
     model?.uteBuilderImages?.imageMobile?.node?.sourceUrl;
   const [mergeImages, setMergeImages] = useState([]);
-  const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
-  const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
   const [localSelectedProducts, setLocalSelectedProducts] =
     useState(selectedProducts);
-  const isMobile = useIsMobile();
 
   useEffect(
     function setupSelectedFactoryOptionImage() {
@@ -87,9 +81,6 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
-      {(!desktopImageLoaded || !mobileImageLoaded) && (
-        <Loading color="white" size="large" />
-      )}
       <FadeInImage
         alt={modelName}
         imageSizes={imageSizes}
