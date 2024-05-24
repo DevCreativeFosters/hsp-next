@@ -334,9 +334,12 @@ export default function Builder({
     ],
   );
 
-  useEffect(() => {
-    setStepProducts([]);
-  }, [products]);
+  useEffect(
+    function removeStepProducts() {
+      setStepProducts([]);
+    },
+    [products],
+  );
 
   useEffect(
     function setBuilderSelectedCover() {
