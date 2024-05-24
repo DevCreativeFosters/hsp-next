@@ -240,7 +240,7 @@ export default function Builder({
   );
 
   useEffect(() => {
-    if (!make || !model || noCoverSlug) {
+    if (!make || !model || !noCoverSlug) {
       return;
     }
 
