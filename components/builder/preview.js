@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import FadeInImage from '@components/builder/fade-in-image';
 import DownloadButton from '@components/download-button/download-button';
+import Loading from '@components/loading/loading';
 
 import BgPictureMobile from '@assets/images/bg-concrete-mobile.webp';
 import BgPicture from '@assets/images/bg-concrete.webp';
@@ -81,6 +82,7 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
+      <Loading color="white" size="small" />
       <FadeInImage
         alt={modelName}
         imageSizes={imageSizes}
