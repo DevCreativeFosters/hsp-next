@@ -253,7 +253,13 @@ export default function Builder({
 
   useEffect(
     function getBuilderRelatedCovers() {
-      if (!make?.slug || !model?.slug || !globalOptions?.coversCategory) {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions?.coversCategory ||
+        stepNumber === 0 ||
+        covers.length > 0
+      ) {
         return;
       }
 
@@ -274,7 +280,7 @@ export default function Builder({
         setCovers(normalizedCovers);
       });
     },
-    [globalOptions, make, model],
+    [covers.length, globalOptions, make, model, stepNumber],
   );
 
   useEffect(
@@ -312,8 +318,10 @@ export default function Builder({
   useEffect(
     function removeStepProducts() {
       setStepProducts([]);
+      setSelectedProducts([]);
+      setSelectedCover(null);
     },
-    [products],
+    [products, setSelectedCover, setSelectedProducts],
   );
 
   useEffect(
