@@ -29,7 +29,10 @@ export default function VideoBackgroundHero({
       <Container>
         <div className={styles.content}>
           <h1 className={styles.title}>{title}</h1>
-          <div className={styles.description}>{description}</div>
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
           {link && (
             <Button href={link.url} rightIcon="play-button" size="large">
               {link.title}
