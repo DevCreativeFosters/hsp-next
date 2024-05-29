@@ -213,7 +213,9 @@ export default function EnquiryModal({
                         <tr className={styles.total}>
                           <td>Total</td>
                           <td>
-                            {formatPrice(productPrice + installationCost)}
+                            {formatPrice(
+                              productPrice + installationCost + freight,
+                            )}
                           </td>
                         </tr>
                       </tbody>
