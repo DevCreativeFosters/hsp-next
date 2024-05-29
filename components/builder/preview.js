@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 
-import { useIsMobile } from '@hooks/useIsMobile';
-
+import FadeInImage from '@components/builder/fade-in-image';
 import DownloadButton from '@components/download-button/download-button';
 import Loading from '@components/loading/loading';
 
@@ -23,19 +22,14 @@ export default function Preview({
   selectedFactoryOption,
   selectedProducts,
 }) {
-  const partImageWrapperRef = useRef(null);
-  const carImageWrapperRef = useRef(null);
   const modelName = model?.name;
   const modelImageDesktop =
     model?.uteBuilderImages?.imageDesktop?.node?.sourceUrl;
   const modelImageMobile =
     model?.uteBuilderImages?.imageMobile?.node?.sourceUrl;
   const [mergeImages, setMergeImages] = useState([]);
-  const [desktopImageLoaded, setDesktopImageLoaded] = useState(false);
-  const [mobileImageLoaded, setMobileImageLoaded] = useState(false);
   const [localSelectedProducts, setLocalSelectedProducts] =
     useState(selectedProducts);
-  const isMobile = useIsMobile();
 
   useEffect(
     function setupSelectedFactoryOptionImage() {
@@ -88,41 +82,13 @@ export default function Preview({
 
   return (
     <div className={clsx(styles.preview, className)}>
-      <div className={styles.imageWrapper} ref={carImageWrapperRef}>
-        <div className={styles.isDesktop}>
-          {!desktopImageLoaded && <Loading color="white" size="large" />}
-          <Image
-            alt={modelName}
-            className={clsx(styles.base, styles.isDesktop)}
-            height={imageSizes.desktop.height}
-            onLoad={() => {
-              if (!isMobile) {
-                carImageWrapperRef.current.style.opacity = '1';
-              }
-
-              setDesktopImageLoaded(true);
-            }}
-            src={modelImageDesktop}
-            width={imageSizes.desktop.width}
-          />
-        </div>
-        <div className={styles.isMobile}>
-          {!mobileImageLoaded && <Loading color="white" size="large" />}
-          <Image
-            alt={modelName}
-            className={clsx(styles.base, styles.isMobile)}
-            height={imageSizes.mobile.height}
-            onLoad={() => {
-              if (isMobile) {
-                carImageWrapperRef.current.style.opacity = '1';
-              }
-              setMobileImageLoaded(true);
-            }}
-            src={modelImageMobile}
-            width={390}
-          />
-        </div>
-      </div>
+      <Loading color="white" size="small" />
+      <FadeInImage
+        alt={modelName}
+        imageSizes={imageSizes}
+        srcDesktop={modelImageDesktop}
+        srcMobile={modelImageMobile}
+      />
       {!!mergeImages.length && (
         <DownloadButton
           className={styles.downloadButton}
@@ -132,55 +98,32 @@ export default function Preview({
           images={mergeImages}
         />
       )}
-      {localSelectedProducts?.map(selectedProduct => {
-        if (selectedProduct.isNoCover) {
+      `
+      {localSelectedProducts?.map((product, index) => {
+        if (product.isNoCover) {
           return null;
         }
 
-        const productTitle = selectedProduct.productName;
-        const productSlug = selectedProduct.variantSlug;
+        const {
+          imageLayerPosition,
+          productName: productTitle,
+          uteBuilderImages,
+        } = product;
+
         const productImageDesktop =
-          selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+          uteBuilderImages.imageDesktop?.node?.sourceUrl;
         const productImageMobile =
-          selectedProduct.uteBuilderImages.imageMobile?.node?.sourceUrl;
+          uteBuilderImages.imageMobile?.node?.sourceUrl;
 
         return (
-          <div
-            className={styles.imageWrapper}
-            key={productSlug}
-            ref={partImageWrapperRef}
-          >
-            <Image
-              alt={productTitle}
-              className={clsx(styles.layer, styles.isDesktop)}
-              height={imageSizes.desktop.height}
-              onLoad={() => {
-                if (!isMobile) {
-                  partImageWrapperRef.current.style.opacity = '1';
-                }
-              }}
-              src={productImageDesktop}
-              style={{
-                zIndex: selectedProduct.imageLayerPosition,
-              }}
-              width={imageSizes.desktop.width}
-            />
-            <Image
-              alt={productTitle}
-              className={clsx(styles.layer, styles.isMobile)}
-              height={imageSizes.mobile.height}
-              onLoad={() => {
-                if (isMobile) {
-                  partImageWrapperRef.current.style.opacity = '1';
-                }
-              }}
-              src={productImageMobile}
-              style={{
-                zIndex: selectedProduct.imageLayerPosition,
-              }}
-              width={imageSizes.mobile.width}
-            />
-          </div>
+          <FadeInImage
+            alt={productTitle}
+            imageLayerPosition={imageLayerPosition}
+            imageSizes={imageSizes}
+            key={index}
+            srcDesktop={productImageDesktop}
+            srcMobile={productImageMobile}
+          />
         );
       })}
       {children}

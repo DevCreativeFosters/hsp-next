@@ -56,97 +56,158 @@ export function getSlides(
   toggleProduct,
 ) {
   const slides = [];
-
   products?.forEach(product => {
+    let disabledCount = 0;
+    let variants = [];
     product?.variants.forEach((variant, index) => {
       const { image, isGroup, productName, variantName, variantSlug } = variant;
+      const attributes = {
+        isGroupItemFirst: index === 0,
+        isGroupItemLast: index === product.variants.length - 1,
+        isGroupItemOpen: isGroup && variant.isOpen,
+        isSelected: isProductSelected(selectedProducts, variantSlug),
+        productImage: image,
+        productTitle: isGroup && index > 0 ? variantName : productName,
+      };
 
-      const productTitle = isGroup && index > 0 ? variantName : productName;
-      const productImage = image;
-      const isSelected = isProductSelected(selectedProducts, variantSlug);
       const isDisabled = disabledProducts.includes(variantSlug);
-      const isGroupItemOpen = isGroup && variant.isOpen;
-      const isGroupItemFirst = index === 0;
-      const isGroupItemLast = index === product.variants.length - 1;
 
-      const slide = (
-        <Fragment key={index}>
-          <button
-            className={clsx(styles.product, {
-              [styles.isSelected]: isSelected,
-              [styles.isDisabled]:
-                isGroupItemFirst && isGroup && isGroupItemOpen
-                  ? false
-                  : isDisabled,
-              [styles.isGroupItem]: isGroup,
-              [styles.isGroupItemOpen]: isGroupItemOpen,
-              [styles.isGroupItemFirst]: isGroupItemFirst,
-              [styles.isGroupItemLast]: isGroupItemLast,
-            })}
-            onClick={() => {
-              isGroup && index === 0
-                ? toggleGroup(product)
-                : toggleProduct(variant);
-            }}
-            type="button"
-          >
-            <div className={styles.productImageContainer}>
-              <Image
-                alt={productTitle}
-                className={styles.productImage}
-                height={Math.round(168 / 1.4)}
-                src={productImage}
-                style={{ objectFit: 'contain' }}
-                width={168}
-              />
-            </div>
-            <div className={styles.productIcon}>
-              <SlideIcon
-                index={index}
-                isGroup={isGroup}
-                isGroupItemOpen={isGroupItemOpen}
-                isSelected={isSelected}
-              />
-            </div>
-            {productTitle && (
-              <div className={styles.productMeta}>
-                <p className={styles.productName}>{productTitle}</p>
-                {index === 0 && product.minPrice > 0 && (
-                  <span className={styles.productPrice}>
-                    {isGroup && <>Starting from </>}
-                    {new Intl.NumberFormat('en-AU', {
-                      currency: 'AUD',
-                      style: 'currency',
-                    }).format(product.minPrice)}
-                  </span>
-                )}
+      disabledCount += isDisabled ? 1 : 0;
 
-                {index > 0 && variant.price > 0 && (
-                  <span className={styles.productPrice}>
-                    {new Intl.NumberFormat('en-AU', {
-                      currency: 'AUD',
-                      style: 'currency',
-                    }).format(variant.price)}
-                  </span>
-                )}
-                {isDisabled && (
-                  <div className={styles.incompatible}>
-                    Incompatible with current configuration
-                  </div>
-                )}
-              </div>
-            )}
-          </button>
-        </Fragment>
+      let slide = getSlideMarkup(
+        attributes,
+        isDisabled,
+        isGroup,
+        product,
+        toggleGroup,
+        toggleProduct,
+        variant,
+        index,
       );
 
-      if (!variant.hidden) {
-        slides.push(slide);
+      if (isGroup && disabledCount === product.variants.length - 1) {
+        const group = variants.shift();
+        const { image, productName } = product.variants[0];
+
+        variants.unshift(
+          getSlideMarkup(
+            {
+              isGroupItemFirst: true,
+              isGroupItemLast: true,
+              isGroupItemOpen: false,
+              isSelected: false,
+              productImage: image,
+              productTitle: productName,
+            },
+            true,
+            true,
+            product,
+            toggleGroup,
+            toggleProduct,
+            group,
+            0,
+          ),
+        );
+      } else if (!variant.hidden) {
+        variants.push(slide);
       }
     });
+
+    if (variants.length > 0) {
+      slides.push(...variants);
+    }
   });
 
   return slides;
+}
+
+function getSlideMarkup(
+  attributes,
+  isDisabled,
+  isGroup,
+  product,
+  toggleGroup,
+  toggleProduct,
+  variant,
+  index,
+) {
+  const {
+    isGroupItemFirst,
+    isGroupItemLast,
+    isGroupItemOpen,
+    isSelected,
+    productImage,
+    productTitle,
+  } = attributes;
+
+  return (
+    <Fragment key={index}>
+      <button
+        className={clsx(styles.product, {
+          [styles.isSelected]: isSelected,
+          [styles.isDisabled]:
+            isGroupItemFirst && isGroup && isGroupItemOpen ? false : isDisabled,
+          [styles.isGroupItem]: isGroup,
+          [styles.isGroupItemOpen]: isGroupItemOpen,
+          [styles.isGroupItemFirst]: isGroupItemFirst,
+          [styles.isGroupItemLast]: isGroupItemLast,
+        })}
+        onClick={() => {
+          isGroup && index === 0
+            ? toggleGroup(product)
+            : toggleProduct(variant);
+        }}
+        type="button"
+      >
+        <div className={styles.productImageContainer}>
+          <Image
+            alt={productTitle}
+            className={styles.productImage}
+            height={Math.round(168 / 1.4)}
+            src={productImage}
+            style={{ objectFit: 'contain' }}
+            width={168}
+          />
+        </div>
+        <div className={styles.productIcon}>
+          <SlideIcon
+            index={index}
+            isGroup={isGroup}
+            isGroupItemOpen={isGroupItemOpen}
+            isSelected={isSelected}
+          />
+        </div>
+        {productTitle && (
+          <div className={styles.productMeta}>
+            <p className={styles.productName}>{productTitle}</p>
+            {index === 0 && product.minPrice > 0 && (
+              <span className={styles.productPrice}>
+                {isGroup && <>Starting from </>}
+                {new Intl.NumberFormat('en-AU', {
+                  currency: 'AUD',
+                  style: 'currency',
+                }).format(product.minPrice)}
+              </span>
+            )}
+
+            {index > 0 && variant.price > 0 && (
+              <span className={styles.productPrice}>
+                {new Intl.NumberFormat('en-AU', {
+                  currency: 'AUD',
+                  style: 'currency',
+                }).format(variant.price)}
+              </span>
+            )}
+            {isDisabled && (
+              <div className={styles.incompatible}>
+                Incompatible with current configuration
+              </div>
+            )}
+          </div>
+        )}
+      </button>
+    </Fragment>
+  );
 }
 
 export function filterOutIncompatibleProducts(products, selectedCover) {

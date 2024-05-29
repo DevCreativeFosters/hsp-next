@@ -78,11 +78,24 @@ function GravityFormWrapperWithRef(
     (form, attributes = {}) => {
       // Side effect: this method modifies the `form` object
 
+      const dynamicInputs = ['productSubCategories', 'stores'];
       const formFields = form?.formFields?.nodes;
+
+      if (!formFields) return;
 
       Object.entries(attributes)
         .filter(([key]) => key !== 'id')
         .forEach(([attrKey, attrValue]) => {
+          dynamicInputs.forEach(dynamicInput => {
+            const field = formFields.find(({ canPrepopulate, inputName }) => {
+              return inputName === dynamicInput && canPrepopulate;
+            });
+
+            if (field) {
+              replaceFieldValueWithSystemData({ field, key: dynamicInput });
+            }
+          });
+
           const field = formFields.find(
             ({ canPrepopulate, inputName, inputs, value }) => {
               if (inputs) {

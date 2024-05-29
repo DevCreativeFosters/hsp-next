@@ -37,6 +37,7 @@ export default function EnquiryForm({
   const productFields = productData.productFields;
   const productPrice = productFields?.price;
   const productInstallationPrice = productFields?.installationCost;
+  const freight = productFields?.freight;
   const variants = productFields?.variants;
   const variantOptions = variants?.map(({ variantName, variantSlug }) => ({
     label: variantName,
@@ -228,6 +229,7 @@ export default function EnquiryForm({
       {enquiryModalOpened && (
         <EnquiryModal
           enquiryFormId={enquiryFormId}
+          freight={freight}
           installationCost={variantInstallationPrice}
           onClose={handleCloseModal}
           productPrice={productPrice}

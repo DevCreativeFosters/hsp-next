@@ -9,7 +9,6 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
-import getNoCoverProduct from '@lib/api/get-no-cover-product';
 import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 import routes from '@lib/routes';
@@ -51,7 +50,6 @@ export default function Builder({
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [covers, setCovers] = useState([]);
-  const [noCoverProduct, setNoCoverProduct] = useState(null);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -62,7 +60,6 @@ export default function Builder({
   const [lastProductSlug, setLastProductSlug] = useState(null);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
-  const noCoverSlug = globalOptions?.noCoverCategory?.nodes[0]?.slug || null;
 
   const {
     maker: make,
@@ -239,20 +236,6 @@ export default function Builder({
     [setStepProducts, stepProducts],
   );
 
-  useEffect(() => {
-    if (!make || !model || noCoverSlug) {
-      return;
-    }
-
-    getNoCoverProduct(noCoverSlug, make.slug, model.slug).then(product => {
-      if (!product) {
-        return;
-      }
-
-      setNoCoverProduct(product);
-    });
-  }, [make, model, noCoverSlug]);
-
   useEffect(
     function getCompatibleFactoryOptions() {
       if (!make || !model || !makes.length) {
@@ -270,7 +253,13 @@ export default function Builder({
 
   useEffect(
     function getBuilderRelatedCovers() {
-      if (!make?.slug || !model?.slug || !globalOptions?.coversCategory) {
+      if (
+        !make?.slug ||
+        !model?.slug ||
+        !globalOptions?.coversCategory ||
+        stepNumber === 0 ||
+        covers.length > 0
+      ) {
         return;
       }
 
@@ -287,18 +276,11 @@ export default function Builder({
           relatedCovers,
           true,
         );
-        const noCoverNormalized = normalizeUteBuilderProducts(
-          noCoverProduct,
-          true,
-          true,
-        );
-        const covers = [...normalizedCovers, ...noCoverNormalized];
 
-        setStepProducts(covers);
-        setCovers(covers);
+        setCovers(normalizedCovers);
       });
     },
-    [globalOptions, make, model, noCoverProduct],
+    [covers.length, globalOptions, make, model, stepNumber],
   );
 
   useEffect(
@@ -317,7 +299,6 @@ export default function Builder({
           normalizeUteBuilderProducts(
             filteredOutProducts,
             false,
-            false,
             lastProductSlug,
           ),
         );
@@ -332,6 +313,15 @@ export default function Builder({
       setStepProducts,
       stepNumber,
     ],
+  );
+
+  useEffect(
+    function removeStepProducts() {
+      setStepProducts([]);
+      setSelectedProducts([]);
+      setSelectedCover(null);
+    },
+    [products, setSelectedCover, setSelectedProducts],
   );
 
   useEffect(
@@ -423,6 +413,15 @@ export default function Builder({
     ],
   );
 
+  useEffect(
+    function resetDisabledProducts() {
+      if (stepNumber < 2) {
+        setDisabledProducts([]);
+      }
+    },
+    [stepNumber],
+  );
+
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -495,21 +494,19 @@ export default function Builder({
               <UTEChooseYourVehicle makes={makes} />
             )}
           </div>
-          {stepNumber > 0 && stepProducts.length > 0 && (
-            <ProductsCarousel
-              disabledProducts={disabledProducts}
-              isMobile={isMobile}
-              products={stepProducts}
-              removeProduct={removeProduct}
-              selectedCover={selectedCover}
-              selectedFactoryOption={selectedFactoryOption}
-              selectedProducts={selectedProducts}
-              stepNumber={stepNumber}
-              stepTitle={stepTitle}
-              toggleGroup={toggleGroup}
-              toggleProduct={toggleProduct}
-            />
-          )}
+          <ProductsCarousel
+            disabledProducts={disabledProducts}
+            isMobile={isMobile}
+            products={stepProducts}
+            removeProduct={removeProduct}
+            selectedCover={selectedCover}
+            selectedFactoryOption={selectedFactoryOption}
+            selectedProducts={selectedProducts}
+            stepNumber={stepNumber}
+            stepTitle={stepTitle}
+            toggleGroup={toggleGroup}
+            toggleProduct={toggleProduct}
+          />
         </Container>
       </div>
     </>

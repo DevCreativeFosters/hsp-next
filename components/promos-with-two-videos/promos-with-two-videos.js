@@ -13,7 +13,12 @@ export default function PromoWithTwoVideos({ data }) {
       <div className={styles.informationSection}>
         {description && (
           <div className={styles.mainInfo}>
-            <p className={styles.description}>{description}</p>
+            {description && (
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )}
             {buttonLink && (
               <Button
                 href={buttonLink.url || ''}

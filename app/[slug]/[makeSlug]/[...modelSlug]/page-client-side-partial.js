@@ -138,7 +138,12 @@ export default function PageClientSidePartial({
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
               </div>
             )}
-            {description && <p className={styles.description}>{description}</p>}
+            {description && (
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )}
           </div>
           <StoreLocatorProvider>
             <EnquiryForm
