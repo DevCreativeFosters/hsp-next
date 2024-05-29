@@ -25,6 +25,7 @@ const InfoIcon = getIcon('info');
 
 export default function EnquiryModal({
   enquiryFormId,
+  freight,
   installationCost,
   onClose,
   productPrice,
@@ -207,7 +208,7 @@ export default function EnquiryModal({
                         </tr>
                         <tr>
                           <td>Freight</td>
-                          <td>$0</td>
+                          <td>{formatPrice(freight) || '$0'}</td>
                         </tr>
                         <tr className={styles.total}>
                           <td>Total</td>
