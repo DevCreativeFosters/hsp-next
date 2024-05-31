@@ -217,7 +217,7 @@ export default function Sidebar({
       </div>
       <div
         className={clsx(styles.sidebarMobileBar, {
-          [styles.isHidden]: selectedProducts.length === 0,
+          [styles.isHidden]: stepNumber === 0,
         })}
       >
         <button
