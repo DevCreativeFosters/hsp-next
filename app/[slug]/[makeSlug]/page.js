@@ -46,7 +46,7 @@ export default async function CategoryPage({ params }) {
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);
   const mainCategory = await getMainProductCategory(slug);
-  const details = makeData?.detailsFields.details;
+  const details = makeData?.detailsFields?.details;
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
   const isExcluded = shouldBeExcluded(excludeTree, categoryData);
@@ -142,12 +142,9 @@ export async function generateStaticParams() {
   const slugs = [];
   categories.forEach(category => {
     category.makes.forEach(make => {
-      // make.models.forEach(model => {
       slugs.push({
         makeSlug: make.slug,
-        // modelSlug: [model.slug],
         slug: category.slug,
-        // });
       });
     });
   });
