@@ -83,6 +83,7 @@
 .secondaryMenu {
   grid-area: secondaryMenu;
   justify-self: flex-end;
+  transform: translateX(12px); // = --inline-padding for buttons
 }
 
 .mainMenuList,
