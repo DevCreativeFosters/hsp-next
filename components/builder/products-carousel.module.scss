@@ -15,7 +15,6 @@
   font-weight: 400;
   margin-block: 0 14px;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
@@ -23,11 +22,24 @@
 .number {
   color: var(--color-primary-100);
   font-weight: 600;
+  flex-shrink: 0;
+}
+
+.stepTitle {
+  flex-shrink: 0;
+}
+
+.coverName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .badge {
-  font-size: 16px;
   gap: 14px;
+  min-width: 0;
+  font-size: 16px;
 
   svg {
     color: var(--color-primary-100);
