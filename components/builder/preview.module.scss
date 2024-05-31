@@ -46,13 +46,8 @@
 .downloadButton {
   position: absolute;
   right: 24px;
-  bottom: 128px;
+  bottom: 24px;
   z-index: calc(infinity - 1);
-
-  @include bp(large) {
-    right: 20px;
-    bottom: 20px;
-  }
 }
 
 .backgroundDesktop,
