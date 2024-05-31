@@ -142,12 +142,9 @@ export async function generateStaticParams() {
   const slugs = [];
   categories.forEach(category => {
     category.makes.forEach(make => {
-      // make.models.forEach(model => {
       slugs.push({
         makeSlug: make.slug,
-        // modelSlug: [model.slug],
         slug: category.slug,
-        // });
       });
     });
   });
