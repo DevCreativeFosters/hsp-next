@@ -23,6 +23,7 @@ const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
 
 const DEFAULT_PRICE_SUMMARY = {
+  freight: 0,
   installationCost: 0,
   price: 0,
 };
@@ -110,6 +111,7 @@ export default function Sidebar({
     function calculatePrice() {
       let newPriceSummary = selectedProducts.reduce(
         (accumulator, currentProduct) => ({
+          freight: accumulator.freight + currentProduct.freight,
           installationCost:
             accumulator.installationCost + currentProduct.installationCost,
           price: accumulator.price + currentProduct.price,
@@ -242,6 +244,7 @@ export default function Sidebar({
       {enquiryModalOpened && (
         <EnquiryModal
           enquiryFormId={globalOptions?.enquiryFormId}
+          freight={priceSummary.freight}
           installationCost={priceSummary.installationCost}
           onClose={handleCloseModal}
           productPrice={priceSummary.price}
