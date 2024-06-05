@@ -87,7 +87,7 @@ export function getSlides(
 
       if (isGroup && disabledCount === product.variants.length - 1) {
         const group = variants.shift();
-        const { image, productName } = product.variants[0];
+        const { image, productTitle } = product.variants[0];
 
         variants.unshift(
           getSlideMarkup(
@@ -97,7 +97,7 @@ export function getSlides(
               isGroupItemOpen: false,
               isSelected: false,
               productImage: image,
-              productTitle: productName,
+              productTitle: productTitle,
             },
             true,
             true,
