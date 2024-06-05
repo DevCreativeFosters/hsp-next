@@ -225,11 +225,7 @@
   }
 
   form {
-    margin-bottom: 24px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+    margin-block: 24px;
   }
 }
 
