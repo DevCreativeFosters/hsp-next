@@ -70,6 +70,7 @@ export default function UTEChooseYourVehicle({ makes }) {
           />
           {compatibleFactoryOptions?.length > 0 && (
             <Select
+              allowItemClear={true}
               className={styles.select}
               dropdownInDocumentFlow
               name="factoryOptions"

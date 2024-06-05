@@ -36,7 +36,8 @@ export default function ProductsCarousel({
     toggleGroup,
     toggleProduct,
   );
-  const productTitle = selectedCover?.productName;
+
+  const productTitle = selectedCover?.productTitle;
   const productImage = selectedCover?.image;
 
   return (
@@ -49,7 +50,7 @@ export default function ProductsCarousel({
         <>
           <h2 className={styles.title}>
             <span className={styles.number}>Step {stepNumber}:</span>{' '}
-            {stepTitle}
+            <span className={styles.stepTitle}>{stepTitle}</span>
             {isMobile && stepNumber === 2 && selectedCover && (
               <Button
                 className={styles.badge}
@@ -58,7 +59,7 @@ export default function ProductsCarousel({
                 size="small"
                 variant="secondary"
               >
-                {productTitle}
+                <span className={styles.coverName}>{productTitle}</span>
               </Button>
             )}
           </h2>

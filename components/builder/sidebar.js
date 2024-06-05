@@ -23,6 +23,7 @@ const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
 
 const DEFAULT_PRICE_SUMMARY = {
+  freight: 0,
   installationCost: 0,
   price: 0,
 };
@@ -110,6 +111,7 @@ export default function Sidebar({
     function calculatePrice() {
       let newPriceSummary = selectedProducts.reduce(
         (accumulator, currentProduct) => ({
+          freight: accumulator.freight + currentProduct.freight,
           installationCost:
             accumulator.installationCost + currentProduct.installationCost,
           price: accumulator.price + currentProduct.price,
@@ -217,7 +219,7 @@ export default function Sidebar({
       </div>
       <div
         className={clsx(styles.sidebarMobileBar, {
-          [styles.isHidden]: selectedProducts.length === 0,
+          [styles.isHidden]: stepNumber === 0,
         })}
       >
         <button
@@ -228,20 +230,23 @@ export default function Sidebar({
           <ListIcon />
           <NrCircle isSmall nr={selectedProducts.length} />
         </button>
-        <div className={styles.sidebarMobileBarPrice}>
-          {formatPrice(priceSummary.price)}
+        <div className={styles.sidebarMobileBarSummary}>
+          <div className={styles.sidebarMobileBarPrice}>
+            {formatPrice(priceSummary.price)}
+          </div>
+          <Button
+            disabled={selectedProducts.length === 0 || !selectedStore}
+            onClick={handleOpenModal}
+            size="large"
+          >
+            Send enquiry
+          </Button>
         </div>
-        <Button
-          disabled={selectedProducts.length === 0 || !selectedStore}
-          onClick={handleOpenModal}
-          size="large"
-        >
-          Send enquiry
-        </Button>
       </div>
       {enquiryModalOpened && (
         <EnquiryModal
           enquiryFormId={globalOptions?.enquiryFormId}
+          freight={priceSummary.freight}
           installationCost={priceSummary.installationCost}
           onClose={handleCloseModal}
           productPrice={priceSummary.price}

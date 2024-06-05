@@ -10,7 +10,7 @@
   left: 0;
   z-index: 2;
   width: 100vw;
-  height: calc(100svh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
   padding: 48px var(--container-inline-padding) var(--container-inline-padding);
   color: var(--color-white-80);
   background-color: var(--color-black-100);
@@ -63,23 +63,27 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   z-index: 1;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 24px var(--container-inline-padding) var(--container-inline-padding);
+  padding: 24px;
   background: var(--color-white-80);
 
   @include bp(large) {
     display: none;
   }
 
-  @include bp-below(large) {
-    &.isHidden {
-      display: none;
-    }
+  &.isHidden {
+    display: none;
   }
+}
+
+.sidebarMobileBarSummary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .mobileSidebarToggle {

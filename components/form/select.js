@@ -7,6 +7,7 @@ import AnimateHeight from 'react-animate-height';
 
 import { useClickOutside } from '@hooks/useClickOutside';
 
+import Button from '@components/button/button';
 import Input from '@components/form/input';
 import SelectCheckbox from '@components/form/select-checkbox';
 import SelectOption from '@components/form/select-option';
@@ -18,6 +19,7 @@ import styles from './select.module.scss';
 const MIN_RESULTS_TO_ENABLE_SEARCH = 20;
 
 export default function Select({
+  allowItemClear = false,
   background = 'dark',
   className,
   dropdownInDocumentFlow,
@@ -141,7 +143,27 @@ export default function Select({
                         index > 0 ? `, ${label || value}` : label || value,
                       )
                     ) : (
-                      <>{selectedOption.label || selectedOption.value}</>
+                      <>
+                        {selectedOption.label || selectedOption.value}
+                        {allowItemClear && (
+                          <Button
+                            className={styles.clearButton}
+                            onClick={event => {
+                              event.stopPropagation();
+                              event.preventDefault();
+                              onChange(null);
+                            }}
+                            rightIcon="cancel"
+                            size="xsmall"
+                            title="Clear selection"
+                            variant="tertiary"
+                          >
+                            <span className={styles.clearLabel}>
+                              Clear selection
+                            </span>
+                          </Button>
+                        )}
+                      </>
                     )}
                     {suffix && (
                       <span className={styles.prefixSuffix}> {suffix}</span>
