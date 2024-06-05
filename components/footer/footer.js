@@ -182,11 +182,19 @@ export default function Footer({ menus, text }) {
             </div>
             <p className={styles.recaptchaText}>
               <span>This site is protected by reCAPTCHA and the Google </span>
-              <a href="https://policies.google.com/privacy">
+              <a
+                href="https://policies.google.com/privacy"
+                rel="noopener"
+                target="_blank"
+              >
                 Privacy Policy
               </a>{' '}
               <span> and </span>
-              <a href="https://policies.google.com/terms">
+              <a
+                href="https://policies.google.com/terms"
+                rel="noopener"
+                target="_blank"
+              >
                 Terms of Service
               </a>{' '}
               <span> apply. </span>
