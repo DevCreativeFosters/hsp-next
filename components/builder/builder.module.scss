@@ -1,5 +1,6 @@
 .builder {
   --vertical-padding: 0 24px;
+  --mobile-bar-summary-height: 104px;
 
   min-height: calc(100svh - var(--header-height));
   display: flex;
@@ -28,7 +29,7 @@
   position: relative;
   display: flex;
   flex: 1;
-  min-height: 300px;
+  min-height: calc(410px + var(--mobile-bar-summary-height));
 
   @include bp-below(large) {
     margin-inline: calc(-1 * var(--container-inline-padding));

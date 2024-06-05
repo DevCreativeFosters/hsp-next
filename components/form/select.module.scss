@@ -146,15 +146,29 @@
 .value {
   white-space: nowrap;
   width: 100%;
+  margin-right: -100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: -100%;
 
   &.forStretchOnly {
     height: 0;
     overflow: hidden;
     visibility: hidden;
     pointer-events: none;
+  }
+
+  .clearButton {
+    padding: 0;
+
+    // increase clickable area
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+    }
   }
 }
 
@@ -237,4 +251,12 @@
   .isInDocumentFlow & {
     padding-bottom: 0;
   }
+}
+
+.clearLabel {
+  @include sr-only;
+}
+
+.prefixSuffix {
+  color: var(--color-white-80);
 }

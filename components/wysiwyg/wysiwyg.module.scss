@@ -225,10 +225,10 @@
   }
 
   form {
-    margin-bottom: 24px;
+    margin-block: 48px;
 
-    &:last-child {
-      margin-bottom: 0;
+    @include bp(large) {
+      margin-block: 0;
     }
   }
 }

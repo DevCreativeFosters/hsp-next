@@ -39,7 +39,12 @@ export default function ChooseYourVehicleBlockPreview({
           </span>
         </h1>
 
-        {description && <p className={styles.description}>{description}</p>}
+        {description && (
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        )}
 
         {price && price > 0 && (
           <ContentBox className={styles.productsPrice}>

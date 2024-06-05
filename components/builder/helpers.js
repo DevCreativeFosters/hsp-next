@@ -60,14 +60,14 @@ export function getSlides(
     let disabledCount = 0;
     let variants = [];
     product?.variants.forEach((variant, index) => {
-      const { image, isGroup, productName, variantName, variantSlug } = variant;
+      const { image, isGroup, productTitle, variantSlug } = variant;
       const attributes = {
         isGroupItemFirst: index === 0,
         isGroupItemLast: index === product.variants.length - 1,
         isGroupItemOpen: isGroup && variant.isOpen,
         isSelected: isProductSelected(selectedProducts, variantSlug),
         productImage: image,
-        productTitle: isGroup && index > 0 ? variantName : productName,
+        productTitle: productTitle,
       };
 
       const isDisabled = disabledProducts.includes(variantSlug);
@@ -87,7 +87,7 @@ export function getSlides(
 
       if (isGroup && disabledCount === product.variants.length - 1) {
         const group = variants.shift();
-        const { image, productName } = product.variants[0];
+        const { image, productTitle } = product.variants[0];
 
         variants.unshift(
           getSlideMarkup(
@@ -97,7 +97,7 @@ export function getSlides(
               isGroupItemOpen: false,
               isSelected: false,
               productImage: image,
-              productTitle: productName,
+              productTitle: productTitle,
             },
             true,
             true,
