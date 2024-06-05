@@ -36,7 +36,8 @@ export default function ProductsCarousel({
     toggleGroup,
     toggleProduct,
   );
-  const productTitle = selectedCover?.productName;
+
+  const productTitle = selectedCover?.productTitle;
   const productImage = selectedCover?.image;
 
   return (
