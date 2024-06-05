@@ -219,7 +219,7 @@ export default function Sidebar({
       </div>
       <div
         className={clsx(styles.sidebarMobileBar, {
-          [styles.isHidden]: selectedProducts.length === 0,
+          [styles.isHidden]: stepNumber === 0,
         })}
       >
         <button
@@ -230,16 +230,18 @@ export default function Sidebar({
           <ListIcon />
           <NrCircle isSmall nr={selectedProducts.length} />
         </button>
-        <div className={styles.sidebarMobileBarPrice}>
-          {formatPrice(priceSummary.price)}
+        <div className={styles.sidebarMobileBarSummary}>
+          <div className={styles.sidebarMobileBarPrice}>
+            {formatPrice(priceSummary.price)}
+          </div>
+          <Button
+            disabled={selectedProducts.length === 0 || !selectedStore}
+            onClick={handleOpenModal}
+            size="large"
+          >
+            Send enquiry
+          </Button>
         </div>
-        <Button
-          disabled={selectedProducts.length === 0 || !selectedStore}
-          onClick={handleOpenModal}
-          size="large"
-        >
-          Send enquiry
-        </Button>
       </div>
       {enquiryModalOpened && (
         <EnquiryModal

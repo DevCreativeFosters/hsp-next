@@ -26,11 +26,12 @@
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
-  width: calc(100vw - 2 * var(--container-inline-padding));
   max-width: 390px;
   border-radius: 0 0 8px 8px;
   padding-inline: 16px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
   transition: border-radius 100ms 250ms;
 

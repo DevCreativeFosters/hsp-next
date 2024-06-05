@@ -83,6 +83,7 @@
 .secondaryMenu {
   grid-area: secondaryMenu;
   justify-self: flex-end;
+  transform: translateX(12px); // = --inline-padding for buttons
 }
 
 .mainMenuList,
@@ -175,7 +176,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  max-width: calc(100vw - 8px);
+  max-width: 100%;
 
   @include bp(large) {
     @include center;
@@ -189,6 +190,7 @@
     gap: 8px;
     white-space: nowrap;
     color: var(--color-white-100);
+    max-width: 100vw;
   }
 
   @include bp(full) {
