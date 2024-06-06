@@ -15,47 +15,55 @@ import styles from './instagram-feed.module.scss';
 import InstagramTile from './instagram-tile';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;
-const IG_TOKEN = process.env.NEXT_PUBLIC_IG_TOKEN;
-const IG_URL = `https://graph.instagram.com/${IG_USER_ID}/media?access_token=${IG_TOKEN}&fields=media_type,media_url,thumbnail_url,permalink`;
 
 export default function InstagramFeed({ description, title }) {
   const [igFeed, setIgFeed] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [displayError, setDisplayError] = useState(false);
   const [socialMedia, setSocialMedia] = useState([]);
+  const [igToken, setIgToken] = useState(null);
 
-  useEffect(function fetchIGFeedOnLoad() {
-    const fetchMedia = async () => {
-      try {
-        const res = await fetch(IG_URL);
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status}`);
+  useEffect(
+    function fetchIGFeedOnLoad() {
+      const fetchMedia = async () => {
+        if (!igToken) return;
+
+        const IG_URL = `https://graph.instagram.com/${IG_USER_ID}/media?access_token=${igToken}&fields=media_type,media_url,thumbnail_url,permalink`;
+
+        try {
+          const res = await fetch(IG_URL);
+          if (!res.ok) {
+            throw new Error(`Error: ${res.status}`);
+          }
+          const json = await res.json();
+          setIgFeed(json.data);
+        } catch (error) {
+          console.error('Failed to fetch Instagram feed:', error);
+          setDisplayError(true);
+        } finally {
+          setLoading(false);
         }
-        const json = await res.json();
-        setIgFeed(json.data);
-      } catch (error) {
-        console.error('Failed to fetch Instagram feed:', error);
-        setDisplayError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchMedia();
-  }, []);
+      fetchMedia();
+    },
+    [igToken],
+  );
 
   useEffect(function fetchSocialMediaDataOnLoad() {
-    const fetchSocialMedia = async () => {
+    const fetchSocialMediaData = async () => {
       try {
         const globalOptions = await getGlobalOptions();
         const socialData = normalizeSocialMediaMenu(globalOptions);
+        const { igToken } = globalOptions;
         setSocialMedia(socialData);
+        setIgToken(igToken);
       } catch (error) {
         console.error('Failed to fetch social media:', error);
       }
     };
 
-    fetchSocialMedia();
+    fetchSocialMediaData();
   }, []);
 
   const transformedIgFeed = useMemo(
