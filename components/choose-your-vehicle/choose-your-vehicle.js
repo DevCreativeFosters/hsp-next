@@ -252,6 +252,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           handleInternalSave();
                         }
                       } else {
+                        setIsLoading(true);
                         handleSave({
                           mainCategorySlug: pathname.split('/')[1],
                           makeSlug: maker?.slug,

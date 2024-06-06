@@ -15,8 +15,6 @@ import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
 export default function BreadcrumbsProduct({ categories, currentProduct }) {
   const [currentSavedVehicle, setCurrentSavedVehicle] = useState({});
-  const [maker, setMaker] = useState(currentProduct.make || {});
-  const [model, setModel] = useState(currentProduct.model || {});
   const [currentMakeList, setCurrentMakeList] = useState([]);
   const [currentModelList, setCurrentModelList] = useState([]);
   const [route, setRoute] = useState('');
@@ -28,9 +26,15 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
   const isFirstLoad = useRef(true);
   const pathname = usePathname();
   const router = useRouter();
+
   const {
     finalSelection,
+    maker,
+    model,
     savedVehicleGlobal,
+    setMaker,
+    setModel,
+    setProductNotCompatible,
     setSavedVehicleGlobal,
     setVehicleSelection,
   } = useVehicleContext();
@@ -46,35 +50,50 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
   );
 
   useEffect(
+    function resetBreadcrumbState() {
+      if (!maker && !model) {
+        setProductNotCompatible(false);
+        setDisplaySelectButton(false);
+        setDisplayApplyButton(false);
+      }
+    },
+    [maker, model, setProductNotCompatible],
+  );
+
+  useEffect(
+    function buildApplyPath() {
+      if ((maker || model) && currentProduct.mainCategory?.value) {
+        setApplyRoute(
+          routes.product(
+            currentProduct.mainCategory.value,
+            getValueOrSlug(maker),
+            getValueOrSlug(model),
+          ),
+        );
+      }
+    },
+    [currentProduct.mainCategory.value, maker, model, setApplyRoute],
+  );
+
+  useEffect(
     function conditionalLogicForButtonVisibility() {
+      const currentPathname = window.location.pathname;
+
       const productRoute = routes.product(
         currentProduct.mainCategory.value,
         getValueOrSlug(maker),
         getValueOrSlug(model),
       );
 
-      const isVehicleMatch =
-        getValueOrSlug(currentSavedVehicle?.maker) ===
-          (getValueOrSlug(maker) || undefined) &&
-        getValueOrSlug(currentSavedVehicle?.model) ===
-          (getValueOrSlug(model) || undefined);
-
-      if (pathname === productRoute) {
-        if (isVehicleMatch) {
-          setDisplaySelectButton(false);
-          setDisplayApplyButton(false);
-        } else {
-          setDisplaySelectButton(false);
-          setDisplayApplyButton(false);
-        }
-      } else if (pathname !== productRoute) {
-        if (isVehicleMatch) {
-          setDisplaySelectButton(false);
-          setDisplayApplyButton(false);
-        } else {
-          setDisplaySelectButton(true);
-          setDisplayApplyButton(true);
-        }
+      if (
+        currentPathname === productRoute &&
+        Object.keys(currentSavedVehicle) > 0
+      ) {
+        setDisplaySelectButton(false);
+        setDisplayApplyButton(false);
+      } else if (pathname !== productRoute && maker) {
+        setDisplaySelectButton(true);
+        setDisplayApplyButton(true);
       }
     },
     [
@@ -161,13 +180,6 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
       label: '',
       slug: '',
     });
-
-    const route = routes.product(
-      currentProduct.mainCategory.value,
-      makeObj ? getValueOrSlug(makeObj) : undefined,
-    );
-
-    setApplyRoute(route);
   };
 
   const handleModelSelect = newModel => {
@@ -184,14 +196,6 @@ export default function BreadcrumbsProduct({ categories, currentProduct }) {
       label: modelObj.label,
       value: getValueOrSlug(modelObj),
     });
-
-    const route = routes.product(
-      currentProduct.mainCategory.value,
-      getValueOrSlug(maker),
-      getValueOrSlug(modelObj),
-    );
-
-    setApplyRoute(route);
   };
 
   useEffect(
