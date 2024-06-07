@@ -131,6 +131,28 @@ export default function Preview({
         const productImageMobile =
           uteBuilderImages.imageMobile?.node?.sourceUrl;
 
+        if (uteBuilderImages.multipleImages) {
+          return uteBuilderImages.multipleImages.map((image, index) => {
+            if (
+              !image.desktop?.node?.sourceUrl ||
+              !image.mobile?.node?.sourceUrl
+            ) {
+              return null;
+            }
+
+            return (
+              <FadeInImage
+                alt={image.altText || productTitle}
+                imageLayerPosition={image.layerPosition || imageLayerPosition}
+                imageSizes={imageSizes}
+                key={index}
+                srcDesktop={image.desktop.node.sourceUrl}
+                srcMobile={image.mobile.node.sourceUrl}
+              />
+            );
+          });
+        }
+
         return (
           <FadeInImage
             alt={productTitle}
