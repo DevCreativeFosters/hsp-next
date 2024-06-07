@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import FadeInImage from '@components/builder/fade-in-image';
+import Button from '@components/button/button';
 import DownloadButton from '@components/download-button/download-button';
 import Loading from '@components/loading/loading';
 
@@ -19,8 +22,11 @@ export default function Preview({
   className,
   make,
   model,
+  removeProduct,
+  selectedCover,
   selectedFactoryOption,
   selectedProducts,
+  stepNumber,
 }) {
   const modelName = model?.name;
   const modelImageDesktop =
@@ -30,6 +36,7 @@ export default function Preview({
   const [mergeImages, setMergeImages] = useState([]);
   const [localSelectedProducts, setLocalSelectedProducts] =
     useState(selectedProducts);
+  const isMobile = useIsMobile(1280);
 
   useEffect(
     function setupSelectedFactoryOptionImage() {
@@ -98,7 +105,16 @@ export default function Preview({
           images={mergeImages}
         />
       )}
-      `
+      {isMobile && stepNumber === 2 && selectedCover && (
+        <Button
+          className={styles.resetButton}
+          onClick={() => removeProduct(selectedCover)}
+          rightIcon="close"
+          variant="secondary"
+        >
+          Reset build
+        </Button>
+      )}
       {localSelectedProducts?.map((product, index) => {
         if (product.isNoCover) {
           return null;

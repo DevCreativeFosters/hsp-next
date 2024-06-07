@@ -479,8 +479,11 @@ export default function Builder({
               <Preview
                 make={make}
                 model={model}
+                removeProduct={removeProduct}
+                selectedCover={selectedCover}
                 selectedFactoryOption={selectedFactoryOption}
                 selectedProducts={selectedProducts}
+                stepNumber={stepNumber}
               >
                 {isInlineMapVisible && (
                   <StoreLocatorMap

@@ -62,6 +62,16 @@ export default function ProductsCarousel({
                 <span className={styles.coverName}>{productTitle}</span>
               </Button>
             )}
+            {!isMobile && stepNumber === 2 && selectedCover && (
+              <Button
+                className={styles.resetButton}
+                onClick={() => removeProduct(selectedCover)}
+                rightIcon="close"
+                variant="secondary"
+              >
+                <span className={styles.coverName}>Reset build</span>
+              </Button>
+            )}
           </h2>
           <div className={styles.carouselWrapper}>
             {!isMobile && stepNumber === 2 && selectedCover && (

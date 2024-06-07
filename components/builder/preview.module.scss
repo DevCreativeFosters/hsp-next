@@ -44,6 +44,7 @@
   }
 }
 
+.resetButton,
 .downloadButton {
   position: absolute;
   right: 24px;
@@ -52,6 +53,15 @@
 
   @include bp(large) {
     bottom: 24px;
+  }
+}
+
+.resetButton {
+  right: 0;
+  left: 24px;
+
+  @include bp(large) {
+    display: none;
   }
 }
 
