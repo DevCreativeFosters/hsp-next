@@ -59,6 +59,7 @@
 .resetButton {
   right: 0;
   left: 24px;
+  display: flex;
 
   @include bp(large) {
     display: none;
