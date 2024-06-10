@@ -20,6 +20,11 @@ import styles from './products-carousel.module.scss';
 const ArrowBackwardIcon = getIcon('arrow-backward');
 const MIN_SLIDES_TO_SHOW_NAVIGATION = 6;
 
+export const slideImageSizes = {
+  height: Math.round(168 / 1.4),
+  width: 168,
+};
+
 export default function ProductsCarousel({
   className,
   disabledProducts,
@@ -119,10 +124,10 @@ export default function ProductsCarousel({
                       <Image
                         alt={productTitle}
                         className={styles.productImage}
-                        height={Math.round(168 / 1.4)}
+                        height={slideImageSizes.height}
                         src={productImage}
                         style={{ objectFit: 'contain' }}
-                        width={168}
+                        width={slideImageSizes.width}
                       />
                     )}
                   </div>
