@@ -452,6 +452,12 @@ export default function Builder({
     setShowClashModal(false);
   };
 
+  const handleResetAccept = () => {
+    setSelectedCover(null);
+    setSelectedProducts([]);
+    setStepNumber(0);
+  };
+
   return (
     <>
       {showClashModal && (
@@ -476,15 +482,7 @@ export default function Builder({
               stepNumber={stepNumber}
             />
             {stepNumber > 0 ? (
-              <Preview
-                make={make}
-                model={model}
-                removeProduct={removeProduct}
-                selectedCover={selectedCover}
-                selectedFactoryOption={selectedFactoryOption}
-                selectedProducts={selectedProducts}
-                stepNumber={stepNumber}
-              >
+              <Preview handleResetAccept={handleResetAccept}>
                 {isInlineMapVisible && (
                   <StoreLocatorMap
                     className={styles.map}
@@ -499,9 +497,9 @@ export default function Builder({
           </div>
           <ProductsCarousel
             disabledProducts={disabledProducts}
+            handleResetAccept={handleResetAccept}
             isMobile={isMobile}
             products={stepProducts}
-            stepTitle={stepTitle}
             toggleGroup={toggleGroup}
             toggleProduct={toggleProduct}
           />
