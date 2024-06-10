@@ -26,6 +26,7 @@ import {
   getIncompatibleProducts,
   getOtherProductsWithSameParent,
   isProductSelected,
+  sortProducts,
   updateSelectedCoverVariant,
 } from './helpers';
 import Preview from './preview';
@@ -246,7 +247,7 @@ export default function Builder({
         .find(i => i.name === make.name)
         ?.models.find(j => j.name === model.name)?.compatibleFactoryOptions;
 
-      setCompatibleFactoryOptions(compatibleFactoryOptions);
+      setCompatibleFactoryOptions(sortProducts(compatibleFactoryOptions));
     },
     [make, makes, model, setCompatibleFactoryOptions],
   );
