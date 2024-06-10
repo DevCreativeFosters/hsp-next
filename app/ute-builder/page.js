@@ -6,6 +6,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import Layout from '@components/layout/layout';
 import UteBuilderPage from '@components/ute-builder-page/ute-builder-page';
@@ -14,6 +15,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.uteBuilder);
 
   return {
+    ...metadata,
     ...data,
   };
 }

@@ -5,6 +5,7 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
@@ -20,6 +21,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.storeLocator);
 
   return {
+    ...metadata,
     ...data,
   };
 }

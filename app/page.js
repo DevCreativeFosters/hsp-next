@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { metadata } from '@lib/seo';
 
 import Layout from '@components/layout/layout';
 
@@ -10,6 +11,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri('/');
 
   return {
+    ...metadata,
     ...data,
   };
 }

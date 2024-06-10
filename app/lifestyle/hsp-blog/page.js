@@ -5,6 +5,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import Background from '@components/background/background';
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
@@ -22,6 +23,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.lifestyleBlog);
 
   return {
+    ...metadata,
     ...data,
   };
 }

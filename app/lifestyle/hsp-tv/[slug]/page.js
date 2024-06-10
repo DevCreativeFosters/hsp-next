@@ -5,6 +5,7 @@ import { draftMode } from 'next/headers';
 import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
+import { metadata } from '@lib/seo';
 
 import { HspTvPost } from '@components/hsp-tv-post';
 import Layout from '@components/layout/layout';
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }) {
   const data = await getSeoByUri(`/hsp_tv/${params.slug}`);
 
   return {
+    ...metadata,
     ...data,
   };
 }
