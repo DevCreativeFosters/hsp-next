@@ -28,9 +28,9 @@ export const slideImageSizes = {
 export default function ProductsCarousel({
   className,
   disabledProducts,
+  handleResetAccept,
   isMobile,
   products,
-  stepTitle,
   toggleGroup,
   toggleProduct,
 }) {
@@ -40,10 +40,9 @@ export default function ProductsCarousel({
     removeProduct,
     selectedCover,
     selectedProducts,
-    setSelectedCover,
-    setSelectedProducts,
     setStepNumber,
     stepNumber,
+    stepTitle,
   } = useVehicleContext();
 
   const slides = getSlides(
@@ -58,18 +57,11 @@ export default function ProductsCarousel({
   const productTitle = selectedCover?.productTitle;
   const productImage = selectedCover?.image;
 
-  const handleOnResetAccept = () => {
-    setSelectedCover(null);
-    setSelectedProducts([]);
-    setStepNumber(0);
-    setShowResetModal(false);
-  };
-
   return (
     <>
       {showResetModal && (
         <ActionModal
-          onAccept={handleOnResetAccept}
+          onAccept={handleResetAccept}
           onClose={() => setShowResetModal(false)}
         />
       )}

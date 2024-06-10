@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { useVehicleContext } from '@contexts/vehicle';
+
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import ActionModal from '@components/builder/action-modal';
 import FadeInImage from '@components/builder/fade-in-image';
 import Button from '@components/button/button';
 import DownloadButton from '@components/download-button/download-button';
@@ -17,17 +20,17 @@ import BgPicture from '@assets/images/bg-concrete.webp';
 
 import styles from './preview.module.scss';
 
-export default function Preview({
-  children,
-  className,
-  make,
-  model,
-  removeProduct,
-  selectedCover,
-  selectedFactoryOption,
-  selectedProducts,
-  stepNumber,
-}) {
+export default function Preview({ children, className, handleResetAccept }) {
+  const [showResetModal, setShowResetModal] = useState(false);
+  const {
+    maker: make,
+    model,
+    selectedFactoryOption,
+    selectedProducts,
+    setStepNumber,
+    stepNumber,
+  } = useVehicleContext();
+
   const modelName = model?.name;
   const modelImageDesktop =
     model?.uteBuilderImages?.imageDesktop?.node?.sourceUrl;
@@ -88,95 +91,109 @@ export default function Preview({
   };
 
   return (
-    <div className={clsx(styles.preview, className)}>
-      <Loading color="white" size="small" />
-      <FadeInImage
-        alt={modelName}
-        imageSizes={imageSizes}
-        srcDesktop={modelImageDesktop}
-        srcMobile={modelImageMobile}
-      />
-      {!!mergeImages.length && (
-        <DownloadButton
-          className={styles.downloadButton}
-          fileName={`${
-            make.name
-          }_${modelName}_${new Date().toLocaleDateString()}`}
-          images={mergeImages}
+    <>
+      {showResetModal && (
+        <ActionModal
+          onAccept={handleResetAccept}
+          onClose={() => setShowResetModal(false)}
         />
       )}
-      {isMobile && stepNumber === 2 && selectedCover && (
-        <Button
-          className={styles.resetButton}
-          onClick={() => removeProduct(selectedCover)}
-          rightIcon="close"
-          variant="secondary"
-        >
-          Reset build
-        </Button>
-      )}
-      {localSelectedProducts?.map((product, index) => {
-        if (product.isNoCover) {
-          return null;
-        }
-
-        const {
-          imageLayerPosition,
-          productName: productTitle,
-          uteBuilderImages,
-        } = product;
-
-        const productImageDesktop =
-          uteBuilderImages.imageDesktop?.node?.sourceUrl;
-        const productImageMobile =
-          uteBuilderImages.imageMobile?.node?.sourceUrl;
-
-        if (uteBuilderImages.multipleImages) {
-          return uteBuilderImages.multipleImages.map((image, index) => {
-            if (
-              !image.desktop?.node?.sourceUrl ||
-              !image.mobile?.node?.sourceUrl
-            ) {
-              return null;
-            }
-
-            return (
-              <FadeInImage
-                alt={image.altText || productTitle}
-                imageLayerPosition={image.layerPosition || imageLayerPosition}
-                imageSizes={imageSizes}
-                key={index}
-                srcDesktop={image.desktop.node.sourceUrl}
-                srcMobile={image.mobile.node.sourceUrl}
-              />
-            );
-          });
-        }
-
-        return (
-          <FadeInImage
-            alt={productTitle}
-            imageLayerPosition={imageLayerPosition}
-            imageSizes={imageSizes}
-            key={index}
-            srcDesktop={productImageDesktop}
-            srcMobile={productImageMobile}
+      <div className={clsx(styles.preview, className)}>
+        <Loading color="white" size="small" />
+        <FadeInImage
+          alt={modelName}
+          imageSizes={imageSizes}
+          srcDesktop={modelImageDesktop}
+          srcMobile={modelImageMobile}
+        />
+        {!!mergeImages.length && (
+          <DownloadButton
+            className={styles.downloadButton}
+            fileName={`${
+              make.name
+            }_${modelName}_${new Date().toLocaleDateString()}`}
+            images={mergeImages}
           />
-        );
-      })}
-      {children}
-      <Image
-        alt="Concrete grey floor"
-        className={styles.backgroundDesktop}
-        fill={true}
-        src={BgPicture}
-      />
-      <Image
-        alt="Concrete grey floor"
-        className={styles.backgroundMobile}
-        fill={true}
-        src={BgPictureMobile}
-      />
-    </div>
+        )}
+        {isMobile && stepNumber > 0 && (
+          <Button
+            className={styles.resetButton}
+            onClick={() => {
+              if (stepNumber === 1 && selectedProducts.length === 0) {
+                setStepNumber(0);
+              } else {
+                setShowResetModal(true);
+              }
+            }}
+            rightIcon="close"
+            variant="secondary"
+          >
+            Reset build
+          </Button>
+        )}
+        {localSelectedProducts?.map((product, index) => {
+          if (product.isNoCover) {
+            return null;
+          }
+
+          const {
+            imageLayerPosition,
+            productName: productTitle,
+            uteBuilderImages,
+          } = product;
+
+          const productImageDesktop =
+            uteBuilderImages.imageDesktop?.node?.sourceUrl;
+          const productImageMobile =
+            uteBuilderImages.imageMobile?.node?.sourceUrl;
+
+          if (uteBuilderImages.multipleImages) {
+            return uteBuilderImages.multipleImages.map((image, index) => {
+              if (
+                !image.desktop?.node?.sourceUrl ||
+                !image.mobile?.node?.sourceUrl
+              ) {
+                return null;
+              }
+
+              return (
+                <FadeInImage
+                  alt={image.altText || productTitle}
+                  imageLayerPosition={image.layerPosition || imageLayerPosition}
+                  imageSizes={imageSizes}
+                  key={index}
+                  srcDesktop={image.desktop.node.sourceUrl}
+                  srcMobile={image.mobile.node.sourceUrl}
+                />
+              );
+            });
+          }
+
+          return (
+            <FadeInImage
+              alt={productTitle}
+              imageLayerPosition={imageLayerPosition}
+              imageSizes={imageSizes}
+              key={index}
+              srcDesktop={productImageDesktop}
+              srcMobile={productImageMobile}
+            />
+          );
+        })}
+        {children}
+        <Image
+          alt="Concrete grey floor"
+          className={styles.backgroundDesktop}
+          fill={true}
+          src={BgPicture}
+        />
+        <Image
+          alt="Concrete grey floor"
+          className={styles.backgroundMobile}
+          fill={true}
+          src={BgPictureMobile}
+        />
+      </div>
+    </>
   );
 }
