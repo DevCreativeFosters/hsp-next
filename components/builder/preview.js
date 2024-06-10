@@ -94,7 +94,10 @@ export default function Preview({ children, className, handleResetAccept }) {
     <>
       {showResetModal && (
         <ActionModal
-          onAccept={handleResetAccept}
+          onAccept={() => {
+            handleResetAccept();
+            setShowResetModal(false);
+          }}
           onClose={() => setShowResetModal(false)}
         />
       )}
