@@ -335,3 +335,14 @@ export function updateSelectedCoverVariant(
     products: newSelectedProducts,
   };
 }
+
+export function sortProducts(products) {
+  return products.sort((a, b) => {
+    const aOrder =
+      a?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
+    const bOrder =
+      b?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
+
+    return aOrder - bOrder;
+  });
+}
