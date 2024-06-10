@@ -89,22 +89,53 @@ export default function ChooseYourVehicleBlock({
         makeSlug,
         modelSlug,
       );
+
       const firstMatch = products?.length ? products[0] : null;
       if (firstMatch) {
-        const imageNodes = firstMatch.productFields.images?.nodes;
-        const image =
-          imageNodes && imageNodes[0]
+        const mainDescription = firstMatch.productFields?.description;
+        const mainPrice = firstMatch.productFields?.price;
+        const mainImageNodes = firstMatch.productFields?.images?.nodes;
+        const mainImage =
+          mainImageNodes && mainImageNodes[0]
             ? {
-                alt: imageNodes[0].altText || 'Vehicle Preview',
-                height: imageNodes[0].mediaDetails.height,
-                url: imageNodes[0].mediaItemUrl,
-                width: imageNodes[0].mediaDetails.width,
+                alt: mainImageNodes[0].altText || 'Vehicle Preview',
+                height: mainImageNodes[0].mediaDetails.height,
+                url: mainImageNodes[0].mediaItemUrl,
+                width: mainImageNodes[0].mediaDetails.width,
+              }
+            : null;
+
+        const fallbackDescription =
+          firstMatch.productFields?.variants?.[0]?.variantDetails?.description;
+        const fallbackPrice =
+          firstMatch.productFields?.variants?.[0]?.variantDetails?.price;
+        const fallbackImageNodes =
+          firstMatch.productFields?.variants?.[0]?.variantDetails?.images
+            ?.nodes;
+        const fallbackImage =
+          fallbackImageNodes && fallbackImageNodes[0]
+            ? {
+                alt: fallbackImageNodes[0].altText || 'Vehicle Preview',
+                height: fallbackImageNodes[0].mediaDetails.height,
+                url: fallbackImageNodes[0].mediaItemUrl,
+                width: fallbackImageNodes[0].mediaDetails.width,
               }
             : null;
 
         setVehicleData({
           ...firstMatch,
-          image: image,
+          description:
+            mainDescription ||
+            fallbackDescription ||
+            'No description available.',
+          image: mainImage ||
+            fallbackImage || {
+              alt: 'No image available',
+              height: 0,
+              url: '',
+              width: 0,
+            },
+          price: mainPrice || fallbackPrice,
         });
       } else {
         throw new Error(errorMessage);
@@ -251,7 +282,7 @@ export default function ChooseYourVehicleBlock({
           ) : vehicleData ? (
             <VehiclePreview
               category={mainCategory}
-              description={vehicleData?.productFields.description}
+              description={vehicleData?.description}
               image={vehicleData?.image}
               make={maker?.name}
               model={model?.name}
@@ -259,7 +290,7 @@ export default function ChooseYourVehicleBlock({
                 handleSave(localParams, reload);
                 setIsLoading(true);
               }}
-              price={vehicleData?.productFields.price}
+              price={vehicleData?.price}
             />
           ) : (
             <div className={styles.error}>

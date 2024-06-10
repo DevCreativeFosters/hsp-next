@@ -44,15 +44,15 @@ export async function middleware(request) {
 
     if (Object.keys(categoryData).length && hspMyVehicle) {
       const { maker, model } = JSON.parse(hspMyVehicle.value);
+      const makerSlug = getValueOrSlug(maker);
+      const modelSlug = getValueOrSlug(model);
 
-      if (maker && getValueOrSlug(maker)) {
-        const productType = pathSegments[0];
-        url.pathname =
-          model && getValueOrSlug(model)
-            ? `/${productType}/${getValueOrSlug(maker)}/${getValueOrSlug(
-                model,
-              )}`
-            : `/${productType}/${getValueOrSlug(maker)}`;
+      if (makerSlug) {
+        const category = pathSegments[0];
+
+        url.pathname = modelSlug
+          ? `/${category}/${makerSlug}/${modelSlug}`
+          : `/${category}/${makerSlug}`;
 
         return NextResponse.redirect(url);
       }

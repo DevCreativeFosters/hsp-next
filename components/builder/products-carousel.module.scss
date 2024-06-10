@@ -29,6 +29,15 @@
   flex-shrink: 0;
 }
 
+.resetButton {
+  display: none;
+
+  @include bp(large) {
+    display: flex;
+    margin-left: auto;
+  }
+}
+
 .coverName {
   flex: 1;
   overflow: hidden;

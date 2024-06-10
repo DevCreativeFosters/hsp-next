@@ -5,6 +5,7 @@ import { draftMode } from 'next/headers';
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
+import { metadata } from '@lib/seo';
 
 import { BlogPost } from '@components/blog-post';
 import Layout from '@components/layout/layout';
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }) {
   const data = await getSeoByUri(`${params.slug}`);
 
   return {
+    ...metadata,
     ...data,
   };
 }

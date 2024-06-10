@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import { formatPrice } from '@lib/helpers';
 
+import { slideImageSizes } from '@components/builder/products-carousel';
+
 import styles from './product-card.module.scss';
 
 export default function ProductCard({ product }) {
@@ -17,9 +19,9 @@ export default function ProductCard({ product }) {
         <Image
           alt={productTitle}
           className={styles.productImage}
-          height={Math.round(168 / 1.4)}
+          height={slideImageSizes.height}
           src={productImage}
-          width={168}
+          width={slideImageSizes.width}
         />
       </div>
       {productTitle && <p className={styles.productName}>{productTitle}</p>}

@@ -7,6 +7,7 @@ import { renderBlock } from '@lib/block';
 import { getExcludeTree, sortMainProductCategories } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -16,6 +17,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.products);
 
   return {
+    ...metadata,
     ...data,
   };
 }

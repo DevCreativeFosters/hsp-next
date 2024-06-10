@@ -26,6 +26,7 @@ import {
   getIncompatibleProducts,
   getOtherProductsWithSameParent,
   isProductSelected,
+  sortProducts,
   updateSelectedCoverVariant,
 } from './helpers';
 import Preview from './preview';
@@ -246,7 +247,7 @@ export default function Builder({
         .find(i => i.name === make.name)
         ?.models.find(j => j.name === model.name)?.compatibleFactoryOptions;
 
-      setCompatibleFactoryOptions(compatibleFactoryOptions);
+      setCompatibleFactoryOptions(sortProducts(compatibleFactoryOptions));
     },
     [make, makes, model, setCompatibleFactoryOptions],
   );
@@ -452,6 +453,12 @@ export default function Builder({
     setShowClashModal(false);
   };
 
+  const handleResetAccept = () => {
+    setSelectedCover(null);
+    setSelectedProducts([]);
+    setStepNumber(0);
+  };
+
   return (
     <>
       {showClashModal && (
@@ -476,12 +483,7 @@ export default function Builder({
               stepNumber={stepNumber}
             />
             {stepNumber > 0 ? (
-              <Preview
-                make={make}
-                model={model}
-                selectedFactoryOption={selectedFactoryOption}
-                selectedProducts={selectedProducts}
-              >
+              <Preview handleResetAccept={handleResetAccept}>
                 {isInlineMapVisible && (
                   <StoreLocatorMap
                     className={styles.map}
@@ -496,14 +498,9 @@ export default function Builder({
           </div>
           <ProductsCarousel
             disabledProducts={disabledProducts}
+            handleResetAccept={handleResetAccept}
             isMobile={isMobile}
             products={stepProducts}
-            removeProduct={removeProduct}
-            selectedCover={selectedCover}
-            selectedFactoryOption={selectedFactoryOption}
-            selectedProducts={selectedProducts}
-            stepNumber={stepNumber}
-            stepTitle={stepTitle}
             toggleGroup={toggleGroup}
             toggleProduct={toggleProduct}
           />

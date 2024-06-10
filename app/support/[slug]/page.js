@@ -4,6 +4,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
 import Container from '@components/container/container';
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }) {
   const data = await getSeoByUri(`${routes.support()}/${params.slug}`);
 
   return {
+    ...metadata,
     ...data,
   };
 }
