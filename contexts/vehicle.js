@@ -11,7 +11,7 @@ import {
 
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
-import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { deleteCookie, setCookie } from '@lib/cookies';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
@@ -27,6 +27,7 @@ export const VehicleProvider = ({ children }) => {
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
+  const [headerWidgetLoading, setHeaderWidgetLoading] = useState(false);
   const [stepNumber, setStepNumber] = useState(0);
   const [stepTitle, setStepTitle] = useState('');
   const [selectedCover, setSelectedCover] = useState(null);
@@ -103,48 +104,40 @@ export const VehicleProvider = ({ children }) => {
   };
 
   const handleVehicleReset = useCallback(() => {
+    setHeaderWidgetLoading(true);
+
     const { makeSlug, modelSlug, slug } = params;
 
+    resetVehicleSelection();
+
     if (!makeSlug && !modelSlug && !slug) {
-      resetVehicleSelection();
+      setHeaderWidgetLoading(false);
 
       return;
     }
 
-    if (makeSlug && modelSlug && slug) {
-      resetVehicleSelection();
+    if ((makeSlug && modelSlug && slug) || (makeSlug && slug)) {
+      const newRoute = routes.product(slug);
 
-      router.push(`/${slug}`);
+      if (pathname !== newRoute) {
+        router.prefetch(newRoute);
+        router.push(newRoute);
+      } else {
+        setHeaderWidgetLoading(false);
+      }
     }
-
-    const products = getProductsByCategoriesSlugs(slug, makeSlug, modelSlug);
-
-    if (!products) {
-      resetVehicleSelection();
-
-      return;
-    }
-
-    products
-      .then(products => {
-        resetVehicleSelection();
-
-        if (products.length && slug && typeof slug === 'string') {
-          router.push(`/${slug}`);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [params, router]);
+  }, [params, pathname, router]);
 
   const handleSave = useCallback(
     (params, reload) => {
+      setHeaderWidgetLoading(true);
+
       const vehicleString = JSON.stringify({
         maker,
         model,
         selectedFactoryOption,
       });
+
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
 
@@ -160,35 +153,56 @@ export const VehicleProvider = ({ children }) => {
       setStepNumber(1);
       setStepTitle(STEP_TITLES[1]);
 
+      let newRoute = null;
+      let localCategory = null;
+      let localMake = null;
+      let localModel = null;
+
       if (params) {
         const { mainCategorySlug, makeSlug, modelSlug } = params;
 
-        if (!mainCategorySlug || !makeSlug || !modelSlug) {
-          return;
-        }
-
-        const newRoute = routes.product(
-          mainCategorySlug,
-          makeSlug,
-          modelSlug,
-          variant?.slug,
-        );
-
-        router.push(newRoute);
+        localCategory = mainCategorySlug;
+        localMake = makeSlug;
+        localModel = modelSlug;
       }
 
       if (reload) {
         const { mainCategorySlug } = params;
-        const newRoute = routes.product(
-          mainCategorySlug,
-          maker?.slug,
-          model?.slug,
-        );
 
-        router.push(newRoute);
+        localCategory = mainCategorySlug;
+        localMake = maker?.slug;
+        localModel = model?.slug;
       }
+
+      if (!localCategory) {
+        setHeaderWidgetLoading(false);
+
+        return;
+      }
+
+      getMainProductCategory(localCategory).then(data => {
+        if (!Object.keys(data).length) {
+          setHeaderWidgetLoading(false);
+
+          return;
+        }
+
+        newRoute = routes.product(localCategory, localMake, localModel);
+
+        if (reload) {
+          window.location.href = newRoute;
+
+          return;
+        }
+
+        if (pathname !== newRoute) {
+          router.prefetch(newRoute);
+          router.push(newRoute);
+          setHeaderWidgetLoading(false);
+        }
+      });
     },
-    [maker, model, router, selectedFactoryOption, variant],
+    [maker, model, pathname, router, selectedFactoryOption],
   );
 
   return (
@@ -200,6 +214,7 @@ export const VehicleProvider = ({ children }) => {
         goToLink,
         handleSave,
         handleVehicleReset,
+        headerWidgetLoading,
         maker,
         model,
         productNotCompatible,
@@ -210,6 +225,7 @@ export const VehicleProvider = ({ children }) => {
         setCompatibleFactoryOptions,
         setDropdownOpened,
         setGoToLink,
+        setHeaderWidgetLoading,
         setMaker,
         setModel,
         setProductNotCompatible,

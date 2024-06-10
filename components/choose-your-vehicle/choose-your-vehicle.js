@@ -34,10 +34,12 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     finalSelection,
     handleSave,
     handleVehicleReset,
+    headerWidgetLoading,
     maker,
     model,
     selectedProducts,
     setDropdownOpened,
+    setHeaderWidgetLoading,
     setSelectedProducts,
     setStepNumber,
     setVehicleSelection,
@@ -55,7 +57,6 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     setLocalModel,
   } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -72,12 +73,6 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   ) : (
     <ExpandMoreNeutralIcon />
   );
-
-  useEffect(() => {
-    if (!maker && !model) {
-      setIsLoading(false);
-    }
-  }, [maker, model]);
 
   useEffect(() => {
     if (maker && localMaker && maker?.slug === localMaker?.slug) {
@@ -123,7 +118,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
 
   return (
     <>
-      {isLoading ? (
+      {headerWidgetLoading ? (
         <>
           <Loading color="white" />
         </>
@@ -179,10 +174,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       pathname === routes.uteBuilder
                     ) {
                       setShowResetModal(true);
-                      setIsLoading(false);
+                      setHeaderWidgetLoading(false);
                     } else {
                       handleVehicleReset();
-                      setIsLoading(true);
                     }
                   }}
                 >
@@ -252,11 +246,10 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           handleInternalSave();
                         }
                       } else {
-                        setIsLoading(true);
                         handleSave({
                           mainCategorySlug: pathname.split('/')[1],
-                          makeSlug: maker?.slug,
-                          modelSlug: model?.slug,
+                          makeSlug: internalMaker?.slug,
+                          modelSlug: internalModel?.slug,
                         });
                       }
                     }}

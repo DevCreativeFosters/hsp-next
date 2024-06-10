@@ -3,6 +3,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
 import Container from '@components/container/container';
@@ -19,6 +20,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.lifestyleTv);
 
   return {
+    ...metadata,
     ...data,
   };
 }

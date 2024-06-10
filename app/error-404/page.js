@@ -1,9 +1,12 @@
+import { metadata as defaultMetadata } from '@lib/seo';
+
 import Container from '@components/container/container';
 import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
 
 export const metadata = {
+  ...defaultMetadata,
   title: 'Error 404 - page not found',
 };
 

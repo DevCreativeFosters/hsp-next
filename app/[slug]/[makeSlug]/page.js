@@ -12,6 +12,7 @@ import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
+import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }) {
   const data = await getMakeModelSeo(params.makeSlug);
 
   return {
+    ...metadata,
     ...data,
   };
 }

@@ -16,6 +16,7 @@ import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categorie
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
+import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
@@ -38,6 +39,7 @@ export async function generateMetadata({ params }) {
   const data = await getMakeModelSeo(modelSlug);
 
   return {
+    ...metadata,
     ...data,
   };
 }

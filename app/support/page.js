@@ -4,6 +4,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import routes from '@lib/routes';
+import { metadata } from '@lib/seo';
 
 import Layout from '@components/layout/layout';
 
@@ -11,6 +12,7 @@ export async function generateMetadata() {
   const data = await getSeoByUri(routes.support());
 
   return {
+    ...metadata,
     ...data,
   };
 }
