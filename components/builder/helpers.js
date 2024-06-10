@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { slideImageSizes } from '@components/builder/products-carousel';
 import styles from '@components/builder/products-carousel.module.scss';
 import SlideIcon from '@components/builder/slide-icon';
 
@@ -163,10 +164,10 @@ function getSlideMarkup(
           <Image
             alt={productTitle}
             className={styles.productImage}
-            height={Math.round(168 / 1.4)}
+            height={slideImageSizes.height}
             src={productImage}
             style={{ objectFit: 'contain' }}
-            width={168}
+            width={slideImageSizes.width}
           />
         </div>
         <div className={styles.productIcon}>

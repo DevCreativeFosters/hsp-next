@@ -502,11 +502,6 @@ export default function Builder({
             disabledProducts={disabledProducts}
             isMobile={isMobile}
             products={stepProducts}
-            removeProduct={removeProduct}
-            selectedCover={selectedCover}
-            selectedFactoryOption={selectedFactoryOption}
-            selectedProducts={selectedProducts}
-            stepNumber={stepNumber}
             stepTitle={stepTitle}
             toggleGroup={toggleGroup}
             toggleProduct={toggleProduct}
