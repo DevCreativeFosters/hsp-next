@@ -501,6 +501,7 @@ export default function Builder({
             handleResetAccept={handleResetAccept}
             isMobile={isMobile}
             products={stepProducts}
+            removeProduct={removeProduct}
             toggleGroup={toggleGroup}
             toggleProduct={toggleProduct}
           />
