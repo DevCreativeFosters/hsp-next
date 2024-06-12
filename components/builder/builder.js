@@ -76,7 +76,6 @@ export default function Builder({
     setStepNumber,
     setStepTitle,
     stepNumber,
-    stepTitle,
   } = useVehicleContext();
 
   const { filteredLocations, isMapVisible, setSelectedStore } =
