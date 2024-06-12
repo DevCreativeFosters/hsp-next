@@ -69,7 +69,7 @@ export default async function Product({ params, searchParams }) {
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
   const make = await getMake(makeSlug);
   const makes = await getAllMakes();
-  const details = make?.detailsFields.details;
+  const details = make?.detailsFields?.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
