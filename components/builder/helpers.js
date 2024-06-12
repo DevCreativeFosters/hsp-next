@@ -306,24 +306,28 @@ export function updateSelectedCoverVariant(
 ) {
   const selectedCoverIndex =
     covers.findIndex(cover => cover.group === selectedCover.productSlug) || 0;
-  let newVariant = covers[selectedCoverIndex].variants[0];
 
-  covers.forEach(cover => {
-    cover.variants.forEach(variant => {
-      const isCompatible = currentProduct?.productCategories?.some(category =>
-        variant.compatibleCategoriesVariants.includes(category),
-      );
+  // keep old selection in case nothing is compatible
+  let newVariant = selectedCover;
 
-      if (isCompatible) {
-        newVariant = {
-          ...variant,
-          image: selectedCover.image,
-        };
-      }
-    });
+  covers[selectedCoverIndex]?.variants?.forEach(variant => {
+    if (variant.isNoCover) {
+      return;
+    }
+
+    const isCompatible = currentProduct?.productCategories?.some(category =>
+      variant?.compatibleCategoriesVariants?.includes(category),
+    );
+
+    if (isCompatible) {
+      newVariant = {
+        ...variant,
+        image: selectedCover.image,
+      };
+    }
   });
 
-  const newSelectedProducts = selectedProducts.map((product, index) => {
+  const newSelectedProducts = selectedProducts?.map((product, index) => {
     if (index === 0) {
       return newVariant;
     }
