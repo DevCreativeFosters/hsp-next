@@ -326,7 +326,7 @@ export default function Builder({
 
   useEffect(
     function setBuilderSelectedCover() {
-      if (!make || !model || stepNumber === 0) {
+      if (!make || !model || stepNumber === 0 || !covers.length) {
         return;
       }
 
@@ -335,11 +335,18 @@ export default function Builder({
       );
 
       if (selectedFactoryOption && selectedCover && !selectedCover.isNoCover) {
+        const selectedFactoryOptionCategorySlug =
+          selectedFactoryOption?.productCategories?.nodes[0]?.slug || null;
+
+        if (!selectedFactoryOptionCategorySlug) {
+          return;
+        }
+
         covers.forEach(cover => {
           cover.variants.forEach(variant => {
             const isCompatible =
               variant?.compatibleFactoryOptionsVariants?.includes(
-                selectedFactoryOption.slug,
+                selectedFactoryOptionCategorySlug,
               ) || false;
 
             if (isCompatible) {
