@@ -31,13 +31,13 @@ export default function ProductsCarousel({
   handleResetAccept,
   isMobile,
   products,
+  removeProduct,
   toggleGroup,
   toggleProduct,
 }) {
   const [showResetModal, setShowResetModal] = useState(false);
 
   const {
-    removeProduct,
     selectedCover,
     selectedProducts,
     setStepNumber,
