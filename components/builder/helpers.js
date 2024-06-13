@@ -263,13 +263,17 @@ export function getIncompatibleFactoryOptions(
 ) {
   const incompatibleFactoryOptions = [];
 
-  if (currentStep !== 2) {
+  if (currentStep !== 2 || !selectedFactoryOption) {
     return incompatibleFactoryOptions;
   }
 
+  const compatibleFactoryOptions =
+    product?.compatibleFactoryOptionsVariants ||
+    product?.compatibleFactoryOptions ||
+    [];
+
   if (
-    selectedFactoryOption &&
-    product.compatibleFactoryOptions.every(option => {
+    compatibleFactoryOptions.every(option => {
       const productCategories =
         selectedFactoryOption.productCategories.nodes.map(
           category => category.slug,
