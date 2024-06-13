@@ -27,7 +27,8 @@ function addSeparators(items) {
 }
 
 function Breadcrumbs({ items, product }) {
-  const { productNotCompatible, setProductNotCompatible } = useVehicleContext();
+  const { maker, model, productNotCompatible, setProductNotCompatible } =
+    useVehicleContext();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const itemsNormalized = items
     .map(item => ({
@@ -204,7 +205,7 @@ function Breadcrumbs({ items, product }) {
             );
           }
         })}
-        {productNotCompatible && (
+        {productNotCompatible && maker && model && (
           <div className={styles.incompatible}>
             <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
             product is not available for your selected vehicle.

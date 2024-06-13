@@ -96,7 +96,7 @@ export default function StoreSearchControls({
 
   useEffect(
     function syncStoreLocationResultList() {
-      const locationList = normalizeStores(allLocations);
+      const locationList = normalizeStores(allLocations, searchGeolocation);
       if (searchGeolocation) {
         setFilteredLocations(
           findLocationsInRadius(searchGeolocation, locationList),
