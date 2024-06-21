@@ -48,6 +48,7 @@ export default function Builder({
   makes,
   products,
 }) {
+  const [isFetchingCovers, setIsFetchingCovers] = useState(false);
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
   const [covers, setCovers] = useState([]);
@@ -258,6 +259,7 @@ export default function Builder({
         !model?.slug ||
         !globalOptions?.coversCategory ||
         stepNumber === 0 ||
+        isFetchingCovers ||
         covers.length > 0
       ) {
         return;
@@ -269,20 +271,27 @@ export default function Builder({
         make.slug,
         model.slug,
         globalOptions.coversCategory.nodes[0].slug,
-      ).then(relatedCovers => {
-        if (!relatedCovers) {
-          return;
-        }
+      )
+        .then(relatedCovers => {
+          if (!relatedCovers) {
+            setCovers([]);
+            return;
+          }
 
-        const normalizedCovers = normalizeUteBuilderProducts(
-          relatedCovers,
-          true,
-        );
+          const normalizedCovers = normalizeUteBuilderProducts(
+            relatedCovers,
+            true,
+          );
 
-        setCovers(normalizedCovers);
-      });
+          setCovers(normalizedCovers);
+          setIsFetchingCovers(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setIsFetchingCovers(false);
+        });
     },
-    [covers.length, globalOptions, make, model, stepNumber],
+    [covers.length, globalOptions, isFetchingCovers, make, model, stepNumber],
   );
 
   useEffect(
