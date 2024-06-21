@@ -263,6 +263,8 @@ export default function Builder({
         return;
       }
 
+      setIsFetchingCovers(true);
+
       getRelatedCovers(
         make.slug,
         model.slug,
@@ -427,6 +429,15 @@ export default function Builder({
       }
     },
     [stepNumber],
+  );
+
+  useEffect(
+    function resetAvailableCovers() {
+      if (stepNumber === 0 && covers.length > 0) {
+        setCovers([]);
+      }
+    },
+    [covers.length, stepNumber],
   );
 
   const isInlineMapVisible = Boolean(
