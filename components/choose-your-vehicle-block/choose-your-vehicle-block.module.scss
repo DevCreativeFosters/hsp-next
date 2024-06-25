@@ -5,10 +5,16 @@
   padding-block: 24px;
 
   @include bp(large) {
-    position: sticky;
+    position: relative;
     z-index: var(--z-index-choose-your-vehicle-block);
-    top: var(--header-height);
     padding-block: 32px;
+  }
+
+  &.isSticky {
+    @include bp(large) {
+      position: sticky;
+      top: var(--header-height);
+    }
   }
 }
 

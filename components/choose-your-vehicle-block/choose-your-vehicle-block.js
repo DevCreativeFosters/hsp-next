@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 import { useWindowSize } from 'usehooks-ts';
@@ -57,6 +58,7 @@ export default function ChooseYourVehicleBlock({
 
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
+  const [isSticky] = useState(false);
 
   const mainCategorySlug = useMemo(() => path.split('/')[1], [path]);
   const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
@@ -217,7 +219,10 @@ export default function ChooseYourVehicleBlock({
   );
 
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
+    <div
+      className={clsx(styles.wrapper, { [styles.isSticky]: isSticky })}
+      ref={wrapperRef}
+    >
       <Container>
         <h3 className={styles.sticker} ref={stickerRef}>
           {constants.SELECT_LABELS.GENERIC_FULL}
