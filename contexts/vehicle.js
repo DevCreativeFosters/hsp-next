@@ -24,6 +24,7 @@ const VehicleContext = createContext();
 export const VehicleProvider = ({ children }) => {
   const router = useRouter();
   const params = useParams();
+  const [covers, setCovers] = useState([]);
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [maker, setMaker] = useState(null);
   const [model, setModel] = useState(null);
@@ -209,6 +210,7 @@ export const VehicleProvider = ({ children }) => {
     <VehicleContext.Provider
       value={{
         compatibleFactoryOptions,
+        covers,
         dropdownOpened,
         finalSelection,
         goToLink,
@@ -223,6 +225,7 @@ export const VehicleProvider = ({ children }) => {
         selectedFactoryOption,
         selectedProducts,
         setCompatibleFactoryOptions,
+        setCovers,
         setDropdownOpened,
         setGoToLink,
         setHeaderWidgetLoading,
