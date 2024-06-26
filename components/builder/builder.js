@@ -51,7 +51,6 @@ export default function Builder({
   const [isFetchingCovers, setIsFetchingCovers] = useState(false);
   const [openSection, setOpenSection] = useState(DEFAULT_OPEN_SECTION);
   const [disabledProducts, setDisabledProducts] = useState([]);
-  const [covers, setCovers] = useState([]);
   const [stepProducts, setStepProducts] = useState(products);
   const [showClashModal, setShowClashModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -64,12 +63,14 @@ export default function Builder({
   const isMobile = useIsMobile(1280);
 
   const {
+    covers,
     maker: make,
     model,
     selectedCover,
     selectedFactoryOption,
     selectedProducts,
     setCompatibleFactoryOptions,
+    setCovers,
     setGoToLink,
     setSelectedCover,
     setSelectedFactoryOption,
@@ -291,7 +292,15 @@ export default function Builder({
           setIsFetchingCovers(false);
         });
     },
-    [covers.length, globalOptions, isFetchingCovers, make, model, stepNumber],
+    [
+      covers,
+      globalOptions,
+      isFetchingCovers,
+      make,
+      model,
+      setCovers,
+      stepNumber,
+    ],
   );
 
   useEffect(
