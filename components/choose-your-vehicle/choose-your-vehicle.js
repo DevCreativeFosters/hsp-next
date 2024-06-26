@@ -38,8 +38,10 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     maker,
     model,
     selectedProducts,
+    setCovers,
     setDropdownOpened,
     setHeaderWidgetLoading,
+    setSelectedCover,
     setSelectedProducts,
     setStepNumber,
     setVehicleSelection,
@@ -96,11 +98,15 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   const handleInternalSave = () => {
     handleMakerChange(internalMaker?.slug, internalMaker?.name);
     handleModelChange(internalModel?.slug, internalModel?.name);
+    setSelectedCover(null);
+    setCovers([]);
   };
 
   const handleOnResetAccept = () => {
     handleVehicleReset();
     setSelectedProducts([]);
+    setSelectedCover(null);
+    setCovers([]);
     setShowResetModal(false);
   };
 
@@ -239,7 +245,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           finalSelection &&
                           finalSelection?.makerName !== internalMaker?.name &&
                           finalSelection?.modelName !== internalModel?.name &&
-                          stepNumber > 0
+                          stepNumber > 0 &&
+                          selectedProducts.length > 0
                         ) {
                           setShowUpdateModal(true);
                         } else {

@@ -45,6 +45,10 @@ export default function ProductsCarousel({
     stepTitle,
   } = useVehicleContext();
 
+  if (stepNumber === 0) {
+    return null;
+  }
+
   const slides = getSlides(
     products,
     selectedCover,
