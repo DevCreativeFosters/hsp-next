@@ -90,7 +90,7 @@ export default function ProductsCarousel({
                   <span className={styles.coverName}>{productTitle}</span>
                 </Button>
               )}
-              {!isMobile && stepNumber > 0 && (
+              {!isMobile && (
                 <Button
                   className={styles.resetButton}
                   onClick={() => {
