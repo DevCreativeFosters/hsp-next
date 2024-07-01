@@ -1,13 +1,133 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
+import { useParams, usePathname, useRouter } from 'next/navigation';
+
+import { useVehicleContext } from '@contexts/vehicle';
+
+import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
+import { getValueOrSlug } from '@lib/helpers';
+import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
 import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
+const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
+
 export default function BreadcrumbsProduct({ currentProduct }) {
   const pathname = usePathname();
+  const params = useParams();
+  const router = useRouter();
+  const { makeSlug, modelSlug, slug } = params;
+  const { maker, model, productNotCompatible, setProductNotCompatible } =
+    useVehicleContext();
+  const [savedVehicleLocal, setSavedVehicleLocal] = useState(null);
+  const [checkingCompatibility, setCheckingCompatibility] = useState(false);
+
+  useEffect(() => {
+    let savedVehicleLocal = null;
+
+    if (maker) {
+      savedVehicleLocal = localStorage.getItem(COOKIE_SAVED_VEHICLE);
+    }
+
+    setSavedVehicleLocal(savedVehicleLocal);
+  }, [maker, model]);
+
+  useEffect(
+    function checkConfigurationCompatibility() {
+      if (!slug || !maker || !savedVehicleLocal) {
+        return;
+      }
+
+      // we're on the PDP already
+      if (slug && modelSlug && makeSlug) {
+        return;
+      }
+
+      const contextMakeSlug = getValueOrSlug(maker);
+      const contextModelSlug = getValueOrSlug(model);
+
+      const savedVehicleLocalData = JSON.parse(savedVehicleLocal);
+
+      const { maker: savedLocalMake, model: savedLocalModel } =
+        savedVehicleLocalData;
+
+      const savedLocalMakeSlug = getValueOrSlug(savedLocalMake);
+      const savedLocalModelSlug = getValueOrSlug(savedLocalModel);
+
+      if (
+        !contextModelSlug &&
+        contextMakeSlug &&
+        contextMakeSlug === savedLocalMakeSlug
+      ) {
+        getMainProductCategory(slug)
+          .then(data => {
+            if (!data) {
+              console.error(
+                'Debug: No data received from getMainProductCategory, returning',
+              );
+              return;
+            }
+
+            if (Object.keys(data).length && contextMakeSlug) {
+              const path = routes.product(slug, contextMakeSlug);
+              router.prefetch(path);
+              router.push(path);
+            }
+          })
+          .catch(error => {
+            console.error('Failed to fetch main product category data:', error);
+          });
+      }
+
+      if (!contextModelSlug) {
+        return;
+      }
+
+      if (
+        contextModelSlug !== savedLocalModelSlug &&
+        contextMakeSlug !== savedLocalMakeSlug
+      ) {
+        return;
+      }
+
+      setCheckingCompatibility(true);
+
+      getProductsByCategoriesSlugs(slug, contextMakeSlug, contextModelSlug)
+        .then(data => {
+          if (!data || !data.length) {
+            console.error(
+              'Debug: No data or empty data received from getProductsByCategoriesSlugs',
+            );
+            setCheckingCompatibility(false);
+            setProductNotCompatible(true);
+            return;
+          }
+
+          const path = routes.product(slug, contextMakeSlug, contextModelSlug);
+
+          router.prefetch(path);
+          router.push(path);
+        })
+        .catch(error => {
+          console.error('Failed to fetch product data:', error);
+        });
+    },
+    [
+      maker,
+      makeSlug,
+      model,
+      modelSlug,
+      productNotCompatible,
+      router,
+      savedVehicleLocal,
+      setProductNotCompatible,
+      slug,
+    ],
+  );
 
   const items = [
     {
@@ -38,6 +158,13 @@ export default function BreadcrumbsProduct({ currentProduct }) {
       label: currentProduct.model.label,
       strong: true,
       url: pathname,
+    });
+  }
+
+  if (checkingCompatibility && !productNotCompatible) {
+    items.push({
+      label: 'Checking selection compatibility ...',
+      url: '#',
     });
   }
 

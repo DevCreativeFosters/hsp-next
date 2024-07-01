@@ -9,6 +9,7 @@
 
   @include bp(large) {
     margin-block: 48px;
+    min-height: 30px;
   }
 
   &.short {
