@@ -17,8 +17,6 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 
-import styles from './product-hero-page.module.scss';
-
 export default async function ProductHeroPage({ children, params, slug }) {
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
@@ -50,13 +48,11 @@ export default async function ProductHeroPage({ children, params, slug }) {
   return (
     <Layout title="Product">
       <Container>
-        <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct
-            categories={categories}
-            currentProduct={currentProduct}
-            mainCategory={true}
-          />
-        </div>
+        <BreadcrumbsProduct
+          categories={categories}
+          currentProduct={currentProduct}
+          mainCategory={true}
+        />
         <ProductHero
           description={categoryData?.description}
           features={{

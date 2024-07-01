@@ -41,6 +41,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     setCovers,
     setDropdownOpened,
     setHeaderWidgetLoading,
+    setProductNotCompatible,
     setSelectedCover,
     setSelectedProducts,
     setStepNumber,
@@ -84,6 +85,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
       setStepNumber(0);
       setShowUpdateModal(false);
       setDropdownOpened(false);
+      setProductNotCompatible(false);
     }
   }, [
     handleSave,
@@ -209,6 +211,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           name: label,
                           slug: value,
                         });
+                        setProductNotCompatible(false);
                       } else {
                         handleMakerChange(value, label);
                       }
@@ -227,6 +230,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           name: label,
                           slug: value,
                         });
+                        setProductNotCompatible(false);
                       } else {
                         handleModelChange(value, label);
                       }
