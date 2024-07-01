@@ -93,15 +93,16 @@ export const VehicleProvider = ({ children }) => {
   const resetVehicleSelection = () => {
     localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
     deleteCookie(LOCAL_STORAGE_VEHICLE);
+    setCompatibleFactoryOptions([]);
     setMaker(null);
     setModel(null);
-    setVehicleSelection(null);
+    setProductNotCompatible(false);
     setSavedVehicleGlobal(null);
     setSelectedFactoryOption(null);
     setSelectedFactoryOption(null);
-    setCompatibleFactoryOptions([]);
     setStepNumber(0);
     setStepTitle('');
+    setVehicleSelection(null);
   };
 
   const handleVehicleReset = useCallback(() => {
@@ -126,8 +127,12 @@ export const VehicleProvider = ({ children }) => {
       } else {
         setHeaderWidgetLoading(false);
       }
+
+      return;
     }
-  }, [params, pathname, router]);
+
+    setHeaderWidgetLoading(false);
+  }, [params, pathname, router]); // eslint-disable-line
 
   const handleSave = useCallback(
     (params, reload) => {
