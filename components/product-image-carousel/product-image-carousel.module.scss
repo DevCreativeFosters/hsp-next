@@ -20,6 +20,21 @@
     top: 144px;
     height: min-content;
   }
+
+  .navigationButton {
+    @include center-vertical;
+
+    --side-space: -28px;
+
+    z-index: 1;
+    width: 56px;
+    height: 56px;
+    background-color: var(--color-black-100);
+
+    @include bp-below(large) {
+      display: none;
+    }
+  }
 }
 
 .mainImageContainer {
@@ -60,21 +75,6 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-}
-
-.navigationButton {
-  @include center-vertical;
-
-  --side-space: -28px;
-
-  z-index: 1;
-  width: 56px;
-  height: 56px;
-  background-color: var(--color-black-100);
-
-  @include bp-below(large) {
-    display: none;
-  }
 }
 
 .prevButton {
