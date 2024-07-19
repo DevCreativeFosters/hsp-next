@@ -11,6 +11,21 @@
 
     align-items: center;
   }
+
+  .map {
+    display: none;
+
+    @include bp(large) {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: calc(infinity);
+      min-height: unset;
+    }
+  }
 }
 
 .container {
@@ -55,20 +70,5 @@
     ul {
       background: transparent;
     }
-  }
-}
-
-.map {
-  display: none;
-
-  @include bp(large) {
-    display: block;
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: calc(infinity);
-    min-height: unset !important;
   }
 }
