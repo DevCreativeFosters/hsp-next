@@ -4,22 +4,22 @@
   position: relative;
   width: 100%;
   min-width: 0;
-}
 
-.navigationButton {
-  @include center-vertical;
+  .navigationButton {
+    @include center-vertical;
 
-  top: calc(50% - 24px);
+    top: calc(50% - 24px);
 
-  --side-space: -28px;
+    --side-space: -28px;
 
-  z-index: 1;
-  width: 56px;
-  height: 56px;
-  background-color: var(--color-black-100);
+    z-index: 1;
+    width: 56px;
+    height: 56px;
+    background-color: var(--color-black-100);
 
-  @include bp-below(large) {
-    display: none;
+    @include bp-below(large) {
+      display: none;
+    }
   }
 }
 
