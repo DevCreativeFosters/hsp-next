@@ -13,7 +13,7 @@ import VideoCard from '@components/video-card/video-card';
 
 import styles from './feature-panels.module.scss';
 
-export default function FeaturePanels({ panels, title }) {
+export default function FeaturePanels({ alignment, panels, title }) {
   const [activeTab, setActiveTab] = useState(0);
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
@@ -21,7 +21,11 @@ export default function FeaturePanels({ panels, title }) {
   return (
     <Container collapseMargin>
       <div className={styles.container}>
-        {title && <h2 className={styles.title}>{title}</h2>}
+        {title && (
+          <h2 className={`${styles.title} ${styles[alignment] || styles.left}`}>
+            {title}
+          </h2>
+        )}
 
         <div className={styles.panels}>
           {panels.map((panel, index) => (
@@ -39,7 +43,7 @@ export default function FeaturePanels({ panels, title }) {
           ))}
         </div>
 
-        <div className={styles.tabContent}>
+        <div className={styles.content}>
           {panels[activeTab].media === 'image' && panels[activeTab].image && (
             <Image
               alt={panels[activeTab].image?.node?.altText || ''}
@@ -51,19 +55,14 @@ export default function FeaturePanels({ panels, title }) {
           )}
           {panels[activeTab].media === 'video' &&
             panels[activeTab].videoFile && (
-              <VideoCard
-                url={panels[activeTab].videoFile?.node?.mediaItemUrl}
-              />
+              <div className={styles.video}>
+                <VideoCard
+                  url={panels[activeTab].videoFile?.node?.mediaItemUrl}
+                />
+              </div>
             )}
-
-          {panels[activeTab].title && (
-            <h3 className={styles.tabTitle}>{panels[activeTab].title}</h3>
-          )}
-          {panels[activeTab].subtitle && (
-            <h4 className={styles.tabSubtitle}>{panels[activeTab].subtitle}</h4>
-          )}
           <TextElement
-            className={styles.tabDescription}
+            className={styles.description}
             text={panels[activeTab].description}
           />
         </div>
