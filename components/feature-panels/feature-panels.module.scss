@@ -29,29 +29,34 @@
 .panels {
   gap: 16px;
   margin-bottom: 48px;
+  margin-inline: -24px;
+  padding-inline: 24px;
   display: flex;
   flex-wrap: nowrap;
   white-space: nowrap;
   overflow-x: auto;
 
   @include bp(large) {
+    margin-inline: unset;
     gap: 48px;
+    overflow: auto;
   }
 }
 
 .panel {
   position: relative;
-  width: max(151px, 100%);
+  flex-basis: 151px;
+  flex-shrink: 0;
   padding: 16px;
   color: var(--color-white-100);
   font-family: var(--font-secondary);
   font-size: 24px;
   font-weight: 600;
-  flex: 1;
 
   @include bp(large) {
     padding: 24px;
     font-size: 36px;
+    flex: 1;
   }
 
   &::before {
@@ -66,10 +71,18 @@
 
   &:first-child {
     margin-left: auto;
+
+    @include bp(large) {
+      margin-left: unset;
+    }
   }
 
   &:last-child {
     margin-right: auto;
+
+    @include bp(large) {
+      margin-left: unset;
+    }
   }
 
   &.isActive {
