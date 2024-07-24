@@ -39,9 +39,8 @@ export default function FeaturedPost({
     moreUrl = routes.tv(slug);
   }
 
-  const tagList = Array.isArray(tags?.nodes) ? tags.nodes : [];
-
-  const sortedTagList = tagList.sort((a, b) => {
+  const tagList = tags?.nodes;
+  const sortedTagList = [...tagList].sort((a, b) => {
     if (a.name === postType) {
       return -1;
     } else if (b.name === postType) {
@@ -49,6 +48,7 @@ export default function FeaturedPost({
     }
     return 0;
   });
+
   const formattedDate = new Date(date).toLocaleString('en-AU', {
     dateStyle: 'short',
   });
