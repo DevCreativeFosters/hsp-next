@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import { useIsMediumWidth } from '@hooks/useIsMediumWidth';
@@ -22,9 +23,10 @@ export default function FeaturePanels({ alignment, panels, title }) {
     <Container collapseMargin>
       <div className={styles.container}>
         {title && (
-          <h2 className={`${styles.title} ${styles[alignment] || styles.left}`}>
-            {title}
-          </h2>
+          <h2
+            className={clsx(styles.title, styles[alignment] || styles.left)}
+            dangerouslySetInnerHTML={{ __html: title }}
+          />
         )}
 
         <div className={styles.panels}>
