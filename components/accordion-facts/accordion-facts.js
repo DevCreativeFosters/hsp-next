@@ -22,14 +22,14 @@ export default function AccordionFacts({ accordions, background }) {
   const [accordionHeight, setAccordionHeight] = useState(0);
 
   useEffect(() => {
-    if (accordionRef.current) {
+    if (accordionRef.current && !isMediumWidth) {
       const height = accordionRef.current.clientHeight;
       setAccordionHeight(height);
     }
-  }, [accordions, isMediumWidth, isMobile]);
+  }, [accordions, isMobile, isMediumWidth]);
 
   return (
-    <Container className={styles.container} collapseMargin>
+    <Container className={styles.container}>
       {accordions && accordions.length > 0 && (
         <div ref={accordionRef}>
           <Accordion
@@ -51,27 +51,36 @@ export default function AccordionFacts({ accordions, background }) {
                         text={accordion.accordionDescription}
                       />
                     )}
-                    <div className={styles.media}>
-                      {accordion.media === 'image' && accordion.image && (
-                        <Image
-                          alt={accordion.image?.node?.altText || ''}
-                          className={styles.image}
-                          height={isMobile ? 198 : isMediumWidth ? 285 : 571}
-                          src={accordion.image?.node?.sourceUrl}
-                          style={{ maxHeight: `${accordionHeight}px` }}
-                          width={isMobile ? 278 : isMediumWidth ? 400 : 800}
-                        />
-                      )}
-                      {accordion.media === 'video' && accordion.videoFile && (
-                        <div
-                          className={styles.video}
-                          style={{ maxHeight: `${accordionHeight}px` }}
-                        >
-                          <VideoCard
-                            url={accordion.videoFile?.node?.mediaItemUrl}
+                    <div className={styles.mediaWrapper}>
+                      <div
+                        className={styles.media}
+                        style={
+                          !isMobile && !isMediumWidth
+                            ? { height: `${accordionHeight}px` }
+                            : { height: 'auto' }
+                        }
+                      >
+                        {accordion.media === 'image' && accordion.image && (
+                          <Image
+                            alt={accordion.image?.node?.altText || ''}
+                            className={styles.image}
+                            height={isMobile ? 198 : 571}
+                            src={accordion.image?.node?.sourceUrl}
+                            width={isMobile ? 278 : 800}
                           />
-                        </div>
-                      )}
+                        )}
+                        {accordion.media === 'video' && accordion.videoFile && (
+                          <div
+                            className={styles.videoWrapper}
+                            style={{ maxHeight: `${accordionHeight}px` }}
+                          >
+                            <VideoCard
+                              className={styles.video}
+                              url={accordion.videoFile?.node?.mediaItemUrl}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </AccordionItem>
                 ),

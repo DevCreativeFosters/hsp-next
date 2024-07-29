@@ -20,7 +20,7 @@ export default function FeaturePanels({ alignment, panels, title }) {
   const isMediumWidth = useIsMediumWidth();
 
   return (
-    <Container collapseMargin>
+    <Container>
       <div className={styles.container}>
         {title && (
           <h2

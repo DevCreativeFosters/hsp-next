@@ -1,6 +1,13 @@
 .container {
+  margin-top: 24px;
+
+  @include bp(medium) {
+    margin-top: 48px;
+  }
+
   @include bp(large) {
     position: relative;
+    margin-top: 96px;
   }
 }
 
@@ -10,51 +17,108 @@
   }
 }
 
-.media {
+.item {
+  // accordion trigger
+  & > div:first-child {
+    @include bp(large) {
+      font-size: 24px;
+    }
+  }
+}
+
+.mediaWrapper {
+  margin-top: 24px;
+
   @include bp(large) {
     position: absolute;
     height: 100%;
     width: 800px;
-    right: 0;
+    right: var(--container-inline-padding);
     top: 0;
+    margin-top: 0;
     overflow: hidden;
+    border-radius: 16px;
   }
 }
 
-.image,
-.video {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin-top: 24px;
-  margin-inline: auto;
-  object-fit: contain;
+.media {
+  display: grid;
+  place-content: center;
 
   @include bp(large) {
-    height: 100%;
-    margin-top: 0;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
   }
 }
 
-.video {
-  width: 278px;
-
-  @include bp(medium) {
-    width: 400px;
-  }
-
-  @include bp(large) {
-    width: 800px;
+[aria-hidden='false'] {
+  .media {
+    opacity: 1;
+    animation: visible 0.5s;
   }
 }
 
-[aria-hidden='false'] {
-  .image,
-  .video {
-    opacity: 1;
-    animation: visible 0.5s;
+.videoWrapper {
+  * {
+    @include bp(large) {
+      max-height: inherit;
+    }
+  }
+}
+
+.description {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 24px;
+  }
+
+  h4,
+  h5,
+  h6 {
+    line-height: 1.4;
+  }
+
+  h4,
+  h5,
+  h6,
+  p {
+    color: var(--color-white-80);
+  }
+
+  p {
+    line-height: 1.5;
+
+    @include bp(large) {
+      font-size: 20px;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
+    }
+  }
+
+  br {
+    display: none;
+
+    @include bp(large) {
+      display: block;
+    }
   }
 }
 

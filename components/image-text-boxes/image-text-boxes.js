@@ -17,8 +17,6 @@ export default function ImageTextBoxes({ boxes }) {
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
 
-  console.log(boxes);
-
   if (!boxes || boxes.length === 0) return null;
 
   return (
@@ -40,7 +38,13 @@ export default function ImageTextBoxes({ boxes }) {
             </div>
           )}
           <div className={styles.content}>
-            {box.title && <h2 className={styles.title}>{box.title}</h2>}
+            {box.title && (
+              <h2
+                className={styles.title}
+                dangerouslySetInnerHTML={{ __html: box.title }}
+              />
+            )}
+
             {box.description && (
               <TextElement
                 className={styles.description}

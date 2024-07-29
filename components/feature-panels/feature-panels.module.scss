@@ -1,3 +1,15 @@
+.container {
+  margin-top: 24px;
+
+  @include bp(medium) {
+    margin-top: 48px;
+  }
+
+  @include bp(large) {
+    margin-top: 96px;
+  }
+}
+
 .title {
   margin-bottom: 24px;
 
@@ -151,6 +163,7 @@
   h5,
   h6,
   p {
+    line-height: 1.5;
     color: var(--color-white-80);
   }
 

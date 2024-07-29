@@ -1,3 +1,16 @@
+.container {
+  margin-top: 24px;
+
+  @include bp(medium) {
+    margin-top: 48px;
+  }
+
+  @include bp(large) {
+    margin-top: 96px;
+  }
+}
+
+
 .title {
   margin-bottom: 48px;
 
@@ -54,6 +67,14 @@
 }
 
 .description {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 24px;
+  }
+
   h4,
   h5,
   h6,
@@ -69,6 +90,16 @@
 
     &:last-of-type {
       margin-bottom: 0;
+    }
+  }
+
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
     }
   }
 
