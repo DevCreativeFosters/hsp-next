@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import { useIsMediumWidth } from '@hooks/useIsMediumWidth';
@@ -22,50 +23,57 @@ export default function FeaturePanels({ alignment, panels, title }) {
     <Container collapseMargin>
       <div className={styles.container}>
         {title && (
-          <h2 className={`${styles.title} ${styles[alignment] || styles.left}`}>
-            {title}
-          </h2>
+          <h2
+            className={clsx(styles.title, styles[alignment] || styles.left)}
+            dangerouslySetInnerHTML={{ __html: title }}
+          />
         )}
 
-        <div className={styles.panels}>
-          {panels.map((panel, index) => (
-            <button
-              aria-selected={activeTab === index}
-              className={`${styles.panel} ${
-                activeTab === index ? styles.isActive : ''
-              }`}
-              key={index}
-              onClick={() => setActiveTab(index)}
-              role="tab"
-            >
-              {panel.label}
-            </button>
-          ))}
-        </div>
+        {panels && panels.length > 0 && (
+          <div className={styles.panels}>
+            {panels.map((panel, index) => (
+              <button
+                aria-selected={activeTab === index}
+                className={clsx(styles.panel, {
+                  [styles.isActive]: activeTab === index,
+                })}
+                key={index}
+                onClick={() => setActiveTab(index)}
+                role="tab"
+              >
+                {panel.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-        <div className={styles.content}>
-          {panels[activeTab].media === 'image' && panels[activeTab].image && (
-            <Image
-              alt={panels[activeTab].image?.node?.altText || ''}
-              className={styles.image}
-              height={isMobile ? 194 : isMediumWidth ? 319 : 639}
-              src={panels[activeTab].image?.node?.sourceUrl}
-              width={isMobile ? 342 : isMediumWidth ? 564 : 1128}
-            />
-          )}
-          {panels[activeTab].media === 'video' &&
-            panels[activeTab].videoFile && (
-              <div className={styles.video}>
-                <VideoCard
-                  url={panels[activeTab].videoFile?.node?.mediaItemUrl}
-                />
-              </div>
+        {panels && panels.length > 0 && (
+          <div className={styles.content}>
+            {panels[activeTab].media === 'image' && panels[activeTab].image && (
+              <Image
+                alt={panels[activeTab].image?.node?.altText || ''}
+                className={styles.image}
+                height={isMobile ? 194 : isMediumWidth ? 319 : 639}
+                src={panels[activeTab].image?.node?.sourceUrl}
+                width={isMobile ? 342 : isMediumWidth ? 564 : 1128}
+              />
             )}
-          <TextElement
-            className={styles.description}
-            text={panels[activeTab].description}
-          />
-        </div>
+            {panels[activeTab].media === 'video' &&
+              panels[activeTab].videoFile && (
+                <div className={styles.video}>
+                  <VideoCard
+                    url={panels[activeTab].videoFile?.node?.mediaItemUrl}
+                  />
+                </div>
+              )}
+            {panels[activeTab].description && (
+              <TextElement
+                className={styles.description}
+                text={panels[activeTab].description}
+              />
+            )}
+          </div>
+        )}
       </div>
     </Container>
   );
