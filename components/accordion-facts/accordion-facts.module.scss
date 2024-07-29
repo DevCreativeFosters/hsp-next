@@ -1,0 +1,69 @@
+.container {
+  @include bp(large) {
+    position: relative;
+  }
+}
+
+.accordion {
+  @include bp(large) {
+    max-width: 378px;
+  }
+}
+
+.media {
+  @include bp(large) {
+    position: absolute;
+    height: 100%;
+    width: 800px;
+    right: 0;
+    top: 0;
+    overflow: hidden;
+  }
+}
+
+.image,
+.video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: 24px;
+  margin-inline: auto;
+  object-fit: contain;
+
+  @include bp(large) {
+    height: 100%;
+    margin-top: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+}
+
+.video {
+  width: 278px;
+
+  @include bp(medium) {
+    width: 400px;
+  }
+
+  @include bp(large) {
+    width: 800px;
+  }
+}
+
+[aria-hidden='false'] {
+  .image,
+  .video {
+    opacity: 1;
+    animation: visible 0.5s;
+  }
+}
+
+@keyframes visible {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
