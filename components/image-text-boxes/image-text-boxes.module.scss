@@ -1,8 +1,14 @@
 .container {
+  margin-top: 24px;
   display: grid;
   gap: 24px;
 
+  @include bp(medium) {
+    margin-top: 48px;
+  }
+
   @include bp(large) {
+    margin-top: 96px;
     gap: 96px;
   }
 }
@@ -18,7 +24,9 @@
 
   &.textVisual {
     .content {
-      order: -1;
+      @include bp(large) {
+        order: -1;
+      }
     }
   }
 }
@@ -29,6 +37,10 @@
 
   @include bp(large) {
     margin-bottom: 25px;
+  }
+
+  br:first-child {
+    display: none;
   }
 }
 
@@ -50,19 +62,42 @@
 }
 
 .description {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 24px;
+  }
+
   h4,
   h5,
   h6,
   p {
     color: var(--color-white-80);
-    line-height: 1.6;
+    line-height: 1.5;
+  }
 
+  p {
     @include bp(large) {
       font-size: 20px;
     }
 
-    &:first-child {
+    &:first-of-type {
       margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
     }
   }
 
