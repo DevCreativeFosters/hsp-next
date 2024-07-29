@@ -13,6 +13,12 @@
 .title {
   margin-bottom: 24px;
 
+  br {
+    &:first-child {
+      display: none;
+    }
+  }
+
   &.left {
     text-align: left;
   }
@@ -34,7 +40,14 @@
   display: flex;
   flex-wrap: nowrap;
   white-space: nowrap;
-  overflow-x: auto;
+  overflow: auto scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 
   @include bp(large) {
     margin-inline: unset;
@@ -97,8 +110,7 @@
   margin-inline: auto;
 }
 
-.image,
-.video {
+.image {
   display: block;
   margin: 0 auto 48px;
   border-radius: 16px;
@@ -106,14 +118,22 @@
 }
 
 .video {
-  width: 342px;
+  video {
+    display: block;
+    margin-inline: auto;
+    width: 342px;
+    max-height: 194px;
+    object-fit: cover;
 
-  @include bp(medium) {
-    width: 564px;
-  }
+    @include bp(medium) {
+      width: 564px;
+      max-height: 319px;
+    }
 
-  @include bp(large) {
-    width: 1128px;
+    @include bp(large) {
+      width: 1128px;
+      max-height: 639px;
+    }
   }
 }
 
@@ -144,6 +164,15 @@
   h6,
   p {
     color: var(--color-white-80);
+  }
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
+    }
   }
 
   br {
