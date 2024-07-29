@@ -1,0 +1,76 @@
+.container {
+  display: grid;
+  gap: 24px;
+
+  @include bp(large) {
+    gap: 96px;
+  }
+}
+
+.box {
+  display: grid;
+  gap: 24px;
+
+  @include bp(large) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+
+  &.textVisual {
+    .content {
+      order: -1;
+    }
+  }
+}
+
+.title {
+  margin-bottom: 16px;
+  font-size: 36px;
+
+  @include bp(large) {
+    margin-bottom: 25px;
+  }
+}
+
+.image,
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.content {
+  padding: 24px 48px;
+
+  @include bp(large) {
+    display: grid;
+    place-content: center;
+  }
+}
+
+.description {
+  h4,
+  h5,
+  h6,
+  p {
+    color: var(--color-white-80);
+    line-height: 1.6;
+
+    @include bp(large) {
+      font-size: 20px;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  br {
+    display: none;
+
+    @include bp(large) {
+      display: block;
+    }
+  }
+}
