@@ -29,7 +29,7 @@ export default function AccordionFacts({ accordions, background }) {
   }, [accordions, isMediumWidth, isMobile]);
 
   return (
-    <Container className={styles.wrapper}>
+    <Container className={styles.container}>
       {accordions && accordions.length > 0 && (
         <div ref={accordionRef}>
           <Accordion
