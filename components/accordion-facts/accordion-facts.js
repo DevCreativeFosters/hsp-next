@@ -26,10 +26,10 @@ export default function AccordionFacts({ accordions, background }) {
       const height = accordionRef.current.clientHeight;
       setAccordionHeight(height);
     }
-  }, [accordions, isMobile, isMediumWidth]);
+  }, [accordions, isMediumWidth, isMobile]);
 
   return (
-    <Container className={styles.container}>
+    <Container className={styles.wrapper}>
       {accordions && accordions.length > 0 && (
         <div ref={accordionRef}>
           <Accordion
