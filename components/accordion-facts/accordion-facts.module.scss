@@ -1,13 +1,13 @@
-.wrapper {
-  padding-top: 24px;
+.container {
+  padding-top: 24px !important;
 
   @include bp(medium) {
-    padding-top: 48px;
+    padding-top: 48px !important;
   }
 
   @include bp(large) {
     position: relative;
-    padding-top: 96px;
+    padding-top: 96px !important;
   }
 }
 
