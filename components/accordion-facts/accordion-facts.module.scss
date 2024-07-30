@@ -1,13 +1,13 @@
 .container {
-  margin-top: 24px;
+  padding-top: 24px;
 
   @include bp(medium) {
-    margin-top: 48px;
+    padding-top: 48px;
   }
 
   @include bp(large) {
     position: relative;
-    margin-top: 96px;
+    padding-top: 96px;
   }
 }
 
@@ -34,7 +34,7 @@
     height: 100%;
     width: 800px;
     right: var(--container-inline-padding);
-    top: 0;
+    top: 90px;
     margin-top: 0;
     overflow: hidden;
     border-radius: 16px;

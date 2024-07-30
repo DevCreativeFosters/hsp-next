@@ -110,10 +110,14 @@
   margin-inline: auto;
 }
 
-.image {
-  display: block;
+.image,
+.video {
   margin: 0 auto 48px;
   border-radius: 16px;
+}
+
+.image {
+  display: block;
   object-fit: cover;
 }
 
