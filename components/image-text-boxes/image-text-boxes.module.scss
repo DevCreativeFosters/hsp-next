@@ -1,14 +1,12 @@
 .container {
-  margin-top: 24px;
+  margin-block: 24px;
+  padding-block: 24px;
   display: grid;
   gap: 24px;
 
-  @include bp(medium) {
-    margin-top: 48px;
-  }
-
   @include bp(large) {
-    margin-top: 96px;
+    margin-block: 48px;
+    padding-block: 48px;
     gap: 96px;
   }
 }
@@ -108,4 +106,8 @@
       display: block;
     }
   }
+}
+
+.button {
+  margin-top: 48px;
 }
