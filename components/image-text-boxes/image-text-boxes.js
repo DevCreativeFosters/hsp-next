@@ -51,6 +51,17 @@ export default function ImageTextBoxes({ boxes }) {
                 text={box.description}
               />
             )}
+
+            {box.ctaButton && (
+              <Button
+                className={styles.button}
+                href={box.ctaButton.url}
+                size="large"
+                target={box.ctaButton?.target || 'self'}
+              >
+                {box.ctaButton.title}
+              </Button>
+            )}
           </div>
         </div>
       ))}

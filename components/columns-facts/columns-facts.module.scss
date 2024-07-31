@@ -1,15 +1,12 @@
 .container {
-  margin-top: 24px;
-
-  @include bp(medium) {
-    margin-top: 48px;
-  }
+  margin-block: 24px;
+  padding-block: 24px;
 
   @include bp(large) {
-    margin-top: 96px;
+    margin-block: 48px;
+    padding-block: 48px;
   }
 }
-
 
 .title {
   margin-bottom: 48px;
@@ -30,7 +27,6 @@
     text-align: right;
   }
 }
-
 
 .image,
 .video {
@@ -92,7 +88,6 @@
       margin-bottom: 0;
     }
   }
-
 
   a {
     text-decoration: underline;

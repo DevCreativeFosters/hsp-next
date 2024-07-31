@@ -1,13 +1,11 @@
 .container {
-  padding-top: 24px !important;
-
-  @include bp(medium) {
-    padding-top: 48px !important;
-  }
+  margin-block: 24px;
+  padding-block: 24px;
 
   @include bp(large) {
     position: relative;
-    padding-top: 96px !important;
+    margin-block: 48px;
+    padding-block: 48px;
   }
 }
 
