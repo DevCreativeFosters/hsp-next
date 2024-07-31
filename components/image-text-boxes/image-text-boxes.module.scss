@@ -1,0 +1,113 @@
+.container {
+  margin-block: 24px;
+  padding-block: 24px;
+  display: grid;
+  gap: 24px;
+
+  @include bp(large) {
+    margin-block: 48px;
+    padding-block: 48px;
+    gap: 96px;
+  }
+}
+
+.box {
+  display: grid;
+  gap: 24px;
+
+  @include bp(large) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+
+  &.textVisual {
+    .content {
+      @include bp(large) {
+        order: -1;
+      }
+    }
+  }
+}
+
+.title {
+  margin-bottom: 16px;
+  font-size: 36px;
+
+  @include bp(large) {
+    margin-bottom: 25px;
+  }
+
+  br:first-child {
+    display: none;
+  }
+}
+
+.image,
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.content {
+  padding: 24px 48px;
+
+  @include bp(large) {
+    display: grid;
+    place-content: center;
+  }
+}
+
+.description {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 24px;
+  }
+
+  h4,
+  h5,
+  h6,
+  p {
+    color: var(--color-white-80);
+    line-height: 1.5;
+  }
+
+  p {
+    @include bp(large) {
+      font-size: 20px;
+    }
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
+    }
+  }
+
+  br {
+    display: none;
+
+    @include bp(large) {
+      display: block;
+    }
+  }
+}
+
+.button {
+  margin-top: 48px;
+}
