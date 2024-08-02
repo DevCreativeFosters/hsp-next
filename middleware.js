@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-import { getMainProductCategory } from '@lib/api/get-main-product-category';
-import { getValueOrSlug } from '@lib/helpers';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
@@ -37,26 +35,6 @@ export async function middleware(request) {
 
   if (paginatedUrl) {
     return NextResponse.rewrite(paginatedUrl);
-  }
-
-  if (pathSegments.length === 1 && pathSegments[0] !== 'favicon.ico') {
-    const categoryData = await getMainProductCategory(pathSegments[0]);
-
-    if (Object.keys(categoryData).length && hspMyVehicle) {
-      const { maker, model } = JSON.parse(hspMyVehicle.value);
-      const makerSlug = getValueOrSlug(maker);
-      const modelSlug = getValueOrSlug(model);
-
-      if (makerSlug) {
-        const category = pathSegments[0];
-
-        url.pathname = modelSlug
-          ? `/${category}/${makerSlug}/${modelSlug}`
-          : `/${category}/${makerSlug}`;
-
-        return NextResponse.redirect(url);
-      }
-    }
   }
 
   return NextResponse.next();
