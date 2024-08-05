@@ -26,13 +26,15 @@
 
 .mediaWrapper {
   margin-top: 24px;
+  display: grid;
+  place-content: center;
 
   @include bp(large) {
     position: absolute;
     height: 100%;
     width: 800px;
     right: var(--container-inline-padding);
-    top: 90px;
+    top: 0;
     margin-top: 0;
     overflow: hidden;
     border-radius: 16px;
@@ -42,6 +44,7 @@
 .media {
   display: grid;
   place-content: center;
+  overflow: hidden;
 
   @include bp(large) {
     opacity: 0;
