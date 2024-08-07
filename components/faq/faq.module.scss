@@ -9,7 +9,8 @@
     grid-template: auto 1fr / 1fr 2fr;
     grid-template-areas:
       'intro questions'
-      'buttons questions';
+      'buttons questions'
+      'buttons toggle';
     grid-gap: 48px;
     margin-top: 96px;
   }
@@ -56,6 +57,12 @@
 
   @include bp-below(medium) {
     .list:not(.activeForMobile) &:nth-child(n + 3) {
+      display: none;
+    }
+  }
+
+  @include bp(medium) {
+    .list:not(.activeForMobile) &:nth-child(n + 7) {
       display: none;
     }
   }
@@ -125,6 +132,7 @@
   }
 
   @include bp(medium) {
-    display: none;
+    margin-top: 0;
+    grid-area: toggle;
   }
 }

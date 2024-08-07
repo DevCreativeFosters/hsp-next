@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import AnimateHeight from 'react-animate-height';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import { getIcon } from '@lib/icons';
 import replacePdfLinks from '@lib/replace-pdf-links';
 
@@ -16,6 +18,7 @@ import styles from './faq.module.scss';
 
 export default function FAQ({ buttons, description, questions, title }) {
   const ExpandIcon = getIcon('expand-more-neutral');
+  const isMobile = useIsMobile();
 
   const [activeItemIndices, setActiveItemIndices] = useState([]);
   const [showAllItemsForMobile, setShowAllItemsForMobile] = useState(false);
@@ -103,17 +106,19 @@ export default function FAQ({ buttons, description, questions, title }) {
           ))}
         </ul>
       )}
-      <Button
-        className={clsx(styles.buttonToggle, {
-          [styles.isActive]: showAllItemsForMobile,
-        })}
-        onClick={toggleShowAllItemsForMobile}
-        rightIcon={'arrow-forward'}
-        type="button"
-        variant="quinary"
-      >
-        {showAllItemsForMobile ? 'Show less' : 'Show more'}
-      </Button>
+      {(isMobile ? questions.length > 2 : questions.length > 6) && (
+        <Button
+          className={clsx(styles.buttonToggle, {
+            [styles.isActive]: showAllItemsForMobile,
+          })}
+          onClick={toggleShowAllItemsForMobile}
+          rightIcon={'arrow-forward'}
+          type="button"
+          variant="quinary"
+        >
+          {showAllItemsForMobile ? 'Show less' : 'Show more'}
+        </Button>
+      )}
     </div>
   );
 }

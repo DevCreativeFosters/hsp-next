@@ -27,32 +27,44 @@
 .mediaWrapper {
   margin-top: 24px;
 
+
   @include bp(large) {
     position: absolute;
-    height: 100%;
     width: 800px;
     right: var(--container-inline-padding);
-    top: 90px;
+    top: 0;
     margin-top: 0;
     overflow: hidden;
     border-radius: 16px;
+    height: 100%;
   }
 }
 
 .media {
   display: grid;
   place-content: center;
+  overflow: hidden;
 
   @include bp(large) {
+
+  }
+
+  img {
+    height: auto;
+  }
+}
+
+[aria-hidden='true'] {
+  .mediaWrapper {
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    animation: visible 1.6s reverse;
   }
 }
 
 [aria-hidden='false'] {
-  .media {
+  .mediaWrapper {
     opacity: 1;
-    animation: visible 0.5s;
+    animation: visible 1.6s;
   }
 }
 

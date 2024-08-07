@@ -27,7 +27,7 @@ export default async function ProductHeroPage({ children, params, slug }) {
   const excludeTree = getExcludeTree(globalOptions);
   const isExcluded = shouldBeExcluded(excludeTree, categoryData);
 
-  if (!categoryData || isExcluded) {
+  if (!categoryData || Object.keys(categoryData).length === 0 || isExcluded) {
     return notFound();
   }
 

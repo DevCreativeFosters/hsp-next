@@ -39,6 +39,8 @@
 }
 
 .withPadding {
+  padding: 24px;
+
   @include bp(medium) {
     padding: 48px;
   }
