@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Image from 'next/image';
 
@@ -18,72 +18,91 @@ import styles from './accordion-facts.module.scss';
 export default function AccordionFacts({ accordions, background }) {
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
-  const accordionRef = useRef(null);
-  const [accordionHeight, setAccordionHeight] = useState(0);
+  const mediaWrapperRefs = useRef([]);
+  const mediaRefs = useRef([]);
+
+  const updateMediaHeight = index => {
+    const mediaWrapper = mediaWrapperRefs.current[index];
+    const media = mediaRefs.current[index];
+    if (mediaWrapper && media) {
+      if (!isMobile && !isMediumWidth) {
+        media.style.height = `${mediaWrapper.offsetHeight}px`;
+      } else {
+        media.style.height = 'auto';
+      }
+    }
+  };
 
   useEffect(() => {
-    if (accordionRef.current && !isMediumWidth) {
-      const height = accordionRef.current.clientHeight;
-      setAccordionHeight(height);
-    }
-  }, [accordions, isMediumWidth, isMobile]);
+    mediaWrapperRefs.current.forEach((_, index) => updateMediaHeight(index));
+
+    // Set up event listeners to update heights when accordions change
+    const accordionItems = document.querySelectorAll(`.${styles.item}`);
+    accordionItems.forEach((item, index) => {
+      item.addEventListener('transitionend', () => updateMediaHeight(index));
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      accordionItems.forEach((item, index) => {
+        item.removeEventListener('transitionend', () =>
+          updateMediaHeight(index),
+        );
+      });
+    };
+  }, [accordions, isMobile, isMediumWidth]);
 
   return (
     <Container className={styles.container}>
       {accordions && accordions.length > 0 && (
-        <div ref={accordionRef}>
+        <div>
           <Accordion
             alwaysOpen={true}
             className={styles.accordion}
             openFirstByDefault={true}
           >
-            {accordions.map(
-              (accordion, index) =>
-                accordion.accordionTitle && (
-                  <AccordionItem
-                    className={styles.item}
-                    key={index}
-                    triggerContent={accordion.accordionTitle}
+            {accordions.map((accordion, index) =>
+              accordion.accordionTitle ? (
+                <AccordionItem
+                  className={styles.item}
+                  key={index}
+                  triggerContent={accordion.accordionTitle}
+                >
+                  {accordion.accordionDescription && (
+                    <TextElement
+                      className={styles.description}
+                      text={accordion.accordionDescription}
+                    />
+                  )}
+                  <div
+                    className={styles.mediaWrapper}
+                    ref={el => (mediaWrapperRefs.current[index] = el)}
                   >
-                    {accordion.accordionDescription && (
-                      <TextElement
-                        className={styles.description}
-                        text={accordion.accordionDescription}
-                      />
-                    )}
-                    <div className={styles.mediaWrapper}>
-                      <div
-                        className={styles.media}
-                        style={
-                          !isMobile && !isMediumWidth
-                            ? { height: `${accordionHeight}px` }
-                            : { height: 'auto' }
-                        }
-                      >
-                        {accordion.media === 'image' && accordion.image && (
-                          <Image
-                            alt={accordion.image?.node?.altText || ''}
-                            className={styles.image}
-                            height={isMobile ? 198 : 571}
-                            src={accordion.image?.node?.sourceUrl}
-                            width={isMobile ? 278 : 800}
+                    <div
+                      className={styles.media}
+                      ref={el => (mediaRefs.current[index] = el)}
+                    >
+                      {accordion.media === 'image' && accordion.image && (
+                        <Image
+                          alt={accordion.image?.node?.altText || ''}
+                          className={styles.image}
+                          height={isMobile ? 198 : 571}
+                          src={accordion.image?.node?.sourceUrl}
+                          width={isMobile ? 278 : 800}
+                        />
+                      )}
+                      {accordion.media === 'video' && accordion.videoFile && (
+                        <div className={styles.videoWrapper}>
+                          <VideoCard
+                            className={styles.video}
+                            url={accordion.videoFile?.node?.mediaItemUrl}
                           />
-                        )}
-                        {accordion.media === 'video' && accordion.videoFile && (
-                          <div
-                            className={styles.videoWrapper}
-                            style={{ maxHeight: `${accordionHeight}px` }}
-                          >
-                            <VideoCard
-                              className={styles.video}
-                              url={accordion.videoFile?.node?.mediaItemUrl}
-                            />
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
-                  </AccordionItem>
-                ),
+                  </div>
+                </AccordionItem>
+              ) : null,
             )}
           </Accordion>
         </div>
