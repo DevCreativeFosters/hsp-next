@@ -19,7 +19,11 @@ export default function DownloadButton({ className, fileName, images }) {
   function downloadPreview() {
     setIsLoading(true);
 
-    mergeImages(images, {
+    const filteredImages = images.filter(
+      image => image !== null && image !== undefined,
+    );
+
+    mergeImages(filteredImages, {
       crossOrigin: 'anonymous',
     })
       .then(b64 => {
