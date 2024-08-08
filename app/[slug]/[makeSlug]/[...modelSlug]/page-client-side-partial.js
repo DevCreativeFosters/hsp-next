@@ -149,6 +149,7 @@ export default function PageClientSidePartial({
             <EnquiryForm
               allLocations={allLocations}
               enquiryFormId={enquiryFormId}
+              mainCategory={mainCategory}
               onVariantChange={onVariantChange}
               productData={firstMatchedProduct}
               variantSlug={variantSlug}
