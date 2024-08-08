@@ -52,7 +52,9 @@ function Breadcrumbs({ items, product }) {
   const singleBreadcrumb = product
     ? { label: 'Products', url: '/products' }
     : itemsLength > 1
-      ? itemsNormalized[itemsLength - 2]
+      ? itemsNormalized[itemsLength - 1].url === '#'
+        ? itemsNormalized[itemsLength - 1]
+        : itemsNormalized[itemsLength - 2]
       : null;
 
   return (
