@@ -23,6 +23,7 @@ import EnquiryModal from './enquiry-modal';
 export default function EnquiryForm({
   allLocations,
   enquiryFormId,
+  mainCategory,
   onVariantChange: onVariantChangeCallback = slug => {},
   productData,
   variantSlug,
@@ -48,6 +49,17 @@ export default function EnquiryForm({
     variants?.find(
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
     ) || variants?.[0];
+
+  const mainCategoryId = mainCategory?.databaseId;
+
+  if (mainCategoryId) {
+    productData?.productCategories?.nodes?.forEach(category => {
+      if (category.databaseId === mainCategoryId) {
+        selectedVariant.icon =
+          category.categoryRelations?.icon?.node?.sourceUrl || null;
+      }
+    });
+  }
 
   selectedVariant.productName = productData.title;
   selectedVariant.image = getProductImage(selectedVariant, productData);
