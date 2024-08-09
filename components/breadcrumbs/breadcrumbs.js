@@ -69,6 +69,12 @@ function Breadcrumbs({ items, product }) {
             {singleBreadcrumb.label}
           </Link>
         )}
+        {productNotCompatible && maker && model && (
+          <div className={styles.incompatible}>
+            <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
+            product is not available for your selected vehicle.
+          </div>
+        )}
       </div>
 
       <div className={clsx(styles.container, styles.full)}>
