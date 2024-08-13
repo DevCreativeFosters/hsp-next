@@ -52,7 +52,9 @@ function Breadcrumbs({ items, product }) {
   const singleBreadcrumb = product
     ? { label: 'Products', url: '/products' }
     : itemsLength > 1
-      ? itemsNormalized[itemsLength - 2]
+      ? itemsNormalized[itemsLength - 1].url === '#'
+        ? itemsNormalized[itemsLength - 1]
+        : itemsNormalized[itemsLength - 2]
       : null;
 
   return (
@@ -66,6 +68,12 @@ function Breadcrumbs({ items, product }) {
             <span className={styles.prevSymbol} />
             {singleBreadcrumb.label}
           </Link>
+        )}
+        {productNotCompatible && maker && model && (
+          <div className={styles.incompatible}>
+            <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
+            product is not available for your selected vehicle.
+          </div>
         )}
       </div>
 

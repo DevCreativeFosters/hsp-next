@@ -14,7 +14,10 @@
 
   &.short {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
+    flex-direction: column;
+    margin-top: 60px;
 
     @include bp(medium-large) {
       display: none;
@@ -23,6 +26,12 @@
 
   &.full {
     @include bp(medium-large) {
+      margin-top: 60px;
+      display: flex;
+    }
+
+    @include bp(large) {
+      margin-top: 48px;
       display: flex;
     }
   }
@@ -158,6 +167,11 @@
   font-size: 1.25rem;
   font-family: var(--font-secondary);
   color: var(--color-white-100);
+  margin-top: 4px;
+
+  @include bp(medium) {
+    margin-top: 0;
+  }
 }
 
 .incompatibleLabel {
