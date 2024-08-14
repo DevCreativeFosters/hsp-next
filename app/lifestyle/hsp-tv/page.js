@@ -34,7 +34,9 @@ export default async function HspTVPage({ searchParams }) {
     postsResponse?.hspTvPosts.pageInfo.offsetPagination.total || 0;
 
   const content = await getPageData('lifestyle/hsp-tv');
-  const contentResolved = content?.flexibleContent?.blocks.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks.map(renderBlock) || [],
+  );
 
   return (
     <Layout title="">
@@ -47,7 +49,7 @@ export default async function HspTVPage({ searchParams }) {
           fitInline
           title={content?.title}
         />
-        {contentResolved}
+        {contentBlocks}
         <PostsList perPage={POSTS_PER_PAGE} posts={posts} variant="hsp-tv" />
         {totalPosts > POSTS_PER_PAGE && (
           <Pagination

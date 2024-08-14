@@ -18,7 +18,9 @@ export async function generateMetadata() {
 }
 export default async function SupportPage() {
   const content = await getPageData('support');
-  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks.map(renderBlock) || [],
+  );
 
   return (
     <Layout>

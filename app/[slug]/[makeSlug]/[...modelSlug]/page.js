@@ -109,8 +109,8 @@ export default async function Product({ params, searchParams }) {
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
-  const contentBlocks = firstMatchedProduct?.flexibleContent?.blocks?.map(
-    block =>
+  const contentBlocks = await Promise.all(
+    firstMatchedProduct?.flexibleContent?.blocks?.map(block =>
       renderBlock(
         block,
         makes,
@@ -118,7 +118,9 @@ export default async function Product({ params, searchParams }) {
         params,
         mainCategoryContentBlocks,
       ),
+    ) || [],
   );
+
   const currentProduct = {
     mainCategory: {
       label: mainCategory?.name,
