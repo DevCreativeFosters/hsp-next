@@ -26,14 +26,17 @@ export default async function DynamicPage({ params }) {
   const { isEnabled: isDraftEnabled } = draftMode();
   const slug = params?.slug;
   const content = await getPageData(slug, isDraftEnabled);
-  const block = content?.flexibleContent?.blocks?.map(renderBlock);
+  const flexibleContentBlocks = content?.flexibleContent?.blocks;
   const title = content?.title;
   const pageContent = content?.content;
 
-  if (pageContent || block) {
+  if (pageContent || flexibleContentBlocks) {
+    const contentBlocks = await Promise.all(
+      flexibleContentBlocks?.map(renderBlock) || [],
+    );
     return (
       <ContentBlocksPage
-        blocks={block}
+        blocks={contentBlocks}
         pageContent={pageContent}
         title={title}
       />

@@ -32,9 +32,12 @@ export default async function ProductHeroPage({ children, params, slug }) {
   }
 
   const blocks = await getMainProductCategoryBlocks(slug);
-  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, makes, [], params),
+  const contentBlocks = await Promise.all(
+    blocks?.flexibleContent?.blocks?.map(block =>
+      renderBlock(block, makes, [], params),
+    ) || [],
   );
+
   const currentProduct = {
     mainCategory: {
       label: categoryData.name,
