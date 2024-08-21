@@ -27,26 +27,36 @@ export default function ProductAddons({ description, products, title }) {
       const categories = product.productCategories || [];
       const makesAndModels = product.makesAndModels || [];
       const variants = product.productFields?.variants || [];
-      const categorySlug = categories[0]?.slug || null;
+      const categorySlug = categories[0]?.slug || product.categorySlug || null;
       const model = makesAndModels.find(({ parent }) => parent) || {};
-      const makeSlug = model.parent?.slug || null;
+      const makeSlug = model.parent?.node?.slug || product.makeSlug || null;
       const modelSlug = model.slug || null;
       const cheapestVariant = variants.find(
         variant => variant.variantDetails.price === product.lowestPrice,
       );
 
       let url = null;
-      if (categorySlug && makeSlug && modelSlug) {
-        const variantSlug = cheapestVariant?.variantSlug || null;
-        const variantSlugNormalized = variantSlug?.startsWith('/')
-          ? variantSlug.slice(1)
-          : variantSlug;
-        url = routes.product(
-          categorySlug,
-          makeSlug,
-          modelSlug,
-          variantSlugNormalized,
-        );
+
+      if (categorySlug) {
+        if (makeSlug) {
+          if (modelSlug) {
+            const variantSlug = cheapestVariant?.variantSlug || null;
+            const variantSlugNormalized = variantSlug?.startsWith('/')
+              ? variantSlug.slice(1)
+              : variantSlug;
+
+            url = routes.product(
+              categorySlug,
+              makeSlug,
+              modelSlug,
+              variantSlugNormalized,
+            );
+          } else {
+            url = routes.product(categorySlug, makeSlug);
+          }
+        } else {
+          url = routes.product(categorySlug);
+        }
       }
 
       return {
