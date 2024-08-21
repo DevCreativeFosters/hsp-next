@@ -17,6 +17,9 @@ export default function VideoCard({ productUrl, url, variant }) {
 
   useEffect(() => {
     const videoElement = videoRef.current;
+
+    videoElement.load();
+
     const options = {
       root: null,
       rootMargin: '0px',
@@ -34,7 +37,7 @@ export default function VideoCard({ productUrl, url, variant }) {
     observer.observe(videoElement);
 
     return () => observer.unobserve(videoElement);
-  }, []);
+  }, [url]);
 
   const videoElement = (
     <video className={styles.video} loop muted playsInline ref={videoRef}>
