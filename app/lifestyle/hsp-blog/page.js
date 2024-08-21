@@ -35,7 +35,9 @@ export default async function BlogPage({ searchParams }) {
   const posts = postsResponse?.posts.nodes || [];
   const totalPosts = postsResponse?.posts.pageInfo.offsetPagination.total || 0;
   const content = await getPageData('lifestyle/hsp-blog');
-  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks.map(renderBlock) || [],
+  );
 
   const colorStops = [
     { colorStop: { color: 'black' } },

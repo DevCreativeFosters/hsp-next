@@ -19,66 +19,80 @@ export default function ProductAddons({ description, products, title }) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
 
-  const productsNormalized = products.map(product => {
-    if (!product) {
-      return null;
-    }
+  const productsNormalized = products
+    .map(product => {
+      if (!product) return null;
 
-    const imageUrl = product?.featuredImage?.sourceUrl || null;
-    const categories = product?.productCategories.nodes;
-    const makesAndModels = product.makesAndModels.nodes.map(el => ({
-      ...el,
-      parent: el.parent?.node || null,
-    }));
-    const variants = product.productFields.variants;
-    const categorySlug = categories[0]?.slug;
-    const model = makesAndModels.find(({ parent }) => parent);
-    const makeSlug = model?.parent?.slug; // 2
-    const modelSlug = model?.slug;
-    const cheapestVariant = variants?.find(
-      ({ variantDetails: { price } }) => price === product.lowestPrice,
-    );
-
-    let url;
-    if (categorySlug && makeSlug && modelSlug) {
-      const variantSlug = cheapestVariant?.variantSlug;
-      const variantSlugNormalized =
-        variantSlug?.slice(0, 1) === '/' ? variantSlug.slice(1) : variantSlug;
-      url = routes.product(
-        categorySlug,
-        makeSlug,
-        modelSlug,
-        variantSlugNormalized,
+      const imageUrl = product.imageUrl || null;
+      const categories = product.productCategories || [];
+      const makesAndModels = product.makesAndModels || [];
+      const variants = product.productFields?.variants || [];
+      const categorySlug = categories[0]?.slug || product.categorySlug || null;
+      const model = makesAndModels.find(({ parent }) => parent) || {};
+      const makeSlug = model.parent?.node?.slug || product.makeSlug || null;
+      const modelSlug = model.slug || null;
+      const cheapestVariant = variants.find(
+        variant => variant.variantDetails.price === product.lowestPrice,
       );
-    }
 
-    return {
-      imageUrl,
-      name: product.title,
-      price: product.lowestPrice,
-      url,
-    };
-  });
+      let url = null;
+
+      if (categorySlug) {
+        if (makeSlug) {
+          if (modelSlug) {
+            const variantSlug = cheapestVariant?.variantSlug || null;
+            const variantSlugNormalized = variantSlug?.startsWith('/')
+              ? variantSlug.slice(1)
+              : variantSlug;
+
+            url = routes.product(
+              categorySlug,
+              makeSlug,
+              modelSlug,
+              variantSlugNormalized,
+            );
+          } else {
+            url = routes.product(categorySlug, makeSlug);
+          }
+        } else {
+          url = routes.product(categorySlug);
+        }
+      }
+
+      return {
+        imageUrl,
+        name: product.title,
+        price: product.lowestPrice,
+        url,
+      };
+    })
+    .filter(Boolean);
+
+  if (!productsNormalized.length) {
+    return null;
+  }
 
   return (
     <Container collapseMargin>
       <SectionIntro description={description} title={title}>
-        <SectionButtons>
-          <div className={styles.buttons}>
-            <Button
-              className={clsx(styles.button, styles.prev)}
-              leftIcon="expand-more-neutral"
-              ref={buttonPrevRef}
-              variant="secondary"
-            />
-            <Button
-              className={clsx(styles.button, styles.next)}
-              leftIcon="expand-more-neutral"
-              ref={buttonNextRef}
-              variant="secondary"
-            />
-          </div>
-        </SectionButtons>
+        {products.length > 4 && (
+          <SectionButtons>
+            <div className={styles.buttons}>
+              <Button
+                className={clsx(styles.button, styles.prev)}
+                leftIcon="expand-more-neutral"
+                ref={buttonPrevRef}
+                variant="secondary"
+              />
+              <Button
+                className={clsx(styles.button, styles.next)}
+                leftIcon="expand-more-neutral"
+                ref={buttonNextRef}
+                variant="secondary"
+              />
+            </div>
+          </SectionButtons>
+        )}
       </SectionIntro>
 
       <TileCarousel

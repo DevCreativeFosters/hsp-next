@@ -34,7 +34,9 @@ export default async function ContactUs() {
   const globalOptions = await getGlobalOptions();
   const contactUsInfo = globalOptions?.contactUsInfo;
   const servicesBox = globalOptions?.servicesBox || [];
-  const contentBlocks = content?.flexibleContent?.blocks?.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks?.map(renderBlock) || [],
+  );
 
   return (
     <Layout title="Contact Us">

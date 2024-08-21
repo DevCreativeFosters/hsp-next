@@ -61,12 +61,13 @@ export function getSlides(
     let disabledCount = 0;
     let variants = [];
     product?.variants.forEach((variant, index) => {
-      const { image, isGroup, productTitle, variantSlug } = variant;
+      const { icon, image, isGroup, productTitle, variantSlug } = variant;
       const attributes = {
         isGroupItemFirst: index === 0,
         isGroupItemLast: index === product.variants.length - 1,
         isGroupItemOpen: isGroup && variant.isOpen,
         isSelected: isProductSelected(selectedProducts, variantSlug),
+        productIcon: icon,
         productImage: image,
         productTitle: productTitle,
       };
@@ -88,7 +89,7 @@ export function getSlides(
 
       if (isGroup && disabledCount === product.variants.length - 1) {
         const group = variants.shift();
-        const { image, productTitle } = product.variants[0];
+        const { icon, image, productTitle } = product.variants[0];
 
         variants.unshift(
           getSlideMarkup(
@@ -97,6 +98,7 @@ export function getSlides(
               isGroupItemLast: true,
               isGroupItemOpen: false,
               isSelected: false,
+              productIcon: icon,
               productImage: image,
               productTitle: productTitle,
             },
@@ -137,6 +139,7 @@ function getSlideMarkup(
     isGroupItemLast,
     isGroupItemOpen,
     isSelected,
+    productIcon,
     productImage,
     productTitle,
   } = attributes;
@@ -165,7 +168,7 @@ function getSlideMarkup(
             alt={productTitle}
             className={styles.productImage}
             height={slideImageSizes.height}
-            src={productImage}
+            src={isGroup && isGroupItemFirst ? productIcon : productImage}
             style={{ objectFit: 'contain' }}
             width={slideImageSizes.width}
           />

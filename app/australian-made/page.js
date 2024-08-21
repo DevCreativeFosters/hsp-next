@@ -19,7 +19,9 @@ export async function generateMetadata() {
 
 export default async function AustralianMadePage() {
   const content = await getPageData('australian-made');
-  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks.map(renderBlock) || [],
+  );
 
   return (
     <Layout withMap>

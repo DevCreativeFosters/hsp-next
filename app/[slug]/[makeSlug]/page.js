@@ -42,8 +42,10 @@ export default async function CategoryPage({ params }) {
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
   const blocks = await getMainProductCategoryBlocks(slug);
   const makes = await getAllMakes();
-  const contentBlocks = blocks?.flexibleContent?.blocks?.map(block =>
-    renderBlock(block, makes, [], params),
+  const contentBlocks = await Promise.all(
+    blocks?.flexibleContent?.blocks?.map(block =>
+      renderBlock(block, makes, [], params),
+    ) || [],
   );
   const makeSlug = params.makeSlug;
   const makeData = await getMake(makeSlug);

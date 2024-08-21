@@ -28,7 +28,9 @@ export async function generateMetadata({ params }) {
 export default async function SupportSubpage({ params }) {
   const supportUrl = routes.support(params.slug);
   const content = await getPageData(supportUrl);
-  const contentBlocks = content?.flexibleContent?.blocks.map(renderBlock);
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks.map(renderBlock) || [],
+  );
   const accordions = content?.supportPagesContent?.accordions;
 
   return (
