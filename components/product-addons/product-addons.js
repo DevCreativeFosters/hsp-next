@@ -75,22 +75,24 @@ export default function ProductAddons({ description, products, title }) {
   return (
     <Container collapseMargin>
       <SectionIntro description={description} title={title}>
-        <SectionButtons>
-          <div className={styles.buttons}>
-            <Button
-              className={clsx(styles.button, styles.prev)}
-              leftIcon="expand-more-neutral"
-              ref={buttonPrevRef}
-              variant="secondary"
-            />
-            <Button
-              className={clsx(styles.button, styles.next)}
-              leftIcon="expand-more-neutral"
-              ref={buttonNextRef}
-              variant="secondary"
-            />
-          </div>
-        </SectionButtons>
+        {products.length > 4 && (
+          <SectionButtons>
+            <div className={styles.buttons}>
+              <Button
+                className={clsx(styles.button, styles.prev)}
+                leftIcon="expand-more-neutral"
+                ref={buttonPrevRef}
+                variant="secondary"
+              />
+              <Button
+                className={clsx(styles.button, styles.next)}
+                leftIcon="expand-more-neutral"
+                ref={buttonNextRef}
+                variant="secondary"
+              />
+            </div>
+          </SectionButtons>
+        )}
       </SectionIntro>
 
       <TileCarousel
