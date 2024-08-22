@@ -18,7 +18,10 @@ import {
   query as globalOptionsQuery,
 } from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
-import { getResult as getMenu, query as menuQuery } from '@lib/api/get-menu';
+import {
+  getResult as getMenu,
+  getQuery as getMenuQuery,
+} from '@lib/api/get-menu';
 import {
   getResult as getMenuDropdownProducts,
   query as menuDropdownProductsQuery,
@@ -56,12 +59,8 @@ async function getLayoutData() {
   const bulkQuery = [
     globalOptionsQuery,
     footerMenusQuery,
-    menuQuery
-      .replace('$menuId', '$mainMenuId')
-      .replace('menu(', 'mainMenu:menu('),
-    menuQuery
-      .replace('$menuId', '$mobileMenuId')
-      .replace('menu(', 'mobileMenu:menu('),
+    getMenuQuery('mainMenu', 'mainMenuId'),
+    getMenuQuery('mobileMenu', 'mobileMenuId'),
     productCategoriesQuery,
     menuDropdownProductsQuery,
     makesQuery,
