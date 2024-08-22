@@ -71,8 +71,7 @@ async function getLayoutData() {
     `
       ${ProductWithVariants}
       query getBulk($mainMenuId: ID!, $mobileMenuId: ID!) { ${bulkQuery} }
-
-      `,
+    `,
     {
       variables: {
         mainMenuId: 'main-menu',
