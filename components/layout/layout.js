@@ -5,14 +5,37 @@ import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-d
 import { UserProvider } from '@contexts/user';
 import { VehicleProvider } from '@contexts/vehicle';
 
-import { getAllMakes } from '@lib/api/get-all-makes';
-import { getFooterMenus } from '@lib/api/get-footer-menus';
-import { getGlobalOptions } from '@lib/api/get-global-options';
+import {
+  getResult as getAllMakes,
+  query as makesQuery,
+} from '@lib/api/get-all-makes';
+import {
+  query as footerMenusQuery,
+  getResult as getFooterMenus,
+} from '@lib/api/get-footer-menus';
+import {
+  getResult as getGlobalOptions,
+  query as globalOptionsQuery,
+} from '@lib/api/get-global-options';
 import { getMainProductCategories } from '@lib/api/get-main-product-categories';
-import { getMenu } from '@lib/api/get-menu';
-import { getMenuDropdownProducts } from '@lib/api/get-menu-dropdown-products';
-import { getProductCategories } from '@lib/api/get-product-categories';
-import { getStores } from '@lib/api/get-stores';
+import {
+  getResult as getMenu,
+  getQuery as getMenuQuery,
+} from '@lib/api/get-menu';
+import {
+  getResult as getMenuDropdownProducts,
+  query as menuDropdownProductsQuery,
+} from '@lib/api/get-menu-dropdown-products';
+import {
+  getResult as getProductCategories,
+  query as productCategoriesQuery,
+} from '@lib/api/get-product-categories';
+import {
+  getResult as getStores,
+  query as storesQuery,
+} from '@lib/api/get-stores';
+import { ProductWithVariants } from '@lib/api/product-fragments/product-with-variants';
+import { fetchAPI } from '@lib/fetch-api';
 import { getExcludeTree, sortMainProductCategories } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import normalizeMobileMenu from '@lib/normalize-mobile-menu';
@@ -33,20 +56,46 @@ const GOOGLE_RECAPTCHA_SITEKEY =
   process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
 
 async function getLayoutData() {
-  const globalOptions = await getGlobalOptions();
-  const footerMenus = await getFooterMenus();
-  const mainMenu = await getMenu('main-menu');
-  const mobileMenu = await getMenu('mobile-navigation');
-  const productCategories = await getProductCategories();
-  const products = await getMenuDropdownProducts();
-  const makes = await getAllMakes();
-  const allStores = await getStores();
+  const bulkQuery = [
+    globalOptionsQuery,
+    footerMenusQuery,
+    getMenuQuery('mainMenu', 'mainMenuId'),
+    getMenuQuery('mobileMenu', 'mobileMenuId'),
+    productCategoriesQuery,
+    menuDropdownProductsQuery,
+    makesQuery,
+    storesQuery,
+  ].join('');
+
+  const data = await fetchAPI(
+    `
+      ${ProductWithVariants}
+      query getBulk($mainMenuId: ID!, $mobileMenuId: ID!) { ${bulkQuery} }
+    `,
+    {
+      variables: {
+        mainMenuId: 'main-menu',
+        mobileMenuId: 'mobile-navigation',
+      },
+    },
+  );
+
+  const globalOptions = getGlobalOptions(data);
+  const footerMenus = getFooterMenus(data);
+  const mainMenu = getMenu(data, 'mainMenu');
+  const mobileMenu = getMenu(data, 'mobileMenu');
+  const productCategories = getProductCategories(data);
+  const products = getMenuDropdownProducts(data);
+  const makes = getAllMakes(data);
+  const allStores = getStores(data);
+
   const excludeTree = getExcludeTree(globalOptions);
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
   const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes[0].id];
+
   const mainProductCategories = await getMainProductCategories(
-    excludeTree,
     excludeChildren,
+    excludeTree,
   );
 
   return {
@@ -127,7 +176,6 @@ export default function Layout({
       mainProductCategoryIds.includes(parent?.node?.id) &&
       !data.excludeChildrenId.includes(id),
   );
-
   return (
     <GravityFormsStaticDataProvider
       productSubCategories={productSubCategories}
