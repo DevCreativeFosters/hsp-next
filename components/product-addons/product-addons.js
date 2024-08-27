@@ -24,10 +24,14 @@ export default function ProductAddons({ description, products, title }) {
       if (!product) return null;
 
       const imageUrl = product.imageUrl || null;
-      const categories = product.productCategories || [];
+      const categories =
+        product.productCategories?.filter(
+          category => category.parent !== null,
+        ) || [];
       const makesAndModels = product.makesAndModels || [];
       const variants = product.productFields?.variants || [];
       const categorySlug = categories[0]?.slug || product.categorySlug || null;
+      const categoryName = categories[0]?.name || null;
       const model = makesAndModels.find(({ parent }) => parent) || {};
       const makeSlug = model.parent?.node?.slug || product.makeSlug || null;
       const modelSlug = model.slug || null;
@@ -61,7 +65,7 @@ export default function ProductAddons({ description, products, title }) {
 
       return {
         imageUrl,
-        name: product.title,
+        name: categoryName ? `${product.title} ${categoryName}` : product.title,
         price: product.lowestPrice,
         url,
       };
