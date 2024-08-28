@@ -7,7 +7,13 @@ import { formatPrice } from '@lib/helpers';
 
 import styles from './product-item.module.scss';
 
-export default function ProductItem({ imageUrl, name, price, url = '' }) {
+export default function ProductItem({
+  category,
+  imageUrl,
+  name,
+  price,
+  url = '',
+}) {
   const LinkOrDiv = url ? Link : 'div';
   return (
     <LinkOrDiv className={styles.product} href={url}>
@@ -22,6 +28,7 @@ export default function ProductItem({ imageUrl, name, price, url = '' }) {
         )}
       </div>
       {name && <div className={styles.name}>{name}</div>}
+      {category && <div className={styles.name}>{category}</div>}
       {(price || price === 0) && (
         <div className={styles.price}>from {formatPrice(price)}</div>
       )}
