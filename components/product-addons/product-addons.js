@@ -64,8 +64,9 @@ export default function ProductAddons({ description, products, title }) {
       }
 
       return {
+        category: categoryName ? categoryName : null,
         imageUrl,
-        name: categoryName ? `${product.title} ${categoryName}` : product.title,
+        name: product?.title || null,
         price: product.lowestPrice,
         url,
       };
