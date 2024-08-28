@@ -47,3 +47,7 @@ export default async function BlogPostPage({ params }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  return [];
+}

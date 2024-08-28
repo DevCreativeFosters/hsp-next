@@ -45,3 +45,7 @@ export default async function HspTVPost({ params }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  return [];
+}

@@ -72,3 +72,7 @@ export default async function SupportSubpage({ params }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  return [];
+}

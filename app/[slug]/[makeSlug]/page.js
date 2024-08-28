@@ -138,3 +138,7 @@ export default async function CategoryPage({ params }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  return [];
+}
