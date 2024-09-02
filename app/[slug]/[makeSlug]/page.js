@@ -40,13 +40,6 @@ export async function generateMetadata({ params }) {
 
 export default async function CategoryPage({ params }) {
   const slug = params.slug;
-
-  const { isEnabled: isDraftEnabled } = draftMode();
-  const content = await getPageData(slug, isDraftEnabled);
-  const flexibleContentBlocks = content?.flexibleContent?.blocks;
-  const title = content?.title;
-  const pageContent = content?.content;
-
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
@@ -64,6 +57,12 @@ export default async function CategoryPage({ params }) {
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
   const isExcluded = shouldBeExcluded(excludeTree, categoryData);
+
+  const { isEnabled: isDraftEnabled } = draftMode();
+  const content = await getPageData(`${slug}/${makeSlug}`, isDraftEnabled);
+  const flexibleContentBlocks = content?.flexibleContent?.blocks;
+  const title = content?.title;
+  const pageContent = content?.content;
 
   if (pageContent || flexibleContentBlocks) {
     const contentBlocks = await Promise.all(
