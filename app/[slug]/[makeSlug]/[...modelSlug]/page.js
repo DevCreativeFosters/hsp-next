@@ -207,3 +207,7 @@ export default async function Product({ params, searchParams }) {
     </Layout>
   );
 }
+
+export async function generateStaticParams() {
+  return [];
+}
