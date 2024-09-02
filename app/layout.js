@@ -61,7 +61,7 @@ export default async function RootLayout({ children }) {
     <html
       className={clsx(hind.variable, khand.variable)}
       data-download-file-form-id={downloadFileFormId}
-      lang="en"
+      lang="en-au"
     >
       <body className="" data-rh="class">
         <ReCaptchaProvider useEnterprise>
