@@ -8,6 +8,7 @@ import styles from './product-hero.module.scss';
 
 export default function ProductHero({
   button,
+  customTitle,
   description,
   features,
   image,
@@ -20,7 +21,14 @@ export default function ProductHero({
   return (
     <div className={styles.hero}>
       <div className={styles.header}>
-        {title && (
+        {customTitle && (
+          <h1 className={styles.title}>
+            {customTitle.product}
+            <br />
+            <span className={styles.slogan}>{customTitle.make}</span>
+          </h1>
+        )}
+        {title && !customTitle && (
           <h1 className={styles.title}>
             {title}
             <br />
@@ -47,7 +55,9 @@ export default function ProductHero({
       {features && (
         <div className={styles.features}>
           <ContentBox>
-            <h3 className={styles.contentBoxTitle}>Features</h3>
+            {features.title && (
+              <h3 className={styles.contentBoxTitle}>{features.title}</h3>
+            )}
             {features.content && <Wysiwyg content={features.content} />}
           </ContentBox>
         </div>
@@ -56,7 +66,7 @@ export default function ProductHero({
         <div className={styles.warranty}>
           <ContentBox className={styles.warrantyDescription}>
             <h3 className={styles.contentBoxTitle}>
-              Warranty{' '}
+              {warranty.title}{' '}
               {warranty.years && (
                 <span className={styles.years}>+{warranty.years} years</span>
               )}
