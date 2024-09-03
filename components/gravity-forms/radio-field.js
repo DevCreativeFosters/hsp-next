@@ -9,7 +9,7 @@ const DEFAULT_VALUE = '';
 export default function RadioField({ field, fieldErrors, form }) {
   const { choices, databaseId: id, isRequired, label } = field;
   const { dispatch, state } = useGravityForm();
-  const formId = form.formId;
+  const formId = form.id;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
   const fieldError = useMemo(() => {

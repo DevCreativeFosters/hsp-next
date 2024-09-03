@@ -28,13 +28,15 @@ export default function EnquiryProduct({
           {sku && <span className={styles.sku}>SKU: {sku}</span>}
         </p>
       )}
-      {price && (
+      {price !== null && price !== undefined && (
         <div className={styles.price}>
           {formatPrice(price)}{' '}
-          <span className={styles.installationCost}>
-            {' '}
-            + {formatPrice(installationCost)}
-          </span>
+          {price !== 0 && (
+            <span className={styles.installationCost}>
+              {' '}
+              + {formatPrice(installationCost)}
+            </span>
+          )}
         </div>
       )}
     </div>

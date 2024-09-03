@@ -55,7 +55,7 @@ export default function InputField({ field, fieldErrors, form }) {
     value,
   } = field;
 
-  const formId = form.formId;
+  const formId = form.id;
   const { dispatch, state } = useGravityForm();
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
 

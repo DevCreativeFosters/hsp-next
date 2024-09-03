@@ -164,12 +164,17 @@ export default function EnquiryModal({
                       ({
                         image,
                         installationCost: itemInstallationCost,
-                        price: itemPrice,
+                        price,
                         productName,
                         sku,
                         variantSlug: productSlug,
                       }) => {
-                        const price = itemPrice || productPrice;
+                        const itemPrice =
+                          price === false
+                            ? 0
+                            : price === null
+                              ? productPrice
+                              : price;
                         const installCost =
                           itemInstallationCost || installationCost;
 
@@ -179,7 +184,7 @@ export default function EnquiryModal({
                             installationCost={installCost}
                             key={productSlug}
                             name={productName}
-                            price={price}
+                            price={itemPrice}
                             sku={sku}
                           />
                         );
