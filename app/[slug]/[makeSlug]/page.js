@@ -90,25 +90,43 @@ export default async function CategoryPage({ params }) {
   }
 
   const filteredData = details?.filter(
-    data => data.relatedProductCategory?.[0]?.slug === slug,
+    data => data.relatedProductCategory?.nodes[0]?.slug === slug,
   );
+
+  const customTitle = {
+    make: filteredData[0]?.makeTitle || null,
+    product: filteredData[0]?.productTitle || null,
+  };
+
+  const makeContentBlocks = await Promise.all(
+    filteredData[0]?.flexibleContentBlocks?.blocks?.map(block =>
+      renderBlock(block, makes, [], params),
+    ) || [],
+  );
+
   const productHeroData = {
     features:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
+    featuresTitle:
+      filteredData?.length >= 1 ? filteredData[0].featuresTitle : 'Features',
     image:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0].featuredImage?.node
         : featuredImage,
     warrantyDescription:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.warranty.warrantyDescription
         : mainCategoryDetails?.warranty.warrantyDescription,
     warrantyTimePeriod:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
+    warrantyTitle:
+      filteredData?.length >= 1
+        ? filteredData[0].warranty.warrantyTitle
+        : 'Warranty',
   };
 
   const currentProduct = {
@@ -140,23 +158,34 @@ export default async function CategoryPage({ params }) {
             />
           </div>
           <ProductHero
+            customTitle={
+              filteredData[0]?.productTitle || filteredData[0]?.makeTitle
+                ? customTitle
+                : null
+            }
             description={makeData?.description || categoryData?.description}
             features={{
               content: productHeroData.features,
+              title: productHeroData.featuresTitle,
             }}
             image={productHeroData.image}
             make={makeData.name}
             title={categoryData?.name}
             warranty={{
               content: productHeroData.warrantyDescription,
+              title: productHeroData.warrantyTitle,
               years: productHeroData.warrantyTimePeriod,
             }}
           />
         </Suspense>
       </Container>
-      {contentBlocks?.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
-      ))}
+      {makeContentBlocks.length >= 1
+        ? makeContentBlocks?.map((contentBlock, index) => (
+            <Fragment key={index}>{contentBlock}</Fragment>
+          ))
+        : contentBlocks?.map((contentBlock, index) => (
+            <Fragment key={index}>{contentBlock}</Fragment>
+          ))}
     </Layout>
   );
 }
