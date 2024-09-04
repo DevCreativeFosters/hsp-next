@@ -27,3 +27,36 @@ export async function GET(request) {
     );
   }
 }
+
+export async function POST(request) {
+  const body = await request.json();
+
+  if (body.secret !== process.env.WORDPRESS_REVALIDATE_SECRET) {
+    return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
+  }
+
+  const tags = body.tags;
+
+  if (!tags || !Array.isArray(tags)) {
+    return NextResponse.json(
+      { message: 'No tags provided or invalid format' },
+      { status: 400 },
+    );
+  }
+
+  try {
+    tags.forEach(tag => revalidateTag(tag));
+
+    return NextResponse.json({
+      message: 'Revalidation successful',
+      revalidated: true,
+      tags,
+    });
+  } catch (error) {
+    console.error('Error during revalidation:', error);
+    return NextResponse.json(
+      { message: `Error revalidating: ${error.message}` },
+      { status: 500 },
+    );
+  }
+}
