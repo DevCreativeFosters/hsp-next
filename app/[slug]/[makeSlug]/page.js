@@ -1,5 +1,6 @@
 import { Fragment, Suspense } from 'react';
 
+import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
@@ -9,6 +10,7 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
+import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -16,6 +18,7 @@ import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
+import ContentBlocksPage from '@components/content-blocks-page/content-blocks-page';
 import Layout from '@components/layout/layout';
 import ProductHero from '@components/product-hero';
 import ProductNotFound from '@components/product-not-found/product-not-found';
@@ -55,6 +58,25 @@ export default async function CategoryPage({ params }) {
   const excludeTree = getExcludeTree(globalOptions);
   const isExcluded = shouldBeExcluded(excludeTree, categoryData);
 
+  const { isEnabled: isDraftEnabled } = draftMode();
+  const content = await getPageData(`${slug}/${makeSlug}`, isDraftEnabled);
+  const flexibleContentBlocks = content?.flexibleContent?.blocks;
+  const title = content?.title;
+  const pageContent = content?.content;
+
+  if (pageContent || flexibleContentBlocks) {
+    const contentBlocks = await Promise.all(
+      flexibleContentBlocks?.map(renderBlock) || [],
+    );
+    return (
+      <ContentBlocksPage
+        blocks={contentBlocks}
+        pageContent={pageContent}
+        title={title}
+      />
+    );
+  }
+
   if (!categoryData || isExcluded) {
     return notFound();
   }
@@ -68,25 +90,46 @@ export default async function CategoryPage({ params }) {
   }
 
   const filteredData = details?.filter(
-    data => data.relatedProductCategory?.[0]?.slug === slug,
+    data => data.relatedProductCategory?.nodes[0]?.slug === slug,
   );
+
+  const customTitle = {
+    make: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
+    product:
+      (filteredData?.length >= 1 && filteredData[0]?.productTitle) || null,
+  };
+
+  const makeContentBlocks = await Promise.all(
+    (filteredData?.length >= 1 &&
+      filteredData[0]?.flexibleContentBlocks?.blocks?.map(block =>
+        renderBlock(block, makes, [], params),
+      )) ||
+      [],
+  );
+
   const productHeroData = {
     features:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.features
         : mainCategoryDetails?.features,
+    featuresTitle:
+      filteredData?.length >= 1 ? filteredData[0].featuresTitle : 'Features',
     image:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0].featuredImage?.node
         : featuredImage,
     warrantyDescription:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.warranty.warrantyDescription
         : mainCategoryDetails?.warranty.warrantyDescription,
     warrantyTimePeriod:
-      filteredData?.length > 1
+      filteredData?.length >= 1
         ? filteredData[0]?.warranty.warrantyTimePeriod
         : mainCategoryDetails?.warranty.warrantyTimePeriod,
+    warrantyTitle:
+      filteredData?.length >= 1
+        ? filteredData[0].warranty.warrantyTitle
+        : 'Warranty',
   };
 
   const currentProduct = {
@@ -118,40 +161,39 @@ export default async function CategoryPage({ params }) {
             />
           </div>
           <ProductHero
+            customTitle={
+              filteredData?.length >= 1 &&
+              (filteredData[0]?.productTitle || filteredData[0]?.makeTitle)
+                ? customTitle
+                : null
+            }
             description={makeData?.description || categoryData?.description}
             features={{
               content: productHeroData.features,
+              title: productHeroData.featuresTitle,
             }}
             image={productHeroData.image}
             make={makeData.name}
             title={categoryData?.name}
             warranty={{
               content: productHeroData.warrantyDescription,
+              title: productHeroData.warrantyTitle,
               years: productHeroData.warrantyTimePeriod,
             }}
           />
         </Suspense>
       </Container>
-      {contentBlocks?.map((contentBlock, index) => (
-        <Fragment key={index}>{contentBlock}</Fragment>
-      ))}
+      {makeContentBlocks.length >= 1
+        ? makeContentBlocks?.map((contentBlock, index) => (
+            <Fragment key={index}>{contentBlock}</Fragment>
+          ))
+        : contentBlocks?.map((contentBlock, index) => (
+            <Fragment key={index}>{contentBlock}</Fragment>
+          ))}
     </Layout>
   );
 }
 
 export async function generateStaticParams() {
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
-
-  const slugs = [];
-  categories.forEach(category => {
-    category.makes.forEach(make => {
-      slugs.push({
-        makeSlug: make.slug,
-        slug: category.slug,
-      });
-    });
-  });
-
-  return slugs;
+  return [];
 }

@@ -16,7 +16,7 @@ export default function DateField({
   max = new Date().toISOString().split('T')[0],
   min = '1990-01-01',
 }) {
-  const { formId } = form;
+  const formId = form.formId;
   const { id, isRequired, label, placeholder, value } = field;
   const { dispatch, state } = useGravityForm();
 

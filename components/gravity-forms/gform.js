@@ -123,19 +123,15 @@ export default function GForm({
       });
   };
 
-  useImperativeHandle(
-    innerRef,
-    () => {
-      return {
-        handleSubmit: () => {
-          if (submitRef.current) {
-            submitRef.current.click();
-          }
-        },
-      };
-    },
-    [],
-  );
+  useImperativeHandle(innerRef, () => {
+    return {
+      handleSubmit: () => {
+        if (submitRef.current) {
+          submitRef.current.click();
+        }
+      },
+    };
+  }, []);
 
   const isTitleVisible = attributes.title && form.title;
 

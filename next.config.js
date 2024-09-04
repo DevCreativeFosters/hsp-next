@@ -14,6 +14,11 @@ const wpImageDomain = process.env.NEXT_PUBLIC_WORDPRESS_API_URL.match(
 
 /** @type {import('next').NextConfig} */
 module.exports = {
+  experimental: {
+    // reduce number of workers when
+    // building static pages
+    cpus: 1,
+  },
   images: {
     remotePatterns: [
       {

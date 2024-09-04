@@ -6,7 +6,7 @@ import Select from '@components/form/select';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
 
 export default function SelectField({ field, fieldErrors, form }) {
-  const { formId } = form;
+  const formId = form.formId;
   const { dispatch, state } = useGravityForm();
   const options = field.choices.map(({ text, value }) => ({
     label: text,
