@@ -15,7 +15,7 @@ export default function NameField({ field, fieldErrors, form }) {
   const parentKey = 'nameValues';
   const { databaseId: id, inputs, isRequired } = field;
 
-  const formId = form.id;
+  const formId = form.formId;
   const { dispatch, state } = useGravityForm();
 
   const fieldError = useMemo(() => {

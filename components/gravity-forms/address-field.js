@@ -17,7 +17,7 @@ const DEFAULT_VALUE = '';
 export default function AddressField({ field, fieldErrors, form }) {
   const parentKey = 'addressValues';
   const { databaseId: id, inputs, isRequired } = field;
-  const formId = form.id;
+  const formId = form.formId;
   const { dispatch, state } = useGravityForm();
 
   const fieldError = useMemo(() => {
