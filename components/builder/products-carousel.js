@@ -119,7 +119,7 @@ export default function ProductsCarousel({
                   type="button"
                 >
                   <div className={styles.productImageContainer}>
-                    {productImage && (
+                    {productImage && productImage !== '' && (
                       <Image
                         alt={productTitle}
                         className={styles.productImage}

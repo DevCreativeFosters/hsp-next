@@ -9,7 +9,7 @@ const DEFAULT_VALUE = '';
 export default function TextAreaField({ field, fieldErrors, form }) {
   const { databaseId: id, isRequired, label, placeholder } = field;
   const { dispatch, state } = useGravityForm();
-  const formId = form.id;
+  const formId = form.formId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
   const fieldError = useMemo(() => {

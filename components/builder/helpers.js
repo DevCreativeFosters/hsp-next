@@ -67,8 +67,8 @@ export function getSlides(
         isGroupItemLast: index === product.variants.length - 1,
         isGroupItemOpen: isGroup && variant.isOpen,
         isSelected: isProductSelected(selectedProducts, variantSlug),
-        productIcon: icon,
-        productImage: image,
+        productIcon: icon || '',
+        productImage: image || '',
         productTitle: productTitle,
       };
 
@@ -164,14 +164,17 @@ function getSlideMarkup(
         type="button"
       >
         <div className={styles.productImageContainer}>
-          <Image
-            alt={productTitle}
-            className={styles.productImage}
-            height={slideImageSizes.height}
-            src={isGroup && isGroupItemFirst ? productIcon : productImage}
-            style={{ objectFit: 'contain' }}
-            width={slideImageSizes.width}
-          />
+          {(productImage || productIcon) &&
+            (productImage !== '' || productIcon !== '') && (
+              <Image
+                alt={productTitle}
+                className={styles.productImage}
+                height={slideImageSizes.height}
+                src={isGroup && isGroupItemFirst ? productIcon : productImage}
+                style={{ objectFit: 'contain' }}
+                width={slideImageSizes.width}
+              />
+            )}
         </div>
         <div className={styles.productIcon}>
           <SlideIcon
@@ -349,12 +352,14 @@ export function updateSelectedCoverVariant(
 }
 
 export function sortProducts(products) {
-  return products.sort((a, b) => {
-    const aOrder =
-      a?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
-    const bOrder =
-      b?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
+  return (
+    products?.sort((a, b) => {
+      const aOrder =
+        a?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
+      const bOrder =
+        b?.productCategories?.nodes[0]?.categoryRelations?.order || 0;
 
-    return aOrder - bOrder;
-  });
+      return aOrder - bOrder;
+    }) || []
+  );
 }

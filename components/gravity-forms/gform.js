@@ -100,7 +100,7 @@ export default function GForm({
       variables: {
         input: {
           fieldValues: state,
-          id: form.id,
+          id: form.formId,
         },
       },
     })
