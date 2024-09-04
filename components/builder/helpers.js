@@ -170,7 +170,16 @@ function getSlideMarkup(
                 alt={productTitle}
                 className={styles.productImage}
                 height={slideImageSizes.height}
-                src={isGroup && isGroupItemFirst ? productIcon : productImage}
+                src={
+                  isGroup &&
+                  isGroupItemFirst &&
+                  productIcon &&
+                  productIcon !== ''
+                    ? productIcon
+                    : productImage && productImage !== ''
+                      ? productImage
+                      : ''
+                }
                 style={{ objectFit: 'contain' }}
                 width={slideImageSizes.width}
               />
