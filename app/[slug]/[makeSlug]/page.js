@@ -94,14 +94,17 @@ export default async function CategoryPage({ params }) {
   );
 
   const customTitle = {
-    make: filteredData[0]?.makeTitle || null,
-    product: filteredData[0]?.productTitle || null,
+    make: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
+    product:
+      (filteredData?.length >= 1 && filteredData[0]?.productTitle) || null,
   };
 
   const makeContentBlocks = await Promise.all(
-    filteredData[0]?.flexibleContentBlocks?.blocks?.map(block =>
-      renderBlock(block, makes, [], params),
-    ) || [],
+    (filteredData?.length >= 1 &&
+      filteredData[0]?.flexibleContentBlocks?.blocks?.map(block =>
+        renderBlock(block, makes, [], params),
+      )) ||
+      [],
   );
 
   const productHeroData = {
@@ -159,7 +162,8 @@ export default async function CategoryPage({ params }) {
           </div>
           <ProductHero
             customTitle={
-              filteredData[0]?.productTitle || filteredData[0]?.makeTitle
+              filteredData?.length >= 1 &&
+              (filteredData[0]?.productTitle || filteredData[0]?.makeTitle)
                 ? customTitle
                 : null
             }
