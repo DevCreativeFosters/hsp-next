@@ -8,7 +8,8 @@ import { metadata } from '@lib/seo';
 import Layout from '@components/layout/layout';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri('/');
+  const tags = ['page:home', 'page:/'];
+  const data = await getSeoByUri('/', tags);
 
   return {
     ...metadata,
