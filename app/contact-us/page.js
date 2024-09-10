@@ -6,6 +6,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -21,7 +22,8 @@ import Sidebar from '@components/sidebar/sidebar';
 import Logo from '@assets/images/logo.svg';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.contact);
+  const tags = [`page:${removeLeadingSlash(routes.contact)}`];
+  const data = await getSeoByUri(routes.contact, tags);
 
   return {
     ...metadata,

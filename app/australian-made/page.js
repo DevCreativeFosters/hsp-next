@@ -3,13 +3,15 @@ import { Fragment } from 'react';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
 import Layout from '@components/layout/layout';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.australianMade);
+  const tags = [`page:${removeLeadingSlash(routes.australianMade)}`];
+  const data = await getSeoByUri(routes.australianMade, tags);
 
   return {
     ...metadata,
