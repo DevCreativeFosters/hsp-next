@@ -30,11 +30,30 @@ export async function generateMetadata({ params }) {
     return;
   }
 
-  const data = await getMakeModelSeo(params.makeSlug);
+  const makeSlug = params.makeSlug;
+  const data = await getMakeModelSeo(makeSlug);
+  const makeData = await getMake(makeSlug);
+  const details = makeData?.detailsFields?.details;
+  const filteredData = details?.filter(
+    data => data.relatedProductCategory?.nodes[0]?.slug === params.slug,
+  );
+
+  const seo = {
+    description:
+      (filteredData?.length >= 1 && filteredData[0]?.seo?.description) || null,
+    title: (filteredData?.length >= 1 && filteredData[0]?.seo?.title) || null,
+  };
 
   return {
     ...metadata,
     ...data,
+    description: seo.description || metadata.description,
+    openGraph: {
+      ...data.openGraph,
+      description: seo.description || metadata.openGraph.description,
+      title: seo.title || metadata.openGraph.title,
+    },
+    title: seo.title || metadata.title,
   };
 }
 
