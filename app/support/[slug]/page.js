@@ -18,8 +18,9 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './page.module.scss';
 
 export async function generateMetadata({ params }) {
-  const tags = [`page:${removeLeadingSlash(routes.support())}/${params.slug}`];
-  const data = await getSeoByUri(`${routes.support()}/${params.slug}`, tags);
+  const supportPagePath = `${routes.support()}/${params.slug}`;
+  const tags = [`page:${removeLeadingSlash(supportPagePath)}`];
+  const data = await getSeoByUri(supportPagePath, tags);
 
   return {
     ...metadata,
