@@ -4,6 +4,7 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -18,7 +19,8 @@ import StoreLocatorSearch from '@components/store-locator-search/store-locator-s
 import styles from './page.module.scss';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.storeLocator);
+  const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`];
+  const data = await getSeoByUri(routes.storeLocator, tags);
 
   return {
     ...metadata,

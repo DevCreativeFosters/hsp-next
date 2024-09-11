@@ -4,6 +4,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { removeLeadingSlash } from '@lib/helpers';
 import { POST_TYPES } from '@lib/post-types';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
@@ -12,7 +13,8 @@ import FeaturedPost from '@components/featured-post/featured-post';
 import Layout from '@components/layout/layout';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.lifestyle);
+  const tags = [`page:${removeLeadingSlash(routes.lifestyle)}`];
+  const data = await getSeoByUri(routes.lifestyle, tags);
 
   return {
     ...metadata,

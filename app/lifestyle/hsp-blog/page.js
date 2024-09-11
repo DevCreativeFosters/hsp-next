@@ -4,6 +4,7 @@ import { getBlogPosts } from '@lib/api/get-blog-posts';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -20,7 +21,8 @@ import styles from '../page.module.scss';
 const POSTS_PER_PAGE = 12;
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.lifestyleBlog);
+  const tags = [`page:${removeLeadingSlash(routes.lifestyleBlog)}`];
+  const data = await getSeoByUri(routes.lifestyleBlog, tags);
 
   return {
     ...metadata,

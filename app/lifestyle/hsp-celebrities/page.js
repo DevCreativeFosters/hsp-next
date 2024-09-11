@@ -1,6 +1,7 @@
 import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number-of-HSP-celebrities-posts';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -12,7 +13,8 @@ import Layout from '@components/layout/layout';
 import PageClient from './page-client';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.lifestyleCelebrities);
+  const tags = [`page:${removeLeadingSlash(routes.lifestyleCelebrities)}`];
+  const data = await getSeoByUri(routes.lifestyleCelebrities, tags);
 
   return {
     ...metadata,
