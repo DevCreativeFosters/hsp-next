@@ -30,43 +30,11 @@ module.exports = {
         protocol: 'https',
       },
       {
-        hostname: '0.gravatar.com',
+        hostname: '**.gravatar.com',
         protocol: 'https',
       },
       {
-        hostname: '1.gravatar.com',
-        protocol: 'https',
-      },
-      {
-        hostname: '2.gravatar.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'secure.gravatar.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-waw1-1.cdninstagram.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-waw2-2.cdninstagram.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-fra3-1.cdninstagram.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-fra3-2.cdninstagram.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-fra5-1.cdninstagram.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent-fra5-2.cdninstagram.com',
+        hostname: '**.cdninstagram.com',
         protocol: 'https',
       },
       {
@@ -78,27 +46,11 @@ module.exports = {
         protocol: 'http',
       },
       {
-        hostname: 'prodhsp.wpenginepowered.com',
+        hostname: '**.wpenginepowered.com',
         protocol: 'http',
       },
       {
-        hostname: 'prodhsp.wpenginepowered.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'stghsp.wpenginepowered.com',
-        protocol: 'http',
-      },
-      {
-        hostname: 'stghsp.wpenginepowered.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'devhsp.wpenginepowered.com',
-        protocol: 'https',
-      },
-      {
-        hostname: 'scontent.cdninstagram.com',
+        hostname: '**.wpenginepowered.com',
         protocol: 'https',
       },
     ],
