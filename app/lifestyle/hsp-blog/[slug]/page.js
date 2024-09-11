@@ -13,7 +13,11 @@ import Layout from '@components/layout/layout';
 const NUMBER_OF_RELATED_POSTS = 5;
 
 export async function generateMetadata({ params }) {
-  const data = await getSeoByUri(`${params.slug}`);
+  const tags = [
+    `page:lifestyle/hsp-blog/${params.slug}`,
+    `post:${params.slug}`,
+  ];
+  const data = await getSeoByUri(`${params.slug}`, tags);
 
   return {
     ...metadata,

@@ -5,6 +5,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, sortMainProductCategories } from '@lib/helpers';
+import { removeLeadingSlash } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
@@ -14,7 +15,8 @@ import Layout from '@components/layout/layout';
 import ProductCategory from '@components/product-category/product-category';
 
 export async function generateMetadata() {
-  const data = await getSeoByUri(routes.products);
+  const tags = [`page:${removeLeadingSlash(routes.products)}`];
+  const data = await getSeoByUri(routes.products, tags);
 
   return {
     ...metadata,

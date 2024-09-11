@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { removeLeadingSlash } from '@lib/helpers';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -17,7 +18,9 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './page.module.scss';
 
 export async function generateMetadata({ params }) {
-  const data = await getSeoByUri(`${routes.support()}/${params.slug}`);
+  const supportPagePath = `${routes.support()}/${params.slug}`;
+  const tags = [`page:${removeLeadingSlash(supportPagePath)}`];
+  const data = await getSeoByUri(supportPagePath, tags);
 
   return {
     ...metadata,

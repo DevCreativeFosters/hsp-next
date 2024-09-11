@@ -12,6 +12,7 @@ import { getMake } from '@lib/api/get-make';
 import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { resolvePreview } from '@lib/api/get-post-type-preview';
 import { getProductPreview } from '@lib/api/get-product-preview';
+import { getProductSeo } from '@lib/api/get-product-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
@@ -30,13 +31,19 @@ import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
 export async function generateMetadata({ params }) {
-  if (!params?.modelSlug) {
+  if (!params?.slug || !params?.makeSlug || !params?.modelSlug) {
     return;
   }
 
+  const categorySlug = params.slug;
+  const makeSlug = params.makeSlug;
   const modelSlug = params.modelSlug[0];
 
-  const data = await getMakeModelSeo(modelSlug);
+  let data = await getProductSeo(categorySlug, makeSlug, modelSlug);
+
+  if (Object.keys(data).length === 0) {
+    data = await getMakeModelSeo(modelSlug);
+  }
 
   return {
     ...metadata,

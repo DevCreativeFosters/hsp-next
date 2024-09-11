@@ -135,7 +135,7 @@ export default function Sidebar({
         <Section
           headerChildren={
             <>
-              Your setup <NrCircle nr={selectedProducts.length} />
+              1. Your Setup <NrCircle nr={selectedProducts.length} />
             </>
           }
           headerClick={setOpenSection}
@@ -148,7 +148,7 @@ export default function Sidebar({
           />
         </Section>
         <Section
-          headerChildren={<>Locate your store</>}
+          headerChildren={<>2. Locate Your Store</>}
           headerClick={setOpenSection}
           id="store"
           isOpen={openSection === 'store'}
@@ -213,7 +213,7 @@ export default function Sidebar({
             onClick={handleOpenModal}
             size="large"
           >
-            Send enquiry
+            Send Enquiry
           </Button>
         </div>
       </div>
