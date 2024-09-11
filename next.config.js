@@ -54,6 +54,22 @@ module.exports = {
         protocol: 'https',
       },
       {
+        hostname: 'scontent-fra3-1.cdninstagram.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'scontent-fra3-2.cdninstagram.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'scontent-fra5-1.cdninstagram.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'scontent-fra5-2.cdninstagram.com',
+        protocol: 'https',
+      },
+      {
         hostname: 'hsp-wp.x5view.co',
         protocol: 'https',
       },
