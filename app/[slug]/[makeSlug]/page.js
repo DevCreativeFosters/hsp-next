@@ -47,13 +47,13 @@ export async function generateMetadata({ params }) {
   return {
     ...metadata,
     ...data,
-    description: seo.description || metadata.description,
+    description: seo.description || metadata?.description,
     openGraph: {
       ...data.openGraph,
-      description: seo.description || metadata.openGraph.description,
-      title: seo.title || metadata.openGraph.title,
+      description: seo.description || metadata?.openGraph?.description,
+      title: seo.title || metadata?.openGraph?.title,
     },
-    title: seo.title || metadata.title,
+    title: seo.title || metadata?.title,
   };
 }
 
