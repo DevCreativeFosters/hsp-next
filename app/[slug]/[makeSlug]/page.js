@@ -83,6 +83,13 @@ export default async function CategoryPage({ params }) {
   const title = content?.title;
   const pageContent = content?.content;
 
+  if (
+    (!makeData || Object.keys(makeData).length === 0) &&
+    !flexibleContentBlocks
+  ) {
+    return notFound();
+  }
+
   if (pageContent || flexibleContentBlocks) {
     const contentBlocks = await Promise.all(
       flexibleContentBlocks?.map(renderBlock) || [],
