@@ -28,6 +28,7 @@
     @include bp(medium-large) {
       margin-top: 60px;
       display: flex;
+      flex-wrap: wrap;
     }
 
     @include bp(large) {
@@ -42,8 +43,6 @@
 }
 
 .itemLink {
-  white-space: nowrap;
-
   &:hover {
     color: var(--color-white-100);
   }
