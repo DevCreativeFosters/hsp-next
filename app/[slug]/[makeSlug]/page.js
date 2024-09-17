@@ -82,6 +82,7 @@ export default async function CategoryPage({ params }) {
 
   const { isEnabled: isDraftEnabled } = draftMode();
   const content = await getPageData(`${slug}/${makeSlug}`, isDraftEnabled);
+  const parent = content?.parent;
   const flexibleContentBlocks = content?.flexibleContent?.blocks;
   const title = content?.title;
   const pageContent = content?.content;
@@ -91,6 +92,10 @@ export default async function CategoryPage({ params }) {
     !flexibleContentBlocks || flexibleContentBlocks.length === 0;
 
   if (isMainCategoryEmpty && !isMakeDataEmpty) {
+    return notFound();
+  }
+
+  if (!parent) {
     return notFound();
   }
 
