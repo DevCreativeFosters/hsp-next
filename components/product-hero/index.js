@@ -23,9 +23,9 @@ export default function ProductHero({
       <div className={styles.header}>
         {customTitle && (
           <h1 className={styles.title}>
-            {customTitle.product}
+            {customTitle.title}
             <br />
-            <span className={styles.slogan}>{customTitle.make}</span>
+            <span className={styles.slogan}>{customTitle.slogan}</span>
           </h1>
         )}
         {title && !customTitle && (

@@ -120,9 +120,9 @@ export default async function CategoryPage({ params }) {
   );
 
   const customTitle = {
-    make: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
-    product:
+    slogan:
       (filteredData?.length >= 1 && filteredData[0]?.productTitle) || null,
+    title: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
   };
 
   const makeContentBlocks = await Promise.all(

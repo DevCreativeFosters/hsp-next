@@ -57,14 +57,20 @@ export default async function ProductHeroPage({ children, params, slug }) {
           mainCategory={true}
         />
         <ProductHero
+          customTitle={{
+            slogan: mainCategoryDetails?.slogan,
+            title: mainCategoryDetails?.title,
+          }}
           description={categoryData?.description}
           features={{
             content: mainCategoryDetails?.features,
+            title: mainCategoryDetails?.featuresTitle,
           }}
           image={featuredImage}
           title={categoryData?.name}
           warranty={{
             content: mainCategoryDetails?.warranty.warrantyDescription,
+            title: mainCategoryDetails?.warranty.warrantyTitle,
             years: mainCategoryDetails?.warranty.warrantyTimePeriod,
           }}
         />
