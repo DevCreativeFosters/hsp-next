@@ -7,6 +7,7 @@ import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-m
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
+import getProductCategoriesToExclude from '@lib/api/get-pdp-categories-to-exclude';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import { shouldBeExcluded } from '@lib/helpers';
@@ -24,8 +25,15 @@ export default async function ProductHeroPage({ children, params, slug }) {
   const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
+  const categoriesToExclude =
+    await getProductCategoriesToExclude(globalOptions);
+
   const excludeTree = getExcludeTree(globalOptions);
   const isExcluded = shouldBeExcluded(excludeTree, categoryData);
+
+  if (categoryData && categoriesToExclude.includes(slug)) {
+    return notFound();
+  }
 
   if (!categoryData || Object.keys(categoryData).length === 0 || isExcluded) {
     return notFound();
@@ -57,14 +65,20 @@ export default async function ProductHeroPage({ children, params, slug }) {
           mainCategory={true}
         />
         <ProductHero
+          customTitle={{
+            slogan: mainCategoryDetails?.slogan,
+            title: mainCategoryDetails?.title,
+          }}
           description={categoryData?.description}
           features={{
             content: mainCategoryDetails?.features,
+            title: mainCategoryDetails?.featuresTitle,
           }}
           image={featuredImage}
           title={categoryData?.name}
           warranty={{
             content: mainCategoryDetails?.warranty.warrantyDescription,
+            title: mainCategoryDetails?.warranty.warrantyTitle,
             years: mainCategoryDetails?.warranty.warrantyTimePeriod,
           }}
         />

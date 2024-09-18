@@ -47,13 +47,16 @@ export async function generateMetadata({ params }) {
   return {
     ...metadata,
     ...data,
-    description: seo.description || metadata?.description,
+    description: seo.description || metadata?.description || data?.description,
     openGraph: {
       ...data.openGraph,
-      description: seo.description || metadata?.openGraph?.description,
-      title: seo.title || metadata?.openGraph?.title,
+      description:
+        seo.description ||
+        metadata?.openGraph?.description ||
+        data?.openGraph?.description,
+      title: seo.title || metadata?.openGraph?.title || data?.openGraph?.title,
     },
-    title: seo.title || metadata?.title,
+    title: seo.title || metadata?.title || data?.title,
   };
 }
 
@@ -79,9 +82,34 @@ export default async function CategoryPage({ params }) {
 
   const { isEnabled: isDraftEnabled } = draftMode();
   const content = await getPageData(`${slug}/${makeSlug}`, isDraftEnabled);
+  const parent = content?.parent;
   const flexibleContentBlocks = content?.flexibleContent?.blocks;
   const title = content?.title;
   const pageContent = content?.content;
+  const isMainCategoryEmpty = Object.keys(mainCategory).length === 0;
+  const isMakeDataEmpty = !makeData || Object.keys(makeData).length === 0;
+  const isFlexibleContentEmpty =
+    !flexibleContentBlocks || flexibleContentBlocks.length === 0;
+
+  if (isMainCategoryEmpty && !isMakeDataEmpty) {
+    return notFound();
+  }
+
+  if (!parent) {
+    return notFound();
+  }
+
+  if (
+    isMainCategoryEmpty &&
+    isMakeDataEmpty &&
+    flexibleContentBlocks === undefined
+  ) {
+    return notFound();
+  }
+
+  if (!isMainCategoryEmpty && isMakeDataEmpty && isFlexibleContentEmpty) {
+    return notFound();
+  }
 
   if (pageContent || flexibleContentBlocks) {
     const contentBlocks = await Promise.all(
@@ -113,9 +141,9 @@ export default async function CategoryPage({ params }) {
   );
 
   const customTitle = {
-    make: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
-    product:
+    slogan:
       (filteredData?.length >= 1 && filteredData[0]?.productTitle) || null,
+    title: (filteredData?.length >= 1 && filteredData[0]?.makeTitle) || null,
   };
 
   const makeContentBlocks = await Promise.all(

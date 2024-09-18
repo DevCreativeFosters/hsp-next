@@ -10,6 +10,7 @@ import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
 import { getMake } from '@lib/api/get-make';
 import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
+import getProductCategoriesToExclude from '@lib/api/get-pdp-categories-to-exclude';
 import { resolvePreview } from '@lib/api/get-post-type-preview';
 import { getProductPreview } from '@lib/api/get-product-preview';
 import { getProductSeo } from '@lib/api/get-product-seo';
@@ -68,6 +69,8 @@ export default async function Product({ params, searchParams }) {
   }
 
   const globalOptions = await getGlobalOptions();
+  const categoriesToExclude =
+    await getProductCategoriesToExclude(globalOptions);
   const enquiryFormId = globalOptions?.enquiryFormId;
   const downloadFileFormId = globalOptions?.downloadFileFormId;
   const slug = params.slug;
@@ -80,6 +83,10 @@ export default async function Product({ params, searchParams }) {
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
   );
+
+  if (mainCategory && categoriesToExclude.includes(slug)) {
+    return notFound();
+  }
 
   let modelName;
   makes?.some(make => {

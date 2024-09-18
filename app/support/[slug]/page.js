@@ -1,5 +1,7 @@
 import { Fragment } from 'react';
 
+import { notFound } from 'next/navigation';
+
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
@@ -31,10 +33,15 @@ export async function generateMetadata({ params }) {
 export default async function SupportSubpage({ params }) {
   const supportUrl = routes.support(params.slug);
   const content = await getPageData(supportUrl);
+  const parent = content?.parent;
   const contentBlocks = await Promise.all(
     content?.flexibleContent?.blocks.map(renderBlock) || [],
   );
   const accordions = content?.supportPagesContent?.accordions;
+
+  if (!parent) {
+    return notFound();
+  }
 
   return (
     <Layout>

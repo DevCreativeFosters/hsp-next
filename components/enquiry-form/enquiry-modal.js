@@ -195,8 +195,8 @@ export default function EnquiryModal({
                     Total cost:
                     <Tooltip
                       attributes={{
-                        content: `Installation costs may vary. For a complete breakdown, please refer to our <a href="${routes.privacyAndTerms}">Terms & Conditions.</a>`,
-                        title: '*Installation cost may vary',
+                        content: `Removal of existing, non compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
+                        title: '*Installation Terms',
                       }}
                     />
                   </div>
