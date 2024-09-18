@@ -140,7 +140,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         </video>
       )}
 
-      {thumbnail.sourceUrl && (
+      {thumbnail?.sourceUrl && (
         <Image
           alt={thumbnail.altText}
           className={clsx(styles.thumbnail, {
