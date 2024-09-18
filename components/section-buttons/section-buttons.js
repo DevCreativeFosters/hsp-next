@@ -23,17 +23,19 @@ export default function SectionButtons({
           : null
       }
     >
-      {buttons.map(({ label, link, withArrowForwardIcon, ...props }, index) => (
-        <Button
-          href={link?.url || link}
-          key={index}
-          target={link?.target || null}
-          {...props}
-          rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
-        >
-          {label}
-        </Button>
-      ))}
+      {buttons?.map(
+        ({ label, link, withArrowForwardIcon, ...props }, index) => (
+          <Button
+            href={link?.url || link}
+            key={index}
+            target={link?.target || null}
+            {...props}
+            rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
+          >
+            {label}
+          </Button>
+        ),
+      )}
       {children}
     </div>
   );
