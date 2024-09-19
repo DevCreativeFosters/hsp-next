@@ -35,11 +35,12 @@ export default function EnquiryModal({
   const [formIsSent, setFormIsSent] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
+  const installCost = installationCost;
 
   const products = selectedProducts
     ?.map(
       ({ freight, installationCost, price, productName, sku }) =>
-        `SKU#${sku},${productName},PRICE${price},FITTING${installationCost}${freight !== null ? `,FREIGHT${freight}` : ''}`,
+        `SKU#${sku},${productName},PRICE${price},FITTING${installationCost || installCost}${freight !== null ? `,FREIGHT${freight}` : ''}`,
     )
     .join('|');
 
