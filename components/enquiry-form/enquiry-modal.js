@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 import routes from '@lib/routes';
@@ -42,7 +41,7 @@ export default function EnquiryModal({
       ({ freight, installationCost, price, productName, sku }) =>
         `SKU#${sku},${productName},PRICE${price},FITTING${installationCost}${freight !== null ? `,FREIGHT${freight}` : ''}`,
     )
-    .join('\n');
+    .join('|');
 
   const allSelectedProducts = products;
 
