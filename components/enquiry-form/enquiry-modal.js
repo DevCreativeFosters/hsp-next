@@ -40,7 +40,7 @@ export default function EnquiryModal({
   const products = selectedProducts
     ?.map(
       ({ freight, installationCost, price, productName, sku }) =>
-        `SKU#${sku},${productName},PRICE${price},FITTING${installationCost || installCost}${freight !== null ? `,FREIGHT${freight}` : ''}`,
+        `SKU#${sku},${productName},PRICE${price || 0},FITTING${installationCost || installCost || 0},FREIGHT${freight !== null ? freight : '0'}`,
     )
     .join('|');
 
