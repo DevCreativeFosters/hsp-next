@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useVehicleContext } from '@contexts/vehicle';
-
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 import routes from '@lib/routes';
@@ -37,19 +35,16 @@ export default function EnquiryModal({
   const [formIsSent, setFormIsSent] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
+  const installCost = installationCost;
 
-  const { selectedFactoryOption } = useVehicleContext();
   const products = selectedProducts
     ?.map(
-      ({ productName, sku, variantName }) =>
-        `${productName}: ${variantName} (SKU: ${sku})`,
+      ({ freight, installationCost, price, productName, sku }) =>
+        `SKU#${sku},${productName},PRICE${price || 0},FITTING${installationCost || installCost || 0},FREIGHT${freight !== null ? freight : '0'}`,
     )
-    .join(', ');
+    .join('|');
 
-  const factoryOptions =
-    selectedFactoryOption?.title || 'No factory option selected';
-
-  const allSelectedProducts = `Product: ${products} ::: Factory Option: ${factoryOptions}`;
+  const allSelectedProducts = products;
 
   const handleSubmitClick = () => {
     if (formRef.current) {

@@ -95,7 +95,7 @@ export default async function CategoryPage({ params }) {
     return notFound();
   }
 
-  if (!parent) {
+  if (isMainCategoryEmpty && isMakeDataEmpty && !parent) {
     return notFound();
   }
 
