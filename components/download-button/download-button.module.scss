@@ -1,10 +1,12 @@
 .downloadButton {
   --size: 40px;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: var(--size);
   height: var(--size);
+  padding: 0;
   border-radius: var(--border-radius-sm);
   color: var(--color-black-100);
   background: var(--color-white-40);
