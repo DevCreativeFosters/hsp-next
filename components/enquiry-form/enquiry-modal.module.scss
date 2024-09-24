@@ -74,7 +74,7 @@ $desktop-height: 1160px;
 
 .enquiryContent {
   position: relative;
-  padding: 48px 16px;
+  padding: 48px 16px 96px;
   min-height: inherit;
 
   @include bp(large) {
