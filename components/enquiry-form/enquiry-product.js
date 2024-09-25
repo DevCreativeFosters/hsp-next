@@ -14,13 +14,15 @@ export default function EnquiryProduct({
   return (
     <div className={styles.product}>
       {imageUrl && (
-        <Image
-          alt={`${name} image`}
-          className={styles.productImage}
-          height={48}
-          src={imageUrl}
-          width={67}
-        />
+        <div className={styles.image}>
+          <Image
+            alt={`${name} image`}
+            className={styles.productImage}
+            height={48}
+            src={imageUrl}
+            width={67}
+          />
+        </div>
       )}
       {name && (
         <p className={styles.name}>
