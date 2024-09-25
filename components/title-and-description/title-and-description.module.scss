@@ -50,9 +50,10 @@
   }
 
   iframe {
-    @include bp-below(medium) {
+    @include bp-below(large) {
       width: 100%;
-      height: auto;
+      height: 100%;
+      aspect-ratio: 16/9;
     }
   }
 }
