@@ -1,3 +1,4 @@
+import { GoogleTagManager } from '@next/third-parties/google';
 import clsx from 'clsx';
 import { ReCaptchaProvider } from 'next-recaptcha-v3';
 import localFont from 'next/font/local';
@@ -63,6 +64,7 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
       lang="en-au"
     >
+      <GoogleTagManager gtmId="GTM-523F9DP" />
       <body className="" data-rh="class">
         <ReCaptchaProvider useEnterprise>
           <NextTopLoader color="#ed2935ff" />

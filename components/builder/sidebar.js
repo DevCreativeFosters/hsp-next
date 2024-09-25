@@ -21,6 +21,7 @@ import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
 const ListIcon = getIcon('list');
+const CarIcon = getIcon('car');
 
 const DEFAULT_PRICE_SUMMARY = {
   freight: 0,
@@ -188,7 +189,7 @@ export default function Sidebar({
             onClick={toggleOpen}
             type="button"
           >
-            <ListIcon />
+            <CarIcon />
             <NrCircle nr={selectedProducts.length} />
           </button>
           <div className={styles.summaryPrice}>

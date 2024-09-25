@@ -79,7 +79,14 @@ export default function FeaturedPost({
   return (
     <div className={styles.featuredPost}>
       {video && (
-        <video className={styles.video} loop muted ref={videoRef}>
+        <video
+          className={styles.video}
+          loop
+          muted
+          playsInline
+          ref={videoRef}
+          webkitPlaysInline
+        >
           <source src={video.mediaItemUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
