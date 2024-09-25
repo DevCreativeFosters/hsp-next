@@ -93,9 +93,11 @@ export default function Features({
             className={styles.video}
             loop
             muted
+            playsInline
             poster={video.poster || null}
             ref={videoRef}
             title={video.title || null}
+            webkitPlaysInline
           >
             <source src={video.src} type={video.type} />
             Your browser does not support the video tag.
