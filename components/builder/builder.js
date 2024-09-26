@@ -154,19 +154,32 @@ export default function Builder({
         }
       });
 
-      const otherProductsWithSameParent = getOtherProductsWithSameParent(
-        stepProducts,
-        product.productSlug,
-        product.variantSlug,
+      const updatedDisabledProducts = newSelectedProducts.reduce(
+        (acc, selectedProduct) => {
+          const otherProductsWithSameParent = getOtherProductsWithSameParent(
+            stepProducts,
+            selectedProduct.productSlug,
+            selectedProduct.variantSlug,
+          );
+
+          const incompatibleProducts = getIncompatibleProducts(
+            stepProducts,
+            selectedProduct,
+            covers,
+          );
+
+          const uniqueDisabled = [
+            ...acc,
+            ...otherProductsWithSameParent,
+            ...incompatibleProducts,
+          ];
+
+          return Array.from(new Set(uniqueDisabled));
+        },
+        [],
       );
 
-      const incompatibleProducts = [
-        ...getIncompatibleProducts(stepProducts, product, covers),
-      ];
-
-      const newDisabledProducts = disabledProducts
-        .filter(el => !otherProductsWithSameParent.includes(el))
-        .filter(el => !incompatibleProducts.includes(el));
+      setDisabledProducts(updatedDisabledProducts);
 
       if (
         newSelectedProducts.length === 1 &&
@@ -176,7 +189,7 @@ export default function Builder({
           covers.findIndex(
             cover => cover.group === newSelectedProducts[0].productSlug,
           ) || 0;
-        const newVariant = covers[selectedCoverIndex].variants[0];
+        const newVariant = covers[selectedCoverIndex]?.variants[0];
 
         setSelectedCover(newVariant);
         newSelectedProducts[0] = newVariant;
@@ -187,11 +200,9 @@ export default function Builder({
       });
 
       setSelectedProducts(newSelectedProducts);
-      setDisabledProducts(newDisabledProducts);
     },
     [
       covers,
-      disabledProducts,
       selectedProducts,
       setGoToLink,
       setSelectedCover,
@@ -455,7 +466,7 @@ export default function Builder({
         setCovers([]);
       }
     },
-    [covers.length, stepNumber],
+    [covers.length, setCovers, stepNumber],
   );
 
   const isInlineMapVisible = Boolean(
