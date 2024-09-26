@@ -100,31 +100,27 @@ export default function Builder({
       setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       setIncompatibleCovers(incompatibleCovers);
 
+      const newDisabledProducts = [
+        ...disabledProducts,
+        ...getOtherProductsWithSameParent(
+          stepProducts,
+          product.productSlug,
+          product.variantSlug,
+        ),
+        ...getIncompatibleProducts(stepProducts, product, covers),
+      ];
+
+      setDisabledProducts(newDisabledProducts);
+
       if (
         incompatibleFactoryOptions.length > 0 ||
         incompatibleCovers.length > 0
       ) {
         setShowClashModal(true);
-
         return;
       }
 
-      if (stepNumber === 2) {
-        const newDisabledProducts = [
-          ...disabledProducts,
-          ...getOtherProductsWithSameParent(
-            stepProducts,
-            product.productSlug,
-            product.variantSlug,
-          ),
-          ...getIncompatibleProducts(stepProducts, product, covers),
-        ];
-
-        setDisabledProducts(newDisabledProducts);
-      }
-
       setLastProductSlug(product.productSlug);
-
       setProductToAdd(product);
     },
     [
@@ -144,7 +140,6 @@ export default function Builder({
 
       if (isCover) {
         setGoToLink(routes.uteBuilder);
-
         return;
       }
 
@@ -154,9 +149,11 @@ export default function Builder({
         }
       });
 
-      const updatedDisabledProducts = newSelectedProducts.reduce(
-        (acc, selectedProduct) => {
-          const otherProductsWithSameParent = getOtherProductsWithSameParent(
+      let updatedDisabledProducts = [];
+
+      if (newSelectedProducts.length > 0) {
+        newSelectedProducts.forEach(selectedProduct => {
+          const productsWithSameParent = getOtherProductsWithSameParent(
             stepProducts,
             selectedProduct.productSlug,
             selectedProduct.variantSlug,
@@ -168,18 +165,17 @@ export default function Builder({
             covers,
           );
 
-          const uniqueDisabled = [
-            ...acc,
-            ...otherProductsWithSameParent,
+          updatedDisabledProducts = [
+            ...updatedDisabledProducts,
+            ...productsWithSameParent,
             ...incompatibleProducts,
           ];
+        });
 
-          return Array.from(new Set(uniqueDisabled));
-        },
-        [],
-      );
-
-      setDisabledProducts(updatedDisabledProducts);
+        updatedDisabledProducts = Array.from(new Set(updatedDisabledProducts));
+      } else {
+        setDisabledProducts([]);
+      }
 
       if (
         newSelectedProducts.length === 1 &&
@@ -195,11 +191,9 @@ export default function Builder({
         newSelectedProducts[0] = newVariant;
       }
 
-      setLastProductSlug(prevState => {
-        return prevState;
-      });
-
       setSelectedProducts(newSelectedProducts);
+      setLastProductSlug(prevState => prevState);
+      setDisabledProducts(updatedDisabledProducts);
     },
     [
       covers,
@@ -493,9 +487,16 @@ export default function Builder({
     }
 
     setProductToAdd(currentProduct);
-    setDisabledProducts([
+
+    const recalculatedDisabledProducts = [
+      ...disabledProducts,
       ...getIncompatibleProducts(stepProducts, currentProduct, covers),
-    ]);
+      ...selectedProducts.flatMap(product =>
+        getIncompatibleProducts(stepProducts, product, covers),
+      ),
+    ];
+
+    setDisabledProducts([...new Set(recalculatedDisabledProducts)]);
     setShowClashModal(false);
   };
 
