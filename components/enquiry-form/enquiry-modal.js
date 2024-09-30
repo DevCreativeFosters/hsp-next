@@ -53,6 +53,7 @@ export default function EnquiryModal({
       ({ freight, installationCost, price, productName, sku }) =>
         `SKU#${handleValue(sku)},${handleValue(productName)},PRICE${handleValue(
           price,
+          productPrice,
         )},FITTING${handleValue(
           installationCost,
           installCost,
