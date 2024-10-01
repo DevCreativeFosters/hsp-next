@@ -36,9 +36,15 @@
 }
 
 .title {
-  word-break: break-word;
-  hyphens: auto;
-  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+  overflow-wrap: normal;
+
+  @include bp(medium) {
+    word-break: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
 }
 
 .description {
