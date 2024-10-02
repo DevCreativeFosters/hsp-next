@@ -36,11 +36,28 @@ export default function EnquiryModal({
   const [isFormDirty, setIsFormDirty] = useState(false);
   const formRef = useRef();
   const installCost = installationCost;
+  const freightCost = freight;
+
+  const handleValue = (value, secondaryValue, defaultValue = 0) => {
+    return value === null || value === undefined || value === ''
+      ? secondaryValue === null ||
+        secondaryValue === undefined ||
+        secondaryValue === ''
+        ? defaultValue
+        : secondaryValue
+      : value;
+  };
 
   const products = selectedProducts
     ?.map(
       ({ freight, installationCost, price, productName, sku }) =>
-        `SKU#${sku},${productName},PRICE${price || 0},FITTING${installationCost || installCost || 0},FREIGHT${freight !== null ? freight : '0'}`,
+        `SKU#${handleValue(sku)},${handleValue(productName)},PRICE${handleValue(
+          price,
+          productPrice,
+        )},FITTING${handleValue(
+          installationCost,
+          installCost,
+        )},FREIGHT${handleValue(freight, freightCost)}`,
     )
     .join('|');
 
