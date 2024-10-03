@@ -57,17 +57,11 @@ module.exports = {
     ],
   },
   async redirects() {
-    return redirects.flatMap(({ destination, permanent, source }) => {
-      const sourceWithoutSlash = source.endsWith('/')
-        ? source.slice(0, -1)
-        : source;
-      const sourceWithSlash = source.endsWith('/') ? source : `${source}/`;
-
-      return [
-        { destination, permanent, source: sourceWithoutSlash },
-        { destination, permanent, source: sourceWithSlash },
-      ];
-    });
+    return redirects.map(({ destination, permanent, source }) => ({
+      destination,
+      permanent: permanent ?? true,
+      source,
+    }));
   },
   sassOptions: {
     importer: globImporter(),
