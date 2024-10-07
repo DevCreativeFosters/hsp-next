@@ -100,24 +100,26 @@ export default function Builder({
       setIncompatibleFactoryOptions(incompatibleFactoryOptions);
       setIncompatibleCovers(incompatibleCovers);
 
-      const newDisabledProducts = [
-        ...disabledProducts,
-        ...getOtherProductsWithSameParent(
-          stepProducts,
-          product.productSlug,
-          product.variantSlug,
-        ),
-        ...getIncompatibleProducts(stepProducts, product, covers),
-      ];
-
-      setDisabledProducts(newDisabledProducts);
-
       if (
         incompatibleFactoryOptions.length > 0 ||
         incompatibleCovers.length > 0
       ) {
         setShowClashModal(true);
         return;
+      }
+
+      if (stepNumber === 2) {
+        const newDisabledProducts = [
+          ...disabledProducts,
+          ...getOtherProductsWithSameParent(
+            stepProducts,
+            product.productSlug,
+            product.variantSlug,
+          ),
+          ...getIncompatibleProducts(stepProducts, product, covers),
+        ];
+
+        setDisabledProducts(newDisabledProducts);
       }
 
       setLastProductSlug(product.productSlug);
@@ -143,39 +145,41 @@ export default function Builder({
         return;
       }
 
-      selectedProducts.forEach(selectedProduct => {
-        if (selectedProduct.variantSlug !== product.variantSlug) {
-          newSelectedProducts.push(selectedProduct);
-        }
-      });
+      newSelectedProducts = selectedProducts.filter(
+        selectedProduct => selectedProduct.variantSlug !== product.variantSlug,
+      );
 
       let updatedDisabledProducts = [];
 
-      if (newSelectedProducts.length > 0) {
-        newSelectedProducts.forEach(selectedProduct => {
-          const productsWithSameParent = getOtherProductsWithSameParent(
-            stepProducts,
-            selectedProduct.productSlug,
-            selectedProduct.variantSlug,
-          );
+      newSelectedProducts.forEach(selectedProduct => {
+        const otherProductsWithSameParent = getOtherProductsWithSameParent(
+          stepProducts,
+          selectedProduct.productSlug,
+          selectedProduct.variantSlug,
+        );
 
-          const incompatibleProducts = getIncompatibleProducts(
-            stepProducts,
-            selectedProduct,
-            covers,
-          );
+        const incompatibleProducts = getIncompatibleProducts(
+          stepProducts,
+          selectedProduct,
+          covers,
+        );
 
-          updatedDisabledProducts = [
+        updatedDisabledProducts = [
+          ...new Set([
             ...updatedDisabledProducts,
-            ...productsWithSameParent,
+            ...otherProductsWithSameParent,
             ...incompatibleProducts,
-          ];
-        });
+          ]),
+        ];
+      });
 
-        updatedDisabledProducts = Array.from(new Set(updatedDisabledProducts));
-      } else {
-        setDisabledProducts([]);
-      }
+      updatedDisabledProducts = updatedDisabledProducts.filter(
+        disabledProduct =>
+          !newSelectedProducts.some(
+            selectedProduct =>
+              selectedProduct.variantSlug === disabledProduct.variantSlug,
+          ),
+      );
 
       if (
         newSelectedProducts.length === 1 &&
@@ -185,14 +189,15 @@ export default function Builder({
           covers.findIndex(
             cover => cover.group === newSelectedProducts[0].productSlug,
           ) || 0;
-        const newVariant = covers[selectedCoverIndex]?.variants[0];
+
+        const newVariant = covers[selectedCoverIndex].variants[0];
 
         setSelectedCover(newVariant);
         newSelectedProducts[0] = newVariant;
       }
 
-      setSelectedProducts(newSelectedProducts);
       setLastProductSlug(prevState => prevState);
+      setSelectedProducts(newSelectedProducts);
       setDisabledProducts(updatedDisabledProducts);
     },
     [
@@ -460,7 +465,7 @@ export default function Builder({
         setCovers([]);
       }
     },
-    [covers.length, setCovers, stepNumber],
+    [covers.length, stepNumber],
   );
 
   const isInlineMapVisible = Boolean(
@@ -487,16 +492,9 @@ export default function Builder({
     }
 
     setProductToAdd(currentProduct);
-
-    const recalculatedDisabledProducts = [
-      ...disabledProducts,
+    setDisabledProducts([
       ...getIncompatibleProducts(stepProducts, currentProduct, covers),
-      ...selectedProducts.flatMap(product =>
-        getIncompatibleProducts(stepProducts, product, covers),
-      ),
-    ];
-
-    setDisabledProducts([...new Set(recalculatedDisabledProducts)]);
+    ]);
     setShowClashModal(false);
   };
 
