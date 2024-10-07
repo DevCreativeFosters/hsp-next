@@ -109,7 +109,8 @@ export default function Select({
       >
         {label && (
           <label className={styles.label} htmlFor={elementId}>
-            {label}
+            {label}{' '}
+            {required ? <span className={styles.required}>*</span> : null}
           </label>
         )}
         <button
