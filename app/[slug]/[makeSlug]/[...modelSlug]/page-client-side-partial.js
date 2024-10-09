@@ -23,8 +23,9 @@ const getVariantDataOrFallbackToParent = (variant, parent, property) => {
     return variant.variantDetails[property];
   } else if (variant && variant.parentInherit) {
     return parent.productFields[property];
+  } else {
+    return parent.productFields[property] || null;
   }
-  return null;
 };
 
 const getVariantDataForProperties = (variant, parent, properties) =>
@@ -45,10 +46,9 @@ export default function PageClientSidePartial({
   variantSlug,
 }) {
   const productVariants = firstMatchedProduct?.productFields.variants || [];
-  const variant =
-    productVariants.find(
-      ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
-    ) || productVariants?.[0];
+  const variant = productVariants.find(
+    ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
+  );
 
   const properties = [
     'description',
