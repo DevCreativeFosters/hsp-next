@@ -31,3 +31,14 @@
   white-space: nowrap;
   margin-bottom: 16px;
 }
+
+.errorInput input {
+  border-color: var(--color-error);
+}
+
+.errorMessage {
+  font-size: 14px;
+  padding-top: 7px;
+  padding-left: 10px;
+  color: var(--color-error);
+}

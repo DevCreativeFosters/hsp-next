@@ -105,7 +105,6 @@ export default function Builder({
         incompatibleCovers.length > 0
       ) {
         setShowClashModal(true);
-
         return;
       }
 
@@ -124,7 +123,6 @@ export default function Builder({
       }
 
       setLastProductSlug(product.productSlug);
-
       setProductToAdd(product);
     },
     [
@@ -144,29 +142,44 @@ export default function Builder({
 
       if (isCover) {
         setGoToLink(routes.uteBuilder);
-
         return;
       }
 
-      selectedProducts.forEach(selectedProduct => {
-        if (selectedProduct.variantSlug !== product.variantSlug) {
-          newSelectedProducts.push(selectedProduct);
-        }
-      });
-
-      const otherProductsWithSameParent = getOtherProductsWithSameParent(
-        stepProducts,
-        product.productSlug,
-        product.variantSlug,
+      newSelectedProducts = selectedProducts.filter(
+        selectedProduct => selectedProduct.variantSlug !== product.variantSlug,
       );
 
-      const incompatibleProducts = [
-        ...getIncompatibleProducts(stepProducts, product, covers),
-      ];
+      let updatedDisabledProducts = [];
 
-      const newDisabledProducts = disabledProducts
-        .filter(el => !otherProductsWithSameParent.includes(el))
-        .filter(el => !incompatibleProducts.includes(el));
+      newSelectedProducts.forEach(selectedProduct => {
+        const otherProductsWithSameParent = getOtherProductsWithSameParent(
+          stepProducts,
+          selectedProduct.productSlug,
+          selectedProduct.variantSlug,
+        );
+
+        const incompatibleProducts = getIncompatibleProducts(
+          stepProducts,
+          selectedProduct,
+          covers,
+        );
+
+        updatedDisabledProducts = [
+          ...new Set([
+            ...updatedDisabledProducts,
+            ...otherProductsWithSameParent,
+            ...incompatibleProducts,
+          ]),
+        ];
+      });
+
+      updatedDisabledProducts = updatedDisabledProducts.filter(
+        disabledProduct =>
+          !newSelectedProducts.some(
+            selectedProduct =>
+              selectedProduct.variantSlug === disabledProduct.variantSlug,
+          ),
+      );
 
       if (
         newSelectedProducts.length === 1 &&
@@ -176,22 +189,19 @@ export default function Builder({
           covers.findIndex(
             cover => cover.group === newSelectedProducts[0].productSlug,
           ) || 0;
+
         const newVariant = covers[selectedCoverIndex].variants[0];
 
         setSelectedCover(newVariant);
         newSelectedProducts[0] = newVariant;
       }
 
-      setLastProductSlug(prevState => {
-        return prevState;
-      });
-
+      setLastProductSlug(prevState => prevState);
       setSelectedProducts(newSelectedProducts);
-      setDisabledProducts(newDisabledProducts);
+      setDisabledProducts(updatedDisabledProducts);
     },
     [
       covers,
-      disabledProducts,
       selectedProducts,
       setGoToLink,
       setSelectedCover,

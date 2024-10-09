@@ -26,7 +26,7 @@ export default function Lifestyle({
   };
 
   const postsNormalized = posts.map(
-    ({ date, excerpt, featuredImage, link, ...props }) => {
+    ({ date, excerpt, featuredImage, hspTvPostId, link, ...props }) => {
       const slug = link
         .split('/')
         .filter(slug => slug)
@@ -36,7 +36,7 @@ export default function Lifestyle({
         content: excerpt,
         createdAt: date,
         image: featuredImage?.node,
-        url: routes.tv(slug),
+        url: hspTvPostId ? routes.tv(slug) : routes.blog(slug),
         ...props,
       };
     },

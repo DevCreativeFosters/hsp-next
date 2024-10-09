@@ -314,7 +314,8 @@
   }
 }
 
-.summaryButton {
+.summaryButtonWrapper {
+  width: fit-content;
   grid-area: button;
   align-self: center;
 }
