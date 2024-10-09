@@ -146,7 +146,7 @@ export default function StoreSearchControls({
           />
           {showLocationError && (
             <div className={styles.errorMessage}>
-              Please enter your location
+              Please Select Your Closest Store.
             </div>
           )}
           <StoreLocatorSuggestions
