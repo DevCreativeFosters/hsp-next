@@ -32,6 +32,7 @@ export default function EnquiryForm({
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
+  const [showLocationError, setShowLocationError] = useState(false);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -114,6 +115,12 @@ export default function EnquiryForm({
     [onVariantChangeCallback, variants],
   );
 
+  const handleButtonWrapperClick = () => {
+    if (!selectedStore) {
+      setShowLocationError(true);
+    }
+  };
+
   const handleOpenModal = () => {
     setEnquiryModalOpened(true);
   };
@@ -175,6 +182,8 @@ export default function EnquiryForm({
           allLocations={allLocations}
           interactWithDisabledForm={interactWithDisabledForm}
           isWide
+          setShowLocationError={setShowLocationError}
+          showLocationError={showLocationError}
         />
 
         {selectedStore ? (
@@ -227,7 +236,10 @@ export default function EnquiryForm({
             </span>
           )}
         </div>
-        <div className={styles.buttonWrapper}>
+        <div
+          className={styles.buttonWrapper}
+          onClick={handleButtonWrapperClick}
+        >
           <Button
             className={styles.submitButton}
             disabled={!selectedStore}
