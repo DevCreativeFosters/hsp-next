@@ -27,6 +27,8 @@ export default function StoreSearchControls({
   isSearchHidden,
   isWide,
   label = 'Locate your store',
+  setShowLocationError,
+  showLocationError,
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
@@ -69,6 +71,15 @@ export default function StoreSearchControls({
   //   },
   //   [selectedStore, setSearchGeolocation],
   // );
+
+  const handleInputChange = value => {
+    setLocationInput(value);
+    if (!value) {
+      setLocation(null);
+      setSearchGeolocation(null);
+    }
+    setShowLocationError(false);
+  };
 
   useEffect(
     function toggleSuggestions() {
@@ -121,23 +132,23 @@ export default function StoreSearchControls({
       {!isSearchHidden && (
         <div className={styles.location}>
           <StoreLocatorInput
+            className={showLocationError ? styles.errorInput : ''}
             disabled={selectedStore}
             icon="search"
             label={label}
             name="location"
-            onChange={value => {
-              setLocationInput(value);
-              if (!value) {
-                setLocation(null);
-                setSearchGeolocation(null);
-              }
-            }}
+            onChange={handleInputChange}
             placeholder="Your location"
             required
             type="text"
             value={locationInput}
             withResetButton
           />
+          {showLocationError && (
+            <div className={styles.errorMessage}>
+              Please Select Your Closest Store.
+            </div>
+          )}
           <StoreLocatorSuggestions
             items={suggestions}
             selectLocation={selectLocation}

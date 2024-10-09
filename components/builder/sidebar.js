@@ -83,6 +83,7 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
+  const [showLocationError, setShowLocationError] = useState(false);
 
   const {
     filteredLocations,
@@ -99,6 +100,12 @@ export default function Sidebar({
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
+
+  const handleButtonWrapperClick = () => {
+    if (selectedProducts.length === 0 || !selectedStore) {
+      setShowLocationError(true);
+    }
+  };
 
   const handleOpenModal = () => {
     setEnquiryModalOpened(true);
@@ -158,6 +165,8 @@ export default function Sidebar({
             allLocations={allLocations}
             isSearchHidden={selectedStore}
             label={null}
+            setShowLocationError={setShowLocationError}
+            showLocationError={showLocationError}
           />
           {selectedStore ? (
             <ResultsStoreTile item={selectedStore} />
@@ -208,14 +217,19 @@ export default function Sidebar({
               </>
             )}
           </div>
-          <Button
-            className={styles.summaryButton}
-            disabled={selectedProducts.length === 0 || !selectedStore}
-            onClick={handleOpenModal}
-            size="large"
+          <div
+            className={styles.summaryButtonWrapper}
+            onClick={handleButtonWrapperClick}
           >
-            Send Enquiry
-          </Button>
+            <Button
+              className={styles.summaryButton}
+              disabled={selectedProducts.length === 0 || !selectedStore}
+              onClick={handleOpenModal}
+              size="large"
+            >
+              Send Enquiry
+            </Button>
+          </div>
         </div>
       </div>
       <div
