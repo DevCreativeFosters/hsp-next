@@ -3,6 +3,8 @@ import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import routes from '@lib/routes';
+
 import styles from '@components/lifestyle/featured-article.module.scss';
 
 export default function FeaturedArticle({
@@ -20,6 +22,11 @@ export default function FeaturedArticle({
   const imageWidth = image?.mediaDetails.width;
   const imageHeight = image?.mediaDetails.height;
   const imageAspectRatio = imageHeight ? imageWidth / imageHeight : 1;
+  const slug = url
+    .split('/')
+    .filter(slug => slug)
+    .pop();
+  const postUrl = routes.tv(slug);
 
   const TheImage = useMemo(
     () =>
@@ -43,7 +50,7 @@ export default function FeaturedArticle({
           {createdAtHuman}
         </time>
 
-        <Link className={styles.link} href={url || ''}>
+        <Link className={styles.link} href={postUrl || ''}>
           <h2 className={styles.title}>{title}</h2>
         </Link>
         <div
@@ -55,7 +62,7 @@ export default function FeaturedArticle({
         className={styles.imageContainer}
         style={{ '--aspect-ratio': imageAspectRatio }}
       >
-        <Link className={styles.link} href={url || ''}>
+        <Link className={styles.link} href={postUrl || ''}>
           {TheImage}
         </Link>
       </div>
