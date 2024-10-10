@@ -1,6 +1,16 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useState } from 'react';
+import React, {
+  Suspense,
+  forwardRef,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
+import { useDebouncedCallback } from 'use-debounce';
 
 import { GravityFormProvider } from '@contexts/gravity-form';
 import { useGravityFormsStaticData } from '@contexts/gravity-forms-static-data';
@@ -10,12 +20,14 @@ import { getGravityForm } from '@lib/api/get-gravity-form';
 
 import Loading from '@components/loading/loading';
 
-import GForm from './gform';
+const GForm = lazy(() => import('./gform'));
 
 const storeNotListed = {
   text: 'My store is not listed',
   value: 'store-not-listed',
 };
+
+const formCache = {};
 
 function GravityFormWrapperWithRef(
   {
@@ -74,74 +86,61 @@ function GravityFormWrapperWithRef(
     [gravityFormsStaticData],
   );
 
+  const dynamicInputs = useMemo(() => ['productSubCategories', 'stores'], []);
+
   const injectDynamicallyPopulatedValues = useCallback(
     (form, attributes = {}) => {
       // Side effect: this method modifies the `form` object
 
-      const dynamicInputs = ['productSubCategories', 'stores'];
       const formFields = form?.formFields?.nodes;
 
       if (!formFields) return;
 
-      Object.entries(attributes)
-        .filter(([key]) => key !== 'id')
-        .forEach(([attrKey, attrValue]) => {
-          dynamicInputs.forEach(dynamicInput => {
-            const field = formFields.find(({ canPrepopulate, inputName }) => {
-              return inputName === dynamicInput && canPrepopulate;
-            });
-
-            if (field) {
-              replaceFieldValueWithSystemData({ field, key: dynamicInput });
-            }
+      Object.entries(attributes).forEach(([attrKey, attrValue]) => {
+        dynamicInputs.forEach(dynamicInput => {
+          const field = formFields.find(({ canPrepopulate, inputName }) => {
+            return inputName === dynamicInput && canPrepopulate;
           });
-
-          const field = formFields.find(
-            ({ canPrepopulate, inputName, inputs, value }) => {
-              if (inputs) {
-                return inputs.find(
-                  ({ name }) =>
-                    name && name === attrKey && canPrepopulate && !value,
-                );
-              } else {
-                return (
-                  inputName && inputName === attrKey && canPrepopulate && !value
-                );
-              }
-            },
-          );
-
-          if (field && attrValue) {
-            const userRegexMatch = attrValue.match(/^(user:)([\w-]*)/);
-            if (userRegexMatch) {
-              const userFieldKey = userRegexMatch?.[2];
-              const newValue =
-                user && userFieldKey && user[userFieldKey]
-                  ? user[userFieldKey]
-                  : null;
-              replaceFieldValue({ field, key: attrKey, value: newValue });
-            }
-            const systemRegexMatch = attrValue.match(/^(system:)([\w-]*)/);
-            if (systemRegexMatch) {
-              const dataIdentifier = systemRegexMatch?.[2];
-              replaceFieldValueWithSystemData({
-                field,
-                key: dataIdentifier,
-              });
-            }
+          if (field) {
+            replaceFieldValueWithSystemData({ field, key: dynamicInput });
           }
         });
+
+        const field = formFields.find(({ canPrepopulate, inputName }) => {
+          return inputName === attrKey && canPrepopulate && !field.value;
+        });
+
+        if (field && attrValue) {
+          const userRegexMatch = attrValue.match(/^(user:)([\w-]*)/);
+          if (userRegexMatch && user?.[userRegexMatch[2]]) {
+            replaceFieldValue({
+              field,
+              key: attrKey,
+              value: user[userRegexMatch[2]],
+            });
+          }
+        }
+      });
     },
-    [replaceFieldValue, replaceFieldValueWithSystemData, user],
+    [dynamicInputs, replaceFieldValue, replaceFieldValueWithSystemData, user],
   );
 
   const fetchGfForm = useCallback(async () => {
-    if (attributes.id) {
+    if (attributes.id && !formCache[attributes.id]) {
       const form = await getGravityForm(attributes.id);
+      formCache[attributes.id] = form.gfForm;
       injectDynamicallyPopulatedValues(form.gfForm, attributes);
       setGfForm(form.gfForm);
+    } else {
+      setGfForm(formCache[attributes.id]);
     }
   }, [attributes, injectDynamicallyPopulatedValues]);
+
+  const debouncedFetchGfForm = useDebouncedCallback(fetchGfForm, 100);
+
+  useEffect(() => {
+    debouncedFetchGfForm();
+  }, [debouncedFetchGfForm]);
 
   useEffect(() => {
     if (gfForm) {
@@ -149,30 +148,28 @@ function GravityFormWrapperWithRef(
     }
   }, [gfForm, onLoad]);
 
-  useEffect(() => {
-    fetchGfForm();
-  }, [fetchGfForm]);
-
   if (!gfForm) return <Loading color="white" size="large" />;
 
   return (
     <GravityFormProvider>
-      <GForm
-        attributes={attributes}
-        form={gfForm}
-        hiddenInputs={hiddenInputs}
-        innerRef={ref}
-        isDirty={isDirty}
-        onChange={onChange}
-        onError={onError}
-        onReset={onReset}
-        onSubmit={onSubmit}
-        onSuccess={onSuccess}
-        preventConfirmation={preventConfirmation}
-        submitButton={submitButton}
-      />
+      <Suspense fallback={<Loading color="white" size="large" />}>
+        <GForm
+          attributes={attributes}
+          form={gfForm}
+          hiddenInputs={hiddenInputs}
+          innerRef={ref}
+          isDirty={isDirty}
+          onChange={onChange}
+          onError={onError}
+          onReset={onReset}
+          onSubmit={onSubmit}
+          onSuccess={onSuccess}
+          preventConfirmation={preventConfirmation}
+          submitButton={submitButton}
+        />
+      </Suspense>
     </GravityFormProvider>
   );
 }
 
-export default forwardRef(GravityFormWrapperWithRef);
+export default React.memo(forwardRef(GravityFormWrapperWithRef));
