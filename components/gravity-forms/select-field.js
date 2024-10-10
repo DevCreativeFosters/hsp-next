@@ -24,8 +24,10 @@ export default function SelectField({ field, fieldErrors, form }) {
     return fieldErrors.find(fieldError => fieldError.id === field.id);
   }, [field.id, fieldErrors]);
 
+  const oneOfValue = field.label === 'Country' ? 2 : 1;
+
   return (
-    <InputWrapper oneOf={1}>
+    <InputWrapper oneOf={oneOfValue}>
       <Select
         errorMessage={fieldError?.message}
         id={`gform_${formId}_${field.id}`}
