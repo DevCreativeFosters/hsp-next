@@ -1,0 +1,34 @@
+User-agent: *
+
+Disallow: /wp-admin/
+Disallow: /_next/
+Disallow: /no-cover/
+Disallow: /a-frame-sports-bar/
+Disallow: /extended-sports-bar/
+Disallow: /rugged-x-sports-bar/
+Disallow: /sailplane/
+Disallow: /*?
+Disallow: /*#
+Disallow: /ute-tray-slide/ram
+Disallow: /ladder-rack/ram
+Disallow: /ute-sports-bar/ram
+Disallow: /tailgate-lock/ram
+Disallow: /tailgate-assist/chevrolet
+Disallow: /ute-tray-slide/chevrolet
+Disallow: /ladder-rack/chevrolet
+Disallow: /ute-sports-bar/chevrolet
+Disallow: /tailgate-lock/chevrolet
+Disallow: /tailgate-assist/chevrolet
+Disallow: /ladder-rack/jeep
+Disallow: /ute-sports-bar/jeep
+Disallow: /tailgate-lock/jeep
+Disallow: /tailgate-assist/jeep
+Disallow: /ladder-rack/mercedes-benz
+Disallow: /ute-sports-bar/mercedes-benz
+Disallow: /electric-roller-cover/mercedes-benz
+Disallow: /load-bar/mercedes-benz
+Disallow: /tailgate-assist/gwm
+Disallow: /ute-sports-bar/holden
+Disallow: /ladder-rack/holden
+
+Sitemap: https://www.hsputelids.com/sitemap.xml
