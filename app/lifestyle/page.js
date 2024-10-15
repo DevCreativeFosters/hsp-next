@@ -35,7 +35,7 @@ export default async function LifestylePage() {
       <Suspense fallback={null}>
         <FeaturedPost
           date={featuredPost?.date}
-          excerpt={featuredPost?.hspTvPostCustomFields?.description}
+          excerpt={featuredPost?.excerpt}
           postType={POST_TYPES.TV}
           slug={featuredPost?.slug}
           tags={featuredPost?.tags}

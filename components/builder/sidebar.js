@@ -104,6 +104,12 @@ export default function Sidebar({
   const handleButtonWrapperClick = () => {
     if (selectedProducts.length === 0 || !selectedStore) {
       setShowLocationError(true);
+      setOpenSection('store');
+      if (isMobile) {
+        setIsOpen(true);
+      } else {
+        toggleOpen();
+      }
     }
   };
 
@@ -245,7 +251,10 @@ export default function Sidebar({
           <ListIcon />
           <NrCircle isSmall nr={selectedProducts.length} />
         </button>
-        <div className={styles.sidebarMobileBarSummary}>
+        <div
+          className={styles.sidebarMobileBarSummary}
+          onClick={handleButtonWrapperClick}
+        >
           <div className={styles.sidebarMobileBarPrice}>
             {formatPrice(priceSummary.price)}
           </div>
