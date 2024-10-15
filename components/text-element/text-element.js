@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
 
 export default function TextElement({ className, text }) {
+  const containsHTML = /<\/?[a-z][\s\S]*>/i.test(text);
+
   const lines = text.split('\r\n');
   const TextBrokenLines = lines.map((line, index) => (
     <Fragment key={index}>
@@ -9,12 +11,11 @@ export default function TextElement({ className, text }) {
     </Fragment>
   ));
 
-  const textNormalized =
-    text.includes('</p>') || text.includes('<br>') ? (
-      <div className={className} dangerouslySetInnerHTML={{ __html: text }} />
-    ) : (
-      <div className={className}>{TextBrokenLines}</div>
-    );
+  const textNormalized = containsHTML ? (
+    <div className={className} dangerouslySetInnerHTML={{ __html: text }} />
+  ) : (
+    <div className={className}>{TextBrokenLines}</div>
+  );
 
   return textNormalized;
 }
