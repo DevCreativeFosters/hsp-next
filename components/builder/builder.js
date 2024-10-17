@@ -16,6 +16,7 @@ import routes from '@lib/routes';
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
+import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -80,8 +81,12 @@ export default function Builder({
     stepNumber,
   } = useVehicleContext();
 
-  const { filteredLocations, isMapVisible, setSelectedStore } =
-    useContext(StoreLocatorContext);
+  const {
+    filteredLocations,
+    isInlineResultListVisible,
+    isMapVisible,
+    setSelectedStore,
+  } = useContext(StoreLocatorContext);
 
   const addProduct = useCallback(
     product => {
@@ -527,6 +532,16 @@ export default function Builder({
               setOpenSection={setOpenSection}
               stepNumber={stepNumber}
             />
+            <div className={styles.mobileOnly}>
+              <StoreList
+                items={filteredLocations}
+                onSelect={item => {
+                  setCurrentResult(item);
+                  setViewMode('RESULT');
+                }}
+                show={isInlineResultListVisible}
+              />
+            </div>
             {stepNumber > 0 ? (
               <Preview handleResetAccept={handleResetAccept}>
                 {isInlineMapVisible && (

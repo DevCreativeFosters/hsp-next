@@ -11,18 +11,22 @@ export const StoreLocatorProvider = ({ children }) => {
   const [filteredStores, setFilteredStores] = useState([]);
   const [selectedStore, setSelectedStore] = useState(null);
   const [isMapVisible, setMapVisible] = useState(false);
+  const [isInlineResultListVisible, setInlineResultListVisible] =
+    useState(false);
 
   return (
     <StoreLocatorContext.Provider
       value={{
         filteredLocations,
         filteredStores,
+        isInlineResultListVisible,
         isMapVisible,
         location,
         searchGeolocation,
         selectedStore,
         setFilteredLocations,
         setFilteredStores,
+        setInlineResultListVisible,
         setLocation,
         setMapVisible,
         setSearchGeolocation,

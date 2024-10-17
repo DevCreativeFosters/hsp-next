@@ -185,16 +185,20 @@ export default function Sidebar({
                   onMarkerClick={setSelectedStore}
                 />
               )}
-              <StoreList
-                items={filteredLocations}
-                onSelect={item => {
-                  setSelectedStore(item);
-                }}
-                show={isInlineResultListVisible}
-                style={{
-                  maxHeight: stepNumber > 0 ? 150 : null,
-                }}
-              />
+              {filteredLocations.length !== 0 && isInlineResultListVisible && (
+                <div className={styles.isMobileOnly}>
+                  <StoreList
+                    items={filteredLocations}
+                    onSelect={item => {
+                      setSelectedStore(item);
+                    }}
+                    show={isInlineResultListVisible}
+                    style={{
+                      maxHeight: stepNumber > 0 ? 150 : null,
+                    }}
+                  />
+                </div>
+              )}
             </>
           )}
         </Section>
@@ -278,6 +282,19 @@ export default function Sidebar({
           store={selectedStore}
         />
       )}
+      <div
+        className={clsx({
+          [styles.list]: isInlineResultListVisible,
+        })}
+      >
+        <StoreList
+          items={filteredLocations}
+          onSelect={item => {
+            setSelectedStore(item);
+          }}
+          show={isInlineResultListVisible}
+        />
+      </div>
     </>
   );
 }
