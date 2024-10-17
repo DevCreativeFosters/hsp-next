@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import Image from 'next/image';
 
 import useMobileVh from '@hooks/useMobileVh';
 
@@ -47,16 +48,43 @@ export default function StoreList({
               key={index}
               onClick={() => onSelect(item)}
             >
-              <div className={styles.index}>{index + 1}</div>
-              <div className={styles.details}>
-                <div
-                  className={styles.name}
-                  dangerouslySetInnerHTML={{ __html: name }}
-                ></div>
-                <div
-                  className={styles.address}
-                  dangerouslySetInnerHTML={{ __html: printedAddress }}
-                ></div>
+              <div className={styles.header}>
+                <div className={styles.index}>{index + 1}</div>
+                <div className={styles.details}>
+                  <div
+                    className={styles.name}
+                    dangerouslySetInnerHTML={{ __html: name }}
+                  ></div>
+                  <div
+                    className={styles.address}
+                    dangerouslySetInnerHTML={{ __html: printedAddress }}
+                  ></div>
+                </div>
+              </div>
+              <div className={styles.displaysContainer}>
+                <div className={styles.separator} />
+                <div className={styles.inStoreDisplays}>
+                  <p className={styles.displaysLabel}>In Store Displays</p>
+                  <div className={styles.displays}>
+                    {item?.displays?.map((product, idx) => {
+                      const imageUrl =
+                        product?.productCategory?.nodes?.[0].mainCategoryDetails
+                          ?.inStoreImage?.node?.mediaItemUrl;
+                      const altText = product.productCategory?.nodes?.[0].name;
+                      if (imageUrl) {
+                        return (
+                          <Image
+                            alt={altText}
+                            height={40}
+                            key={idx}
+                            src={imageUrl}
+                            width={40}
+                          />
+                        );
+                      }
+                    })}
+                  </div>
+                </div>
               </div>
             </li>
           );

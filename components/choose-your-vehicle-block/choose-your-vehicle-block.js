@@ -65,7 +65,7 @@ export default function ChooseYourVehicleBlock({
   const modelSlug = useMemo(() => getValueOrSlug(model), [model]);
 
   const errorMessage =
-    'No vehicle data available. Please try different selections.';
+    'The Vehicle you have selected is not compatible with this product. Please change your vehicle or find compatible products below.';
 
   const handleIsOpen = () => {
     setIsOpen(!isOpen);

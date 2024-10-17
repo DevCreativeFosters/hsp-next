@@ -11,20 +11,53 @@
   }
 }
 
-.box {
-  display: grid;
-  gap: 24px;
-
-  @include bp(large) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 48px;
+.description {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 24px;
   }
 
-  &.textVisual {
-    .content {
-      @include bp(large) {
-        order: -1;
-      }
+  h4,
+  h5,
+  h6,
+  li,
+  p {
+    color: var(--color-white-80);
+    line-height: 1.5;
+  }
+
+  li,
+  p {
+    @include bp(large) {
+      font-size: 20px;
+    }
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    transition: var(--transition);
+
+    &:hover {
+      color: var(--color-primary-100);
+    }
+  }
+
+  br {
+    display: none;
+
+    @include bp(large) {
+      display: block;
     }
   }
 }
@@ -59,51 +92,20 @@
   }
 }
 
-.description {
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-bottom: 24px;
+.box {
+  display: grid;
+  gap: 24px;
+
+  @include bp(large) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
   }
 
-  h4,
-  h5,
-  h6,
-  p {
-    color: var(--color-white-80);
-    line-height: 1.5;
-  }
-
-  p {
-    @include bp(large) {
-      font-size: 20px;
-    }
-
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-
-  a {
-    text-decoration: underline;
-    transition: var(--transition);
-
-    &:hover {
-      color: var(--color-primary-100);
-    }
-  }
-
-  br {
-    display: none;
-
-    @include bp(large) {
-      display: block;
+  &.textVisual {
+    .content {
+      @include bp(large) {
+        order: -1;
+      }
     }
   }
 }

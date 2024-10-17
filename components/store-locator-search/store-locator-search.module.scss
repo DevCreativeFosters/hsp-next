@@ -71,12 +71,6 @@
   }
 }
 
-.mobileOnly {
-  @include bp(medium) {
-    display: none;
-  }
-}
-
 .viewContainer {
   display: flex;
   transition: transform 0.3s;
