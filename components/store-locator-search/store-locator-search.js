@@ -35,7 +35,6 @@ export default function StoreLocatorSearch({ allLocations }) {
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [location, setLocation] = useState(undefined);
-  const [filteredLocations, setFilteredLocations] = useState(null);
   const [currentResult, setCurrentResult] = useState(null);
   const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'RESULT'
   const wrapperOuterRef = useRef(null);
@@ -44,8 +43,14 @@ export default function StoreLocatorSearch({ allLocations }) {
 
   useMobileVh();
 
-  const { searchGeolocation, setSearchGeolocation } =
-    useContext(StoreLocatorContext);
+  const {
+    filteredLocations,
+    isInlineResultListVisible,
+    searchGeolocation,
+    setFilteredLocations,
+    setInlineResultListVisible,
+    setSearchGeolocation,
+  } = useContext(StoreLocatorContext);
 
   const onFormInteraction = useCallback(
     ev => {
@@ -82,8 +87,8 @@ export default function StoreLocatorSearch({ allLocations }) {
     }
   }, [isFullScreen, viewMode]);
 
-  const isInlineResultListVisible = Boolean(
-    location && searchGeolocation && isFullScreen && isMobile,
+  setInlineResultListVisible(
+    Boolean(location && searchGeolocation && isFullScreen && isMobile),
   );
 
   const isSearchButtonVisible = !isInlineResultListVisible;
@@ -142,7 +147,7 @@ export default function StoreLocatorSearch({ allLocations }) {
       }
       return () => {};
     },
-    [allLocations, searchGeolocation],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (
