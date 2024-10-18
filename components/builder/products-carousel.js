@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { getIcon } from '@lib/icons';
@@ -44,6 +45,8 @@ export default function ProductsCarousel({
     stepNumber,
     stepTitle,
   } = useVehicleContext();
+
+  const { setShowLocationError } = useContext(StoreLocatorContext);
 
   if (stepNumber === 0) {
     return null;
@@ -103,6 +106,7 @@ export default function ProductsCarousel({
                     } else {
                       setShowResetModal(true);
                     }
+                    setShowLocationError(false);
                   }}
                   rightIcon="close"
                   variant="secondary"

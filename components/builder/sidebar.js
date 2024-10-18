@@ -83,7 +83,6 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [showLocationError, setShowLocationError] = useState(false);
 
   const {
     filteredLocations,
@@ -92,6 +91,8 @@ export default function Sidebar({
     searchGeolocation,
     selectedStore,
     setSelectedStore,
+    setShowLocationError,
+    showLocationError,
   } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
