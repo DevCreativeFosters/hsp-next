@@ -29,15 +29,15 @@ export default async function UteBuilder() {
   const excludedCategories = await getCategoriesToExclude(globalOptions);
 
   return (
-    <Layout withFooter={false}>
-      <StoreLocatorProvider>
+    <StoreLocatorProvider>
+      <Layout withFooter={false}>
         <UteBuilderPage
           allLocations={allLocations}
           excludedCategories={excludedCategories}
           globalOptions={globalOptions}
           makes={makes}
         />
-      </StoreLocatorProvider>
-    </Layout>
+      </Layout>
+    </StoreLocatorProvider>
   );
 }
