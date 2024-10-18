@@ -74,10 +74,10 @@ export default function Sidebar({
   className,
   globalOptions,
   isMobile,
-  openSection,
+  openSection: openSectionProp,
   removeProduct,
   selectedProducts,
-  setOpenSection,
+  setOpenSection: setOpenSectionProp,
   stepNumber,
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,12 +88,26 @@ export default function Sidebar({
     filteredLocations,
     isMapVisible,
     location,
+    openSection: openSectionContext,
     searchGeolocation,
     selectedStore,
+    setOpenSection: setOpenSectionContext,
     setSelectedStore,
     setShowLocationError,
     showLocationError,
   } = useContext(StoreLocatorContext);
+
+  const openSection = openSectionContext;
+
+  const setOpenSection = useCallback(
+    section => {
+      setOpenSectionContext(section);
+      if (setOpenSectionProp) {
+        setOpenSectionProp(section);
+      }
+    },
+    [setOpenSectionContext, setOpenSectionProp],
+  );
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
   const isInlineMapVisible = Boolean(isMobile && isMapVisible);
