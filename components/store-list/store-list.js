@@ -61,31 +61,35 @@ export default function StoreList({
                   ></div>
                 </div>
               </div>
-              <div className={styles.displaysContainer}>
-                <div className={styles.separator} />
-                <div className={styles.inStoreDisplays}>
-                  <p className={styles.displaysLabel}>In Store Displays</p>
-                  <div className={styles.displays}>
-                    {item?.displays?.map((product, idx) => {
-                      const imageUrl =
-                        product?.productCategory?.nodes?.[0].mainCategoryDetails
-                          ?.inStoreImage?.node?.mediaItemUrl;
-                      const altText = product.productCategory?.nodes?.[0].name;
-                      if (imageUrl) {
-                        return (
-                          <Image
-                            alt={altText}
-                            height={40}
-                            key={idx}
-                            src={imageUrl}
-                            width={40}
-                          />
-                        );
-                      }
-                    })}
+              {item?.displays?.length > 0 && (
+                <div className={styles.displaysContainer}>
+                  <div className={styles.separator} />
+                  <div className={styles.inStoreDisplays}>
+                    <p className={styles.displaysLabel}>In Store Displays</p>
+                    <div className={styles.displays}>
+                      {item?.displays?.map((product, idx) => {
+                        const imageUrl =
+                          product?.productCategory?.nodes?.[0]
+                            .mainCategoryDetails?.inStoreImage?.node
+                            ?.mediaItemUrl;
+                        const altText =
+                          product.productCategory?.nodes?.[0].name;
+                        if (imageUrl) {
+                          return (
+                            <Image
+                              alt={altText}
+                              height={40}
+                              key={idx}
+                              src={imageUrl}
+                              width={40}
+                            />
+                          );
+                        }
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </li>
           );
         })}
