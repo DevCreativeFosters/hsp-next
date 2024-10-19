@@ -16,7 +16,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 50 * 1000; // [m]
+const RADIUS = 100 * 1000; // 100km in meters
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
@@ -49,6 +49,7 @@ export default function StoreLocatorMap({
         bounds,
         locations,
       );
+      console.log('Locations within bounds:', locationsWithinBounds.length);
       setFilteredStores(locationsWithinBounds);
     },
     [locations, setFilteredStores],
@@ -140,9 +141,19 @@ export default function StoreLocatorMap({
           strokeOpacity: 0,
         });
         googleMap.fitBounds(circle.getBounds());
+
+        if (locations.length === 1) {
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(searchGeolocation);
+          bounds.extend(locations[0].geolocation);
+          googleMap.fitBounds(bounds);
+        }
+
+        // Trigger handleMapChange after the map has been recentered
+        setTimeout(() => handleMapChange(googleMap), 500);
       }
     },
-    [googleMap, searchGeolocation],
+    [googleMap, handleMapChange, locations, searchGeolocation],
   );
 
   return (

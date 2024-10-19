@@ -53,9 +53,12 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
     function syncMapBoundaries() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
       if (searchGeolocation) {
-        setFilteredLocations(
-          findLocationsInRadius(searchGeolocation, locationList),
+        const locationsInRadius = findLocationsInRadius(
+          searchGeolocation,
+          locationList,
         );
+        console.log('Locations in radius:', locationsInRadius.length);
+        setFilteredLocations(locationsInRadius);
       } else {
         setFilteredLocations(locationList);
       }
