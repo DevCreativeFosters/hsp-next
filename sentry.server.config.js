@@ -8,6 +8,9 @@ Sentry.init({
   debug: false,
 
   dsn: 'https://2e9ff5c22739fc0f169966eaa19a39fa@o66342.ingest.us.sentry.io/4508001145913344',
+  enabled:
+    process.env.VERCEL_ENV === 'vercel-production' ||
+    process.env.VERCEL_ENV === 'vercel-preview',
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 0,
