@@ -14,7 +14,7 @@ export const StoreLocatorProvider = ({ children }) => {
   const [isInlineResultListVisible, setInlineResultListVisible] =
     useState(false);
   const [showLocationError, setShowLocationError] = useState(false);
-  const [openSection, setOpenSection] = useState('products');
+  const [productsSectionOpen, setProductsSectionOpen] = useState(true);
 
   return (
     <StoreLocatorContext.Provider
@@ -24,7 +24,7 @@ export const StoreLocatorProvider = ({ children }) => {
         isInlineResultListVisible,
         isMapVisible,
         location,
-        openSection,
+        productsSectionOpen,
         searchGeolocation,
         selectedStore,
         setFilteredLocations,
@@ -32,7 +32,7 @@ export const StoreLocatorProvider = ({ children }) => {
         setInlineResultListVisible,
         setLocation,
         setMapVisible,
-        setOpenSection,
+        setProductsSectionOpen,
         setSearchGeolocation,
         setSelectedStore,
         setShowLocationError,

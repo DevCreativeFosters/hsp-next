@@ -74,10 +74,10 @@ export default function Sidebar({
   className,
   globalOptions,
   isMobile,
-  openSection: openSectionProp,
+  openSection,
   removeProduct,
   selectedProducts,
-  setOpenSection: setOpenSectionProp,
+  setOpenSection,
   stepNumber,
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,26 +88,14 @@ export default function Sidebar({
     filteredLocations,
     isMapVisible,
     location,
-    openSection: openSectionContext,
+    productsSectionOpen,
     searchGeolocation,
     selectedStore,
-    setOpenSection: setOpenSectionContext,
+    setProductsSectionOpen,
     setSelectedStore,
     setShowLocationError,
     showLocationError,
   } = useContext(StoreLocatorContext);
-
-  const openSection = openSectionContext;
-
-  const setOpenSection = useCallback(
-    section => {
-      setOpenSectionContext(section);
-      if (setOpenSectionProp) {
-        setOpenSectionProp(section);
-      }
-    },
-    [setOpenSectionContext, setOpenSectionProp],
-  );
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
   const isInlineMapVisible = Boolean(isMobile && isMapVisible);
@@ -135,6 +123,13 @@ export default function Sidebar({
   const handleCloseModal = () => {
     setEnquiryModalOpened(false);
   };
+
+  useEffect(() => {
+    if (productsSectionOpen) {
+      setOpenSection('products');
+      setProductsSectionOpen(false);
+    }
+  }, [productsSectionOpen, setOpenSection, setProductsSectionOpen]);
 
   useEffect(
     function calculatePrice() {

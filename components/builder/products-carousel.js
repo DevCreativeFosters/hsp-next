@@ -46,7 +46,8 @@ export default function ProductsCarousel({
     stepTitle,
   } = useVehicleContext();
 
-  const { setShowLocationError } = useContext(StoreLocatorContext);
+  const { setProductsSectionOpen, setShowLocationError } =
+    useContext(StoreLocatorContext);
 
   if (stepNumber === 0) {
     return null;
@@ -107,6 +108,7 @@ export default function ProductsCarousel({
                       setShowResetModal(true);
                     }
                     setShowLocationError(false);
+                    setProductsSectionOpen(true);
                   }}
                   rightIcon="close"
                   variant="secondary"

@@ -50,7 +50,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     stepNumber,
   } = useVehicleContext();
 
-  const { setOpenSection, setShowLocationError } =
+  const { setProductsSectionOpen, setShowLocationError } =
     useContext(StoreLocatorContext);
 
   const {
@@ -190,7 +190,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                     } else {
                       handleVehicleReset();
                       setShowLocationError(false);
-                      setOpenSection('products');
+                      setProductsSectionOpen(true);
                     }
                   }}
                 >
