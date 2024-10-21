@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
@@ -14,7 +15,7 @@ import HamburgerButton from '@components/hamburger-button/hamburger-button';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
 
-import Logo from '@assets/images/logo.svg';
+import Logo from '@assets/images/logo.png';
 
 import styles from './header.module.scss';
 
@@ -61,7 +62,7 @@ export default function Header({
             </div>
 
             <Link className={styles.logo} href="/">
-              <Logo />
+              <Image alt={'HSP Logo'} height={50} src={Logo} width={130} />
             </Link>
 
             <div className={styles.callButtonContainer}>

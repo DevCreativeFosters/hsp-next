@@ -1,4 +1,5 @@
-import Logo from '@images/logo.svg';
+import Logo from '@images/logo.png';
+import Image from 'next/image';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -16,7 +17,7 @@ export default function Footer({ menus, text }) {
             <div className={styles.footerContainerC}>
               <div className={styles.column}>
                 <div className={styles.logo}>
-                  <Logo />
+                  <Image alt={'HSP Logo'} height={36} src={Logo} width={95} />
                 </div>
                 <p className={styles.text}>{text}</p>
               </div>
