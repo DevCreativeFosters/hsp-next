@@ -52,7 +52,11 @@ export default function StoreLocatorMap({
         const { lat, lng } = location.geolocation;
         return bounds?.contains(new google.maps.LatLng(lat, lng));
       });
-      console.log('Locations within bounds:', visibleLocations.length);
+      console.log(
+        'Map change - All locations visible in current map view:',
+        visibleLocations.length,
+      );
+      console.log('Map change - Total locations:', locations.length);
       setFilteredStores(visibleLocations);
     },
     [locations, setFilteredStores],
@@ -151,6 +155,12 @@ export default function StoreLocatorMap({
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
+        console.log(
+          'Recentering map - Filtered locations:',
+          filteredLocations.length,
+        );
+        console.log('Recentering map - Total locations:', locations.length);
+
         const locationsToShow =
           filteredLocations.length > 0 ? filteredLocations : [locations[0]];
 
@@ -177,7 +187,10 @@ export default function StoreLocatorMap({
         }
 
         // Trigger handleMapChange after the map has been recentered
-        setTimeout(() => handleMapChange(googleMap), 100);
+        setTimeout(() => {
+          console.log('Delayed map change trigger');
+          handleMapChange(googleMap);
+        }, 100);
       }
     },
     [
