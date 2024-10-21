@@ -6,7 +6,9 @@ import StoreLocatorContext from '@contexts/store-locator';
 
 import { getGeoHash } from '@lib/get-geo-hash';
 import normalizeStores from '@lib/normalize-stores';
-import { findLocationsInRadius } from '@lib/store-locations';
+import {
+  getLocationsToDisplay,
+} from '@lib/store-locations';
 
 import Container from '@components/container/container';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
@@ -17,10 +19,12 @@ import styles from './store-locator-results-and-map.module.scss';
 export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
+    allMapLocations,
     filteredLocations,
     filteredStores,
     searchGeolocation,
     selectedStore,
+    setAllMapLocations,
     setFilteredLocations,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
@@ -28,9 +32,10 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
   useEffect(
     function setInitialLocationList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+      setAllMapLocations(locationList);
       setFilteredLocations(locationList);
     },
-    [allLocations, searchGeolocation, setFilteredLocations],
+    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   useEffect(
@@ -52,19 +57,20 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
   useEffect(
     function syncMapBoundaries() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+      setAllMapLocations(locationList); // Keep all locations for the map
+
       if (searchGeolocation) {
-        const locationsInRadius = findLocationsInRadius(
+        const locationsToDisplay = getLocationsToDisplay(
           searchGeolocation,
           locationList,
         );
-        console.log('Locations in radius:', locationsInRadius.length);
-        setFilteredLocations(locationsInRadius);
+        console.log('Locations to display:', locationsToDisplay.length);
+        setFilteredLocations(locationsToDisplay);
       } else {
-        // Show all locations when there's no search
         setFilteredLocations(locationList);
       }
     },
-    [allLocations, searchGeolocation, setFilteredLocations],
+    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   return (
@@ -93,7 +99,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
             )}
           </div>
           <StoreLocatorMap
-            locations={filteredLocations}
+            locations={allMapLocations}
             onMarkerClick={setSelectedStore}
           />
         </div>

@@ -22,6 +22,8 @@ const HSP_HEADQUARTERS_COORDINATES = {
   lng: 145.1871773227412,
 };
 
+// const INITIAL_ZOOM_ADJUSTMENT = 0; // Zoom in by one step
+
 function filterLocationsWithinBounds(bounds, locations) {
   return locations.filter(location => {
     const { lat, lng } = location.geolocation;
@@ -34,9 +36,10 @@ export default function StoreLocatorMap({
   locations = [],
   onMarkerClick,
 }) {
-  const { searchGeolocation, setFilteredStores } =
+  const { filteredLocations, searchGeolocation, setFilteredStores } =
     useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   const center = useMemo(() => {
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
@@ -45,12 +48,12 @@ export default function StoreLocatorMap({
   const handleMapChange = useCallback(
     map => {
       const bounds = map.getBounds();
-      const locationsWithinBounds = filterLocationsWithinBounds(
-        bounds,
-        locations,
-      );
-      console.log('Locations within bounds:', locationsWithinBounds.length);
-      setFilteredStores(locationsWithinBounds);
+      const visibleLocations = locations.filter(location => {
+        const { lat, lng } = location.geolocation;
+        return bounds?.contains(new google.maps.LatLng(lat, lng));
+      });
+      console.log('Locations within bounds:', visibleLocations.length);
+      setFilteredStores(visibleLocations);
     },
     [locations, setFilteredStores],
   );
@@ -77,8 +80,6 @@ export default function StoreLocatorMap({
           },
         );
 
-        // Remove the initial circle and fitBounds call
-        // Only set the center if there's a searchGeolocation
         if (searchGeolocation) {
           map.setCenter(searchGeolocation);
         } else {
@@ -88,6 +89,11 @@ export default function StoreLocatorMap({
             bounds.extend(location.geolocation);
           });
           map.fitBounds(bounds);
+
+          // Wait for the map to finish loading before adjusting zoom
+          google.maps.event.addListenerOnce(map, 'idle', () => {
+            map.setZoom(map.getZoom());
+          });
         }
 
         map.addListener('tilesloaded', () => handleMapChange(map));
@@ -103,7 +109,10 @@ export default function StoreLocatorMap({
   useEffect(
     function renderMapClustersAndMarkers() {
       if (googleMap) {
-        let markers = locations
+        // Clear existing markers
+        markers.forEach(marker => marker.setMap(null));
+
+        const newMarkers = locations
           .map(location => {
             const { geolocation, icon, name } = location;
             if (geolocation?.lat == null || geolocation?.lng == null) {
@@ -112,6 +121,7 @@ export default function StoreLocatorMap({
 
             const marker = new google.maps.Marker({
               icon,
+              map: googleMap,
               position: geolocation,
               title: name,
             });
@@ -121,42 +131,62 @@ export default function StoreLocatorMap({
           })
           .filter(Boolean);
 
+        setMarkers(newMarkers);
+
         new MarkerClusterer({
           map: googleMap,
-          markers,
+          markers: newMarkers,
           renderer: {
             render: googleMapsMarkerClusterRenderer,
           },
         });
+
+        // Trigger handleMapChange to update filtered stores
+        handleMapChange(googleMap);
       }
     },
-    [googleMap, locations, onMarkerClick],
+    [googleMap, handleMapChange, locations, onMarkerClick],
   );
 
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        const circle = new google.maps.Circle({
-          center: searchGeolocation,
-          fillOpacity: 0,
-          map: googleMap,
-          radius: RADIUS,
-          strokeOpacity: 0,
-        });
-        googleMap.fitBounds(circle.getBounds());
+        const locationsToShow =
+          filteredLocations.length > 0 ? filteredLocations : [locations[0]];
 
-        if (locations.length === 1) {
+        if (locationsToShow.length === 1) {
+          // If there's only one location, fit the map to show both the search location and the store
           const bounds = new google.maps.LatLngBounds();
           bounds.extend(searchGeolocation);
-          bounds.extend(locations[0].geolocation);
+          bounds.extend(locationsToShow[0].geolocation);
           googleMap.fitBounds(bounds);
+
+          // Add some padding to the bounds
+          const padding = { bottom: 50, left: 50, right: 50, top: 50 };
+          googleMap.fitBounds(bounds, padding);
+        } else {
+          // For multiple locations, use the circle method
+          const circle = new google.maps.Circle({
+            center: searchGeolocation,
+            fillOpacity: 0,
+            map: googleMap,
+            radius: RADIUS,
+            strokeOpacity: 0,
+          });
+          googleMap.fitBounds(circle.getBounds());
         }
 
         // Trigger handleMapChange after the map has been recentered
         setTimeout(() => handleMapChange(googleMap), 100);
       }
     },
-    [googleMap, handleMapChange, locations, searchGeolocation],
+    [
+      filteredLocations,
+      googleMap,
+      handleMapChange,
+      locations,
+      searchGeolocation,
+    ],
   );
 
   return (

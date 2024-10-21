@@ -17,7 +17,7 @@ import {
   stringifySuggestion,
 } from '@lib/google-place';
 import normalizeStores from '@lib/normalize-stores';
-import { findLocationsInRadius } from '@lib/store-locations';
+import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -47,6 +47,7 @@ export default function StoreLocatorSearch({ allLocations }) {
     filteredLocations,
     isInlineResultListVisible,
     searchGeolocation,
+    setAllMapLocations,
     setFilteredLocations,
     setInlineResultListVisible,
     setSearchGeolocation,
@@ -138,19 +139,19 @@ export default function StoreLocatorSearch({ allLocations }) {
   useEffect(
     function syncStoreLocationResultList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+      setAllMapLocations(locationList);
       if (searchGeolocation) {
-        const locationsInRadius = findLocationsInRadius(
+        const locationsToDisplay = getLocationsToDisplay(
           searchGeolocation,
           locationList,
         );
-        console.log('Locations in radius:', locationsInRadius.length);
-        setFilteredLocations(locationsInRadius);
+        console.log('Locations to display:', locationsToDisplay.length);
+        setFilteredLocations(locationsToDisplay);
       } else {
-        // Show all locations when there's no search
         setFilteredLocations(locationList);
       }
     },
-    [allLocations, searchGeolocation, setFilteredLocations],
+    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   return (
