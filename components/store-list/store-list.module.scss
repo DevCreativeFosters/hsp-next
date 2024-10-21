@@ -7,6 +7,11 @@
   border-radius: 8px;
 
   @include scrollbar;
+
+  @include bp-below(large) {
+    margin-top: 20px;
+    max-height: 40vh !important;
+  }
 }
 
 .list {
