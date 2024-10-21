@@ -146,6 +146,7 @@ export default function StoreLocatorSearch({ allLocations }) {
         console.log('Locations in radius:', locationsInRadius.length);
         setFilteredLocations(locationsInRadius);
       } else {
+        // Show all locations when there's no search
         setFilteredLocations(locationList);
       }
     },

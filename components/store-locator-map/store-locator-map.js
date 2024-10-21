@@ -77,15 +77,18 @@ export default function StoreLocatorMap({
           },
         );
 
-        const circle = new google.maps.Circle({
-          center: center,
-          fillOpacity: 0,
-          map: map,
-          radius: RADIUS,
-          strokeOpacity: 0,
-        });
-
-        map.fitBounds(circle.getBounds());
+        // Remove the initial circle and fitBounds call
+        // Only set the center if there's a searchGeolocation
+        if (searchGeolocation) {
+          map.setCenter(searchGeolocation);
+        } else {
+          // Fit the map to show all locations
+          const bounds = new google.maps.LatLngBounds();
+          locations.forEach(location => {
+            bounds.extend(location.geolocation);
+          });
+          map.fitBounds(bounds);
+        }
 
         map.addListener('tilesloaded', () => handleMapChange(map));
         map.addListener('zoom_changed', () => handleMapChange(map));
@@ -94,7 +97,7 @@ export default function StoreLocatorMap({
         setGoogleMap(map);
       });
     },
-    [center, handleMapChange],
+    [center, handleMapChange, locations, searchGeolocation],
   );
 
   useEffect(
@@ -150,7 +153,7 @@ export default function StoreLocatorMap({
         }
 
         // Trigger handleMapChange after the map has been recentered
-        setTimeout(() => handleMapChange(googleMap), 500);
+        setTimeout(() => handleMapChange(googleMap), 100);
       }
     },
     [googleMap, handleMapChange, locations, searchGeolocation],
