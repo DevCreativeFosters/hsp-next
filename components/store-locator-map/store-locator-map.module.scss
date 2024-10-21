@@ -5,6 +5,10 @@
   min-height: 550px;
   z-index: var(--z-index-component);
   background: black;
+
+  @include bp-below(large) {
+    min-height: 256px;
+  }
 }
 
 .map {

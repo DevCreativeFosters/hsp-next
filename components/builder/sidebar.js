@@ -83,15 +83,18 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [showLocationError, setShowLocationError] = useState(false);
 
   const {
     filteredLocations,
     isMapVisible,
     location,
+    productsSectionOpen,
     searchGeolocation,
     selectedStore,
+    setProductsSectionOpen,
     setSelectedStore,
+    setShowLocationError,
+    showLocationError,
   } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
@@ -120,6 +123,13 @@ export default function Sidebar({
   const handleCloseModal = () => {
     setEnquiryModalOpened(false);
   };
+
+  useEffect(() => {
+    if (productsSectionOpen) {
+      setOpenSection('products');
+      setProductsSectionOpen(false);
+    }
+  }, [productsSectionOpen, setOpenSection, setProductsSectionOpen]);
 
   useEffect(
     function calculatePrice() {

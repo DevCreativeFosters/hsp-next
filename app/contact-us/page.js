@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 
 import parse from 'html-react-parser';
+import Image from 'next/image';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
@@ -19,7 +20,7 @@ import PageGrid from '@components/page-grid/page-grid';
 import SectionIntro from '@components/section-intro/section-intro';
 import Sidebar from '@components/sidebar/sidebar';
 
-import Logo from '@assets/images/logo.svg';
+import Logo from '@assets/images/logo.png';
 
 export async function generateMetadata() {
   const tags = [`page:${removeLeadingSlash(routes.contact)}`];
@@ -53,7 +54,7 @@ export default async function ContactUs() {
             <Sidebar>
               {contactUsInfo && (
                 <ContentBox>
-                  <Logo width="95" />
+                  <Image alt={'HSP Logo'} height={36} src={Logo} width={95} />
                   {parse(contactUsInfo)}
                 </ContentBox>
               )}

@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -30,6 +31,9 @@ export default function Preview({ children, className, handleResetAccept }) {
     setStepNumber,
     stepNumber,
   } = useVehicleContext();
+
+  const { setProductsSectionOpen, setShowLocationError } =
+    useContext(StoreLocatorContext);
 
   const modelName = model?.name;
   const modelImageDesktop =
@@ -127,6 +131,8 @@ export default function Preview({ children, className, handleResetAccept }) {
               } else {
                 setShowResetModal(true);
               }
+              setShowLocationError(false);
+              setProductsSectionOpen(true);
             }}
             rightIcon="close"
             variant="secondary"
