@@ -39,6 +39,7 @@ export default function StoreSearchControls({
     selectedStore,
     setAllMapLocations,
     setFilteredLocations,
+    setFilteredStores,
     setLocation,
     setMapVisible,
     setSearchGeolocation,
@@ -55,8 +56,9 @@ export default function StoreSearchControls({
       const geolocation = await getPlaceGeoLocation(placeId, sessionToken);
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
+      setFilteredStores([]); // Reset filteredStores
     },
-    [sessionToken, setLocation, setSearchGeolocation],
+    [sessionToken, setFilteredStores, setLocation, setSearchGeolocation],
   );
 
   // on clear store ?
@@ -117,11 +119,25 @@ export default function StoreSearchControls({
           locationList,
         );
         setFilteredLocations(filteredList);
+
+        // Add a small delay before updating filteredStores
+        const timer = setTimeout(() => {
+          setFilteredStores(filteredList);
+        }, 300);
+
+        return () => clearTimeout(timer);
       } else {
         setFilteredLocations(locationList);
+        setFilteredStores(locationList);
       }
     },
-    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
+    [
+      allLocations,
+      searchGeolocation,
+      setAllMapLocations,
+      setFilteredLocations,
+      setFilteredStores,
+    ],
   );
 
   return (
