@@ -300,9 +300,17 @@ export default function Sidebar({
         })}
       >
         <StoreList
-          items={filteredStores}
+          items={Array.from(
+            new Map(
+              [...filteredLocations, ...filteredStores].map(item => [
+                item.storeId,
+                item,
+              ]),
+            ).values(),
+          )}
           onSelect={item => {
-            setSelectedStore(item);
+            setCurrentResult(item);
+            setViewMode('RESULT');
           }}
           show={isInlineResultListVisible}
         />
