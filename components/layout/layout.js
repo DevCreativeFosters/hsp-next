@@ -23,7 +23,6 @@ import Footer from '@components/footer/footer';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import Header from '@components/header/header';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
-import Newsletter from '@components/newsletter/newsletter';
 
 import BgContinent from '@assets/images/bg-continent.png';
 
@@ -167,11 +166,11 @@ export default function Layout({
           {withFooter && (
             <div className={styles.bottomSticky}>
               <FullscreenCollapse>
-                <Newsletter
+                {/* <Newsletter
                   description={newsletterDescription}
                   googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
                   title={newsletterTitle}
-                />
+                /> */}
                 <Footer menus={normalizedFooterMenus} text={footerText} />
               </FullscreenCollapse>
             </div>
