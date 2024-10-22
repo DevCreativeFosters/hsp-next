@@ -8,7 +8,6 @@ Disallow: /extended-sports-bar/
 Disallow: /rugged-x-sports-bar/
 Disallow: /sailplane/
 Disallow: /*?
-Disallow: /*#
 Disallow: /ute-tray-slide/ram
 Disallow: /ladder-rack/ram
 Disallow: /ute-sports-bar/ram
