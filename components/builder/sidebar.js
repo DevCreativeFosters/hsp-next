@@ -87,6 +87,7 @@ export default function Sidebar({
   const {
     allMapLocations,
     filteredLocations,
+    filteredStores,
     isMapVisible,
     location,
     searchGeolocation,
@@ -290,7 +291,7 @@ export default function Sidebar({
         })}
       >
         <StoreList
-          items={filteredLocations}
+          items={filteredStores}
           onSelect={item => {
             setSelectedStore(item);
           }}

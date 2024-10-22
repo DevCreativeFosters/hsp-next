@@ -53,11 +53,11 @@ export default function StoreLocatorMap({ className, onMarkerClick }) {
         const { lat, lng } = location.geolocation;
         return bounds?.contains(new google.maps.LatLng(lat, lng));
       });
-      console.log(
-        'Map change - All locations visible in current map view:',
-        visibleLocations.length,
-      );
-      console.log('Map change - Total locations:', allMapLocations.length);
+      // console.log(
+      //   'Map change - All locations visible in current map view:',
+      //   visibleLocations.length,
+      // );
+      // console.log('Map change - Total locations:', allMapLocations.length);
       setFilteredStores(visibleLocations);
     },
     [allMapLocations, setFilteredStores],
@@ -156,14 +156,14 @@ export default function StoreLocatorMap({ className, onMarkerClick }) {
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        console.log(
-          'Recentering map - Filtered locations:',
-          filteredLocations.length,
-        );
-        console.log(
-          'Recentering map - Total locations:',
-          allMapLocations.length,
-        );
+        // console.log(
+        //   'Recentering map - Filtered locations:',
+        //   filteredLocations.length,
+        // );
+        // console.log(
+        //   'Recentering map - Total locations:',
+        //   allMapLocations.length,
+        // );
 
         const locationsToShow =
           filteredLocations.length > 0
@@ -194,7 +194,7 @@ export default function StoreLocatorMap({ className, onMarkerClick }) {
 
         // Trigger handleMapChange after the map has been recentered
         setTimeout(() => {
-          console.log('Delayed map change trigger');
+          // console.log('Delayed map change trigger');
           handleMapChange(googleMap);
         }, 100);
       }
