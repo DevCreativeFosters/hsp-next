@@ -31,13 +31,14 @@ function filterLocationsWithinBounds(bounds, locations) {
   });
 }
 
-export default function StoreLocatorMap({
-  className,
-  locations = [],
-  onMarkerClick,
-}) {
-  const { filteredLocations, searchGeolocation, setFilteredStores } =
-    useContext(StoreLocatorContext);
+export default function StoreLocatorMap({ className, onMarkerClick }) {
+  const {
+    allMapLocations,
+    filteredLocations,
+    searchGeolocation,
+    setFilteredStores,
+  } = useContext(StoreLocatorContext);
+
   const [googleMap, setGoogleMap] = useState(null);
   const [markers, setMarkers] = useState([]);
 
@@ -48,7 +49,7 @@ export default function StoreLocatorMap({
   const handleMapChange = useCallback(
     map => {
       const bounds = map.getBounds();
-      const visibleLocations = locations.filter(location => {
+      const visibleLocations = allMapLocations.filter(location => {
         const { lat, lng } = location.geolocation;
         return bounds?.contains(new google.maps.LatLng(lat, lng));
       });
@@ -56,10 +57,10 @@ export default function StoreLocatorMap({
         'Map change - All locations visible in current map view:',
         visibleLocations.length,
       );
-      console.log('Map change - Total locations:', locations.length);
+      console.log('Map change - Total locations:', allMapLocations.length);
       setFilteredStores(visibleLocations);
     },
-    [locations, setFilteredStores],
+    [allMapLocations, setFilteredStores],
   );
 
   useEffect(
@@ -89,7 +90,7 @@ export default function StoreLocatorMap({
         } else {
           // Fit the map to show all locations
           const bounds = new google.maps.LatLngBounds();
-          locations.forEach(location => {
+          allMapLocations.forEach(location => {
             bounds.extend(location.geolocation);
           });
           map.fitBounds(bounds);
@@ -107,7 +108,7 @@ export default function StoreLocatorMap({
         setGoogleMap(map);
       });
     },
-    [center, handleMapChange, locations, searchGeolocation],
+    [allMapLocations, center, handleMapChange, searchGeolocation],
   );
 
   useEffect(
@@ -116,7 +117,7 @@ export default function StoreLocatorMap({
         // Clear existing markers
         markers.forEach(marker => marker.setMap(null));
 
-        const newMarkers = locations
+        const newMarkers = allMapLocations
           .map(location => {
             const { geolocation, icon, name } = location;
             if (geolocation?.lat == null || geolocation?.lng == null) {
@@ -149,7 +150,7 @@ export default function StoreLocatorMap({
         handleMapChange(googleMap);
       }
     },
-    [googleMap, handleMapChange, locations, onMarkerClick],
+    [allMapLocations, googleMap, handleMapChange, onMarkerClick],
   );
 
   useEffect(
@@ -159,10 +160,15 @@ export default function StoreLocatorMap({
           'Recentering map - Filtered locations:',
           filteredLocations.length,
         );
-        console.log('Recentering map - Total locations:', locations.length);
+        console.log(
+          'Recentering map - Total locations:',
+          allMapLocations.length,
+        );
 
         const locationsToShow =
-          filteredLocations.length > 0 ? filteredLocations : [locations[0]];
+          filteredLocations.length > 0
+            ? filteredLocations
+            : [allMapLocations[0]];
 
         if (locationsToShow.length === 1) {
           // If there's only one location, fit the map to show both the search location and the store
@@ -194,10 +200,10 @@ export default function StoreLocatorMap({
       }
     },
     [
+      allMapLocations,
       filteredLocations,
       googleMap,
       handleMapChange,
-      locations,
       searchGeolocation,
     ],
   );

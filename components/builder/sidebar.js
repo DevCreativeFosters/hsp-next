@@ -83,15 +83,17 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [showLocationError, setShowLocationError] = useState(false);
 
   const {
+    allMapLocations,
     filteredLocations,
     isMapVisible,
     location,
     searchGeolocation,
     selectedStore,
     setSelectedStore,
+    setShowLocationError,
+    showLocationError,
   } = useContext(StoreLocatorContext);
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
@@ -181,7 +183,7 @@ export default function Sidebar({
               {isInlineMapVisible && (
                 <StoreLocatorMap
                   className={styles.map}
-                  locations={filteredLocations}
+                  locations={allMapLocations}
                   onMarkerClick={setSelectedStore}
                 />
               )}

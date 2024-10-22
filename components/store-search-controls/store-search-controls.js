@@ -39,6 +39,7 @@ export default function StoreSearchControls({
     location,
     searchGeolocation,
     selectedStore,
+    setAllMapLocations,
     setFilteredLocations,
     setLocation,
     setMapVisible,
@@ -108,18 +109,19 @@ export default function StoreSearchControls({
   useEffect(
     function syncStoreLocationResultList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+      setAllMapLocations(locationList);
+
       if (searchGeolocation) {
-        setFilteredLocations(
-          findLocationsInRadius(searchGeolocation, locationList),
+        const filteredList = findLocationsInRadius(
+          searchGeolocation,
+          locationList,
         );
+        setFilteredLocations(filteredList);
       } else {
         setFilteredLocations(locationList);
       }
-      return () => {
-        setFilteredLocations(locationList);
-      };
     },
-    [allLocations, searchGeolocation, setFilteredLocations],
+    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   return (
