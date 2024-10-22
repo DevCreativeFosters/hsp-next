@@ -85,6 +85,7 @@ export default function Sidebar({
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const {
+    allMapLocations,
     filteredLocations,
     isMapVisible,
     location,
@@ -191,7 +192,7 @@ export default function Sidebar({
               {isInlineMapVisible && (
                 <StoreLocatorMap
                   className={styles.map}
-                  locations={filteredLocations}
+                  locations={allMapLocations}
                   onMarkerClick={setSelectedStore}
                 />
               )}
