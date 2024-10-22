@@ -105,7 +105,7 @@ export default function Sidebar({
   }, [isOpen]);
 
   const handleButtonWrapperClick = () => {
-    if (selectedProducts.length === 0 || !selectedStore) {
+    if (!selectedStore) {
       setShowLocationError(true);
       setOpenSection('store');
       if (isMobile) {

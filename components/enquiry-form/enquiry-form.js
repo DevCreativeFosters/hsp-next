@@ -32,7 +32,6 @@ export default function EnquiryForm({
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
-  const [showLocationError, setShowLocationError] = useState(false);
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -87,6 +86,7 @@ export default function EnquiryForm({
     selectedStore,
     setFilteredStores,
     setSelectedStore,
+    setShowLocationError,
   } = useContext(StoreLocatorContext);
 
   useEffect(
@@ -182,8 +182,6 @@ export default function EnquiryForm({
           allLocations={allLocations}
           interactWithDisabledForm={interactWithDisabledForm}
           isWide
-          setShowLocationError={setShowLocationError}
-          showLocationError={showLocationError}
         />
 
         {selectedStore ? (
