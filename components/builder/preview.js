@@ -33,6 +33,8 @@ export default function Preview({ children, className, handleResetAccept }) {
   } = useVehicleContext();
 
   const {
+    setLocation,
+    setLocationInput,
     setProductsSectionOpen,
     setSearchGeolocation,
     setSelectedStore,
@@ -137,6 +139,8 @@ export default function Preview({ children, className, handleResetAccept }) {
               }
               setShowLocationError(false);
               setSelectedStore(null);
+              setLocation(undefined);
+              setLocationInput('');
               setSearchGeolocation(null);
               setProductsSectionOpen(true);
             }}

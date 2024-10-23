@@ -47,6 +47,8 @@ export default function ProductsCarousel({
   } = useVehicleContext();
 
   const {
+    setLocation,
+    setLocationInput,
     setProductsSectionOpen,
     setSearchGeolocation,
     setSelectedStore,
@@ -112,6 +114,8 @@ export default function ProductsCarousel({
                       setShowResetModal(true);
                     }
                     setShowLocationError(false);
+                    setLocation(undefined);
+                    setLocationInput('');
                     setSelectedStore(null);
                     setSearchGeolocation(null);
                     setProductsSectionOpen(true);

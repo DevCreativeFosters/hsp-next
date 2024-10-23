@@ -6,6 +6,7 @@ const StoreLocatorContext = createContext({});
 
 export const StoreLocatorProvider = ({ children }) => {
   const [location, setLocation] = useState(undefined);
+  const [locationInput, setLocationInput] = useState('');
   const [searchGeolocation, setSearchGeolocation] = useState(null);
   const [filteredLocations, setFilteredLocations] = useState([]);
   const [filteredStores, setFilteredStores] = useState([]);
@@ -26,6 +27,7 @@ export const StoreLocatorProvider = ({ children }) => {
         isInlineResultListVisible,
         isMapVisible,
         location,
+        locationInput,
         productsSectionOpen,
         searchGeolocation,
         selectedStore,
@@ -34,6 +36,7 @@ export const StoreLocatorProvider = ({ children }) => {
         setFilteredStores,
         setInlineResultListVisible,
         setLocation,
+        setLocationInput,
         setMapVisible,
         setProductsSectionOpen,
         setSearchGeolocation,
