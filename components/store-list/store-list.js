@@ -25,7 +25,10 @@ export default function StoreList({
 
   if (!items?.length > 0 || !show) return null;
 
-  const results = showMoreResults ? items : items.slice(0, 5);
+  const results =
+    showMoreResults === undefined || showMoreResults === false
+      ? items
+      : items.slice(0, 5);
 
   return (
     <div className={clsx(styles.listWrapper, className)} style={style}>
