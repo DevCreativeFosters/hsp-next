@@ -46,8 +46,12 @@ export default function ProductsCarousel({
     stepTitle,
   } = useVehicleContext();
 
-  const { setProductsSectionOpen, setShowLocationError } =
-    useContext(StoreLocatorContext);
+  const {
+    setProductsSectionOpen,
+    setSearchGeolocation,
+    setSelectedStore,
+    setShowLocationError,
+  } = useContext(StoreLocatorContext);
 
   if (stepNumber === 0) {
     return null;
@@ -108,6 +112,8 @@ export default function ProductsCarousel({
                       setShowResetModal(true);
                     }
                     setShowLocationError(false);
+                    setSelectedStore(null);
+                    setSearchGeolocation(null);
                     setProductsSectionOpen(true);
                   }}
                   rightIcon="close"
