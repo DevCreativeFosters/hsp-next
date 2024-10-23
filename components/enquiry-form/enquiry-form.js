@@ -197,7 +197,7 @@ export default function EnquiryForm({
 
             <StoreList
               className={styles.results}
-              items={filteredStores}
+              items={filteredLocations}
               onSelect={item => {
                 setSelectedStore(item);
               }}
@@ -206,7 +206,7 @@ export default function EnquiryForm({
             />
             {!showMoreResults &&
               isInlineResultListVisible &&
-              filteredStores.length > 5 && (
+              filteredLocations.length > 5 && (
                 <div className={styles.showMoreWrapper}>
                   <Button
                     className={styles.showMoreButton}

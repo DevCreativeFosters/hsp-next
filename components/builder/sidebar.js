@@ -85,13 +85,13 @@ export default function Sidebar({
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const {
-    allMapLocations,
     filteredLocations,
-    filteredStores,
     isMapVisible,
     location,
+    productsSectionOpen,
     searchGeolocation,
     selectedStore,
+    setProductsSectionOpen,
     setSelectedStore,
     setShowLocationError,
     showLocationError,
@@ -105,7 +105,7 @@ export default function Sidebar({
   }, [isOpen]);
 
   const handleButtonWrapperClick = () => {
-    if (selectedProducts.length === 0 || !selectedStore) {
+    if (!selectedStore) {
       setShowLocationError(true);
       setOpenSection('store');
       if (isMobile) {
@@ -123,6 +123,13 @@ export default function Sidebar({
   const handleCloseModal = () => {
     setEnquiryModalOpened(false);
   };
+
+  useEffect(() => {
+    if (productsSectionOpen) {
+      setOpenSection('products');
+      setProductsSectionOpen(false);
+    }
+  }, [productsSectionOpen, setOpenSection, setProductsSectionOpen]);
 
   useEffect(
     function calculatePrice() {
@@ -184,7 +191,7 @@ export default function Sidebar({
               {isInlineMapVisible && (
                 <StoreLocatorMap
                   className={styles.map}
-                  locations={allMapLocations}
+                  locations={filteredLocations}
                   onMarkerClick={setSelectedStore}
                 />
               )}
@@ -291,7 +298,7 @@ export default function Sidebar({
         })}
       >
         <StoreList
-          items={filteredStores}
+          items={filteredLocations}
           onSelect={item => {
             setSelectedStore(item);
           }}

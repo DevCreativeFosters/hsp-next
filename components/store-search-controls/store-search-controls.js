@@ -37,9 +37,7 @@ export default function StoreSearchControls({
     location,
     searchGeolocation,
     selectedStore,
-    setAllMapLocations,
     setFilteredLocations,
-    setFilteredStores,
     setLocation,
     setMapVisible,
     setSearchGeolocation,
@@ -56,9 +54,8 @@ export default function StoreSearchControls({
       const geolocation = await getPlaceGeoLocation(placeId, sessionToken);
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
-      setFilteredStores([]); // Reset filteredStores
     },
-    [sessionToken, setFilteredStores, setLocation, setSearchGeolocation],
+    [sessionToken, setLocation, setSearchGeolocation],
   );
 
   // on clear store ?
@@ -111,33 +108,18 @@ export default function StoreSearchControls({
   useEffect(
     function syncStoreLocationResultList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
-      setAllMapLocations(locationList);
-
       if (searchGeolocation) {
-        const filteredList = findLocationsInRadius(
-          searchGeolocation,
-          locationList,
+        setFilteredLocations(
+          findLocationsInRadius(searchGeolocation, locationList),
         );
-        setFilteredLocations(filteredList);
-
-        // Add a small delay before updating filteredStores
-        const timer = setTimeout(() => {
-          setFilteredStores(filteredList);
-        }, 300);
-
-        return () => clearTimeout(timer);
       } else {
         setFilteredLocations(locationList);
-        setFilteredStores(locationList);
       }
+      return () => {
+        setFilteredLocations(locationList);
+      };
     },
-    [
-      allLocations,
-      searchGeolocation,
-      setAllMapLocations,
-      setFilteredLocations,
-      setFilteredStores,
-    ],
+    [allLocations, searchGeolocation, setFilteredLocations],
   );
 
   return (
