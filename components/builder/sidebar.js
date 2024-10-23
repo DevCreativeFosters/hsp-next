@@ -136,9 +136,6 @@ export default function Sidebar({
 
   useEffect(
     function calculatePrice() {
-      console.log('Sidebar - Selected Cover:', selectedCover);
-      console.log('Sidebar - Selected Products:', selectedProducts);
-
       // Check if the selectedCover is already included in selectedProducts
       const isCoverIncluded = selectedProducts.some(
         product => product.productSlug === selectedCover?.productSlug,
@@ -151,8 +148,6 @@ export default function Sidebar({
           ? [selectedCover, ...selectedProducts]
           : selectedProducts;
 
-      console.log('Sidebar - All Products for Price Calculation:', allProducts);
-
       let newPriceSummary = allProducts.reduce(
         (accumulator, currentProduct) => {
           const newAccumulator = {
@@ -163,18 +158,10 @@ export default function Sidebar({
             price: accumulator.price + (currentProduct.price || 0),
           };
 
-          console.log('Price calculation step in Sidebar:', {
-            accumulatedPrice: newAccumulator.price,
-            currentPrice: currentProduct.price,
-            product: currentProduct.title,
-          });
-
           return newAccumulator;
         },
         DEFAULT_PRICE_SUMMARY,
       );
-
-      console.log('Final Price Summary in Sidebar:', newPriceSummary);
 
       setPriceSummary(newPriceSummary);
     },
