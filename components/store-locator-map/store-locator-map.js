@@ -16,11 +16,13 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 50 * 1000; // [m]
+const RADIUS = 200 * 1000; // 200km in meters
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
 };
+
+// const INITIAL_ZOOM_ADJUSTMENT = 0; // Zoom in by one step
 
 function filterLocationsWithinBounds(bounds, locations) {
   return locations.filter(location => {
@@ -34,9 +36,10 @@ export default function StoreLocatorMap({
   locations = [],
   onMarkerClick,
 }) {
-  const { searchGeolocation, setFilteredStores } =
+  const { filteredLocations, searchGeolocation, setFilteredStores } =
     useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   const center = useMemo(() => {
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
@@ -45,11 +48,16 @@ export default function StoreLocatorMap({
   const handleMapChange = useCallback(
     map => {
       const bounds = map.getBounds();
-      const locationsWithinBounds = filterLocationsWithinBounds(
-        bounds,
-        locations,
-      );
-      setFilteredStores(locationsWithinBounds);
+      const visibleLocations = locations.filter(location => {
+        const { lat, lng } = location.geolocation;
+        return bounds?.contains(new google.maps.LatLng(lat, lng));
+      });
+      // console.log(
+      //   'Map change - All locations visible in current map view:',
+      //   visibleLocations.length,
+      // );
+      // console.log('Map change - Total locations:', locations.length);
+      setFilteredStores(visibleLocations);
     },
     [locations, setFilteredStores],
   );
@@ -76,15 +84,21 @@ export default function StoreLocatorMap({
           },
         );
 
-        const circle = new google.maps.Circle({
-          center: center,
-          fillOpacity: 0,
-          map: map,
-          radius: RADIUS,
-          strokeOpacity: 0,
-        });
+        if (searchGeolocation) {
+          map.setCenter(searchGeolocation);
+        } else {
+          // Fit the map to show all locations
+          const bounds = new google.maps.LatLngBounds();
+          locations.forEach(location => {
+            bounds.extend(location.geolocation);
+          });
+          map.fitBounds(bounds);
 
-        map.fitBounds(circle.getBounds());
+          // Wait for the map to finish loading before adjusting zoom
+          google.maps.event.addListenerOnce(map, 'idle', () => {
+            map.setZoom(map.getZoom());
+          });
+        }
 
         map.addListener('tilesloaded', () => handleMapChange(map));
         map.addListener('zoom_changed', () => handleMapChange(map));
@@ -93,13 +107,16 @@ export default function StoreLocatorMap({
         setGoogleMap(map);
       });
     },
-    [center, handleMapChange],
+    [center, handleMapChange, locations, searchGeolocation],
   );
 
   useEffect(
     function renderMapClustersAndMarkers() {
       if (googleMap) {
-        let markers = locations
+        // Clear existing markers
+        markers.forEach(marker => marker.setMap(null));
+
+        const newMarkers = locations
           .map(location => {
             const { geolocation, icon, name } = location;
             if (geolocation?.lat == null || geolocation?.lng == null) {
@@ -108,6 +125,7 @@ export default function StoreLocatorMap({
 
             const marker = new google.maps.Marker({
               icon,
+              map: googleMap,
               position: geolocation,
               title: name,
             });
@@ -117,32 +135,71 @@ export default function StoreLocatorMap({
           })
           .filter(Boolean);
 
+        setMarkers(newMarkers);
+
         new MarkerClusterer({
           map: googleMap,
-          markers,
+          markers: newMarkers,
           renderer: {
             render: googleMapsMarkerClusterRenderer,
           },
         });
+
+        // Trigger handleMapChange to update filtered stores
+        handleMapChange(googleMap);
       }
     },
-    [googleMap, locations, onMarkerClick],
+    [googleMap, handleMapChange, locations, onMarkerClick],
   );
 
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        const circle = new google.maps.Circle({
-          center: searchGeolocation,
-          fillOpacity: 0,
-          map: googleMap,
-          radius: RADIUS,
-          strokeOpacity: 0,
-        });
-        googleMap.fitBounds(circle.getBounds());
+        // console.log(
+        //   'Recentering map - Filtered locations:',
+        //   filteredLocations.length,
+        // );
+        // console.log('Recentering map - Total locations:', locations.length);
+
+        const locationsToShow =
+          filteredLocations.length > 0 ? filteredLocations : [locations[0]];
+
+        if (locationsToShow.length === 1) {
+          // If there's only one location, fit the map to show both the search location and the store
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(searchGeolocation);
+          bounds.extend(locationsToShow[0].geolocation);
+          googleMap.fitBounds(bounds);
+
+          // Add some padding to the bounds
+          const padding = { bottom: 50, left: 50, right: 50, top: 50 };
+          googleMap.fitBounds(bounds, padding);
+        } else {
+          // For multiple locations, use the circle method
+          const circle = new google.maps.Circle({
+            center: searchGeolocation,
+            fillOpacity: 0,
+            map: googleMap,
+            radius: RADIUS,
+            strokeOpacity: 0,
+          });
+          googleMap.fitBounds(circle.getBounds());
+        }
+
+        // Trigger handleMapChange after the map has been recentered
+        setTimeout(() => {
+          // console.log('Delayed map change trigger');
+          handleMapChange(googleMap);
+        }, 100);
       }
     },
-    [googleMap, searchGeolocation],
+    [
+      filteredLocations,
+      googleMap,
+      handleMapChange,
+      locations,
+      searchGeolocation,
+    ],
   );
 
   return (

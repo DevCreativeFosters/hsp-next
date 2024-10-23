@@ -18,7 +18,17 @@ export default function StoreList({
   if (show && items?.length === 0) {
     return (
       <div className={className}>
-        Sorry, there are no results for given location and radius
+        Sorry, there are no results within 200km radius of your selected
+        location. Please contact HSP directly
+        <h5 className={styles.header}>
+          HSP 4X4 HEAD OFFICE <br /> FITTING CENTRE
+        </h5>
+        <br />
+        <div className={styles.details}>
+          40 Overseas Drive
+          <br />
+          Noble Park North VIC, NSW 3174, AU
+        </div>
       </div>
     );
   }

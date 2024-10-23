@@ -17,7 +17,7 @@ import {
   stringifySuggestion,
 } from '@lib/google-place';
 import normalizeStores from '@lib/normalize-stores';
-import { findLocationsInRadius } from '@lib/store-locations';
+import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -47,6 +47,7 @@ export default function StoreLocatorSearch({ allLocations }) {
     filteredLocations,
     isInlineResultListVisible,
     searchGeolocation,
+    setAllMapLocations,
     setFilteredLocations,
     setInlineResultListVisible,
     setSearchGeolocation,
@@ -138,16 +139,30 @@ export default function StoreLocatorSearch({ allLocations }) {
   useEffect(
     function syncStoreLocationResultList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+      console.log('Sync store locations - All locations:', locationList.length);
+      setAllMapLocations(locationList);
       if (searchGeolocation) {
-        setFilteredLocations(
-          findLocationsInRadius(searchGeolocation, locationList),
+        const locationsToDisplay = getLocationsToDisplay(
+          searchGeolocation,
+          locationList,
         );
+        console.log(
+          'Sync store locations - Locations within 100km radius:',
+          locationsToDisplay.length,
+        );
+        console.log(
+          'Sync store locations - Search geolocation:',
+          searchGeolocation,
+        );
+        setFilteredLocations(locationsToDisplay);
       } else {
+        console.log(
+          'Sync store locations - No search geolocation, displaying all',
+        );
         setFilteredLocations(locationList);
       }
-      return () => {};
     },
-    [allLocations, searchGeolocation, setFilteredLocations],
+    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   return (
