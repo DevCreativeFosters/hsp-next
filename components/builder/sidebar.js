@@ -5,6 +5,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import StoreLocatorContext from '@contexts/store-locator';
+import { useVehicleContext } from '@contexts/vehicle';
 
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
@@ -131,21 +132,53 @@ export default function Sidebar({
     }
   }, [productsSectionOpen, setOpenSection, setProductsSectionOpen]);
 
+  const { selectedCover } = useVehicleContext();
+
   useEffect(
     function calculatePrice() {
-      let newPriceSummary = selectedProducts.reduce(
-        (accumulator, currentProduct) => ({
-          freight: accumulator.freight + currentProduct.freight,
-          installationCost:
-            accumulator.installationCost + currentProduct.installationCost,
-          price: accumulator.price + currentProduct.price,
-        }),
+      console.log('Sidebar - Selected Cover:', selectedCover);
+      console.log('Sidebar - Selected Products:', selectedProducts);
+
+      // Check if the selectedCover is already included in selectedProducts
+      const isCoverIncluded = selectedProducts.some(
+        product => product.productSlug === selectedCover?.productSlug,
+      );
+
+      // Only add selectedCover if it's not already included
+      const allProducts = isCoverIncluded
+        ? selectedProducts
+        : selectedCover
+          ? [selectedCover, ...selectedProducts]
+          : selectedProducts;
+
+      console.log('Sidebar - All Products for Price Calculation:', allProducts);
+
+      let newPriceSummary = allProducts.reduce(
+        (accumulator, currentProduct) => {
+          const newAccumulator = {
+            freight: accumulator.freight + (currentProduct.freight || 0),
+            installationCost:
+              accumulator.installationCost +
+              (currentProduct.installationCost || 0),
+            price: accumulator.price + (currentProduct.price || 0),
+          };
+
+          console.log('Price calculation step in Sidebar:', {
+            accumulatedPrice: newAccumulator.price,
+            currentPrice: currentProduct.price,
+            product: currentProduct.title,
+          });
+
+          return newAccumulator;
+        },
         DEFAULT_PRICE_SUMMARY,
       );
 
+      console.log('Final Price Summary in Sidebar:', newPriceSummary);
+
       setPriceSummary(newPriceSummary);
     },
-    [selectedProducts],
+    [selectedCover, selectedProducts],
   );
 
   return (
