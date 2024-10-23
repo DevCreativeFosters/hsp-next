@@ -5,6 +5,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import StoreLocatorContext from '@contexts/store-locator';
+import { useVehicleContext } from '@contexts/vehicle';
 
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
@@ -131,21 +132,40 @@ export default function Sidebar({
     }
   }, [productsSectionOpen, setOpenSection, setProductsSectionOpen]);
 
+  const { selectedCover } = useVehicleContext();
+
   useEffect(
     function calculatePrice() {
-      let newPriceSummary = selectedProducts.reduce(
-        (accumulator, currentProduct) => ({
-          freight: accumulator.freight + currentProduct.freight,
-          installationCost:
-            accumulator.installationCost + currentProduct.installationCost,
-          price: accumulator.price + currentProduct.price,
-        }),
+      // Check if the selectedCover is already included in selectedProducts
+      const isCoverIncluded = selectedProducts.some(
+        product => product.productSlug === selectedCover?.productSlug,
+      );
+
+      // Only add selectedCover if it's not already included
+      const allProducts = isCoverIncluded
+        ? selectedProducts
+        : selectedCover
+          ? [selectedCover, ...selectedProducts]
+          : selectedProducts;
+
+      let newPriceSummary = allProducts.reduce(
+        (accumulator, currentProduct) => {
+          const newAccumulator = {
+            freight: accumulator.freight + (currentProduct.freight || 0),
+            installationCost:
+              accumulator.installationCost +
+              (currentProduct.installationCost || 0),
+            price: accumulator.price + (currentProduct.price || 0),
+          };
+
+          return newAccumulator;
+        },
         DEFAULT_PRICE_SUMMARY,
       );
 
       setPriceSummary(newPriceSummary);
     },
-    [selectedProducts],
+    [selectedCover, selectedProducts],
   );
 
   return (
