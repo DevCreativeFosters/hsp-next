@@ -85,6 +85,7 @@ export default function Builder({
     filteredLocations,
     isInlineResultListVisible,
     isMapVisible,
+    setSearchGeolocation,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
@@ -506,6 +507,8 @@ export default function Builder({
   const handleResetAccept = () => {
     setSelectedCover(null);
     setSelectedProducts([]);
+    setSelectedStore(null);
+    setSearchGeolocation(null);
     setStepNumber(0);
   };
 

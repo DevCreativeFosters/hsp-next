@@ -32,8 +32,12 @@ export default function Preview({ children, className, handleResetAccept }) {
     stepNumber,
   } = useVehicleContext();
 
-  const { setProductsSectionOpen, setShowLocationError } =
-    useContext(StoreLocatorContext);
+  const {
+    setProductsSectionOpen,
+    setSearchGeolocation,
+    setSelectedStore,
+    setShowLocationError,
+  } = useContext(StoreLocatorContext);
 
   const modelName = model?.name;
   const modelImageDesktop =
@@ -132,6 +136,8 @@ export default function Preview({ children, className, handleResetAccept }) {
                 setShowResetModal(true);
               }
               setShowLocationError(false);
+              setSelectedStore(null);
+              setSearchGeolocation(null);
               setProductsSectionOpen(true);
             }}
             rightIcon="close"

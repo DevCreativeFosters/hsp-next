@@ -298,6 +298,7 @@ export default function Sidebar({
           <div
             className={clsx({
               [styles.list]: isInlineResultListVisible,
+              [styles.isHidden]: stepNumber === 0,
             })}
           >
             <StoreList
