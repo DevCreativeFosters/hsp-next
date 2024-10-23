@@ -16,7 +16,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 100 * 1000; // 100km in meters
+const RADIUS = 200 * 1000; // 200km in meters
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
