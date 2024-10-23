@@ -292,19 +292,24 @@ export default function Sidebar({
           store={selectedStore}
         />
       )}
-      <div
-        className={clsx({
-          [styles.list]: isInlineResultListVisible,
-        })}
-      >
-        <StoreList
-          items={filteredLocations}
-          onSelect={item => {
-            setSelectedStore(item);
-          }}
-          show={isInlineResultListVisible}
-        />
-      </div>
+      {filteredLocations.length !== 0 &&
+        isInlineResultListVisible &&
+        !selectedStore && (
+          <div
+            className={clsx({
+              [styles.list]: isInlineResultListVisible,
+              [styles.isHidden]: stepNumber === 0,
+            })}
+          >
+            <StoreList
+              items={filteredLocations}
+              onSelect={item => {
+                setSelectedStore(item);
+              }}
+              show={isInlineResultListVisible}
+            />
+          </div>
+        )}
     </>
   );
 }

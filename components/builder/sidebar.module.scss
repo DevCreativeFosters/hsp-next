@@ -334,6 +334,10 @@
   @include bp-below(large) {
     display: none;
   }
+
+  &.isHidden {
+    display: none;
+  }
 }
 
 .isMobileOnly {
