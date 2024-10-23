@@ -6,9 +6,7 @@ import StoreLocatorContext from '@contexts/store-locator';
 
 import { getGeoHash } from '@lib/get-geo-hash';
 import normalizeStores from '@lib/normalize-stores';
-import {
-  getLocationsToDisplay,
-} from '@lib/store-locations';
+import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Container from '@components/container/container';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
@@ -64,7 +62,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
           searchGeolocation,
           locationList,
         );
-        console.log('Locations to display:', locationsToDisplay.length);
+        // console.log('Locations to display:', locationsToDisplay.length);
         setFilteredLocations(locationsToDisplay);
       } else {
         setFilteredLocations(locationList);
