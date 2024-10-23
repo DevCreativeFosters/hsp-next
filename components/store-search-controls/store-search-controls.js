@@ -27,8 +27,6 @@ export default function StoreSearchControls({
   isSearchHidden,
   isWide,
   label = 'Locate your store',
-  setShowLocationError,
-  showLocationError,
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [locationInput, setLocationInput] = useState('');
@@ -45,6 +43,8 @@ export default function StoreSearchControls({
     setLocation,
     setMapVisible,
     setSearchGeolocation,
+    setShowLocationError,
+    showLocationError,
   } = useContext(StoreLocatorContext);
 
   const selectLocation = useCallback(

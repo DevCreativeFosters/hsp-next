@@ -23,6 +23,10 @@
   &.isDisabled {
     pointer-events: none;
     opacity: 0.5;
+
+    @include bp-below(large) {
+      opacity: 0;
+    }
   }
 
   @include bp(large) {

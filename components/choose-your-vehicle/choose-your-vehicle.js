@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 
+import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -48,6 +49,9 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     setVehicleSelection,
     stepNumber,
   } = useVehicleContext();
+
+  const { setProductsSectionOpen, setShowLocationError } =
+    useContext(StoreLocatorContext);
 
   const {
     handleMakerChange,
@@ -185,6 +189,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       setHeaderWidgetLoading(false);
                     } else {
                       handleVehicleReset();
+                      setShowLocationError(false);
+                      setProductsSectionOpen(true);
                     }
                   }}
                 >

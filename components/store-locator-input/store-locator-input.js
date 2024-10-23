@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+
+import StoreLocatorContext from '@contexts/store-locator';
 
 import useHasClass from '@hooks/useHasClass';
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -32,6 +34,8 @@ export default function Input({
   const mainInputRef = useRef(null);
   const isFullScreen = useHasClass(STORE_LOCATOR_FULLSCREEN);
   const isMobile = useIsMobile();
+
+  const { setShowLocationError } = useContext(StoreLocatorContext);
 
   useEffect(
     function syncValue() {
@@ -95,6 +99,7 @@ export default function Input({
             className={styles.resetButton}
             disabled={disabled}
             onClick={ev => {
+              setShowLocationError(false);
               ev.preventDefault();
               onChange('');
               mainInputRef.current.focus();
