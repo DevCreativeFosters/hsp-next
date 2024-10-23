@@ -29,16 +29,17 @@ export default function StoreSearchControls({
   label = 'Locate your store',
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
-  const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
   const {
     isMapVisible,
     location,
+    locationInput,
     searchGeolocation,
     selectedStore,
     setFilteredLocations,
     setLocation,
+    setLocationInput,
     setMapVisible,
     setSearchGeolocation,
     setShowLocationError,
@@ -55,7 +56,7 @@ export default function StoreSearchControls({
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
     },
-    [sessionToken, setLocation, setSearchGeolocation],
+    [sessionToken, setLocation, setLocationInput, setSearchGeolocation],
   );
 
   // on clear store ?

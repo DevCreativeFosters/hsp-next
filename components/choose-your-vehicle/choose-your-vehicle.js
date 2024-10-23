@@ -51,6 +51,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
   } = useVehicleContext();
 
   const {
+    setLocation,
+    setLocationInput,
     setProductsSectionOpen,
     setSearchGeolocation,
     setSelectedStore,
@@ -196,6 +198,8 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       setShowLocationError(false);
                       setSearchGeolocation(null);
                       setSelectedStore(null);
+                      setLocation(undefined);
+                      setLocationInput('');
                       setProductsSectionOpen(true);
                     }
                   }}
