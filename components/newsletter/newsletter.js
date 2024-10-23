@@ -36,7 +36,6 @@ export default function Newsletter({
 
   const handleSubmit = useCallback(
     async token => {
-      // console.log('Handling submit, token:', token);
       setIsBusy(true);
       try {
         const response = await sendBrevoNewsletterData({
@@ -44,8 +43,6 @@ export default function Newsletter({
           'g-recaptcha-response': token,
           locale: 'en',
         });
-
-        // console.log('Response from Brevo:', response);
 
         if (response.success) {
           setError(null);
@@ -158,12 +155,9 @@ export default function Newsletter({
                 disabled={isBusy}
                 isBusy={isBusy}
                 onClick={event => {
-                  // console.log('Button clicked');
                   const isValid = formRef.current.reportValidity();
-                  // console.log('Form is valid:', isValid);
                   if (isValid) {
                     setIsBusy(true);
-                    // console.log('Executing ReCAPTCHA');
                     if (recaptchaRef.current) {
                       recaptchaRef.current.execute();
                     } else {
