@@ -11,6 +11,7 @@ Sentry.init({
   enabled:
     process.env.VERCEL_ENV === 'production' ||
     process.env.VERCEL_ENV === 'preview',
+  ignoreErrors: ['window.lintrk is not a function'],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 0,
