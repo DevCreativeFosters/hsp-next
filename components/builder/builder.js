@@ -485,22 +485,56 @@ export default function Builder({
   const handleClashModalAccept = () => {
     setSelectedFactoryOption(null);
 
-    if (!selectedCover?.isNoCover) {
-      const data = updateSelectedCoverVariant(
-        covers,
-        selectedCover,
-        selectedProducts,
-        currentProduct,
-      );
+    let newSelectedProducts = selectedProducts.filter(product =>
+      covers.some(cover => cover.group === product.productSlug),
+    );
 
-      setSelectedCover(data.cover);
-      setSelectedProducts(data.products);
+    if (selectedCover && !selectedCover.isNoCover) {
+      const baseVariant = covers
+        .find(cover => cover.group === selectedCover.productSlug)
+        ?.variants.find(v => !v.compatibleFactoryOptionsVariants);
+
+      if (baseVariant) {
+        newSelectedProducts[0] = baseVariant;
+        setSelectedCover(baseVariant);
+      }
     }
 
-    setProductToAdd(currentProduct);
-    setDisabledProducts([
-      ...getIncompatibleProducts(stepProducts, currentProduct, covers),
-    ]);
+    newSelectedProducts.push(currentProduct);
+
+    let updatedDisabledProducts = [];
+    newSelectedProducts.forEach(selectedProduct => {
+      const otherProductsWithSameParent = getOtherProductsWithSameParent(
+        stepProducts,
+        selectedProduct.productSlug,
+        selectedProduct.variantSlug,
+      );
+
+      const incompatibleProducts = getIncompatibleProducts(
+        stepProducts,
+        selectedProduct,
+        covers,
+      );
+
+      updatedDisabledProducts = [
+        ...new Set([
+          ...updatedDisabledProducts,
+          ...otherProductsWithSameParent,
+          ...incompatibleProducts,
+        ]),
+      ];
+    });
+
+    updatedDisabledProducts = updatedDisabledProducts.filter(
+      disabledProduct =>
+        !newSelectedProducts.some(
+          selectedProduct =>
+            selectedProduct.variantSlug === disabledProduct.variantSlug,
+        ),
+    );
+
+    setSelectedProducts(newSelectedProducts);
+    setDisabledProducts(updatedDisabledProducts);
     setShowClashModal(false);
   };
 
