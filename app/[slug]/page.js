@@ -2,6 +2,7 @@ import { draftMode } from 'next/headers';
 
 import { getPageData } from '@lib/api/get-page-data';
 import { getProductCategorySeo } from '@lib/api/get-product-category-seo';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { metadata } from '@lib/seo';
 
@@ -14,10 +15,16 @@ export async function generateMetadata({ params }) {
   }
 
   const data = await getProductCategorySeo(params.slug);
+  let pageSeo = {};
+
+  if (Object.keys(data).length === 0) {
+    pageSeo = await getSeoByUri(params.slug);
+  }
 
   return {
     ...metadata,
     ...data,
+    ...pageSeo,
   };
 }
 
