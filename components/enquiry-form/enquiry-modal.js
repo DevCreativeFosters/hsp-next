@@ -148,7 +148,11 @@ export default function EnquiryModal({
                       hiddenInputs={[
                         {
                           inputName: 'storeId',
-                          value: store?.storeId || store?.name || 'Not set',
+                          value: store?.storeId || 'Not set',
+                        },
+                        {
+                          inputName: 'storeName',
+                          value: store?.name || 'Not set',
                         },
                         {
                           inputName: 'products',
