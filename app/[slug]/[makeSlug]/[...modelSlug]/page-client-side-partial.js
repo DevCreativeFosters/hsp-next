@@ -46,9 +46,10 @@ export default function PageClientSidePartial({
   variantSlug,
 }) {
   const productVariants = firstMatchedProduct?.productFields.variants || [];
-  const variant = productVariants.find(
-    ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
-  );
+  const variant =
+    productVariants.find(
+      ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
+    ) || productVariants[0];
 
   const properties = [
     'description',
