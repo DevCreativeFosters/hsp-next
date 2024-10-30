@@ -254,7 +254,7 @@ export default function EnquiryForm({
           freight={freight}
           installationCost={variantInstallationPrice}
           onClose={handleCloseModal}
-          productPrice={productPrice ?? variantPrice}
+          productPrice={variantPrice ?? productPrice}
           selectedProducts={
             selectedVariant
               ? [selectedVariant]
