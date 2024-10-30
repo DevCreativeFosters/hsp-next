@@ -69,25 +69,40 @@ export default function Preview({ children, className, handleResetAccept }) {
     [selectedFactoryOption, selectedProducts],
   );
 
-  useEffect(() => {
-    let newMergeImages = [];
+  useEffect(
+    function buildDownloadableImageLayers() {
+      if (!localSelectedProducts?.length) {
+        setMergeImages([]);
+        return;
+      }
 
-    if (localSelectedProducts?.length > 0) {
-      newMergeImages.push(BgPicture);
-      newMergeImages.push(modelImageDesktop);
+      const baseImages = [BgPicture, modelImageDesktop].filter(Boolean);
 
-      localSelectedProducts.forEach(selectedProduct => {
-        const productImageDesktop =
-          selectedProduct.uteBuilderImages.imageDesktop?.node?.sourceUrl;
+      const sortedProducts = [...localSelectedProducts].sort(
+        (a, b) => a.imageLayerPosition - b.imageLayerPosition,
+      );
 
-        newMergeImages.push(productImageDesktop);
+      const productImages = sortedProducts.flatMap(product => {
+        const { uteBuilderImages } = product;
+
+        if (uteBuilderImages.imageDesktop?.node?.sourceUrl) {
+          return [uteBuilderImages.imageDesktop.node.sourceUrl];
+        }
+
+        if (uteBuilderImages.multipleImages) {
+          return uteBuilderImages.multipleImages
+            .toSorted((a, b) => a.layerPosition - b.layerPosition)
+            .map(image => image.desktop?.node?.sourceUrl)
+            .filter(Boolean);
+        }
+
+        return [];
       });
-    }
 
-    setMergeImages(newMergeImages);
-
-    return () => {};
-  }, [localSelectedProducts, modelImageDesktop]);
+      setMergeImages([...baseImages, ...productImages]);
+    },
+    [localSelectedProducts, modelImageDesktop],
+  );
 
   const imageSizes = {
     desktop: {
