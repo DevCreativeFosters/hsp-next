@@ -85,15 +85,15 @@ export default function Preview({ children, className, handleResetAccept }) {
       const productImages = sortedProducts.flatMap(product => {
         const { uteBuilderImages } = product;
 
-        if (uteBuilderImages.imageDesktop?.node?.sourceUrl) {
-          return [uteBuilderImages.imageDesktop.node.sourceUrl];
-        }
-
-        if (uteBuilderImages.multipleImages) {
+        if (uteBuilderImages.multipleImages?.length) {
           return uteBuilderImages.multipleImages
             .toSorted((a, b) => a.layerPosition - b.layerPosition)
             .map(image => image.desktop?.node?.sourceUrl)
             .filter(Boolean);
+        }
+
+        if (uteBuilderImages.imageDesktop?.node?.sourceUrl) {
+          return [uteBuilderImages.imageDesktop.node.sourceUrl];
         }
 
         return [];
