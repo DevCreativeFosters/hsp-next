@@ -20,6 +20,7 @@ export default function PageClient({ description, posts = [], title }) {
   const [currentIndex, setCurrentIndex] = useState(undefined);
   const isMobile = useIsMobile();
   const startY = useRef(null);
+  const currentY = useRef(null);
 
   const onNext = useCallback(() => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % posts.length);
@@ -41,48 +42,51 @@ export default function PageClient({ description, posts = [], title }) {
     [posts],
   );
 
-  function syncHashWithCurrentIndex() {
-    const hash = window.location.hash;
-    if (currentIndex === undefined) {
-      const slugFromHash = hash[0] === '#' ? hash.slice(1) : hash;
-      const index = findIndexBySlug(slugFromHash);
-      setCurrentIndex(index > -1 ? index : 0);
-    } else {
-      const slugFromIndex = findSlugByIndex(currentIndex);
-      router.replace(`#${slugFromIndex}`, { scroll: false });
-    }
-  }
+  useEffect(
+    function syncHashWithCurrentIndex() {
+      const hash = window.location.hash;
+      if (currentIndex === undefined) {
+        const slugFromHash = hash[0] === '#' ? hash.slice(1) : hash;
+        const index = findIndexBySlug(slugFromHash);
+        setCurrentIndex(index > -1 ? index : 0);
+      } else {
+        const slugFromIndex = findSlugByIndex(currentIndex);
+        router.replace(`#${slugFromIndex}`, { scroll: false });
+      }
+    },
+    [currentIndex, findIndexBySlug, findSlugByIndex, router],
+  );
 
-  useEffect(syncHashWithCurrentIndex, [
-    currentIndex,
-    findIndexBySlug,
-    findSlugByIndex,
-    router,
-  ]);
+  useEffect(
+    function handleSwipeEvents() {
+      if (!isMobile) return;
 
-  function handleSwipeEvents() {
-    if (!isMobile) return;
+      const handleTouchStart = e => {
+        startY.current = e.touches[0].clientY;
+      };
 
-    const handleTouchStart = e => {
-      startY.current = e.touches[0].clientY;
-    };
+      const handleTouchMove = e => {
+        currentY.current = e.touches[0].clientY;
+      };
 
-    const handleTouchEnd = e => {
-      const endY = e.changedTouches[0].clientY;
-      if (startY.current - endY > 50) onNext();
-      else if (endY - startY.current > 50) onPrev();
-    };
+      const handleTouchEnd = () => {
+        const deltaY = startY.current - currentY.current;
+        if (deltaY > 50) onNext();
+        else if (deltaY < -50) onPrev();
+      };
 
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchend', handleTouchEnd);
+      window.addEventListener('touchstart', handleTouchStart);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
 
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }
-
-  useEffect(handleSwipeEvents, [isMobile, onNext, onPrev]);
+      return () => {
+        window.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
+      };
+    },
+    [isMobile, onNext, onPrev],
+  );
 
   if (isMobile === undefined) {
     return null;
