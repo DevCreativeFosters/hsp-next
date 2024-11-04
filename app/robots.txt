@@ -1,13 +1,12 @@
 User-agent: *
 
 Disallow: /wp-admin/
-Disallow: /_next/
+Disallow: /static/
 Disallow: /no-cover/
 Disallow: /a-frame-sports-bar/
 Disallow: /extended-sports-bar/
 Disallow: /rugged-x-sports-bar/
 Disallow: /sailplane/
-Disallow: /*?
 Disallow: /ute-tray-slide/ram
 Disallow: /ladder-rack/ram
 Disallow: /ute-sports-bar/ram
