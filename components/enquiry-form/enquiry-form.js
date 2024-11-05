@@ -8,7 +8,6 @@ import useMobileVh from '@hooks/useMobileVh';
 
 import { formatPrice, getProductImage } from '@lib/helpers';
 import normalizeStores from '@lib/normalize-stores';
-import { findLocationsInRadius } from '@lib/store-locations';
 import { trimSlash } from '@lib/trim-slash';
 
 import Button from '@components/button/button';
@@ -33,6 +32,8 @@ export default function EnquiryForm({
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
+
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -90,16 +91,22 @@ export default function EnquiryForm({
     setShowLocationError,
   } = useContext(StoreLocatorContext);
 
-  useEffect(
-    function syncLocationsBasedOnInitialSearch() {
-      if (searchGeolocation) {
-        setFilteredStores(
-          findLocationsInRadius(searchGeolocation, filteredLocations),
-        );
-      }
-    },
-    [filteredLocations, searchGeolocation, setFilteredStores],
-  );
+  useEffect(() => {
+    const normalized = normalizeStores(allLocations);
+
+    setNormalizedLocations(normalized);
+  }, [allLocations]);
+
+  // useEffect(
+  //   function syncLocationsBasedOnInitialSearch() {
+  //     if (searchGeolocation) {
+  //       setFilteredStores(
+  //         findLocationsInRadius(searchGeolocation, filteredLocations),
+  //       );
+  //     }
+  //   },
+  //   [filteredLocations, searchGeolocation, setFilteredStores],
+  // );
 
   useMobileVh();
 
@@ -156,15 +163,6 @@ export default function EnquiryForm({
     },
     [highlight],
   );
-
-  const [normalizedLocations, setNormalizedLocations] = useState([]);
-
-  useEffect(() => {
-    const normalized = normalizeStores(allLocations);
-    // console.log('Original locations:', allLocations);
-    // console.log('Normalized Locations:', normalized);
-    setNormalizedLocations(normalized);
-  }, [allLocations]);
 
   return (
     <section className={styles.wrapper} ref={wrapperOuterRef}>

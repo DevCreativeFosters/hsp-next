@@ -34,8 +34,13 @@ export default function StoreLocatorMap({
   locations = [],
   onMarkerClick,
 }) {
-  const { filteredLocations, searchGeolocation, setFilteredStores } =
-    useContext(StoreLocatorContext);
+  const {
+    filteredLocations,
+    hasMapInteracted,
+    searchGeolocation,
+    setFilteredStores,
+    setHasMapInteracted,
+  } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
   const [markers, setMarkers] = useState([]);
 
@@ -43,6 +48,21 @@ export default function StoreLocatorMap({
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
   }, [searchGeolocation]);
 
+  useEffect(() => {
+    console.log('Map Component:', {
+      hasMapInteracted,
+      timestamp: new Date().toISOString(),
+    });
+  }, [hasMapInteracted]);
+
+  // Separate handler for map interaction
+  const handleMapInteraction = useCallback(() => {
+    setTimeout(() => {
+      setHasMapInteracted(true);
+    }, 1000);
+  }, [setHasMapInteracted]);
+
+  // Handler for bounds update
   const handleMapChange = useCallback(
     map => {
       const bounds = map.getBounds();
@@ -94,14 +114,25 @@ export default function StoreLocatorMap({
           });
         }
 
+        // Add specific listeners for user interaction
+        map.addListener('dragend', () => handleMapInteraction());
+        // map.addListener('zoom_changed', () => handleMapInteraction());
+
+        // Separate listener for bounds update
+        map.addListener('bounds_changed', () => handleMapChange(map));
         map.addListener('tilesloaded', () => handleMapChange(map));
         map.addListener('zoom_changed', () => handleMapChange(map));
-        map.addListener('center_changed', () => handleMapChange(map));
 
         setGoogleMap(map);
       });
     },
-    [center, handleMapChange, locations, searchGeolocation],
+    [
+      center,
+      handleMapChange,
+      handleMapInteraction,
+      locations,
+      searchGeolocation,
+    ],
   );
 
   useEffect(
