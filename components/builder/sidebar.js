@@ -10,7 +10,6 @@ import { useVehicleContext } from '@contexts/vehicle';
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 import normalizeStores from '@lib/normalize-stores';
-import { findLocationsInRadius } from '@lib/store-locations';
 
 import Button from '@components/button/button';
 import EnquiryModal from '@components/enquiry-form/enquiry-modal';
@@ -91,6 +90,7 @@ export default function Sidebar({
   const {
     filteredLocations,
     filteredStores,
+    hasMapInteracted,
     isMapVisible,
     location,
     productsSectionOpen,
@@ -175,7 +175,7 @@ export default function Sidebar({
 
   useEffect(() => {
     const normalized = normalizeStores(allLocations);
-    console.log('Normalized Locations:', normalized);
+
     setNormalizedLocations(normalized);
   }, [allLocations]);
 
@@ -197,16 +197,33 @@ export default function Sidebar({
   //   [searchGeolocation, filteredLocations, setFilteredStores],
   // );
 
-  useEffect(
-    function syncStoresOnSearch() {
-      if (searchGeolocation) {
-        setFilteredStores(
-          findLocationsInRadius(searchGeolocation, filteredLocations),
-        );
-      }
-    },
-    [searchGeolocation, filteredLocations, setFilteredStores],
-  );
+  // useEffect(
+  //   function syncStoresOnSearch() {
+  //     if (searchGeolocation) {
+  //       setFilteredStores(
+  //         findLocationsInRadius(searchGeolocation, filteredLocations),
+  //       );
+  //     }
+  //   },
+  //   [searchGeolocation, filteredLocations, setFilteredStores],
+  // );
+
+  // Add debug effect
+  useEffect(() => {
+    console.log('Sidebar Store Context Debug:', {
+      filteredLocations: {
+        data: filteredLocations,
+        length: filteredLocations?.length,
+      },
+      filteredStores: {
+        data: filteredStores,
+        length: filteredStores?.length,
+      },
+      hasMapInteracted,
+      searchGeolocation,
+      timestamp: new Date().toISOString(),
+    });
+  }, [filteredLocations, filteredStores, hasMapInteracted, searchGeolocation]);
 
   return (
     <>
@@ -259,7 +276,9 @@ export default function Sidebar({
                 <div className={styles.isMobileOnly}>
                   <StoreList
                     allLocations={allLocations}
-                    items={filteredStores}
+                    items={
+                      hasMapInteracted ? filteredStores : filteredLocations
+                    }
                     onSelect={item => {
                       setSelectedStore(item);
                     }}
@@ -362,7 +381,8 @@ export default function Sidebar({
         >
           <StoreList
             allLocations={allLocations}
-            items={filteredStores}
+            hasMapInteracted={hasMapInteracted}
+            items={hasMapInteracted ? filteredStores : filteredLocations}
             onSelect={item => {
               setSelectedStore(item);
             }}

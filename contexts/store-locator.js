@@ -17,6 +17,7 @@ export const StoreLocatorProvider = ({ children }) => {
   const [showLocationError, setShowLocationError] = useState(false);
   const [productsSectionOpen, setProductsSectionOpen] = useState(true);
   const [allMapLocations, setAllMapLocations] = useState([]);
+  const [hasMapInteracted, setHasMapInteracted] = useState(false);
 
   return (
     <StoreLocatorContext.Provider
@@ -33,7 +34,9 @@ export const StoreLocatorProvider = ({ children }) => {
         selectedStore,
         setAllMapLocations,
         setFilteredLocations,
+        hasMapInteracted,
         setFilteredStores,
+        setHasMapInteracted,
         setInlineResultListVisible,
         setLocation,
         setLocationInput,

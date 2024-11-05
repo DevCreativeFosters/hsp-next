@@ -13,12 +13,10 @@ import getRelatedCovers from '@lib/api/get-related-covers';
 import normalizeStores from '@lib/normalize-stores';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 import routes from '@lib/routes';
-import { findLocationsInRadius } from '@lib/store-locations';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
 import Container from '@components/container/container';
-import StoreList from '@components/store-list/store-list';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
 
 import styles from './builder.module.scss';
@@ -486,16 +484,16 @@ export default function Builder({
     [covers.length, stepNumber],
   );
 
-  useEffect(
-    function syncStoresWithMap() {
-      if (searchGeolocation) {
-        setFilteredStores(
-          findLocationsInRadius(searchGeolocation, filteredLocations),
-        );
-      }
-    },
-    [filteredLocations, searchGeolocation, setFilteredStores],
-  );
+  // useEffect(
+  //   function syncStoresWithMap() {
+  //     if (searchGeolocation) {
+  //       setFilteredStores(
+  //         findLocationsInRadius(searchGeolocation, filteredLocations),
+  //       );
+  //     }
+  //   },
+  //   [filteredLocations, searchGeolocation, setFilteredStores],
+  // );
 
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
