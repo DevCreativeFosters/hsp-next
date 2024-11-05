@@ -7,6 +7,7 @@ import StoreLocatorContext from '@contexts/store-locator';
 import useMobileVh from '@hooks/useMobileVh';
 
 import { formatPrice, getProductImage } from '@lib/helpers';
+import normalizeStores from '@lib/normalize-stores';
 import { findLocationsInRadius } from '@lib/store-locations';
 import { trimSlash } from '@lib/trim-slash';
 
@@ -156,6 +157,15 @@ export default function EnquiryForm({
     [highlight],
   );
 
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
+
+  useEffect(() => {
+    const normalized = normalizeStores(allLocations);
+    console.log('Original locations:', allLocations);
+    console.log('Normalized Locations:', normalized);
+    setNormalizedLocations(normalized);
+  }, [allLocations]);
+
   return (
     <section className={styles.wrapper} ref={wrapperOuterRef}>
       <form
@@ -190,14 +200,15 @@ export default function EnquiryForm({
           <>
             {isMapVisible && (
               <StoreLocatorMap
-                locations={filteredLocations}
+                locations={normalizedLocations}
                 onMarkerClick={setSelectedStore}
               />
             )}
 
             <StoreList
+              allLocations={allLocations}
               className={styles.results}
-              items={filteredLocations}
+              items={filteredStores}
               onSelect={item => {
                 setSelectedStore(item);
               }}
@@ -206,7 +217,7 @@ export default function EnquiryForm({
             />
             {!showMoreResults &&
               isInlineResultListVisible &&
-              filteredLocations.length > 5 && (
+              filteredStores.length > 5 && (
                 <div className={styles.showMoreWrapper}>
                   <Button
                     className={styles.showMoreButton}

@@ -10,8 +10,10 @@ import { useVehicleContext } from '@contexts/vehicle';
 import { useIsMobile } from '@hooks/useIsMobile';
 
 import getRelatedCovers from '@lib/api/get-related-covers';
+import normalizeStores from '@lib/normalize-stores';
 import normalizeUteBuilderProducts from '@lib/normalize-ute-builder-products';
 import routes from '@lib/routes';
+import { findLocationsInRadius } from '@lib/store-locations';
 
 import ClashModal from '@components/builder/clash-modal';
 import UTEChooseYourVehicle from '@components/builder/ute-choose-your-vehicle';
@@ -83,11 +85,21 @@ export default function Builder({
 
   const {
     filteredLocations,
+    filteredStores,
     isInlineResultListVisible,
     isMapVisible,
+    searchGeolocation,
+    setFilteredStores,
     setSearchGeolocation,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
+
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
+
+  useEffect(() => {
+    const normalized = normalizeStores(allLocations);
+    setNormalizedLocations(normalized);
+  }, [allLocations]);
 
   const addProduct = useCallback(
     product => {
@@ -474,6 +486,17 @@ export default function Builder({
     [covers.length, stepNumber],
   );
 
+  useEffect(
+    function syncStoresWithMap() {
+      if (searchGeolocation) {
+        setFilteredStores(
+          findLocationsInRadius(searchGeolocation, filteredLocations),
+        );
+      }
+    },
+    [filteredLocations, searchGeolocation, setFilteredStores],
+  );
+
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -535,22 +558,22 @@ export default function Builder({
               setOpenSection={setOpenSection}
               stepNumber={stepNumber}
             />
-            <div className={styles.mobileOnly}>
+            {/* <div className={styles.mobileOnly}>
               <StoreList
-                items={filteredLocations}
+                items={filteredStores}
                 onSelect={item => {
                   setCurrentResult(item);
                   setViewMode('RESULT');
                 }}
                 show={isInlineResultListVisible}
               />
-            </div>
+            </div> */}
             {stepNumber > 0 ? (
               <Preview handleResetAccept={handleResetAccept}>
                 {isInlineMapVisible && (
                   <StoreLocatorMap
                     className={styles.map}
-                    locations={filteredLocations}
+                    locations={normalizedLocations}
                     onMarkerClick={setSelectedStore}
                   />
                 )}

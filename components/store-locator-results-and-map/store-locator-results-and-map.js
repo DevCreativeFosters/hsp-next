@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef } from 'react';
 
 import StoreLocatorContext from '@contexts/store-locator';
 
+import constants from '@lib/constants';
 import { getGeoHash } from '@lib/get-geo-hash';
 import normalizeStores from '@lib/normalize-stores';
 import { getLocationsToDisplay } from '@lib/store-locations';
@@ -93,7 +94,33 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
                 })}
               </ul>
             ) : (
-              'No results'
+              <>
+                <div className={styles.noResultsNotice}>
+                  {constants.NO_RESULTS_NOTICE}
+                </div>
+                {allLocations && (
+                  <ul className={styles.resultList}>
+                    {(() => {
+                      const superStore = allLocations?.find(location =>
+                        location.storesCustomFields.storeCategory.includes(
+                          'super_store',
+                        ),
+                      );
+                      if (superStore) {
+                        const normalizedSuperStore = normalizeStores([
+                          superStore,
+                        ])[0];
+                        return (
+                          <StoreTile
+                            item={normalizedSuperStore}
+                            selected={false}
+                          />
+                        );
+                      }
+                    })()}
+                  </ul>
+                )}
+              </>
             )}
           </div>
           <StoreLocatorMap

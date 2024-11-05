@@ -215,6 +215,7 @@ export default function StoreLocatorSearch({ allLocations }) {
 
               <div className={styles.mobileOnly}>
                 <StoreList
+                  allLocations={allLocations}
                   items={filteredLocations}
                   onSelect={item => {
                     setCurrentResult(item);

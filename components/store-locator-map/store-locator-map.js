@@ -22,8 +22,6 @@ const HSP_HEADQUARTERS_COORDINATES = {
   lng: 145.1871773227412,
 };
 
-// const INITIAL_ZOOM_ADJUSTMENT = 0; // Zoom in by one step
-
 function filterLocationsWithinBounds(bounds, locations) {
   return locations.filter(location => {
     const { lat, lng } = location.geolocation;
@@ -52,11 +50,7 @@ export default function StoreLocatorMap({
         const { lat, lng } = location.geolocation;
         return bounds?.contains(new google.maps.LatLng(lat, lng));
       });
-      // console.log(
-      //   'Map change - All locations visible in current map view:',
-      //   visibleLocations.length,
-      // );
-      // console.log('Map change - Total locations:', locations.length);
+
       setFilteredStores(visibleLocations);
     },
     [locations, setFilteredStores],
@@ -155,51 +149,55 @@ export default function StoreLocatorMap({
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        // console.log(
-        //   'Recentering map - Filtered locations:',
-        //   filteredLocations.length,
-        // );
-        // console.log('Recentering map - Total locations:', locations.length);
-
+        // Safety check: ensure we have locations to show
         const locationsToShow =
-          filteredLocations.length > 0 ? filteredLocations : [locations[0]];
+          filteredLocations?.length > 0 ? filteredLocations : [];
 
-        if (locationsToShow.length === 1) {
-          // If there's only one location, fit the map to show both the search location and the store
-          const bounds = new google.maps.LatLngBounds();
-          bounds.extend(searchGeolocation);
-          bounds.extend(locationsToShow[0].geolocation);
-          googleMap.fitBounds(bounds);
-
-          // Add some padding to the bounds
-          const padding = { bottom: 50, left: 50, right: 50, top: 50 };
-          googleMap.fitBounds(bounds, padding);
-        } else {
-          // For multiple locations, use the circle method
+        if (locationsToShow.length === 0) {
+          // Create a circle with 200km radius
           const circle = new google.maps.Circle({
             center: searchGeolocation,
             fillOpacity: 0,
             map: googleMap,
-            radius: RADIUS,
+            radius: RADIUS, // 200km in meters
             strokeOpacity: 0,
           });
+
+          // Fit the map to the circle bounds
           googleMap.fitBounds(circle.getBounds());
+
+          // Remove the circle after bounds are set
+          circle.setMap(null);
+          return;
         }
 
-        // Trigger handleMapChange after the map has been recentered
+        if (locationsToShow.length === 1 && locationsToShow[0]?.geolocation) {
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(searchGeolocation);
+          bounds.extend(locationsToShow[0].geolocation);
+
+          const padding = { bottom: 50, left: 50, right: 50, top: 50 };
+          googleMap.fitBounds(bounds, padding);
+        } else {
+          // For multiple locations
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(searchGeolocation);
+          locationsToShow.forEach(location => {
+            if (location?.geolocation) {
+              bounds.extend(location.geolocation);
+            }
+          });
+
+          const padding = { bottom: 50, left: 50, right: 50, top: 50 };
+          googleMap.fitBounds(bounds, padding);
+        }
+
         setTimeout(() => {
-          // console.log('Delayed map change trigger');
           handleMapChange(googleMap);
         }, 100);
       }
     },
-    [
-      filteredLocations,
-      googleMap,
-      handleMapChange,
-      locations,
-      searchGeolocation,
-    ],
+    [filteredLocations, googleMap, handleMapChange, searchGeolocation],
   );
 
   return (
