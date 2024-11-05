@@ -17,7 +17,6 @@ export default function StoreList({
   showMoreResults,
   style,
 }) {
-  console.log('StoreList items:', items);
   useMobileVh();
 
   if (show && items?.length === 0) {

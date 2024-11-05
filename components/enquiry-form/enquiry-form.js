@@ -161,8 +161,8 @@ export default function EnquiryForm({
 
   useEffect(() => {
     const normalized = normalizeStores(allLocations);
-    console.log('Original locations:', allLocations);
-    console.log('Normalized Locations:', normalized);
+    // console.log('Original locations:', allLocations);
+    // console.log('Normalized Locations:', normalized);
     setNormalizedLocations(normalized);
   }, [allLocations]);
 
