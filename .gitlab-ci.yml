@@ -54,7 +54,7 @@ deploy_develop:
   script:
     - npm install --location=global vercel
     - npm install sharp
-    - vercel pull --yes --environment=development --git-branch=develop --token=$VERCEL_TOKEN
+    - vercel pull --yes --environment=preview --git-branch=develop --token=$VERCEL_TOKEN
     - vercel build --token=$VERCEL_TOKEN
     - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
     - vercel alias set $DEPLOYMENT_URL $VERCEL_DEV_DOMAIN --token=$VERCEL_TOKEN
