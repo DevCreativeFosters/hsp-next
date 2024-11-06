@@ -7,7 +7,7 @@ import StoreLocatorContext from '@contexts/store-locator';
 import useMobileVh from '@hooks/useMobileVh';
 
 import { formatPrice, getProductImage } from '@lib/helpers';
-import { findLocationsInRadius } from '@lib/store-locations';
+import normalizeStores from '@lib/normalize-stores';
 import { trimSlash } from '@lib/trim-slash';
 
 import Button from '@components/button/button';
@@ -32,6 +32,8 @@ export default function EnquiryForm({
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
+
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
   const formRef = useRef(null);
@@ -90,14 +92,11 @@ export default function EnquiryForm({
   } = useContext(StoreLocatorContext);
 
   useEffect(
-    function syncLocationsBasedOnInitialSearch() {
-      if (searchGeolocation) {
-        setFilteredStores(
-          findLocationsInRadius(searchGeolocation, filteredLocations),
-        );
-      }
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
     },
-    [filteredLocations, searchGeolocation, setFilteredStores],
+    [allLocations],
   );
 
   useMobileVh();
@@ -190,14 +189,15 @@ export default function EnquiryForm({
           <>
             {isMapVisible && (
               <StoreLocatorMap
-                locations={filteredLocations}
+                locations={normalizedLocations}
                 onMarkerClick={setSelectedStore}
               />
             )}
 
             <StoreList
+              allLocations={allLocations}
               className={styles.results}
-              items={filteredLocations}
+              items={filteredStores}
               onSelect={item => {
                 setSelectedStore(item);
               }}
@@ -206,7 +206,7 @@ export default function EnquiryForm({
             />
             {!showMoreResults &&
               isInlineResultListVisible &&
-              filteredLocations.length > 5 && (
+              filteredStores.length > 5 && (
                 <div className={styles.showMoreWrapper}>
                   <Button
                     className={styles.showMoreButton}
@@ -254,7 +254,7 @@ export default function EnquiryForm({
           freight={freight}
           installationCost={variantInstallationPrice}
           onClose={handleCloseModal}
-          productPrice={productPrice ?? variantPrice}
+          productPrice={variantPrice ?? productPrice}
           selectedProducts={
             selectedVariant
               ? [selectedVariant]
