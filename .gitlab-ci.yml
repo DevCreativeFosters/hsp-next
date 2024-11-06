@@ -35,18 +35,6 @@ deploy_production:
     - vercel build --prod --token=$VERCEL_TOKEN
     - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
 
-deploy_uat:
-  stage: deploy
-  only:
-    - uat
-  script:
-    - npm install --location=global vercel
-    - npm install sharp
-    - vercel pull --yes --environment=preview --git-branch=uat --token=$VERCEL_TOKEN
-    - vercel build --token=$VERCEL_TOKEN
-    - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
-    - vercel alias set $DEPLOYMENT_URL $VERCEL_UAT_DOMAIN --token=$VERCEL_TOKEN
-
 deploy_staging:
   stage: deploy
   only:
@@ -66,7 +54,7 @@ deploy_develop:
   script:
     - npm install --location=global vercel
     - npm install sharp
-    - vercel pull --yes --environment=preview --git-branch=develop --token=$VERCEL_TOKEN
+    - vercel pull --yes --environment=development --git-branch=develop --token=$VERCEL_TOKEN
     - vercel build --token=$VERCEL_TOKEN
     - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
     - vercel alias set $DEPLOYMENT_URL $VERCEL_DEV_DOMAIN --token=$VERCEL_TOKEN
