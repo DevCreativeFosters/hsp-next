@@ -1,0 +1,22 @@
+.desktopImage {
+  width: 100%;
+  height: auto;
+}
+
+.hideOnMobile {
+  display: none;
+
+  @include bp(medium) {
+    display: block;
+  }
+}
+
+.mobileImage {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  @include bp(medium) {
+    display: none;
+  }
+}
