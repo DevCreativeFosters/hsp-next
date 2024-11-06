@@ -173,11 +173,13 @@ export default function Sidebar({
     [selectedCover, selectedProducts],
   );
 
-  useEffect(() => {
-    const normalized = normalizeStores(allLocations);
-
-    setNormalizedLocations(normalized);
-  }, [allLocations]);
+  useEffect(
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
+    },
+    [allLocations],
+  );
 
   return (
     <>

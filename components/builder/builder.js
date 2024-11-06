@@ -60,6 +60,7 @@ export default function Builder({
     useState(null);
   const [incompatibleCovers, setIncompatibleCovers] = useState(null);
   const [lastProductSlug, setLastProductSlug] = useState(null);
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
   const topRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
@@ -92,12 +93,13 @@ export default function Builder({
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  const [normalizedLocations, setNormalizedLocations] = useState([]);
-
-  useEffect(() => {
-    const normalized = normalizeStores(allLocations);
-    setNormalizedLocations(normalized);
-  }, [allLocations]);
+  useEffect(
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
+    },
+    [allLocations],
+  );
 
   const addProduct = useCallback(
     product => {
