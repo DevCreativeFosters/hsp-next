@@ -500,7 +500,25 @@ export default function Builder({
       }
     }
 
-    newSelectedProducts.push(currentProduct);
+    const compatibleExistingProducts = selectedProducts.filter(product => {
+      if (covers.some(cover => cover.group === product.productSlug)) {
+        return false;
+      }
+
+      const isCompatible = !getIncompatibleProducts(
+        stepProducts,
+        currentProduct,
+        covers,
+      ).some(incompatible => incompatible.variantSlug === product.variantSlug);
+
+      return isCompatible;
+    });
+
+    newSelectedProducts = [
+      ...newSelectedProducts,
+      ...compatibleExistingProducts,
+      currentProduct,
+    ];
 
     let updatedDisabledProducts = [];
     newSelectedProducts.forEach(selectedProduct => {
