@@ -170,7 +170,7 @@ export default function VideoEl({ isActive, thumbnail, title, video }) {
         </button>
       )}
 
-      <div className={styles.backButtonWrapper}>
+      <span className={styles.backButtonWrapper}>
         <Button
           className={styles.buttonBack}
           leftIcon="arrow-backward"
@@ -179,7 +179,7 @@ export default function VideoEl({ isActive, thumbnail, title, video }) {
           variant="tertiary"
         />
         {title && <h5>{title}</h5>}
-      </div>
+      </span>
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />
     </>

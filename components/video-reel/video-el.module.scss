@@ -65,8 +65,7 @@
 
   &.soundButton {
     svg {
-      width: 36px;
-      height: 36px;
+      transform: scale(0.75);
     }
 
     path {
@@ -90,6 +89,7 @@
   align-items: center;
   gap: 16px;
   padding: 8px 24px;
+  z-index: 1;
 
   @include bp(medium) {
     display: none;
