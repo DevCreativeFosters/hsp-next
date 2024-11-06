@@ -16,7 +16,7 @@ import styles from '@components/video-reel/video-el.module.scss';
 
 const SpeakerIcon = getIcon('speaker');
 
-export default function VideoEl({ isActive, thumbnail, video }) {
+export default function VideoEl({ isActive, thumbnail, title, video }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
   const [canAutoplayWithSound, setCanAutoplayWithSound] = useState(undefined);
@@ -178,6 +178,7 @@ export default function VideoEl({ isActive, thumbnail, video }) {
           size="large"
           variant="tertiary"
         />
+        {title && <h5>{title}</h5>}
       </div>
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />

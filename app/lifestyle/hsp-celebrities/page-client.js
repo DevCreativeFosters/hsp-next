@@ -153,6 +153,7 @@ export default function PageClient({ description, posts = [], title }) {
           isActive={true}
           key={currentIndex}
           thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
+          title={post.title}
           video={post.celebrityPostsCustomFields?.video?.node}
         />
       </div>
