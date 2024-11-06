@@ -91,22 +91,13 @@ export default function EnquiryForm({
     setShowLocationError,
   } = useContext(StoreLocatorContext);
 
-  useEffect(() => {
-    const normalized = normalizeStores(allLocations);
-
-    setNormalizedLocations(normalized);
-  }, [allLocations]);
-
-  // useEffect(
-  //   function syncLocationsBasedOnInitialSearch() {
-  //     if (searchGeolocation) {
-  //       setFilteredStores(
-  //         findLocationsInRadius(searchGeolocation, filteredLocations),
-  //       );
-  //     }
-  //   },
-  //   [filteredLocations, searchGeolocation, setFilteredStores],
-  // );
+  useEffect(
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
+    },
+    [allLocations],
+  );
 
   useMobileVh();
 
