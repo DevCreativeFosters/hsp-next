@@ -16,7 +16,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 200 * 1000; // 200km in meters
+const RADIUS = 150 * 1000; // 150km in meters
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
@@ -48,18 +48,11 @@ export default function StoreLocatorMap({
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
   }, [searchGeolocation]);
 
-  useEffect(() => {
-    console.log('Map Component:', {
-      hasMapInteracted,
-      timestamp: new Date().toISOString(),
-    });
-  }, [hasMapInteracted]);
-
   // Separate handler for map interaction
   const handleMapInteraction = useCallback(() => {
     setTimeout(() => {
       setHasMapInteracted(true);
-    }, 1000);
+    }, 500);
   }, [setHasMapInteracted]);
 
   // Handler for bounds update
@@ -116,7 +109,6 @@ export default function StoreLocatorMap({
 
         // Add specific listeners for user interaction
         map.addListener('dragend', () => handleMapInteraction());
-        // map.addListener('zoom_changed', () => handleMapInteraction());
 
         // Separate listener for bounds update
         map.addListener('bounds_changed', () => handleMapChange(map));

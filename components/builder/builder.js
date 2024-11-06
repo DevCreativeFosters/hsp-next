@@ -484,17 +484,6 @@ export default function Builder({
     [covers.length, stepNumber],
   );
 
-  // useEffect(
-  //   function syncStoresWithMap() {
-  //     if (searchGeolocation) {
-  //       setFilteredStores(
-  //         findLocationsInRadius(searchGeolocation, filteredLocations),
-  //       );
-  //     }
-  //   },
-  //   [filteredLocations, searchGeolocation, setFilteredStores],
-  // );
-
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
