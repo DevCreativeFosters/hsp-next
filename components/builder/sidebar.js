@@ -179,52 +179,6 @@ export default function Sidebar({
     setNormalizedLocations(normalized);
   }, [allLocations]);
 
-  // console.log('Store List Debug:', {
-  //   filteredLocationsLength: filteredLocations?.length,
-  //   filteredStoresLength: filteredStores?.length,
-  //   isInlineResultListVisible,
-  //   location,
-  //   searchGeolocation,
-  // });
-
-  // Add this effect to sync filteredStores with filteredLocations on search
-  // useEffect(
-  //   function syncStoresOnSearch() {
-  //     if (searchGeolocation && filteredLocations?.length > 0) {
-  //       setFilteredStores(filteredLocations);
-  //     }
-  //   },
-  //   [searchGeolocation, filteredLocations, setFilteredStores],
-  // );
-
-  // useEffect(
-  //   function syncStoresOnSearch() {
-  //     if (searchGeolocation) {
-  //       setFilteredStores(
-  //         findLocationsInRadius(searchGeolocation, filteredLocations),
-  //       );
-  //     }
-  //   },
-  //   [searchGeolocation, filteredLocations, setFilteredStores],
-  // );
-
-  // Add debug effect
-  useEffect(() => {
-    console.log('Sidebar Store Context Debug:', {
-      filteredLocations: {
-        data: filteredLocations,
-        length: filteredLocations?.length,
-      },
-      filteredStores: {
-        data: filteredStores,
-        length: filteredStores?.length,
-      },
-      hasMapInteracted,
-      searchGeolocation,
-      timestamp: new Date().toISOString(),
-    });
-  }, [filteredLocations, filteredStores, hasMapInteracted, searchGeolocation]);
-
   return (
     <>
       <div

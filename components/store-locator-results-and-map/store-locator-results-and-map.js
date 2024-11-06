@@ -63,7 +63,6 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
           searchGeolocation,
           locationList,
         );
-        // console.log('Locations to display:', locationsToDisplay.length);
         setFilteredLocations(locationsToDisplay);
       } else {
         setFilteredLocations(locationList);
