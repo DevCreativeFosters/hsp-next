@@ -10,6 +10,7 @@ import React, {
   useState,
 } from 'react';
 
+import { usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { GravityFormProvider } from '@contexts/gravity-form';
@@ -49,6 +50,8 @@ function GravityFormWrapperWithRef(
 
   const { user } = useUserContext();
   const gravityFormsStaticData = useGravityFormsStaticData();
+
+  const pathname = usePathname();
 
   const replaceFieldValue = useCallback(({ field, key, value }) => {
     if (!value) return;
@@ -156,7 +159,13 @@ function GravityFormWrapperWithRef(
         <GForm
           attributes={attributes}
           form={gfForm}
-          hiddenInputs={hiddenInputs}
+          hiddenInputs={[
+            ...hiddenInputs,
+            {
+              inputName: 'pageUrl',
+              value: pathname || 'Not available',
+            },
+          ]}
           innerRef={ref}
           isDirty={isDirty}
           onChange={onChange}
