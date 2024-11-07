@@ -32,12 +32,14 @@ export default function StoreSearchControls({
   const [suggestions, setSuggestions] = useState([]);
 
   const {
+    hasMapInteracted,
     isMapVisible,
     location,
     locationInput,
     searchGeolocation,
     selectedStore,
     setFilteredLocations,
+    setHasMapInteracted,
     setLocation,
     setLocationInput,
     setMapVisible,
@@ -55,8 +57,15 @@ export default function StoreSearchControls({
       const geolocation = await getPlaceGeoLocation(placeId, sessionToken);
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
+      setHasMapInteracted(false);
     },
-    [sessionToken, setLocation, setLocationInput, setSearchGeolocation],
+    [
+      sessionToken,
+      setHasMapInteracted,
+      setLocation,
+      setLocationInput,
+      setSearchGeolocation,
+    ],
   );
 
   // on clear store ?

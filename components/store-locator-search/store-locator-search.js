@@ -139,26 +139,14 @@ export default function StoreLocatorSearch({ allLocations }) {
   useEffect(
     function syncStoreLocationResultList() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
-      console.log('Sync store locations - All locations:', locationList.length);
       setAllMapLocations(locationList);
       if (searchGeolocation) {
         const locationsToDisplay = getLocationsToDisplay(
           searchGeolocation,
           locationList,
         );
-        console.log(
-          'Sync store locations - Locations within 100km radius:',
-          locationsToDisplay.length,
-        );
-        console.log(
-          'Sync store locations - Search geolocation:',
-          searchGeolocation,
-        );
         setFilteredLocations(locationsToDisplay);
       } else {
-        console.log(
-          'Sync store locations - No search geolocation, displaying all',
-        );
         setFilteredLocations(locationList);
       }
     },
@@ -215,6 +203,7 @@ export default function StoreLocatorSearch({ allLocations }) {
 
               <div className={styles.mobileOnly}>
                 <StoreList
+                  allLocations={allLocations}
                   items={filteredLocations}
                   onSelect={item => {
                     setCurrentResult(item);

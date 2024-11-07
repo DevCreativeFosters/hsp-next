@@ -9,6 +9,7 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
+import normalizeStores from '@lib/normalize-stores';
 
 import Button from '@components/button/button';
 import EnquiryModal from '@components/enquiry-form/enquiry-modal';
@@ -84,14 +85,18 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
 
   const {
     filteredLocations,
+    filteredStores,
+    hasMapInteracted,
     isMapVisible,
     location,
     productsSectionOpen,
     searchGeolocation,
     selectedStore,
+    setFilteredStores,
     setProductsSectionOpen,
     setSelectedStore,
     setShowLocationError,
@@ -168,6 +173,14 @@ export default function Sidebar({
     [selectedCover, selectedProducts],
   );
 
+  useEffect(
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
+    },
+    [allLocations],
+  );
+
   return (
     <>
       <div
@@ -211,14 +224,17 @@ export default function Sidebar({
               {isInlineMapVisible && (
                 <StoreLocatorMap
                   className={styles.map}
-                  locations={filteredLocations}
+                  locations={normalizedLocations}
                   onMarkerClick={setSelectedStore}
                 />
               )}
-              {filteredLocations.length !== 0 && isInlineResultListVisible && (
+              {isInlineResultListVisible && (
                 <div className={styles.isMobileOnly}>
                   <StoreList
-                    items={filteredLocations}
+                    allLocations={allLocations}
+                    items={
+                      hasMapInteracted ? filteredStores : filteredLocations
+                    }
                     onSelect={item => {
                       setSelectedStore(item);
                     }}
@@ -312,24 +328,24 @@ export default function Sidebar({
           store={selectedStore}
         />
       )}
-      {filteredLocations.length !== 0 &&
-        isInlineResultListVisible &&
-        !selectedStore && (
-          <div
-            className={clsx({
-              [styles.list]: isInlineResultListVisible,
-              [styles.isHidden]: stepNumber === 0,
-            })}
-          >
-            <StoreList
-              items={filteredLocations}
-              onSelect={item => {
-                setSelectedStore(item);
-              }}
-              show={isInlineResultListVisible}
-            />
-          </div>
-        )}
+      {isInlineResultListVisible && !selectedStore && (
+        <div
+          className={clsx({
+            [styles.list]: isInlineResultListVisible,
+            [styles.isHidden]: stepNumber === 0,
+          })}
+        >
+          <StoreList
+            allLocations={allLocations}
+            hasMapInteracted={hasMapInteracted}
+            items={hasMapInteracted ? filteredStores : filteredLocations}
+            onSelect={item => {
+              setSelectedStore(item);
+            }}
+            show={isInlineResultListVisible}
+          />
+        </div>
+      )}
     </>
   );
 }
