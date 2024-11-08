@@ -42,7 +42,7 @@ deploy_staging:
   script:
     - npm install --location=global vercel
     - npm install sharp
-    - vercel pull --yes --environment=production --git-branch=staging --token=$VERCEL_TOKEN
+    - vercel pull --yes --environment=preview --git-branch=staging --token=$VERCEL_TOKEN
     - vercel build --token=$VERCEL_TOKEN
     - DEPLOYMENT_URL=$(vercel deploy --prebuilt --archive=tgz --token=$VERCEL_TOKEN)
     - vercel alias set $DEPLOYMENT_URL $VERCEL_STG_DOMAIN --token=$VERCEL_TOKEN
