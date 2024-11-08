@@ -82,6 +82,7 @@ export default function EnquiryForm({
   const {
     filteredLocations,
     filteredStores,
+    hasMapInteracted,
     isMapVisible,
     location,
     searchGeolocation,
@@ -197,7 +198,8 @@ export default function EnquiryForm({
             <StoreList
               allLocations={allLocations}
               className={styles.results}
-              items={filteredStores}
+              hasMapInteracted={hasMapInteracted}
+              items={hasMapInteracted ? filteredStores : filteredLocations}
               onSelect={item => {
                 setSelectedStore(item);
               }}
