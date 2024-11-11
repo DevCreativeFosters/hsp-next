@@ -1,3 +1,13 @@
+.container {
+  margin-block: 24px;
+  padding-block: 24px;
+
+  @include bp(large) {
+    margin-block: 48px;
+    padding-block: 48px;
+  }
+}
+
 .desktopImage {
   width: 100%;
   height: auto;
