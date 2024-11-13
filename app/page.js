@@ -18,7 +18,7 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const content = await getPageData('');
+  const content = await getPageData('/');
   const contentBlocks = await Promise.all(
     content?.flexibleContent?.blocks?.map(renderBlock) || [],
   );
