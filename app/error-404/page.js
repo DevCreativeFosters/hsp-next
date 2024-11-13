@@ -1,3 +1,7 @@
+import { Fragment } from 'react/jsx-runtime';
+
+import { getPageData } from '@lib/api/get-page-data';
+import { renderBlock } from '@lib/block';
 import { metadata as defaultMetadata } from '@lib/seo';
 
 import Container from '@components/container/container';
@@ -10,7 +14,12 @@ export const metadata = {
   title: 'Error 404 - page not found',
 };
 
-export default function NotFound() {
+export default async function NotFound() {
+  const content = await getPageData('/error-404');
+  const contentBlocks = await Promise.all(
+    content?.flexibleContent?.blocks?.map(renderBlock) || [],
+  );
+
   return (
     <Layout withMap>
       <Container>
@@ -22,6 +31,9 @@ export default function NotFound() {
           />
         </PageContainer>
       </Container>
+      {contentBlocks?.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }
