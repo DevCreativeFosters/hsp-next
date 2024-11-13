@@ -14,8 +14,8 @@ import Layout from '@components/layout/layout';
 const NUMBER_OF_RELATED_POSTS = 5;
 
 export async function generateMetadata({ params }) {
-  const tags = [`hsp_tv:${removeLeadingSlash(params.slug)}`];
-  const data = await getSeoByUri(`/hsp_tv/${params.slug}`, tags);
+  const tags = [`hsp-tv:${removeLeadingSlash(params.slug)}`];
+  const data = await getSeoByUri(`/hsp-tv/${params.slug}`, tags);
 
   return {
     ...metadata,
