@@ -40,12 +40,17 @@ export async function generateMetadata({ params }) {
   );
 
   const seo = {
+    canonical:
+      (filteredData?.length >= 1 && filteredData[0]?.seo?.canonicalUrl) || null,
     description:
       (filteredData?.length >= 1 && filteredData[0]?.seo?.description) || null,
     title: (filteredData?.length >= 1 && filteredData[0]?.seo?.title) || null,
   };
 
   const makeSeo = {
+    alternates: {
+      canonical: seo.canonical || data?.alternates?.canonical,
+    },
     description: seo.description || metadata?.description || data?.description,
     openGraph: {
       ...data.openGraph,
