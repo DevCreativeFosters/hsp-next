@@ -11,6 +11,7 @@ import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category
 import { getMake } from '@lib/api/get-make';
 import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import { getPageData } from '@lib/api/get-page-data';
+import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
 import formatCategories from '@lib/normalize-product-breadcrumbs';
@@ -39,14 +40,17 @@ export async function generateMetadata({ params }) {
   );
 
   const seo = {
+    canonical:
+      (filteredData?.length >= 1 && filteredData[0]?.seo?.canonicalUrl) || null,
     description:
       (filteredData?.length >= 1 && filteredData[0]?.seo?.description) || null,
     title: (filteredData?.length >= 1 && filteredData[0]?.seo?.title) || null,
   };
 
-  return {
-    ...metadata,
-    ...data,
+  const makeSeo = {
+    alternates: {
+      canonical: seo.canonical || data?.alternates?.canonical,
+    },
     description: seo.description || metadata?.description || data?.description,
     openGraph: {
       ...data.openGraph,
@@ -57,6 +61,19 @@ export async function generateMetadata({ params }) {
       title: seo.title || metadata?.openGraph?.title || data?.openGraph?.title,
     },
     title: seo.title || metadata?.title || data?.title,
+  };
+
+  let pageSeo = {};
+
+  if (Object.keys(data).length === 0) {
+    pageSeo = await getSeoByUri(`${params.slug}/${params.makeSlug}`);
+  }
+
+  return {
+    ...metadata,
+    ...data,
+    ...makeSeo,
+    ...pageSeo,
   };
 }
 
