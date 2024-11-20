@@ -19,12 +19,8 @@ export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
   const isMobile = useIsMobile();
-  const touchRef = useRef({
-    isSwiping: false,
-    startTime: null,
-    startX: null,
-    startY: null,
-  });
+  const startY = useRef(null);
+  const currentY = useRef(null);
 
   const onNext = useCallback(() => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % posts.length);
@@ -66,72 +62,21 @@ export default function PageClient({ description, posts = [], title }) {
       if (!isMobile) return;
 
       const handleTouchStart = e => {
-        if (!['BUTTON'].includes(e.target.tagName)) {
-          e.preventDefault();
-        }
-
-        touchRef.current = {
-          isSwiping: false,
-          startTime: Date.now(),
-          startX: e.touches[0].clientX,
-          startY: e.touches[0].clientY,
-        };
+        startY.current = e.touches[0].clientY;
       };
 
       const handleTouchMove = e => {
-        if (!touchRef.current.startY) return;
-
-        const currentY = e.touches[0].clientY;
-        const currentX = e.touches[0].clientX;
-        const deltaY = touchRef.current.startY - currentY;
-        const deltaX = Math.abs(touchRef.current.startX - currentX);
-
-        if (deltaX > Math.abs(deltaY)) {
-          touchRef.current.isSwiping = false;
-          return;
-        }
-
-        if (Math.abs(deltaY) > 10) {
-          touchRef.current.isSwiping = true;
-        }
-
-        if (touchRef.current.isSwiping) {
-          e.preventDefault();
-        }
+        currentY.current = e.touches[0].clientY;
       };
 
-      const handleTouchEnd = e => {
-        if (!touchRef.current.startY) return;
-
-        const deltaY = touchRef.current.startY - e.changedTouches[0].clientY;
-        const deltaTime = Date.now() - touchRef.current.startTime;
-
-        const velocity = Math.abs(deltaY) / deltaTime;
-
-        if (
-          touchRef.current.isSwiping &&
-          Math.abs(deltaY) > 50 &&
-          velocity > 0.15
-        ) {
-          if (deltaY > 0) {
-            onNext();
-          } else {
-            onPrev();
-          }
-        }
-
-        touchRef.current = {
-          isSwiping: false,
-          startTime: null,
-          startX: null,
-          startY: null,
-        };
+      const handleTouchEnd = () => {
+        const deltaY = startY.current - currentY.current;
+        if (deltaY > 50) onNext();
+        else if (deltaY < -50) onPrev();
       };
 
-      window.addEventListener('touchstart', handleTouchStart, {
-        passive: false,
-      });
-      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchstart', handleTouchStart);
+      window.addEventListener('touchmove', handleTouchMove);
       window.addEventListener('touchend', handleTouchEnd);
 
       return () => {
