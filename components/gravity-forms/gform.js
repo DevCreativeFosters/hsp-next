@@ -110,6 +110,10 @@ export default function GForm({
         const gfFormConfirmation = response.data.submitGfForm.confirmation;
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
+          console.group('Form Submission Data');
+          console.log('Form State:', state);
+          console.log('Form Fields:', formFields);
+          console.groupEnd();
           updateGtagUserData(state);
           onSuccess();
           setSubmitted(true);
