@@ -110,11 +110,23 @@ export default function GForm({
         const gfFormConfirmation = response.data.submitGfForm.confirmation;
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
+          // Combine field definitions with state values
+          const enrichedState = state.map(fieldState => {
+            const fieldDef = formFields.find(
+              f => f.databaseId === fieldState.id,
+            );
+            return {
+              ...fieldState,
+              label: fieldDef?.label,
+              type: fieldDef?.type,
+            };
+          });
+
           console.group('Form Submission Data');
-          console.log('Form State:', state);
-          console.log('Form Fields:', formFields);
+          console.log('Enriched State:', enrichedState);
           console.groupEnd();
-          updateGtagUserData(state);
+
+          updateGtagUserData(enrichedState);
           onSuccess();
           setSubmitted(true);
           setConfirmation(gfFormConfirmation);
