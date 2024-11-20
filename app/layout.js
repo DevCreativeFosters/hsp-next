@@ -2,6 +2,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import clsx from 'clsx';
 import { ReCaptchaProvider } from 'next-recaptcha-v3';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 import NextTopLoader from 'nextjs-toploader';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
@@ -68,6 +69,22 @@ export default async function RootLayout({ children }) {
       lang="en-au"
     >
       <GoogleTagManager gtmId="GTM-523F9DP" />
+      <Script id="gtag-user-data" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('set', 'user_data', {
+            "email": "",
+            "phone_number": "",
+            "first_name": "",
+            "last_name": "",
+            "street": "",
+            "city": "",
+            "postal_code": "",
+            "country": "AU"
+          });
+        `}
+      </Script>
       <body className="" data-rh="class">
         <ReCaptchaProvider useEnterprise>
           <NextTopLoader color="#ed2935ff" />

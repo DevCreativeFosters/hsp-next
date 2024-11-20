@@ -78,9 +78,33 @@ export default function EnquiryModal({
     setFormIsSending(true);
   }, []);
 
-  const onSuccess = useCallback(() => {
+  const onSuccess = useCallback(formData => {
     setFormIsSending(false);
     setFormIsSent(true);
+
+    const formFields = formData?.formFields?.nodes || [];
+    const getUserField = type =>
+      formFields.find(field => field.type === type)?.value;
+
+    const nameField = getUserField('NAME');
+    const addressField = getUserField('ADDRESS');
+
+    const userData = {
+      city: addressField?.city,
+      country: addressField?.country || 'AU',
+      email: getUserField('EMAIL'),
+      first_name: nameField?.firstName,
+      last_name: nameField?.lastName,
+      phone_number: getUserField('PHONE'),
+      postal_code: addressField?.postalCode,
+      street: addressField?.streetAddress,
+    };
+
+    console.log('Setting user data:', userData);
+    window.gtag('set', 'user_data', userData);
+
+    // Verify gtag exists
+    console.log('GTM loaded:', !!window.gtag);
   }, []);
 
   const onError = useCallback(() => {
