@@ -77,9 +77,10 @@ export default function EnquiryModal({
   const onSubmit = useCallback(formData => {
     setFormIsSending(true);
 
+    // Log the state from useGravityForm
     console.group('Form Submission Data');
+    console.log('Form State:', formData?.input?.fieldValues);
     console.log('Raw Form Data:', formData);
-    console.log('Form Fields:', formData?.formFields?.nodes);
     console.groupEnd();
   }, []);
 
@@ -87,35 +88,41 @@ export default function EnquiryModal({
     setFormIsSending(false);
     setFormIsSent(true);
 
-    // Debug log on success
+    // Log the state from useGravityForm
     console.group('Form Success Data');
-    console.log('Raw Form Data:', formData);
-    console.log('Form Fields:', formData?.formFields?.nodes);
-    console.groupEnd();
+    console.log('Form State:', formData?.input?.fieldValues);
 
-    const formFields = formData?.formFields?.nodes || [];
-    const getUserField = type =>
-      formFields.find(field => field.type === type)?.value;
-
-    const nameField = getUserField('NAME');
-    const addressField = getUserField('ADDRESS');
-
-    const userData = {
-      city: addressField?.city,
-      country: addressField?.country || 'AU',
-      email: getUserField('EMAIL'),
-      first_name: nameField?.firstName,
-      last_name: nameField?.lastName,
-      phone_number: getUserField('PHONE'),
-      postal_code: addressField?.postalCode,
-      street: addressField?.streetAddress,
+    // The state is an array of objects with id and value
+    const getFieldValue = fieldId => {
+      const field = formData?.input?.fieldValues?.find(
+        field => field.id === fieldId,
+      );
+      return field?.value;
     };
 
-    console.log('Setting user data:', userData);
-    window.gtag('set', 'user_data', userData);
+    // Log each field value
+    console.log('Field Values:', {
+      address: getFieldValue('ADDRESS'),
+      email: getFieldValue('EMAIL'),
+      name: getFieldValue('NAME'),
+      phone: getFieldValue('PHONE'),
+    });
 
-    // Verify gtag exists
-    console.log('GTM loaded:', !!window.gtag);
+    const userData = {
+      city: getFieldValue('ADDRESS.3'),
+      country: getFieldValue('ADDRESS.6') || 'AU',
+      email: getFieldValue('EMAIL'),
+      first_name: getFieldValue('NAME.3'),
+      last_name: getFieldValue('NAME.6'),
+      phone_number: getFieldValue('PHONE'),
+      postal_code: getFieldValue('ADDRESS.5'),
+      street: getFieldValue('ADDRESS.1'),
+    };
+
+    console.log('User Data for GTM:', userData);
+    console.groupEnd();
+
+    window.gtag('set', 'user_data', userData);
   }, []);
 
   const onError = useCallback(() => {
