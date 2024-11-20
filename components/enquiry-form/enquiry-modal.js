@@ -74,55 +74,13 @@ export default function EnquiryModal({
     setLoading(false);
   }, []);
 
-  const onSubmit = useCallback(formData => {
+  const onSubmit = useCallback(() => {
     setFormIsSending(true);
-
-    // Log the state from useGravityForm
-    console.group('Form Submission Data');
-    console.log('Form State:', formData?.input?.fieldValues);
-    console.log('Raw Form Data:', formData);
-    console.groupEnd();
   }, []);
 
-  const onSuccess = useCallback(formData => {
+  const onSuccess = useCallback(() => {
     setFormIsSending(false);
     setFormIsSent(true);
-
-    // Log the state from useGravityForm
-    console.group('Form Success Data');
-    console.log('Form State:', formData?.input?.fieldValues);
-
-    // The state is an array of objects with id and value
-    const getFieldValue = fieldId => {
-      const field = formData?.input?.fieldValues?.find(
-        field => field.id === fieldId,
-      );
-      return field?.value;
-    };
-
-    // Log each field value
-    console.log('Field Values:', {
-      address: getFieldValue('ADDRESS'),
-      email: getFieldValue('EMAIL'),
-      name: getFieldValue('NAME'),
-      phone: getFieldValue('PHONE'),
-    });
-
-    const userData = {
-      city: getFieldValue('ADDRESS.3'),
-      country: getFieldValue('ADDRESS.6') || 'AU',
-      email: getFieldValue('EMAIL'),
-      first_name: getFieldValue('NAME.3'),
-      last_name: getFieldValue('NAME.6'),
-      phone_number: getFieldValue('PHONE'),
-      postal_code: getFieldValue('ADDRESS.5'),
-      street: getFieldValue('ADDRESS.1'),
-    };
-
-    console.log('User Data for GTM:', userData);
-    console.groupEnd();
-
-    window.gtag('set', 'user_data', userData);
   }, []);
 
   const onError = useCallback(() => {
