@@ -74,13 +74,24 @@ export default function EnquiryModal({
     setLoading(false);
   }, []);
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(formData => {
     setFormIsSending(true);
+
+    console.group('Form Submission Data');
+    console.log('Raw Form Data:', formData);
+    console.log('Form Fields:', formData?.formFields?.nodes);
+    console.groupEnd();
   }, []);
 
   const onSuccess = useCallback(formData => {
     setFormIsSending(false);
     setFormIsSent(true);
+
+    // Debug log on success
+    console.group('Form Success Data');
+    console.log('Raw Form Data:', formData);
+    console.log('Form Fields:', formData?.formFields?.nodes);
+    console.groupEnd();
 
     const formFields = formData?.formFields?.nodes || [];
     const getUserField = type =>
