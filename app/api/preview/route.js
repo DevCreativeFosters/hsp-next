@@ -20,7 +20,7 @@ export async function GET(request) {
     case 'post':
       routeBase = routes.blog();
       break;
-    case 'hsp_tv':
+    case 'hsp-tv':
       routeBase = routes.tv();
       graphQLType = 'hspTvPost';
       break;

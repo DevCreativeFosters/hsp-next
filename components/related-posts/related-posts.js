@@ -6,7 +6,7 @@ import Button from '@components/button/button';
 
 import styles from './related-posts.module.scss';
 
-export default function RelatedPosts({ posts, type = 'hsp_tv', url }) {
+export default function RelatedPosts({ posts, type = 'hsp-tv', url }) {
   const title = type === 'blog' ? 'HSP Blog' : type === 'hsp-tv' && 'HSP TV';
 
   return (

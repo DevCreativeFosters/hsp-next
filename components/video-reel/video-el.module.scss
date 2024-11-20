@@ -65,8 +65,7 @@
 
   &.soundButton {
     svg {
-      width: 36px;
-      height: 36px;
+      transform: scale(0.75);
     }
 
     path {
@@ -79,14 +78,18 @@
   }
 }
 
-.buttonBack.buttonBack {
+.backButtonWrapper {
   position: absolute;
-  left: 24px;
-  top: 48px;
-
-  &:hover {
-    background: var(--color-black-100);
-  }
+  left: 0;
+  top: 0;
+  background: linear-gradient(to bottom, #08090de6 0%, transparent 80%);
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 24px;
+  z-index: 1;
 
   @include bp(medium) {
     display: none;
@@ -94,6 +97,14 @@
 
   @media (hover: hover) {
     display: none;
+  }
+}
+
+.buttonBack.buttonBack {
+  position: relative;
+
+  &:hover {
+    background: var(--color-black-100);
   }
 }
 
