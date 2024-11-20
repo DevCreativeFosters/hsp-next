@@ -51,6 +51,9 @@ const khand = localFont({
 export const metadata = {
   description: 'HSP',
   title: 'HSP 4x4',
+  verification: {
+    google: 'K-RMV2w3h5GuvubgDtsWZM9h0HTaREYywKwbTeIXK3A',
+  },
 };
 
 export const revalidate = 30;
