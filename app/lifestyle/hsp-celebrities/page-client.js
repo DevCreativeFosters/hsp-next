@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -18,71 +18,55 @@ import styles from './page-client.module.scss';
 export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
-  const isMobile = useIsMobile();
-  const startY = useRef(null);
 
-  const onNext = useCallback(() => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % posts.length);
-  }, [posts.length]);
+  const isMobile = useIsMobile();
 
   const onPrev = useCallback(() => {
-    setCurrentIndex(prevIndex =>
-      prevIndex === 0 ? posts.length - 1 : prevIndex - 1,
-    );
-  }, [posts.length]);
+    const newIndex = Math.max(0, currentIndex - 1);
+    if (newIndex !== currentIndex) {
+      setCurrentIndex(newIndex);
+    }
+  }, [currentIndex]);
 
-  const findSlugByIndex = useCallback(index => posts[index]?.slug, [posts]);
+  const onNext = useCallback(() => {
+    setCurrentIndex(Math.min(currentIndex + 1, posts.length - 1));
+  }, [currentIndex, posts.length]);
 
-  const findIndexBySlug = useCallback(
-    slugParam => {
-      const post = posts.find(({ slug }) => slug === slugParam);
-      return post ? posts.indexOf(post) : -1;
+  const findSlugByIndex = useCallback(
+    index => {
+      return posts[index]?.slug;
     },
     [posts],
   );
 
-  function syncHashWithCurrentIndex() {
-    const hash = window.location.hash;
-    if (currentIndex === undefined) {
-      const slugFromHash = hash[0] === '#' ? hash.slice(1) : hash;
-      const index = findIndexBySlug(slugFromHash);
-      setCurrentIndex(index > -1 ? index : 0);
-    } else {
-      const slugFromIndex = findSlugByIndex(currentIndex);
-      router.replace(`#${slugFromIndex}`, { scroll: false });
-    }
-  }
+  const findIndexBySlug = useCallback(
+    slugParam => {
+      const post = posts.find(({ slug }) => slug === slugParam);
+      if (post) {
+        return posts.indexOf(post);
+      }
+      return -1;
+    },
+    [posts],
+  );
 
-  useEffect(syncHashWithCurrentIndex, [
-    currentIndex,
-    findIndexBySlug,
-    findSlugByIndex,
-    router,
-  ]);
-
-  function handleSwipeEvents() {
-    if (!isMobile) return;
-
-    const handleTouchStart = e => {
-      startY.current = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = e => {
-      const endY = e.changedTouches[0].clientY;
-      if (startY.current - endY > 50) onNext();
-      else if (endY - startY.current > 50) onPrev();
-    };
-
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }
-
-  useEffect(handleSwipeEvents, [isMobile, onNext, onPrev]);
+  useEffect(
+    function syncHashWithCurrentIndex() {
+      const hash = window.location.hash;
+      if (currentIndex === undefined) {
+        const slugFromHash = hash[0] === '#' ? hash.slice(1) : hash;
+        const index = findIndexBySlug(slugFromHash);
+        setCurrentIndex(index > -1 ? index : 0);
+      } else {
+        const slugFromIndex = findSlugByIndex(currentIndex);
+        const slugFromHash = hash[0] === '#' ? hash.slice(1) : hash;
+        if (slugFromIndex !== slugFromHash) {
+          router.replace(`#${slugFromIndex}`, { scroll: false });
+        }
+      }
+    },
+    [currentIndex, findIndexBySlug, findSlugByIndex, router],
+  );
 
   if (isMobile === undefined) {
     return null;
@@ -92,7 +76,6 @@ export default function PageClient({ description, posts = [], title }) {
       <div className={styles.fullscreenContainer}>
         <VideoEl
           isActive={true}
-          key={currentIndex}
           thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
           video={post.celebrityPostsCustomFields?.video?.node}
         />

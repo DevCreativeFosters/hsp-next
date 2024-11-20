@@ -170,15 +170,13 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         </button>
       )}
 
-      <div className={styles.backButtonWrapper}>
-        <Button
-          className={styles.buttonBack}
-          leftIcon="arrow-backward"
-          onClick={onBackButtonClick}
-          size="large"
-          variant="tertiary"
-        />
-      </div>
+      <Button
+        className={styles.buttonBack}
+        leftIcon="arrow-backward"
+        onClick={onBackButtonClick}
+        size="large"
+        variant="tertiary"
+      />
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />
     </>
