@@ -66,7 +66,7 @@ export default function PageClient({ description, posts = [], title }) {
       if (!isMobile) return;
 
       const handleTouchStart = e => {
-        if (!['BUTTON', 'VIDEO', 'SPAN'].includes(e.target.tagName)) {
+        if (!['BUTTON'].includes(e.target.tagName)) {
           e.preventDefault();
         }
 
