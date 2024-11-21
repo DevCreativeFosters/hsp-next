@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
@@ -16,7 +23,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 150 * 1000; // 150km in meters
+const RADIUS = 150 * 1000; // 150km
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
@@ -34,6 +41,7 @@ export default function StoreLocatorMap({
   locations = [],
   onMarkerClick,
 }) {
+  const mapRef = useRef(null);
   const {
     filteredLocations,
     hasMapInteracted,
@@ -43,9 +51,6 @@ export default function StoreLocatorMap({
   } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-
   const center = useMemo(() => {
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
   }, [searchGeolocation]);
@@ -77,7 +82,6 @@ export default function StoreLocatorMap({
 
       const loader = new Loader({
         apiKey: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        libraries: ['places'],
         version: 'weekly',
       });
 
@@ -87,12 +91,11 @@ export default function StoreLocatorMap({
 
           if (!isMounted) return;
 
-          const mapElement = document.getElementById('store-locator-map');
-          if (!mapElement) {
+          if (!mapRef.current) {
             throw new Error('Map container not found');
           }
 
-          const map = new google.maps.Map(mapElement, {
+          const map = new google.maps.Map(mapRef.current, {
             backgroundColor: '#000000',
             center: center,
             mapId: NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
@@ -105,7 +108,6 @@ export default function StoreLocatorMap({
 
           if (!isMounted) return;
           setGoogleMap(map);
-          setIsLoading(false);
 
           if (searchGeolocation) {
             map.setCenter(searchGeolocation);
@@ -131,7 +133,7 @@ export default function StoreLocatorMap({
           map.addListener('tilesloaded', () => handleMapChange(map));
           map.addListener('zoom_changed', () => handleMapChange(map));
         } catch (error) {
-          setLoadError(error);
+          console.error(error);
         }
       }
 
@@ -195,17 +197,17 @@ export default function StoreLocatorMap({
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        // Safety check: ensure we have locations to show
+        // Ensure we have locations to show
         const locationsToShow =
           filteredLocations?.length > 0 ? filteredLocations : [];
 
         if (locationsToShow.length === 0) {
-          // Create a circle with 200km radius
+          // Create a circle with 150km radius
           const circle = new google.maps.Circle({
             center: searchGeolocation,
             fillOpacity: 0,
             map: googleMap,
-            radius: RADIUS, // 200km in meters
+            radius: RADIUS,
             strokeOpacity: 0,
           });
 
@@ -248,7 +250,7 @@ export default function StoreLocatorMap({
 
   return (
     <div className={clsx(styles.mapWrapper, className)}>
-      <div className={styles.map} id="store-locator-map" />
+      <div className={clsx(styles.map, className)} ref={mapRef} />
     </div>
   );
 }
