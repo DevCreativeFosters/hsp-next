@@ -43,6 +43,8 @@ export default function StoreLocatorMap({
   } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   const center = useMemo(() => {
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
@@ -71,15 +73,26 @@ export default function StoreLocatorMap({
 
   useEffect(
     function loadGoogleMap() {
+      let isMounted = true;
+
       const loader = new Loader({
         apiKey: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        libraries: ['places'],
         version: 'weekly',
       });
 
-      loader.load().then(() => {
-        const map = new google.maps.Map(
-          document.getElementById('store-locator-map'),
-          {
+      async function initMap() {
+        try {
+          await loader.load();
+
+          if (!isMounted) return;
+
+          const mapElement = document.getElementById('store-locator-map');
+          if (!mapElement) {
+            throw new Error('Map container not found');
+          }
+
+          const map = new google.maps.Map(mapElement, {
             backgroundColor: '#000000',
             center: center,
             mapId: NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
@@ -88,35 +101,45 @@ export default function StoreLocatorMap({
             minZoom: 1,
             streetViewControl: true,
             zoom: DEFAULT_MAP_ZOOM,
-          },
-        );
-
-        if (searchGeolocation) {
-          map.setCenter(searchGeolocation);
-        } else {
-          // Fit the map to show all locations
-          const bounds = new google.maps.LatLngBounds();
-          locations.forEach(location => {
-            bounds.extend(location.geolocation);
           });
-          map.fitBounds(bounds);
 
-          // Wait for the map to finish loading before adjusting zoom
-          google.maps.event.addListenerOnce(map, 'idle', () => {
-            map.setZoom(map.getZoom());
-          });
+          if (!isMounted) return;
+          setGoogleMap(map);
+          setIsLoading(false);
+
+          if (searchGeolocation) {
+            map.setCenter(searchGeolocation);
+          } else {
+            // Fit the map to show all locations
+            const bounds = new google.maps.LatLngBounds();
+            locations.forEach(location => {
+              bounds.extend(location.geolocation);
+            });
+            map.fitBounds(bounds);
+
+            // Wait for the map to finish loading before adjusting zoom
+            google.maps.event.addListenerOnce(map, 'idle', () => {
+              map.setZoom(map.getZoom());
+            });
+          }
+
+          // Add specific listeners for user interaction
+          map.addListener('dragend', () => handleMapInteraction());
+
+          // Separate listener for bounds update
+          map.addListener('bounds_changed', () => handleMapChange(map));
+          map.addListener('tilesloaded', () => handleMapChange(map));
+          map.addListener('zoom_changed', () => handleMapChange(map));
+        } catch (error) {
+          setLoadError(error);
         }
+      }
 
-        // Add specific listeners for user interaction
-        map.addListener('dragend', () => handleMapInteraction());
+      initMap();
 
-        // Separate listener for bounds update
-        map.addListener('bounds_changed', () => handleMapChange(map));
-        map.addListener('tilesloaded', () => handleMapChange(map));
-        map.addListener('zoom_changed', () => handleMapChange(map));
-
-        setGoogleMap(map);
-      });
+      return () => {
+        isMounted = false;
+      };
     },
     [
       center,
