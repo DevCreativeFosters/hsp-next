@@ -16,7 +16,7 @@ const NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
 
 const DEFAULT_MAP_ZOOM = 11;
-const RADIUS = 150 * 1000; // 150km in meters
+const RADIUS = 150 * 1000; // 150km
 const HSP_HEADQUARTERS_COORDINATES = {
   lat: -37.95347921924772,
   lng: 145.1871773227412,
@@ -195,17 +195,17 @@ export default function StoreLocatorMap({
   useEffect(
     function recenterMapOnPlaceGeolocationChange() {
       if (googleMap && searchGeolocation) {
-        // Safety check: ensure we have locations to show
+        // Ensure we have locations to show
         const locationsToShow =
           filteredLocations?.length > 0 ? filteredLocations : [];
 
         if (locationsToShow.length === 0) {
-          // Create a circle with 200km radius
+          // Create a circle with 150km radius
           const circle = new google.maps.Circle({
             center: searchGeolocation,
             fillOpacity: 0,
             map: googleMap,
-            radius: RADIUS, // 200km in meters
+            radius: RADIUS,
             strokeOpacity: 0,
           });
 
