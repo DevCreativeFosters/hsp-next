@@ -6,6 +6,7 @@ import Script from 'next/script';
 import NextTopLoader from 'nextjs-toploader';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { GTM_ID } from '@lib/gtm-config';
 
 import PreviewAlert from '@components/preview-alert/preview-alert';
 
@@ -68,21 +69,13 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
       lang="en-au"
     >
-      <GoogleTagManager gtmId="GTM-523F9DP" />
+      <GoogleTagManager gtmId={GTM_ID} />
       <Script id="gtag-user-data" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
-          gtag('set', 'user_data', {
-            "email": "",
-            "phone_number": "",
-            "first_name": "",
-            "last_name": "",
-            "street": "",
-            "city": "",
-            "postal_code": "",
-            "country": "AU"
-          });
+          gtag('js', new Date());
+          gtag('config', '${GTM_ID}', {'allow_enhanced_conversions': true});
         `}
       </Script>
       <body className="" data-rh="class">
