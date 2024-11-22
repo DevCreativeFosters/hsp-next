@@ -122,10 +122,6 @@ export default function GForm({
             };
           });
 
-          console.group('Form Submission Data');
-          console.log('Enriched State:', enrichedState);
-          console.groupEnd();
-
           updateGtagUserData(enrichedState);
           onSuccess();
           setSubmitted(true);
