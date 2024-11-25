@@ -151,7 +151,7 @@ export default function StoreTile({
               {displays.map((product, idx) => {
                 const imageUrl =
                   product?.productCategory?.nodes?.[0]?.mainCategoryDetails
-                    ?.instoreIcon?.node?.mediaItemUrl;
+                    ?.inStoreImage?.node?.mediaItemUrl;
                 const altText = product.productCategory?.name;
                 if (imageUrl) {
                   return (
