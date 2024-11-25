@@ -21,7 +21,7 @@ export default function StoreList({
 
   if (show && items?.length === 0) {
     const superStore = allLocations?.find(location =>
-      location.storesCustomFields.storeCategory.includes('super_store'),
+      location.storeCategory?.nodes[0].slug.includes('super-store'),
     );
 
     if (superStore) {
