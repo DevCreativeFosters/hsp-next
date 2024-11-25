@@ -9,9 +9,6 @@ import { getIcon } from '@lib/icons';
 
 import Button from '@components/button/button';
 
-import TypeMajorImage from '@assets/images/type-major.webp';
-import TypeSuperImage from '@assets/images/type-super.webp';
-
 import styles from './store-tile.module.scss';
 
 const LocationIcon = getIcon('location');
@@ -20,28 +17,19 @@ const PhoneIcon = getIcon('phone');
 export default function StoreTile({
   item: {
     address,
+    color,
     displays,
     geolocation,
+    label,
     learnMoreButton,
     location: { city, country, postalCode, stateAbbr, street },
     name,
+    storeIcon,
     tel,
-    type,
   },
   selected,
 }) {
-  let storeImage;
-  let storeTypeLabel;
-  switch (type) {
-    case 'SUPER':
-      storeImage = TypeSuperImage;
-      storeTypeLabel = 'Super Store';
-      break;
-    case 'MAJOR':
-      storeImage = TypeMajorImage;
-      storeTypeLabel = 'Major Distributor';
-      break;
-  }
+  let storeTypeLabel = label;
 
   const geoHash = getGeoHash(geolocation);
   const telNormalized = tel?.toString().replaceAll(/([^0-9+])/gi, '');
@@ -72,17 +60,23 @@ export default function StoreTile({
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
       {storeTypeLabel && (
         <div className={styles.typeContainer}>
-          {storeImage && (
+          {storeIcon && (
             <div className={styles.imageWrapper}>
-              <Image alt={type} className={styles.image} src={storeImage} />
+              <Image
+                alt={storeTypeLabel}
+                className={styles.image}
+                height={193}
+                src={storeIcon}
+                width={193}
+              />
             </div>
           )}
           {storeTypeLabel && (
             <p
-              className={clsx(styles.storeTypeLabel, {
-                [styles.major]: type === 'MAJOR',
-                [styles.super]: type === 'SUPER',
-              })}
+              className={styles.storeTypeLabel}
+              style={{
+                color: color,
+              }}
             >
               {storeTypeLabel}
             </p>
@@ -157,7 +151,7 @@ export default function StoreTile({
               {displays.map((product, idx) => {
                 const imageUrl =
                   product?.productCategory?.nodes?.[0]?.mainCategoryDetails
-                    ?.inStoreImage?.node?.mediaItemUrl;
+                    ?.instoreIcon?.node?.mediaItemUrl;
                 const altText = product.productCategory?.name;
                 if (imageUrl) {
                   return (
