@@ -109,7 +109,6 @@ export default function StoreLocatorMap({
 
           if (!isMounted) return;
           setGoogleMap(map);
-          setIsLoading(false);
 
           if (searchGeolocation) {
             map.setCenter(searchGeolocation);
