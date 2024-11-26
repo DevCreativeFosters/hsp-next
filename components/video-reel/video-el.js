@@ -16,7 +16,7 @@ import styles from '@components/video-reel/video-el.module.scss';
 
 const SpeakerIcon = getIcon('speaker');
 
-export default function VideoEl({ isActive, thumbnail, title, video }) {
+export default function VideoEl({ isActive, thumbnail, video }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
   const [canAutoplayWithSound, setCanAutoplayWithSound] = useState(undefined);
@@ -170,16 +170,13 @@ export default function VideoEl({ isActive, thumbnail, title, video }) {
         </button>
       )}
 
-      <span className={styles.backButtonWrapper}>
-        <Button
-          className={styles.buttonBack}
-          leftIcon="arrow-backward"
-          onClick={onBackButtonClick}
-          size="large"
-          variant="tertiary"
-        />
-        {title && <h5>{title}</h5>}
-      </span>
+      <Button
+        className={styles.buttonBack}
+        leftIcon="arrow-backward"
+        onClick={onBackButtonClick}
+        size="large"
+        variant="tertiary"
+      />
 
       <div className={styles.cursorOnly} onClick={onVideoClick} />
     </>

@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
@@ -34,6 +41,7 @@ export default function StoreLocatorMap({
   locations = [],
   onMarkerClick,
 }) {
+  const mapRef = useRef(null);
   const {
     filteredLocations,
     hasMapInteracted,
@@ -43,9 +51,6 @@ export default function StoreLocatorMap({
   } = useContext(StoreLocatorContext);
   const [googleMap, setGoogleMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-
   const center = useMemo(() => {
     return searchGeolocation || HSP_HEADQUARTERS_COORDINATES;
   }, [searchGeolocation]);
@@ -87,12 +92,11 @@ export default function StoreLocatorMap({
 
           if (!isMounted) return;
 
-          const mapElement = document.getElementById('store-locator-map');
-          if (!mapElement) {
+          if (!mapRef.current) {
             throw new Error('Map container not found');
           }
 
-          const map = new google.maps.Map(mapElement, {
+          const map = new google.maps.Map(mapRef.current, {
             backgroundColor: '#000000',
             center: center,
             mapId: NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
@@ -131,7 +135,7 @@ export default function StoreLocatorMap({
           map.addListener('tilesloaded', () => handleMapChange(map));
           map.addListener('zoom_changed', () => handleMapChange(map));
         } catch (error) {
-          setLoadError(error);
+          console.error(error);
         }
       }
 
@@ -248,7 +252,7 @@ export default function StoreLocatorMap({
 
   return (
     <div className={clsx(styles.mapWrapper, className)}>
-      <div className={styles.map} id="store-locator-map" />
+      <div className={clsx(styles.map, className)} ref={mapRef} />
     </div>
   );
 }

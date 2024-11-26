@@ -28,10 +28,19 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
   } = useContext(StoreLocatorContext);
 
   useEffect(
-    function setInitialLocationList() {
+    function initializeAndSyncLocations() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
       setAllMapLocations(locationList);
-      setFilteredLocations(locationList);
+
+      if (searchGeolocation) {
+        const locationsToDisplay = getLocationsToDisplay(
+          searchGeolocation,
+          locationList,
+        );
+        setFilteredLocations(locationsToDisplay);
+      } else {
+        setFilteredLocations(locationList);
+      }
     },
     [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
@@ -50,24 +59,6 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
       }
     },
     [selectedStore],
-  );
-
-  useEffect(
-    function syncMapBoundaries() {
-      const locationList = normalizeStores(allLocations, searchGeolocation);
-      setAllMapLocations(locationList); // Keep all locations for the map
-
-      if (searchGeolocation) {
-        const locationsToDisplay = getLocationsToDisplay(
-          searchGeolocation,
-          locationList,
-        );
-        setFilteredLocations(locationsToDisplay);
-      } else {
-        setFilteredLocations(locationList);
-      }
-    },
-    [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
   );
 
   return (
