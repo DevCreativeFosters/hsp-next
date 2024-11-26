@@ -82,7 +82,6 @@ export default function StoreLocatorMap({
 
       const loader = new Loader({
         apiKey: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        libraries: ['places'],
         version: 'weekly',
       });
 
