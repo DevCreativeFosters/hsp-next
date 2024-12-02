@@ -4,11 +4,23 @@ export const COUNTRY_OPTIONS = [
     value: 'AU',
   },
   {
-    label: 'Thailand',
-    value: 'TH',
+    label: 'Bulgaria',
+    value: 'BG',
   },
   {
     label: 'New Zealand',
     value: 'NZ',
+  },
+  {
+    label: 'Thailand',
+    value: 'TH',
+  },
+  {
+    label: 'US/Canada',
+    value: 'US',
+  },
+  {
+    label: 'Other',
+    value: 'OTHER',
   },
 ];

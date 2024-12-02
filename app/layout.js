@@ -2,9 +2,11 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import clsx from 'clsx';
 import { ReCaptchaProvider } from 'next-recaptcha-v3';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 import NextTopLoader from 'nextjs-toploader';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
+import { GTM_ID } from '@lib/gtm-config';
 
 import PreviewAlert from '@components/preview-alert/preview-alert';
 
@@ -67,7 +69,15 @@ export default async function RootLayout({ children }) {
       data-download-file-form-id={downloadFileFormId}
       lang="en-au"
     >
-      <GoogleTagManager gtmId="GTM-523F9DP" />
+      <GoogleTagManager gtmId={GTM_ID} />
+      <Script id="gtag-user-data" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GTM_ID}', {'allow_enhanced_conversions': true});
+        `}
+      </Script>
       <body className="" data-rh="class">
         <ReCaptchaProvider useEnterprise>
           <NextTopLoader color="#ed2935ff" />

@@ -14,6 +14,8 @@ import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 import useGravityForm from '@hooks/useGravityForm';
 
+import { updateGtagUserData } from '@lib/gtag-user-data';
+
 import Button from '@components/button/button';
 import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
 import Form from '@components/form/form';
@@ -108,6 +110,19 @@ export default function GForm({
         const gfFormConfirmation = response.data.submitGfForm.confirmation;
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
+          // Combine field definitions with state values
+          const enrichedState = state.map(fieldState => {
+            const fieldDef = formFields.find(
+              f => f.databaseId === fieldState.id,
+            );
+            return {
+              ...fieldState,
+              label: fieldDef?.label,
+              type: fieldDef?.type,
+            };
+          });
+
+          updateGtagUserData(enrichedState);
           onSuccess();
           setSubmitted(true);
           setConfirmation(gfFormConfirmation);
@@ -123,15 +138,19 @@ export default function GForm({
       });
   };
 
-  useImperativeHandle(innerRef, () => {
-    return {
-      handleSubmit: () => {
-        if (submitRef.current) {
-          submitRef.current.click();
-        }
-      },
-    };
-  }, []);
+  useImperativeHandle(
+    innerRef,
+    () => {
+      return {
+        handleSubmit: () => {
+          if (submitRef.current) {
+            submitRef.current.click();
+          }
+        },
+      };
+    },
+    [],
+  );
 
   const isTitleVisible = attributes.title && form.title;
 
