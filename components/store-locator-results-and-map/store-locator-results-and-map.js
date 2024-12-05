@@ -19,7 +19,6 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
   const resultsRef = useRef(null);
   const {
     allMapLocations,
-    filteredLocations,
     filteredStores,
     searchGeolocation,
     selectedStore,
@@ -92,8 +91,8 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
                   <ul className={styles.resultList}>
                     {(() => {
                       const superStore = allLocations?.find(location =>
-                        location.storesCustomFields.storeCategory.includes(
-                          'super_store',
+                        location.storeCategory?.nodes[0].slug.includes(
+                          'super-store',
                         ),
                       );
                       if (superStore) {
