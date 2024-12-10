@@ -4,6 +4,7 @@ import styles from './store-category.module.scss';
 
 export default function StoreCategory({ color, icon, label }) {
   if (!label) return null;
+
   return (
     <div className={styles.typeContainer}>
       {icon && (
@@ -17,16 +18,14 @@ export default function StoreCategory({ color, icon, label }) {
           />
         </div>
       )}
-      {label && (
-        <p
-          className={styles.storeTypeLabel}
-          style={{
-            color: color,
-          }}
-        >
-          {label}
-        </p>
-      )}
+      <p
+        className={styles.storeTypeLabel}
+        style={{
+          color: color || '#fff',
+        }}
+      >
+        {label}
+      </p>
     </div>
   );
 }
