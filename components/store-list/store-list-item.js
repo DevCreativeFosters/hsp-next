@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import StoreCategory from '@components/store-category/store-category';
+
 import styles from './store-list-item.module.scss';
 
 export default function StoreListItem({ index, item, onSelect }) {
@@ -25,31 +27,7 @@ export default function StoreListItem({ index, item, onSelect }) {
             className={styles.name}
             dangerouslySetInnerHTML={{ __html: name }}
           ></div>
-          {label && (
-            <div className={styles.typeContainer}>
-              {storeIcon && (
-                <div className={styles.imageWrapper}>
-                  <Image
-                    alt={label}
-                    className={styles.image}
-                    height={193}
-                    src={storeIcon}
-                    width={193}
-                  />
-                </div>
-              )}
-              {label && (
-                <p
-                  className={styles.storeTypeLabel}
-                  style={{
-                    color: color,
-                  }}
-                >
-                  {label}
-                </p>
-              )}
-            </div>
-          )}
+          <StoreCategory color={color} icon={storeIcon} label={label} />
           <div
             className={styles.address}
             dangerouslySetInnerHTML={{ __html: printedAddress }}
