@@ -81,3 +81,39 @@
   margin-block: 16px;
   background: var(--color-white-10);
 }
+
+.typeContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-block: 8px;
+}
+
+.imageWrapper {
+  width: 24px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+
+  @include bp(large) {
+    display: block;
+  }
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.storeTypeLabel {
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: uppercase;
+  margin-block: 0;
+  color: var(--color-white-80);
+}

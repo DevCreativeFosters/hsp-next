@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 import styles from './store-list-item.module.scss';
 
-export default function StoreListItem({ item, index, onSelect }) {
-  const { address, location, name, displays } = item;
+export default function StoreListItem({ index, item, onSelect }) {
+  const { address, color, displays, label, location, name, storeIcon } = item;
   const { city, country, postalCode, stateAbbr, street } = location || {};
 
   let printedAddress = address
@@ -25,6 +25,31 @@ export default function StoreListItem({ item, index, onSelect }) {
             className={styles.name}
             dangerouslySetInnerHTML={{ __html: name }}
           ></div>
+          {label && (
+            <div className={styles.typeContainer}>
+              {storeIcon && (
+                <div className={styles.imageWrapper}>
+                  <Image
+                    alt={label}
+                    className={styles.image}
+                    height={193}
+                    src={storeIcon}
+                    width={193}
+                  />
+                </div>
+              )}
+              {label && (
+                <p
+                  className={styles.storeTypeLabel}
+                  style={{
+                    color: color,
+                  }}
+                >
+                  {label}
+                </p>
+              )}
+            </div>
+          )}
           <div
             className={styles.address}
             dangerouslySetInnerHTML={{ __html: printedAddress }}
