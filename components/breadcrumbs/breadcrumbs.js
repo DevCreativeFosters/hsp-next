@@ -106,7 +106,7 @@ function Breadcrumbs({ items, product }) {
               </Button>
             );
           } else if (item?.label) {
-            return (
+            return index < itemsWithSeparators.length - 1 ? (
               <Link
                 className={clsx(styles.itemLink, {
                   [styles.strong]: item.strong,
@@ -116,6 +116,15 @@ function Breadcrumbs({ items, product }) {
               >
                 {item.label}
               </Link>
+            ) : (
+              <span
+                className={clsx(styles.itemLink, {
+                  [styles.strong]: item.strong,
+                })}
+                key={item.url + index}
+              >
+                {item.label}
+              </span>
             );
           } else if (item?.type === 'select') {
             return (
