@@ -8,6 +8,7 @@ import { getGeoHash } from '@lib/get-geo-hash';
 import { getIcon } from '@lib/icons';
 
 import Button from '@components/button/button';
+import StoreCategory from '@components/store-category/store-category';
 
 import styles from './store-tile.module.scss';
 
@@ -58,31 +59,7 @@ export default function StoreTile({
       id={geoHash}
     >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
-      {storeTypeLabel && (
-        <div className={styles.typeContainer}>
-          {storeIcon && (
-            <div className={styles.imageWrapper}>
-              <Image
-                alt={storeTypeLabel}
-                className={styles.image}
-                height={193}
-                src={storeIcon}
-                width={193}
-              />
-            </div>
-          )}
-          {storeTypeLabel && (
-            <p
-              className={styles.storeTypeLabel}
-              style={{
-                color: color,
-              }}
-            >
-              {storeTypeLabel}
-            </p>
-          )}
-        </div>
-      )}
+      <StoreCategory color={color} icon={storeIcon} label={storeTypeLabel} />
       <div className={styles.location}>
         <div className={styles.icon}>
           <LocationIcon />
