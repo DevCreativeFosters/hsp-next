@@ -1,9 +1,11 @@
 import Image from 'next/image';
 
+import StoreCategory from '@components/store-category/store-category';
+
 import styles from './store-list-item.module.scss';
 
-export default function StoreListItem({ item, index, onSelect }) {
-  const { address, location, name, displays } = item;
+export default function StoreListItem({ index, item, onSelect }) {
+  const { address, color, displays, label, location, name, storeIcon } = item;
   const { city, country, postalCode, stateAbbr, street } = location || {};
 
   let printedAddress = address
@@ -25,6 +27,7 @@ export default function StoreListItem({ item, index, onSelect }) {
             className={styles.name}
             dangerouslySetInnerHTML={{ __html: name }}
           ></div>
+          <StoreCategory color={color} icon={storeIcon} label={label} />
           <div
             className={styles.address}
             dangerouslySetInnerHTML={{ __html: printedAddress }}
