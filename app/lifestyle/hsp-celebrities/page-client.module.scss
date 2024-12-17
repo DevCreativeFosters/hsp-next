@@ -63,9 +63,10 @@
 }
 
 .buttonBack {
-  position: absolute;
+  position: fixed;
   left: 24px;
   top: 48px;
+  z-index: 2;
 }
 
 @keyframes fade-in-out {

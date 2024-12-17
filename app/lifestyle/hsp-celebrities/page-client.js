@@ -25,6 +25,14 @@ export default function PageClient({ description, posts = [], title }) {
 
   const isMobile = useIsMobile();
 
+  const onBackButtonClick = useCallback(() => {
+    if (sessionStorage.getItem('prevPathname')) {
+      router.back();
+    } else {
+      router.push(routes.home);
+    }
+  }, [router]);
+
   const onPrev = useCallback(() => {
     const newIndex = Math.max(0, currentIndex - 1);
     if (newIndex !== currentIndex) {
@@ -98,6 +106,14 @@ export default function PageClient({ description, posts = [], title }) {
 
     return (
       <div className={styles.fullscreenContainer}>
+        <Button
+          className={styles.buttonBack}
+          leftIcon="arrow-backward"
+          onClick={onBackButtonClick}
+          size="large"
+          variant="tertiary"
+        />
+
         <Swiper
           className={styles.swiper}
           initialSlide={currentIndex}
@@ -108,6 +124,7 @@ export default function PageClient({ description, posts = [], title }) {
               <VideoEl
                 isActive={index === currentIndex}
                 onTimeUpdate={e => handleVideoProgress(e, index)}
+                showBackButton={false}
                 thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
                 video={post.celebrityPostsCustomFields?.video?.node}
               />
