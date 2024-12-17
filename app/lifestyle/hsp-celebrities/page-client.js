@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
@@ -18,6 +20,8 @@ import styles from './page-client.module.scss';
 export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
+  const [showMessage, setShowMessage] = useState(false);
+  const messageShownRef = useRef({ end: {}, start: {} });
 
   const isMobile = useIsMobile();
 
@@ -71,14 +75,57 @@ export default function PageClient({ description, posts = [], title }) {
   if (isMobile === undefined) {
     return null;
   } else if (isMobile) {
-    const post = posts[currentIndex];
+    const handleVideoProgress = (event, index) => {
+      const video = event.target;
+      const isNearStart = video.currentTime < 3;
+      const isNearEnd = video.duration - video.currentTime < 3;
+
+      // Show message at start if not shown yet
+      if (isNearStart && !messageShownRef.current.start[index]) {
+        messageShownRef.current.start[index] = true;
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 4000);
+      }
+
+      // Show message at end if not shown yet
+      if (isNearEnd && !messageShownRef.current.end[index]) {
+        messageShownRef.current.end[index] = true;
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 4000);
+      }
+    };
+
+    const handleSlideChange = swiper => {
+      const newIndex = swiper.activeIndex;
+      setCurrentIndex(newIndex);
+      // Reset the flags for the new slide
+      messageShownRef.current.start[newIndex] = false;
+      messageShownRef.current.end[newIndex] = false;
+    };
+
     return (
       <div className={styles.fullscreenContainer}>
-        <VideoEl
-          isActive={true}
-          thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
-          video={post.celebrityPostsCustomFields?.video?.node}
-        />
+        <Swiper
+          className={styles.swiper}
+          initialSlide={currentIndex}
+          onSlideChange={handleSlideChange}
+        >
+          {posts.map((post, index) => (
+            <SwiperSlide className={styles.swiperSlide} key={index}>
+              <VideoEl
+                isActive={index === currentIndex}
+                onTimeUpdate={e => handleVideoProgress(e, index)}
+                thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
+                video={post.celebrityPostsCustomFields?.video?.node}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        {showMessage && (
+          <div className={styles.navigationMessage}>
+            <span>Swipe to navigate between videos</span>
+          </div>
+        )}
       </div>
     );
   }
