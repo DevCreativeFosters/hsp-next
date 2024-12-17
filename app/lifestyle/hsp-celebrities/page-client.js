@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
+import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
@@ -18,8 +20,18 @@ import styles from './page-client.module.scss';
 export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
+  const [showMessage, setShowMessage] = useState(false);
+  const lastMessageTimeRef = useRef({});
 
   const isMobile = useIsMobile();
+
+  const onBackButtonClick = useCallback(() => {
+    if (sessionStorage.getItem('prevPathname')) {
+      router.back();
+    } else {
+      router.push(routes.home);
+    }
+  }, [router]);
 
   const onPrev = useCallback(() => {
     const newIndex = Math.max(0, currentIndex - 1);
@@ -71,14 +83,59 @@ export default function PageClient({ description, posts = [], title }) {
   if (isMobile === undefined) {
     return null;
   } else if (isMobile) {
-    const post = posts[currentIndex];
+    const handleVideoProgress = (event, index) => {
+      const video = event.target;
+      const currentTime = video.currentTime;
+      const isNearStart = currentTime < 3;
+      const isNearEnd = video.duration - currentTime < 3;
+
+      // Only show message if we haven't shown one in the last 5 seconds
+      const now = Date.now();
+      const lastShown = lastMessageTimeRef.current[index] || 0;
+
+      if ((isNearStart || isNearEnd) && now - lastShown > 5000) {
+        lastMessageTimeRef.current[index] = now;
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 3000);
+      }
+    };
+
+    const handleSlideChange = swiper => {
+      setCurrentIndex(swiper.activeIndex);
+    };
+
     return (
       <div className={styles.fullscreenContainer}>
-        <VideoEl
-          isActive={true}
-          thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
-          video={post.celebrityPostsCustomFields?.video?.node}
+        <Button
+          className={styles.buttonBack}
+          leftIcon="arrow-backward"
+          onClick={onBackButtonClick}
+          size="large"
+          variant="tertiary"
         />
+
+        <Swiper
+          className={styles.swiper}
+          initialSlide={currentIndex}
+          onSlideChange={handleSlideChange}
+        >
+          {posts.map((post, index) => (
+            <SwiperSlide className={styles.swiperSlide} key={index}>
+              <VideoEl
+                isActive={index === currentIndex}
+                onTimeUpdate={e => handleVideoProgress(e, index)}
+                showBackButton={false}
+                thumbnail={post.celebrityPostsCustomFields?.thumbnail?.node}
+                video={post.celebrityPostsCustomFields?.video?.node}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        {showMessage && (
+          <div className={styles.navigationMessage}>
+            <span>Swipe to navigate between videos</span>
+          </div>
+        )}
       </div>
     );
   }
