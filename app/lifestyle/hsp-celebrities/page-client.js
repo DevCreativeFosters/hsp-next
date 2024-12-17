@@ -21,7 +21,7 @@ export default function PageClient({ description, posts = [], title }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(undefined);
   const [showMessage, setShowMessage] = useState(false);
-  const messageShownRef = useRef({ end: {}, start: {} });
+  const lastMessageTimeRef = useRef({});
 
   const isMobile = useIsMobile();
 
@@ -77,30 +77,23 @@ export default function PageClient({ description, posts = [], title }) {
   } else if (isMobile) {
     const handleVideoProgress = (event, index) => {
       const video = event.target;
-      const isNearStart = video.currentTime < 3;
-      const isNearEnd = video.duration - video.currentTime < 3;
+      const currentTime = video.currentTime;
+      const isNearStart = currentTime < 3;
+      const isNearEnd = video.duration - currentTime < 3;
 
-      // Show message at start if not shown yet
-      if (isNearStart && !messageShownRef.current.start[index]) {
-        messageShownRef.current.start[index] = true;
-        setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 4000);
-      }
+      // Only show message if we haven't shown one in the last 5 seconds
+      const now = Date.now();
+      const lastShown = lastMessageTimeRef.current[index] || 0;
 
-      // Show message at end if not shown yet
-      if (isNearEnd && !messageShownRef.current.end[index]) {
-        messageShownRef.current.end[index] = true;
+      if ((isNearStart || isNearEnd) && now - lastShown > 5000) {
+        lastMessageTimeRef.current[index] = now;
         setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 4000);
+        setTimeout(() => setShowMessage(false), 3000);
       }
     };
 
     const handleSlideChange = swiper => {
-      const newIndex = swiper.activeIndex;
-      setCurrentIndex(newIndex);
-      // Reset the flags for the new slide
-      messageShownRef.current.start[newIndex] = false;
-      messageShownRef.current.end[newIndex] = false;
+      setCurrentIndex(swiper.activeIndex);
     };
 
     return (
