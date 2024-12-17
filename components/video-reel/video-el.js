@@ -16,7 +16,7 @@ import styles from '@components/video-reel/video-el.module.scss';
 
 const SpeakerIcon = getIcon('speaker');
 
-export default function VideoEl({ isActive, thumbnail, video }) {
+export default function VideoEl({ isActive, onTimeUpdate, thumbnail, video }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isPlayButtonVisible, setIsPlayButtonVisible] = useState(false);
   const [canAutoplayWithSound, setCanAutoplayWithSound] = useState(undefined);
@@ -95,6 +95,9 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         el.addEventListener('play', onPlay);
         el.addEventListener('pause', onPause);
         el.addEventListener('ended', onEnd);
+        if (onTimeUpdate) {
+          el.addEventListener('timeupdate', onTimeUpdate);
+        }
         areEventsAttached.current = true;
       }
 
@@ -104,11 +107,13 @@ export default function VideoEl({ isActive, thumbnail, video }) {
         el?.removeEventListener('play', onPlay);
         el?.removeEventListener('pause', onPause);
         el?.removeEventListener('ended', onEnd);
-
+        if (onTimeUpdate) {
+          el?.removeEventListener('timeupdate', onTimeUpdate);
+        }
         areEventsAttached.current = false;
       };
     },
-    [isActive, onCanPlay, onEnd, onPause, onPlay, videoUrl],
+    [isActive, onCanPlay, onEnd, onPause, onPlay, onTimeUpdate, videoUrl],
   );
 
   useEffect(
