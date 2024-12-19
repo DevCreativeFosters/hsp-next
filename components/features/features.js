@@ -97,7 +97,6 @@ export default function Features({
             poster={video.poster || null}
             ref={videoRef}
             title={video.title || null}
-            webkitPlaysInline
           >
             <source src={video.src} type={video.type} />
             Your browser does not support the video tag.

@@ -16,6 +16,7 @@ import formatCategories from '@lib/normalize-product-breadcrumbs';
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
+import ProductCompatibilityPopup from '@components/product-compatibility-popup';
 import ProductHero from '@components/product-hero';
 
 export default async function ProductHeroPage({ children, params, slug }) {
@@ -64,6 +65,7 @@ export default async function ProductHeroPage({ children, params, slug }) {
           currentProduct={currentProduct}
           mainCategory={true}
         />
+        <ProductCompatibilityPopup />
         <ProductHero
           customTitle={{
             slogan: mainCategoryDetails?.slogan,

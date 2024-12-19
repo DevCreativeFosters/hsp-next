@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 import { useWindowSize } from 'usehooks-ts';
 
@@ -11,9 +11,14 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { getAllProductMakesAndModelsByCategory } from '@lib/api/get-all-product-makes-and-models-by-category';
+import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import constants from '@lib/constants';
+import filterMakesByCategory from '@lib/filter-makes-by-category';
 import { getValueOrSlug } from '@lib/helpers';
+import formatCategories from '@lib/normalize-product-breadcrumbs';
+import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
 import { useVehicleSelection } from '@lib/use-vehicle-select';
 
@@ -30,6 +35,14 @@ export default function ChooseYourVehicleBlock({
   params,
   variants,
 }) {
+  const [maker, setMaker] = useState({
+    name: '',
+    slug: '',
+  });
+  const [model, setModel] = useState({
+    name: '',
+    slug: '',
+  });
   const wrapperRef = useRef();
   const stickerRef = useRef();
   const variantsNormalized = variants?.map(variant => {
@@ -38,23 +51,26 @@ export default function ChooseYourVehicleBlock({
       value: variant.variantSlug,
     };
   });
-  const { handleSave, maker, model, setVariant, setVehicleSelection, variant } =
-    useVehicleContext();
-  const {
-    handleMakerChange,
-    handleModelChange,
-    handleVariantChange,
-    makerSelectOptions,
-    modelSelectOptions,
-  } = useVehicleSelection(makersAndModels, setVehicleSelection, maker);
+  const { setVariant, setVehicleSelection, variant } = useVehicleContext();
+  const { handleVariantChange, modelSelectOptions } = useVehicleSelection(
+    makersAndModels,
+    setVehicleSelection,
+    maker,
+  );
 
   const [localParams, setLocalParams] = useState(params);
   const [vehicleData, setVehicleData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [filteredMakeSelectOptions, setFilteredMakeSelectOptions] = useState(
+    [],
+  );
+  const [filteredMakes, setFilteredMakes] = useState([]);
+  const [availableModels, setAvailableModels] = useState([]);
 
   const path = usePathname();
+  const router = useRouter();
 
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
@@ -64,6 +80,105 @@ export default function ChooseYourVehicleBlock({
   const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
   const modelSlug = useMemo(() => getValueOrSlug(model), [model]);
 
+  const fetchAvailableModels = useCallback(async () => {
+    if (!makeSlug) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const selectedMake = makersAndModels.find(make => make.slug === makeSlug);
+
+      if (!selectedMake || !selectedMake.models) {
+        setAvailableModels([]);
+        return;
+      }
+
+      const modelPromises = selectedMake.models.map(async model => {
+        const products = await getProductsByCategoriesSlugs(
+          mainCategorySlug,
+          makeSlug,
+          model.slug,
+        );
+        return products?.length
+          ? { label: model.name, value: model.slug }
+          : null;
+      });
+
+      const results = await Promise.all(modelPromises);
+      const available = results.filter(Boolean);
+
+      setAvailableModels(available);
+    } catch (err) {
+      console.error('Error fetching model availability:', err);
+      setError('Failed to fetch available models.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [mainCategorySlug, makersAndModels, makeSlug]);
+
+  useEffect(
+    function filterModelsByMake() {
+      if (makeSlug) {
+        fetchAvailableModels();
+      }
+    },
+    [fetchAvailableModels, makeSlug],
+  );
+
+  useEffect(
+    function getCategoriesMakes() {
+      let isMounted = true;
+
+      async function fetchData() {
+        try {
+          const categoryMakesAndModels = await getCategoriesMakesAndModels();
+          if (!isMounted) return;
+          const categories = formatCategories(categoryMakesAndModels);
+          setFilteredMakes(filterMakesByCategory(categories, mainCategorySlug));
+        } catch (error) {
+          console.error('Error fetching categories and makes:', error);
+        }
+      }
+
+      fetchData();
+
+      return () => {
+        isMounted = false;
+      };
+    },
+    [mainCategorySlug],
+  );
+
+  useEffect(
+    function filterMakeSelectOptions() {
+      const filterMakeOptions = async () => {
+        const products =
+          await getAllProductMakesAndModelsByCategory(mainCategorySlug);
+
+        const validMakeSlugs = new Set(
+          products.flatMap(product =>
+            product.makesAndModels?.nodes
+              ?.map(node => node.slug)
+              .filter(Boolean),
+          ),
+        );
+
+        const filteredMakeOptions = filteredMakes.reduce((acc, make) => {
+          if (validMakeSlugs.has(make.slug)) {
+            acc.push({ label: make.name, value: make.slug });
+          }
+          return acc;
+        }, []);
+
+        setFilteredMakeSelectOptions(filteredMakeOptions);
+      };
+
+      filterMakeOptions();
+    },
+    [filteredMakes, mainCategorySlug],
+  );
+
   const errorMessage =
     'The Vehicle you have selected is not compatible with this product. Please change your vehicle or find compatible products below.';
 
@@ -71,11 +186,28 @@ export default function ChooseYourVehicleBlock({
     setIsOpen(!isOpen);
   };
 
+  const handleSelectionChange = useCallback(
+    (options, setState, clearState, clearList) => value => {
+      const selectedOption = options.find(option => option.value === value);
+      if (selectedOption) {
+        setState({
+          name: selectedOption.label,
+          slug: selectedOption.value,
+        });
+        if (clearState) {
+          clearState({ name: '', slug: '' });
+        }
+        if (clearList) {
+          clearList([]);
+        }
+      }
+    },
+    [],
+  );
+
   const variantSlug = useMemo(() => {
     return path.split('/').pop();
   }, [path]);
-
-  const reload = !getValueOrSlug(variant);
 
   const mainCategory = mainCategorySlug
     .split('-')
@@ -228,47 +360,59 @@ export default function ChooseYourVehicleBlock({
           {constants.SELECT_LABELS.GENERIC_FULL}
         </h3>
         <div className={styles.form}>
-          <Select
-            className={styles.select}
-            dropdownInDocumentFlow={isMobile}
-            onChange={handleMakerChange}
-            options={makerSelectOptions}
-            placeholder={constants.SELECT_LABELS.MAKER}
-            size="large"
-            value={getValueOrSlug(maker) || null}
-          />
-          <Select
-            className={styles.select}
-            disabled={!modelSelectOptions.length}
-            dropdownInDocumentFlow={isMobile}
-            onChange={handleModelChange}
-            options={modelSelectOptions}
-            placeholder={constants.SELECT_LABELS.MODEL}
-            size="large"
-            value={getValueOrSlug(model) || null}
-          />
-          {variants?.length > 0 && (
-            <Select
-              className={styles.select}
-              disabled={!variants.length}
-              dropdownInDocumentFlow={isMobile}
-              onChange={handleVariantChange}
-              options={variantsNormalized}
-              placeholder={constants.SELECT_LABELS.VARIANT}
-              size="large"
-              value={getValueOrSlug(variant) || null}
-            />
+          {!filteredMakeSelectOptions.length ? (
+            <Loading color="white" size="large" />
+          ) : (
+            <>
+              <Select
+                className={styles.select}
+                disabled={!filteredMakeSelectOptions.length}
+                dropdownInDocumentFlow={isMobile}
+                onChange={handleSelectionChange(
+                  filteredMakeSelectOptions,
+                  setMaker,
+                  setModel,
+                  setAvailableModels,
+                )}
+                options={filteredMakeSelectOptions}
+                placeholder={constants.SELECT_LABELS.MAKER}
+                size="large"
+                value={getValueOrSlug(maker) || null}
+              />
+              <Select
+                className={styles.select}
+                disabled={!availableModels.length}
+                dropdownInDocumentFlow={isMobile}
+                onChange={handleSelectionChange(availableModels, setModel)}
+                options={availableModels}
+                placeholder={constants.SELECT_LABELS.MODEL}
+                size="large"
+                value={getValueOrSlug(model) || null}
+              />
+              {variants?.length > 0 && (
+                <Select
+                  className={styles.select}
+                  disabled={!variants.length}
+                  dropdownInDocumentFlow={isMobile}
+                  onChange={handleVariantChange}
+                  options={variantsNormalized}
+                  placeholder={constants.SELECT_LABELS.VARIANT}
+                  size="large"
+                  value={getValueOrSlug(variant) || null}
+                />
+              )}
+              <Button
+                className={styles.button}
+                disabled={!getValueOrSlug(model)}
+                isBusy={isLoading}
+                onClick={handleIsOpen}
+                rightIcon="arrow-forward"
+                size="large"
+              >
+                See details
+              </Button>
+            </>
           )}
-          <Button
-            className={styles.button}
-            disabled={!model}
-            isBusy={isLoading}
-            onClick={handleIsOpen}
-            rightIcon="arrow-forward"
-            size="large"
-          >
-            See details
-          </Button>
         </div>
 
         <AnimateHeight
@@ -292,7 +436,15 @@ export default function ChooseYourVehicleBlock({
               make={maker?.name}
               model={model?.name}
               onEnquire={() => {
-                handleSave(localParams, reload);
+                const { mainCategorySlug, makeSlug, modelSlug } = localParams;
+
+                const newRoute = routes.product(
+                  mainCategorySlug,
+                  makeSlug,
+                  modelSlug,
+                );
+
+                router.push(newRoute);
                 setIsLoading(true);
               }}
               price={vehicleData?.price}
