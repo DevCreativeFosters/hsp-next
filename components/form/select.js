@@ -229,6 +229,7 @@ export default function Select({
           })}
         >
           <AnimateHeight
+            aria-hidden="false"
             contentClassName={styles.animateHeightContainer}
             duration={200}
             height={isOpen ? 'auto' : 0}

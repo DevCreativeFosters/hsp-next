@@ -21,10 +21,9 @@ export default function BreadcrumbsProduct({ currentProduct }) {
   const params = useParams();
   const router = useRouter();
   const { makeSlug, modelSlug, slug } = params;
-  const { maker, model, productNotCompatible, setProductNotCompatible } =
+  const { isProductCompatible, maker, model, setIsProductCompatible } =
     useVehicleContext();
   const [savedVehicleLocal, setSavedVehicleLocal] = useState(null);
-  const [checkingCompatibility, setCheckingCompatibility] = useState(false);
 
   useEffect(() => {
     let savedVehicleLocal = null;
@@ -58,11 +57,7 @@ export default function BreadcrumbsProduct({ currentProduct }) {
       const savedLocalMakeSlug = getValueOrSlug(savedLocalMake);
       const savedLocalModelSlug = getValueOrSlug(savedLocalModel);
 
-      if (
-        !contextModelSlug &&
-        contextMakeSlug &&
-        contextMakeSlug === savedLocalMakeSlug
-      ) {
+      if (!contextModelSlug && contextMakeSlug) {
         getMainProductCategory(slug)
           .then(data => {
             if (!data) {
@@ -70,12 +65,8 @@ export default function BreadcrumbsProduct({ currentProduct }) {
                 'Debug: No data received from getMainProductCategory, returning',
               );
               return;
-            }
-
-            if (Object.keys(data).length && contextMakeSlug) {
-              const path = routes.product(slug, contextMakeSlug);
-              router.prefetch(path);
-              router.push(path);
+            } else {
+              setIsProductCompatible(true);
             }
           })
           .catch(error => {
@@ -94,37 +85,31 @@ export default function BreadcrumbsProduct({ currentProduct }) {
         return;
       }
 
-      setCheckingCompatibility(true);
-
       getProductsByCategoriesSlugs(slug, contextMakeSlug, contextModelSlug)
         .then(data => {
           if (!data || !data.length) {
             console.error(
               'Debug: No data or empty data received from getProductsByCategoriesSlugs',
             );
-            setCheckingCompatibility(false);
-            setProductNotCompatible(true);
+            setIsProductCompatible(false);
             return;
+          } else {
+            setIsProductCompatible(true);
           }
-
-          const path = routes.product(slug, contextMakeSlug, contextModelSlug);
-
-          router.prefetch(path);
-          router.push(path);
         })
         .catch(error => {
           console.error('Failed to fetch product data:', error);
         });
     },
     [
+      isProductCompatible,
       maker,
       makeSlug,
       model,
       modelSlug,
-      productNotCompatible,
       router,
       savedVehicleLocal,
-      setProductNotCompatible,
+      setIsProductCompatible,
       slug,
     ],
   );
@@ -158,13 +143,6 @@ export default function BreadcrumbsProduct({ currentProduct }) {
       label: currentProduct.model.label,
       strong: true,
       url: pathname,
-    });
-  }
-
-  if (checkingCompatibility && !productNotCompatible) {
-    items.push({
-      label: 'Checking selection compatibility ...',
-      url: '#',
     });
   }
 

@@ -26,6 +26,7 @@ import ErrorPage from '@components/error-page';
 import Layout from '@components/layout/layout';
 import NotCompatible from '@components/not-compatible/not-compatible';
 import PageContainer from '@components/page-container/page-container';
+import ProductCompatibilityPopup from '@components/product-compatibility-popup';
 import ProductHeroPage from '@components/product-hero-page/product-hero-page';
 
 import PageClientSidePartial from './page-client-side-partial';
@@ -202,6 +203,7 @@ export default async function Product({ params, searchParams }) {
             showNotCompatible={showNotCompatible}
           />
         </div>
+        <ProductCompatibilityPopup />
         <PageClientSidePartial
           allLocations={allLocations}
           downloadFileFormId={downloadFileFormId}

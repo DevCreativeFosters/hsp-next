@@ -39,10 +39,11 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
     maker,
     model,
     selectedProducts,
+    setCheckingProductCompatibility,
     setCovers,
     setDropdownOpened,
     setHeaderWidgetLoading,
-    setProductNotCompatible,
+    setIsProductCompatible,
     setSelectedCover,
     setSelectedProducts,
     setStepNumber,
@@ -95,13 +96,15 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
       setStepNumber(0);
       setShowUpdateModal(false);
       setDropdownOpened(false);
-      setProductNotCompatible(false);
+      setCheckingProductCompatibility(false);
     }
   }, [
     handleSave,
     localMaker,
     maker,
+    setCheckingProductCompatibility,
     setDropdownOpened,
+    setIsProductCompatible,
     setLocalMaker,
     setLocalModel,
     setStepNumber,
@@ -195,12 +198,12 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       setHeaderWidgetLoading(false);
                     } else {
                       handleVehicleReset();
-                      setShowLocationError(false);
-                      setSearchGeolocation(null);
-                      setSelectedStore(null);
-                      setLocation(undefined);
-                      setLocationInput('');
-                      setProductsSectionOpen(true);
+                      if (setProductsSectionOpen) setProductsSectionOpen(true);
+                      if (setShowLocationError) setShowLocationError(false);
+                      if (setSearchGeolocation) setSearchGeolocation(null);
+                      if (setSelectedStore) setSelectedStore(null);
+                      if (setLocation) setLocation(undefined);
+                      if (setLocationInput) setLocationInput('');
                     }
                   }}
                 >
@@ -210,6 +213,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
             </div>
 
             <AnimateHeight
+              aria-hidden="false"
               className={styles.containerAnimateHeight}
               contentClassName={clsx(styles.containerInner, {
                 [styles.opened]: dropdownOpened,
@@ -227,7 +231,6 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           name: label,
                           slug: value,
                         });
-                        setProductNotCompatible(false);
                       } else {
                         handleMakerChange(value, label);
                       }
@@ -246,7 +249,6 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           name: label,
                           slug: value,
                         });
-                        setProductNotCompatible(false);
                       } else {
                         handleModelChange(value, label);
                       }

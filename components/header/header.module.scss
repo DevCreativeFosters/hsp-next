@@ -177,6 +177,12 @@
   left: 50%;
   transform: translateX(-50%);
   max-width: 100%;
+  width: 100%;
+
+  @include bp(small) {
+    max-width: 390px;
+    width: auto;
+  }
 
   @include bp(large) {
     @include center;
