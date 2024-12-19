@@ -21,6 +21,7 @@ import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
 import ContentBlocksPage from '@components/content-blocks-page/content-blocks-page';
 import Layout from '@components/layout/layout';
+import ProductCompatibilityPopup from '@components/product-compatibility-popup';
 import ProductHero from '@components/product-hero';
 import ProductNotFound from '@components/product-not-found/product-not-found';
 
@@ -224,6 +225,7 @@ export default async function CategoryPage({ params }) {
               currentProduct={currentProduct}
             />
           </div>
+          <ProductCompatibilityPopup />
           <ProductHero
             customTitle={
               filteredData?.length >= 1 &&

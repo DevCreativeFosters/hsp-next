@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, createRef } from 'react';
+import { Fragment, createRef, useMemo } from 'react';
 
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -27,8 +27,13 @@ function addSeparators(items) {
 }
 
 function Breadcrumbs({ items, product }) {
-  const { maker, model, productNotCompatible, setProductNotCompatible } =
-    useVehicleContext();
+  const {
+    checkingProductCompatibility,
+    isProductCompatible,
+    maker,
+    model,
+    setIsProductCompatible,
+  } = useVehicleContext();
   const itemsNormalized = items
     .map(item => ({
       ...item,
@@ -57,6 +62,23 @@ function Breadcrumbs({ items, product }) {
         : itemsNormalized[itemsLength - 2]
       : null;
 
+  const renderIncompatibleProductMessage = useMemo(() => {
+    if (
+      !isProductCompatible &&
+      maker &&
+      model &&
+      !checkingProductCompatibility
+    ) {
+      return (
+        <div className={styles.incompatibilityMessage}>
+          <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
+          product is not available for your selected vehicle.
+        </div>
+      );
+    }
+    return null;
+  }, [checkingProductCompatibility, isProductCompatible, maker, model]);
+
   return (
     <>
       <div className={clsx(styles.container, styles.short)}>
@@ -69,12 +91,7 @@ function Breadcrumbs({ items, product }) {
             {singleBreadcrumb.label}
           </Link>
         )}
-        {productNotCompatible && maker && model && (
-          <div className={styles.incompatible}>
-            <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
-            product is not available for your selected vehicle.
-          </div>
-        )}
+        {renderIncompatibleProductMessage}
       </div>
 
       <div className={clsx(styles.container, styles.full)}>
@@ -134,7 +151,7 @@ function Breadcrumbs({ items, product }) {
                   fRef={item.ref}
                   onSelect={value => {
                     item.onSelectCallbackAndActivateNext(value);
-                    setProductNotCompatible(false);
+                    setIsProductCompatible(false);
                   }}
                   options={item.options}
                   placeholder={item.placeholder}
@@ -159,12 +176,7 @@ function Breadcrumbs({ items, product }) {
             );
           }
         })}
-        {productNotCompatible && maker && model && (
-          <div className={styles.incompatible}>
-            <span className={styles.incompatibleLabel}>Note:</span> Sorry, this
-            product is not available for your selected vehicle.
-          </div>
-        )}
+        {renderIncompatibleProductMessage}
       </div>
     </>
   );
