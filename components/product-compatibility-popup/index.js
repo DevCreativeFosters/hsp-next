@@ -104,7 +104,7 @@ export default function ProductCompatibilityPopup() {
               size="small"
               variant="secondary"
             >
-              Close
+              Dismiss
             </Button>
           </div>
         </div>
