@@ -49,7 +49,9 @@ export const VehicleProvider = ({ children }) => {
   const [popupOpen, setPopupOpen] = useState(false);
   const [checkingProductCompatibility, setCheckingProductCompatibility] =
     useState(false);
+  const [isPopupFirstVisit, setIsPopupFirstVisit] = useState(true);
   const wrapperRef = useRef(null);
+  const enteredProductPageRef = useRef(null);
   const pathname = usePathname();
   const { slug } = params;
 
@@ -208,11 +210,13 @@ export const VehicleProvider = ({ children }) => {
         compatibleFactoryOptions,
         covers,
         dropdownOpened,
+        enteredProductPageRef,
         finalSelection,
         goToLink,
         handleSave,
         handleVehicleReset,
         headerWidgetLoading,
+        isPopupFirstVisit,
         isProductCompatible,
         maker,
         model,
@@ -227,6 +231,7 @@ export const VehicleProvider = ({ children }) => {
         setDropdownOpened,
         setGoToLink,
         setHeaderWidgetLoading,
+        setIsPopupFirstVisit,
         setIsProductCompatible,
         setMaker,
         setModel,

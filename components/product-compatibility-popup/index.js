@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 
 import { useVehicleContext } from '@contexts/vehicle';
+
+import { useIsMobile } from '@hooks/useIsMobile';
 
 import { getNameOrLabel, getValueOrSlug } from '@lib/helpers';
 import routes from '@lib/routes';
@@ -17,14 +19,17 @@ import BellIcon from '@assets/icons/bell.svg';
 
 import styles from './product-compatibility-popup.module.scss';
 
+const LOCAL_STORAGE_KEY = 'vehiclePopupPreviousValues';
+
 export default function ProductCompatibilityPopup() {
   const router = useRouter();
-  const params = useParams();
   const pathname = usePathname();
+  const isMobile = useIsMobile();
   const [userVehicleProductRoute, setUserVehicleProductRoute] = useState(null);
   const [shouldDisplayPopup, setShouldDisplayPopup] = useState(false);
   const {
     checkingProductCompatibility,
+    enteredProductPageRef,
     isProductCompatible,
     maker,
     model,
@@ -32,21 +37,47 @@ export default function ProductCompatibilityPopup() {
     setPopupOpen,
   } = useVehicleContext();
 
+  useEffect(() => {
+    const newRoute = routes.product(
+      getValueOrSlug(maker),
+      getValueOrSlug(model),
+    );
+
+    setUserVehicleProductRoute(newRoute);
+  }, [maker, model]);
+
   useEffect(
-    function updateProductRedirectRoute() {
-      const { slug } = params;
+    function displayPopupMobileLogic() {
+      const storedValues = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY),
+      ) || {
+        maker: null,
+        model: null,
+      };
 
-      const newRoute = routes.product(
-        slug,
-        getValueOrSlug(maker),
-        getValueOrSlug(model),
-      );
+      const currentMaker = getValueOrSlug(maker);
+      const currentModel = getValueOrSlug(model);
 
-      if (pathname !== newRoute) {
-        setUserVehicleProductRoute(newRoute);
+      if (enteredProductPageRef.current) {
+        if (
+          (currentMaker && currentMaker !== (storedValues.maker || null)) ||
+          (currentModel && currentModel !== (storedValues.model || null))
+        ) {
+          setPopupOpen(true);
+        } else {
+          setPopupOpen(false);
+        }
       }
+
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          maker: currentMaker ?? storedValues.maker,
+          model: currentModel ?? storedValues.model,
+        }),
+      );
     },
-    [maker, model, params, pathname],
+    [enteredProductPageRef, isMobile, maker, model, pathname, setPopupOpen],
   );
 
   const handleProductRoute = useCallback(() => {
@@ -60,18 +91,28 @@ export default function ProductCompatibilityPopup() {
       const makerSlug = getValueOrSlug(maker);
       const modelSlug = getValueOrSlug(model);
 
-      const { makeSlug, modelSlug: paramModelSlug } = params;
-
-      const shouldDisplayPopup = Boolean(
-        (makerSlug || modelSlug) &&
-          (makeSlug !== makerSlug || paramModelSlug?.[0] !== modelSlug),
-      );
+      const shouldDisplayPopup = Boolean(makerSlug || modelSlug);
 
       setShouldDisplayPopup(shouldDisplayPopup);
-      setPopupOpen(shouldDisplayPopup);
+
+      if (!isMobile) {
+        setPopupOpen(shouldDisplayPopup);
+      }
     },
-    [maker, model, params, setPopupOpen],
+    [isMobile, maker, model, setPopupOpen],
   );
+
+  useEffect(function clearOnReload() {
+    const clearLocalStorage = () => {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    };
+
+    window.addEventListener('beforeunload', clearLocalStorage);
+
+    return () => {
+      window.removeEventListener('beforeunload', clearLocalStorage);
+    };
+  }, []);
 
   return (
     <>
