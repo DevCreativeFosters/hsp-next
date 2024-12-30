@@ -21,8 +21,13 @@ export default function BreadcrumbsProduct({ currentProduct }) {
   const params = useParams();
   const router = useRouter();
   const { makeSlug, modelSlug, slug } = params;
-  const { isProductCompatible, maker, model, setIsProductCompatible } =
-    useVehicleContext();
+  const {
+    enteredProductPageRef,
+    isProductCompatible,
+    maker,
+    model,
+    setIsProductCompatible,
+  } = useVehicleContext();
   const [savedVehicleLocal, setSavedVehicleLocal] = useState(null);
 
   useEffect(() => {
@@ -150,5 +155,9 @@ export default function BreadcrumbsProduct({ currentProduct }) {
     items[items.length - 1].strong = true;
   }
 
-  return <Breadcrumbs items={items} />;
+  return (
+    <div ref={enteredProductPageRef}>
+      <Breadcrumbs items={items} />
+    </div>
+  );
 }
