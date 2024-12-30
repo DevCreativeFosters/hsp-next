@@ -231,40 +231,58 @@ export function filterOutIncompatibleProducts(products, selectedCover) {
 
   products?.forEach((product, index) => {
     const variants = [];
+    let shouldIncludeProduct = false;
 
-    const isCoverCompatible = product.compatibleCovers.find(cover => {
-      return selectedCover?.productCategories?.includes(cover);
-    });
+    // Only check product-level compatibility if there are no variants
+    if (!product?.productFields?.variants?.length) {
+      const isCoverCompatible = product.compatibleCovers.find(cover => {
+        return selectedCover?.productCategories?.includes(cover);
+      });
 
-    if (isCoverCompatible) {
-      if (!filteredProducts[index]) {
-        filteredProducts[index] = product;
+      if (isCoverCompatible) {
+        shouldIncludeProduct = true;
       }
     }
 
+    // Check variant-level compatibility
     product?.productFields?.variants?.forEach(variant => {
       const compatibleCoversVariants =
         variant?.compatibleCoversVariants?.nodes?.map(
           category => category.slug,
         ) || [];
 
-      const isCoverVariantCompatible = compatibleCoversVariants.some(
-        category => {
-          return selectedCover?.productCategories?.includes(category);
-        },
-      );
+      // If variant has specific cover compatibility settings, use those
+      if (compatibleCoversVariants.length > 0) {
+        const isCoverVariantCompatible = compatibleCoversVariants.some(
+          category => selectedCover?.productCategories?.includes(category),
+        );
 
-      if (isCoverVariantCompatible) {
-        if (!filteredProducts[index]) {
-          filteredProducts[index] = product;
+        if (isCoverVariantCompatible) {
+          shouldIncludeProduct = true;
+          variants.push(variant);
         }
+      } else {
+        // If no specific variant settings, fall back to product-level settings
+        const isCoverCompatible = product.compatibleCovers.find(cover =>
+          selectedCover?.productCategories?.includes(cover),
+        );
 
-        variants.push(variant);
+        if (isCoverCompatible) {
+          shouldIncludeProduct = true;
+          variants.push(variant);
+        }
       }
     });
 
-    if (variants.length > 0) {
-      filteredProducts[index]['productFields']['variants'] = variants;
+    if (shouldIncludeProduct) {
+      filteredProducts[index] = {
+        ...product,
+        productFields: {
+          ...product.productFields,
+          variants:
+            variants.length > 0 ? variants : product.productFields?.variants,
+        },
+      };
     }
   });
 
