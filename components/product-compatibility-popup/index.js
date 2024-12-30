@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 
 import { useVehicleContext } from '@contexts/vehicle';
@@ -23,7 +22,6 @@ const LOCAL_STORAGE_KEY = 'vehiclePopupPreviousValues';
 
 export default function ProductCompatibilityPopup() {
   const router = useRouter();
-  const pathname = usePathname();
   const isMobile = useIsMobile();
   const [userVehicleProductRoute, setUserVehicleProductRoute] = useState(null);
   const [shouldDisplayPopup, setShouldDisplayPopup] = useState(false);
@@ -37,23 +35,30 @@ export default function ProductCompatibilityPopup() {
     setPopupOpen,
   } = useVehicleContext();
 
-  useEffect(() => {
-    const newRoute = routes.product(
-      getValueOrSlug(maker),
-      getValueOrSlug(model),
-    );
+  useEffect(
+    function updateProductRedirectRoute() {
+      const newRoute = routes.product(
+        getValueOrSlug(maker),
+        getValueOrSlug(model),
+      );
 
-    setUserVehicleProductRoute(newRoute);
-  }, [maker, model]);
+      setUserVehicleProductRoute(newRoute);
+    },
+    [maker, model],
+  );
 
   useEffect(
     function displayPopupMobileLogic() {
-      const storedValues = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_KEY),
-      ) || {
-        maker: null,
-        model: null,
-      };
+      let storedValues = { maker: null, model: null };
+
+      try {
+        const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedData) {
+          storedValues = JSON.parse(storedData);
+        }
+      } catch (error) {
+        console.error('Error reading from localStorage:', error);
+      }
 
       const currentMaker = getValueOrSlug(maker);
       const currentModel = getValueOrSlug(model);
@@ -69,15 +74,19 @@ export default function ProductCompatibilityPopup() {
         }
       }
 
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({
-          maker: currentMaker ?? storedValues.maker,
-          model: currentModel ?? storedValues.model,
-        }),
-      );
+      try {
+        localStorage.setItem(
+          LOCAL_STORAGE_KEY,
+          JSON.stringify({
+            maker: currentMaker ?? storedValues.maker,
+            model: currentModel ?? storedValues.model,
+          }),
+        );
+      } catch (error) {
+        console.error('Error writing to localStorage:', error);
+      }
     },
-    [enteredProductPageRef, isMobile, maker, model, pathname, setPopupOpen],
+    [enteredProductPageRef, maker, model, setPopupOpen],
   );
 
   const handleProductRoute = useCallback(() => {
