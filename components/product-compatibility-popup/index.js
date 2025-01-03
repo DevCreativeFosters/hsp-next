@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 
 import { useVehicleContext } from '@contexts/vehicle';
@@ -21,6 +22,7 @@ import styles from './product-compatibility-popup.module.scss';
 const LOCAL_STORAGE_KEY = 'vehiclePopupPreviousValues';
 
 export default function ProductCompatibilityPopup() {
+  const pathname = usePathname();
   const router = useRouter();
   const isMobile = useIsMobile();
   const [userVehicleProductRoute, setUserVehicleProductRoute] = useState(null);
@@ -37,14 +39,26 @@ export default function ProductCompatibilityPopup() {
 
   useEffect(
     function updateProductRedirectRoute() {
-      const newRoute = routes.product(
-        getValueOrSlug(maker),
-        getValueOrSlug(model),
-      );
+      try {
+        const mainCategorySlug = pathname.split('/')[1];
+        if (!mainCategorySlug) {
+          throw new Error(
+            'Main category slug could not be determined from pathname.',
+          );
+        }
 
-      setUserVehicleProductRoute(newRoute);
+        const newRoute = routes.product(
+          mainCategorySlug,
+          getValueOrSlug(maker),
+          getValueOrSlug(model),
+        );
+
+        setUserVehicleProductRoute(newRoute);
+      } catch (error) {
+        console.error('Error updating product redirect route:', error.message);
+      }
     },
-    [maker, model],
+    [maker, model, pathname],
   );
 
   useEffect(
