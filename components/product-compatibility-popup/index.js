@@ -39,14 +39,24 @@ export default function ProductCompatibilityPopup() {
 
   useEffect(
     function updateProductRedirectRoute() {
-      const mainCategorySlug = pathname.split('/')[1];
-      const newRoute = routes.product(
-        mainCategorySlug,
-        getValueOrSlug(maker),
-        getValueOrSlug(model),
-      );
+      try {
+        const mainCategorySlug = pathname.split('/')[1];
+        if (!mainCategorySlug) {
+          throw new Error(
+            'Main category slug could not be determined from pathname.',
+          );
+        }
 
-      setUserVehicleProductRoute(newRoute);
+        const newRoute = routes.product(
+          mainCategorySlug,
+          getValueOrSlug(maker),
+          getValueOrSlug(model),
+        );
+
+        setUserVehicleProductRoute(newRoute);
+      } catch (error) {
+        console.error('Error updating product redirect route:', error.message);
+      }
     },
     [maker, model, pathname],
   );
