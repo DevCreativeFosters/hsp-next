@@ -31,7 +31,7 @@ export default function SectionButtons({
             target={link?.target || null}
             {...props}
             rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
-            variant={variant[0]}
+            {...(variant[0] && { variant: variant[0] })}
           >
             {label}
           </Button>
