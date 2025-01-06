@@ -1,7 +1,9 @@
 .layout {
   --question-horizontal-padding: 24px;
 
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
   margin-top: 48px;
 
   @include bp(large) {
@@ -23,10 +25,10 @@
 }
 
 .buttonsContainer {
-  margin: 48px 24px;
+  display: flex;
+  margin: 0 24px;
 
   @include bp(medium) {
-    margin: 48px 0;
     padding: var(--question-horizontal-padding);
   }
 
@@ -41,6 +43,7 @@
   padding: 0;
   margin: 0;
   scroll-margin-top: calc(var(--header-height) + 32px);
+  grid-column: span 2;
 
   @include bp(large) {
     grid-area: questions;
@@ -119,7 +122,7 @@
 
 .buttonToggle {
   margin-top: 24px;
-  justify-self: end;
+  margin-left: auto;
 
   svg {
     transform: rotate(90deg);
