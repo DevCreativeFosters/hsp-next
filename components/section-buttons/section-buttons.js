@@ -24,13 +24,14 @@ export default function SectionButtons({
       }
     >
       {buttons?.map(
-        ({ label, link, withArrowForwardIcon, ...props }, index) => (
+        ({ label, link, variant, withArrowForwardIcon, ...props }, index) => (
           <Button
             href={link?.url || link}
             key={index}
             target={link?.target || null}
             {...props}
             rightIcon={withArrowForwardIcon ? 'arrow-forward' : null}
+            {...(variant[0] && { variant: variant[0] })}
           >
             {label}
           </Button>
