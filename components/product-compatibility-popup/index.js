@@ -37,6 +37,18 @@ export default function ProductCompatibilityPopup() {
     setPopupOpen,
   } = useVehicleContext();
 
+  const checkCurrentRoute = useCallback(() => {
+    const pathParts = pathname.split('/').filter(Boolean);
+    const makerSlug = getValueOrSlug(maker);
+    const modelSlug = getValueOrSlug(model);
+
+    return (
+      pathParts.length >= 3 &&
+      pathParts[1] === makerSlug &&
+      pathParts[2] === modelSlug
+    );
+  }, [maker, model, pathname]);
+
   useEffect(
     function updateProductRedirectRoute() {
       try {
@@ -76,8 +88,9 @@ export default function ProductCompatibilityPopup() {
 
       const currentMaker = getValueOrSlug(maker);
       const currentModel = getValueOrSlug(model);
+      const isCurrentRoute = checkCurrentRoute();
 
-      if (enteredProductPageRef.current) {
+      if (enteredProductPageRef.current && !isCurrentRoute) {
         if (
           (currentMaker && currentMaker !== (storedValues.maker || null)) ||
           (currentModel && currentModel !== (storedValues.model || null))
@@ -100,7 +113,7 @@ export default function ProductCompatibilityPopup() {
         console.error('Error writing to localStorage:', error);
       }
     },
-    [enteredProductPageRef, maker, model, setPopupOpen],
+    [checkCurrentRoute, enteredProductPageRef, maker, model, setPopupOpen],
   );
 
   const handleProductRoute = useCallback(() => {
@@ -113,8 +126,10 @@ export default function ProductCompatibilityPopup() {
     function displayPopup() {
       const makerSlug = getValueOrSlug(maker);
       const modelSlug = getValueOrSlug(model);
+      const isCurrentRoute = checkCurrentRoute();
 
-      const shouldDisplayPopup = Boolean(makerSlug || modelSlug);
+      const shouldDisplayPopup =
+        Boolean(makerSlug || modelSlug) && !isCurrentRoute;
 
       setShouldDisplayPopup(shouldDisplayPopup);
 
@@ -122,7 +137,7 @@ export default function ProductCompatibilityPopup() {
         setPopupOpen(shouldDisplayPopup);
       }
     },
-    [isMobile, maker, model, setPopupOpen],
+    [checkCurrentRoute, isMobile, maker, model, setPopupOpen],
   );
 
   useEffect(function clearOnReload() {
@@ -136,6 +151,10 @@ export default function ProductCompatibilityPopup() {
       window.removeEventListener('beforeunload', clearLocalStorage);
     };
   }, []);
+
+  if (checkCurrentRoute()) {
+    return null;
+  }
 
   return (
     <>
