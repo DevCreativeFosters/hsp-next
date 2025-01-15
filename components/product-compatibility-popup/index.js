@@ -165,7 +165,7 @@ export default function ProductCompatibilityPopup() {
         })}
       >
         <div className={styles.container}>
-          <h3 className={styles.title}>Good News!</h3>
+          <h3 className={styles.title}>Suits Your Ute!</h3>
           <p className={styles.message}>
             We have this product available for{' '}
             <strong>
