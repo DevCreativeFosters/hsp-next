@@ -128,12 +128,13 @@ export default function ProductCompatibilityPopup() {
       const modelSlug = getValueOrSlug(model);
       const isCurrentRoute = checkCurrentRoute();
 
-      const shouldShow = Boolean(makerSlug || modelSlug) && !isCurrentRoute;
+      const shouldDisplayPopup =
+        Boolean(makerSlug || modelSlug) && !isCurrentRoute;
 
-      setShouldDisplayPopup(shouldShow);
+      setShouldDisplayPopup(shouldDisplayPopup);
 
       if (!isMobile) {
-        setPopupOpen(shouldShow);
+        setPopupOpen(shouldDisplayPopup);
       }
     },
     [checkCurrentRoute, isMobile, maker, model, setPopupOpen],
