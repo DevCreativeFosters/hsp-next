@@ -12,7 +12,9 @@ import {
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
+import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { deleteCookie, setCookie } from '@lib/cookies';
+import { getValueOrSlug } from '@lib/helpers';
 import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
 import routes from '@lib/routes';
 
@@ -37,16 +39,21 @@ export const VehicleProvider = ({ children }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [variant, setVariant] = useState(null);
   const [finalSelection, setFinalSelection] = useState(null);
-  const [productNotCompatible, setProductNotCompatible] = useState(false);
+  const [isProductCompatible, setIsProductCompatible] = useState(false);
   const [savedVehicleGlobal, setSavedVehicleGlobal] = useState({
     maker: '',
     model: '',
     selectedFactoryOption: [],
   });
   const [goToLink, setGoToLink] = useState('');
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [checkingProductCompatibility, setCheckingProductCompatibility] =
+    useState(false);
+  const [isPopupFirstVisit, setIsPopupFirstVisit] = useState(true);
   const wrapperRef = useRef(null);
-
+  const enteredProductPageRef = useRef(null);
   const pathname = usePathname();
+  const { slug } = params;
 
   useEffect(() => {
     const { current: wrapper } = wrapperRef;
@@ -96,7 +103,8 @@ export const VehicleProvider = ({ children }) => {
     setCompatibleFactoryOptions([]);
     setMaker(null);
     setModel(null);
-    setProductNotCompatible(false);
+    setCheckingProductCompatibility(false);
+    setIsProductCompatible(false);
     setSavedVehicleGlobal(null);
     setSelectedFactoryOption(null);
     setSelectedFactoryOption(null);
@@ -106,36 +114,29 @@ export const VehicleProvider = ({ children }) => {
   };
 
   const handleVehicleReset = useCallback(() => {
-    setHeaderWidgetLoading(true);
-
-    const { makeSlug, modelSlug, slug } = params;
-
     resetVehicleSelection();
+  }, [params, pathname, router]); //eslint-disable-line
 
-    if (!makeSlug && !modelSlug && !slug) {
-      setHeaderWidgetLoading(false);
+  const checkProductCompatibility = async (slug, makeSlug, modelSlug) => {
+    setCheckingProductCompatibility(true);
 
-      return;
+    try {
+      const data = await getProductsByCategoriesSlugs(
+        slug,
+        makeSlug,
+        modelSlug ?? '',
+      );
+      setIsProductCompatible(data && data.length > 0);
+    } catch (error) {
+      console.error('Failed to fetch compatibility data:', error);
+      setIsProductCompatible(false);
+    } finally {
+      setCheckingProductCompatibility(false);
     }
-
-    if ((makeSlug && modelSlug && slug) || (makeSlug && slug)) {
-      const newRoute = routes.product(slug);
-
-      if (pathname !== newRoute) {
-        router.prefetch(newRoute);
-        router.push(newRoute);
-      } else {
-        setHeaderWidgetLoading(false);
-      }
-
-      return;
-    }
-
-    setHeaderWidgetLoading(false);
-  }, [params, pathname, router]); // eslint-disable-line
+  };
 
   const handleSave = useCallback(
-    (params, reload) => {
+    async (params, hardReload) => {
       setHeaderWidgetLoading(true);
 
       const vehicleString = JSON.stringify({
@@ -146,7 +147,6 @@ export const VehicleProvider = ({ children }) => {
 
       localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
-
       setSavedVehicleGlobal({ maker, model, selectedFactoryOption });
 
       setVehicleSelection({
@@ -159,84 +159,83 @@ export const VehicleProvider = ({ children }) => {
       setStepNumber(1);
       setStepTitle(STEP_TITLES[1]);
 
-      let newRoute = null;
-      let localCategory = null;
-      let localMake = null;
-      let localModel = null;
-
-      if (params) {
-        const { mainCategorySlug, makeSlug, modelSlug } = params;
-
-        localCategory = mainCategorySlug;
-        localMake = makeSlug;
-        localModel = modelSlug;
-      }
-
-      if (reload) {
-        const { mainCategorySlug } = params;
-
-        localCategory = mainCategorySlug;
-        localMake = maker?.slug;
-        localModel = model?.slug;
-      }
+      const localCategory = params?.mainCategorySlug || slug;
+      const localMake = hardReload ? maker?.slug : params?.makeSlug;
+      const localModel = hardReload ? model?.slug : params?.modelSlug;
 
       if (!localCategory) {
         setHeaderWidgetLoading(false);
+        return;
+      }
+
+      const newRoute = routes.product(localCategory, localMake, localModel);
+
+      if (hardReload) {
+        window.location.href = newRoute;
 
         return;
       }
 
-      getMainProductCategory(localCategory).then(data => {
+      try {
+        const data = await getMainProductCategory(slug);
+
         if (!Object.keys(data).length) {
-          setHeaderWidgetLoading(false);
-
           return;
         }
 
-        newRoute = routes.product(localCategory, localMake, localModel);
+        const contextMakeSlug = getValueOrSlug(maker);
+        const contextModelSlug = getValueOrSlug(model);
 
-        if (reload) {
-          window.location.href = newRoute;
-
-          return;
+        if (contextMakeSlug) {
+          await checkProductCompatibility(
+            slug,
+            contextMakeSlug,
+            contextModelSlug,
+          );
         }
-
-        if (pathname !== newRoute) {
-          router.prefetch(newRoute);
-          router.push(newRoute);
-          setHeaderWidgetLoading(false);
-        }
-      });
+      } catch (error) {
+        console.error('Error in handleSave:', error);
+      } finally {
+        setHeaderWidgetLoading(false);
+      }
     },
-    [maker, model, pathname, router, selectedFactoryOption],
+    [maker, model, pathname, selectedFactoryOption, slug],
   );
 
   return (
     <VehicleContext.Provider
       value={{
+        checkProductCompatibility,
+        checkingProductCompatibility,
         compatibleFactoryOptions,
         covers,
         dropdownOpened,
+        enteredProductPageRef,
         finalSelection,
         goToLink,
         handleSave,
         handleVehicleReset,
         headerWidgetLoading,
+        isPopupFirstVisit,
+        isProductCompatible,
         maker,
         model,
-        productNotCompatible,
+        popupOpen,
         savedVehicleGlobal,
         selectedCover,
         selectedFactoryOption,
         selectedProducts,
+        setCheckingProductCompatibility,
         setCompatibleFactoryOptions,
         setCovers,
         setDropdownOpened,
         setGoToLink,
         setHeaderWidgetLoading,
+        setIsPopupFirstVisit,
+        setIsProductCompatible,
         setMaker,
         setModel,
-        setProductNotCompatible,
+        setPopupOpen,
         setSavedVehicleGlobal,
         setSelectedCover,
         setSelectedFactoryOption,

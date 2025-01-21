@@ -39,14 +39,7 @@ export default function VideoCard({ idx, name, price, productUrl, url }) {
       })}
       href={productUrl || ''}
     >
-      <video
-        className={styles.video}
-        loop
-        muted
-        playsInline
-        ref={videoRef}
-        webkitPlaysInline
-      >
+      <video className={styles.video} loop muted playsInline ref={videoRef}>
         <source src={url} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

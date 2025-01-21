@@ -21,14 +21,7 @@ export default function VideoBackgroundHero({
 
   return (
     <section className={styles.wrapper}>
-      <video
-        className={styles.video}
-        loop
-        muted
-        playsInline
-        ref={videoRef}
-        webkitPlaysInline
-      >
+      <video className={styles.video} loop muted playsInline ref={videoRef}>
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
