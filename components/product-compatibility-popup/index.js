@@ -169,7 +169,7 @@ export default function ProductCompatibilityPopup() {
           <p className={styles.message}>
             We have this product available for{' '}
             <strong>
-              {getNameOrLabel(maker)} {model ? `${getNameOrLabel(model)}!` : ''}
+              {getNameOrLabel(maker)} {model ? `${getNameOrLabel(model)}` : ''}
             </strong>
           </p>
           <div className={styles.buttons}>
