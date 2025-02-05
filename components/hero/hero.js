@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 
@@ -22,6 +24,7 @@ export default function Hero({ slides, transition = 'fade' }) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
   const [preloadedAssets, setPreloadedAssets] = useState(initialAssets);
+  const isMobile = useIsMobile();
 
   const currentSlide = slides[currentSlideIndex];
 
@@ -92,31 +95,61 @@ export default function Hero({ slides, transition = 'fade' }) {
       ref={heroRef}
     >
       <div className={styles.track} data-index={currentSlideIndex}>
-        {slides.map(({ backgroundImage, backgroundImagePosition }, index) => {
-          return (
-            <div
-              className={clsx(styles.slide, {
-                [styles.active]: index === currentSlideIndex,
-              })}
-              key={index}
-            >
-              {Boolean(
-                preloadedAssets.includes(index) &&
-                  backgroundImage?.node?.sourceUrl,
-              ) ? (
-                <Image
-                  alt={backgroundImage?.node?.altText || ''}
-                  className={styles.backgroundImage}
-                  fill={true}
-                  src={backgroundImage?.node?.sourceUrl}
-                  style={{ objectPosition: backgroundImagePosition }}
-                />
-              ) : (
-                <div />
-              )}
-            </div>
-          );
-        })}
+        {slides.map(
+          (
+            {
+              backgroundImage,
+              backgroundImageMobile,
+              backgroundImagePosition,
+              backgroundImagePositionMobile,
+            },
+            index,
+          ) => {
+            return (
+              <div
+                className={clsx(styles.slide, {
+                  [styles.active]: index === currentSlideIndex,
+                })}
+                key={index}
+              >
+                {Boolean(
+                  preloadedAssets.includes(index) &&
+                    (backgroundImage?.node?.sourceUrl ||
+                      backgroundImageMobile?.node?.sourceUrl),
+                ) ? (
+                  <Image
+                    alt={
+                      isMobile
+                        ? backgroundImageMobile?.node?.altText ||
+                          backgroundImage?.node?.altText ||
+                          ''
+                        : backgroundImage?.node?.altText || ''
+                    }
+                    className={
+                      isMobile
+                        ? styles.backgroundImageMobile
+                        : styles.backgroundImage
+                    }
+                    fill={true}
+                    src={
+                      isMobile
+                        ? backgroundImageMobile?.node?.sourceUrl ||
+                          backgroundImage?.node?.sourceUrl
+                        : backgroundImage?.node?.sourceUrl
+                    }
+                    style={{
+                      objectPosition: isMobile
+                        ? backgroundImagePositionMobile
+                        : backgroundImagePosition,
+                    }}
+                  />
+                ) : (
+                  <div />
+                )}
+              </div>
+            );
+          },
+        )}
       </div>
 
       <Container>
