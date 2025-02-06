@@ -48,13 +48,10 @@
 }
 
 .title {
-  font-family: var(--font-secondary);
-  font-size: 48px;
   font-weight: 600;
   line-height: 1.33;
 
   @include bp(large) {
-    font-size: 64px;
     line-height: 1.25;
   }
 
