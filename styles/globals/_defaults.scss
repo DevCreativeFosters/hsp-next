@@ -66,6 +66,11 @@ a {
   box-sizing: border-box;
 }
 
+.p {
+  font-family: var(--font-primary);
+  font-size: 16px;
+}
+
 h1,
 h2,
 h3,
@@ -79,7 +84,9 @@ h6 {
 }
 
 h1,
-h2 {
+.h1,
+h2,
+.h2 {
   font-size: 48px;
 
   @include bp(large) {
@@ -87,7 +94,8 @@ h2 {
   }
 }
 
-h3 {
+h3,
+.h3 {
   font-size: 36px;
 
   @include bp(medium) {
@@ -95,7 +103,8 @@ h3 {
   }
 }
 
-h4 {
+h4,
+.h4 {
   font-size: 24px;
 
   @include bp(medium) {
@@ -103,7 +112,8 @@ h4 {
   }
 }
 
-h5 {
+h5,
+.h5 {
   font-size: 20px;
 
   @include bp(medium) {

@@ -83,6 +83,8 @@ export default function Hero({ slides, transition = 'fade' }) {
     [currentSlideIndex, preloadedAssets, slides],
   );
 
+  const TitleTag = currentSlide.titleTag[0] || 'h3';
+
   return (
     <div
       className={clsx(styles.hero, {
@@ -154,7 +156,9 @@ export default function Hero({ slides, transition = 'fade' }) {
 
       <Container>
         <div className={styles.content}>
-          <h3 className={styles.title}>{currentSlide.title}</h3>
+          <TitleTag className={clsx(styles.title, currentSlide.titleTagStyle)}>
+            {currentSlide.title}
+          </TitleTag>
           <div
             className={styles.description}
             dangerouslySetInnerHTML={{ __html: currentSlide.description }}

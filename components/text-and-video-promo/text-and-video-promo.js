@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import TextElement from '@components/text-element/text-element';
@@ -10,16 +12,20 @@ export default function TextAndImagePromo({
   linkText,
   linkUrl = '',
   title,
+  titleTag,
+  titleTagStyle,
   videoUrl,
 }) {
+  const TitleTag = titleTag[0] || 'h3';
+
   return (
     <Container>
       <div className={styles.promo}>
         <div className={styles.text}>
           {title && (
-            <h2 className={styles.title}>
+            <TitleTag className={clsx(styles.title, titleTagStyle)}>
               <TextElement text={title} />
-            </h2>
+            </TitleTag>
           )}
           {description && (
             <div
