@@ -17,7 +17,6 @@ export default function TextAndImagePromo({
   videoUrl,
 }) {
   const TitleTag = titleTag[0] || 'h3';
-  console.log(TitleTag);
 
   return (
     <Container>
