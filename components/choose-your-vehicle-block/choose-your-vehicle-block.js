@@ -350,6 +350,10 @@ export default function ChooseYourVehicleBlock({
     [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <div
       className={clsx(styles.wrapper, { [styles.isSticky]: isSticky })}
