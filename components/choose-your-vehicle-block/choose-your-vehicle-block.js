@@ -313,7 +313,7 @@ export default function ChooseYourVehicleBlock({
       const { height, width } = windowSize;
       const el = wrapperRef.current;
       const stickerEl = stickerRef.current;
-      const stickerHeight = stickerEl.clientHeight;
+      const stickerHeight = stickerEl?.clientHeight;
       let io;
       if (width && height && el) {
         const headerHeight =
