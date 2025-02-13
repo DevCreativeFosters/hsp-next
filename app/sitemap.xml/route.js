@@ -43,13 +43,37 @@ export async function GET() {
     const baseUrl = new URL(process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '')
       .origin;
 
+    // Fallback, basic sitemap
+    const staticRoutes = [
+      '',
+      'australian-made',
+      'contact-us',
+      'error-404',
+      'lifestyle',
+      'lifestyle/hsp-blog',
+      'lifestyle/hsp-celebrities',
+      'lifestyle/hsp-tv',
+      'products',
+      'store-locator',
+      'support',
+      'ute-builder',
+    ];
+
+    const sitemapEntries = staticRoutes
+      .map(route => {
+        const url = route === '' ? baseUrl : `${baseUrl}/${route}`;
+        return `  <url>
+    <loc>${url}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>${route === '' ? '1.0' : '0.8'}</priority>
+  </url>`;
+      })
+      .join('\n');
+
     const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${baseUrl}</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+${sitemapEntries}
 </urlset>`;
 
     return new Response(fallbackSitemap, {
