@@ -1,5 +1,3 @@
-import { headers } from 'next/headers';
-
 import { getGlobalOptions } from '@lib/api/get-global-options';
 
 export async function GET() {
@@ -30,7 +28,6 @@ export async function GET() {
       throw new Error('Invalid sitemap content');
     }
 
-    const headersList = headers();
     return new Response(sitemap, {
       headers: {
         'Cache-Control': 'public, max-age=3600',
