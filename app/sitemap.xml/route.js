@@ -43,7 +43,7 @@ export async function GET() {
       },
     });
 
-    const baseUrl = VERCEL_PROJECT_PRODUCTION_URL || '';
+    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL || '';
 
     // Fallback, basic sitemap
     const staticRoutes = [
