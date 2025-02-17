@@ -1,6 +1,5 @@
 const path = require('path');
 const globImporter = require('node-sass-glob-importer');
-const redirects = require('./lib/redirects');
 
 if (!process.env.NEXT_PUBLIC_WORDPRESS_API_URL) {
   throw new Error(`
@@ -57,11 +56,13 @@ module.exports = {
     ],
   },
   async redirects() {
-    return redirects.map(({ destination, permanent, source }) => ({
-      destination,
-      permanent: permanent ?? true,
-      source,
-    }));
+    return [
+      {
+        destination: '/store-locator',
+        permanent: true,
+        source: '/location/:slug*',
+      },
+    ];
   },
   sassOptions: {
     importer: globImporter(),

@@ -1,33 +1,31 @@
 import { NextResponse } from 'next/server';
 
-import { LOCAL_STORAGE_VEHICLE } from '@lib/local-storage';
+import { redirectsMiddleware } from '@lib/middleware-redirects';
 import routes from '@lib/routes';
 
-const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
-
 function getPathSegments(url) {
-  const path = typeof url === 'string' ? url : new URL(url).pathname;
-  return path?.split('/').filter(Boolean);
+  return url.pathname.split('/').filter(Boolean);
 }
 
-export async function middleware(request) {
-  const url = request.nextUrl.clone();
-  const pathSegments = getPathSegments(url);
-  const hspMyVehicle = request.cookies.get(COOKIE_SAVED_VEHICLE);
-
+function paginationMiddleware(request) {
   const routesWithPagination = [routes.blog(), routes.tv()];
+  const url = request.nextUrl;
+
+  const pathSegments = getPathSegments(url);
   const paginatedUrl = routesWithPagination
     .map(route => {
       const routeSegments = route.slice(1).split('/');
-      if (pathSegments.join().includes(routeSegments.join())) {
-        if (pathSegments.length === routeSegments.length + 1) {
-          const lastSegment = pathSegments.slice(-1)[0];
-          const isPagination = lastSegment.startsWith('page-');
-          if (isPagination) {
-            const pageNumber = lastSegment.split('page-')[1];
-            const searchParams = new URLSearchParams({ page: pageNumber });
-            return [`${url.origin}${route}`, searchParams.toString()].join('?');
-          }
+      if (
+        pathSegments.join().startsWith(routeSegments.join()) &&
+        pathSegments.length === routeSegments.length + 1
+      ) {
+        const lastSegment = pathSegments.slice(-1)[0];
+        const isPagination = lastSegment.startsWith('page-');
+
+        if (isPagination) {
+          const pageNumber = lastSegment.split('page-')[1];
+          const searchParams = new URLSearchParams({ page: pageNumber });
+          return [`${url.origin}${route}`, searchParams.toString()].join('?');
         }
       }
     })
@@ -36,15 +34,37 @@ export async function middleware(request) {
   if (paginatedUrl) {
     return NextResponse.rewrite(paginatedUrl);
   }
+}
+
+/**
+ * @param {import('next/server').NextRequest} request
+ * @returns {import('next/server').NextResponse}
+ */
+export async function middleware(request) {
+  const redirectsResponse = await redirectsMiddleware(request);
+
+  if (redirectsResponse) {
+    return redirectsResponse;
+  }
+
+  const paginationResponse = paginationMiddleware(request);
+
+  if (paginationResponse) {
+    return paginationResponse;
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    '/:category*/:make*/:model*/:variant*',
-    '/:path*',
-    '/lifestyle/hsp-blog/:path*', // this must match with routes.blog()
-    '/lifestyle/hsp-tv/:path*', // this must match with routes.tv()
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 };

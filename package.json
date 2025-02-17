@@ -16,6 +16,7 @@
     "@next/third-parties": "^14.2.13",
     "@sentry/nextjs": "^8",
     "@svgr/webpack": "^8.0.1",
+    "@vercel/functions": "^2.0.0",
     "apollo-upload-client": "^18.0.1",
     "can-autoplay": "^3.0.2",
     "clsx": "^2.0.0",
@@ -62,6 +63,7 @@
     "prettier": "^3.1.1",
     "sass": "^1.64.2",
     "stylelint": "^15.10.2",
-    "stylelint-config-standard-scss": "^10.0.0"
+    "stylelint-config-standard-scss": "^10.0.0",
+    "typescript": "^5.7.3"
   }
 }
