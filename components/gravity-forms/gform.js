@@ -14,6 +14,7 @@ import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 
 import useGravityForm from '@hooks/useGravityForm';
 
+import { WORDPRESS_API_URL } from '@lib/config';
 import { updateGtagUserData } from '@lib/gtag-user-data';
 
 import Button from '@components/button/button';
@@ -79,7 +80,7 @@ export default function GForm({
     return new ApolloClient({
       cache: new InMemoryCache(),
       link: createUploadLink({
-        uri: process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
+        uri: WORDPRESS_API_URL,
       }),
     });
   }, []);
@@ -138,19 +139,15 @@ export default function GForm({
       });
   };
 
-  useImperativeHandle(
-    innerRef,
-    () => {
-      return {
-        handleSubmit: () => {
-          if (submitRef.current) {
-            submitRef.current.click();
-          }
-        },
-      };
-    },
-    [],
-  );
+  useImperativeHandle(innerRef, () => {
+    return {
+      handleSubmit: () => {
+        if (submitRef.current) {
+          submitRef.current.click();
+        }
+      },
+    };
+  }, []);
 
   const isTitleVisible = attributes.title && form.title;
 

@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 
+import { WORDPRESS_API_URL } from '@lib/config';
+
 function getRedirectsUrl() {
-  const apiUrl = new URL(process.env.NEXT_PUBLIC_WORDPRESS_API_URL);
+  const apiUrl = new URL(WORDPRESS_API_URL);
   apiUrl.pathname = '/wp-content/uploads/redirects.json';
   apiUrl.search = `v=${Date.now()}`;
   return apiUrl.toString();

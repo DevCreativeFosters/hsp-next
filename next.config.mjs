@@ -1,19 +1,20 @@
-const path = require('path');
-const globImporter = require('node-sass-glob-importer');
+import { withSentryConfig } from '@sentry/nextjs';
+import globImporter from 'node-sass-glob-importer';
+import path from 'path';
 
-if (!process.env.NEXT_PUBLIC_WORDPRESS_API_URL) {
+import { WORDPRESS_API_URL } from './lib/config.mjs';
+
+if (!WORDPRESS_API_URL) {
   throw new Error(`
     Please provide a valid WordPress instance URL.
     Add to your environment variables NEXT_PUBLIC_WORDPRESS_API_URL.
   `);
 }
 
-const wpImageDomain = process.env.NEXT_PUBLIC_WORDPRESS_API_URL.match(
-  /(?!(w+)\.)\w*(?:\w+\.)+\w+/,
-)[0];
+const wpImageDomain = WORDPRESS_API_URL.match(/(?!(w+)\.)\w*(?:\w+\.)+\w+/)[0];
 
 /** @type {import('next').NextConfig} */
-module.exports = {
+const config = {
   experimental: {
     // reduce number of workers when
     // building static pages
@@ -66,7 +67,7 @@ module.exports = {
   },
   sassOptions: {
     importer: globImporter(),
-    includePaths: [path.join(__dirname, 'styles')],
+    includePaths: [path.join(import.meta.dirname, 'styles')],
     prependData: `@import "_common.scss";`,
   },
 
@@ -81,10 +82,7 @@ module.exports = {
 };
 
 // Injected content via Sentry wizard below
-
-const { withSentryConfig } = require('@sentry/nextjs');
-
-module.exports = withSentryConfig(module.exports, {
+export default withSentryConfig(config, {
   // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
   // See the following for more information:
   // https://docs.sentry.io/product/crons/

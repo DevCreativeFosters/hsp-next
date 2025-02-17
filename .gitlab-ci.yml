@@ -1,5 +1,12 @@
 default:
   image: node:20.14.0
+  artifacts:
+    paths:
+      - .vercel/output
+    expire_in: 1 month
+
+variables:
+  NEXT_PUBLIC_BRANCH: $CI_COMMIT_REF_SLUG
 
 deploy_preview:
   stage: deploy
