@@ -1,12 +1,10 @@
 export const revalidate = 0;
 
 export default async function robots() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/robots.txt`,
-    {
-      cache: 'no-store',
-    },
-  );
+  const baseUrl = VERCEL_PROJECT_PRODUCTION_URL || '';
+  const res = await fetch(`https://${baseUrl}/robots.txt`, {
+    cache: 'no-store',
+  });
 
   const text = await res.text();
 
