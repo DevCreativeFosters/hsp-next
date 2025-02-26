@@ -5,10 +5,23 @@ import Tile from '@components/tile/tile';
 
 import styles from './tiles.module.scss';
 
-export default function Tiles({ buttons, description, tiles, title }) {
+export default function Tiles({
+  buttons,
+  description,
+  tiles,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   return (
     <div className={styles.container}>
-      <SectionIntro description={description} fitInline title={title}>
+      <SectionIntro
+        description={description}
+        fitInline
+        title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
         <SectionButtons buttons={buttons} />
       </SectionIntro>
 

@@ -1,15 +1,31 @@
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './promos-with-two-videos.module.scss';
 import VideoCard from './video-card';
 
 export default function PromoWithTwoVideos({ data }) {
-  const { accessories, buttonLink, description, sectionTitle } = data;
+  const {
+    accessories,
+    buttonLink,
+    description,
+    sectionTitle,
+    titleTag,
+    titleTagStyle,
+  } = data;
 
   return (
     <Container>
-      {sectionTitle && <h2 className={styles.title}>{sectionTitle}</h2>}
+      {sectionTitle && (
+        <DynamicTitle
+          className={styles.title}
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          {sectionTitle}
+        </DynamicTitle>
+      )}
       <div className={styles.informationSection}>
         {description && (
           <div className={styles.mainInfo}>

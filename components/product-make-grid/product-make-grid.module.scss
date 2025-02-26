@@ -1,0 +1,21 @@
+.container {
+  padding-block: 24px;
+}
+
+.title {
+  margin-bottom: 16px;
+}
+
+.description {
+  margin-bottom: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
+  gap: 16px;
+
+  @include bp(medium-large) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

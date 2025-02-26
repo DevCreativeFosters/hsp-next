@@ -15,7 +15,14 @@ import Tile from '@components/tile/tile';
 
 import styles from './posts-carousel.module.scss';
 
-export default function PostsCarousel({ button, description, posts, title }) {
+export default function PostsCarousel({
+  button,
+  description,
+  posts,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const isMobile = useIsMobile();
   const swiperRef = useRef(null);
 
@@ -65,7 +72,13 @@ export default function PostsCarousel({ button, description, posts, title }) {
 
   return (
     <Container collapseMargin>
-      <SectionIntro description={description} fitInline title={title}>
+      <SectionIntro
+        description={description}
+        fitInline
+        title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
         <SectionButtons>
           <div className={styles.actionButtons}>
             {groupedPosts.length > 1 && (

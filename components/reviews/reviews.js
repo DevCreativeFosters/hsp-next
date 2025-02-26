@@ -64,6 +64,8 @@ export default function Reviews({ data }) {
         description={data?.description}
         fitInline
         title={data?.title}
+        titleTag={data?.titleTag}
+        titleTagStyle={data?.titleTagStyle}
       >
         <SectionButtons>
           <div className={styles.actionButtons}>

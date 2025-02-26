@@ -16,7 +16,14 @@ import SectionIntro from '@components/section-intro/section-intro';
 
 import styles from './faq.module.scss';
 
-export default function FAQ({ buttons, description, questions, title }) {
+export default function FAQ({
+  buttons,
+  description,
+  questions,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const ExpandIcon = getIcon('expand-more-neutral');
   const isMobile = useIsMobile();
 
@@ -59,7 +66,13 @@ export default function FAQ({ buttons, description, questions, title }) {
   return (
     <div className={styles.layout}>
       <div className={styles.intro}>
-        <SectionIntro description={description} noMargin title={title} />
+        <SectionIntro
+          description={description}
+          noMargin
+          title={title}
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        />
       </div>
 
       <div className={styles.buttonsContainer}>

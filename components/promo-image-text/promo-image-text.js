@@ -6,10 +6,17 @@ import { useIsMediumWidth } from '@hooks/useIsMediumWidth';
 import { useIsMobile } from '@hooks/useIsMobile';
 
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './promo-image-text.module.scss';
 
-export default function PromoImageText({ description, image, title }) {
+export default function PromoImageText({
+  description,
+  image,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
   return (
@@ -25,7 +32,15 @@ export default function PromoImageText({ description, image, title }) {
           />
         </div>
         <div className={styles.text}>
-          <h2 className={styles.title}>{title}</h2>
+          {title && (
+            <DynamicTitle
+              className={styles.title}
+              titleTag={titleTag}
+              titleTagStyle={titleTagStyle}
+            >
+              {title}
+            </DynamicTitle>
+          )}
           <div
             className={styles.description}
             dangerouslySetInnerHTML={{ __html: description }}

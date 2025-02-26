@@ -1,7 +1,6 @@
-import clsx from 'clsx';
-
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
@@ -16,16 +15,18 @@ export default function TextAndImagePromo({
   titleTagStyle,
   videoUrl,
 }) {
-  const TitleTag = titleTag[0] || 'h3';
-
   return (
     <Container>
       <div className={styles.promo}>
         <div className={styles.text}>
           {title && (
-            <TitleTag className={clsx(styles.title, titleTagStyle)}>
+            <DynamicTitle
+              className={styles.title}
+              titleTag={titleTag}
+              titleTagStyle={titleTagStyle}
+            >
               <TextElement text={title} />
-            </TitleTag>
+            </DynamicTitle>
           )}
           {description && (
             <div

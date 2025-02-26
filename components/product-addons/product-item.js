@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,6 +10,7 @@ import styles from './product-item.module.scss';
 
 export default function ProductItem({
   category,
+  className,
   imageUrl,
   name,
   price,
@@ -16,7 +18,7 @@ export default function ProductItem({
 }) {
   const LinkOrDiv = url ? Link : 'div';
   return (
-    <LinkOrDiv className={styles.product} href={url}>
+    <LinkOrDiv className={clsx(styles.product, className)} href={url}>
       <div className={styles.imageContainer}>
         {imageUrl && (
           <Image

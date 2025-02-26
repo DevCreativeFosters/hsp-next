@@ -8,6 +8,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import Button from '@components/button/button';
 import Carousel from '@components/carousel/carousel';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import Feature from './feature';
 import styles from './features.module.scss';
@@ -17,6 +18,8 @@ export default function Features({
   description: leadingDescription,
   features,
   title: leadingTitle,
+  titleTag,
+  titleTagStyle,
   video,
 }) {
   const videoRef = useRef(null);
@@ -49,7 +52,9 @@ export default function Features({
     <div className={styles.container}>
       <div className={styles.leadingFeature}>
         {leadingTitle && (
-          <h2 className={styles.leadingTitle}>{leadingTitle}</h2>
+          <DynamicTitle titleTag={titleTag} titleTagStyle={titleTagStyle}>
+            {leadingTitle}
+          </DynamicTitle>
         )}
         {leadingDescription && (
           <div

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 
 import styles from './section-intro.module.scss';
@@ -13,6 +14,8 @@ export default function SectionIntro({
   noMargin,
   noTopMargin,
   title,
+  titleTag,
+  titleTagStyle,
 }) {
   return (
     <div
@@ -25,7 +28,15 @@ export default function SectionIntro({
         [styles.noMargin]: noMargin,
       })}
     >
-      {title && <h2 className={styles.title}>{title}</h2>}
+      {title && (
+        <DynamicTitle
+          className={styles.title}
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          {title}
+        </DynamicTitle>
+      )}
       {description && (
         <TextElement className={styles.description} text={description} />
       )}

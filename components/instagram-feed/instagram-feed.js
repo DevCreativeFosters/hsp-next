@@ -16,7 +16,12 @@ import InstagramTile from './instagram-tile';
 
 const IG_USER_ID = process.env.NEXT_PUBLIC_IG_USER_ID;
 
-export default function InstagramFeed({ description, title }) {
+export default function InstagramFeed({
+  description,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const [igFeed, setIgFeed] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [displayError, setDisplayError] = useState(false);
@@ -86,6 +91,8 @@ export default function InstagramFeed({ description, title }) {
           narrowDescription
           noBottomMargin
           title={title}
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
         />
         <InstagramFeedSocialMedia socialMenu={socialMedia} />
       </div>

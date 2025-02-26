@@ -7,6 +7,7 @@ import styles from './pagination.module.scss';
 export default function Pagination({
   current = 1,
   maxPagesToShow = 3,
+  onClick,
   perPage,
   total,
   urlBase,
@@ -63,7 +64,9 @@ export default function Pagination({
     <div className={styles.pagination}>
       <Button
         disabled={current === 1}
-        href={getPaginatedUrl(current - 1)}
+        {...(onClick
+          ? { onClick: () => onClick(current - 1) }
+          : { href: getPaginatedUrl(current - 1) })}
         rightIcon="arrow-previous"
         size="mixed"
         variant="secondary"
@@ -80,7 +83,9 @@ export default function Pagination({
         return (
           <Button
             disabled={!isNumber || isCurrent}
-            href={getPaginatedUrl(value)}
+            {...(onClick
+              ? { onClick: () => onClick(value) }
+              : { href: getPaginatedUrl(value) })}
             key={`${value}-${index}`}
             size="mixed"
             variant={variant}
@@ -92,7 +97,9 @@ export default function Pagination({
 
       <Button
         disabled={current === totalPages}
-        href={getPaginatedUrl(current + 1)}
+        {...(onClick
+          ? { onClick: () => onClick(current + 1) }
+          : { href: getPaginatedUrl(current + 1) })}
         rightIcon="arrow-next"
         size="mixed"
         variant="secondary"

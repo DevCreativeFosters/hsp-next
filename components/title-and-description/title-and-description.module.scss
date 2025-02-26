@@ -20,15 +20,6 @@
 }
 
 .title {
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  line-height: 1.33;
-  font-weight: 600;
-
-  @include bp(large) {
-    font-size: 64px;
-  }
-
   .section.stacked-centered & {
     @include bp(large) {
       text-align: center;

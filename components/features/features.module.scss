@@ -44,20 +44,6 @@
   }
 }
 
-.leadingTitle {
-  font-family: var(--font-secondary);
-  line-height: 1.3;
-
-  @include bp(medium) {
-    font-size: 48px;
-  }
-
-  @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-  }
-}
-
 .leadingDescription {
   font-size: 20px;
   line-height: 1.4;

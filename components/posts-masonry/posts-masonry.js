@@ -11,12 +11,25 @@ import Tile from '@components/tile/tile';
 
 import styles from './posts-masonry.module.scss';
 
-export default function PostsMasonry({ button, description, posts, title }) {
+export default function PostsMasonry({
+  button,
+  description,
+  posts,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const isMobile = useIsMobile();
 
   return (
     <Container collapseMargin>
-      <SectionIntro description={description} fitInline title={title}>
+      <SectionIntro
+        description={description}
+        fitInline
+        title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
         {button && !isMobile && (
           <SectionButtons>
             <Button href={button.url} variant="primary">

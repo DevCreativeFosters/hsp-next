@@ -1,5 +1,6 @@
 'use client';
 
+
 import routes from '@lib/routes';
 
 import SectionButtons from '@components/section-buttons/section-buttons';
@@ -15,6 +16,8 @@ export default function Lifestyle({
   featured,
   posts,
   title,
+  titleTag,
+  titleTagStyle,
 }) {
   const featuredNormalized = {
     className: 'featured',
@@ -46,7 +49,13 @@ export default function Lifestyle({
 
   return (
     <>
-      <SectionIntro description={description} noTopMargin title={title}>
+      <SectionIntro
+        description={description}
+        noTopMargin
+        title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
         <SectionButtons buttons={buttons} />
       </SectionIntro>
 

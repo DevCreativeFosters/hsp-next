@@ -55,10 +55,6 @@
 }
 
 .title {
-  font-family: var(--font-secondary);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.33;
   width: 100%;
   text-align: left;
   padding-inline: 24px;
@@ -68,7 +64,6 @@
   }
 
   @include bp(large) {
-    font-size: 36px;
     text-align: center;
     padding-inline: 0;
   }

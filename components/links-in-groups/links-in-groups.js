@@ -1,11 +1,19 @@
 import clsx from 'clsx';
 
 import Button from '@components/button/button';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import SectionIntro from '@components/section-intro/section-intro';
 
 import styles from './links-in-groups.module.scss';
 
-export default function LinksInGroups({ description, groups, title, variant }) {
+export default function LinksInGroups({
+  description,
+  groups,
+  title,
+  titleTag,
+  titleTagStyle,
+  variant,
+}) {
   const sectionClassNames = clsx(styles.section, {
     [styles.sidebar]: variant === 'sidebar',
   });
@@ -13,12 +21,27 @@ export default function LinksInGroups({ description, groups, title, variant }) {
   return (
     <section className={sectionClassNames}>
       {title && description && (
-        <SectionIntro description={description} fitInline title={title} />
+        <SectionIntro
+          description={description}
+          fitInline
+          title={title}
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        />
       )}
       <div className={styles.groups}>
-        {groups.map(({ links, title }, index) => (
+        {groups.map(({ links, title, titleTag, titleTagStyle }, index) => (
           <div className={styles.group} key={index}>
-            <h3 className={styles.title}>{title}</h3>
+            {title && (
+              <DynamicTitle
+                className={styles.title}
+                defaultTag="h3"
+                titleTag={titleTag}
+                titleTagStyle={titleTagStyle}
+              >
+                {title}
+              </DynamicTitle>
+            )}
             {links.length > 0 && (
               <ul className={styles.list}>
                 {links.map(({ link }, index) => {

@@ -6,6 +6,7 @@ import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './video-background-hero.module.scss';
 
@@ -13,10 +14,11 @@ export default function VideoBackgroundHero({
   description,
   link,
   title,
+  titleTag,
+  titleTagStyle,
   videoUrl,
 }) {
   const videoRef = useRef(null);
-
   usePlaybackOnScroll(videoRef);
 
   return (
@@ -28,7 +30,16 @@ export default function VideoBackgroundHero({
       <div className={styles.backgroundGradient} />
       <Container>
         <div className={styles.content}>
-          <h1 className={styles.title}>{title}</h1>
+          {title && (
+            <DynamicTitle
+              className={styles.title}
+              defaultTag="h1"
+              titleTag={titleTag}
+              titleTagStyle={titleTagStyle}
+            >
+              {title}
+            </DynamicTitle>
+          )}
           <div
             className={styles.description}
             dangerouslySetInnerHTML={{ __html: description }}

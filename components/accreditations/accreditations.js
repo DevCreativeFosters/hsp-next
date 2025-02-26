@@ -1,4 +1,5 @@
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './accreditations.module.scss';
 import Certification from './certification';
@@ -8,12 +9,22 @@ export default function Accreditations({
   description,
   group,
   title,
+  titleTag,
+  titleTagStyle,
 }) {
   return (
     <Container>
       <div className={styles.wrapper}>
         <div className={styles.intro}>
-          {title && <h2 className={styles.title}>{title}</h2>}
+          {title && (
+            <DynamicTitle
+              className={styles.title}
+              titleTag={titleTag}
+              titleTagStyle={titleTagStyle}
+            >
+              {title}
+            </DynamicTitle>
+          )}
           {description && (
             <div
               className={styles.description}

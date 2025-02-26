@@ -9,6 +9,8 @@ export default function VideoCarousel({
   context,
   description,
   title,
+  titleTag,
+  titleTagStyle,
   videos,
 }) {
   return (
@@ -18,6 +20,8 @@ export default function VideoCarousel({
         fitInline
         narrowDescription
         title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
       >
         <SectionButtons buttons={buttons} />
       </SectionIntro>

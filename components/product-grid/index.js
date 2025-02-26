@@ -3,14 +3,28 @@ import Link from 'next/link';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './product-grid.module.scss';
 
-export default function ProductGrid({ products, title }) {
+export default function ProductGrid({
+  products,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   return (
     <Container collapseMargin>
       <div className={styles.container}>
-        {title && <h2 className={styles.title}>{title}</h2>}
+        {title && (
+          <DynamicTitle
+            className={styles.title}
+            titleTag={titleTag}
+            titleTagStyle={titleTagStyle}
+          >
+            {title}
+          </DynamicTitle>
+        )}
         <div className={styles.grid}>
           {products?.map((product, index) => {
             return (

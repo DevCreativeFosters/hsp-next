@@ -9,6 +9,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import ArrowLeft from '@assets/images/arrow-left.svg';
 import ArrowRight from '@assets/images/arrow-right.svg';
@@ -83,8 +84,6 @@ export default function Hero({ slides, transition = 'fade' }) {
     [currentSlideIndex, preloadedAssets, slides],
   );
 
-  const TitleTag = currentSlide.titleTag[0] || 'h3';
-
   return (
     <div
       className={clsx(styles.hero, {
@@ -156,9 +155,13 @@ export default function Hero({ slides, transition = 'fade' }) {
 
       <Container>
         <div className={styles.content}>
-          <TitleTag className={clsx(styles.title, currentSlide.titleTagStyle)}>
+          <DynamicTitle
+            className={styles.title}
+            titleTag={currentSlide.titleTag}
+            titleTagStyle={currentSlide.titleTagStyle}
+          >
             {currentSlide.title}
-          </TitleTag>
+          </DynamicTitle>
           <div
             className={styles.description}
             dangerouslySetInnerHTML={{ __html: currentSlide.description }}

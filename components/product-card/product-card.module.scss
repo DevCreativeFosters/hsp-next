@@ -1,0 +1,33 @@
+.product {
+  padding: 8px;
+  border: 2px solid var(--color-white-20);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+
+  @include bp(large) {
+    padding: 20px;
+  }
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 147/112;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+}
+
+.name {
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-block: 16px 0;
+}
+
+.price {
+  font-size: 14px;
+  color: var(--color-white-80);
+  line-height: 1.5;
+  margin-top: 16px;
+}

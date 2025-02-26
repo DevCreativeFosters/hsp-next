@@ -9,12 +9,19 @@ import { useIsMediumWidth } from '@hooks/useIsMediumWidth';
 import { useIsMobile } from '@hooks/useIsMobile';
 
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
 import styles from './feature-panels.module.scss';
 
-export default function FeaturePanels({ alignment, panels, title }) {
+export default function FeaturePanels({
+  alignment,
+  panels,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const [activeTab, setActiveTab] = useState(0);
   const isMobile = useIsMobile();
   const isMediumWidth = useIsMediumWidth();
@@ -22,10 +29,13 @@ export default function FeaturePanels({ alignment, panels, title }) {
   return (
     <Container className={styles.container}>
       {title && (
-        <h2
+        <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
-          dangerouslySetInnerHTML={{ __html: title }}
-        />
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          <div dangerouslySetInnerHTML={{ __html: title }} />
+        </DynamicTitle>
       )}
 
       {panels && panels.length > 0 && (

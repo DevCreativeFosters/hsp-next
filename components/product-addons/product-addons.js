@@ -15,7 +15,13 @@ import TileCarousel from '@components/tile-carousel/tile-carousel';
 
 import styles from './product-addons.module.scss';
 
-export default function ProductAddons({ description, products, title }) {
+export default function ProductAddons({
+  description,
+  products,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
 
@@ -79,7 +85,12 @@ export default function ProductAddons({ description, products, title }) {
 
   return (
     <Container collapseMargin>
-      <SectionIntro description={description} title={title}>
+      <SectionIntro
+        description={description}
+        title={title}
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
         {products.length > 4 && (
           <SectionButtons>
             <div className={styles.buttons}>

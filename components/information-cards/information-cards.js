@@ -2,16 +2,29 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 
 import styles from './information-cards.module.scss';
 
-export default function InformationCards({ cards }) {
+export default function InformationCards({ cards, titleTag, titleTagStyle }) {
   return (
     <Container>
       <div className={styles.cards}>
         {cards.map(
-          ({ backgroundImage, description, gap, icon, size, title }, index) => {
+          (
+            {
+              backgroundImage,
+              description,
+              gap,
+              icon,
+              size,
+              title,
+              titleTag,
+              titleTagStyle,
+            },
+            index,
+          ) => {
             const arr = gap > 0 ? new Array(gap).fill(<br />) : [];
             const gapFragment = arr.map(el => el);
             return (
@@ -42,7 +55,16 @@ export default function InformationCards({ cards }) {
                     />
                   </div>
                 )}
-                {title && <h3 className={styles.title}>{title}</h3>}
+                {title && (
+                  <DynamicTitle
+                    className={styles.title}
+                    defaultTag="h3"
+                    titleTag={titleTag}
+                    titleTagStyle={titleTagStyle}
+                  >
+                    {title}
+                  </DynamicTitle>
+                )}
                 <div className={styles.spacer} />
                 {gap > 0 && <div className={styles.gap}>{gapFragment}</div>}
 

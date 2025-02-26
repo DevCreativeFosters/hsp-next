@@ -1,14 +1,29 @@
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import Card from './card';
 import styles from './intro-and-cards.module.scss';
 
-export default function IntroAndCards({ cards, description, title }) {
+export default function IntroAndCards({
+  cards,
+  description,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   return (
     <Container>
       <div className={styles.container}>
         <div className={styles.intro}>
-          {title && <h2 className={styles.title}>{title}</h2>}
+          {title && (
+            <DynamicTitle
+              className={styles.title}
+              titleTag={titleTag}
+              titleTagStyle={titleTagStyle}
+            >
+              {title}
+            </DynamicTitle>
+          )}
           {description && (
             <div
               className={styles.description}

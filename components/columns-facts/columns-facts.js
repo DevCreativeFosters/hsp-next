@@ -8,6 +8,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
@@ -19,6 +20,8 @@ export default function ColumnsFacts({
   image,
   media,
   title,
+  titleTag,
+  titleTagStyle,
   videoFile,
 }) {
   const isMobile = useIsMobile();
@@ -27,10 +30,13 @@ export default function ColumnsFacts({
   return (
     <Container className={styles.container}>
       {title && (
-        <h2
+        <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
-          dangerouslySetInnerHTML={{ __html: title }}
-        />
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          <div dangerouslySetInnerHTML={{ __html: title }} />
+        </DynamicTitle>
       )}
 
       <div className={styles.media}>

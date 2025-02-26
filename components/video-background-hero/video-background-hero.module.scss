@@ -42,14 +42,9 @@
 
 .title {
   color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  line-height: 1.33;
   margin-bottom: 16px;
 
   @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
     margin-bottom: 48px;
   }
 }
