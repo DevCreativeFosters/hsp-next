@@ -47,7 +47,16 @@ export default function Accreditations({
 
         {group && (
           <div className={styles.info}>
-            <h3 className={styles.heading}>{group.title}</h3>
+            {group.title && (
+              <DynamicTitle
+                className={styles.heading}
+                defaultTag="h3"
+                titleTag={group.titleTag}
+                titleTagStyle={group.titleTagStyle}
+              >
+                {group.title}
+              </DynamicTitle>
+            )}
             <div
               className={styles.content}
               dangerouslySetInnerHTML={{ __html: group.text }}

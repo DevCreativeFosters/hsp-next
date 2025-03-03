@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { formatPrice } from '@lib/helpers';
 
 import { slideImageSizes } from '@components/builder/products-carousel';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
 import styles from './product-card.module.scss';
 
 export default function ProductCard({ product }) {
   const productLink = product.link?.url || '';
   const productTitle = product.title;
+  const productTitleTag = product.titleTag;
+  const productTitleStyle = product.titleTagStyle;
   const productStartingPrice = product.startingPrice;
   const productImage = product.productImage?.node?.sourceUrl;
 
@@ -24,7 +27,16 @@ export default function ProductCard({ product }) {
           width={slideImageSizes.width}
         />
       </div>
-      {productTitle && <p className={styles.productName}>{productTitle}</p>}
+      {productTitle && (
+        <DynamicTitle
+          className={styles.productName}
+          defaultTag="p"
+          titleTag={productTitleTag}
+          titleTagStyle={productTitleStyle}
+        >
+          {productTitle}
+        </DynamicTitle>
+      )}
       {productStartingPrice && (
         <p className={styles.productStartingPrice}>
           Starting from{' '}

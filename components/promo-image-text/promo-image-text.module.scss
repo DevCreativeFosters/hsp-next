@@ -57,14 +57,6 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  line-height: 1.33;
-
-  @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-  }
 }
 
 .description {

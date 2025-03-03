@@ -37,7 +37,12 @@ export default function ProductGrid({
                     size="small"
                     variant="tertiary"
                   >
-                    {product.title}
+                    <DynamicTitle
+                      titleTag={product.titleTag}
+                      titleTagStyle={product.titleTagStyle}
+                    >
+                      {product.title}
+                    </DynamicTitle>
                   </Button>
                 </div>
                 <Link
