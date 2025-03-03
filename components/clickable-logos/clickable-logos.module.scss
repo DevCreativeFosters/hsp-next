@@ -29,12 +29,18 @@
 }
 
 .logoItem {
-  width: 103px;
-  height: 77.5px;
+  flex: 0 0 calc((100% - 32px) / 3);
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 103/77.5;
+
+  @include bp(small) {
+    flex: 0 0 calc((100% - 48px) / 4);
+  }
 
   @include bp(medium) {
-    width: 192px;
-    height: 144px;
+    flex: 0 0 calc((100% - 96px) / 5);
+    aspect-ratio: 192/144;
   }
 }
 
@@ -59,5 +65,10 @@
 .logo {
   max-width: 100%;
   height: auto;
+  max-height: 66px;
   object-fit: contain;
+
+  @include bp(medium) {
+    max-height: 130px;
+  }
 }
