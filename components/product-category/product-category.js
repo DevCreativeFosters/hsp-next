@@ -9,7 +9,12 @@ import TitleAndDescription from '@components/title-and-description/title-and-des
 import styles from './product-category.module.scss';
 
 export default function ProductCategory({ category }) {
-  const subCategories = category?.children?.nodes || [];
+  const subCategories = (category?.children?.nodes || []).filter(
+    child =>
+      !child.mainCategoryDetails
+        ?.dontCreateL1AndL2PageNorFeatureInTheProductsDropdownAndPage,
+  );
+
   const ArrowIcon = getIcon('arrow-forward');
   return (
     <div className={styles.productCategory}>

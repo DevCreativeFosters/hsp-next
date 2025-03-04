@@ -2,7 +2,7 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
-import styles from '../../app/[slug]/page.module.scss';
+import styles from '../../app/[...segments]/_product-category-or-dynamic-page/page.module.scss';
 
 export default async function ContentBlocksPage({
   blocks,

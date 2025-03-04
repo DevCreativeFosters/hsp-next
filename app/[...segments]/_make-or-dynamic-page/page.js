@@ -4,7 +4,6 @@ import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
-import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
@@ -14,7 +13,6 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -25,7 +23,7 @@ import ProductCompatibilityPopup from '@components/product-compatibility-popup';
 import ProductHero from '@components/product-hero';
 import ProductNotFound from '@components/product-not-found/product-not-found';
 
-import styles from '../page.module.scss';
+import styles from '../_product-category-or-dynamic-page/page.module.scss';
 
 export async function generateMetadata({ params }) {
   if (!params?.makeSlug) {
@@ -212,18 +210,12 @@ export default async function CategoryPage({ params }) {
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
-
   return (
     <Layout title="Product">
       <Container>
         <Suspense fallback={null}>
           <div className={styles.breadcrumbs}>
-            <BreadcrumbsProduct
-              categories={categories}
-              currentProduct={currentProduct}
-            />
+            <BreadcrumbsProduct currentProduct={currentProduct} />
           </div>
           <ProductCompatibilityPopup />
           <ProductHero
@@ -258,8 +250,4 @@ export default async function CategoryPage({ params }) {
           ))}
     </Layout>
   );
-}
-
-export async function generateStaticParams() {
-  return [];
 }

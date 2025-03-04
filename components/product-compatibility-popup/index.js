@@ -31,6 +31,7 @@ export default function ProductCompatibilityPopup() {
     checkingProductCompatibility,
     enteredProductPageRef,
     isProductCompatible,
+    isProductPageWithoutMakeAndModel,
     maker,
     model,
     popupOpen,
@@ -43,11 +44,12 @@ export default function ProductCompatibilityPopup() {
     const modelSlug = getValueOrSlug(model);
 
     return (
-      pathParts.length >= 3 &&
-      pathParts[1] === makerSlug &&
-      pathParts[2] === modelSlug
+      isProductPageWithoutMakeAndModel ||
+      (pathParts.length >= 3 &&
+        pathParts[1] === makerSlug &&
+        pathParts[2] === modelSlug)
     );
-  }, [maker, model, pathname]);
+  }, [isProductPageWithoutMakeAndModel, maker, model, pathname]);
 
   useEffect(
     function updateProductRedirectRoute() {
@@ -141,6 +143,8 @@ export default function ProductCompatibilityPopup() {
   );
 
   useEffect(function clearOnReload() {
+    // TODO: alternative to localStorage?
+
     const clearLocalStorage = () => {
       localStorage.removeItem(LOCAL_STORAGE_KEY);
     };

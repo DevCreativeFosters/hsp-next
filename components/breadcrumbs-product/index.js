@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -18,9 +18,13 @@ const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
 
 export default function BreadcrumbsProduct({ currentProduct }) {
   const pathname = usePathname();
-  const params = useParams();
   const router = useRouter();
-  const { makeSlug, modelSlug, slug } = params;
+  const slug = currentProduct.mainCategory?.value;
+  const makeSlug = currentProduct.make?.value;
+  const modelSlug = currentProduct.model?.value;
+  const isWithoutMakeAndModel =
+    currentProduct.mainCategory?.isWithoutMakeAndModel;
+
   const {
     enteredProductPageRef,
     isProductCompatible,
@@ -47,7 +51,7 @@ export default function BreadcrumbsProduct({ currentProduct }) {
       }
 
       // we're on the PDP already
-      if (slug && modelSlug && makeSlug) {
+      if (slug && ((modelSlug && makeSlug) || isWithoutMakeAndModel)) {
         return;
       }
 

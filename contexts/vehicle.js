@@ -23,7 +23,10 @@ import { STEP_TITLES } from '@components/builder/builder';
 
 const VehicleContext = createContext();
 
-export const VehicleProvider = ({ children }) => {
+export const VehicleProvider = ({
+  children,
+  isProductPageWithoutMakeAndModel,
+}) => {
   const router = useRouter();
   const params = useParams();
   const [covers, setCovers] = useState([]);
@@ -217,7 +220,9 @@ export const VehicleProvider = ({ children }) => {
         handleVehicleReset,
         headerWidgetLoading,
         isPopupFirstVisit,
-        isProductCompatible,
+        isProductCompatible:
+          isProductPageWithoutMakeAndModel || isProductCompatible,
+        isProductPageWithoutMakeAndModel,
         maker,
         model,
         popupOpen,

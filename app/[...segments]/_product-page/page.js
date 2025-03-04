@@ -4,7 +4,6 @@ import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
-import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
@@ -17,7 +16,6 @@ import { getProductSeo } from '@lib/api/get-product-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -33,17 +31,17 @@ import PageClientSidePartial from './page-client-side-partial';
 import styles from './page.module.scss';
 
 export async function generateMetadata({ params }) {
-  if (!params?.slug || !params?.makeSlug || !params?.modelSlug) {
+  if (!params?.slug) {
     return;
   }
 
   const categorySlug = params.slug;
   const makeSlug = params.makeSlug;
-  const modelSlug = params.modelSlug[0];
+  const modelSlug = params.modelSlug;
 
   let data = await getProductSeo(categorySlug, makeSlug, modelSlug);
 
-  if (Object.keys(data).length === 0) {
+  if (Object.keys(data).length === 0 && modelSlug && makeSlug) {
     data = await getMakeModelSeo(modelSlug);
   }
 
@@ -55,11 +53,15 @@ export async function generateMetadata({ params }) {
 
 export default async function Product({ params, searchParams }) {
   const { isEnabled: isDraftEnabled } = draftMode();
+  const hasMakeAndModel = !!params.makeSlug;
+  const isWithoutMakeAndModel = !hasMakeAndModel;
   let firstMatchedProduct = null;
   let modelSlug = params.modelSlug;
+  let variantSlug = params.variantSlug;
 
-  if (isDraftEnabled) {
-    const [model, id] = decodeURIComponent(modelSlug[0]).split(':');
+  // TODO: draft related logic is not implemented for products without make and model
+  if (hasMakeAndModel && isDraftEnabled) {
+    const [model, id] = decodeURIComponent(modelSlug).split(':');
     const [asPreview, databaseId] = await resolvePreview(id, true, 'product');
 
     modelSlug = [model];
@@ -78,8 +80,8 @@ export default async function Product({ params, searchParams }) {
   const makeSlug = params.makeSlug;
   const mainCategory = await getMainProductCategory(slug);
   const mainCategoryDetails = mainCategory?.mainCategoryDetails;
-  const make = await getMake(makeSlug);
-  const makes = await getAllMakes();
+  const make = hasMakeAndModel ? await getMake(makeSlug) : null;
+  const makes = hasMakeAndModel ? await getAllMakes() : null;
   const details = make?.detailsFields?.details;
   const filteredData = details?.filter(
     data => data.relatedProductCategory?.[0]?.slug === slug,
@@ -138,6 +140,7 @@ export default async function Product({ params, searchParams }) {
 
   const currentProduct = {
     mainCategory: {
+      isWithoutMakeAndModel,
       label: mainCategory?.name,
       value: slug,
     },
@@ -151,28 +154,25 @@ export default async function Product({ params, searchParams }) {
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
   modelName = modelName || firstMatchedProduct?.title;
-  const showNotCompatible = false;
 
-  if (!firstMatchedProduct || !mainCategory || !make) {
+  if (!firstMatchedProduct || !mainCategory || (hasMakeAndModel && !make)) {
     return (
-      <ProductHeroPage params={params} slug={slug}>
+      <ProductHeroPage
+        isWithoutMakeAndModel={isWithoutMakeAndModel}
+        params={params}
+        slug={slug}
+      >
         <NotCompatible slug={slug} />
       </ProductHeroPage>
     );
   }
 
-  if (modelSlug.length > 2) {
-    return notFound();
-  }
-
-  if (modelSlug.length === 2) {
+  if (variantSlug) {
     const variantExists =
       firstMatchedProduct?.productFields?.variants?.find(
-        ({ variantSlug }) =>
-          variantSlug.toLocaleLowerCase() === modelSlug[1].toLowerCase(),
+        variant =>
+          variant.variantSlug.toLocaleLowerCase() === variantSlug.toLowerCase(),
       ) || false;
 
     if (!variantExists) {
@@ -194,14 +194,13 @@ export default async function Product({ params, searchParams }) {
   }
 
   return (
-    <Layout title="Product">
+    <Layout
+      isProductPageWithoutMakeAndModel={isWithoutMakeAndModel}
+      title="Product"
+    >
       <Container>
         <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct
-            categories={categories}
-            currentProduct={currentProduct}
-            showNotCompatible={showNotCompatible}
-          />
+          <BreadcrumbsProduct currentProduct={currentProduct} />
         </div>
         <ProductCompatibilityPopup />
         <PageClientSidePartial
@@ -214,7 +213,7 @@ export default async function Product({ params, searchParams }) {
           modelName={modelName}
           pageParams={params}
           productHeroData={productHeroData}
-          variantSlug={modelSlug[1]}
+          variantSlug={variantSlug}
         />
       </Container>
       {contentBlocks?.map((contentBlock, index) => (
@@ -222,8 +221,4 @@ export default async function Product({ params, searchParams }) {
       ))}
     </Layout>
   );
-}
-
-export async function generateStaticParams() {
-  return [];
 }

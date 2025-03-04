@@ -3,7 +3,6 @@ import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
-import { getCategoriesMakesAndModels } from '@lib/api/get-categories-makes-and-models';
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getMainProductCategory } from '@lib/api/get-main-product-category';
 import { getMainProductCategoryBlocks } from '@lib/api/get-main-product-category-blocks';
@@ -11,7 +10,6 @@ import getProductCategoriesToExclude from '@lib/api/get-pdp-categories-to-exclud
 import { renderBlock } from '@lib/block';
 import { getExcludeTree } from '@lib/helpers';
 import { shouldBeExcluded } from '@lib/helpers';
-import formatCategories from '@lib/normalize-product-breadcrumbs';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
 import Container from '@components/container/container';
@@ -19,7 +17,12 @@ import Layout from '@components/layout/layout';
 import ProductCompatibilityPopup from '@components/product-compatibility-popup';
 import ProductHero from '@components/product-hero';
 
-export default async function ProductHeroPage({ children, params, slug }) {
+export default async function ProductHeroPage({
+  children,
+  isWithoutMakeAndModel,
+  params,
+  slug,
+}) {
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
@@ -49,22 +52,16 @@ export default async function ProductHeroPage({ children, params, slug }) {
 
   const currentProduct = {
     mainCategory: {
+      isWithoutMakeAndModel,
       label: categoryData.name,
       value: slug,
     },
   };
 
-  const categoryMakesAndModels = await getCategoriesMakesAndModels();
-  const categories = formatCategories(categoryMakesAndModels);
-
   return (
     <Layout title="Product">
       <Container>
-        <BreadcrumbsProduct
-          categories={categories}
-          currentProduct={currentProduct}
-          mainCategory={true}
-        />
+        <BreadcrumbsProduct currentProduct={currentProduct} />
         <ProductCompatibilityPopup />
         <ProductHero
           customTitle={{

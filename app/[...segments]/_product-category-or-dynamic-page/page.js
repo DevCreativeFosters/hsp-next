@@ -51,7 +51,3 @@ export default async function DynamicPage({ params }) {
 
   return <ProductHeroPage params={params} slug={slug} />;
 }
-
-export async function generateStaticParams() {
-  return [];
-}

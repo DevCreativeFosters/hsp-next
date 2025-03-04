@@ -54,17 +54,19 @@ export default function EnquiryForm({
 
   const mainCategoryId = mainCategory?.databaseId;
 
-  if (mainCategoryId) {
-    productData?.productCategories?.nodes?.forEach(category => {
-      if (category.databaseId === mainCategoryId) {
-        selectedVariant.icon =
-          category.categoryRelations?.icon?.node?.sourceUrl || null;
-      }
-    });
-  }
+  if (selectedVariant) {
+    if (mainCategoryId) {
+      productData?.productCategories?.nodes?.forEach(category => {
+        if (category.databaseId === mainCategoryId) {
+          selectedVariant.icon =
+            category.categoryRelations?.icon?.node?.sourceUrl || null;
+        }
+      });
+    }
 
-  selectedVariant.productName = productData.title;
-  selectedVariant.image = getProductImage(selectedVariant, productData);
+    selectedVariant.productName = productData.title;
+    selectedVariant.image = getProductImage(selectedVariant, productData);
+  }
 
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant?.variantDetails.price

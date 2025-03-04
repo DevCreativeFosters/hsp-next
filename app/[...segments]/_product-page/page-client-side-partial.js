@@ -113,7 +113,7 @@ export default function PageClientSidePartial({
       const newRoute = routes.product(
         slug,
         makeSlug,
-        modelSlug[0],
+        modelSlug,
         newVariantSlug,
       );
 
@@ -131,7 +131,7 @@ export default function PageClientSidePartial({
             <h1 className={styles.name}>
               {mainCategory.name} <br />
               <span className={styles.variant}>
-                {make.name} {modelName}
+                {make?.name} {modelName}
               </span>
             </h1>
             {variant?.sku && (

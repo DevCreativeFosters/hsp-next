@@ -12,11 +12,38 @@ export async function GET(req) {
 
   try {
     const modelData = await getModelBySlug(model);
-    const productData = await getProductsWithVariants(
+    const productsForMakeAndModelPromise = getProductsWithVariants(
       make,
       model,
       excludedCategories,
     );
+    const productsWithoutMakeAndModelPromise = getProductsWithVariants(
+      null,
+      null,
+      excludedCategories,
+      true,
+    ).then(products =>
+      products.filter(product =>
+        product.productCategories.nodes.some(
+          node =>
+            node.mainCategoryDetails
+              .dontCreateL1AndL2PageNorFeatureInTheProductsDropdownAndPage,
+        ),
+      ),
+    );
+    const productData = (
+      await Promise.all([
+        productsForMakeAndModelPromise,
+        productsWithoutMakeAndModelPromise,
+      ])
+    )
+      .flat()
+      .filter(
+        product =>
+          !product.productCategories.nodes.some(
+            node => node.categoryRelations.dontIncludeInTheUteBuilder,
+          ),
+      );
     return NextResponse.json({ modelData, productData });
   } catch (error) {
     return NextResponse.json(

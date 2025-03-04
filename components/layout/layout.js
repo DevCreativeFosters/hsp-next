@@ -32,14 +32,26 @@ const GOOGLE_RECAPTCHA_SITEKEY =
   process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITEKEY;
 
 async function getLayoutData() {
-  const globalOptions = await getGlobalOptions();
-  const footerMenus = await getFooterMenus();
-  const mainMenu = await getMenu('main-menu');
-  const mobileMenu = await getMenu('mobile-navigation');
-  const productCategories = await getProductCategories();
-  const products = await getMenuDropdownProducts();
-  const makes = await getAllMakes();
-  const allStores = await getStores();
+  // TODO: reduce number of requests
+  const [
+    globalOptions,
+    footerMenus,
+    mainMenu,
+    mobileMenu,
+    productCategories,
+    products,
+    makes,
+    allStores,
+  ] = await Promise.all([
+    getGlobalOptions(),
+    getFooterMenus(),
+    getMenu('main-menu'),
+    getMenu('mobile-navigation'),
+    getProductCategories(),
+    getMenuDropdownProducts(),
+    getAllMakes(),
+    getStores(),
+  ]);
   const excludeTree = getExcludeTree(globalOptions);
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
   const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes[0].id];
@@ -66,6 +78,7 @@ const data = await getLayoutData();
 
 export default function Layout({
   children,
+  isProductPageWithoutMakeAndModel,
   reserveSpaceForVehicleSelection,
   withFooter = true,
   withMap,
@@ -133,7 +146,9 @@ export default function Layout({
       stores={data.allStores}
     >
       <UserProvider>
-        <VehicleProvider>
+        <VehicleProvider
+          isProductPageWithoutMakeAndModel={isProductPageWithoutMakeAndModel}
+        >
           <Header
             mainMenu={normalizedMainMenu}
             mainProductCategories={normalizedMainProductCategories}
