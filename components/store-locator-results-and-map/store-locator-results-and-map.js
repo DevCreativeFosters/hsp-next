@@ -91,7 +91,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
                   <ul className={styles.resultList}>
                     {(() => {
                       const superStore = allLocations?.find(location =>
-                        location.storeCategory?.nodes[0].slug.includes(
+                        location.storeCategories?.nodes[0]?.slug?.includes(
                           'super-store',
                         ),
                       );

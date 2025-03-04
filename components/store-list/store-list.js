@@ -21,7 +21,7 @@ export default function StoreList({
 
   if (show && items?.length === 0) {
     const superStore = allLocations?.find(location =>
-      location.storeCategory?.nodes[0].slug.includes('super-store'),
+      location.storeCategories?.nodes[0]?.slug?.includes('super-store'),
     );
 
     if (superStore) {
@@ -41,6 +41,12 @@ export default function StoreList({
             />
           </ul>
         </>
+      );
+    } else {
+      return (
+        <div className={styles.noResultsNotice}>
+          {constants.NO_RESULTS_NOTICE}
+        </div>
       );
     }
   }
