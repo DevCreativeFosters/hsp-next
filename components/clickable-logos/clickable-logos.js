@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import Container from '@components/container/container';
@@ -6,6 +7,7 @@ import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import styles from './clickable-logos.module.scss';
 
 export default function ClickableLogos({
+  alignment,
   bodyText,
   logos,
   title,
@@ -32,7 +34,7 @@ export default function ClickableLogos({
     <Container className={styles.container}>
       {title && (
         <DynamicTitle
-          className={styles.title}
+          className={clsx(styles.title, styles[alignment] || styles.left)}
           titleTag={titleTag}
           titleTagStyle={titleTagStyle}
         >
@@ -41,7 +43,7 @@ export default function ClickableLogos({
       )}
       {bodyText && (
         <div
-          className={styles.content}
+          className={clsx(styles.content, styles[alignment] || styles.left)}
           dangerouslySetInnerHTML={{ __html: bodyText }}
         />
       )}

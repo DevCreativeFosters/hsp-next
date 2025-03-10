@@ -8,10 +8,26 @@
 
 .title {
   margin-bottom: 16px;
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
 }
 
 .content {
   margin-bottom: 24px;
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
 }
 
 .logos {
