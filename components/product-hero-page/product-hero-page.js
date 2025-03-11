@@ -26,6 +26,7 @@ export default async function ProductHeroPage({
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
+  const featuredImageMobile = mainCategoryDetails?.featuredImageMobile?.node;
   const makes = await getAllMakes();
 
   const globalOptions = await getGlobalOptions();
@@ -69,17 +70,9 @@ export default async function ProductHeroPage({
             title: mainCategoryDetails?.title,
           }}
           description={categoryData?.description}
-          features={{
-            content: mainCategoryDetails?.features,
-            title: mainCategoryDetails?.featuresTitle,
-          }}
           image={featuredImage}
+          mobileImage={featuredImageMobile}
           title={categoryData?.name}
-          warranty={{
-            content: mainCategoryDetails?.warranty.warrantyDescription,
-            title: mainCategoryDetails?.warranty.warrantyTitle,
-            years: mainCategoryDetails?.warranty.warrantyTimePeriod,
-          }}
         />
         {children}
       </Container>

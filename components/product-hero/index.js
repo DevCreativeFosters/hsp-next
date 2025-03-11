@@ -1,22 +1,39 @@
-import Image from 'next/image';
-
-import Button from '@components/button/button';
-import ContentBox from '@components/content-box/content-box';
-import Wysiwyg from '@components/wysiwyg/wysiwyg';
+import Image, { getImageProps } from 'next/image';
 
 import styles from './product-hero.module.scss';
 
 export default function ProductHero({
-  button,
   customTitle,
   description,
-  features,
   image,
   make,
+  mobileImage,
   title,
-  warranty,
 }) {
   const slogan = make ? `for ${make}` : '100% Australian';
+  const imageAlt = image?.node?.altText || title || customTitle;
+
+  const desktopImageProps =
+    image &&
+    getImageProps({
+      alt: imageAlt,
+      height: 875,
+      quality: 80,
+      src: image.mediaItemUrl,
+      width: 1440,
+    });
+
+  const mobileAlt = mobileImage?.node?.altText || imageAlt;
+
+  const mobileImageProps =
+    mobileImage &&
+    getImageProps({
+      alt: mobileAlt,
+      height: 1334,
+      quality: 70,
+      src: mobileImage.mediaItemUrl,
+      width: 750,
+    });
 
   return (
     <div className={styles.hero}>
@@ -24,56 +41,35 @@ export default function ProductHero({
         {customTitle && (
           <h1 className={styles.title}>
             {customTitle.title}
-            <br />
             <span className={styles.slogan}>{customTitle.slogan}</span>
           </h1>
         )}
         {title && !customTitle && (
           <h1 className={styles.title}>
             {title}
-            <br />
             <span className={styles.slogan}>{slogan}</span>
           </h1>
         )}
         {description && <p className={styles.description}>{description}</p>}
-        {button && (
-          <Button href={button.url} size="large">
-            {button.label}
-          </Button>
-        )}
       </div>
       {image && (
-        <div className={styles.image}>
-          <Image
-            alt=""
-            height={image.mediaDetails.height}
-            src={image.mediaItemUrl}
-            width={image.mediaDetails.width}
-          />
-        </div>
-      )}
-      {features && (
-        <div className={styles.features}>
-          <ContentBox>
-            {features.title && (
-              <h3 className={styles.contentBoxTitle}>{features.title}</h3>
-            )}
-            {features.content && <Wysiwyg content={features.content} />}
-          </ContentBox>
-        </div>
-      )}
-      {warranty && (
-        <div className={styles.warranty}>
-          <ContentBox className={styles.warrantyDescription}>
-            <h3 className={styles.contentBoxTitle}>
-              {warranty.title}{' '}
-              {warranty.years && (
-                <span className={styles.years}>+{warranty.years} years</span>
-              )}
-            </h3>
-            {warranty.content && <p>{warranty.content}</p>}
-          </ContentBox>
-        </div>
+        <figure className={styles.figure}>
+          {mobileImage ? (
+            <picture>
+              <source
+                media="(min-width: 768px)"
+                srcSet={desktopImageProps.props.srcSet}
+              />
+              <source srcSet={mobileImageProps.props.srcSet} />
+              <img
+                {...desktopImageProps.props}
+                alt={mobileImage ? mobileAlt : imageAlt}
+              />
+            </picture>
+          ) : (
+            <Image alt={imageAlt} fill src={image.mediaItemUrl} />
+          )}
+        </figure>
       )}
     </div>
   );

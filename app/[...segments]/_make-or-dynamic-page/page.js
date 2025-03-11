@@ -81,6 +81,7 @@ export default async function CategoryPage({ params }) {
   const categoryData = await getMainProductCategory(slug);
   const mainCategoryDetails = categoryData?.mainCategoryDetails;
   const featuredImage = mainCategoryDetails?.featuredImage?.node;
+  const featuredImageMobile = mainCategoryDetails?.featuredImageMobile?.node;
   const blocks = await getMainProductCategoryBlocks(slug);
   const makes = await getAllMakes();
   const contentBlocks = await Promise.all(
@@ -171,28 +172,14 @@ export default async function CategoryPage({ params }) {
   );
 
   const productHeroData = {
-    features:
-      filteredData?.length >= 1
-        ? filteredData[0]?.features
-        : mainCategoryDetails?.features,
-    featuresTitle:
-      filteredData?.length >= 1 ? filteredData[0].featuresTitle : 'Features',
     image:
       filteredData?.length >= 1
         ? filteredData[0].featuredImage?.node
         : featuredImage,
-    warrantyDescription:
+    mobileImage:
       filteredData?.length >= 1
-        ? filteredData[0]?.warranty.warrantyDescription
-        : mainCategoryDetails?.warranty.warrantyDescription,
-    warrantyTimePeriod:
-      filteredData?.length >= 1
-        ? filteredData[0]?.warranty.warrantyTimePeriod
-        : mainCategoryDetails?.warranty.warrantyTimePeriod,
-    warrantyTitle:
-      filteredData?.length >= 1
-        ? filteredData[0].warranty.warrantyTitle
-        : 'Warranty',
+        ? filteredData[0].featuredImageMobile?.node
+        : featuredImageMobile,
   };
 
   const currentProduct = {
@@ -226,18 +213,10 @@ export default async function CategoryPage({ params }) {
                 : null
             }
             description={makeData?.description || categoryData?.description}
-            features={{
-              content: productHeroData.features,
-              title: productHeroData.featuresTitle,
-            }}
             image={productHeroData.image}
             make={makeData.name}
+            mobileImage={productHeroData.mobileImage}
             title={categoryData?.name}
-            warranty={{
-              content: productHeroData.warrantyDescription,
-              title: productHeroData.warrantyTitle,
-              years: productHeroData.warrantyTimePeriod,
-            }}
           />
         </Suspense>
       </Container>
