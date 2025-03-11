@@ -7,27 +7,38 @@
   @include bp(large) {
     padding: 20px;
   }
+
+  &.removeBorder {
+    border: none;
+    padding: 0;
+
+    @include bp(large) {
+      padding: 8px 8px 0;
+    }
+  }
 }
 
 .image {
   width: 100%;
   height: auto;
-  aspect-ratio: 147/112;
+  aspect-ratio: 163/112;
   object-fit: cover;
   border-radius: var(--border-radius-sm);
+
+  @include bp(large) {
+    aspect-ratio: 230/160;
+  }
 }
 
 .name {
-  font-family: var(--font-secondary);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-  margin-block: 16px 0;
+  margin-top: 8px;
+
+  @include bp(large) {
+    margin-top: 16px;
+  }
 }
 
 .price {
-  font-size: 14px;
   color: var(--color-white-80);
-  line-height: 1.5;
-  margin-top: 16px;
+  margin-top: 4px;
 }

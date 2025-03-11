@@ -1,21 +1,48 @@
 .container {
   padding-block: 24px;
+
+  @include bp(large) {
+    padding-block: 48px;
+  }
 }
 
 .title {
   margin-bottom: 16px;
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
 }
 
 .description {
-  margin-bottom: 24px;
+  color: var(--color-white-80);
+
+  @include bp(large) {
+    font-size: 20px;
+  }
+
+  &.center {
+    text-align: center;
+  }
+
+  &.right {
+    text-align: right;
+  }
 }
 
 .grid {
+  margin-block: 24px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
   gap: 16px;
 
-  @include bp(medium-large) {
+  @include bp(large) {
     grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-block: 32px;
   }
 }
