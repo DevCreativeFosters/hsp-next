@@ -4,7 +4,7 @@
   top: 0;
   background: var(--color-primary-100);
   transition: height 0.3s;
-  padding-block: 24px;
+  padding-block: 16px;
 
   @include bp(medium) {
     position: sticky;
@@ -13,8 +13,8 @@
 
   &.isFullScreen {
     @include bp-below(medium) {
-      top: 0;
-      height: calc(var(--vh) * 100);
+      top: var(--header-height);
+      height: calc(100dvh - var(--header-height));
       overflow: hidden;
       transition: height 0.3s 0.07s;
     }
@@ -33,15 +33,26 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   padding: 24px;
   border-radius: 8px;
   background: var(--color-black-100);
+  max-height: calc(100dvh - var(--header-height) - 96px);
 
   @include bp(medium) {
     flex-direction: row;
     align-items: center;
     border-radius: 16px;
+  }
+}
+
+.label {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: block;
+
+  @include bp(medium) {
+    display: none;
   }
 }
 
@@ -59,53 +70,37 @@
   }
 }
 
-.button {
+.storeList {
   margin-top: 12px;
+}
+
+.button {
   height: 48px;
   text-align: center;
   width: 100%;
-
-  @include bp(medium) {
-    margin-top: 0;
-    width: auto;
-  }
-}
-
-.viewContainer {
-  display: flex;
-  transition: transform 0.3s;
-
-  &.listMode {
-    transform: translateX(0);
-  }
-
-  &.resultMode {
-    transform: translateX(-100%);
-
-    @include bp(medium) {
-      transform: translateX(0);
-    }
-  }
-}
-
-.viewContent {
-  flex-shrink: 0;
-  width: 100%;
-  padding-inline: var(--container-inline-padding);
-}
-
-.singleResult {
-  padding: 24px;
-  background: var(--color-black-100);
-  border-radius: 16px;
-
-  @include bp(medium) {
-    display: none;
-  }
-}
-
-.buttonWrapper {
   margin-top: 24px;
-  display: flex;
-  justify-content: center;
+
+  @include bp(medium) {
+    width: auto;
+    margin-top: 0;
+  }
+}
+
+.goBackButton {
+  --gap: 12px;
+  --block-padding: 10px;
+  --only-icon-padding: 0;
+
+  margin-bottom: 16px;
+  font-size: 20px;
+
+  path {
+    fill: var(--color-white-100) !important;
+  }
+}
+
+.showingResults {
+  .form {
+    overflow: auto;
+  }
 }

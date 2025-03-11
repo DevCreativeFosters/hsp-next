@@ -79,6 +79,7 @@ const data = await getLayoutData();
 export default function Layout({
   children,
   isProductPageWithoutMakeAndModel,
+  preventHeaderCollapse = false,
   reserveSpaceForVehicleSelection,
   withFooter = true,
   withMap,
@@ -154,6 +155,7 @@ export default function Layout({
             mainProductCategories={normalizedMainProductCategories}
             makes={data.makes}
             mobileMenu={normalizedMobileMenu}
+            preventHeaderCollapse={preventHeaderCollapse}
             products={normalizedProductData}
             secondaryMenu={topNavigationMenu}
           />

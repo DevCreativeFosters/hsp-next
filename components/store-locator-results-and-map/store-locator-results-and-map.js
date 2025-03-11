@@ -11,7 +11,7 @@ import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Container from '@components/container/container';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import StoreTile from '@components/store-tile/store-tile';
+import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
 
 import styles from './store-locator-results-and-map.module.scss';
 
@@ -66,51 +66,12 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
       <Container className={styles.container}>
         <div className={styles.visualContainer}>
           <div className={styles.results} ref={resultsRef}>
-            {filteredStores.length > 0 ? (
-              <ul className={styles.resultList}>
-                {filteredStores.map((result, index) => {
-                  const isSelected =
-                    selectedStore?.geolocation?.lat ===
-                      result.geolocation.lat &&
-                    selectedStore?.geolocation?.lng === result.geolocation.lng;
-                  return (
-                    <StoreTile
-                      item={result}
-                      key={index}
-                      selected={isSelected}
-                    />
-                  );
-                })}
-              </ul>
-            ) : (
-              <>
-                <div className={styles.noResultsNotice}>
-                  {constants.NO_RESULTS_NOTICE}
-                </div>
-                {allLocations && (
-                  <ul className={styles.resultList}>
-                    {(() => {
-                      const superStore = allLocations?.find(location =>
-                        location.storeCategories?.nodes[0]?.slug?.includes(
-                          'super-store',
-                        ),
-                      );
-                      if (superStore) {
-                        const normalizedSuperStore = normalizeStores([
-                          superStore,
-                        ])[0];
-                        return (
-                          <StoreTile
-                            item={normalizedSuperStore}
-                            selected={false}
-                          />
-                        );
-                      }
-                    })()}
-                  </ul>
-                )}
-              </>
-            )}
+            <StoreTilesList
+              allLocations={allLocations}
+              filteredStores={filteredStores}
+              normalizeStores={normalizeStores}
+              selectedStore={selectedStore}
+            />
           </div>
           <StoreLocatorMap
             locations={allMapLocations}

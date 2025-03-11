@@ -199,7 +199,19 @@
     max-width: 100vw;
   }
 
+  &.hideOnMobile {
+    @include bp-below(large) {
+      display: none;
+    }
+  }
+
   @include bp(full) {
     gap: 16px;
+  }
+
+  :global(html.store-locator-fullscreen) & {
+    @include bp-below(medium) {
+      display: none;
+    }
   }
 }

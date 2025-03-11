@@ -1,6 +1,5 @@
-import Image from 'next/image';
-
 import StoreCategory from '@components/store-category/store-category';
+import StoreDisplays from '@components/store-displays/store-displays';
 
 import styles from './store-list-item.module.scss';
 
@@ -34,33 +33,7 @@ export default function StoreListItem({ index, item, onSelect }) {
           ></div>
         </div>
       </div>
-      {displays?.length > 0 && (
-        <div className={styles.displaysContainer}>
-          <div className={styles.separator} />
-          <div className={styles.inStoreDisplays}>
-            <p className={styles.displaysLabel}>In Store Displays</p>
-            <div className={styles.displays}>
-              {displays.map((product, idx) => {
-                const imageUrl =
-                  product?.productCategory?.nodes?.[0].mainCategoryDetails
-                    ?.inStoreImage?.node?.mediaItemUrl;
-                const altText = product.productCategory?.nodes?.[0].name;
-                if (imageUrl) {
-                  return (
-                    <Image
-                      alt={altText}
-                      height={40}
-                      key={idx}
-                      src={imageUrl}
-                      width={40}
-                    />
-                  );
-                }
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+      <StoreDisplays displays={displays} />
     </li>
   );
 }

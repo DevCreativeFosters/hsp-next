@@ -2,13 +2,13 @@ import { useCallback } from 'react';
 
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
-import Image from 'next/image';
 
 import { getGeoHash } from '@lib/get-geo-hash';
 import { getIcon } from '@lib/icons';
 
 import Button from '@components/button/button';
 import StoreCategory from '@components/store-category/store-category';
+import StoreDisplays from '@components/store-displays/store-displays';
 
 import styles from './store-tile.module.scss';
 
@@ -119,33 +119,7 @@ export default function StoreTile({
         )}
       </div>
       <div className={styles.pusher} />
-      {displays?.length > 1 && (
-        <div className={styles.displaysContainer}>
-          <div className={styles.separator} />
-          <div className={styles.inStoreDisplays}>
-            <p className={styles.displaysLabel}>In Store Displays</p>
-            <div className={styles.displays}>
-              {displays.map((product, idx) => {
-                const imageUrl =
-                  product?.productCategory?.nodes?.[0]?.mainCategoryDetails
-                    ?.inStoreImage?.node?.mediaItemUrl;
-                const altText = product.productCategory?.name;
-                if (imageUrl) {
-                  return (
-                    <Image
-                      alt={altText}
-                      height={40}
-                      key={idx}
-                      src={imageUrl}
-                      width={40}
-                    />
-                  );
-                }
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+      <StoreDisplays displays={displays} />
     </li>
   );
 }

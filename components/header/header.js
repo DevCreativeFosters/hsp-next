@@ -24,6 +24,7 @@ export default function Header({
   mainProductCategories,
   makes,
   mobileMenu,
+  preventHeaderCollapse = false,
   products,
   secondaryMenu,
 }) {
@@ -52,7 +53,10 @@ export default function Header({
       </HelmetProvider>
 
       <header className={styles.header} ref={headerRef}>
-        <FullscreenCollapse className={styles.headerInner}>
+        <FullscreenCollapse
+          className={styles.headerInner}
+          preventCollapse={preventHeaderCollapse}
+        >
           <div className={styles.grid}>
             <div className={styles.hamburgerContainer}>
               <HamburgerButton

@@ -21,22 +21,20 @@ import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
-import StoreList from '@components/store-list/store-list';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
-import StoreTile from '@components/store-tile/store-tile';
+import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
 
 import styles from './store-locator-search.module.scss';
 
 export default function StoreLocatorSearch({ allLocations }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
-  const [_, setIsFormValid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [locationInput, setLocationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [location, setLocation] = useState(undefined);
   const [currentResult, setCurrentResult] = useState(null);
-  const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'RESULT'
   const wrapperOuterRef = useRef(null);
   const isMobile = useIsMobile();
   const formRef = useRef(null);
@@ -62,9 +60,14 @@ export default function StoreLocatorSearch({ allLocations }) {
     [isMobile],
   );
 
-  const onAnyInputChange = useCallback(ev => {
-    setIsFormValid(formRef.current?.checkValidity());
-  }, []);
+  const onAnyInputChange = useCallback(
+    ev => {
+      setIsFormValid(
+        formRef.current?.checkValidity() && location !== undefined,
+      );
+    },
+    [location],
+  );
 
   const selectLocation = useCallback(
     async suggestion => {
@@ -76,29 +79,41 @@ export default function StoreLocatorSearch({ allLocations }) {
       const geolocation = placeDetails?.result?.geometry?.location;
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
+      setIsFormValid(true);
     },
     [sessionToken, setSearchGeolocation],
   );
 
   const goBack = useCallback(() => {
-    if (viewMode === 'RESULT') {
-      setViewMode('LIST');
-    } else if (isFullScreen) {
+    if (isFullScreen) {
       setIsFullScreen(false);
     }
-  }, [isFullScreen, viewMode]);
+  }, [isFullScreen]);
 
-  setInlineResultListVisible(
-    Boolean(location && searchGeolocation && isFullScreen && isMobile),
-  );
+  useEffect(() => {
+    setInlineResultListVisible(
+      Boolean(location && searchGeolocation && isFullScreen && isMobile),
+    );
 
-  const isSearchButtonVisible = !isInlineResultListVisible;
+    if (!isMobile && isFullScreen) {
+      setIsFullScreen(false);
+    }
+  }, [
+    isFullScreen,
+    isMobile,
+    location,
+    searchGeolocation,
+    setInlineResultListVisible,
+  ]);
+
+  const isSearchButtonVisible = !isInlineResultListVisible && !isFullScreen;
 
   useEffect(
     function toggleSuggestions() {
       let isMounted = true;
       if (locationInput) {
         if (!location || stringifySuggestion(location) !== locationInput) {
+          setIsFormValid(false);
           const fetchSuggestions = async () => {
             const predictions = await getPlaceSuggestions(
               locationInput,
@@ -112,6 +127,7 @@ export default function StoreLocatorSearch({ allLocations }) {
         }
       } else {
         setSuggestions([]);
+        setIsFormValid(false);
       }
 
       return () => {
@@ -157,17 +173,27 @@ export default function StoreLocatorSearch({ allLocations }) {
     <section
       className={clsx(styles.wrapper, {
         [styles.isFullScreen]: isFullScreen,
+        [styles.showingResults]: isInlineResultListVisible,
       })}
       ref={wrapperOuterRef}
     >
       <Container>
-        <div
-          className={clsx(styles.viewContainer, {
-            [styles.listMode]: viewMode === 'LIST',
-            [styles.resultMode]: viewMode === 'RESULT',
-          })}
-        >
+        <div className={styles.viewContainer}>
+          {isFullScreen && (
+            <Button
+              className={styles.goBackButton}
+              leftIcon="arrow-backward"
+              onClick={goBack}
+              variant="quinary"
+            >
+              Back to search
+            </Button>
+          )}
+
           <div className={styles.viewContent}>
+            {!isFullScreen && (
+              <span className={clsx(styles.label, 'h4')}>Locate a store</span>
+            )}
             <form
               action="#"
               autoComplete="off"
@@ -184,7 +210,6 @@ export default function StoreLocatorSearch({ allLocations }) {
                     if (!value) {
                       setLocation(null);
                       setSearchGeolocation(null);
-                      setIsFullScreen(false);
                     }
                   }}
                   onClick={onFormInteraction}
@@ -201,21 +226,21 @@ export default function StoreLocatorSearch({ allLocations }) {
                 />
               </div>
 
-              <div className={styles.mobileOnly}>
-                <StoreList
-                  allLocations={allLocations}
-                  items={filteredLocations}
-                  onSelect={item => {
-                    setCurrentResult(item);
-                    setViewMode('RESULT');
-                  }}
-                  show={isInlineResultListVisible}
-                />
-              </div>
+              {isInlineResultListVisible && (
+                <div className={clsx(styles.mobileOnly, styles.storeList)}>
+                  <StoreTilesList
+                    allLocations={allLocations}
+                    filteredStores={filteredLocations}
+                    normalizeStores={normalizeStores}
+                    selectedStore={currentResult}
+                  />
+                </div>
+              )}
 
               {isSearchButtonVisible && (
                 <Button
                   className={styles.button}
+                  disabled={!isFormValid}
                   href="#store-search"
                   onClick={() => {
                     if (isMobile && !isFullScreen) {
@@ -231,20 +256,6 @@ export default function StoreLocatorSearch({ allLocations }) {
                 </Button>
               )}
             </form>
-          </div>
-          <div className={styles.viewContent}>
-            <div className={styles.singleResult}>
-              {currentResult && <StoreTile item={currentResult} />}
-              <div className={styles.buttonWrapper}>
-                <Button
-                  leftIcon="arrow-backward"
-                  onClick={goBack}
-                  variant="quaternary"
-                >
-                  Back to search
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </Container>
