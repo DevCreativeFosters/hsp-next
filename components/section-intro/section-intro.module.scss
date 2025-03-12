@@ -1,20 +1,16 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-left: 24px;
-  margin-block: 72px 56px;
+  gap: 8px;
+  padding-block: 24px;
 
   @include bp(medium) {
     display: grid;
     grid-template-areas:
       'title buttons'
       'description description';
-    padding-left: 0;
-  }
-
-  @include bp(large) {
-    margin-block: 96px 56px;
+    gap: 16px;
+    padding-block: 48px;
   }
 
   &.fitInline {
@@ -61,8 +57,6 @@
 }
 
 .description {
-  font-size: 20px;
-  line-height: 1.6;
   color: var(--color-white-80);
 
   @include bp(medium) {
@@ -76,17 +70,11 @@
     }
   }
 
-  @include bp(large) {
-    font-size: 24px;
+  *:first-child {
+    margin-top: 0;
   }
 
-  p {
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  *:last-child {
+    margin-bottom: 0;
   }
 }

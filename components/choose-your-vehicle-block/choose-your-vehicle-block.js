@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import clsx from 'clsx';
+
 import { usePathname, useRouter } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 import { useWindowSize } from 'usehooks-ts';
@@ -44,7 +44,6 @@ export default function ChooseYourVehicleBlock({
     slug: '',
   });
   const wrapperRef = useRef();
-  const stickerRef = useRef();
   const variantsNormalized = variants?.map(variant => {
     return {
       label: variant.productName,
@@ -74,7 +73,7 @@ export default function ChooseYourVehicleBlock({
 
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
-  const [isSticky] = useState(false);
+
 
   const mainCategorySlug = useMemo(() => path.split('/')[1], [path]);
   const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
@@ -308,47 +307,7 @@ export default function ChooseYourVehicleBlock({
     [setVariant, variantSlug, variantsNormalized],
   );
 
-  useEffect(
-    function attachIntersectionObserver() {
-      const { height, width } = windowSize;
-      const el = wrapperRef.current;
-      const stickerEl = stickerRef.current;
-      const stickerHeight = stickerEl?.clientHeight;
-      let io;
-      if (width && height && el) {
-        const headerHeight =
-          parseInt(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              '--header-height',
-            ),
-          ) || 0;
-        const top = headerHeight + Math.floor(stickerHeight / 2);
-        const bottom = height - top;
-        const rootMargin = `-${top - 1}px 0px -${bottom}px 0px`;
-        io = new IntersectionObserver(
-          function (entries) {
-            const entry = entries[0];
-            const { isIntersecting } = entry;
 
-            el.classList.toggle(styles.isCloseToHeader, isIntersecting);
-          },
-          {
-            root: document.body,
-            rootMargin,
-            threshold: 0,
-          },
-        );
-        io.observe(el);
-      }
-
-      return () => {
-        if (io) {
-          io.disconnect();
-        }
-      };
-    },
-    [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
-  );
 
   if (isMobile) {
     return null;
@@ -356,13 +315,11 @@ export default function ChooseYourVehicleBlock({
 
   return (
     <div
-      className={clsx(styles.wrapper, { [styles.isSticky]: isSticky })}
+      className={styles.wrapper}
       ref={wrapperRef}
     >
       <Container>
-        <h3 className={styles.sticker} ref={stickerRef}>
-          {constants.SELECT_LABELS.GENERIC_FULL}
-        </h3>
+
         <div className={styles.form}>
           {!filteredMakeSelectOptions.length ? (
             <Loading color="white" size="large" />

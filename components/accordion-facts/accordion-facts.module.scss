@@ -1,17 +1,17 @@
+@import '/styles/globals/typography';
+
 .container {
-  margin-block: 24px;
   padding-block: 24px;
 
   @include bp(large) {
     position: relative;
-    margin-block: 48px;
     padding-block: 48px;
   }
 }
 
 .accordion {
   @include bp(large) {
-    max-width: 378px;
+    max-width: 456px;
   }
 }
 
@@ -27,15 +27,12 @@
 .mediaWrapper {
   margin-top: 24px;
 
-
   @include bp(large) {
     position: absolute;
-    width: 800px;
+    width: 504px;
     right: var(--container-inline-padding);
     top: 0;
     margin-top: 0;
-    overflow: hidden;
-    border-radius: 16px;
     height: 100%;
   }
 }
@@ -45,12 +42,14 @@
   place-content: center;
   overflow: hidden;
 
-  @include bp(large) {
-
-  }
-
   img {
     height: auto;
+    border-radius: var(--border-radius-sm);
+    max-width: 100%;
+
+    @include bp(medium) {
+      border-radius: var(--border-radius-md);
+    }
   }
 }
 
@@ -82,7 +81,7 @@
   h4,
   h5,
   h6 {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
   h4,
@@ -98,29 +97,16 @@
     color: var(--color-white-80);
   }
 
-  p {
-    line-height: 1.5;
-
-    @include bp(large) {
-      font-size: 20px;
-    }
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+  a {
+    @include text-link;
   }
 
-  a {
-    text-decoration: underline;
-    transition: var(--transition);
+  *:first-child {
+    margin-top: 0;
+  }
 
-    &:hover {
-      color: var(--color-primary-100);
-    }
+  *:last-child {
+    margin-bottom: 0;
   }
 
   br {

@@ -81,6 +81,24 @@ a {
   }
 }
 
+.p-medium {
+  font-size: 14px;
+
+  @include bp(large) {
+    font-size: 16px;
+  }
+}
+
+.p-large {
+  font-size: 18px;
+  font-weight: 400;
+
+  @include bp(large) {
+    font-size: 20px;
+    line-height: 1.28;
+  }
+}
+
 .h1,
 .h2,
 .h3,
@@ -100,40 +118,57 @@ h6 {
 }
 
 h1,
-.h1,
-h2,
-.h2 {
-  font-size: 48px;
+.h1 {
+  font-size: 40px;
+  line-height: 1.2;
 
   @include bp(large) {
-    font-size: 64px;
+    font-size: 48px;
+    line-height: 1.16;
+  }
+}
+
+h2,
+.h2 {
+  font-size: 32px;
+  line-height: 1.12;
+
+  @include bp(large) {
+    font-size: 40px;
+    line-height: 1.15;
   }
 }
 
 h3,
 .h3 {
-  font-size: 36px;
+  font-size: 24px;
+  line-height: 1.33;
 
   @include bp(medium) {
-    font-size: 48px;
+    font-size: 32px;
+    line-height: 1.12;
   }
 }
 
 h4,
 .h4 {
-  font-size: 24px;
+  font-size: 20px;
+  line-height: 1.4;
 
   @include bp(medium) {
-    font-size: 36px;
+    font-size: 24px;
+    line-height: 1.16;
   }
 }
 
 h5,
 .h5 {
-  font-size: 20px;
+  font-size: 16px;
+  line-height: 1.25;
 
   @include bp(medium) {
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.4;
   }
 }
 

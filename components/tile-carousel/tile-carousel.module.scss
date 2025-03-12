@@ -8,12 +8,12 @@
   width: 100vw;
   max-width: calc(1320px + var(--container-inline-padding) * 2);
   padding-inline: var(--container-inline-padding);
-  margin-top: 56px;
-  margin-bottom: 56px;
+  padding-block: 24px;
   margin-left: 50%;
   transform: translateX(-50%);
 
-  @include bp(large) {
+  @include bp(medium) {
+    padding-block: 48px;
     gap: 48px;
     overflow: hidden;
   }
@@ -37,10 +37,6 @@
   gap: 24px;
   transition: transform 300ms;
   transform: translateX(var(--offset));
-
-  @include bp(large) {
-    gap: 48px;
-  }
 
   .smallGaps > & {
     gap: 16px;

@@ -28,7 +28,7 @@ export default function TitleAndDescription({
         )}
         {description && (
           <div
-            className={styles.description}
+            className={clsx(styles.description, 'p-large')}
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}

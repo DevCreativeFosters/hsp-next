@@ -38,7 +38,7 @@ export default function SectionIntro({
         </DynamicTitle>
       )}
       {description && (
-        <TextElement className={styles.description} text={description} />
+        <TextElement className={clsx(styles.description, 'p-large')} text={description} />
       )}
       {children}
     </div>

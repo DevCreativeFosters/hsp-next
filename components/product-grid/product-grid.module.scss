@@ -4,10 +4,6 @@
   @include bp(medium) {
     padding-block: 48px;
   }
-
-  @include bp(large) {
-    padding-block: 64px;
-  }
 }
 
 .grid {
@@ -17,10 +13,6 @@
 
   @include bp(medium) {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include bp(large) {
-    gap: 48px;
   }
 }
 
@@ -82,16 +74,9 @@
 
 .title {
   color: var(--color-white);
-  margin-block: 24px;
-  padding-inline: 24px;
-  text-align: center;
-
-  @include bp(small) {
-    margin-top: 0;
-    text-align: left;
-  }
+  margin-bottom: 24px;
 
   @include bp(medium) {
-    margin-bottom: 48px;
+    margin-bottom: 24px;
   }
 }

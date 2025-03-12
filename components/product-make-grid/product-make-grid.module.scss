@@ -21,8 +21,12 @@
 .description {
   color: var(--color-white-80);
 
-  @include bp(large) {
-    font-size: 20px;
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
   }
 
   &.center {

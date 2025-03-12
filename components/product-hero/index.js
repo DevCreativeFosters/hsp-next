@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Image, { getImageProps } from 'next/image';
 
 import styles from './product-hero.module.scss';
@@ -39,13 +40,13 @@ export default function ProductHero({
     <div className={styles.hero}>
       <div className={styles.header}>
         {customTitle && (
-          <h1 className={styles.title}>
+          <h1 className={clsx(styles.title, 'h2')}>
             {customTitle.title}
             <span className={styles.slogan}>{customTitle.slogan}</span>
           </h1>
         )}
         {title && !customTitle && (
-          <h1 className={styles.title}>
+          <h1 className={clsx(styles.title, 'h2')}>
             {title}
             <span className={styles.slogan}>{slogan}</span>
           </h1>

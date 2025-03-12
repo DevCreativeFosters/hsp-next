@@ -1,94 +1,17 @@
+@import '/styles/globals/typography';
+
 .container {
-  margin-block: 24px;
   padding-block: 24px;
   display: grid;
   gap: 24px;
 
-  @include bp(large) {
-    margin-block: 48px;
+  @include bp(medium) {
     padding-block: 48px;
+    gap: 48px;
+  }
+
+  @include bp(large) {
     gap: 96px;
-  }
-}
-
-.description {
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-bottom: 24px;
-  }
-
-  h4,
-  h5,
-  h6,
-  li,
-  p {
-    color: var(--color-white-80);
-    line-height: 1.5;
-  }
-
-  li,
-  p {
-    @include bp(large) {
-      font-size: 20px;
-    }
-
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-
-  a {
-    text-decoration: underline;
-    transition: var(--transition);
-
-    &:hover {
-      color: var(--color-primary-100);
-    }
-  }
-
-  br {
-    display: none;
-
-    @include bp(large) {
-      display: block;
-    }
-  }
-}
-
-.title {
-  margin-bottom: 16px;
-  font-size: 36px;
-
-  @include bp(large) {
-    margin-bottom: 25px;
-  }
-
-  br:first-child {
-    display: none;
-  }
-}
-
-.image,
-.video {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-}
-
-.content {
-  padding: 24px 48px;
-
-  @include bp(large) {
-    display: grid;
-    place-content: center;
   }
 }
 
@@ -96,16 +19,77 @@
   display: grid;
   gap: 24px;
 
-  @include bp(large) {
+  @include bp(medium) {
     grid-template-columns: repeat(2, 1fr);
     gap: 48px;
   }
 
   &.textVisual {
     .content {
-      @include bp(large) {
+      @include bp(medium) {
         order: -1;
       }
+    }
+  }
+}
+
+.image,
+.video {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: grid;
+  place-content: center;
+}
+
+.content {
+  @include bp(medium) {
+    display: grid;
+    place-content: center;
+    padding: 24px;
+  }
+}
+
+.title {
+  margin-bottom: 8px;
+
+  @include bp(medium) {
+    margin-bottom: 16px;
+  }
+
+  br:first-child {
+    display: none;
+  }
+}
+
+.description {
+  color: var(--color-white-80);
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 16px;
+  }
+
+  a {
+    @include text-link;
+  }
+
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
+
+  br {
+    display: none;
+
+    @include bp(large) {
+      display: block;
     }
   }
 }

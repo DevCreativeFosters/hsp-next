@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import { useIsMediumWidth } from '@hooks/useIsMediumWidth';
@@ -50,7 +51,7 @@ export default function AccordionFacts({ accordions, background }) {
         );
       });
     };
-  }, [accordions, isMobile, isMediumWidth]);
+  }, [accordions, isMobile, isMediumWidth, updateMediaHeight]);
 
   return (
     <Container className={styles.container}>
@@ -70,7 +71,7 @@ export default function AccordionFacts({ accordions, background }) {
                 >
                   {accordion.accordionDescription && (
                     <TextElement
-                      className={styles.description}
+                      className={clsx(styles.description, 'p-medium')}
                       text={accordion.accordionDescription}
                     />
                   )}

@@ -1,7 +1,7 @@
 @import '/styles/globals/helpers';
 
 .button {
-  --font-size: 24px;
+  --font-size: 20px;
   --icon-side-padding: 20px;
   --inline-padding: 24px;
 
@@ -100,7 +100,6 @@
   --only-icon-padding: 16px;
 
   @include bp(medium) {
-    --block-padding: 20px;
     --only-icon-padding: 20px;
   }
 

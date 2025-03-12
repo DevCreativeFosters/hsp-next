@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
+import clsx from 'clsx';
 import { SwiperSlide } from 'swiper/react';
 
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -52,18 +53,22 @@ export default function Features({
     <div className={styles.container}>
       <div className={styles.leadingFeature}>
         {leadingTitle && (
-          <DynamicTitle titleTag={titleTag} titleTagStyle={titleTagStyle}>
+          <DynamicTitle
+            className={styles.leadingTitle}
+            titleTag={titleTag}
+            titleTagStyle={titleTagStyle}
+          >
             {leadingTitle}
           </DynamicTitle>
         )}
         {leadingDescription && (
           <div
-            className={styles.leadingDescription}
+            className={clsx(styles.leadingDescription, 'p-large')}
             dangerouslySetInnerHTML={{ __html: leadingDescription }}
           />
         )}
         {cta && (
-          <Button href={cta.url} size="large">
+          <Button className={styles.leadingButton} href={cta.url} size="large">
             {cta.label}
           </Button>
         )}

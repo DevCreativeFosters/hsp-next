@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: 48px;
   position: relative;
-  margin-block: 72px 96px;
+  padding-block: 24px;
 
   @include bp(medium) {
     display: grid;
@@ -44,21 +44,35 @@
   }
 }
 
+.leadingTitle {
+  margin-bottom: 8px;
+
+  @include bp(medium) {
+    margin-bottom: 16px;
+  }
+}
+
 .leadingDescription {
-  font-size: 20px;
-  line-height: 1.4;
   color: var(--color-white-80);
 
   a {
     @include text-link;
   }
 
-  &:not(:first-child) {
-    margin-top: 32px;
+  *:first-child {
+    margin-top: 0;
   }
 
-  &:not(:last-child) {
-    margin-bottom: 32px;
+  *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.leadingButton {
+  margin-top: 16px;
+
+  @include bp(large) {
+    margin-top: 24px;
   }
 }
 

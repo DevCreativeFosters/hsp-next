@@ -1,64 +1,18 @@
 .wrapper {
   position: relative;
-  margin-top: 24px;
   background: var(--color-primary-100);
   padding-block: 24px;
-
-  @include bp(large) {
-    position: relative;
-    z-index: var(--z-index-choose-your-vehicle-block);
-    padding-block: 32px;
-  }
-
-  &.isSticky {
-    @include bp(large) {
-      position: sticky;
-      top: var(--header-height);
-    }
-  }
-}
-
-.sticker {
-  background: var(--color-primary-100);
-  color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 600;
-
-  @include bp(large) {
-    position: absolute;
-    top: 0;
-    padding: 12px 24px;
-    border-radius: 8px 8px 8px 0;
-    transform: translateY(-50%);
-    transition: opacity 0.2s;
-  }
-
-  .isCloseToHeader & {
-    @include bp(large) {
-      opacity: 0;
-    }
-  }
+  z-index: var(--z-index-choose-your-vehicle-block);
 }
 
 .form {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 24px;
-  margin-top: 24px;
+  gap: 16px;
   border-radius: 16px;
-  padding: 24px;
+  padding: 16px;
   background-color: var(--color-black-100);
-
-  @include bp(large) {
-    flex-direction: row;
-    margin-top: 0;
-    padding: 16px 24px;
-    transition: margin-top 0.1s;
-  }
 }
 
 .select {

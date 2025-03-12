@@ -47,7 +47,7 @@ export default function ImageTextBoxes({ boxes }) {
 
             {box.description && (
               <TextElement
-                className={styles.description}
+                className={clsx(styles.description, 'p-medium')}
                 text={box.description}
               />
             )}

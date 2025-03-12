@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -30,7 +32,7 @@ export default function TextAndImagePromo({
           )}
           {description && (
             <div
-              className={styles.description}
+              className={clsx(styles.description, 'p-large')}
               dangerouslySetInnerHTML={{ __html: description }}
             />
           )}

@@ -1,35 +1,28 @@
 .promo {
   display: flex;
   flex-flow: column-reverse nowrap;
-  margin: 64px 0 46px;
-  gap: 48px;
+  padding-block: 24px;
+  gap: 24px;
 
   @include bp(medium) {
-    margin-top: 114px;
+    padding-block: 48px;
     flex-direction: row;
-  }
-
-  @include bp(large) {
-    margin-top: 150px;
   }
 }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding-inline: 24px;
   width: 100%;
 
   @include bp(medium) {
     width: 50%;
+    justify-content: center;
   }
 
   @include bp(large) {
-    justify-content: center;
-    gap: 48px;
     width: 522px;
-    padding-inline: 48px;
+    padding-inline: 24px;
   }
 }
 
@@ -48,6 +41,12 @@
 }
 
 .title {
+  margin-bottom: 8px;
+
+  @include bp(medium) {
+    margin-bottom: 16px;
+  }
+
   br {
     display: none;
 
@@ -59,28 +58,20 @@
 
 .description {
   color: var(--color-white-80);
-  font-size: 20px;
-  line-height: 1.35;
 
-  @include bp(large) {
-    font-size: 24px;
+  *:first-child {
+    margin-top: 0;
   }
 
-  p {
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  *:last-child {
+    margin-bottom: 0;
   }
 }
 
 .moreButton {
-  margin-top: 8px;
+  margin-top: 16px;
 
   @include bp(large) {
-    margin-top: 0;
+    margin-top: 24px;
   }
 }

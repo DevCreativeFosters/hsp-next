@@ -11,7 +11,7 @@ export default function Feature({ description, index, style, title }) {
       {title && <h3 className={styles.featureTitle}>{title}</h3>}
       {description && (
         <div
-          className={styles.featureDescription}
+          className={clsx(styles.featureDescription, 'p-large')}
           dangerouslySetInnerHTML={{ __html: description }}
         />
       )}

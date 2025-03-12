@@ -65,7 +65,7 @@ export default function ProductMakeGrid({
       )}
       {bodyText && (
         <div
-          className={clsx(styles.description, styles[alignment] || styles.left)}
+          className={clsx(styles.description, styles[alignment] || styles.left, 'p-large')}
           dangerouslySetInnerHTML={{ __html: bodyText }}
         />
       )}

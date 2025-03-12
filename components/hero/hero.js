@@ -163,7 +163,7 @@ export default function Hero({ slides, transition = 'fade' }) {
             {currentSlide.title}
           </DynamicTitle>
           <div
-            className={styles.description}
+            className={clsx(styles.description, 'p-large')}
             dangerouslySetInnerHTML={{ __html: currentSlide.description }}
           />
           <div className={styles.buttonContainer}>
