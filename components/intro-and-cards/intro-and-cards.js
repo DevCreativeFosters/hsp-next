@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
@@ -12,12 +14,11 @@ export default function IntroAndCards({
   titleTagStyle,
 }) {
   return (
-    <Container>
+    <Container flexibleBlockPadding>
       <div className={styles.container}>
         <div className={styles.intro}>
           {title && (
             <DynamicTitle
-              className={styles.title}
               titleTag={titleTag}
               titleTagStyle={titleTagStyle}
             >
@@ -26,7 +27,7 @@ export default function IntroAndCards({
           )}
           {description && (
             <div
-              className={styles.description}
+              className={clsx(styles.description, 'p-large')}
               dangerouslySetInnerHTML={{ __html: description }}
             />
           )}

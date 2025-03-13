@@ -9,7 +9,7 @@ import styles from './information-cards.module.scss';
 
 export default function InformationCards({ cards, titleTag, titleTagStyle }) {
   return (
-    <Container>
+    <Container flexibleBlockPadding>
       <div className={styles.cards}>
         {cards.map(
           (
@@ -69,7 +69,7 @@ export default function InformationCards({ cards, titleTag, titleTagStyle }) {
                 {gap > 0 && <div className={styles.gap}>{gapFragment}</div>}
 
                 <TextElement
-                  className={styles.description}
+                  className={clsx(styles.description, 'p-medium')}
                   text={description}
                 />
               </div>

@@ -36,15 +36,15 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  gap: 24px;
+  gap: var(--gap);
   transition: transform 300ms;
   transform: translateX(var(--offset));
 
   .smallGaps > & {
-    gap: 16px;
+    gap: var(--gap-s);
 
     @include bp(medium) {
-      gap: 24px;
+      gap: var(--gap);
     }
   }
 

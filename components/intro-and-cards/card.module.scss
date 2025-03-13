@@ -1,42 +1,39 @@
 .card {
   display: flex;
   flex-direction: column;
-  padding-top: 24px;
+  padding-top: var(--gap);
   background-color: var(--color-black-100);
   border-radius: 16px;
 
   @include bp(large) {
-    padding-top: 48px;
+    padding-top: var(--gap);
   }
 }
 
 .icon {
-  margin-left: 48px;
-  margin-bottom: 24px;
+  margin-left: var(--gap);
+  margin-bottom: 16px;
+
+  @include bp(medium) {
+    margin-bottom: var(--gap);
+  }
 }
 
 .title {
-  padding: 0 48px 24px;
+  padding-left: var(--gap);
   color: var(--color-white-100);
-
-  @include bp(large) {
-    padding: 0 48px 24px;
-  }
 }
 
 .description {
-  margin: 0 48px 48px;
+  margin: 0 24px 24px;
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 16px;
-  line-height: 1.2;
 
-  @include bp(large) {
-    font-size: 20px;
+  *:first-child {
+    margin-top: 0;
   }
 
-  * {
-    margin: 0;
+  *:last-child {
+    margin-bottom: 0;
   }
 }
 

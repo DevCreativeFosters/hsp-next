@@ -1,17 +1,10 @@
 .container {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: auto;
-  grid-gap: 48px;
-  margin: 48px 0;
+  gap: var(--gap);
   position: relative;
 
   @include bp(medium) {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include bp(large) {
-    margin: 96px 0;
   }
 }
 
@@ -19,37 +12,20 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 24px;
 
-  @include bp(large) {
-    padding: 0;
-  }
-}
-
-.title {
-  color: var(--color-white-100);
-  margin-bottom: 24px;
-
-  @include bp(large) {
-    margin-bottom: 48px;
+  @include bp(medium) {
+    padding: var(--content-padding-m);
   }
 }
 
 .description {
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
-  line-height: 1.2;
 
-  @include bp(large) {
-    font-size: 24px;
+  *:first-child {
+    margin-top: 0;
   }
 
-  p {
-    margin: 0 0 32px;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  *:last-child {
+    margin-bottom: 0;
   }
 }

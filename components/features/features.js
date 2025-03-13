@@ -54,7 +54,6 @@ export default function Features({
       <div className={styles.leadingFeature}>
         {leadingTitle && (
           <DynamicTitle
-            className={styles.leadingTitle}
             titleTag={titleTag}
             titleTagStyle={titleTagStyle}
           >
@@ -86,7 +85,6 @@ export default function Features({
               <Feature
                 description={feature.description}
                 index={index}
-                title={feature.title}
                 titleTag={feature.titleTag}
                 titleTagStyle={feature.titleTagStyle}
               />

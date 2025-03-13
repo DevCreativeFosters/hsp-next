@@ -31,14 +31,13 @@
 }
 
 .grid {
-  margin-block: 24px;
+  margin-block: var(--gap);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(163px, 1fr));
-  gap: 16px;
+  gap: var(--gap-s);
 
   @include bp(large) {
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-block: 32px;
+    gap: var(--gap);
   }
 }

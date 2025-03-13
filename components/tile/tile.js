@@ -83,7 +83,7 @@ export default function Tile({
     () => (
       <DynamicTitle
         className={styles.title}
-        defaultTag="h2"
+        defaultTag="h4"
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >

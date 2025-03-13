@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap);
   position: relative;
   padding-block: 24px;
 
@@ -33,26 +33,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    padding: var(--content-padding);
   }
 
   @include bp(large) {
     align-self: center;
-  }
-}
-
-.leadingTitle {
-  margin-bottom: 8px;
-
-  @include bp(medium) {
-    margin-bottom: 16px;
-  }
-}
-
-.leadingTitle {
-  margin-bottom: 8px;
-
-  @include bp(medium) {
-    margin-bottom: 16px;
   }
 }
 

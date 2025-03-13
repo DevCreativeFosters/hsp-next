@@ -1,7 +1,7 @@
 .promo {
   display: flex;
   flex-flow: column-reverse nowrap;
-  gap: 24px;
+  gap: var(--gap);
 
   @include bp(medium) {
     flex-direction: row;
@@ -35,12 +35,6 @@
 }
 
 .title {
-  margin-bottom: 8px;
-
-  @include bp(medium) {
-    margin-bottom: 16px;
-  }
-
   br {
     display: none;
 

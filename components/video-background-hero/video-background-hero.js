@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-
+import clsx from 'clsx';
 import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
 
 import Button from '@components/button/button';
@@ -41,7 +41,7 @@ export default function VideoBackgroundHero({
             </DynamicTitle>
           )}
           <div
-            className={styles.description}
+            className={clsx(styles.description, 'p-large')}
             dangerouslySetInnerHTML={{ __html: description }}
           />
           {link && (

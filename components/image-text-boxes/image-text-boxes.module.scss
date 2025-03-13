@@ -1,12 +1,10 @@
 @import '/styles/globals/typography';
 
 .container {
-  padding-block: 24px;
   display: grid;
-  gap: 24px;
+  gap: var(--gap);
 
   @include bp(medium) {
-    padding-block: 48px;
     gap: 48px;
   }
 
@@ -17,11 +15,18 @@
 
 .box {
   display: grid;
-  gap: 24px;
+  gap: var(--gap);
 
   @include bp(medium) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 48px;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
   }
 
   &.textVisual {
@@ -37,26 +42,19 @@
 .video {
   width: 100%;
   height: auto;
-  border-radius: 16px;
-  display: grid;
-  place-content: center;
+  border-radius: var(--border-radius-md);
+  place-self: center;
 }
 
 .content {
   @include bp(medium) {
     display: grid;
     place-content: center;
-    padding: 24px;
+    padding: var(--content-padding);
   }
 }
 
 .title {
-  margin-bottom: 8px;
-
-  @include bp(medium) {
-    margin-bottom: 16px;
-  }
-
   br:first-child {
     display: none;
   }

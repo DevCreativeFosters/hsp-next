@@ -21,7 +21,7 @@ export default function ImageTextBoxes({ boxes }) {
   if (!boxes || boxes.length === 0) return null;
 
   return (
-    <Container className={styles.container}>
+    <Container flexibleBlockPadding className={styles.container}>
       {boxes.map((box, index) => (
         <div className={clsx(styles.box, styles[box.layout])} key={index}>
           {box.media === 'image' && box.image && (

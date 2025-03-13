@@ -98,12 +98,10 @@
 }
 
 .title {
-  color: var(--color-white-100);
+  margin-bottom: 8px;
 }
 
 .description {
-  margin-top: 8px;
-
   p {
     color: var(--color-white-80);
     pointer-events: none;

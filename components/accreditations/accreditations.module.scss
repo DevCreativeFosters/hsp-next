@@ -1,103 +1,68 @@
 .wrapper {
   position: relative;
-  display: grid;
-  grid-template-areas: 'intro' 'certificates' 'info';
-  gap: 48px;
-  margin: 96px 0 48px;
-
-  @include bp(medium) {
-    grid-template-areas: 'intro certificates' 'info info';
-  }
-
-  @include bp(large) {
-    grid-template-areas: 'intro intro' 'certificates info';
-    margin-block: 96px;
-  }
 }
 
 .intro {
-  grid-area: intro;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  padding: 24px;
-
-  @include bp(medium) {
-    padding-block: 0;
-  }
-
-  @include bp(large) {
-    padding-inline: 0;
-    gap: 32px;
-  }
+  margin-bottom: var(--gap);
 }
 
 .description {
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
-  line-height: 1.2;
 
-  @include bp(large) {
-    font-size: 24px;
+  *:first-of-type {
+    margin-top: 0;
   }
 
-  p {
-    margin: 0;
-    line-height: 1.2;
+  *:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.certificatesWrapper {
+  display: grid;
+  gap: var(--gap);
+
+  @include bp(medium) {
+    grid-template-columns: repeat(12, 1fr);
   }
 }
 
 .certificates {
-  grid-area: certificates;
-  display: flex;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap);
+
+  @include bp(medium) {
+    grid-column: span 6;
+  }
 
   @include bp(large) {
-    gap: 24px;
+    grid-column: span 4;
   }
 }
 
 .info {
-  grid-area: info;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  padding: 48px 24px;
-  border-radius: 16px;
+  padding: var(--card-padding);
+  border-radius: var(--border-radius-md);
   border: 2px solid var(--color-white-20);
 
   @include bp(medium) {
-    width: calc(100% + 2 * 24px);
-    margin-left: -24px;
-    padding: 48px;
+    grid-column: span 6;
   }
 
   @include bp(large) {
-    width: 100%;
-    margin-left: 0;
-    gap: 48px;
+    grid-column: span 8;
   }
 }
 
 .content {
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 16px;
 
-  @include bp(large) {
-    font-size: 20px;
+  *:first-of-type {
+    margin-top: 0;
   }
 
-  p {
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  *:last-of-type {
+    margin-bottom: 0;
   }
 }

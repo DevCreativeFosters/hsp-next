@@ -1,12 +1,9 @@
 .cards {
-  display: flex;
-  flex-direction: column;
-  margin-block: 48px;
-  gap: 48px;
+  display: grid;
+  gap: var(--gap);
 
-  @include bp(large) {
-    flex-direction: row;
-    margin-block: 96px;
+  @include bp(medium) {
+    grid-template-columns: repeat(12, 1fr);
   }
 }
 
@@ -22,20 +19,27 @@
   overflow: hidden;
   width: 100%;
 
-  @include bp(large) {
-    width: 50%;
-    padding: 48px;
+  @include bp(medium) {
+    padding: 32px;
   }
 
   &.minor {
+    @include bp(medium) {
+      grid-column: span 6;
+    }
+
     @include bp(large) {
-      width: calc((100% - 48px) * 0.25);
+      grid-column: span 4;
     }
   }
 
   &.major {
+    @include bp(medium) {
+      grid-column: span 6;
+    }
+
     @include bp(large) {
-      width: calc((100% - 48px) * 0.75);
+      grid-column: span 8;
     }
   }
 }
@@ -70,21 +74,21 @@
   position: relative;
   width: 58px;
   height: 58px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   @include bp(large) {
-    margin-bottom: 48px;
+    margin-bottom: 24px;
   }
 }
 
 .title {
   position: relative;
   z-index: 1;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   text-shadow: 0 0 6px rgb(0 0 0 / 90%);
 
-  @include bp(large) {
-    margin-bottom: 48px;
+  @include bp(medium) {
+    margin-bottom: 16px;
   }
 }
 
@@ -105,12 +109,13 @@
   position: relative;
   margin: 0;
   color: var(--color-white-80);
-  font-size: 16px;
-  line-height: 1.35;
   text-shadow: 0 0 6px rgb(0 0 0 / 90%);
 
-  @include bp(large) {
-    font-size: 20px;
-    line-height: 1.35;
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-top: 0;
   }
 }

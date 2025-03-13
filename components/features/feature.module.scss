@@ -4,14 +4,9 @@
   display: flex;
   height: 100%;
   flex-direction: column;
-  gap: 8px;
-  padding: 24px;
+  padding: var(--card-padding);
   border: 2px solid var(--color-white-20);
-  border-radius: 16px;
-
-  @include bp(large) {
-    gap: 16px;
-  }
+  border-radius: var(--border-radius-md);
 
   &.f1 {
     grid-area: feature1;
@@ -28,10 +23,6 @@
   &.f3 {
     grid-area: feature3;
   }
-}
-
-.featureTitle {
-  font-family: var(--font-secondary);
 }
 
 .featureDescription {
