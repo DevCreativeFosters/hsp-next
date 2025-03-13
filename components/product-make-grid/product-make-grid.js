@@ -19,6 +19,8 @@ export default function ProductMakeGrid({
   products,
   productsPerPage,
   productsPerPageMobile,
+  productsTitleTag,
+  productsTitleTagStyle,
   title,
   titleTag,
   titleTagStyle,
@@ -65,7 +67,11 @@ export default function ProductMakeGrid({
       )}
       {bodyText && (
         <div
-          className={clsx(styles.description, styles[alignment] || styles.left, 'p-large')}
+          className={clsx(
+            styles.description,
+            styles[alignment] || styles.left,
+            'p-large',
+          )}
           dangerouslySetInnerHTML={{ __html: bodyText }}
         />
       )}
@@ -81,6 +87,8 @@ export default function ProductMakeGrid({
               name={product.title}
               price={product.startingPrice}
               removeBorder={true}
+              titleTag={productsTitleTag}
+              titleTagStyle={productsTitleTagStyle}
               url={product.link?.url}
             />
           ))}

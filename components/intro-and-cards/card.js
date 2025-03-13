@@ -1,8 +1,17 @@
 import Image from 'next/image';
 
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
+
 import styles from './card.module.scss';
 
-export default function Card({ backgroundImage, description, icon, title }) {
+export default function Card({
+  backgroundImage,
+  description,
+  icon,
+  title,
+  titleTag,
+  titleTagStyle,
+}) {
   return (
     <div className={styles.card}>
       {icon && (
@@ -14,7 +23,16 @@ export default function Card({ backgroundImage, description, icon, title }) {
           width={58}
         />
       )}
-      {title && <h3 className={styles.title}>{title}</h3>}
+      {title && (
+        <DynamicTitle
+          className={styles.title}
+          defaultTag="h3"
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          {title}
+        </DynamicTitle>
+      )}
       {description && (
         <div
           className={styles.description}

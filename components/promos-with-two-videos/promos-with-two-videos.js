@@ -56,6 +56,8 @@ export default function PromoWithTwoVideos({ data }) {
                 name={accessory?.accessoryName}
                 price={accessory?.price}
                 productUrl={accessory?.productLink?.url}
+                titleTag={accessory?.titleTag}
+                titleTagStyle={accessory?.titleTagStyle}
                 url={accessory?.videoFile?.node?.mediaItemUrl}
               />
             ))}

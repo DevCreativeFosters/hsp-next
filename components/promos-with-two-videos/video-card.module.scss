@@ -46,15 +46,6 @@
 
 .productName {
   color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-
-  @include bp(large) {
-    font-size: 24px;
-    line-height: 1.33;
-  }
 }
 
 .productPrice {

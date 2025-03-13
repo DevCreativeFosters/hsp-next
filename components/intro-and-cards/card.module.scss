@@ -18,14 +18,9 @@
 .title {
   padding: 0 48px 24px;
   color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 36px;
-  line-height: 1.33;
 
   @include bp(large) {
     padding: 0 48px 24px;
-    font-size: 48px;
-    line-height: 1.25;
   }
 }
 

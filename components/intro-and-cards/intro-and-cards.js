@@ -40,6 +40,8 @@ export default function IntroAndCards({
                 icon={card?.image?.node}
                 key={card?.title + idx}
                 title={card?.title}
+                titleTag={card?.titleTag}
+                titleTagStyle={card?.titleTagStyle}
               />
             );
           })}

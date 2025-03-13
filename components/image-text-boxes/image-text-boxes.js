@@ -8,6 +8,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import TextElement from '@components/text-element/text-element';
 import VideoCard from '@components/video-card/video-card';
 
@@ -39,10 +40,14 @@ export default function ImageTextBoxes({ boxes }) {
           )}
           <div className={styles.content}>
             {box.title && (
-              <h2
+              <DynamicTitle
                 className={styles.title}
-                dangerouslySetInnerHTML={{ __html: box.title }}
-              />
+                defaultTag="h2"
+                titleTag={box.titleTag}
+                titleTagStyle={box.titleTagStyle}
+              >
+                <span dangerouslySetInnerHTML={{ __html: box.title }} />
+              </DynamicTitle>
             )}
 
             {box.description && (

@@ -30,19 +30,6 @@
   }
 }
 
-.featureTitle {
-  font-family: var(--font-secondary);
-  line-height: 1.33;
-
-  @include bp(medium) {
-    font-size: 36px;
-  }
-
-  @include bp(large) {
-    font-size: 48px;
-  }
-}
-
 .featureDescription {
   color: var(--color-white-80);
   line-height: 1.3;

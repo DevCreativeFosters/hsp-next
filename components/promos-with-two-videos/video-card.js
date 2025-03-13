@@ -5,9 +5,19 @@ import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
+
 import styles from './video-card.module.scss';
 
-export default function VideoCard({ idx, name, price, productUrl, url }) {
+export default function VideoCard({
+  idx,
+  name,
+  price,
+  productUrl,
+  titleTag,
+  titleTagStyle,
+  url,
+}) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -44,7 +54,14 @@ export default function VideoCard({ idx, name, price, productUrl, url }) {
         Your browser does not support the video tag.
       </video>
       <div className={styles.information}>
-        <h5 className={styles.productName}>{name}</h5>
+        <DynamicTitle
+          className={styles.productName}
+          defaultTag="h5"
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          {name}
+        </DynamicTitle>
         <span className={styles.productPrice}>
           from ${price.toLocaleString()}
         </span>

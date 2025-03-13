@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 import { formatPrice } from '@lib/helpers';
 
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
+
 import styles from './product-card.module.scss';
 
 export default function ProductCard({
@@ -13,6 +15,8 @@ export default function ProductCard({
   name,
   price,
   removeBorder = false,
+  titleTag,
+  titleTagStyle,
   url = '',
 }) {
   const LinkOrDiv = url ? Link : 'div';
@@ -31,7 +35,16 @@ export default function ProductCard({
           width={230}
         />
       )}
-      {name && <div className={clsx(styles.name, 'h5')}>{name}</div>}
+      {name && (
+        <DynamicTitle
+          className={styles.name}
+          defaultTag="h5"
+          titleTag={titleTag}
+          titleTagStyle={titleTagStyle}
+        >
+          {name}
+        </DynamicTitle>
+      )}
       {(price || price === 0) && (
         <div className={clsx(styles.price, 'p-small')}>
           from {formatPrice(price)}

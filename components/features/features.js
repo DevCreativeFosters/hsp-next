@@ -83,17 +83,26 @@ export default function Features({
           }}
           slides={features.map((feature, index) => (
             <SwiperSlide className={styles.slide} key={index}>
-              <Feature {...feature} index={index} />
+              <Feature
+                description={feature.description}
+                index={index}
+                title={feature.title}
+                titleTag={feature.titleTag}
+                titleTagStyle={feature.titleTagStyle}
+              />
             </SwiperSlide>
           ))}
         />
       ) : (
         features.map((feature, index) => (
           <Feature
-            {...feature}
+            description={feature.description}
             index={index}
             key={index}
             style={{ order: (index + 1) * 10 }}
+            title={feature.title}
+            titleTag={feature.titleTag}
+            titleTagStyle={feature.titleTagStyle}
           />
         ))
       )}

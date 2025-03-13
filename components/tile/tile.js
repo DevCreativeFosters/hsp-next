@@ -8,6 +8,8 @@ import Link from 'next/link';
 
 import routes from '@lib/routes';
 
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
+
 import styles from './tile.module.scss';
 
 export default function Tile({
@@ -17,6 +19,8 @@ export default function Tile({
   image,
   link,
   title,
+  titleTag,
+  titleTagStyle,
   url,
   variant,
 }) {
@@ -76,8 +80,17 @@ export default function Tile({
   );
 
   const Title = useMemo(
-    () => <h2 className={styles.title}>{title}</h2>,
-    [title],
+    () => (
+      <DynamicTitle
+        className={styles.title}
+        defaultTag="h2"
+        titleTag={titleTag}
+        titleTagStyle={titleTagStyle}
+      >
+        {title}
+      </DynamicTitle>
+    ),
+    [title, titleTag, titleTagStyle],
   );
 
   return (

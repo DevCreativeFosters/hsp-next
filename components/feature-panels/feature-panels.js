@@ -50,7 +50,13 @@ export default function FeaturePanels({
               onClick={() => setActiveTab(index)}
               role="tab"
             >
-              {panel.label}
+              <DynamicTitle
+                defaultTag="p"
+                titleTag={panel.titleTag}
+                titleTagStyle={panel.titleTagStyle}
+              >
+                {panel.label}
+              </DynamicTitle>
             </button>
           ))}
         </div>
