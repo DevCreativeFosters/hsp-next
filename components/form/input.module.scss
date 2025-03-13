@@ -25,8 +25,12 @@
 }
 
 .hasLabel {
+  --has-label-offset: 16px;
+
   padding-top: calc(
-    var(--filled-label-font-size) * var(--filled-label-line-height)
+    var(--filled-label-font-size) * var(--filled-label-line-height) - var(
+        --has-label-offset
+      )
   );
 }
 

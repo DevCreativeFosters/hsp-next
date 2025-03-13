@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
-  margin-top: 48px;
+  padding-block: 24px;
 
   @include bp(large) {
     display: grid;
@@ -14,7 +14,7 @@
       'buttons questions'
       'buttons toggle';
     grid-gap: 48px;
-    margin-top: 96px;
+    padding-block: 48px;
   }
 }
 

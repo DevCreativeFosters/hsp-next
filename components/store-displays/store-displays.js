@@ -36,7 +36,7 @@ export default function StoreDisplays({ displays }) {
   const displayText = `${displayCount} ${displayCount === 1 ? 'product' : 'products'}`;
   const triggerText = (
     <div>
-      Store Displays: <span>{displayText}</span>
+      In-store Displays: <span>{displayText}</span>
     </div>
   );
 

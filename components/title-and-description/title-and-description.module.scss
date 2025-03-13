@@ -1,7 +1,6 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   padding-block: 24px;
 
   @include bp(medium) {
@@ -11,7 +10,6 @@
   @include bp(large) {
     flex-direction: row;
     align-items: center;
-    gap: 24px;
     padding-inline: 48px;
   }
 
