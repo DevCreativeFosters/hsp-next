@@ -56,7 +56,7 @@ export const VehicleProvider = ({
   const wrapperRef = useRef(null);
   const enteredProductPageRef = useRef(null);
   const pathname = usePathname();
-  const { slug } = params;
+  const slug = params.segments?.[0];
 
   useEffect(() => {
     const { current: wrapper } = wrapperRef;
