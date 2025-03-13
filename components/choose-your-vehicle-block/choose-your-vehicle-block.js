@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-
 import { usePathname, useRouter } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 import { useWindowSize } from 'usehooks-ts';
@@ -73,7 +72,6 @@ export default function ChooseYourVehicleBlock({
 
   const windowSize = useWindowSize();
   const isMobile = useIsMobile();
-
 
   const mainCategorySlug = useMemo(() => path.split('/')[1], [path]);
   const makeSlug = useMemo(() => getValueOrSlug(maker), [maker]);
@@ -307,19 +305,13 @@ export default function ChooseYourVehicleBlock({
     [setVariant, variantSlug, variantsNormalized],
   );
 
-
-
   if (isMobile) {
     return null;
   }
 
   return (
-    <div
-      className={styles.wrapper}
-      ref={wrapperRef}
-    >
+    <div className={styles.wrapper} ref={wrapperRef}>
       <Container>
-
         <div className={styles.form}>
           {!filteredMakeSelectOptions.length ? (
             <Loading color="white" size="large" />

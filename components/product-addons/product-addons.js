@@ -84,7 +84,7 @@ export default function ProductAddons({
   }
 
   return (
-    <Container collapseMargin>
+    <Container collapseMargin flexibleBlockPadding>
       <SectionIntro
         description={description}
         title={title}

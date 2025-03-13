@@ -86,6 +86,7 @@ a {
 
   @include bp(large) {
     font-size: 16px;
+    line-height: 1.37;
   }
 }
 
@@ -95,7 +96,7 @@ a {
 
   @include bp(large) {
     font-size: 20px;
-    line-height: 1.28;
+    line-height: 1.3;
   }
 }
 

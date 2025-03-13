@@ -1,11 +1,9 @@
 .promo {
   display: flex;
   flex-flow: column-reverse nowrap;
-  padding-block: 24px;
   gap: 24px;
 
   @include bp(medium) {
-    padding-block: 48px;
     flex-direction: row;
   }
 }
@@ -33,10 +31,6 @@
 
   @include bp(medium) {
     width: 50%;
-  }
-
-  @include bp(full) {
-    width: 750px;
   }
 }
 

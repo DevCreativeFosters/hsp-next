@@ -5,9 +5,9 @@
     display: flex;
     min-height: 240px;
     border-radius: 16px;
-    margin-top: 56px;
     background: var(--color-black-100);
     overflow: hidden;
+    margin-bottom: 24px;
   }
 }
 
@@ -21,7 +21,7 @@
   }
 
   @include bp(large) {
-    width: 31%;
+    width: 40%;
   }
 }
 
@@ -33,22 +33,14 @@
   color: var(--color-white-80);
   margin: 16px 0;
   font-family: var(--font-secondary);
-  font-size: 24px;
 
   .link:hover & {
     color: var(--color-white-100);
-  }
-
-  @include bp(large) {
-    font-size: 36px;
-    line-height: 1.33;
   }
 }
 
 .content {
   color: var(--color-white-80);
-  font-size: 16px;
-  line-height: 1.35;
 }
 
 .imageContainer {
@@ -64,7 +56,7 @@
   }
 
   @include bp(large) {
-    width: 69%;
+    width: 60%;
   }
 }
 

@@ -28,7 +28,7 @@ export default function Feature({
       )}
       {description && (
         <div
-          className={clsx(styles.featureDescription, 'p-large')}
+          className={clsx(styles.featureDescription, 'p-medium')}
           dangerouslySetInnerHTML={{ __html: description }}
         />
       )}

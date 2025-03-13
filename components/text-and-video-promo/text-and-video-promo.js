@@ -18,7 +18,7 @@ export default function TextAndImagePromo({
   videoUrl,
 }) {
   return (
-    <Container>
+    <Container flexibleBlockPadding>
       <div className={styles.promo}>
         <div className={styles.text}>
           {title && (

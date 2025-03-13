@@ -59,7 +59,7 @@ export default function Reviews({ data }) {
   }, []);
 
   return (
-    <Container collapseTopMargin>
+    <Container collapseTopMargin flexibleBlockPadding>
       <SectionIntro
         description={data?.description}
         fitInline

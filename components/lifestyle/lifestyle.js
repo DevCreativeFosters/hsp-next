@@ -1,8 +1,8 @@
 'use client';
 
-
 import routes from '@lib/routes';
 
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
@@ -48,7 +48,7 @@ export default function Lifestyle({
   const carouselItems = [featuredNormalized, ...postsNormalized];
 
   return (
-    <>
+    <Container flexibleBlockPadding>
       <SectionIntro
         description={description}
         noTopMargin
@@ -56,7 +56,7 @@ export default function Lifestyle({
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >
-        <SectionButtons buttons={buttons} />
+        <SectionButtons alwaysInRow buttons={buttons} />
       </SectionIntro>
 
       <FeaturedArticle
@@ -73,6 +73,6 @@ export default function Lifestyle({
           name="Lifestyle -> posts"
         />
       )}
-    </>
+    </Container>
   );
 }

@@ -14,7 +14,7 @@ export default function ProductGrid({
   titleTagStyle,
 }) {
   return (
-    <Container collapseMargin>
+    <Container collapseMargin flexibleBlockPadding>
       <div className={styles.container}>
         {title && (
           <DynamicTitle

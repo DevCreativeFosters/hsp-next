@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 24px;
   position: relative;
   padding-block: 24px;
 
@@ -14,10 +14,10 @@
       'video leading'
       'feature1 feature1'
       'feature2 feature3';
+    padding-block: 48px;
   }
 
   @include bp(large) {
-    column-gap: 48px;
     grid-template-areas:
       'video leading'
       'video feature1'
@@ -27,20 +27,24 @@
 }
 
 .leadingFeature {
-  padding: 24px 24px 0;
-
   @include bp(medium) {
     grid-area: leading;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 48px 24px;
   }
 
   @include bp(large) {
     align-self: center;
-    padding: 48px;
+  }
+}
+
+.leadingTitle {
+  margin-bottom: 8px;
+
+  @include bp(medium) {
+    margin-bottom: 16px;
   }
 }
 
@@ -100,8 +104,6 @@
   }
 
   @include bp(large) {
-    min-width: 500px;
-    max-width: 750px;
     max-height: 960px;
   }
 }
@@ -116,7 +118,7 @@
   }
 
   @include bp(large) {
-    max-height: none;
+    max-height: 700px;
   }
 }
 

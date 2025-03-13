@@ -1,9 +1,8 @@
+import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
 import SectionIntro from '@components/section-intro/section-intro';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 import Tile from '@components/tile/tile';
-
-import styles from './tiles.module.scss';
 
 export default function Tiles({
   buttons,
@@ -14,7 +13,7 @@ export default function Tiles({
   titleTagStyle,
 }) {
   return (
-    <div className={styles.container}>
+    <Container flexibleBlockPadding>
       <SectionIntro
         description={description}
         fitInline
@@ -22,10 +21,10 @@ export default function Tiles({
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >
-        <SectionButtons buttons={buttons} />
+        <SectionButtons alwaysInRow buttons={buttons} />
       </SectionIntro>
 
       <TileCarousel itemTemplate={Tile} items={tiles} name="Tiles" />
-    </div>
+    </Container>
   );
 }

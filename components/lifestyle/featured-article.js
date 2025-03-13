@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -46,7 +47,7 @@ export default function FeaturedArticle({
   return (
     <article className={styles.container}>
       <div className={styles.info}>
-        <time className={styles.date} dateTime={createdAt}>
+        <time className={clsx(styles.date, 'p-small')} dateTime={createdAt}>
           {createdAtHuman}
         </time>
 
@@ -54,7 +55,7 @@ export default function FeaturedArticle({
           <h2 className={styles.title}>{title}</h2>
         </Link>
         <div
-          className={styles.content}
+          className={clsx(styles.content, 'p-medium')}
           dangerouslySetInnerHTML={{ __html: content || '' }}
         />
       </div>

@@ -54,7 +54,7 @@ export default function ProductMakeGrid({
   }, [itemsPerPage, page, products]);
 
   return (
-    <Container className={styles.container}>
+    <Container flexibleBlockPadding>
       {title && (
         <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}

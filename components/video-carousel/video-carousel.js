@@ -14,7 +14,7 @@ export default function VideoCarousel({
   videos,
 }) {
   return (
-    <Container collapseMargin>
+    <Container collapseMargin flexibleBlockPadding>
       <SectionIntro
         description={description}
         fitInline

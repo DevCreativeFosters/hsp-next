@@ -87,7 +87,7 @@
 }
 
 .info {
-  padding: 48px 24px;
+  padding: 24px;
   border-radius: 0 0 16px 16px;
   background: var(--color-black-100);
   flex-grow: 1;
@@ -97,8 +97,6 @@
   display: block;
   margin-bottom: 16px;
   color: var(--color-white-40);
-  font-size: 14px;
-  line-height: 1.6;
 }
 
 .title {
@@ -112,5 +110,4 @@
 
 .content {
   color: var(--color-white-80);
-  line-height: 1.6;
 }
