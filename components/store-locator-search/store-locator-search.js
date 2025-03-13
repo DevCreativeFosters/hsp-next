@@ -38,6 +38,10 @@ export default function StoreLocatorSearch({ allLocations }) {
   const wrapperOuterRef = useRef(null);
   const isMobile = useIsMobile();
   const formRef = useRef(null);
+  const [windowSize, setWindowSize] = useState({
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+  });
 
   useMobileVh();
 
@@ -167,6 +171,60 @@ export default function StoreLocatorSearch({ allLocations }) {
       }
     },
     [allLocations, searchGeolocation, setAllMapLocations, setFilteredLocations],
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(
+    function attachIntersectionObserver() {
+      const { height, width } = windowSize;
+      const el = wrapperOuterRef.current;
+      let io;
+      if (width && height && el) {
+        const headerHeight =
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              '--header-height',
+            ),
+          ) || 0;
+        const top = headerHeight;
+        const bottom = height - top;
+        const rootMargin = `-${top - 1}px 0px -${bottom}px 0px`;
+        io = new IntersectionObserver(
+          function (entries) {
+            const entry = entries[0];
+            const { isIntersecting } = entry;
+
+            el.classList.toggle(styles.isCloseToHeader, isIntersecting);
+          },
+          {
+            root: document.body,
+            rootMargin,
+            threshold: 0,
+          },
+        );
+        io.observe(el);
+      }
+
+      return () => {
+        if (io) {
+          io.disconnect();
+        }
+      };
+    },
+    [windowSize.height, windowSize.width], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (

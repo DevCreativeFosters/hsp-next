@@ -49,3 +49,9 @@
   position: sticky;
   top: 100vh;
 }
+
+.fullHeightWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}

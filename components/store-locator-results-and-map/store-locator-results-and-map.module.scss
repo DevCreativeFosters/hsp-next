@@ -3,17 +3,6 @@
 
   @include bp(medium) {
     display: block;
-    min-height: calc(
-      100vh - var(--header-height) - var(--store-locator-desktop-form-height)
-    );
-    scroll-margin-top: calc(
-      var(--header-height) + var(--store-locator-desktop-form-height)
-    );
-    background: linear-gradient(
-      to bottom,
-      var(--color-black-60),
-      var(--color-black-90) 20%
-    );
   }
 }
 
@@ -26,29 +15,17 @@
 }
 
 .visualContainer {
-  --margin-block: 48px;
-  --padding: 24px;
-
   display: flex;
-  gap: 16px;
   flex-grow: 1;
   width: 100%;
   max-height: 725px;
-  padding: var(--padding);
   margin: var(--margin-block) 0;
   list-style: none;
-  border-radius: 0 0 32px 32px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    var(--color-black-60) 10%,
-    var(--color-black-100) 100%
-  );
+  padding-block: 24px;
+  gap: 8px;
 
   @include bp(large) {
-    --padding: 48px;
-
-    gap: 24px;
+    gap: 12px;
   }
 }
 
@@ -57,16 +34,17 @@
   width: 35%;
   overflow-y: scroll;
   max-height: calc(
-    100vh - var(--header-height) - var(--store-locator-desktop-form-height) -
-      var(--margin-block) * 2 - var(--padding) * 2
+    100vh - var(--header-height) - var(--store-locator-desktop-form-height) - var(
+        --margin-block
+      ) * 2 - var(--padding) * 2
   );
   min-height: 300px;
-  padding-right: 16px;
+  padding-right: 8px;
   scrollbar-width: thin;
   scrollbar-color: #262626 #0e0e0e;
 
   @include bp(large) {
-    padding-right: 24px;
+    padding-right: 12px;
   }
 
   &::-webkit-scrollbar {

@@ -81,6 +81,7 @@ export default function Layout({
   isProductPageWithoutMakeAndModel,
   preventHeaderCollapse = false,
   reserveSpaceForVehicleSelection,
+  stickyFooter = false,
   withFooter = true,
   withMap,
 }) {
@@ -150,49 +151,55 @@ export default function Layout({
         <VehicleProvider
           isProductPageWithoutMakeAndModel={isProductPageWithoutMakeAndModel}
         >
-          <Header
-            mainMenu={normalizedMainMenu}
-            mainProductCategories={normalizedMainProductCategories}
-            makes={data.makes}
-            mobileMenu={normalizedMobileMenu}
-            preventHeaderCollapse={preventHeaderCollapse}
-            products={normalizedProductData}
-            secondaryMenu={topNavigationMenu}
-          />
-          <main className={styles.main}>
-            {withMap && (
-              <div className={styles.background}>
-                <Image
-                  alt="Shape of the Australian continent"
-                  className={styles.backgroundImage}
-                  fill={true}
-                  quality={80}
-                  src={BgContinent}
-                />
+          <div
+            className={
+              withFooter && stickyFooter ? styles.fullHeightWrapper : ''
+            }
+          >
+            <Header
+              mainMenu={normalizedMainMenu}
+              mainProductCategories={normalizedMainProductCategories}
+              makes={data.makes}
+              mobileMenu={normalizedMobileMenu}
+              preventHeaderCollapse={preventHeaderCollapse}
+              products={normalizedProductData}
+              secondaryMenu={topNavigationMenu}
+            />
+            <main className={styles.main}>
+              {withMap && (
+                <div className={styles.background}>
+                  <Image
+                    alt="Shape of the Australian continent"
+                    className={styles.backgroundImage}
+                    fill={true}
+                    quality={80}
+                    src={BgContinent}
+                  />
+                </div>
+              )}
+              <div
+                className={clsx(styles.content, {
+                  [styles.reserveSpaceForVehicleSelection]:
+                    reserveSpaceForVehicleSelection,
+                })}
+              >
+                {children}
               </div>
-            )}
-            <div
-              className={clsx(styles.content, {
-                [styles.reserveSpaceForVehicleSelection]:
-                  reserveSpaceForVehicleSelection,
-              })}
-            >
-              {children}
-            </div>
-          </main>
-          {withFooter && (
-            <div className={styles.bottomSticky}>
-              <FullscreenCollapse>
-                {/* <Newsletter
+            </main>
+            {withFooter && (
+              <div className={styles.bottomSticky}>
+                <FullscreenCollapse>
+                  {/* <Newsletter
                   description={newsletterDescription}
                   googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
                   title={newsletterTitle}
                 /> */}
-                <Footer menus={normalizedFooterMenus} text={footerText} />
-              </FullscreenCollapse>
-            </div>
-          )}
-          <div id={MODAL_PORTAL_ID} />
+                  <Footer menus={normalizedFooterMenus} text={footerText} />
+                </FullscreenCollapse>
+              </div>
+            )}
+            <div id={MODAL_PORTAL_ID} />
+          </div>
         </VehicleProvider>
       </UserProvider>
     </GravityFormsStaticDataProvider>

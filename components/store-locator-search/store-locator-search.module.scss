@@ -3,8 +3,8 @@
   z-index: var(--z-index-store-search);
   top: 0;
   background: var(--color-primary-100);
-  transition: height 0.3s;
-  padding-block: 16px;
+  padding-block: 24px;
+  transition: padding-block 0.3s ease-in-out;
 
   @include bp(medium) {
     position: sticky;
@@ -20,8 +20,15 @@
     }
   }
 
-  @include bp(medium) {
-    height: auto;
+  &.isCloseToHeader {
+    @include bp(medium) {
+      padding-block: 8px;
+    }
+
+    input,
+    a {
+      max-height: 32px;
+    }
   }
 }
 
@@ -33,12 +40,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 16px;
   border-radius: 8px;
   background: var(--color-black-100);
   max-height: calc(100dvh - var(--header-height) - 96px);
 
   @include bp(medium) {
+    gap: 16px;
     flex-direction: row;
     align-items: center;
     border-radius: 16px;
