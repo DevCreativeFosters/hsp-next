@@ -18,6 +18,12 @@
   }
 }
 
+div.product {
+  &:hover {
+    cursor: auto;
+  }
+}
+
 .image {
   width: 100%;
   height: auto;
