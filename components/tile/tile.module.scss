@@ -42,11 +42,6 @@
       width: calc(100% / 3 - (2 / 3 * 24px));
       max-width: calc(100% / 3 - (2 / 3 * 24px));
     }
-
-    @include bp(large) {
-      width: calc(100% / 3 - (2 / 3 * 48px));
-      max-width: calc(100% / 3 - (2 / 3 * 48px));
-    }
   }
 
   &.featured {

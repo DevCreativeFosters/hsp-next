@@ -30,7 +30,7 @@ export default function ProductItem({
         )}
       </div>
       {name && <div className={clsx(styles.name, 'h5')}>{name}</div>}
-      {category && <div className={styles.name}>{category}</div>}
+      {category && <div className={clsx(styles.name, 'h5')}>{category}</div>}
       {(price || price === 0) && (
         <div className={styles.price}>from {formatPrice(price)}</div>
       )}

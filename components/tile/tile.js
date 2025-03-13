@@ -82,7 +82,7 @@ export default function Tile({
   const Title = useMemo(
     () => (
       <DynamicTitle
-        className={clsx(styles.title, 'h3')}
+        className={clsx(styles.title, 'h4')}
         defaultTag="h2"
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}

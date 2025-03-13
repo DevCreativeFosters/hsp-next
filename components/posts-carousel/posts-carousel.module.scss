@@ -2,7 +2,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 16px;
+  gap: var(--gap-s);
 
   @include bp(medium) {
     justify-content: flex-end;
@@ -38,16 +38,12 @@
 
 .postContainer {
   display: flex;
-  gap: 24px;
+  gap: var(--gap);
   width: calc(100% - 24px);
   height: 100%;
 
   @include bp(medium) {
     width: 100%;
-  }
-
-  @include bp(large) {
-    gap: 48px;
   }
 }
 
