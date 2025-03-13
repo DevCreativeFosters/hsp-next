@@ -82,14 +82,14 @@
 
 .resetButtonContainer {
   width: 0;
-  height: 40px;
+  height: 36px;
   overflow: hidden;
   border-radius: 0 0 8px;
   transition: width 300ms;
   flex-shrink: 0;
 
   .nonEmpty:not(.opened) + & {
-    width: 40px;
+    width: 36px;
     transition: width 300ms 300ms;
   }
 
@@ -102,7 +102,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
+  width: 36px;
   height: inherit;
   padding: 0;
   color: var(--color-white-100);

@@ -12,6 +12,8 @@ export default function DynamicTitle({
   const TitleTag = titleTag?.length ? titleTag[0] : defaultTag;
 
   return (
-    <TitleTag className={clsx(className, titleTagStyle)}>{children}</TitleTag>
+    <TitleTag className={clsx(className, titleTagStyle || TitleTag)}>
+      {children}
+    </TitleTag>
   );
 }

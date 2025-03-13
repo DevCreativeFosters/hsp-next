@@ -5,13 +5,15 @@ import AccordionItem from '@components/accordion/accordion-item';
 
 import styles from './store-displays.module.scss';
 
-const renderLogo = (product) => {
+const renderLogo = product => {
   const imageUrl =
     product?.productCategory?.nodes?.[0]?.mainCategoryDetails?.inStoreImage
       ?.node?.mediaItemUrl;
   const altText =
-    product.productCategory?.nodes?.[0]?.name ||
-    product.productCategory?.name;
+    product.productCategory?.nodes?.[0]?.name || product.productCategory?.name;
+
+  const uniqueId =
+    product?.productCategory?.nodes?.[0]?.databaseId || Math.random();
 
   if (!imageUrl) return null;
 
@@ -20,7 +22,7 @@ const renderLogo = (product) => {
       alt={altText}
       className={styles.logo}
       height={32}
-      key={product.id}
+      key={uniqueId}
       src={imageUrl}
       width={107}
     />
@@ -40,7 +42,7 @@ export default function StoreDisplays({ displays }) {
 
   const displayLogos = (
     <div className={styles.displays}>
-      {displays.map((product) => renderLogo(product))}
+      {displays.map(product => renderLogo(product))}
     </div>
   );
 

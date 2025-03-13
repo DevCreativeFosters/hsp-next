@@ -60,7 +60,7 @@ export default async function ProductHeroPage({
   };
 
   return (
-    <Layout title="Product">
+    <Layout reserveSpaceForVehicleSelection title="Product">
       <Container>
         <BreadcrumbsProduct currentProduct={currentProduct} />
         <ProductCompatibilityPopup />

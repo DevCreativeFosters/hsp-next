@@ -93,5 +93,9 @@
 }
 
 .button {
-  margin-top: 48px;
+  margin-top: 16px;
+
+  @include bp(medium) {
+    margin-top: 24px;
+  }
 }

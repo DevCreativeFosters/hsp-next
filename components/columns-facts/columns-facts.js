@@ -28,10 +28,11 @@ export default function ColumnsFacts({
   const isMediumWidth = useIsMediumWidth();
 
   return (
-    <Container className={styles.container}>
+    <Container flexibleBlockPadding>
       {title && (
         <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
+          defaultTag='h2'
           titleTag={titleTag}
           titleTagStyle={titleTagStyle}
         >
@@ -61,7 +62,7 @@ export default function ColumnsFacts({
           <div className={styles.column} key={index}>
             {column.description && (
               <TextElement
-                className={styles.description}
+                className={clsx(styles.description, 'p-medium')}
                 text={column.description}
               />
             )}
