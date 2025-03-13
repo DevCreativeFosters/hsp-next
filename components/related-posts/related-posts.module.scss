@@ -1,9 +1,9 @@
 .relatedPosts {
   display: flex;
-  padding: 48px;
+  padding: var(--card-padding);
   flex-direction: column;
-  gap: 44px;
-  border-radius: 16px;
+  gap: 14px;
+  border-radius: var(--border-radius-md);
   border: 2px solid var(--color-white-20);
 }
 

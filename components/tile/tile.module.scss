@@ -100,7 +100,6 @@
 }
 
 .title {
-  margin: 0;
   color: var(--color-white-80);
 
   .link:hover & {
@@ -110,4 +109,12 @@
 
 .content {
   color: var(--color-white-80);
+
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
 }

@@ -34,23 +34,17 @@
   z-index: var(--z-index-component);
   display: flex;
   flex-direction: column;
-  gap: 16px;
   max-width: 636px;
   width: 100%;
-  padding-inline: 24px;
 
   @include bp(medium) {
     padding-inline: 0;
-  }
-
-  @include bp(large) {
-    gap: 24px;
   }
 }
 
 .tags {
   display: flex;
-  gap: 24px;
+  gap: var(--gap);
   margin-bottom: 8px;
 
   @include bp(large) {
@@ -58,43 +52,27 @@
   }
 }
 
-.title {
-  color: var(--color-white-100);
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  font-weight: 600;
-  line-height: 1.33;
-
-  @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-  }
+.date {
+  margin-bottom: 4px;
 }
 
 .excerpt {
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
 
-  p {
-    &:first-of-type {
-      margin-top: 0;
-    }
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  *:first-of-type {
+    margin-top: 0;
   }
 
-  @include bp(large) {
-    font-size: 24px;
+  *:last-of-type {
+    margin-bottom: 0;
   }
 }
 
 .buttons {
   display: flex;
+  margin-top: var(--gap);
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap);
 
   @include bp(medium) {
     flex-direction: row;

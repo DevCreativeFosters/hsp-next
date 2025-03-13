@@ -82,8 +82,8 @@ export default function Tile({
   const Title = useMemo(
     () => (
       <DynamicTitle
-        className={styles.title}
-        defaultTag="h4"
+        className={clsx(styles.title, 'h3')}
+        defaultTag="h2"
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >
@@ -110,7 +110,7 @@ export default function Tile({
 
         {urlNormalized ? renderLink(Title) : Title}
         <div
-          className={styles.content}
+          className={clsx(styles.content, 'p-medium')}
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </div>

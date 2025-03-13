@@ -71,7 +71,7 @@ export default function PostsCarousel({
   }, []);
 
   return (
-    <Container collapseMargin>
+    <Container collapseMargin flexibleBlockPadding>
       <SectionIntro
         description={description}
         fitInline

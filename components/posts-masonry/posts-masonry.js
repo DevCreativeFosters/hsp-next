@@ -22,7 +22,7 @@ export default function PostsMasonry({
   const isMobile = useIsMobile();
 
   return (
-    <Container collapseMargin>
+    <Container collapseMargin flexibleBlockPadding>
       <SectionIntro
         description={description}
         fitInline

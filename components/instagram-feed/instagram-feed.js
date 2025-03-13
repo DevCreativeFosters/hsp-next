@@ -83,7 +83,7 @@ export default function InstagramFeed({
   );
 
   return (
-    <Container>
+    <Container flexibleBlockPadding>
       <div className={styles.wrapper}>
         <SectionIntro
           description={description}

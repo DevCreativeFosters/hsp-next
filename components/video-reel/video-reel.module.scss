@@ -12,7 +12,6 @@ $duration: 400ms;
   --min-height-current: 420px;
   --height-current: 42vh;
   --max-height-current: 960px;
-  --gap: 24px;
   --regular-height: clamp(var(--min-height), var(--height), var(--max-height));
   --current-height: clamp(
     var(--min-height-current),
@@ -24,7 +23,7 @@ $duration: 400ms;
   gap: var(--gap);
   align-items: center;
   width: fit-content;
-  margin-block: var(--gap);
+  margin-bottom: var(--gap);
   transition: transform $duration;
   height: var(--current-height);
 

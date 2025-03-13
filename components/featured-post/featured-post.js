@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -107,7 +108,7 @@ export default function FeaturedPost({
           {title && <h1 className={styles.title}>{title}</h1>}
           {excerpt && (
             <div
-              className={styles.excerpt}
+              className={clsx(styles.excerpt, 'p-large')}
               dangerouslySetInnerHTML={{ __html: excerpt }}
             />
           )}

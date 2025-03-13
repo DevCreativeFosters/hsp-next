@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import routes from '@lib/routes';
@@ -51,7 +52,7 @@ export function BlogPost({
             {title && <h1 className={styles.title}>{title}</h1>}
             {excerpt && (
               <div
-                className={styles.excerpt}
+                className={clsx(styles.excerpt, 'p-large')}
                 dangerouslySetInnerHTML={{ __html: excerpt }}
               />
             )}
