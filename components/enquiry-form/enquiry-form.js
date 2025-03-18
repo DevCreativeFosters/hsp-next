@@ -2,6 +2,8 @@
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
+import clsx from 'clsx';
+
 import StoreLocatorContext from '@contexts/store-locator';
 
 import useMobileVh from '@hooks/useMobileVh';
@@ -227,12 +229,12 @@ export default function EnquiryForm({
 
         <div className={styles.price}>
           {variantPrice > 0 && (
-            <span className={styles.productsPrice}>
+            <span className={clsx(styles.productsPrice, 'h3')}>
               {formatPrice(variantPrice)}
             </span>
           )}
           {variantInstallationPrice > 0 && (
-            <span className={styles.installationPrice}>
+            <span className={clsx(styles.installationPrice, 'h4')}>
               +<span> {formatPrice(variantInstallationPrice)} </span>
               <span> for installation </span>
             </span>

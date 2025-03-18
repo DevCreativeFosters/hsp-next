@@ -96,8 +96,10 @@
 
 .large {
   --gap: 12px;
-  --block-padding: 16px;
+  --block-padding: 10px;
   --only-icon-padding: 16px;
+
+  min-height: 48px;
 
   @include bp(medium) {
     --only-icon-padding: 20px;

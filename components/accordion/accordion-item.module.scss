@@ -20,8 +20,7 @@
 }
 
 .body {
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: var(--content-padding-sm);
 
   & > :first-child {
     margin-top: 0;

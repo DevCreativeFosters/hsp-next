@@ -15,20 +15,20 @@
   position: relative;
 
   @include bp(large) {
-    width: 50%;
     position: sticky;
     top: 144px;
     height: min-content;
+    max-width: 516px;
   }
 
   .navigationButton {
     @include center-vertical;
 
-    --side-space: -3px;
+    --side-space: -16px;
 
     z-index: 1;
-    width: 56px;
-    height: 56px;
+    width: 32px;
+    height: 32px;
     background-color: var(--color-black-100);
 
     @include bp-below(large) {
@@ -45,11 +45,10 @@
   aspect-ratio: 1/1;
   position: relative;
   overflow: hidden;
-  margin-bottom: 36px;
-  border-radius: 16px;
+  margin-bottom: var(--gap-sm);
+  border-radius: var(--border-radius-md);
   background-position: 50% 50%;
   z-index: 2;
-  cursor: zoom-in;
 
   @include bp(large) {
     margin-bottom: 24px;
@@ -66,6 +65,10 @@
   width: 25%;
   min-width: 80px;
   flex-shrink: 0;
+
+  @include bp(large) {
+    width: 123px;
+  }
 }
 
 .thumbnail {
@@ -75,6 +78,11 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
+  transition: all 0.2s ease-in-out;
+
+  &.active {
+    border: 2px solid var(--color-primary-100);
+  }
 }
 
 .prevButton {

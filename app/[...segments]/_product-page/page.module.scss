@@ -1,7 +1,7 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: var(--gap);
 
   @include bp(large) {
     flex-direction: row;
@@ -9,41 +9,35 @@
 }
 
 .details {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
   @include bp(large) {
-    gap: 48px;
-    width: 50%;
+    padding-inline: var(--gap);
   }
-}
-
-.mainText {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  @include bp(medium) {
-    gap: 24px;
-  }
-}
-
-.name {
-  line-height: 1.25;
 }
 
 .variant {
   color: var(--color-primary-100);
 }
 
-.description {
-  color: var(--color-white-80);
-  font-size: 24px;
-  margin: 0;
+.meta {
+  margin-bottom: var(--gap-sm);
+}
 
-  @include bp(medium) {
-    margin-bottom: 16px;
+.productAccordion {
+  margin-top: var(--gap);
+  margin-inline: calc(-1 * var(--container-inline-padding));
+  border-top: 2px solid var(--color-white-20);
+}
+
+.productDescription {
+  margin-top: var(--gap);
+  color: var(--color-white-80);
+
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -55,32 +49,6 @@
   }
 }
 
-.contentBoxTitle {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  column-gap: 10px;
-}
-
-.warrantyDescription {
-  padding: 24px;
-
-  @include bp(large) {
-    padding: 48px;
-  }
-
-  p {
-    color: var(--color-white-80);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.2;
-
-    @include bp(large) {
-      font-size: 20px;
-    }
-  }
-}
-
 .years,
 .redColor {
   color: var(--color-primary-100);
@@ -88,11 +56,24 @@
 
 .sku {
   text-transform: uppercase;
-  font-weight: 600;
-  font-size: 20px;
-  font-family: var(--font-secondary);
+}
 
+.enquiryForm {
+  @include bp(large) {
+    max-width: 468px;
+  }
+}
+
+.hideOnMobile {
+  display: none;
+
+  @include bp(large) {
+    display: block;
+  }
+}
+
+.hideOnTablet {
   @include bp(medium) {
-    font-size: 24px;
+    display: none;
   }
 }

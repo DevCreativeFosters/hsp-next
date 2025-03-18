@@ -5,8 +5,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import { scrollIntoViewHorizontally } from '@lib/helpers';
 
+import Accordion from '@components/accordion/accordion';
+import AccordionItem from '@components/accordion/accordion-item';
 import DownloadFileButton from '@components/download-file-button/download-file-button';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
@@ -21,6 +25,7 @@ export default function ProductTabs({
   specificationContent,
   specificationDescription,
 }) {
+  const isMobile = useIsMobile();
   const headerRef = useRef(null);
   const tabs = useMemo(
     () => ({
@@ -56,12 +61,151 @@ export default function ProductTabs({
     [activeTab],
   );
 
-  return (
-    <div className={styles.tabs}>
+  const FeaturesContent = () => (
+    <>
+      {featuresDescription && (
+        <p className={clsx(styles.description, 'p-large')}>
+          {featuresDescription}
+        </p>
+      )}
+      <div className={styles.featuresContainer}>
+        {featuresBoxes?.length > 0 &&
+          featuresBoxes.map((feature, index) => (
+            <div
+              className={clsx(styles.featureItem, {
+                [styles.videoFeature]: feature.video,
+                [styles.imageFeature]: feature.image,
+              })}
+              key={feature.title + index}
+            >
+              <div>
+                {feature.icon && (
+                  <Image
+                    alt="icon"
+                    className={styles.icon}
+                    height={58}
+                    src={feature.icon.node?.mediaItemUrl || ''}
+                    width={58}
+                  />
+                )}
+                <div className={styles.featureContent}>
+                  {feature.title && (
+                    <h4 className={styles.featureTitle}>{feature.title}</h4>
+                  )}
+                  <Wysiwyg
+                    className={styles.wysiwyg}
+                    content={feature.content}
+                  />
+                </div>
+              </div>
+              {feature.video && (
+                <video
+                  autoPlay
+                  className={styles.video}
+                  height="443"
+                  muted
+                  width="230"
+                >
+                  <source
+                    src={feature.video?.node?.mediaItemUrl || ''}
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+              {feature.image && (
+                <Image
+                  alt=""
+                  className={styles.image}
+                  height={166}
+                  src={feature.image?.node?.mediaItemUrl || ''}
+                  width={636}
+                />
+              )}
+            </div>
+          ))}
+      </div>
+    </>
+  );
+
+  const SpecsContent = () => (
+    <>
+      {specificationDescription && (
+        <p className={clsx(styles.description, 'p-large')}>
+          {specificationDescription}
+        </p>
+      )}
+      {specificationContent && (
+        <Wysiwyg className={styles.wysiwyg} content={specificationContent} />
+      )}
+    </>
+  );
+
+  const ManualsContent = () => (
+    <>
+      {manualsDescription && (
+        <p className={clsx(styles.description, 'p-large')}>
+          {manualsDescription}
+        </p>
+      )}
+      <div className={styles.manualsContainer}>
+        {manualsLinks.map(({ label, url }, index) => {
+          if (!url) return null;
+          return (
+            <DownloadFileButton
+              download
+              downloadFileFormId={downloadFileFormId}
+              href={url}
+              key={`${url}-${index}`}
+              rightIcon="download"
+              shortenable
+              variant="quinary"
+            >
+              {label}
+            </DownloadFileButton>
+          );
+        })}
+      </div>
+    </>
+  );
+
+  // Mobile accordion view
+  const mobileContent = (
+    <Accordion className={clsx(styles.productAccordion, styles.hideOnDesktop)}>
+      {tabs.features && (
+        <AccordionItem
+          className={styles.accordionItem}
+          triggerContent={tabs.features}
+        >
+          <FeaturesContent />
+        </AccordionItem>
+      )}
+      {tabs.specs && (
+        <AccordionItem
+          className={styles.accordionItem}
+          triggerContent={tabs.specs}
+        >
+          <SpecsContent />
+        </AccordionItem>
+      )}
+      {tabs.manuals && (
+        <AccordionItem
+          className={styles.accordionItem}
+          triggerContent={tabs.manuals}
+        >
+          <ManualsContent />
+        </AccordionItem>
+      )}
+    </Accordion>
+  );
+
+  // Desktop tabs view
+  const desktopContent = (
+    <div className={clsx(styles.tabs, styles.hideOnMobile)}>
       <div className={styles.headers} ref={headerRef}>
         {Object.entries(tabs).map(([tabKey, tabTitle], index) => (
           <button
-            className={clsx(styles.tab, {
+            className={clsx(styles.tab, 'h3', {
               [styles.activeTab]: activeTab === tabKey,
             })}
             id={tabKey}
@@ -74,107 +218,17 @@ export default function ProductTabs({
         ))}
       </div>
       <div className={styles.content}>
-        {activeTab === 'features' && (
-          <>
-            {featuresDescription && (
-              <p className={styles.description}>{featuresDescription}</p>
-            )}
-            <div className={styles.featuresContainer}>
-              {featuresBoxes?.length > 0 &&
-                featuresBoxes.map((feature, index) => (
-                  <div
-                    className={clsx(styles.featureItem, {
-                      [styles.videoFeature]: feature.video,
-                      [styles.imageFeature]: feature.image,
-                    })}
-                    key={feature.title + index}
-                  >
-                    <div>
-                      {feature.icon && (
-                        <Image
-                          alt="icon"
-                          className={styles.icon}
-                          height={58}
-                          src={feature.icon.node?.mediaItemUrl || ''}
-                          width={58}
-                        />
-                      )}
-                      <div className={styles.featureContent}>
-                        {feature.title && <h5>{feature.title}</h5>}
-                        <Wysiwyg
-                          className={styles.wysiwyg}
-                          content={feature.content}
-                        />
-                      </div>
-                    </div>
-                    {feature.video && (
-                      <video
-                        autoPlay
-                        className={styles.video}
-                        height="443"
-                        muted
-                        width="230"
-                      >
-                        <source
-                          src={feature.video?.node?.mediaItemUrl || ''}
-                          type="video/mp4"
-                        />
-                        Your browser does not support the video tag.
-                      </video>
-                    )}
-                    {feature.image && (
-                      <Image
-                        alt=""
-                        className={styles.image}
-                        height={166}
-                        src={feature.image?.node?.mediaItemUrl || ''}
-                        width={636}
-                      />
-                    )}
-                  </div>
-                ))}
-            </div>
-          </>
-        )}
-        {activeTab === 'specs' && (
-          <>
-            {specificationDescription && (
-              <p className={styles.description}>{specificationDescription}</p>
-            )}
-            {specificationContent && (
-              <Wysiwyg
-                className={styles.wysiwyg}
-                content={specificationContent}
-              />
-            )}
-          </>
-        )}
-        {activeTab === 'manuals' && (
-          <>
-            {manualsDescription && (
-              <p className={styles.description}>{manualsDescription}</p>
-            )}
-            <div className={styles.manualsContainer}>
-              {manualsLinks.map(({ label, url }, index) => {
-                if (!url) return null;
-                return (
-                  <DownloadFileButton
-                    download
-                    downloadFileFormId={downloadFileFormId}
-                    href={url}
-                    key={`${url}-${index}`}
-                    rightIcon="download"
-                    shortenable
-                    variant="quinary"
-                  >
-                    {label}
-                  </DownloadFileButton>
-                );
-              })}
-            </div>
-          </>
-        )}
+        {activeTab === 'features' && <FeaturesContent />}
+        {activeTab === 'specs' && <SpecsContent />}
+        {activeTab === 'manuals' && <ManualsContent />}
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {mobileContent}
+      {desktopContent}
+    </>
   );
 }

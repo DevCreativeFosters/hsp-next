@@ -1,49 +1,57 @@
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin: 48px 0;
+  padding-bottom: 24px;
+
+  @include bp(medium) {
+    margin-top: 64px;
+    padding-bottom: 48px;
+  }
 
   @include bp(large) {
-    margin: 120px 0;
-    gap: 48px;
+    margin-top: 96px;
+  }
+
+  &.hideOnMobile {
+    display: none;
+
+    @include bp(medium) {
+      display: block;
+    }
   }
 }
 
 .headers {
   display: flex;
-  gap: 24px;
   overflow-y: auto;
-  margin-inline: calc(-1 * var(--container-inline-padding));
-  padding-inline: var(--container-inline-padding);
+  gap: 48px;
+  margin-bottom: var(--gap);
+}
 
-  @include bp(large) {
-    gap: 48px;
+.productAccordion {
+  margin-left: calc(-1 * var(--container-inline-padding));
+  margin-right: calc(-1 * var(--container-inline-padding));
+
+  &.hideOnDesktop {
+    @include bp(medium) {
+      display: none;
+    }
   }
 }
 
 .tab {
   color: var(--color-white-80);
-  font-family: var(--font-secondary);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.33;
   white-space: nowrap;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   padding: 0 0 8px;
   transition: var(--transition);
+  margin-bottom: 0;
 
   @media (hover: hover) {
     &:hover {
       color: var(--color-white-90);
     }
-  }
-
-  @include bp(large) {
-    font-size: 48px;
-    font-weight: 600;
-    line-height: 1;
   }
 }
 
@@ -55,62 +63,54 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 48px;
-
-  @include bp(large) {
-    gap: 64px;
-  }
+  gap: var(--gap);
 }
 
 .description {
   color: var(--color-white-80);
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.6;
-  margin: 0;
+
+  @include bp(medium) {
+    margin: 0;
+  }
 }
 
 .featuresContainer {
-  display: flex;
-  flex-flow: column wrap;
-  gap: 24px;
+  display: grid;
+  gap: var(--gap-sm);
 
   @include bp(medium) {
-    flex-direction: row;
-    gap: 48px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
   }
 }
 
 .featureItem {
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   background-color: var(--color-black-100);
   display: flex;
   justify-content: space-between;
   overflow: hidden;
   width: 100%;
-
-  @include bp(medium) {
-    width: calc(50% - 24px);
-  }
 }
 
 .icon {
-  margin: 24px;
+  margin: var(--content-padding-sm) 0 0 var(--content-padding-sm);
+
+  @include bp(large) {
+    margin: var(--content-padding) 0 0 var(--content-padding);
+  }
+}
+
+.featureTitle {
+  margin-bottom: var(--gap-xs);
 }
 
 .featureContent {
-  padding: 24px;
+  padding: var(--content-padding-sm);
 
-  h5 {
-    margin-bottom: 24px;
-  }
-
-  ul {
-    margin-bottom: 14px;
-  }
-
-  p {
-    font-size: 16px;
+  @include bp(large) {
+    padding-inline: var(--content-padding);
+    padding-bottom: var(--content-padding);
   }
 }
 
@@ -154,11 +154,9 @@
 .wysiwyg {
   --border: 1px solid var(--color-white-40) !important;
 
-  padding: 0 20px;
-
   ul li {
     font-size: 16px;
-    line-height: 2;
+    line-height: 1.37;
     margin-bottom: 0;
   }
 

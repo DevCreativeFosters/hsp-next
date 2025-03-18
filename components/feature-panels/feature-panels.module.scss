@@ -93,8 +93,8 @@
 }
 
 .panels {
-  gap: 16px;
-  margin-bottom: 48px;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap);
   margin-inline: -24px;
   padding-inline: 24px;
   display: flex;
@@ -111,7 +111,7 @@
 
   @include bp(large) {
     margin-inline: unset;
-    gap: 48px;
+    gap: var(--gap);
     overflow: auto;
   }
 }
@@ -163,6 +163,10 @@
       height: 4px;
     }
   }
+}
+
+.panelTitle {
+  margin-bottom: 0;
 }
 
 .content {

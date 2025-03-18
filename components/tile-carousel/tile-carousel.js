@@ -18,8 +18,10 @@ export default function TileCarousel({
   id = '',
   itemTemplate: ItemTemplate,
   items = [],
+  nonOverflowWrapper,
   resetStyle,
   smallGaps,
+  xSmallGaps,
 }) {
   const carouselRef = useRef(null);
   const containerRef = useRef(null);
@@ -235,12 +237,17 @@ export default function TileCarousel({
   return (
     <>
       {items?.length > 0 && (
-        <div className={styles.carouselWrapper}>
+        <div
+          className={clsx(styles.carouselWrapper, {
+            [styles.nonOverflowWrapper]: nonOverflowWrapper,
+          })}
+        >
           <div
             className={clsx(styles.carousel, {
               [styles.isDragging]: isDragging,
               [styles.resetStyle]: resetStyle,
               [styles.smallGaps]: smallGaps,
+              [styles.xSmallGaps]: xSmallGaps,
             })}
             ref={carouselRef}
           >

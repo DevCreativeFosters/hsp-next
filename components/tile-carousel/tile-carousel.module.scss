@@ -4,6 +4,10 @@
 
   @include bp(large) {
     overflow: hidden;
+
+    &.nonOverflowWrapper {
+      overflow: visible;
+    }
   }
 }
 
@@ -40,8 +44,16 @@
   transition: transform 300ms;
   transform: translateX(var(--offset));
 
+  .xSmallGaps > & {
+    gap: var(--gap-sm);
+
+    @include bp(large) {
+      gap: var(--gap-xs);
+    }
+  }
+
   .smallGaps > & {
-    gap: var(--gap-s);
+    gap: var(--gap-sm);
 
     @include bp(medium) {
       gap: var(--gap);

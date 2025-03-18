@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 
+import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
@@ -9,7 +10,8 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
 
-import ContentBox from '@components/content-box/content-box';
+import Accordion from '@components/accordion/accordion';
+import AccordionItem from '@components/accordion/accordion-item';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
@@ -127,47 +129,74 @@ export default function PageClientSidePartial({
       <div className={styles.header}>
         <ProductImageCarousel images={carouselImages} />
         <div className={styles.details}>
-          <div className={styles.mainText}>
-            <h1 className={styles.name}>
+          <div className={styles.meta}>
+            <h1 className={clsx(styles.name, 'h2')}>
               {mainCategory.name} <br />
               <span className={styles.variant}>
                 {make?.name} {modelName}
               </span>
             </h1>
             {variant?.sku && (
-              <div className={styles.sku}>
+              <div className={clsx(styles.sku, 'h5')}>
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
               </div>
             )}
-            {description && (
-              <div
-                className={styles.description}
-                dangerouslySetInnerHTML={{ __html: description }}
-              />
-            )}
           </div>
-          <StoreLocatorProvider>
-            <EnquiryForm
-              allLocations={allLocations}
-              enquiryFormId={enquiryFormId}
-              mainCategory={mainCategory}
-              onVariantChange={onVariantChange}
-              productData={firstMatchedProduct}
-              variantSlug={variantSlug}
-            />
-          </StoreLocatorProvider>
-          {warrantyTimePeriod && (
-            <ContentBox className={styles.warrantyDescription}>
-              <h3 className={styles.contentBoxTitle}>
-                Warranty{' '}
-                {warrantyTimePeriod && (
-                  <span className={styles.years}>
-                    +{warrantyTimePeriod} years
+          <div className={styles.enquiryForm}>
+            <StoreLocatorProvider>
+              <EnquiryForm
+                allLocations={allLocations}
+                enquiryFormId={enquiryFormId}
+                mainCategory={mainCategory}
+                onVariantChange={onVariantChange}
+                productData={firstMatchedProduct}
+                variantSlug={variantSlug}
+              />
+            </StoreLocatorProvider>
+          </div>
+          <Accordion
+            className={clsx(styles.productAccordion, styles.hideOnTablet)}
+          >
+            {description && (
+              <AccordionItem
+                className={styles.productAccordionItem}
+                triggerContent="Description"
+              >
+                <div
+                  className={clsx(styles.productDescription, 'p-large')}
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
+              </AccordionItem>
+            )}
+            {warrantyTimePeriod && (
+              <AccordionItem
+                className={styles.productAccordionItem}
+                triggerContent={
+                  <span>
+                    Warranty{' '}
+                    <span className={styles.years}>
+                      +{warrantyTimePeriod} years
+                    </span>
                   </span>
+                }
+              >
+                {warrantyDescription && (
+                  <div className={clsx(styles.warrantyDescription, 'p-large')}>
+                    {warrantyDescription}
+                  </div>
                 )}
-              </h3>
-              {warrantyDescription && <p>{warrantyDescription}</p>}
-            </ContentBox>
+              </AccordionItem>
+            )}
+          </Accordion>
+          {description && (
+            <div
+              className={clsx(
+                styles.productDescription,
+                styles.hideOnMobile,
+                'p-large',
+              )}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           )}
         </div>
       </div>

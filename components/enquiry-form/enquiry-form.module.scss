@@ -7,12 +7,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  border-radius: 8px;
+  gap: var(--gap-sm);
+  padding: var(--card-padding-sm);
+  border-radius: var(--border-radius-sm);
 
   @include bp(large) {
-    padding: 48px;
+    padding: var(--content-padding-lg);
   }
 }
 
@@ -25,38 +25,22 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 36px;
   gap: 8px;
 }
 
 .productsPrice {
-  color: var(--color-white-100);
-  font-size: 36px;
-  line-height: 1.33;
-  font-family: var(--font-secondary);
-  font-weight: bold;
-
-  @include bp(medium) {
-    font-size: 48px;
-  }
+  margin-bottom: 0;
 }
 
 .installationPrice {
   color: var(--color-primary-100);
-  font-size: 24px;
-  line-height: 1.33;
-  font-family: var(--font-secondary);
-  font-weight: bold;
-
-  @include bp(medium) {
-    font-size: 36px;
-  }
+  margin-bottom: 0;
 }
 
 .buttonWrapper {
-  width: fit-content;
-  margin-top: 24px;
-  display: flex;
+  button {
+    width: 100%;
+  }
 }
 
 .submitButton {

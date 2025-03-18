@@ -10,7 +10,7 @@
 }
 
 .headerInfo {
-  margin: var(--gap-s) 0 var(--gap);
+  margin: var(--gap-sm) 0 var(--gap);
 
   @include bp(large) {
     display: none;
@@ -96,7 +96,7 @@
   position: relative;
 
   @include bp(medium) {
-    padding: var(--content-padding-m);
+    padding: var(--content-padding-lg);
     border-radius: 0 0 16px 16px;
     background-color: var(--color-black-100);
   }

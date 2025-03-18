@@ -51,6 +51,7 @@ export default function FeaturePanels({
               role="tab"
             >
               <DynamicTitle
+                className={clsx(styles.panelTitle, 'h3')}
                 defaultTag="p"
                 titleTag={panel.titleTag}
                 titleTagStyle={panel.titleTagStyle}
