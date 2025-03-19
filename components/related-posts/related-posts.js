@@ -16,7 +16,7 @@ export default function RelatedPosts({ posts, type = 'hsp-tv', url }) {
           className={styles.button}
           href={url}
           rightIcon="arrow-forward"
-          size="small"
+          size="large"
           variant="tertiary"
         >
           {title}

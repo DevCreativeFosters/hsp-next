@@ -2,6 +2,8 @@
 
 import { useRef } from 'react';
 
+import clsx from 'clsx';
+
 import routes from '@lib/routes';
 
 import BreadcrumbsLifestyle from '@components/breadcrumbs-lifestyle/breadcrumbs-lifestyle';
@@ -22,7 +24,7 @@ export function HspTvPost({
   const informationRef = useRef(null);
 
   return (
-    <Container>
+    <Container className={styles.container}>
       <div className={styles.breadcrumbs}>
         <BreadcrumbsLifestyle
           exactBreadcrumb={{
@@ -33,24 +35,14 @@ export function HspTvPost({
           initialContentTypeRoute={routes.tv()}
         />
       </div>
-      <div className={styles.header}>
-        {title && (
-          <div className={styles.headerIntroduction}>
-            <h1 className={styles.title}>{title}</h1>
-            {customFields?.description && (
-              <div
-                className={styles.description}
-                dangerouslySetInnerHTML={{ __html: customFields?.description }}
-              />
-            )}
-          </div>
-        )}
+      <div className={styles.video}>
         {customFields?.videoId && customFields?.backgroundVideo && (
           <VideoContainer youtubeId={customFields.videoId} />
         )}
       </div>
       <div className={styles.post}>
         <div className={styles.information} ref={informationRef}>
+          {title && <h1 className={clsx(styles.title, 'h2')}>{title}</h1>}
           <div className={styles.relatedPostsContainer}>
             <RelatedPosts
               posts={relatedPosts}
@@ -60,6 +52,12 @@ export function HspTvPost({
           </div>
         </div>
         <div className={styles.contentContainer}>
+          {customFields?.description && (
+            <div
+              className={clsx(styles.description, 'p-large')}
+              dangerouslySetInnerHTML={{ __html: customFields?.description }}
+            />
+          )}
           {content && <Wysiwyg className={styles.content} content={content} />}
         </div>
       </div>

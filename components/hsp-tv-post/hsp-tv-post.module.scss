@@ -1,3 +1,11 @@
+.container {
+  padding-bottom: 28px;
+
+  @include bp(medium) {
+    padding-bottom: 48px;
+  }
+}
+
 .post {
   position: relative;
 
@@ -8,19 +16,6 @@
     grid-template-areas:
       'infoArea contentArea'
       'infoArea contentArea';
-  }
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-}
-
-.headerIntroduction {
-  padding: 0 20px;
-
-  @include bp(large) {
-    padding: 0;
   }
 }
 
@@ -44,13 +39,14 @@
   object-position: center;
   width: 100%;
   aspect-ratio: 342/293;
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   overflow: hidden;
   max-height: 50vh;
+  margin-bottom: var(--gap);
 
   @include bp(large) {
     aspect-ratio: 861/498;
-    border-radius: 0 0 0 16px;
+    border-radius: 0 0 0 var(--border-radius-md);
   }
 }
 
@@ -59,29 +55,22 @@
   object-position: center center;
 }
 
-.title {
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  line-height: 1.33;
-  margin: 0 0 24px;
+.video {
+  margin-bottom: var(--gap);
+}
 
+.title {
   @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-    margin: 0 0 48px;
+    margin-bottom: 0;
   }
 }
 
 .description {
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
-  font-weight: 400;
-  margin: 0;
 
   @include bp(large) {
-    font-size: 24px;
-    line-height: 1.41;
+    padding: var(--content-padding-lg) var(--content-padding-lg) 0
+      var(--content-padding-lg);
   }
 
   > :first-of-type {
@@ -96,16 +85,10 @@
 .contentContainer {
   grid-area: contentArea;
   padding-top: 0.1px;
-}
-
-.content {
-  padding: 0.1px 24px;
-  position: relative;
 
   @include bp(large) {
-    padding: (48px + 16px) 48px 48px;
-    border-radius: 16px;
-    margin-top: -16px;
+    height: fit-content;
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
     background: linear-gradient(
       0deg,
       var(--color-black-100) 70%,
@@ -114,10 +97,16 @@
   }
 }
 
+.content {
+  position: relative;
+
+  @include bp(large) {
+    padding: var(--content-padding-lg);
+  }
+}
+
 .information {
   grid-area: infoArea;
-  padding: 24px;
-  display: none;
   flex-direction: column;
   gap: 24px;
   height: min-content;
@@ -127,7 +116,7 @@
     top: var(--header-height);
     display: flex;
     padding: 0;
-    gap: 48px;
+    gap: var(--gap);
   }
 }
 

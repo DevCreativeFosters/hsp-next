@@ -1,5 +1,4 @@
 .videoContainer {
-  margin: 24px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,10 +8,6 @@
 
   @include bp(medium) {
     aspect-ratio: 16/9;
-  }
-
-  @include bp(large) {
-    margin: 96px 0;
   }
 }
 

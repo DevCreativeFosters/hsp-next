@@ -2,7 +2,7 @@
   display: flex;
   padding: var(--card-padding);
   flex-direction: column;
-  gap: 14px;
+  gap: var(--gap-global-xs);
   border-radius: var(--border-radius-md);
   border: 2px solid var(--color-white-20);
 }
@@ -28,8 +28,6 @@
   display: inline-block;
   padding: 5px 5px 5px 22px;
   color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
 
   &:hover,
   &:focus {

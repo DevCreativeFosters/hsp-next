@@ -2,11 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: 8px;
-  margin: 48px 0;
+  gap: var(--gap-global-xs);
+  margin: var(--gap) 0;
 
   @include bp(large) {
-    gap: 16px;
+    gap: var(--gap-global-sm);
   }
 
   > * {
