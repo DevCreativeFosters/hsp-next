@@ -1,4 +1,5 @@
 import Logo from '@images/logo.png';
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import Button from '@components/button/button';
@@ -16,10 +17,12 @@ export default function Footer({ menus, text }) {
           <div className={styles.footerContainerB}>
             <div className={styles.footerContainerC}>
               <div className={styles.column}>
-                <div className={styles.logo}>
-                  <Image alt={'HSP Logo'} height={36} src={Logo} width={95} />
+                <div className={styles.logoColumn}>
+                  <div className={styles.logo}>
+                    <Image alt={'HSP Logo'} height={24} src={Logo} width={65} />
+                  </div>
+                  <p className={clsx(styles.text, 'p-small')}>{text}</p>
                 </div>
-                <p className={styles.text}>{text}</p>
               </div>
               <div className={styles.column}>
                 <ul className={styles.menuList}>

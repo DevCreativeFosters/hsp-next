@@ -104,21 +104,16 @@ export default function Select({
           [styles.small]: size === 'small',
           [styles.large]: size === 'large',
           [styles.isOpen]: isOpen,
+          [styles.hasLabel]: label,
         })}
         ref={triggerRef}
       >
-        {label && (
-          <label className={styles.label} htmlFor={elementId}>
-            {label}{' '}
-            {required ? <span className={styles.required}>*</span> : null}
-          </label>
-        )}
         <button
           className={clsx(styles.trigger, {
             [styles.darkBackground]: background === 'dark',
             [styles.lightBackground]: background === 'light',
             [styles.error]: errorMessage,
-            [styles.filled]: value,
+            [styles.filled]: value || isOpen,
           })}
           id={elementId}
           type="button"
@@ -128,6 +123,12 @@ export default function Select({
             onClick();
           }}
         >
+          {label && (
+            <label className={styles.label} htmlFor={elementId}>
+              {label}{' '}
+              {required ? <span className={styles.required}>*</span> : null}
+            </label>
+          )}
           {!isSearchVisible && (
             <>
               {isPlaceholder ? (

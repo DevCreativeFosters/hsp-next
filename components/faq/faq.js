@@ -73,64 +73,64 @@ export default function FAQ({
           titleTag={titleTag}
           titleTagStyle={titleTagStyle}
         />
-      </div>
 
-      <div className={styles.buttonsContainer}>
-        <SectionButtons alternatingLayout buttons={buttons} />
+        <SectionButtons alwaysInColumn buttons={buttons} />
       </div>
 
       {questions.length > 0 && (
-        <ul
-          className={clsx(styles.list, {
-            [styles.activeForMobile]: showAllItemsForMobile,
-          })}
-          ref={listRef}
-        >
-          {questions.map(({ answer, question }, index) => (
-            <li
-              className={clsx(styles.item, {
-                [styles.active]: activeItemIndices.includes(index),
-              })}
-              key={index}
-            >
-              <div
-                aria-pressed={activeItemIndices.includes(index)}
-                className={styles.question}
-                onClick={() => toggleItem(index)}
-                onKeyUp={ev => onKeyUp(ev, index)}
-                role="button"
-                tabIndex="0"
-              >
-                <div className={styles.questionText}>{question}</div>
-                <div className={styles.questionIndicator}>
-                  <ExpandIcon />
-                </div>
-              </div>
-              <AnimateHeight
-                duration={300}
-                height={activeItemIndices.includes(index) ? 'auto' : 0}
+        <div className={styles.questions}>
+          <ul
+            className={clsx(styles.list, {
+              [styles.activeForMobile]: showAllItemsForMobile,
+            })}
+            ref={listRef}
+          >
+            {questions.map(({ answer, question }, index) => (
+              <li
+                className={clsx(styles.item, {
+                  [styles.active]: activeItemIndices.includes(index),
+                })}
+                key={index}
               >
                 <div
-                  className={styles.answer}
-                  dangerouslySetInnerHTML={{ __html: answer }}
-                />
-              </AnimateHeight>
-            </li>
-          ))}
-        </ul>
-      )}
-      {(isMobile ? questions.length > 2 : questions.length > 6) && (
-        <Button
-          className={clsx(styles.buttonToggle, {
-            [styles.isActive]: showAllItemsForMobile,
-          })}
-          onClick={toggleShowAllItemsForMobile}
-          rightIcon={'arrow-forward'}
-          type="button"
-          variant="quinary"
-        >
-          {showAllItemsForMobile ? 'Show less' : 'Show more'}
-        </Button>
+                  aria-pressed={activeItemIndices.includes(index)}
+                  className={clsx(styles.question, 'h5')}
+                  onClick={() => toggleItem(index)}
+                  onKeyUp={ev => onKeyUp(ev, index)}
+                  role="button"
+                  tabIndex="0"
+                >
+                  <div className={styles.questionText}>{question}</div>
+                  <div className={styles.questionIndicator}>
+                    <ExpandIcon />
+                  </div>
+                </div>
+                <AnimateHeight
+                  duration={300}
+                  height={activeItemIndices.includes(index) ? 'auto' : 0}
+                >
+                  <div
+                    className={clsx(styles.answer, 'p-medium')}
+                    dangerouslySetInnerHTML={{ __html: answer }}
+                  />
+                </AnimateHeight>
+              </li>
+            ))}
+          </ul>
+          {(isMobile ? questions.length > 2 : questions.length > 6) && (
+            <Button
+              className={clsx(styles.buttonToggle, {
+                [styles.isActive]: showAllItemsForMobile,
+              })}
+              onClick={toggleShowAllItemsForMobile}
+              rightIcon={'arrow-forward'}
+              type="button"
+              variant="quinary"
+            >
+              {showAllItemsForMobile ? 'Show less' : 'Show more'}
+            </Button>
+          )}
+        </div>
       )}
     </div>
   );

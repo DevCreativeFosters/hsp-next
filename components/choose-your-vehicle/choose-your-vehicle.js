@@ -283,6 +283,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                       }
                     }}
                     rightIcon="save"
+                    size="large"
                     variant="primary"
                   >
                     Save

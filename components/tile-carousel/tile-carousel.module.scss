@@ -45,15 +45,15 @@
   transform: translateX(var(--offset));
 
   .xSmallGaps > & {
-    gap: var(--gap-sm);
+    gap: var(--gap-global-sm);
 
     @include bp(large) {
-      gap: var(--gap-xs);
+      gap: var(--gap-global-xs);
     }
   }
 
   .smallGaps > & {
-    gap: var(--gap-sm);
+    gap: var(--gap-global-sm);
 
     @include bp(medium) {
       gap: var(--gap);

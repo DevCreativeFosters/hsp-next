@@ -60,7 +60,7 @@
   }
 
   /* Header */
-  --header-height: 80px;
+  --header-height: 72px;
 
   @include bp(large) {
     --header-height: 124px;
@@ -72,8 +72,9 @@
   --store-locator-form-header-height: 54px;
 
   /* Layout */
-  --gap-xs: 8px;
-  --gap-sm: 16px;
+  --gap-global-xs: 8px;
+  --gap-global-sm: 16px;
+  --gap-global: 24px;
   --gap: 24px;
   --content-padding-sm: 16px;
   --content-padding: 24px;

@@ -105,7 +105,7 @@ export default function FeaturedPost({
             </div>
           )}
           {isMobile && <span className={styles.date}>{formattedDate}</span>}
-          {title && <h1 className={styles.title}>{title}</h1>}
+          {title && <h1 className={clsx(styles.title, 'h1')}>{title}</h1>}
           {excerpt && (
             <div
               className={clsx(styles.excerpt, 'p-large')}

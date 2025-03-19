@@ -1,41 +1,24 @@
 .layout {
-  --question-horizontal-padding: 24px;
+  --question-padding: 16px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
+  display: grid;
+  gap: var(--gap);
   padding-block: 24px;
 
-  @include bp(large) {
-    display: grid;
-    grid-template: auto 1fr / 1fr 2fr;
-    grid-template-areas:
-      'intro questions'
-      'buttons questions'
-      'buttons toggle';
-    grid-gap: 48px;
+  @include bp(medium) {
     padding-block: 48px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include bp(large) {
+    grid-template-columns: 408px 1fr;
   }
 }
 
 .intro {
-  @include bp(medium) {
-    padding-inline: var(--question-horizontal-padding);
-  }
-}
-
-.buttonsContainer {
   display: flex;
-  margin: 0 24px;
-
-  @include bp(medium) {
-    padding: var(--question-horizontal-padding);
-  }
-
-  @include bp(large) {
-    grid-area: buttons;
-    margin: 0;
-  }
+  flex-direction: column;
+  row-gap: var(--gap);
 }
 
 .list {
@@ -43,11 +26,6 @@
   padding: 0;
   margin: 0;
   scroll-margin-top: calc(var(--header-height) + 32px);
-  grid-column: span 2;
-
-  @include bp(large) {
-    grid-area: questions;
-  }
 }
 
 .item {
@@ -71,16 +49,17 @@
   }
 }
 
+.questions {
+  display: grid;
+  row-gap: var(--gap);
+}
+
 .question {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px var(--question-horizontal-padding);
+  padding: var(--question-padding);
   color: var(--color-white-80);
-  font-family: var(--font-secondary);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
 
   &:hover,
   .item.active & {
@@ -108,8 +87,8 @@
 }
 
 .answer {
-  padding-inline: 24px;
-  margin-bottom: 24px;
+  margin-bottom: var(--gap);
+  padding-inline: var(--gap);
 
   & > :first-child {
     margin-top: 0;
@@ -121,7 +100,6 @@
 }
 
 .buttonToggle {
-  margin-top: 24px;
   margin-left: auto;
 
   svg {
@@ -136,6 +114,5 @@
 
   @include bp(medium) {
     margin-top: 0;
-    grid-area: toggle;
   }
 }

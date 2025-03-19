@@ -1,11 +1,15 @@
 .review {
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   background: var(--color-white-100);
   backdrop-filter: blur(12px);
-  padding: 24px;
-  width: calc(100% - 24px);
+  width: calc(100% - var(--gap));
   height: min-content;
   max-width: 100%;
+  padding: var(--card-padding-sm);
+
+  @include bp(medium) {
+    padding: var(--card-padding);
+  }
 
   @include bp(large) {
     max-width: 25%;
@@ -14,22 +18,13 @@
 
 .text {
   color: rgb(0 0 0 / 70%);
-  font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 400;
+  margin-block: var(--gap-global-xs);
 
-  @include bp(large) {
-    font-size: 20px;
+  @include bp(medium) {
+    margin-block: var(--gap-global-sm);
   }
 }
 
 .name {
   color: var(--color-primary-100);
-  font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 400;
-
-  @include bp(large) {
-    font-size: 20px;
-  }
 }

@@ -13,7 +13,7 @@ export default async function ContentBlocksPage({
     <Layout withMap>
       {pageContent && (
         <Container className={styles.container}>
-          {title && <h1>{title}</h1>}
+          {title && <h1 className="h1">{title}</h1>}
           {pageContent && <Wysiwyg content={pageContent} />}
         </Container>
       )}

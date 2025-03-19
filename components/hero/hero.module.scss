@@ -1,8 +1,8 @@
 @mixin arrow-button-styling {
-  padding: 0.75rem;
-  border: 2px solid #ed2935;
-  width: 3.5rem;
-  height: 3.5rem;
+  padding: 14px;
+  border: 2px solid var(--color-primary-100);
+  width: 48px;
+  height: 48px;
 }
 
 .hero {
@@ -81,9 +81,9 @@
 .content {
   position: relative;
   z-index: var(--z-index-component);
-  padding: 24px;
+  padding: var(--content-padding);
   border-radius: 1rem;
-  margin-top: 64px;
+  margin-top: 72px;
   background: var(--color-black-40);
   backdrop-filter: blur(12px);
   max-width: 100%;
@@ -93,12 +93,8 @@
   }
 
   @include bp(large) {
-    max-width: 39.75rem;
+    max-width: 516px;
   }
-}
-
-.title {
-  margin-bottom: 8px;
 }
 
 .description {
@@ -106,16 +102,24 @@
     color: var(--color-white-80);
     pointer-events: none;
   }
+
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .buttonContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
+  margin-top: var(--gap-global-sm);
 
   @include bp(medium) {
-    margin-top: 24px;
+    margin-top: var(--gap-global);
   }
 }
 
@@ -152,7 +156,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: var(--gap-global-sm);
     min-height: 28px;
 
     @include bp(medium) {

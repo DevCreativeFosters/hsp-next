@@ -10,7 +10,7 @@
 }
 
 .headerInfo {
-  margin: var(--gap-sm) 0 var(--gap);
+  margin: var(--gap-global-sm) 0 var(--gap);
 
   @include bp(large) {
     display: none;

@@ -1,6 +1,6 @@
 .posts {
   display: grid;
-  grid-gap: var(--gap-sm);
+  grid-gap: var(--gap-global-sm);
 
   @include bp(medium) {
     gap: var(--gap);

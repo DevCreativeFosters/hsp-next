@@ -16,7 +16,7 @@
   z-index: var(--z-index-footer);
 
   @include bp(large) {
-    padding: 96px 0;
+    padding: 48px 0;
   }
 }
 
@@ -72,7 +72,7 @@
 .column {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: var(--gap-global);
 
   @include bp(medium) {
     &:first-child {
@@ -96,6 +96,7 @@
   @include bp(large) {
     &:first-child {
       flex-direction: column;
+      padding-left: 0;
     }
 
     &:last-child {
@@ -110,11 +111,13 @@
   }
 }
 
+.logoColumn {
+  display: grid;
+  row-gap: var(--gap-global);
+}
+
 .text {
-  color: var(--color-white-80);
-  font-family: var(--font-primary);
-  font-size: 20px;
-  font-weight: 400;
+  margin: 0;
 }
 
 .menuList {
@@ -125,13 +128,7 @@
 
 .menuItem {
   &:first-child {
-    text-transform: uppercase;
-    font-family: var(--font-secondary);
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    padding: 0 0 24px;
+    margin-bottom: var(--gap-global-xs);
   }
 }
 
@@ -144,9 +141,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 24px;
-  padding: 1.5rem 0 0;
+  margin-top: var(--gap-global);
+  padding-top: var(--gap-global);
   border-top: 2px solid var(--color-white-20);
+
+  @include bp(large) {
+    margin-top: 48px;
+    padding-top: 48px;
+  }
 }
 
 .copyrightText,

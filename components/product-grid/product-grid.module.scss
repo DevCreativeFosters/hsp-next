@@ -26,7 +26,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 0;
-  padding-block: 24px;
+  padding-block: var(--card-padding-sm);
   background-color: var(--color-primary-100);
   width: 100%;
   height: auto;
@@ -38,6 +38,16 @@
 
   @include bp(medium) {
     padding-block: 32px;
+  }
+
+  svg {
+    --svg-width: 16px;
+    --svg-height: 16px;
+
+    @include bp(medium) {
+      --svg-width: 20px;
+      --svg-height: 20px;
+    }
   }
 }
 
@@ -65,5 +75,5 @@
 }
 
 .title {
-  margin-bottom: 24px;
+  margin-bottom: var(--gap);
 }

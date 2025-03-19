@@ -2,8 +2,9 @@
 
 .button {
   --font-size: 20px;
-  --icon-side-padding: 20px;
+  --icon-side-padding: 16px;
   --inline-padding: 24px;
+  --min-height: auto;
 
   position: relative;
   font-family: var(--font-secondary);
@@ -13,6 +14,7 @@
   display: inline-flex;
   align-items: center;
   width: max-content;
+  min-height: var(--min-height);
   justify-content: center;
   padding: var(--block-padding)
     calc(var(--inline-padding) + var(--toggler-padding, 0px))
@@ -64,18 +66,21 @@
 }
 
 .xsmall {
+  --font-size: 16px;
   --gap: 8px;
   --block-padding: 8px;
   --only-icon-padding: 8px;
   --inline-padding: 12px;
-
-  font-size: 16px;
 }
 
 .small {
+  --font-size: 16px;
   --gap: 8px;
-  --block-padding: 8px;
+  --block-padding: 6px;
+  --inline-padding: 16px;
   --only-icon-padding: 8px;
+  --icon-side-padding: 8px;
+  --min-height: 32px;
 
   &.leftIcon {
     padding-left: var(--icon-side-padding);
@@ -83,6 +88,11 @@
 
   &.rightIcon {
     padding-right: var(--icon-side-padding);
+
+    svg {
+      --svg-width: 16px;
+      --svg-height: 16px;
+    }
   }
 
   &.noText {
@@ -98,8 +108,7 @@
   --gap: 12px;
   --block-padding: 10px;
   --only-icon-padding: 16px;
-
-  min-height: 48px;
+  --min-height: 48px;
 
   @include bp(medium) {
     --only-icon-padding: 20px;
@@ -251,7 +260,7 @@
   @include center;
 
   display: flex;
-  height: 28px;
+  height: 24px;
   margin-left: -32px;
   padding: 0 8px;
   transition: transform 400ms;
@@ -260,7 +269,7 @@
   z-index: 2;
 
   @include bp(full) {
-    margin-left: -36px;
+    margin-left: -28px;
   }
 
   @media (hover: hover) {
@@ -297,6 +306,10 @@ div.toggleContainer {
 }
 
 .footer {
+  --block-padding: 6px;
+  --inline-padding: 16px;
+  --font-size: 24px;
+
   text-transform: capitalize;
 
   svg path {
@@ -306,9 +319,9 @@ div.toggleContainer {
 }
 
 .footerItem {
-  --block-padding: 12px;
-  --inline-padding: 24px;
-  --font-size: 16px;
+  --block-padding: 8px;
+  --inline-padding: 16px;
+  --font-size: 14px;
   --font-color: var(--color-white-100);
   --bg-color: var(--color-black-0);
   --hover-font-color: var(--color-primary-100);
@@ -316,7 +329,6 @@ div.toggleContainer {
   font-family: var(--font-primary);
   font-weight: 400;
   font-size: var(--font-size);
-  padding: var(--block-padding) var(--inline-padding) var(--block-padding);
   color: var(--font-color);
 
   &:hover {

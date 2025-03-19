@@ -24,7 +24,7 @@
   display: grid;
   grid-template-areas: 'hamburger logo spacer call';
   grid-template-columns: 0fr 108px 10fr 88px;
-  gap: 12px;
+  gap: var(--gap);
   width: 100%;
   height: 100%;
   align-items: center;
@@ -47,9 +47,15 @@
 
   grid-area: logo;
 
-  svg {
-    width: 100%;
-    height: auto;
+  svg,
+  img {
+    width: 108px;
+    height: 40px;
+
+    @include bp(large) {
+      width: 129px;
+      height: 48px;
+    }
   }
 }
 
@@ -57,7 +63,6 @@
   @include center;
 
   position: relative;
-  margin-left: -12px;
   z-index: var(--z-index-hamburger);
 
   @include bp(large) {

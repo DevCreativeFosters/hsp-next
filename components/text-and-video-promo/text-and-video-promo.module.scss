@@ -1,7 +1,7 @@
 .promo {
   display: flex;
   flex-flow: column-reverse nowrap;
-  gap: var(--gap);
+  gap: var(--gap-global);
 
   @include bp(medium) {
     flex-direction: row;
@@ -20,7 +20,7 @@
 
   @include bp(large) {
     width: 522px;
-    padding-inline: 24px;
+    padding-inline: var(--content-padding);
   }
 }
 
@@ -57,9 +57,9 @@
 }
 
 .moreButton {
-  margin-top: 16px;
+  margin-top: var(--gap-global-sm);
 
   @include bp(large) {
-    margin-top: 24px;
+    margin-top: var(--gap-global);
   }
 }

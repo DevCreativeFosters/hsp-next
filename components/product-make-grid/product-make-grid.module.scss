@@ -1,6 +1,4 @@
 .title {
-  margin-bottom: 16px;
-
   &.center {
     text-align: center;
   }
@@ -34,7 +32,7 @@
   margin-block: var(--gap);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--gap-sm);
+  gap: var(--gap-global-sm);
 
   @include bp(medium) {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));

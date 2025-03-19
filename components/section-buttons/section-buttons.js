@@ -6,6 +6,7 @@ import styles from './section-buttons.module.scss';
 
 export default function SectionButtons({
   alternatingLayout,
+  alwaysInColumn,
   alwaysInRow,
   buttons = [],
   children,
@@ -18,6 +19,7 @@ export default function SectionButtons({
       className={clsx(styles.buttons, className, {
         [styles.alternatingLayout]: alternatingLayout,
         [styles.alwaysInRow]: alwaysInRow,
+        [styles.alwaysInColumn]: alwaysInColumn,
       })}
       style={
         alternatingLayout

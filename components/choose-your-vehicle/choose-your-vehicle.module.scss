@@ -34,11 +34,14 @@
   text-overflow: ellipsis;
   text-align: center;
   transition: border-radius 100ms 250ms;
+  min-height: 40px;
 
   @include bp(large) {
+    min-height: auto;
+    height: 32px;
     width: auto;
     max-width: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
   }
 
   &:hover,
@@ -134,11 +137,12 @@
   @include bp(large) {
     position: absolute;
     right: 0;
+    top: 34px;
   }
 }
 
 .dropdownOuter {
-  padding: 24px;
+  padding: var(--card-padding);
   background: var(--color-primary-100);
 
   @include bp(small) {
@@ -159,8 +163,8 @@
   flex-direction: column;
   border-radius: 16px;
   background-color: var(--color-black-100);
-  padding: 24px;
-  gap: 24px;
+  padding: var(--card-padding);
+  gap: var(--gap-global);
 }
 
 .modelAndVariantText {

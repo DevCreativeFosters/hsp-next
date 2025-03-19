@@ -66,12 +66,12 @@ export default function Header({
             </div>
 
             <Link className={styles.logo} href="/">
-              <Image alt={'HSP Logo'} height={50} src={Logo} width={130} />
+              <Image alt={'HSP Logo'} height={48} src={Logo} width={129} />
             </Link>
 
             <div className={styles.callButtonContainer}>
               {secondaryMenu?.map(item => {
-                if (item.mobileDisplay === true) {
+                if (item.mobileDisplay === true ) {
                   return (
                     <Button
                       background="dark"
@@ -98,7 +98,7 @@ export default function Header({
                         const newValue = currentSubmenu === name ? null : name;
                         setCurrentSubmenu(newValue);
                       }}
-                      size="small"
+                      size="large"
                       toggleable={
                         subItems?.length > 0 && url.includes('/products/')
                           ? 'neutral'

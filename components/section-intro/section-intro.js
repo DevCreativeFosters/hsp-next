@@ -11,6 +11,7 @@ export default function SectionIntro({
   fitInline,
   narrowDescription,
   noBottomMargin,
+  noChildrenContainer = false,
   noMargin,
   noTopMargin,
   title,
@@ -40,7 +41,7 @@ export default function SectionIntro({
       {description && (
         <TextElement className={clsx(styles.description, 'p-large')} text={description} />
       )}
-      {children}
+      {children && (noChildrenContainer ? children : <div className={styles.childrenContainer}>{children}</div>)}
     </div>
   );
 }

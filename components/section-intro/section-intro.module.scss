@@ -1,15 +1,15 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: var(--gap-global-xs);
+  margin-bottom: var(--gap);
 
   @include bp(medium) {
     display: grid;
     grid-template-areas:
       'title buttons'
       'description description';
-    gap: 16px;
+    gap: var(--gap-global-sm);
   }
 
   &.fitInline {
@@ -74,5 +74,15 @@
 
   *:last-child {
     margin-bottom: 0;
+  }
+}
+
+.childrenContainer {
+  margin-top: var(--gap-global-sm);
+
+  @include bp(medium) {
+    display: grid;
+    place-content: center end;
+    margin-top: 0;
   }
 }

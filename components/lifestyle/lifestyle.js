@@ -56,7 +56,7 @@ export default function Lifestyle({
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >
-        <SectionButtons alwaysInRow buttons={buttons} />
+        <SectionButtons addMobileMarginTop alwaysInRow buttons={buttons} />
       </SectionIntro>
 
       <FeaturedArticle
