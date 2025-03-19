@@ -1,13 +1,15 @@
 .mapWrapper {
   position: relative;
   flex-grow: 1;
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   min-height: 256px;
   z-index: var(--z-index-component);
   background: black;
 
-  @include bp-below(large) {
-    min-height: 256px;
+  &.minHeightLarge {
+    @include bp(large) {
+      min-height: 512px;
+    }
   }
 }
 

@@ -29,6 +29,15 @@
     a {
       max-height: 32px;
     }
+
+    button {
+      width: 36px;
+      height: 36px;
+
+      &::after {
+        font-size: 32px;
+      }
+    }
   }
 }
 

@@ -63,7 +63,7 @@ export default async function StoreLocatorPage() {
 
         <StoreLocatorProvider>
           <StoreLocatorSearch allLocations={allStores} />
-          <StoreLocatorResultsAndMap allLocations={allStores} />
+          <StoreLocatorResultsAndMap allLocations={allStores} minHeightLarge />
         </StoreLocatorProvider>
       </Suspense>
     </Layout>

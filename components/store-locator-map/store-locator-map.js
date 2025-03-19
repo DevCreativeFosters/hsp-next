@@ -39,6 +39,7 @@ function filterLocationsWithinBounds(bounds, locations) {
 export default function StoreLocatorMap({
   className,
   locations = [],
+  minHeightLarge,
   onMarkerClick,
 }) {
   const mapRef = useRef(null);
@@ -249,7 +250,11 @@ export default function StoreLocatorMap({
   );
 
   return (
-    <div className={clsx(styles.mapWrapper, className)}>
+    <div
+      className={clsx(styles.mapWrapper, className, {
+        [styles.minHeightLarge]: minHeightLarge,
+      })}
+    >
       <div className={clsx(styles.map, className)} ref={mapRef} />
     </div>
   );

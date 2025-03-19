@@ -4,7 +4,6 @@ import { useContext, useEffect, useRef } from 'react';
 
 import StoreLocatorContext from '@contexts/store-locator';
 
-import constants from '@lib/constants';
 import { getGeoHash } from '@lib/get-geo-hash';
 import normalizeStores from '@lib/normalize-stores';
 import { getLocationsToDisplay } from '@lib/store-locations';
@@ -20,6 +19,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
   const {
     allMapLocations,
     filteredStores,
+    minHeightLarge,
     searchGeolocation,
     selectedStore,
     setAllMapLocations,
@@ -75,6 +75,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
           </div>
           <StoreLocatorMap
             locations={allMapLocations}
+            minHeightLarge
             onMarkerClick={setSelectedStore}
           />
         </div>

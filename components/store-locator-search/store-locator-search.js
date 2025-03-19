@@ -84,15 +84,30 @@ export default function StoreLocatorSearch({ allLocations }) {
       setSessionToken(uuidv4());
       setSearchGeolocation(geolocation);
       setIsFormValid(true);
+
+      // For mobile, automatically go to fullscreen mode when location is selected
+      if (isMobile) {
+        setIsFullScreen(true);
+      }
     },
-    [sessionToken, setSearchGeolocation],
+    [isMobile, sessionToken, setIsFullScreen, setSearchGeolocation],
   );
 
   const goBack = useCallback(() => {
     if (isFullScreen) {
       setIsFullScreen(false);
+      setLocationInput('');
+      setLocation(null);
+      setSearchGeolocation(null);
+      setSuggestions([]);
     }
-  }, [isFullScreen]);
+  }, [
+    isFullScreen,
+    setLocation,
+    setLocationInput,
+    setSearchGeolocation,
+    setSuggestions,
+  ]);
 
   useEffect(() => {
     setInlineResultListVisible(
@@ -293,25 +308,6 @@ export default function StoreLocatorSearch({ allLocations }) {
                     selectedStore={currentResult}
                   />
                 </div>
-              )}
-
-              {isSearchButtonVisible && (
-                <Button
-                  className={styles.button}
-                  disabled={!isFormValid}
-                  href="#store-search"
-                  onClick={() => {
-                    if (isMobile && !isFullScreen) {
-                      setIsFullScreen(true);
-                    } else {
-                      formRef.current.reportValidity();
-                    }
-                  }}
-                  rightIcon="search"
-                  type="button"
-                >
-                  Search
-                </Button>
               )}
             </form>
           </div>
