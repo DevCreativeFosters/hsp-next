@@ -20,9 +20,7 @@
 }
 
 .hasLabel {
-  padding-top: calc(
-    var(--filled-label-font-size) * var(--filled-label-line-height)
-  );
+  padding-top: calc(var(--filled-label-font-size) - 10px);
 }
 
 .label {

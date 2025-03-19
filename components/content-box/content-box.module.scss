@@ -1,16 +1,30 @@
 .contentBox {
   font-weight: 400;
-  font-size: 24px;
+  font-size: 20px;
   display: flex;
   flex-direction: column;
-  padding: 48px;
+  padding: var(--card-padding-lg);
   border: var(--border-size) solid var(--color-white-20);
   border-radius: var(--border-radius-md);
-  gap: 48px;
+
+  img {
+    margin-bottom: var(--gap-global);
+  }
 
   p {
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.3;
+
+    & + p {
+      margin-top: 0;
+    }
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   a {
@@ -20,6 +34,5 @@
   > div {
     display: flex;
     flex-direction: column;
-    gap: 24px;
   }
 }

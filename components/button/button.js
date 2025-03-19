@@ -20,6 +20,7 @@ function ButtonWithRef(
     fontStyle = null,
     footer,
     href = '',
+    inlineOffsetByPadding = false,
     isBusy,
     isToggled = false,
     leftIcon = null,
@@ -60,6 +61,7 @@ function ButtonWithRef(
     [styles.noText]: !children,
     [styles.footer]: footer,
     [styles.isBusy]: isBusy,
+    [styles.inlineOffsetByPadding]: inlineOffsetByPadding,
   });
 
   const LeftIconSvg = getIcon(leftIcon);

@@ -18,6 +18,7 @@ import Sidebar from '@components/sidebar/sidebar';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
 import styles from './page.module.scss';
+import clsx from 'clsx';
 
 export async function generateMetadata({ params }) {
   const supportPagePath = `${routes.support()}/${params.slug}`;
@@ -65,7 +66,7 @@ export default async function SupportSubpage({ params }) {
               </Sidebar>
               <div className={styles.contentContainer}>
                 {content?.title && (
-                  <h1 className={styles.title}>{content.title}</h1>
+                  <h1 className={clsx(styles.title, 'h1')}>{content.title}</h1>
                 )}
                 {content && (
                   <Wysiwyg

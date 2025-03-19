@@ -372,6 +372,10 @@ div.toggleContainer {
   }
 }
 
+.inlineOffsetByPadding {
+  margin-left: calc(-1 * var(--inline-padding));
+}
+
 @keyframes spin {
   to {
     rotate: 360deg;

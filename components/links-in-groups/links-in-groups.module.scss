@@ -9,7 +9,7 @@
 .groups {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: var(--gap);
 
   @include bp(large) {
     flex-direction: row;
@@ -20,16 +20,12 @@
 .group {
   padding: 32px 0;
   border: 2px solid var(--color-white-20);
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   width: 100%;
 
   @include bp(large) {
-    padding: 48px 24px;
+    padding: var(--card-padding) var(--card-padding-lg);
   }
-}
-
-.title {
-  margin-left: 24px;
 }
 
 .list {
@@ -37,15 +33,13 @@
   padding: 0;
   margin: 0;
   list-style: none;
-
-  @include bp(large) {
-    margin-top: 44px;
-  }
 }
 
 .listItem {
+  --inline-padding: 16px;
+
   padding: 0;
-  margin: 8px 0 0;
+  margin-left: calc(-1 * var(--inline-padding));
 }
 
 .sidebar {

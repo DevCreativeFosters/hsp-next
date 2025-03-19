@@ -1,7 +1,7 @@
 .page {
   position: relative;
   z-index: 1;
-  margin-top: -60px;
+  margin-top: -32px;
 
   &::before {
     content: '';
@@ -29,37 +29,28 @@
   }
 }
 
+.title {
+  @include bp(large) {
+    margin: var(--content-padding-lg) 0 0 var(--content-padding-lg);
+  }
+}
+
 .contentContainer {
-  border-radius: 16px;
-  padding-top: 48px;
-  background-color: none;
+  border-radius: var(--border-radius-md);
+  background-color: transparent;
 
   @include bp(large) {
     background-color: var(--color-black-100);
   }
 }
 
-.title {
-  font-family: var(--font-secondary);
-  font-size: 48px;
-  line-height: 1.33;
-  margin-top: 0;
-  margin-left: 24px;
-
-  @include bp(large) {
-    font-size: 64px;
-    line-height: 1.25;
-    margin-left: 48px;
-  }
-}
-
 .content {
-  padding: 0.1px 24px;
+  padding-block: 0.1px;
   position: relative;
 
-  @include bp(large) {
-    padding: 64px 48px 48px;
-    border-radius: 0 0 16px 16px;
+  @include bp(medium) {
+    padding: var(--content-padding-lg);
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
     background-color: var(--color-black-100);
   }
 }

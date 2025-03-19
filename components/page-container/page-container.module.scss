@@ -1,12 +1,11 @@
 .pageContainer {
-  --vertical-padding: 24px;
+  --vertical-padding: 64px;
 
   @include bp(large) {
-    --vertical-padding: 120px;
+    --vertical-padding: 48px;
   }
 
   display: flex;
   flex-direction: column;
   padding: var(--vertical-padding) 0;
-  gap: 64px;
 }

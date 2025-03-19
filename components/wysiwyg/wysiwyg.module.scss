@@ -40,13 +40,9 @@
   p,
   li {
     color: var(--color-white-80);
-    font-size: 14px;
     margin-bottom: 8px;
-
-    @include bp(medium) {
-      font-size: 16px;
-      line-height: 1.37;
-    }
+    font-size: 16px;
+    line-height: 1.37;
   }
 
   iframe {

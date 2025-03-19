@@ -60,7 +60,7 @@ export default async function ContactUs() {
               )}
               {servicesBox.length > 0 && (
                 <ContentBox>
-                  <h3>Services</h3>
+                  <h3 className='h3'>Services</h3>
                   <div>
                     {servicesBox.map((serviceLink, index) => {
                       const link = serviceLink.link;
@@ -69,6 +69,7 @@ export default async function ContactUs() {
                         return (
                           <Button
                             href={link?.url || ''}
+                            inlineOffsetByPadding
                             key={index}
                             rightIcon="arrow-forward"
                             target={link?.target}
