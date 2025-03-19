@@ -218,7 +218,9 @@ export default function Sidebar({
             showLocationError={showLocationError}
           />
           {selectedStore ? (
-            <ResultsStoreTile item={selectedStore} />
+            <div className={styles.resultStoreTile}>
+              <ResultsStoreTile item={selectedStore} />
+            </div>
           ) : (
             <>
               {isInlineMapVisible && (
