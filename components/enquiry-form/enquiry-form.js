@@ -172,6 +172,8 @@ export default function EnquiryForm({
         <Select
           id="product-variant"
           label="Variant"
+          labelMarginBottom="10px"
+          marginTop="16px"
           onChange={onVariantChange}
           options={variantOptions}
           placeholder="Variant"
@@ -203,11 +205,15 @@ export default function EnquiryForm({
               allLocations={allLocations}
               className={styles.results}
               hasMapInteracted={hasMapInteracted}
+              itemInList={true}
               items={hasMapInteracted ? filteredStores : filteredLocations}
               onSelect={item => {
                 setSelectedStore(item);
               }}
               show={isInlineResultListVisible}
+              showCategory={false}
+              showDisplays={false}
+              showIndex={false}
               showMoreResults={showMoreResults}
             />
             {!showMoreResults &&

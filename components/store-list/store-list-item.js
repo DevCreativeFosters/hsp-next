@@ -1,9 +1,19 @@
+import clsx from 'clsx';
+
 import StoreCategory from '@components/store-category/store-category';
 import StoreDisplays from '@components/store-displays/store-displays';
 
 import styles from './store-list-item.module.scss';
 
-export default function StoreListItem({ index, item, onSelect }) {
+export default function StoreListItem({
+  index,
+  item,
+  itemInList = false,
+  onSelect,
+  showCategory = true,
+  showDisplays = true,
+  showIndex = true,
+}) {
   const { address, color, displays, label, location, name, storeIcon } = item;
   const { city, country, postalCode, stateAbbr, street } = location || {};
 
@@ -18,22 +28,29 @@ export default function StoreListItem({ index, item, onSelect }) {
   }
 
   return (
-    <li className={styles.item} onClick={() => onSelect(item)}>
+    <li
+      className={clsx(styles.item, {
+        [styles.itemInList]: itemInList,
+      })}
+      onClick={() => onSelect(item)}
+    >
       <div className={styles.header}>
-        <div className={styles.index}>{index}</div>
+        {showIndex && <div className={styles.index}>{index}</div>}
         <div className={styles.details}>
           <div
             className={styles.name}
             dangerouslySetInnerHTML={{ __html: name }}
           ></div>
-          <StoreCategory color={color} icon={storeIcon} label={label} />
+          {showCategory && (
+            <StoreCategory color={color} icon={storeIcon} label={label} />
+          )}
           <div
             className={styles.address}
             dangerouslySetInnerHTML={{ __html: printedAddress }}
           ></div>
         </div>
       </div>
-      <StoreDisplays displays={displays} />
+      {showDisplays && <StoreDisplays displays={displays} />}
     </li>
   );
 }

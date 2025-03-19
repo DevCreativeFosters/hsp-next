@@ -11,9 +11,13 @@ import styles from './store-list.module.scss';
 export default function StoreList({
   allLocations,
   className,
+  itemInList = false,
   items,
   onSelect,
   show,
+  showCategory = true,
+  showDisplays = true,
+  showIndex = true,
   showMoreResults,
   style,
 }) {
@@ -37,7 +41,11 @@ export default function StoreList({
             <StoreListItem
               index={1}
               item={normalizedSuperStore}
+              itemInList={itemInList}
               onSelect={onSelect}
+              showCategory={showCategory}
+              showDisplays={showDisplays}
+              showIndex={showIndex}
             />
           </ul>
         </>
@@ -65,8 +73,12 @@ export default function StoreList({
           <StoreListItem
             index={index + 1}
             item={item}
+            itemInList={itemInList}
             key={index}
             onSelect={onSelect}
+            showCategory={showCategory}
+            showDisplays={showDisplays}
+            showIndex={showIndex}
           />
         ))}
       </ul>

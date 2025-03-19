@@ -26,6 +26,8 @@ export default function Select({
   errorMessage = '',
   id = '',
   label = '',
+  labelMarginBottom,
+  marginTop,
   multiple = false,
   onChange = () => null,
   onClick = () => null,
@@ -97,8 +99,10 @@ export default function Select({
     ? !value?.length
     : !selectedOption?.label && selectedOption?.value === undefined;
 
+  const wrapperStyle = marginTop ? { marginTop } : {};
+
   return (
-    <div className={clsx(styles.wrapperOuter, className)}>
+    <div className={clsx(styles.wrapperOuter, className)} style={wrapperStyle}>
       <div
         className={clsx(styles.wrapperInner, {
           [styles.small]: size === 'small',
@@ -124,7 +128,15 @@ export default function Select({
           }}
         >
           {label && (
-            <label className={styles.label} htmlFor={elementId}>
+            <label
+              className={styles.label}
+              htmlFor={elementId}
+              style={
+                labelMarginBottom && (value || isOpen)
+                  ? { marginBottom: labelMarginBottom }
+                  : {}
+              }
+            >
               {label}{' '}
               {required ? <span className={styles.required}>*</span> : null}
             </label>
