@@ -128,6 +128,10 @@
 
   &.toggleable {
     --toggler-padding: 20px;
+
+    @include bp(large) {
+      --toggler-padding: 32px;
+    }
   }
 }
 
@@ -260,14 +264,14 @@
   display: flex;
   height: 24px;
   margin-left: -32px;
-  padding: 0 8px;
+  padding: 0 9px;
   transition: transform 400ms;
   transform-origin: center center;
   border-radius: 4px;
   z-index: 2;
 
   @include bp(full) {
-    margin-left: -28px;
+    margin-left: -42px;
   }
 
   @media (hover: hover) {

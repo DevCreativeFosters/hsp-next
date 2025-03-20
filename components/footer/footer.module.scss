@@ -22,7 +22,7 @@
 
 .footerContainerC {
   display: none;
-  gap: 3rem;
+  gap: var(--gap-global);
 
   @include bp(medium) {
     display: grid;
@@ -79,7 +79,6 @@
       grid-column: 1 / span 3;
       display: flex;
       flex-direction: row;
-      padding-left: 24px;
     }
 
     &:last-child {
@@ -96,7 +95,6 @@
   @include bp(large) {
     &:first-child {
       flex-direction: column;
-      padding-left: 0;
     }
 
     &:last-child {

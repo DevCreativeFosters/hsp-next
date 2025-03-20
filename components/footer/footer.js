@@ -34,6 +34,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -42,6 +43,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -58,6 +60,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -66,6 +69,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -84,6 +88,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -92,6 +97,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -110,6 +116,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -118,6 +125,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -136,6 +144,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -144,6 +153,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -160,6 +170,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           rightIcon="arrow-forward"
                           variant="tertiary"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -168,6 +179,7 @@ export default function Footer({ menus, text }) {
                           href={menu.url}
                           size="xsmall"
                           variant="footer-item"
+                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>

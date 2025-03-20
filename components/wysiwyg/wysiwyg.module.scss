@@ -74,7 +74,7 @@
   table {
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 16px;
+    border-radius: var(--border-radius-md);
     background-color: var(--color-black-100);
     width: 100%;
 
@@ -101,11 +101,11 @@
           }
 
           &:first-child {
-            border-top-left-radius: 16px;
+            border-top-left-radius: var(--border-radius-md);
           }
 
           &:last-child {
-            border-top-right-radius: 16px;
+            border-top-right-radius: var(--border-radius-md);
             border-right: 1px solid var(--color-white-40);
           }
         }
@@ -124,13 +124,7 @@
           border-right: 0;
           padding: 16px 24px;
           text-align: left;
-          font-size: 16px;
-          line-height: 1.2;
           color: var(--color-white-80);
-
-          @include bp(large) {
-            font-size: 20px;
-          }
 
           /* stylelint-disable-next-line no-descending-specificity */
           a {
@@ -150,7 +144,7 @@
             }
 
             &:hover {
-              border-radius: 8px;
+              border-radius: var(--border-radius-sm);
               background-color: var(--color-white-10);
             }
           }
@@ -165,11 +159,11 @@
             border-bottom: 1px solid var(--color-white-40);
 
             &:first-child {
-              border-bottom-left-radius: 16px;
+              border-bottom-left-radius: var(--border-radius-md);
             }
 
             &:last-child {
-              border-bottom-right-radius: 16px;
+              border-bottom-right-radius: var(--border-radius-md);
             }
           }
         }
@@ -178,11 +172,8 @@
   }
 
   figure {
-    margin-block: 24px;
-
-    @include bp(medium) {
-      margin-bottom: 32px;
-    }
+    margin-block: var(--gap-global);
+    margin-inline: 0;
   }
 
   form {
@@ -192,11 +183,7 @@
 }
 
 .accordion {
-  margin-block: 24px;
-
-  @include bp(medium) {
-    margin-bottom: 32px;
-  }
+  margin-block: var(--gap-global);
 }
 
 .accordionItemBody {
@@ -211,11 +198,7 @@
     margin-bottom: 0;
 
     &:not(:last-child) {
-      margin-bottom: 24px;
-
-      @include bp(medium) {
-        margin-bottom: 32px;
-      }
+      margin-bottom: var(--gap-global);
     }
   }
 

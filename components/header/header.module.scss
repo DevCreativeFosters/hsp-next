@@ -103,6 +103,10 @@
 
 .mainMenuList {
   white-space: nowrap;
+
+  @include bp(large) {
+    gap: var(--gap-global-xs);
+  }
 }
 
 .mainMenuButton {

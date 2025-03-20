@@ -1,8 +1,4 @@
-.container {
-  @include bp(large) {
-    height: 40px;
-  }
-}
+
 
 .containerInner {
   position: relative;
@@ -128,8 +124,8 @@
 }
 
 .iconWrapper {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
