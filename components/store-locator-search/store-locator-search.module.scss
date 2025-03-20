@@ -3,7 +3,7 @@
   z-index: var(--z-index-store-search);
   top: 0;
   background: var(--color-primary-100);
-  padding-block: 24px;
+  padding-block: var(--gap-global);
   transition: padding-block 0.3s ease-in-out;
 
   @include bp(medium) {
@@ -12,6 +12,8 @@
   }
 
   &.isFullScreen {
+    padding-block: var(--gap-global-sm);
+
     @include bp-below(medium) {
       top: var(--header-height);
       height: calc(100dvh - var(--header-height));
@@ -49,16 +51,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  border-radius: 8px;
+  padding: var(--content-padding);
+  border-radius: var(--border-radius-sm);
   background: var(--color-black-100);
   max-height: calc(100dvh - var(--header-height) - 96px);
 
   @include bp(medium) {
-    gap: 16px;
-    flex-direction: row;
-    align-items: center;
-    border-radius: 16px;
+    border-radius: var(--border-radius-md);
+    padding: var(--content-padding-sm);
   }
 }
 
@@ -106,9 +106,11 @@
 .goBackButton {
   --gap: 12px;
   --block-padding: 10px;
+  --icon-side-padding: 16px;
   --only-icon-padding: 0;
+  --bg-color: transparent;
 
-  margin-bottom: 16px;
+  margin-bottom: var(--gap-global-sm);
   font-size: 20px;
 
   path {

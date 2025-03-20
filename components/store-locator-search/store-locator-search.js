@@ -216,7 +216,9 @@ export default function StoreLocatorSearch({ allLocations }) {
           ) || 0;
         const top = headerHeight;
         const bottom = height - top;
-        const rootMargin = `-${top - 1}px 0px -${bottom}px 0px`;
+        const topMargin = Math.round(top - 1);
+        const bottomMargin = Math.round(bottom);
+        const rootMargin = `-${topMargin}px 0px -${bottomMargin}px 0px`;
         io = new IntersectionObserver(
           function (entries) {
             const entry = entries[0];
@@ -259,7 +261,7 @@ export default function StoreLocatorSearch({ allLocations }) {
               onClick={goBack}
               variant="quinary"
             >
-              Back to search
+              Back
             </Button>
           )}
 

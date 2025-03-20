@@ -8,14 +8,10 @@
 
 .noResultsNotice {
   border: 2px solid var(--color-white-20);
-  border-radius: 16px;
-  padding: 16px 16px 16px 24px;
+  border-radius: var(--border-radius-md);
+  padding: var(--card-padding-sm);
   background: var(--color-black-100);
   margin-bottom: 10px;
-
-  @include bp(medium) {
-    padding: 12px 16px 16px;
-  }
 
   @include bp(large) {
     background: var(--color-black-60);
