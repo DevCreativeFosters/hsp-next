@@ -8,7 +8,14 @@
 
   &.minHeightLarge {
     @include bp(large) {
-      min-height: 512px;
+      min-height: min(
+        calc(
+          100vh - var(--header-height) - var(
+              --store-locator-collapsed-search-height
+            ) - var(--store-locator-offset)
+        ),
+        512px
+      );
     }
   }
 }

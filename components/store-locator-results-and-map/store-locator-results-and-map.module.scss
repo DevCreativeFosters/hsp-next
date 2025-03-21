@@ -21,8 +21,8 @@
   max-height: 725px;
   margin: var(--margin-block) 0;
   list-style: none;
-  padding-block: 24px;
-  gap: 8px;
+  padding-block: var(--card-padding);
+  gap: var(--gap-global-xs);
 
   @include bp(large) {
     gap: 12px;
@@ -34,9 +34,9 @@
   width: 35%;
   overflow-y: scroll;
   max-height: calc(
-    100vh - var(--header-height) - var(--store-locator-desktop-form-height) - var(
-        --margin-block
-      ) * 2 - var(--padding) * 2
+    100vh - var(--header-height) - var(--store-locator-collapsed-search-height) - var(
+        --store-locator-offset
+      )
   );
   min-height: 300px;
   padding-right: 8px;
@@ -49,7 +49,7 @@
 
   &::-webkit-scrollbar {
     width: 24px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
   }
 

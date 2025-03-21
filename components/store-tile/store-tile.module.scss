@@ -4,7 +4,7 @@
   justify-content: space-between;
   border: 2px solid var(--color-white-20);
   border-radius: var(--border-radius-md);
-  padding: 16px;
+  padding: var(--content-padding-sm);
   list-style: none;
   margin: 0;
   background: var(--color-black-100);
@@ -29,7 +29,7 @@
   font-family: var(--font-secondary);
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: var(--gap-global-xs);
 
   @include bp(medium) {
     font-size: 24px;
@@ -38,18 +38,13 @@
 
 .location {
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
+  gap: var(--gap-global-xs);
   color: var(--color-white-80);
   font-size: 14px;
   line-height: 1.28;
 
-  @include bp(medium) {
-    gap: 8px;
-  }
-
   @include bp(large) {
-    gap: 16px;
+    gap: var(--gap-global-sm);
   }
 
   path {
@@ -59,7 +54,7 @@
 
 .tel {
   display: flex;
-  gap: 8px;
+  gap: var(--gap-global-xs);
   margin-top: 10px;
   font-weight: 600;
   font-family: var(--font-secondary);
@@ -95,14 +90,14 @@
 .extra {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
+  gap: var(--gap-global-sm);
+  margin-top: var(--gap-global-sm);
 
   @include bp(large) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
+    margin-top: var(--gap-global-xs);
   }
 }
 
