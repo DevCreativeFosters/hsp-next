@@ -1,3 +1,18 @@
+@import '/styles/globals/breakpoints';
+
+.isStickyOnMobile {
+  --sticky-trigger-bg: #0d0d0d;
+
+  @include bp-below(medium) {
+    position: sticky;
+
+    // fallback to header height when no custom offset is provided
+    top: var(--header-height);
+    z-index: var(--z-index-dropdown);
+    background-color: var(--sticky-trigger-bg);
+  }
+}
+
 .button {
   display: flex;
   align-items: center;

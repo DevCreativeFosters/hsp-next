@@ -171,7 +171,11 @@ export default function ProductTabs({
 
   // Mobile accordion view
   const mobileContent = (
-    <Accordion className={clsx(styles.productAccordion, styles.hideOnDesktop)}>
+    <Accordion
+      allowMultipleOpen
+      className={clsx(styles.productAccordion, styles.hideOnDesktop)}
+      stickyOnMobile
+    >
       {tabs.features && (
         <AccordionItem
           className={styles.accordionItem}

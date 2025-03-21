@@ -3,34 +3,67 @@
 import React, { useCallback, useState } from 'react';
 
 export default function Accordion({
-  alwaysOpen = false,
+  allowMultipleOpen = false,
   children,
   className,
+  keepOneOpen = false,
   openFirstByDefault = false,
+  stickyOnMobile = false,
+  stickyTopOffset,
 }) {
   const [activeIndex, setActiveIndex] = useState(openFirstByDefault ? 0 : -1);
 
+  // Use array of active indices if allowing multiple open items
+  const [activeIndices, setActiveIndices] = useState(() => {
+    if (openFirstByDefault) {
+      return [0];
+    }
+    return [];
+  });
+
   const toggleItem = useCallback(
     index => {
-      if (activeIndex === index) {
-        if (!alwaysOpen) {
-          setActiveIndex(-1);
-        } else if (children.length > 1) {
-          setActiveIndex(index === 0 ? 1 : 0);
+      if (allowMultipleOpen) {
+        if (activeIndices.includes(index)) {
+          if (keepOneOpen && activeIndices.length === 1) {
+            return;
+          }
+          setActiveIndices(prev => prev.filter(i => i !== index));
+        } else {
+          setActiveIndices(prev => [...prev, index]);
         }
       } else {
-        setActiveIndex(index);
+        // Single open item logic
+        if (activeIndex === index) {
+          if (!keepOneOpen) {
+            setActiveIndex(-1);
+          } else if (children.length > 1) {
+            setActiveIndex(index === 0 ? 1 : 0);
+          }
+        } else {
+          setActiveIndex(index);
+        }
       }
     },
-    [activeIndex, alwaysOpen, children.length],
+    [
+      activeIndex,
+      activeIndices,
+      allowMultipleOpen,
+      children?.length,
+      keepOneOpen,
+    ],
   );
 
   return (
     <div className={className}>
       {React.Children.map(children, (child, index) =>
         React.cloneElement(child, {
-          isOpen: index === activeIndex,
+          isOpen: allowMultipleOpen
+            ? activeIndices.includes(index)
+            : index === activeIndex,
           onToggle: () => toggleItem(index),
+          stickyOnMobile: stickyOnMobile,
+          stickyTopOffset: stickyTopOffset,
         }),
       )}
     </div>

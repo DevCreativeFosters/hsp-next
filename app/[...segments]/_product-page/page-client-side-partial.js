@@ -155,7 +155,9 @@ export default function PageClientSidePartial({
             </StoreLocatorProvider>
           </div>
           <Accordion
+            allowMultipleOpen
             className={clsx(styles.productAccordion, styles.hideOnTablet)}
+            stickyOnMobile
           >
             {description && (
               <AccordionItem

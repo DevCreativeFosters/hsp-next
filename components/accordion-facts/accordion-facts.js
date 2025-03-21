@@ -51,15 +51,15 @@ export default function AccordionFacts({ accordions, background }) {
         );
       });
     };
-  }, [accordions, isMobile, isMediumWidth, updateMediaHeight]);
+  }, [accordions, isMediumWidth, isMobile, updateMediaHeight]);
 
   return (
     <Container className={styles.container}>
       {accordions && accordions.length > 0 && (
         <div>
           <Accordion
-            alwaysOpen={true}
             className={styles.accordion}
+            keepOneOpen={true}
             openFirstByDefault={true}
           >
             {accordions.map((accordion, index) =>

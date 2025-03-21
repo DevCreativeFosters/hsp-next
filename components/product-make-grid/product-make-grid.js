@@ -83,7 +83,7 @@ export default function ProductMakeGrid({
           {currentProducts.map((product, index) => (
             <ProductCard
               imageUrl={product.productImage?.node?.mediaItemUrl}
-              key={product.id || product.databaseId}
+              key={`product-${index}-${product.title?.replace(/\s+/g, '-').toLowerCase()}`}
               name={product.title}
               price={product.startingPrice}
               removeBorder={true}

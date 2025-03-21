@@ -15,6 +15,8 @@ export default function AccordionItem({
   isOpen,
   onToggle,
   resetStyling = false,
+  stickyOnMobile = false,
+  stickyTopOffset,
   triggerContent,
 }) {
   const ExpandIcon = getIcon('expand-more-neutral');
@@ -39,9 +41,11 @@ export default function AccordionItem({
     >
       <AccordionTrigger
         isOpen={isOpen}
+        isStickyOnMobile={stickyOnMobile}
         onClick={onToggle}
         onKeyUp={handleKeyUp}
         resetStyling={resetStyling}
+        stickyTopOffset={stickyTopOffset}
       >
         {triggerContent}
         <div className={styles.arrow}>
