@@ -5,6 +5,7 @@ import { draftMode } from 'next/headers';
 import { getBlogPost } from '@lib/api/get-blog-post';
 import { getRecentBlogPosts } from '@lib/api/get-recent-blog-posts';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import { BlogPost } from '@components/blog-post';
@@ -38,6 +39,7 @@ export default async function BlogPostPage({ params }) {
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
+      {prepareSchemas(post?.schemaProSchemas)}
       <Suspense fallback={null}>
         <BlogPost
           content={content}

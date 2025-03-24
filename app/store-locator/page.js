@@ -2,9 +2,11 @@ import { Suspense } from 'react';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
+import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
 import { removeLeadingSlash } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -36,6 +38,7 @@ export const viewport = {
 
 export default async function StoreLocatorPage() {
   const allStores = await getStores();
+  const content = await getPageData('store-locator');
 
   return (
     <Layout
@@ -44,6 +47,7 @@ export default async function StoreLocatorPage() {
       stickyFooter
       withMap
     >
+      {prepareSchemas(content?.schemaProSchemas)}
       <Suspense fallback={null}>
         <FullscreenCollapse>
           <div className={styles.breadcrumbs}>

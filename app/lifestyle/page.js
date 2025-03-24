@@ -6,6 +6,7 @@ import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { removeLeadingSlash } from '@lib/helpers';
 import { POST_TYPES } from '@lib/post-types';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -32,6 +33,7 @@ export default async function LifestylePage() {
 
   return (
     <Layout title="HSP 4x4 - Lifestyle">
+      {prepareSchemas(content?.schemaProSchemas)}
       <Suspense fallback={null}>
         <FeaturedPost
           date={featuredPost?.date}

@@ -5,6 +5,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { removeLeadingSlash } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -48,6 +49,7 @@ export default async function BlogPage({ searchParams }) {
 
   return (
     <Layout title="">
+      {prepareSchemas(content?.schemaProSchemas)}
       <Background colorStops={colorStops} containMargins>
         <Container collapseMargin>
           <div className={styles.breadcrumbs}>

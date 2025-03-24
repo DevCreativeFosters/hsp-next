@@ -13,6 +13,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { getExcludeTree, shouldBeExcluded } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -133,11 +134,14 @@ export default async function CategoryPage({ params }) {
       flexibleContentBlocks?.map(renderBlock) || [],
     );
     return (
-      <ContentBlocksPage
-        blocks={contentBlocks}
-        pageContent={pageContent}
-        title={title}
-      />
+      <>
+        {prepareSchemas(content?.schemaProSchemas)}
+        <ContentBlocksPage
+          blocks={contentBlocks}
+          pageContent={pageContent}
+          title={title}
+        />
+      </>
     );
   }
 

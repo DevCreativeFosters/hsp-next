@@ -3,6 +3,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
 import { removeLeadingSlash } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -42,6 +43,7 @@ export default async function HspTVPage({ searchParams }) {
 
   return (
     <Layout title="">
+      {prepareSchemas(content?.schemaProSchemas)}
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsLifestyle initialContentTypeRoute={routes.tv()} />

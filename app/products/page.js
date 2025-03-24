@@ -7,6 +7,7 @@ import { renderBlock } from '@lib/block';
 import { getExcludeTree, sortMainProductCategories } from '@lib/helpers';
 import { removeLeadingSlash } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -45,6 +46,7 @@ export default async function ProductsPage() {
 
   return (
     <Layout>
+      {prepareSchemas(content?.schemaProSchemas)}
       <Container>
         {sortedMainProductCategories?.map(productCategory => (
           <ProductCategory

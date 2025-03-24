@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import Layout from '@components/layout/layout';
@@ -25,6 +26,7 @@ export default async function HomePage() {
 
   return (
     <Layout withMap>
+      {prepareSchemas(content?.schemaProSchemas)}
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}

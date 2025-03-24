@@ -16,6 +16,7 @@ import { getProductSeo } from '@lib/api/get-product-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
 import { renderBlock } from '@lib/block';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsProduct from '@components/breadcrumbs-product';
@@ -198,6 +199,7 @@ export default async function Product({ params, searchParams }) {
       isProductPageWithoutMakeAndModel={isWithoutMakeAndModel}
       title="Product"
     >
+      {prepareSchemas(firstMatchedProduct?.schemaProSchemas)}
       <Container>
         <div className={styles.breadcrumbs}>
           <BreadcrumbsProduct currentProduct={currentProduct} />

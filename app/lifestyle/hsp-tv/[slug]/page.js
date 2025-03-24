@@ -6,6 +6,7 @@ import { getHspTvPost } from '@lib/api/get-hsptv-post';
 import { getRecentHspTvPosts } from '@lib/api/get-recent-hsptv-posts';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { removeLeadingSlash } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import { HspTvPost } from '@components/hsp-tv-post';
@@ -35,6 +36,7 @@ export default async function HspTVPost({ params }) {
 
   return (
     <Layout title={`HSP 4x4 - ${title}`}>
+      {prepareSchemas(post?.schemaProSchemas)}
       <Suspense fallback={null}>
         <HspTvPost
           content={content}

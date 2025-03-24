@@ -2,6 +2,7 @@ import { getLatestNumberOfHSPCelebritiesPosts } from '@lib/api/get-latest-number
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { removeLeadingSlash } from '@lib/helpers';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
@@ -27,6 +28,7 @@ export default async function HSPCelebritiesPage() {
   const content = await getPageData('lifestyle/hsp-celebrities');
   return (
     <Layout reserveSpaceForVehicleSelection>
+      {prepareSchemas(content?.schemaProSchemas)}
       <Background colorStops={[]} containMargins>
         <Container collapseMargin>
           <BreadcrumbsLifestyle

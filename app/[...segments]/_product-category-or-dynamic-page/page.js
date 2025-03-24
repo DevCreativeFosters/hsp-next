@@ -4,6 +4,7 @@ import { getPageData } from '@lib/api/get-page-data';
 import { getProductCategorySeo } from '@lib/api/get-product-category-seo';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
+import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
 
 import ContentBlocksPage from '@components/content-blocks-page/content-blocks-page';
@@ -41,11 +42,14 @@ export default async function DynamicPage({ params }) {
       flexibleContentBlocks?.map(renderBlock) || [],
     );
     return (
-      <ContentBlocksPage
-        blocks={contentBlocks}
-        pageContent={pageContent}
-        title={title}
-      />
+      <>
+        {prepareSchemas(content?.schemaProSchemas)}
+        <ContentBlocksPage
+          blocks={contentBlocks}
+          pageContent={pageContent}
+          title={title}
+        />
+      </>
     );
   }
 
