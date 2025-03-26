@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 
 import clsx from 'clsx';
 import 'swiper/css';
@@ -8,14 +8,21 @@ import Button from '@components/button/button';
 
 import styles from './carousel.module.scss';
 
-export default function Carousel({
-  className,
-  settings,
-  showNavigation,
-  slides,
-}) {
+const Carousel = forwardRef(function Carousel(
+  { className, settings, showNavigation, slides },
+  ref,
+) {
   const swiperRef = useRef(null);
   const swiperHeightRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    slideTo: (index, speed, runCallbacks) => {
+      if (swiperRef.current) {
+        swiperRef.current.slideTo(index, speed, runCallbacks);
+      }
+    },
+    swiper: swiperRef.current,
+  }));
 
   const handlePrevClick = useCallback(() => {
     if (swiperRef.current) {
@@ -57,4 +64,6 @@ export default function Carousel({
       )}
     </div>
   );
-}
+});
+
+export default Carousel;

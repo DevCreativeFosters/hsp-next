@@ -9,10 +9,9 @@
   justify-content: center;
 
   @include bp(large) {
-    aspect-ratio: 864/538;
-    max-width: 864px;
-    max-height: 538px;
-    margin-left: var(--gap);
+    aspect-ratio: 696/409;
+    grid-column: span 8;
+    max-height: 409px;
     border-radius: var(--border-radius-md);
   }
 }
@@ -39,6 +38,7 @@
     object-fit: cover;
     object-position: center;
     width: 100%;
+    height: 100%;
   }
 
   &.isLoaded {
@@ -48,13 +48,15 @@
 
 .resetButton,
 .downloadButton {
+  --mobile-bar-summary-height: 64px;
+
   position: absolute;
-  right: 24px;
-  bottom: 128px;
+  right: var(--gap-global-sm);
+  bottom: calc(var(--mobile-bar-summary-height) + var(--gap-global-sm));
   z-index: calc(infinity - 1);
 
   @include bp(large) {
-    bottom: 24px;
+    bottom: var(--gap-global-sm)
   }
 }
 

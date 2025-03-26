@@ -22,7 +22,7 @@ import ProductsList from './sidebar-products-list';
 import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
-const ListIcon = getIcon('list');
+const CartIcon = getIcon('cart');
 const CarIcon = getIcon('car');
 
 const DEFAULT_PRICE_SUMMARY = {
@@ -35,9 +35,12 @@ const Section = ({
   children,
   headerChildren,
   headerClick,
+  icon,
   id,
   isOpen = false,
 }) => {
+  const Icon = getIcon(icon);
+
   return (
     <div
       className={clsx(styles.section, {
@@ -49,24 +52,15 @@ const Section = ({
         onClick={() => headerClick(id)}
         type="button"
       >
-        {headerChildren}
+        <span className={styles.sectionHeaderInner}>
+          {headerChildren}
+
+          {icon && <Icon />}
+        </span>
+
         <ExpandIcon className={styles.sectionHeaderIcon} />
       </button>
-      <div className={styles.sectionContent}>{children}</div>
-    </div>
-  );
-};
-
-const NrCircle = ({ className, isSmall, nr }) => {
-  if (nr === 0) return null;
-
-  return (
-    <div
-      className={clsx(styles.nr, className, {
-        [styles.isSmall]: isSmall,
-      })}
-    >
-      {nr}
+      <div className={clsx(styles.sectionContent, 'p-small')}>{children}</div>
     </div>
   );
 };
@@ -190,11 +184,7 @@ export default function Sidebar({
         })}
       >
         <Section
-          headerChildren={
-            <>
-              1. Your Setup <NrCircle nr={selectedProducts.length} />
-            </>
-          }
+          headerChildren={<span className="h4">Your Setup</span>}
           headerClick={setOpenSection}
           id="products"
           isOpen={openSection === 'products'}
@@ -205,8 +195,9 @@ export default function Sidebar({
           />
         </Section>
         <Section
-          headerChildren={<>2. Locate Your Store</>}
+          headerChildren={<span className="h4">Locate Your Store</span>}
           headerClick={setOpenSection}
+          icon="error"
           id="store"
           isOpen={openSection === 'store'}
         >
@@ -241,6 +232,8 @@ export default function Sidebar({
                       setSelectedStore(item);
                     }}
                     show={isInlineResultListVisible}
+                    showCategory={false}
+                    showIndex={false}
                     style={{
                       maxHeight: stepNumber > 0 ? 150 : null,
                     }}
@@ -257,12 +250,11 @@ export default function Sidebar({
             type="button"
           >
             <CarIcon />
-            <NrCircle nr={selectedProducts.length} />
           </button>
-          <div className={styles.summaryPrice}>
+          <div className={clsx(styles.summaryPrice, 'h4')}>
             {formatPrice(priceSummary.price)}
           </div>
-          <div className={styles.summaryInstallation}>
+          <div className={clsx(styles.summaryInstallation, 'p-small')}>
             +{' '}
             {priceSummary.installationCost === 0 ? (
               <>
@@ -300,8 +292,12 @@ export default function Sidebar({
           onClick={toggleOpen}
           type="button"
         >
-          <ListIcon />
-          <NrCircle isSmall nr={selectedProducts.length} />
+          <CartIcon />
+          {selectedProducts.length > 0 && (
+            <div className={styles.productCounter}>
+              {selectedProducts.length}
+            </div>
+          )}
         </button>
         <div
           className={styles.sidebarMobileBarSummary}
@@ -330,7 +326,7 @@ export default function Sidebar({
           store={selectedStore}
         />
       )}
-      {isInlineResultListVisible && !selectedStore && (
+      {isInlineResultListVisible && !selectedStore && !isMapVisible && (
         <div
           className={clsx({
             [styles.list]: isInlineResultListVisible,

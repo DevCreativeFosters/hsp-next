@@ -1,12 +1,13 @@
 .alert {
-  padding: 16px 24px;
+  padding: 12px var(--card-padding);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
-  font-size: 14px;
   border-radius: var(--border-radius-sm);
   background: var(--color-white-5);
+  color: var(--color-white-80);
 }
 
 .icon {

@@ -63,7 +63,7 @@ export default function Modal({
             rightIcon="arrow-backward-large"
             variant="tertiary"
           />
-          {title && <h3>{title}</h3>}
+          {title && <h2>{title}</h2>}
           <Button
             className={styles.closeButton}
             onClick={onCloseButtonClick}

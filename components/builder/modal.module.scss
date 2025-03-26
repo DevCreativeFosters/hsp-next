@@ -1,6 +1,6 @@
 .buttons {
   display: flex;
-  gap: 24px;
+  gap: var(--gap-global);
   justify-content: flex-end;
-  margin-top: 48px;
+  margin-top: var(--gap-global);
 }

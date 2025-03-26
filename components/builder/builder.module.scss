@@ -1,15 +1,18 @@
 .builder {
   --vertical-padding: 0 24px;
-  --mobile-bar-summary-height: 104px;
+  --ute-builder-bg: #181616;
 
   min-height: calc(100svh - var(--header-height));
   display: flex;
   padding-block: var(--vertical-padding);
+  background: linear-gradient(
+    to bottom,
+    var(--color-black-100, #000) 0%,
+    #181616 100%
+  );
 
   @include bp(large) {
-    --vertical-padding: 24px 48px;
-
-    align-items: center;
+    --vertical-padding: var(--gap-global);
   }
 
   .map {
@@ -39,21 +42,20 @@
 }
 
 .top {
-  --gap: 24px;
-
   position: relative;
   display: flex;
   flex: 1;
-  min-height: calc(410px + var(--mobile-bar-summary-height));
+  min-height: 64dvh;
 
   @include bp-below(large) {
     margin-inline: calc(-1 * var(--container-inline-padding));
   }
 
   @include bp(large) {
-    display: flex;
-    gap: var(--gap);
-    min-height: 538px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--gap-global);
+    min-height: auto;
   }
 }
 

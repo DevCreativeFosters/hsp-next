@@ -1,8 +1,12 @@
+.container {
+  width: 100%;
+}
+
 .separator {
   width: 100%;
   height: 1px;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: var(--gap-global-sm);
+  margin-bottom: var(--gap-global-xs);
   background: var(--color-white-10);
 }
 

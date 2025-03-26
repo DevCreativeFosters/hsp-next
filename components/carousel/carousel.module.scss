@@ -10,11 +10,11 @@
 
     top: calc(50% - 24px);
 
-    --side-space: -28px;
+    --side-space: -6px;
 
     z-index: 1;
-    width: 56px;
-    height: 56px;
+    width: 32px;
+    height: 32px;
     background-color: var(--color-black-100);
 
     @include bp-below(large) {
@@ -26,7 +26,7 @@
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
 :global(.uteBuilder) {
   .navigationButton {
-    top: 44px;
+    top: 32px;
     transform: none;
   }
 }

@@ -20,7 +20,9 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
             return (
               <li className={styles.productsListItem} key={`${slug}_${index}`}>
                 <div className={styles.productBox}>
-                  {formatPrice(price)}
+                  <span className={styles.productBoxPrice}>
+                    {formatPrice(price)}
+                  </span>
                   <span className={styles.productBoxName}>{productName}</span>
                 </div>
                 <button

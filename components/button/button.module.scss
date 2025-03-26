@@ -93,6 +93,13 @@
       --svg-width: 16px;
       --svg-height: 16px;
     }
+
+    [class*='svg--close'] {
+      --svg-width: 10px;
+      --svg-height: 10px;
+
+      margin-right: 2px;
+    }
   }
 
   &.noText {

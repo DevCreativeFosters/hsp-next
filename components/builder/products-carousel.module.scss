@@ -2,21 +2,17 @@
 @import '/styles/globals/helpers';
 
 .productsCarousel {
-  margin-top: 24px;
-
-  @include bp(medium) {
-    margin-top: 40px;
-  }
+  margin-top: var(--gap-global);
 }
 
 .title {
-  @include paragraph-lg;
-
-  font-weight: 400;
-  margin-block: 0 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap-global-xs);
+
+  @include bp(large) {
+    gap: var(--gap-global-sm);
+  }
 }
 
 .number {
@@ -62,13 +58,14 @@
 
 .carouselWrapper {
   display: flex;
-  gap: 48px;
+  gap: var(--gap-global);
   align-items: flex-start;
+  margin-top: var(--gap-global);
 
-  --product-width: 134px;
+  --product-width: 108px;
 
   @include bp(medium) {
-    --product-width: 168px;
+    --product-width: 135px;
   }
 }
 
@@ -76,11 +73,17 @@
   margin-left: -10px;
 
   @include bp-below(medium) {
-    overflow: hidden;
-
     /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
     :global(.swiper) {
       overflow: visible;
+    }
+  }
+
+  @include bp(medium) {
+    /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+    :global(.swiper-wrapper) {
+      padding-block: 8px;
+      margin-top: -8px;
     }
   }
 
@@ -102,11 +105,10 @@
   align-items: center;
   justify-content: flex-start;
   height: 100%;
-  gap: 8px;
+  gap: var(--gap-global-xs);
   padding: 0;
   transition: opacity 200ms;
   width: var(--product-width);
-  padding-block: 10px;
 
   &.isDisabled {
     pointer-events: none;
@@ -121,10 +123,10 @@
   @include center;
 
   position: absolute;
-  top: 22px;
-  right: 12px;
-  width: 40px;
-  border-radius: 8px;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  border-radius: 4px;
   aspect-ratio: 1/1;
   border: 2px solid currentcolor;
   transition: all 150ms;
@@ -217,11 +219,11 @@
       z-index: -1;
       content: '';
       position: absolute;
-      top: 0;
-      left: -10px;
-      width: calc(100% + 19px);
-      height: 100%;
-      background-color: var(--color-white-10);
+      top: -8px;
+      left: -8px;
+      width: calc(100% + 16px);
+      height: calc(100% + 16px);
+      background-color: #2f2d2d;
     }
   }
 

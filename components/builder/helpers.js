@@ -156,6 +156,7 @@ function getSlideMarkup(
           [styles.isGroupItemFirst]: isGroupItemFirst,
           [styles.isGroupItemLast]: isGroupItemLast,
         })}
+        data-group-id={isGroup && isGroupItemFirst ? product.group : undefined}
         onClick={() => {
           isGroup && index === 0
             ? toggleGroup(product)

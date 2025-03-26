@@ -62,6 +62,7 @@ export default function Builder({
   const [lastProductSlug, setLastProductSlug] = useState(null);
   const [normalizedLocations, setNormalizedLocations] = useState([]);
   const topRef = useRef(null);
+  const productsCarouselRef = useRef(null);
   const isMobile = useIsMobile(1280);
 
   const {
@@ -87,11 +88,17 @@ export default function Builder({
     filteredStores,
     isInlineResultListVisible,
     isMapVisible,
+    location,
     searchGeolocation,
+    selectedStore,
     setFilteredStores,
     setSearchGeolocation,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
+
+  const shouldShowListResults = Boolean(
+    location && searchGeolocation && !isMobile && !isMapVisible,
+  );
 
   useEffect(
     function normalizeStoreLocations() {
@@ -243,6 +250,27 @@ export default function Builder({
   const toggleGroup = useCallback(
     item => {
       const products = [];
+      // Close any already opened groups if we're about to open a new one
+      const isOpeningGroup = !item.variants[0].isOpen;
+
+      if (isOpeningGroup) {
+        stepProducts.forEach(product => {
+          if (product.variants.length > 1 && product.group !== item.group) {
+            const isGroupOpen = product.variants[0].isOpen;
+
+            if (isGroupOpen) {
+              product.variants.forEach((variant, index) => {
+                variant.isOpen = false;
+
+                if (index > 0) {
+                  variant.hidden = true;
+                }
+              });
+            }
+          }
+        });
+      }
+
       stepProducts.forEach(product => {
         if (product.variants.length > 1 && product.group === item.group) {
           product.variants.forEach((variant, index) => {
@@ -262,8 +290,50 @@ export default function Builder({
       });
 
       setStepProducts(products);
+
+      // Handle carousel scroll for desktop only – scroll to opened group first slide (header)
+      if (!isMobile && isOpeningGroup && productsCarouselRef.current) {
+        setTimeout(() => {
+          const swiper = productsCarouselRef.current.swiper;
+          if (!swiper) return;
+
+          let firstSubitemIndex = null;
+          let groupItemIndex = null;
+
+          const slides = swiper.slides;
+
+          // Find the group header
+          groupItemIndex = Array.from(slides).findIndex(slide => {
+            const button = slide.querySelector(
+              'button[data-group-id="' + item.group + '"]',
+            );
+            return button !== null;
+          });
+
+          if (groupItemIndex === null) return;
+
+          // Find the first subitem (next slide after the group header)
+          if (groupItemIndex !== null && groupItemIndex + 1 < slides.length) {
+            firstSubitemIndex = groupItemIndex + 1;
+          } else {
+            return;
+          }
+
+          if (firstSubitemIndex !== null) {
+            const isGroupHeaderVisible = slides[
+              groupItemIndex
+            ].classList.contains('swiper-slide-visible');
+
+            const slideToIndex = isGroupHeaderVisible
+              ? groupItemIndex
+              : firstSubitemIndex;
+
+            productsCarouselRef.current.slideTo(slideToIndex, 300, true);
+          }
+        }, 100);
+      }
     },
-    [setStepProducts, stepProducts],
+    [isMobile, setStepProducts, stepProducts],
   );
 
   useEffect(
@@ -599,26 +669,21 @@ export default function Builder({
               setOpenSection={setOpenSection}
               stepNumber={stepNumber}
             />
-            {/* <div className={styles.mobileOnly}>
-              <StoreList
-                items={filteredStores}
-                onSelect={item => {
-                  setCurrentResult(item);
-                  setViewMode('RESULT');
-                }}
-                show={isInlineResultListVisible}
-              />
-            </div> */}
             {stepNumber > 0 ? (
-              <Preview handleResetAccept={handleResetAccept}>
-                {isInlineMapVisible && (
-                  <StoreLocatorMap
-                    className={styles.map}
-                    locations={normalizedLocations}
-                    onMarkerClick={setSelectedStore}
-                  />
-                )}
-              </Preview>
+              shouldShowListResults &&
+              !selectedStore &&
+              !isMapVisible ? null : (
+                <Preview handleResetAccept={handleResetAccept}>
+                  {/* Show map inside preview when map toggle is on or on mobile */}
+                  {(isMapVisible || isInlineMapVisible) && (
+                    <StoreLocatorMap
+                      className={styles.map}
+                      locations={normalizedLocations}
+                      onMarkerClick={setSelectedStore}
+                    />
+                  )}
+                </Preview>
+              )
             ) : (
               <UTEChooseYourVehicle makes={makes} />
             )}
@@ -628,6 +693,7 @@ export default function Builder({
             handleResetAccept={handleResetAccept}
             isMobile={isMobile}
             products={stepProducts}
+            ref={productsCarouselRef}
             removeProduct={removeProduct}
             toggleGroup={toggleGroup}
             toggleProduct={toggleProduct}

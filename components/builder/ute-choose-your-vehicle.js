@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { useVehicleContext } from '@contexts/vehicle';
 
 import constants from '@lib/constants';
@@ -34,7 +36,9 @@ export default function UTEChooseYourVehicle({ makes }) {
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Welcome to the HSP UTE Builder</h1>
+        <h1 className={clsx(styles.title, 'h2')}>
+          Welcome to the HSP UTE Builder
+        </h1>
         <Alert
           content="To get started, please select your vehicle make and model below."
           icon="info"
@@ -91,6 +95,7 @@ export default function UTEChooseYourVehicle({ makes }) {
             disabled={!model}
             onClick={handleSave}
             rightIcon="arrow-forward"
+            size="large"
           >
             Start building
           </Button>

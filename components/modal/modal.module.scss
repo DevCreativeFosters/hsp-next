@@ -1,4 +1,4 @@
-@import '/styles/globals/helpers';
+ @import '/styles/globals/helpers';
 
 .backdrop {
   position: fixed;
@@ -28,7 +28,6 @@
   z-index: var(--z-index-modal);
   display: flex;
   flex-direction: column;
-  gap: 20px;
   max-height: 100%;
   padding: 20px;
   background-color: var(--color-black-100);
@@ -40,11 +39,10 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    gap: 48px;
     width: var(--max-width);
     max-width: calc(100% - 80px);
     max-height: calc(100vh - 80px);
-    padding: 48px;
+    padding: var(--card-padding-lg);
     border-radius: 16px;
     background-color: var(--color-dark-gray-100);
     transform: translateX(-50%) translateY(-50%);

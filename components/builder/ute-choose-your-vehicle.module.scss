@@ -5,35 +5,35 @@
   @include bp(large) {
     --border-color: var(--color-white-20);
 
-    padding: 32px;
+    padding: var(--card-padding);
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     border: var(--border-size) solid var(--border-color);
     border-radius: var(--border-radius-md);
+    grid-column: span 8;
   }
 }
 
 .content {
-  padding: 110px 48px 48px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap-global);
+  padding: 80px var(--gap-global) 48px var(--gap-global);
 
   @include bp(large) {
-    padding: 48px 0 75px;
-    gap: 48px;
     align-items: center;
+    padding-top: var(--card-padding);
+    padding-bottom: 48px;
   }
 }
 
 .title {
-  font-size: 36px;
+  text-align: center;
+  margin-bottom: 0;
 
   @include bp(large) {
-    font-size: 48px;
     max-width: 50%;
-    text-align: center;
   }
 }
 
@@ -61,19 +61,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  gap: 24px;
+  padding: var(--card-padding);
+  gap: var(--gap-global);
   width: 100%;
   border-radius: var(--border-radius-md);
   background-color: var(--color-black-100);
-
-  @include bp(large) {
-    padding: 24px 48px;
-  }
 }
 
 .select,
 .button {
   width: 100%;
-  min-height: 48px;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { forwardRef, useContext, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -22,20 +22,23 @@ const ArrowBackwardIcon = getIcon('arrow-backward');
 const MIN_SLIDES_TO_SHOW_NAVIGATION = 6;
 
 export const slideImageSizes = {
-  height: Math.round(168 / 1.4),
-  width: 168,
+  height: Math.round(135 / 1.4),
+  width: 135,
 };
 
-export default function ProductsCarousel({
-  className,
-  disabledProducts,
-  handleResetAccept,
-  isMobile,
-  products,
-  removeProduct,
-  toggleGroup,
-  toggleProduct,
-}) {
+const ProductsCarousel = forwardRef(function ProductsCarousel(
+  {
+    className,
+    disabledProducts,
+    handleResetAccept,
+    isMobile,
+    products,
+    removeProduct,
+    toggleGroup,
+    toggleProduct,
+  },
+  ref,
+) {
   const [showResetModal, setShowResetModal] = useState(false);
 
   const {
@@ -90,7 +93,7 @@ export default function ProductsCarousel({
 
         {stepNumber > 0 && products.length > 0 && (
           <>
-            <h2 className={styles.title}>
+            <h2 className={clsx(styles.title, 'h4')}>
               <span className={styles.number}>Step {stepNumber}:</span>{' '}
               <span className={styles.stepTitle}>{stepTitle}</span>
               {isMobile && stepNumber === 2 && selectedCover && (
@@ -166,12 +169,18 @@ export default function ProductsCarousel({
               )}
               <Carousel
                 className={styles.carousel}
+                ref={ref}
                 settings={{
+                  breakpoints: {
+                    1280: {
+                      spaceBetween: 16
+                    }
+                  },
                   loop: false,
                   slidesOffsetBefore: 10,
                   slidesPerView: 'auto',
-                  spaceBetween: 19,
-                  watchSlidesProgress: true,
+                  spaceBetween: 8,
+                  watchSlidesProgress: true
                 }}
                 showNavigation={slides.length > MIN_SLIDES_TO_SHOW_NAVIGATION}
                 slides={slides}
@@ -182,4 +191,6 @@ export default function ProductsCarousel({
       </div>
     </>
   );
-}
+});
+
+export default ProductsCarousel;
