@@ -1,9 +1,14 @@
 import clsx from 'clsx';
 
+import { getIcon } from '@lib/icons';
+
 import StoreCategory from '@components/store-category/store-category';
 import StoreDisplays from '@components/store-displays/store-displays';
 
 import styles from './store-list-item.module.scss';
+
+const LocationIcon = getIcon('location');
+const PhoneIcon = getIcon('phone');
 
 export default function StoreListItem({
   index,
@@ -13,8 +18,20 @@ export default function StoreListItem({
   showCategory = true,
   showDisplays = true,
   showIndex = true,
+  wideLayout = false,
 }) {
-  const { address, color, displays, label, location, name, storeIcon } = item;
+  const {
+    address,
+    color,
+    displays,
+    label,
+    location,
+    name,
+    phone,
+    storeIcon,
+    tel,
+  } = item;
+  const telNormalized = tel?.toString()?.replaceAll(/([^0-9+])/gi, '');
   const { city, country, postalCode, stateAbbr, street } = location || {};
 
   let printedAddress = address
@@ -25,6 +42,52 @@ export default function StoreListItem({
 
   if (street && city && stateAbbr && postalCode && country) {
     printedAddress = `${street}<br />${city}, ${stateAbbr} ${postalCode}, ${country}`;
+  }
+
+  if (wideLayout) {
+    return (
+      <li className={styles.wideItem} onClick={() => onSelect(item)}>
+        <div className={styles.wideData}>
+          <div
+            className={clsx(styles.wideName, 'h4')}
+            dangerouslySetInnerHTML={{ __html: name }}
+          />
+          <div className={styles.wideCatRow}>
+            {showCategory && (
+              <StoreCategory color={color} icon={storeIcon} label={label} />
+            )}
+            {tel && (
+              <a
+                className={styles.wideTel}
+                href={telNormalized ? `tel:${telNormalized}` : undefined}
+              >
+                <div className={styles.wideIcon}>
+                  <PhoneIcon />
+                </div>
+                {tel}
+              </a>
+            )}
+          </div>
+
+          <div className={styles.wideLocation}>
+            <div className={styles.wideIcon}>
+              <LocationIcon />
+            </div>
+            <div dangerouslySetInnerHTML={{ __html: printedAddress }} />
+          </div>
+        </div>
+
+        {showDisplays && displays?.length > 0 && (
+          <div className={styles.wideDisplays}>
+            <StoreDisplays
+              alwaysOpen={true}
+              displays={displays}
+              hideSeparator={true}
+            />
+          </div>
+        )}
+      </li>
+    );
   }
 
   return (

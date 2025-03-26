@@ -14,12 +14,14 @@ export default function StoreList({
   itemInList = false,
   items,
   onSelect,
+  paddingRight,
   show,
   showCategory = true,
   showDisplays = true,
   showIndex = true,
   showMoreResults,
   style,
+  wideLayout = false,
 }) {
   useMobileVh();
 
@@ -46,6 +48,7 @@ export default function StoreList({
               showCategory={showCategory}
               showDisplays={showDisplays}
               showIndex={showIndex}
+              wideLayout={wideLayout}
             />
           </ul>
         </>
@@ -66,8 +69,16 @@ export default function StoreList({
       ? items
       : items.slice(0, 5);
 
+  const listWrapperStyle = {
+    ...(paddingRight && { paddingRight }),
+    ...style,
+  };
+
   return (
-    <div className={clsx(styles.listWrapper, className)} style={style}>
+    <div
+      className={clsx(styles.listWrapper, className)}
+      style={listWrapperStyle}
+    >
       <ul className={styles.list}>
         {results.map((item, index) => (
           <StoreListItem
@@ -79,6 +90,7 @@ export default function StoreList({
             showCategory={showCategory}
             showDisplays={showDisplays}
             showIndex={showIndex}
+            wideLayout={wideLayout}
           />
         ))}
       </ul>

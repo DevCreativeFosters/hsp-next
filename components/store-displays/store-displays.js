@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 
 import Accordion from '@components/accordion/accordion';
@@ -29,7 +30,11 @@ const renderLogo = product => {
   );
 };
 
-export default function StoreDisplays({ displays }) {
+export default function StoreDisplays({
+  alwaysOpen = false,
+  displays,
+  hideSeparator = false,
+}) {
   if (!displays?.length) return null;
 
   const displayCount = displays?.length || 0;
@@ -41,23 +46,34 @@ export default function StoreDisplays({ displays }) {
   );
 
   const displayLogos = (
-    <div className={styles.displays}>
+    <div
+      className={clsx(styles.displays, { [styles.wideDisplays]: alwaysOpen })}
+    >
       {displays.map(product => renderLogo(product))}
     </div>
   );
 
   return (
     <div className={styles.container}>
-      <div className={styles.separator} />
-      <Accordion className={styles.accordion}>
-        <AccordionItem
-          className={styles.toggle}
-          resetStyling
-          triggerContent={triggerText}
-        >
+      {!hideSeparator && <div className={styles.separator} />}
+      {alwaysOpen ? (
+        <div className={styles.alwaysOpen}>
+          <div className={styles.toggle}>
+            In-store Displays: <span>{displayText}</span>
+          </div>
           {displayLogos}
-        </AccordionItem>
-      </Accordion>
+        </div>
+      ) : (
+        <Accordion className={styles.accordion}>
+          <AccordionItem
+            className={styles.toggle}
+            resetStyling
+            triggerContent={triggerText}
+          >
+            {displayLogos}
+          </AccordionItem>
+        </Accordion>
+      )}
     </div>
   );
 }

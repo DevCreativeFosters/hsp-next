@@ -95,3 +95,67 @@
     line-height: 1.2;
   }
 }
+
+// Wide, UTE Builder layout
+.wideItem {
+  border: 1px solid var(--color-white-20);
+  padding: var(--card-padding-sm);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  cursor: pointer;
+}
+
+.wideData {
+  padding-right: var(--card-padding-sm);
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.wideName {
+  margin-bottom: var(--gap-global-xs);
+}
+
+.wideCatRow {
+  display: flex;
+  gap: var(--gap-global-xs) var(--gap-global-sm);
+  margin-bottom: var(--gap-global-xs);
+  flex-wrap: wrap;
+
+  * {
+    margin-bottom: 0;
+  }
+}
+
+.wideIcon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-content: center;
+
+  path {
+    fill: var(--color-primary-100);
+  }
+}
+
+.wideTel,
+.wideLocation {
+  display: flex;
+  gap: var(--gap-global-xs);
+}
+
+.wideTel {
+  align-items: center;
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.wideLocation {
+  font-size: 14px;
+}
+
+.wideDisplays {
+  padding-left: var(--card-padding-sm);
+  border-left: 1px solid var(--color-white-10);
+  width: 100%;
+}

@@ -357,7 +357,7 @@
   height: fit-content;
   background-color: var(--color-black-100);
   border-radius: var(--border-radius-md);
-  padding: var(--card-padding);
+  padding: var(--card-padding) var(--card-padding-sm) 0 var(--card-padding);
   grid-column: span 8;
 
   @include bp-below(large) {

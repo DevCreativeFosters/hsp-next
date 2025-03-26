@@ -277,7 +277,7 @@
   border-radius: 4px;
   z-index: 2;
 
-  @include bp(full) {
+  @include bp(large) {
     margin-left: -42px;
   }
 

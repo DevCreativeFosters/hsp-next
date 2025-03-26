@@ -11,15 +11,16 @@
 }
 
 .toggle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.28;
+  font-family: var(--font-primary);
+
   * {
     font-size: 14px;
     font-weight: 400;
     line-height: 1.28;
     font-family: var(--font-primary);
-
-    @include bp(medium) {
-      grid-template-columns: repeat(3, 1fr);
-    }
   }
 
   span {
@@ -40,6 +41,13 @@
 
   @include bp(large) {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.wideDisplays {
+  @include bp(large) {
+    margin-top: var(--gap-global-xs) !important;
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 

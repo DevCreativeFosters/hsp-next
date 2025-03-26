@@ -234,6 +234,7 @@ export default function Sidebar({
                     show={isInlineResultListVisible}
                     showCategory={false}
                     showIndex={false}
+                    showDisplays={false}
                     style={{
                       maxHeight: stepNumber > 0 ? 150 : null,
                     }}
@@ -340,7 +341,9 @@ export default function Sidebar({
             onSelect={item => {
               setSelectedStore(item);
             }}
+            paddingRight="16px"
             show={isInlineResultListVisible}
+            wideLayout={true}
           />
         </div>
       )}
