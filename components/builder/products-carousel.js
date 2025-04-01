@@ -94,7 +94,7 @@ const ProductsCarousel = forwardRef(function ProductsCarousel(
         {stepNumber > 0 && products.length > 0 && (
           <>
             <h2 className={clsx(styles.title, 'h4')}>
-              <span className={styles.number}>Step {stepNumber}:</span>{' '}
+              <span className={styles.number}>STEP {stepNumber}:</span>{' '}
               <span className={styles.stepTitle}>{stepTitle}</span>
               {isMobile && stepNumber === 2 && selectedCover && (
                 <Button
@@ -173,14 +173,14 @@ const ProductsCarousel = forwardRef(function ProductsCarousel(
                 settings={{
                   breakpoints: {
                     1280: {
-                      spaceBetween: 16
-                    }
+                      spaceBetween: 16,
+                    },
                   },
                   loop: false,
                   slidesOffsetBefore: 10,
                   slidesPerView: 'auto',
                   spaceBetween: 8,
-                  watchSlidesProgress: true
+                  watchSlidesProgress: true,
                 }}
                 showNavigation={slides.length > MIN_SLIDES_TO_SHOW_NAVIGATION}
                 slides={slides}

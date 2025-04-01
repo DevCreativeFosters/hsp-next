@@ -95,9 +95,8 @@ export default function StoreListItem({
       className={clsx(styles.item, {
         [styles.itemInList]: itemInList,
       })}
-      onClick={() => onSelect(item)}
     >
-      <div className={styles.header}>
+      <div className={styles.header} onClick={() => onSelect(item)}>
         {showIndex && <div className={styles.index}>{index}</div>}
         <div className={styles.details}>
           <div

@@ -37,7 +37,9 @@ export default function UTEChooseYourVehicle({ makes }) {
     <Container className={styles.container}>
       <div className={styles.content}>
         <h1 className={clsx(styles.title, 'h2')}>
-          Welcome to the HSP UTE Builder
+          Welcome to the HSP
+          <br />
+          UTE Builder
         </h1>
         <Alert
           content="To get started, please select your vehicle make and model below."

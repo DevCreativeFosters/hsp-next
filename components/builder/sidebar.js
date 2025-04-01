@@ -233,8 +233,8 @@ export default function Sidebar({
                     }}
                     show={isInlineResultListVisible}
                     showCategory={false}
+                    showDisplays
                     showIndex={false}
-                    showDisplays={false}
                     style={{
                       maxHeight: stepNumber > 0 ? 150 : null,
                     }}

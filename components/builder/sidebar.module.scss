@@ -170,6 +170,7 @@
   }
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .sectionHeader {
   display: flex;
   align-items: center;
@@ -335,6 +336,11 @@
   grid-area: price;
   align-self: end;
   margin-bottom: 0;
+}
+
+.sidebarMobileBarPrice {
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .summaryInstallation {
