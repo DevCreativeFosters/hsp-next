@@ -20,6 +20,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  @include bp-below(large) {
+    padding-right: 8px;
+  }
 }
 
 .noResultsNotice {
