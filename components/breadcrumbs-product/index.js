@@ -161,7 +161,7 @@ export default function BreadcrumbsProduct({ currentProduct }) {
 
   return (
     <div ref={enteredProductPageRef}>
-      <Breadcrumbs items={items} />
+      <Breadcrumbs items={items} showProductCompatibility />
     </div>
   );
 }

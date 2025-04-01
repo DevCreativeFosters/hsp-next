@@ -26,7 +26,7 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items, product }) {
+function Breadcrumbs({ items, product, showProductCompatibility }) {
   const {
     checkingProductCompatibility,
     isProductCompatible,
@@ -64,6 +64,7 @@ function Breadcrumbs({ items, product }) {
 
   const renderIncompatibleProductMessage = useMemo(() => {
     if (
+      showProductCompatibility &&
       !isProductCompatible &&
       maker &&
       model &&
@@ -77,7 +78,13 @@ function Breadcrumbs({ items, product }) {
       );
     }
     return null;
-  }, [checkingProductCompatibility, isProductCompatible, maker, model]);
+  }, [
+    checkingProductCompatibility,
+    isProductCompatible,
+    maker,
+    model,
+    showProductCompatibility,
+  ]);
 
   return (
     <>
