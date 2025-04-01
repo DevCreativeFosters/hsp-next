@@ -448,6 +448,7 @@ export default function Builder({
         return;
       }
 
+      let updatedFirstProduct;
       let selectedCover = selectedProducts.find(selectedProduct =>
         covers.some(cover => cover.group === selectedProduct.productSlug),
       );
@@ -470,7 +471,7 @@ export default function Builder({
             if (isCompatible) {
               variant.image = selectedCover.image;
               selectedCover = variant;
-              selectedProducts[0] = variant;
+              updatedFirstProduct = variant;
             }
           });
         });
@@ -484,6 +485,12 @@ export default function Builder({
       }
 
       const key = isMobile ? 'mobile' : 'desktop';
+
+      if (updatedFirstProduct && selectedProducts[0] !== updatedFirstProduct) {
+        const updatedSelectedProducts = [...selectedProducts];
+        updatedSelectedProducts[0] = updatedFirstProduct;
+        setSelectedProducts(updatedSelectedProducts);
+      }
 
       setStepNumber(2);
       setStepTitle(STEP_TITLES[2][key]);
