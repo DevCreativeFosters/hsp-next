@@ -21,6 +21,12 @@ export default function GoogleRecaptchaField({ field, fieldErrors, form }) {
     return fieldErrors.find(fieldError => fieldError.id === id);
   }, [fieldErrors, id]);
 
+  useEffect(() => {
+    if (fieldErrors.length > 0) {
+      recaptchaRef.current.reset();
+    }
+  }, [fieldErrors]);
+
   const handleChange = useCallback(
     value => {
       setCaptchaValue(value);
