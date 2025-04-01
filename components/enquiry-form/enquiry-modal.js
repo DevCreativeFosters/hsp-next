@@ -211,7 +211,7 @@ export default function EnquiryModal({
                     Total cost:
                     <Tooltip
                       attributes={{
-                        content: `Removal of existing, non compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
+                        content: `Removal and/ or re-installation of existing or non-compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
                         title: '*Installation Terms',
                       }}
                     />
