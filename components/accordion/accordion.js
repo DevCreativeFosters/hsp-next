@@ -56,15 +56,18 @@ export default function Accordion({
 
   return (
     <div className={className}>
-      {React.Children.map(children, (child, index) =>
-        React.cloneElement(child, {
-          isOpen: allowMultipleOpen
-            ? activeIndices.includes(index)
-            : index === activeIndex,
-          onToggle: () => toggleItem(index),
-          stickyOnMobile: stickyOnMobile,
-          stickyTopOffset: stickyTopOffset,
-        }),
+      {React.Children.map(
+        children,
+        (child, index) =>
+          child &&
+          React.cloneElement(child, {
+            isOpen: allowMultipleOpen
+              ? activeIndices.includes(index)
+              : index === activeIndex,
+            onToggle: () => toggleItem(index),
+            stickyOnMobile: stickyOnMobile,
+            stickyTopOffset: stickyTopOffset,
+          }),
       )}
     </div>
   );
