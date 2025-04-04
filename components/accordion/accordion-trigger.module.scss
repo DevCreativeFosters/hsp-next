@@ -1,13 +1,26 @@
+/* stylelint-disable scss/operator-no-newline-after */
+
 @import '/styles/globals/breakpoints';
 
 .isStickyOnMobile {
+  --sticky-trigger-top-base-normalized: var(
+    --accordion-trigger-sticky-top,
+    var(--header-height)
+  );
+  --choose-your-vehicle-height: 40px;
+  --choose-your-vehicle-with-gap: calc(var(--choose-your-vehicle-height) + 8px);
   --sticky-trigger-bg: #0d0d0d;
 
   @include bp-below(medium) {
+    --sticky-trigger-top: calc(
+      var(--sticky-trigger-top-base-normalized) +
+        var(--choose-your-vehicle-with-gap)
+    );
+
     position: sticky;
 
     // fallback to header height when no custom offset is provided
-    top: var(--header-height);
+    top: var(--sticky-trigger-top);
     z-index: var(--z-index-dropdown);
     background-color: var(--sticky-trigger-bg);
   }
@@ -26,7 +39,9 @@
   line-height: 1.4;
 
   &:hover {
-    background: var(--color-white-5);
+    @include bp(medium) {
+      background: var(--color-white-5);
+    }
   }
 
   &:hover,
@@ -50,4 +65,38 @@
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+}
+
+.monitor {
+  position: absolute;
+  top: 0;
+
+  &.first {
+    top: calc(var(--sticky-trigger-top) * -1 - 1px);
+  }
+
+  &.second {
+    top: calc(var(--header-height) * -1);
+  }
+
+  @include bp(medium) {
+    display: none;
+  }
+}
+
+.belowVehiclePickerBar {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  width: 100%;
+  background-color: var(--sticky-trigger-bg);
+  height: var(--sticky-trigger-top);
+  display: none;
+  border-bottom: 2px solid var(--color-white-20);
+
+  &.isCurrentlySticky {
+    @include bp-below(medium) {
+      display: block;
+    }
+  }
 }
