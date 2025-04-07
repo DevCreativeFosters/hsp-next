@@ -11,6 +11,7 @@
 .details {
   @include bp(large) {
     padding-inline: var(--gap);
+    flex-grow: 1;
   }
 }
 

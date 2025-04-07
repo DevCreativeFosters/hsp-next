@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
@@ -124,6 +124,14 @@ export default function PageClientSidePartial({
     [pageParams, router],
   );
 
+  const mainCategoryName = useMemo(() => {
+    return mainCategory.name?.trim();
+  }, [mainCategory]);
+
+  const variantName = useMemo(() => {
+    return `${make?.name || ''} ${modelName || ''}`.trim();
+  }, [make, modelName]);
+
   return (
     <>
       <div className={styles.header}>
@@ -131,10 +139,10 @@ export default function PageClientSidePartial({
         <div className={styles.details}>
           <div className={styles.meta}>
             <h1 className={clsx(styles.name, 'h2')}>
-              {mainCategory.name} <br />
-              <span className={styles.variant}>
-                {make?.name} {modelName}
-              </span>
+              {mainCategoryName} <br />
+              {mainCategoryName !== variantName && (
+                <span className={styles.variant}>{variantName}</span>
+              )}
             </h1>
             {variant?.sku && (
               <div className={clsx(styles.sku, 'h5')}>
