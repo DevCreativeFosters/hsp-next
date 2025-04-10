@@ -197,7 +197,7 @@ export default function Sidebar({
         <Section
           headerChildren={<span className="h4">Locate Your Store</span>}
           headerClick={setOpenSection}
-          icon="error"
+          icon={selectedStore ? 'check-mark-circle' : 'error'}
           id="store"
           isOpen={openSection === 'store'}
         >

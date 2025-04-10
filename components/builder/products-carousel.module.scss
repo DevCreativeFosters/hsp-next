@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   gap: var(--gap-global-xs);
+  font-size: 20px;
 
   @include bp(large) {
     gap: var(--gap-global-sm);

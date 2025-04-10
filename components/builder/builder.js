@@ -84,14 +84,10 @@ export default function Builder({
   } = useVehicleContext();
 
   const {
-    filteredLocations,
-    filteredStores,
-    isInlineResultListVisible,
     isMapVisible,
     location,
     searchGeolocation,
     selectedStore,
-    setFilteredStores,
     setSearchGeolocation,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
@@ -235,18 +231,6 @@ export default function Builder({
     ],
   );
 
-  const toggleProduct = useCallback(
-    product => {
-      const isSelected = isProductSelected(
-        selectedProducts,
-        product.variantSlug,
-      );
-      setCurrentProduct(product);
-      isSelected ? removeProduct(product) : addProduct(product);
-    },
-    [addProduct, removeProduct, selectedProducts],
-  );
-
   const toggleGroup = useCallback(
     item => {
       const products = [];
@@ -291,8 +275,8 @@ export default function Builder({
 
       setStepProducts(products);
 
-      // Handle carousel scroll for desktop only – scroll to opened group first slide (header)
-      if (!isMobile && isOpeningGroup && productsCarouselRef.current) {
+      // Handle carousel scroll – scroll to opened group first slide (header)
+      if (isOpeningGroup && productsCarouselRef.current) {
         setTimeout(() => {
           const swiper = productsCarouselRef.current.swiper;
           if (!swiper) return;
@@ -333,7 +317,28 @@ export default function Builder({
         }, 100);
       }
     },
-    [isMobile, setStepProducts, stepProducts],
+    [setStepProducts, stepProducts],
+  );
+
+  const toggleProduct = useCallback(
+    product => {
+      const isSelected = isProductSelected(
+        selectedProducts,
+        product.variantSlug,
+      );
+      setCurrentProduct(product);
+      isSelected ? removeProduct(product) : addProduct(product);
+
+      if (!isSelected) {
+        const parentGroup = stepProducts.find(p =>
+          p.variants.some(v => v.variantSlug === product.variantSlug),
+        );
+        if (parentGroup && parentGroup.variants.length > 1) {
+          toggleGroup(parentGroup);
+        }
+      }
+    },
+    [addProduct, removeProduct, selectedProducts, stepProducts, toggleGroup],
   );
 
   useEffect(
