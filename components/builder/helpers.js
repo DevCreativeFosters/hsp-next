@@ -33,14 +33,46 @@ export function getIncompatibleProducts(products, currentProduct, covers) {
     .filter(product => product.group !== currentProduct.productSlug)
     .flatMap(product => product.variants)
     .filter(variant => variant.productSlug !== currentProduct.productSlug)
-    .filter(
-      variant =>
-        covers &&
-        variant?.productCategories &&
-        variant?.productCategories.some(
-          category => !currentProduct.compatibleProducts.includes(category),
-        ),
-    )
+    .filter(variant => {
+      if (!covers || !variant?.productCategories) {
+        return false;
+      }
+
+      // Check global category compatibility
+      const isIncompatibleByCategory = variant.productCategories.some(
+        category => !currentProduct.compatibleProducts.includes(category),
+      );
+
+      if (!isIncompatibleByCategory) {
+        return false;
+      }
+
+      // Check for variant-level compatibility overrides
+      // If both variants specifically mark each other's categories as compatible,
+      // they will work together even if their parent categories are incompatible
+
+      // Check if current product variant allows the other variant's category
+      const currentProductHasCompatibleCategory =
+        currentProduct.compatibleCategoriesVariants &&
+        variant.productCategories.some(category =>
+          currentProduct.compatibleCategoriesVariants.includes(category),
+        );
+
+      // Check if other variant allows current product's category
+      const otherVariantHasCompatibleCategory =
+        variant.compatibleCategoriesVariants &&
+        currentProduct.productCategories &&
+        currentProduct.productCategories.some(category =>
+          variant.compatibleCategoriesVariants.includes(category),
+        );
+
+      // Both sides must specify compatibility for it to work
+      const hasBidirectionalCompatibility =
+        currentProductHasCompatibleCategory &&
+        otherVariantHasCompatibleCategory;
+
+      return !hasBidirectionalCompatibility;
+    })
     .filter(variant => variant.variantSlug)
     .filter(
       variant => !covers.some(cover => cover.group === variant.productSlug),
