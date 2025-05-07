@@ -19,7 +19,7 @@ export default function Lifestyle({
   titleTag,
   titleTagStyle,
 }) {
-  const featuredNormalized = {
+  const featuredNormalized = featured && {
     className: 'featured',
     content: featured.excerpt,
     createdAt: featured.date,
@@ -45,7 +45,9 @@ export default function Lifestyle({
     },
   );
 
-  const carouselItems = [featuredNormalized, ...postsNormalized];
+  const carouselItems = [featuredNormalized, ...postsNormalized].filter(
+    Boolean,
+  );
 
   return (
     <Container flexibleBlockPadding>
@@ -59,13 +61,16 @@ export default function Lifestyle({
         <SectionButtons addMobileMarginTop alwaysInRow buttons={buttons} />
       </SectionIntro>
 
-      <FeaturedArticle
-        content={featured.excerpt}
-        createdAt={featured.date}
-        image={featured.featuredImage?.node}
-        title={featured.title}
-        url={featured.uri}
-      />
+      {featured && (
+        <FeaturedArticle
+          content={featured.excerpt}
+          createdAt={featured.date}
+          image={featured.featuredImage?.node}
+          title={featured.title}
+          url={featured.uri}
+        />
+      )}
+
       {carouselItems.length > 0 && (
         <TileCarousel
           itemTemplate={Tile}
