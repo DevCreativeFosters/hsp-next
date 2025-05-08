@@ -2,6 +2,7 @@
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
+import * as Sentry from '@sentry/nextjs';
 import clsx from 'clsx';
 
 import StoreLocatorContext from '@contexts/store-locator';
@@ -173,15 +174,38 @@ export default function Builder({
       let updatedDisabledProducts = [];
 
       newSelectedProducts.forEach(selectedProduct => {
+        // Find the product with complete compatibility data from stepProducts
+        // First try to find it in variants
+        let productWithCompatibilityData = stepProducts
+          .flatMap(p => p.variants || [])
+          .find(v => v.variantSlug === selectedProduct.variantSlug);
+
+        // If not found in variants, try to find it directly in stepProducts
+        if (!productWithCompatibilityData) {
+          productWithCompatibilityData = stepProducts.find(
+            p => p.variantSlug === selectedProduct.variantSlug,
+          );
+        }
+
+        if (!productWithCompatibilityData) {
+          Sentry.captureException(
+            new Error(
+              `Could not find product with compatibility data for: ${selectedProduct.variantSlug}`,
+            ),
+            { level: 'warning' },
+          );
+          return;
+        }
+
         const otherProductsWithSameParent = getOtherProductsWithSameParent(
           stepProducts,
-          selectedProduct.productSlug,
-          selectedProduct.variantSlug,
+          productWithCompatibilityData.productSlug,
+          productWithCompatibilityData.variantSlug,
         );
 
         const incompatibleProducts = getIncompatibleProducts(
           stepProducts,
-          selectedProduct,
+          productWithCompatibilityData,
           covers,
         );
 
