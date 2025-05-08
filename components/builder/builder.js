@@ -261,39 +261,26 @@ export default function Builder({
       // Close any already opened groups if we're about to open a new one
       const isOpeningGroup = !item.variants[0].isOpen;
 
-      if (isOpeningGroup) {
-        stepProducts.forEach(product => {
-          if (product.variants.length > 1 && product.group !== item.group) {
-            const isGroupOpen = product.variants[0].isOpen;
-
-            if (isGroupOpen) {
-              product.variants.forEach((variant, index) => {
-                variant.isOpen = false;
-
-                if (index > 0) {
-                  variant.hidden = true;
-                }
-              });
-            }
-          }
-        });
-      }
-
       stepProducts.forEach(product => {
-        if (product.variants.length > 1 && product.group === item.group) {
+        if (product.variants.length > 1) {
+          // Close groups that aren't the target when opening a new group
+          const isTargetGroup = product.group === item.group;
+          const shouldClose = isOpeningGroup && !isTargetGroup;
+
           product.variants.forEach((variant, index) => {
-            variant.isOpen = !variant.isOpen;
-
-            if (!variant.isOpen) {
-              setLastProductSlug(null);
-            }
-
-            if (index > 0) {
-              variant.hidden = !variant.hidden;
+            if (shouldClose || (isTargetGroup && !isOpeningGroup)) {
+              variant.isOpen = false;
+              variant.hidden = index > 0;
+            } else if (isTargetGroup && isOpeningGroup) {
+              variant.isOpen = true;
+              variant.hidden = false;
             }
           });
-        }
 
+          if (!isOpeningGroup && isTargetGroup) {
+            setLastProductSlug(null);
+          }
+        }
         products.push(product);
       });
 
@@ -308,27 +295,28 @@ export default function Builder({
           let firstSubitemIndex = null;
           let groupItemIndex = null;
 
-          const slides = swiper.slides;
+          const slidesArray = Array.from(swiper.slides);
+          if (!slidesArray.length) return;
 
           // Find the group header
-          groupItemIndex = Array.from(slides).findIndex(slide => {
+          groupItemIndex = slidesArray.findIndex(slide => {
             const button = slide.querySelector(
               'button[data-group-id="' + item.group + '"]',
             );
             return button !== null;
           });
 
-          if (groupItemIndex === null) return;
+          if (groupItemIndex === -1 || groupItemIndex === null) return;
 
           // Find the first subitem (next slide after the group header)
-          if (groupItemIndex !== null && groupItemIndex + 1 < slides.length) {
+          if (groupItemIndex + 1 < slidesArray.length) {
             firstSubitemIndex = groupItemIndex + 1;
           } else {
             return;
           }
 
-          if (firstSubitemIndex !== null) {
-            const isGroupHeaderVisible = slides[
+          if (firstSubitemIndex !== null && slidesArray[groupItemIndex]) {
+            const isGroupHeaderVisible = slidesArray[
               groupItemIndex
             ].classList.contains('swiper-slide-visible');
 
@@ -432,8 +420,17 @@ export default function Builder({
 
   useEffect(
     function setBuilderStepProducts() {
-      if (stepNumber === 1) {
-        setStepProducts(covers);
+      if (stepNumber === 1 && covers.length > 0) {
+        // Initialize products with proper variant states
+        const initialProducts = covers.map(product => ({
+          ...product,
+          variants: product.variants.map((variant, index) => ({
+            ...variant,
+            hidden: index > 0,
+            isOpen: false,
+          })),
+        }));
+        setStepProducts(initialProducts);
       }
 
       if (stepNumber === 2) {
