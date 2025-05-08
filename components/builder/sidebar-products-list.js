@@ -23,7 +23,9 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
                   <span className={styles.productBoxPrice}>
                     {formatPrice(price)}
                   </span>
-                  <span className={styles.productBoxName}>{productName}</span>
+                  <span className={styles.productBoxName} title={productName}>
+                    {productName}
+                  </span>
                 </div>
                 <button
                   className={styles.productRemove}

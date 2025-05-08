@@ -30,10 +30,6 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: var(--gap-global-xs);
-
-  @include bp(medium) {
-    font-size: 24px;
-  }
 }
 
 .location {
