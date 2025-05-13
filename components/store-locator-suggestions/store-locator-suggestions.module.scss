@@ -23,8 +23,12 @@
 
 .suggestion {
   position: relative;
-  padding: 8px 24px;
+  padding: 8px 36px;
   cursor: pointer;
+
+  @include bp(large) {
+    padding-inline: 24px;
+  }
 
   &::before {
     content: '';
