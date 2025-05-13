@@ -267,10 +267,6 @@
 
   @include scrollbar;
 
-  @include bp(large) {
-    max-height: 210px;
-  }
-
   .isInDocumentFlow & {
     padding-bottom: 0;
   }

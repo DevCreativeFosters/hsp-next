@@ -167,6 +167,18 @@
       padding-top: 0;
     }
   }
+
+  // Store tile bottom space workaround
+  &:nth-child(2) {
+    & > div {
+      padding-bottom: 0;
+
+      // Show map toggle
+      & > div:first-child {
+        margin-bottom: var(--gap-global-sm);
+      }
+    }
+  }
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -328,12 +340,12 @@
 }
 
 .resultStoreTile {
-  margin-top: var(--gap-global);
+  margin-top: var(--gap-global-sm);
 
   @include bp(large) {
     @include scrollbar;
 
-    max-height: 195px;
+    max-height: 151px;
     overflow: hidden auto;
 
     // adjust scrollbar position
@@ -354,6 +366,7 @@
   @include bp(large) {
     grid-template-columns: 1fr auto;
     grid-template-areas: '. button' 'price button' 'installation button' '. button';
+    margin-top: var(--gap-global-sm);
   }
 }
 
