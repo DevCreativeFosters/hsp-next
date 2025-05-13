@@ -352,6 +352,11 @@
     margin-right: -20px;
     padding-right: 6px;
   }
+
+  // last item spacing workaround
+  li {
+    margin-bottom: var(--gap-global-sm);
+  }
 }
 
 // Summary
