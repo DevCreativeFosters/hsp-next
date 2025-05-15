@@ -102,21 +102,6 @@ export default function StoreTile({
             Directions
           </Button>
         )}
-        {learnMoreButton && (
-          <Button
-            className={styles.link}
-            href={learnMoreButton?.url}
-            rel="noopener noreferrer"
-            rightIcon="external-link"
-            size="small"
-            target="_blank"
-            variant="primary"
-          >
-            {learnMoreButton?.title && learnMoreButton?.title !== ''
-              ? learnMoreButton?.title
-              : 'Learn more'}
-          </Button>
-        )}
       </div>
       <div className={styles.pusher} />
       <StoreDisplays displays={displays} />
