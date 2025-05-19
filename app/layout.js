@@ -58,7 +58,7 @@ export const metadata = {
   },
 };
 
-export const revalidate = 30;
+export const revalidate = 600;
 
 export default async function RootLayout({ children }) {
   const globalOptions = await getGlobalOptions();
