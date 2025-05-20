@@ -51,6 +51,7 @@ export default function UTEChooseYourVehicle({ makes }) {
         <div className={styles.vehicleSelector}>
           <Select
             className={styles.select}
+            mobileScrollAnimation={true}
             name="maker"
             onChange={(slug, name) => {
               handleMakerChange(slug, name);
@@ -63,6 +64,7 @@ export default function UTEChooseYourVehicle({ makes }) {
           <Select
             className={styles.select}
             disabled={!modelSelectOptions.length}
+            mobileScrollAnimation={true}
             name="model"
             onChange={(slug, name) => {
               handleModelChange(slug, name);
@@ -76,6 +78,7 @@ export default function UTEChooseYourVehicle({ makes }) {
             <Select
               allowItemClear={true}
               className={styles.select}
+              mobileScrollAnimation={true}
               name="factoryOptions"
               onChange={value => {
                 handleFactoryOptionsChange(value, compatibleFactoryOptions);

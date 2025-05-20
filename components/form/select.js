@@ -28,6 +28,7 @@ export default function Select({
   label = '',
   labelMarginBottom,
   marginTop,
+  mobileScrollAnimation = false,
   multiple = false,
   onChange = () => null,
   onClick = () => null,
@@ -280,7 +281,9 @@ export default function Select({
                     ) : (
                       <SelectOption
                         handleSelectOption={handleSelectOption}
+                        isOpen={isOpen}
                         label={label}
+                        mobileScrollAnimation={mobileScrollAnimation}
                         prefix={prefix}
                         selectedOption={selectedOption}
                         suffix={suffix}
