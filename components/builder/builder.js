@@ -2,7 +2,6 @@
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import * as Sentry from '@sentry/nextjs';
 import clsx from 'clsx';
 
 import StoreLocatorContext from '@contexts/store-locator';
@@ -167,45 +166,28 @@ export default function Builder({
         return;
       }
 
+      // Handle potential duplicate variant slugs by using both slug and title for comparison
       newSelectedProducts = selectedProducts.filter(
-        selectedProduct => selectedProduct.variantSlug !== product.variantSlug,
+        selectedProduct =>
+          // Keep products that don't match the variant slug OR
+          // match the variant slug but have a different title/slug (to handle duplicates)
+          selectedProduct.variantSlug !== product.variantSlug ||
+          (selectedProduct.variantSlug === product.variantSlug &&
+            selectedProduct.productTitle !== product.productTitle),
       );
 
       let updatedDisabledProducts = [];
 
       newSelectedProducts.forEach(selectedProduct => {
-        // Find the product with complete compatibility data from stepProducts
-        // First try to find it in variants
-        let productWithCompatibilityData = stepProducts
-          .flatMap(p => p.variants || [])
-          .find(v => v.variantSlug === selectedProduct.variantSlug);
-
-        // If not found in variants, try to find it directly in stepProducts
-        if (!productWithCompatibilityData) {
-          productWithCompatibilityData = stepProducts.find(
-            p => p.variantSlug === selectedProduct.variantSlug,
-          );
-        }
-
-        if (!productWithCompatibilityData) {
-          Sentry.captureException(
-            new Error(
-              `Could not find product with compatibility data for: ${selectedProduct.variantSlug}`,
-            ),
-            { level: 'warning' },
-          );
-          return;
-        }
-
         const otherProductsWithSameParent = getOtherProductsWithSameParent(
           stepProducts,
-          productWithCompatibilityData.productSlug,
-          productWithCompatibilityData.variantSlug,
+          selectedProduct.productSlug,
+          selectedProduct.variantSlug,
         );
 
         const incompatibleProducts = getIncompatibleProducts(
           stepProducts,
-          productWithCompatibilityData,
+          selectedProduct,
           covers,
         );
 
@@ -338,6 +320,7 @@ export default function Builder({
         selectedProducts,
         product.variantSlug,
       );
+
       setCurrentProduct(product);
       isSelected ? removeProduct(product) : addProduct(product);
 
