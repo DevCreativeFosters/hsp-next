@@ -20,6 +20,7 @@ import BellIcon from '@assets/icons/bell.svg';
 import styles from './product-compatibility-popup.module.scss';
 
 const LOCAL_STORAGE_KEY = 'vehiclePopupPreviousValues';
+const POPUP_DISMISSED_KEY = 'vehiclePopupDismissed';
 
 export default function ProductCompatibilityPopup() {
   const pathname = usePathname();
@@ -27,6 +28,7 @@ export default function ProductCompatibilityPopup() {
   const isMobile = useIsMobile();
   const [userVehicleProductRoute, setUserVehicleProductRoute] = useState(null);
   const [shouldDisplayPopup, setShouldDisplayPopup] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
   const {
     checkingProductCompatibility,
     enteredProductPageRef,
@@ -151,6 +153,17 @@ export default function ProductCompatibilityPopup() {
     [isAlreadyOnVehicleRoute, isMobile, maker, model, setPopupOpen],
   );
 
+  useEffect(function readDismissState() {
+    try {
+      const dismissedState = sessionStorage.getItem(POPUP_DISMISSED_KEY);
+      if (dismissedState === 'true') {
+        setIsDismissed(true);
+      }
+    } catch (error) {
+      console.error('Error reading dismiss state from sessionStorage:', error);
+    }
+  }, []);
+
   useEffect(function clearOnReload() {
     // TODO: alternative to localStorage?
 
@@ -174,7 +187,10 @@ export default function ProductCompatibilityPopup() {
       <div
         className={clsx(styles.popup, {
           [styles.open]:
-            popupOpen && !checkingProductCompatibility && isProductCompatible,
+            popupOpen &&
+            !checkingProductCompatibility &&
+            isProductCompatible &&
+            !isDismissed,
         })}
       >
         <div className={styles.container}>
@@ -196,7 +212,18 @@ export default function ProductCompatibilityPopup() {
             </Button>
             <Button
               className={styles.button}
-              onClick={() => setPopupOpen(false)}
+              onClick={() => {
+                setPopupOpen(false);
+                setIsDismissed(true);
+                try {
+                  sessionStorage.setItem(POPUP_DISMISSED_KEY, 'true');
+                } catch (error) {
+                  console.error(
+                    'Error saving dismiss state to sessionStorage:',
+                    error,
+                  );
+                }
+              }}
               size="small"
               variant="secondary"
             >
@@ -210,9 +237,23 @@ export default function ProductCompatibilityPopup() {
         <button
           aria-label="Open product compatibility popup"
           className={clsx(styles.notificationBell, {
-            [styles.open]: !popupOpen && !checkingProductCompatibility,
+            [styles.open]:
+              (!popupOpen || isDismissed) && !checkingProductCompatibility,
           })}
-          onClick={() => setPopupOpen(true)}
+          onClick={() => {
+            setPopupOpen(true);
+            if (isDismissed) {
+              setIsDismissed(false);
+              try {
+                sessionStorage.removeItem(POPUP_DISMISSED_KEY);
+              } catch (error) {
+                console.error(
+                  'Error removing dismiss state from sessionStorage:',
+                  error,
+                );
+              }
+            }
+          }}
           role="button"
           type="button"
         >
