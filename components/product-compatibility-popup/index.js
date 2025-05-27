@@ -38,17 +38,20 @@ export default function ProductCompatibilityPopup() {
     setPopupOpen,
   } = useVehicleContext();
 
-  const checkCurrentRoute = useCallback(() => {
+  const isAlreadyOnVehicleRoute = useCallback(() => {
     const pathParts = pathname.split('/').filter(Boolean);
     const makerSlug = getValueOrSlug(maker);
     const modelSlug = getValueOrSlug(model);
 
-    return (
-      isProductPageWithoutMakeAndModel ||
-      (pathParts.length >= 3 &&
-        pathParts[1] === makerSlug &&
-        pathParts[2] === modelSlug)
-    );
+    const isOnMakePage =
+      pathParts.length === 2 && pathParts[1] === makerSlug && !modelSlug;
+
+    const isOnModelPage =
+      pathParts.length >= 3 &&
+      pathParts[1] === makerSlug &&
+      pathParts[2] === modelSlug;
+
+    return isProductPageWithoutMakeAndModel || isOnMakePage || isOnModelPage;
   }, [isProductPageWithoutMakeAndModel, maker, model, pathname]);
 
   useEffect(
@@ -90,7 +93,7 @@ export default function ProductCompatibilityPopup() {
 
       const currentMaker = getValueOrSlug(maker);
       const currentModel = getValueOrSlug(model);
-      const isCurrentRoute = checkCurrentRoute();
+      const isCurrentRoute = isAlreadyOnVehicleRoute();
 
       if (enteredProductPageRef.current && !isCurrentRoute) {
         if (
@@ -115,7 +118,13 @@ export default function ProductCompatibilityPopup() {
         console.error('Error writing to localStorage:', error);
       }
     },
-    [checkCurrentRoute, enteredProductPageRef, maker, model, setPopupOpen],
+    [
+      enteredProductPageRef,
+      isAlreadyOnVehicleRoute,
+      maker,
+      model,
+      setPopupOpen,
+    ],
   );
 
   const handleProductRoute = useCallback(() => {
@@ -128,7 +137,7 @@ export default function ProductCompatibilityPopup() {
     function displayPopup() {
       const makerSlug = getValueOrSlug(maker);
       const modelSlug = getValueOrSlug(model);
-      const isCurrentRoute = checkCurrentRoute();
+      const isCurrentRoute = isAlreadyOnVehicleRoute();
 
       const shouldDisplayPopup =
         Boolean(makerSlug || modelSlug) && !isCurrentRoute;
@@ -139,7 +148,7 @@ export default function ProductCompatibilityPopup() {
         setPopupOpen(shouldDisplayPopup);
       }
     },
-    [checkCurrentRoute, isMobile, maker, model, setPopupOpen],
+    [isAlreadyOnVehicleRoute, isMobile, maker, model, setPopupOpen],
   );
 
   useEffect(function clearOnReload() {
@@ -156,7 +165,7 @@ export default function ProductCompatibilityPopup() {
     };
   }, []);
 
-  if (checkCurrentRoute()) {
+  if (isAlreadyOnVehicleRoute()) {
     return null;
   }
 
