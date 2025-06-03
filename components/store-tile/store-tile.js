@@ -22,7 +22,6 @@ export default function StoreTile({
     displays,
     geolocation,
     label,
-    learnMoreButton,
     location: { city, country, postalCode, stateAbbr, street },
     name,
     storeIcon,
@@ -59,7 +58,9 @@ export default function StoreTile({
       id={geoHash}
     >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
-      <StoreCategory color={color} icon={storeIcon} label={storeTypeLabel} />
+      <div className={styles.storeCategory}>
+        <StoreCategory color={color} icon={storeIcon} label={storeTypeLabel} />
+      </div>
       <div className={styles.location}>
         <div className={styles.icon}>
           <LocationIcon />

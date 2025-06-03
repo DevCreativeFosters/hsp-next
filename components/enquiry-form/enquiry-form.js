@@ -207,12 +207,13 @@ export default function EnquiryForm({
               hasMapInteracted={hasMapInteracted}
               itemInList={true}
               items={hasMapInteracted ? filteredStores : filteredLocations}
+              noRowGap={true}
               onSelect={item => {
                 setSelectedStore(item);
               }}
               show={isInlineResultListVisible}
-              showCategory={false}
-              showDisplays={false}
+              showCategory={true}
+              showDisplays={true}
               showIndex={false}
               showMoreResults={showMoreResults}
             />

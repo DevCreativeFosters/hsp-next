@@ -24,6 +24,10 @@
   @include bp-below(large) {
     padding-right: 8px;
   }
+
+  &.noRowGap {
+    gap: 0;
+  }
 }
 
 .noResultsNotice {

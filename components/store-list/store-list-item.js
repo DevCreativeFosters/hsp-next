@@ -20,17 +20,8 @@ export default function StoreListItem({
   showIndex = true,
   wideLayout = false,
 }) {
-  const {
-    address,
-    color,
-    displays,
-    label,
-    location,
-    name,
-    phone,
-    storeIcon,
-    tel,
-  } = item;
+  const { address, color, displays, label, location, name, storeIcon, tel } =
+    item;
   const telNormalized = tel?.toString()?.replaceAll(/([^0-9+])/gi, '');
   const { city, country, postalCode, stateAbbr, street } = location || {};
 
@@ -53,8 +44,10 @@ export default function StoreListItem({
             dangerouslySetInnerHTML={{ __html: name }}
           />
           <div className={styles.wideCatRow}>
-            {showCategory && (
-              <StoreCategory color={color} icon={storeIcon} label={label} />
+            {showCategory && label && (
+              <div className={styles.storeCategory}>
+                <StoreCategory color={color} icon={storeIcon} label={label} />
+              </div>
             )}
             {tel && (
               <a
@@ -103,8 +96,10 @@ export default function StoreListItem({
             className={styles.name}
             dangerouslySetInnerHTML={{ __html: name }}
           ></div>
-          {showCategory && (
-            <StoreCategory color={color} icon={storeIcon} label={label} />
+          {showCategory && label && (
+            <div className={styles.storeCategory}>
+              <StoreCategory color={color} icon={storeIcon} label={label} />
+            </div>
           )}
           <div
             className={styles.address}

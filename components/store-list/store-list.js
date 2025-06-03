@@ -13,6 +13,7 @@ export default function StoreList({
   className,
   itemInList = false,
   items,
+  noRowGap = false,
   onSelect,
   paddingRight,
   show,
@@ -39,7 +40,7 @@ export default function StoreList({
             {constants.NO_RESULTS_NOTICE}
           </div>
 
-          <ul className={styles.list}>
+          <ul className={clsx(styles.list, { [styles.noRowGap]: noRowGap })}>
             <StoreListItem
               index={1}
               item={normalizedSuperStore}
@@ -79,7 +80,7 @@ export default function StoreList({
       className={clsx(styles.listWrapper, className)}
       style={listWrapperStyle}
     >
-      <ul className={styles.list}>
+      <ul className={clsx(styles.list, { [styles.noRowGap]: noRowGap })}>
         {results.map((item, index) => (
           <StoreListItem
             index={index + 1}
