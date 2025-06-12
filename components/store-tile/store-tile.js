@@ -22,6 +22,7 @@ export default function StoreTile({
     displays,
     geolocation,
     label,
+    learnMoreButton,
     location: { city, country, postalCode, stateAbbr, street },
     name,
     storeIcon,
@@ -101,6 +102,21 @@ export default function StoreTile({
             variant="quinary"
           >
             Directions
+          </Button>
+        )}
+        {learnMoreButton && (
+          <Button
+            className={styles.link}
+            href={learnMoreButton?.url}
+            rel="noopener noreferrer"
+            rightIcon="external-link"
+            size="small"
+            target="_blank"
+            variant="primary"
+          >
+            {learnMoreButton?.title && learnMoreButton?.title !== ''
+              ? learnMoreButton?.title
+              : 'Learn more'}
           </Button>
         )}
       </div>

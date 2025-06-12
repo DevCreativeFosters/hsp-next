@@ -210,7 +210,9 @@ export default function Sidebar({
           />
           {selectedStore ? (
             <div className={styles.resultStoreTile}>
-              <ResultsStoreTile item={selectedStore} />
+              <ResultsStoreTile
+                item={{ ...selectedStore, learnMoreButton: null }}
+              />
             </div>
           ) : (
             <>
