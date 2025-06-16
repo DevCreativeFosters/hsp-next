@@ -20,7 +20,7 @@ import StoreLocatorSearch from '@components/store-locator-search/store-locator-s
 import styles from './page.module.scss';
 
 export async function generateMetadata() {
-  const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`];
+  const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`, 'store'];
   const data = await getSeoByUri(routes.storeLocator, tags);
 
   return {
