@@ -471,6 +471,14 @@ export default function Builder({
         }
 
         covers.forEach(cover => {
+          if (
+            selectedCover &&
+            !selectedCover?.productCategories?.includes(
+              cover?.productCategories?.nodes[0]?.slug,
+            )
+          )
+            return;
+
           cover.variants.forEach(variant => {
             const isCompatible =
               variant?.compatibleFactoryOptionsVariants?.includes(
