@@ -5,9 +5,12 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import NextTopLoader from 'nextjs-toploader';
 
+import { CartProvider } from '@contexts/cart-context';
+
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { GTM_ID } from '@lib/gtm-config';
 
+import CartSidebar from '@components/cart-sidebar/cart-sidebar';
 import PreviewAlert from '@components/preview-alert/preview-alert';
 
 import '@styles/main.scss';
@@ -79,12 +82,15 @@ export default async function RootLayout({ children }) {
         `}
       </Script>
       <body className="" data-rh="class">
-        <ReCaptchaProvider useEnterprise>
-          <NextTopLoader color="#ed2935ff" />
-          {children}
-          <PreviewAlert />
-          <RootLayoutClient />
-        </ReCaptchaProvider>
+        <CartProvider>
+          <ReCaptchaProvider useEnterprise>
+            <NextTopLoader color="#ed2935ff" />
+            {children}
+            <PreviewAlert />
+            <RootLayoutClient />
+            <CartSidebar />
+          </ReCaptchaProvider>
+        </CartProvider>
       </body>
     </html>
   );

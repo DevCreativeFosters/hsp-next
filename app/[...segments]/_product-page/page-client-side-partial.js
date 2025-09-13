@@ -13,6 +13,7 @@ import { trimSlash } from '@lib/trim-slash';
 import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
+import ProductComboDeals from '@components/product-combo-deals/product-combo-deals';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
 
@@ -210,6 +211,11 @@ export default function PageClientSidePartial({
           )}
         </div>
       </div>
+      <ProductComboDeals
+        comboDeals={firstMatchedProduct.productComboDeals}
+        productData={firstMatchedProduct}
+        variantSlug={variantSlug}
+      />
       <ProductTabs
         downloadFileFormId={downloadFileFormId}
         featuresBoxes={featuresBoxes}

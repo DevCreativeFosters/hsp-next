@@ -1,0 +1,236 @@
+.comboDeals {
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-black-100);
+  padding: var(--content-padding-sm);
+  margin: 24px 0;
+  border: 1px solid var(--color-white-40);
+
+  @include bp(medium) {
+    padding: var(--content-padding);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--gap-global-sm);
+  padding-bottom: var(--gap-global-xs);
+  border-bottom: 1px solid var(--color-white-40);
+}
+
+.title {
+  color: var(--color-white-100);
+  margin: 0;
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.badge {
+  background: var(--color-accent);
+  color: var(--color-white-100);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-global-sm);
+  margin-bottom: var(--gap);
+}
+
+.productItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  padding: var(--gap-global-xs) 0;
+}
+
+.productImage {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.productInfo {
+  flex: 1;
+}
+
+.productTitle {
+  margin: 0 0 4px;
+  font-weight: 600;
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  line-height: 1.37;
+}
+
+.productPrice {
+  margin: 0;
+  font-size: 16px;
+
+  .regularPrice {
+    color: var(--color-white-80);
+  }
+
+  .bundlePrice {
+    color: var(--color-primary);
+  }
+}
+
+.plusSign {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
+  color: var(--color-white-100);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.pricing {
+  background-color: var(--color-black-90);
+  padding: var(--content-padding-sm);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--gap);
+}
+
+.regularPrice {
+  text-decoration: line-through;
+  color: var(--color-white-60);
+  margin-bottom: var(--gap-global-xs);
+  font-size: 14px;
+}
+
+.bundlePrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: var(--gap-global-xs);
+  font-family: var(--font-secondary);
+}
+
+.savings {
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.discountInfo {
+  margin-top: var(--gap-global-sm);
+}
+
+.discountDescription {
+  color: var(--color-white-80);
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+// Responsive design
+@include bp-below(medium) {
+  .comboDeals {
+    padding: var(--content-padding-sm);
+  }
+
+  .productImage {
+    width: 60px;
+    height: 60px;
+  }
+
+  .plusSign {
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+
+  .bundlePrice {
+    font-size: 1.25rem;
+  }
+}
+
+.addToCart {
+  margin-top: var(--gap);
+  text-align: center;
+}
+
+.addToCartButton {
+  border-radius: var(--border-radius-sm);
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+
+  &:disabled {
+    background-color: var(--color-white-40);
+    cursor: not-allowed;
+  }
+
+  &.loading {
+    position: relative;
+    color: transparent;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid var(--color-white-100);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.message {
+  margin-top: var(--gap-global-xs);
+  padding: 8px 12px;
+  border-radius: var(--border-radius-sm);
+  font-size: 14px;
+
+  &.success {
+    background-color: rgb(40 167 69 / 10%);
+    color: #28a745;
+    border: 1px solid rgb(40 167 69 / 20%);
+  }
+
+  &.error {
+    background-color: rgb(220 53 69 / 10%);
+    color: #dc3545;
+    border: 1px solid rgb(220 53 69 / 20%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
