@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "redirects": [
+    {
+      "source": "/wp-admin",
+      "has": [
+        { "type": "host", "value": "hsputelids.com" }
+      ],
+      "destination": "https://wordpress-1505184-5767119.cloudwaysapps.com/wp-admin",
+      "permanent": true
+    },
+    {
+      "source": "/wp-admin",
+      "has": [
+        { "type": "host", "value": "devhsp.vercel.app" }
+      ],
+      "destination": "https://wordpress-1505184-5811849.cloudwaysapps.com/wp-admin",
+      "permanent": true
+    },
+    {
+      "source": "/wp-admin",
+      "has": [
+        { "type": "host", "value": "stghsp.vercel.app" }
+      ],
+      "destination": "https://wordpress-1505184-5847603.cloudwaysapps.com/wp-admin",
+      "permanent": true
+    }
+  ]
+}
