@@ -54,6 +54,14 @@ const config = {
         hostname: '**.wpenginepowered.com',
         protocol: 'https',
       },
+      {
+        hostname: '**.cloudwaysapps.com',
+        protocol: 'http',
+      },
+      {
+        hostname: '**.cloudwaysapps.com',
+        protocol: 'https',
+      },
     ],
   },
   async redirects() {
