@@ -21,6 +21,7 @@ export default function Tile({
   title,
   titleTag,
   titleTagStyle,
+  titleTagType,
   url,
   variant,
 }) {
@@ -83,7 +84,7 @@ export default function Tile({
     () => (
       <DynamicTitle
         className={clsx(styles.title, 'h4')}
-        defaultTag="h2"
+        defaultTag={titleTagType ?? 'h2'}
         titleTag={titleTag}
         titleTagStyle={titleTagStyle}
       >
