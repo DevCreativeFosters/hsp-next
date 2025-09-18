@@ -80,20 +80,27 @@ export default function ProductComboDeals({
   const handleAddToCart = async () => {
     setAddToCartMessage('');
 
-    console.log({
-      bundlePrice: discountedPrice,
-      comboProductIds: products.map(p => p.databaseId),
-      parentProductId: productData.databaseId,
-      quantity: 1,
+    const parentProduct = {
+      databaseId: productData.databaseId,
+      regularPrice: formatPrice(variantPrice),
+      salePrice: formatPrice(getDiscountedItemPrice(variantPrice)),
+      title: productData.title,
       variantSlug: selectedVariant?.variantSlug,
-    });
+    };
+
+    const otherComboProducts = products.map(product => ({
+      databaseId: product.databaseId,
+      regularPrice: formatPrice(product.productFields.price),
+      salePrice: formatPrice(
+        getDiscountedItemPrice(product.productFields.price),
+      ),
+      title: product.title,
+      variantSlug: product.productFields.variants[0].variantSlug,
+    }));
 
     const { error, ok } = await addCombo({
-      bundlePrice: discountedPrice,
-      comboProductIds: products.map(p => p.databaseId),
-      parentProductId: productData.databaseId,
+      products: [...otherComboProducts, parentProduct],
       quantity: 1,
-      variantSlug: selectedVariant?.variantSlug,
     });
 
     if (ok) {
@@ -134,10 +141,10 @@ export default function ProductComboDeals({
 
       <div className={styles.products}>
         {/* Current product variant */}
-        <div className={styles.productItem} key={productData.id}>
+        <div className={styles.productItem}>
           <div className={styles.productImage}>
             <img
-              alt={productData.title}
+              alt={`${productData.title} | ${selectedVariant?.variantName}`}
               height={80}
               src={variantImage || '/placeholder-image.jpg'}
               width={80}
@@ -145,7 +152,7 @@ export default function ProductComboDeals({
           </div>
           <div className={styles.productInfo}>
             <h4 className={clsx(styles.productTitle, 'p-large')}>
-              {productData.title} | {selectedVariant?.variantName}
+              {`${productData.title} | ${selectedVariant?.variantName}`}
             </h4>
             <div className={clsx(styles.productPrice)}>
               <div className={clsx(styles.regularPrice, 'p')}>
@@ -160,39 +167,42 @@ export default function ProductComboDeals({
         </div>
 
         {/* Combo products */}
-        {products.map((product, index) => (
-          <div className={styles.productItem} key={product.id}>
-            <div className={styles.productImage}>
-              <img
-                alt={product.title}
-                height={80}
-                src={
-                  product.productFields?.images?.nodes?.[0]?.mediaItemUrl ||
-                  '/placeholder-image.jpg'
-                }
-                width={80}
-              />
-            </div>
-            <div className={styles.productInfo}>
-              <h4 className={clsx(styles.productTitle, 'p-large')}>
-                {product.title}
-              </h4>
-              <div className={clsx(styles.productPrice, 'p')}>
-                <div className={clsx(styles.regularPrice, 'p')}>
-                  {formatPrice(product.productFields?.price)}
-                </div>
-                <div className={clsx(styles.bundlePrice, 'p')}>
-                  {formatPrice(
-                    getDiscountedItemPrice(product.productFields?.price),
-                  )}
+        {products.map((product, index) => {
+          const variant = product.productFields?.variants?.[0];
+          const variantDetails = variant?.variantDetails;
+
+          return (
+            <div className={styles.productItem} key={product.id}>
+              <div className={styles.productImage}>
+                <img
+                  alt={`${product.title} | ${variant?.variantName}`}
+                  height={80}
+                  src={
+                    variantDetails.images?.nodes?.[0]?.mediaItemUrl ||
+                    '/placeholder-image.jpg'
+                  }
+                  width={80}
+                />
+              </div>
+              <div className={styles.productInfo}>
+                <h4 className={clsx(styles.productTitle, 'p-large')}>
+                  {`${product.title} | ${variant?.variantName}`}
+                </h4>
+                <div className={clsx(styles.productPrice, 'p')}>
+                  <div className={clsx(styles.regularPrice, 'p')}>
+                    {formatPrice(variantDetails.price)}
+                  </div>
+                  <div className={clsx(styles.bundlePrice, 'p')}>
+                    {formatPrice(getDiscountedItemPrice(variantDetails.price))}
+                  </div>
                 </div>
               </div>
+              {index < products.length - 1 && (
+                <div className={styles.plusSign}>+</div>
+              )}
             </div>
-            {index < products.length - 1 && (
-              <div className={styles.plusSign}>+</div>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className={styles.pricing}>
