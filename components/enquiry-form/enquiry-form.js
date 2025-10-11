@@ -14,10 +14,6 @@ import { trimSlash } from '@lib/trim-slash';
 
 import Button from '@components/button/button';
 import Select from '@components/form/select';
-import StoreList from '@components/store-list/store-list';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import StoreSearchControls from '@components/store-search-controls/store-search-controls';
-import ResultsStoreTile from '@components/store-tile/result-store-tile';
 
 import styles from './enquiry-form.module.scss';
 import EnquiryModal from './enquiry-modal';
@@ -33,7 +29,9 @@ export default function EnquiryForm({
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const [showMoreResults, setShowMoreResults] = useState(false);
+
+  const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
+
   const [normalizedLocations, setNormalizedLocations] = useState([]);
 
   const highlightHandler = useRef(null);
@@ -133,6 +131,10 @@ export default function EnquiryForm({
     setEnquiryModalOpened(false);
   };
 
+  const handleCartToggle = () => {
+    setIsCartPopupOpen(prev => !prev);
+  };
+
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
 
   const onAnyInputChange = useCallback(ev => {
@@ -161,123 +163,165 @@ export default function EnquiryForm({
   );
 
   return (
-    <section className={styles.wrapper} ref={wrapperOuterRef}>
-      <form
-        action="#"
-        autoComplete="off"
-        className={styles.form}
-        onChange={onAnyInputChange}
-        ref={formRef}
-      >
-        <Select
-          id="product-variant"
-          label="Variant"
-          labelMarginBottom="10px"
-          marginTop="16px"
-          onChange={onVariantChange}
-          options={variantOptions}
-          placeholder="Variant"
-          size="large"
-          value={
-            selectedVariant?.variantSlug ||
-            (variantOptions?.length ? variantOptions?.value : '')
-          }
-        />
-
-        <StoreSearchControls
-          allLocations={allLocations}
-          interactWithDisabledForm={interactWithDisabledForm}
-          isWide
-        />
-
-        {selectedStore ? (
-          <ResultsStoreTile isHighlighted={highlight} item={selectedStore} />
-        ) : (
-          <>
-            {isMapVisible && (
-              <StoreLocatorMap
-                locations={normalizedLocations}
-                onMarkerClick={setSelectedStore}
-              />
-            )}
-
-            <StoreList
-              allLocations={allLocations}
-              className={styles.results}
-              hasMapInteracted={hasMapInteracted}
-              itemInList={true}
-              items={hasMapInteracted ? filteredStores : filteredLocations}
-              noRowGap={true}
-              onSelect={item => {
-                setSelectedStore(item);
-              }}
-              show={isInlineResultListVisible}
-              showCategory={true}
-              showDisplays={true}
-              showIndex={false}
-              showMoreResults={showMoreResults}
-            />
-            {!showMoreResults &&
-              isInlineResultListVisible &&
-              filteredStores.length > 5 && (
-                <div className={styles.showMoreWrapper}>
-                  <Button
-                    className={styles.showMoreButton}
-                    onClick={() => setShowMoreResults(true)}
-                    size="small"
-                    variant="septenary"
-                  >
-                    Load more results
-                  </Button>
-                </div>
-              )}
-          </>
-        )}
-
-        <div className={styles.price}>
-          {variantPrice > 0 && (
-            <span className={clsx(styles.productsPrice, 'h3')}>
-              {formatPrice(variantPrice)}
-            </span>
-          )}
-          {variantInstallationPrice > 0 && (
-            <span className={clsx(styles.installationPrice, 'h4')}>
-              +<span> {formatPrice(variantInstallationPrice)} </span>
-              <span> for installation </span>
-            </span>
-          )}
-        </div>
-        <div
-          className={styles.buttonWrapper}
-          onClick={handleButtonWrapperClick}
-        >
-          <Button
-            className={styles.submitButton}
-            disabled={!selectedStore}
-            onClick={handleOpenModal}
-            size="large"
+    <>
+      {isCartPopupOpen && (
+        <div className={styles.cartMain} onClick={handleCartToggle}>
+          <div
+            className={styles.cartWrapper}
+            onClick={e => e.stopPropagation()}
           >
-            Make an enquiry
-          </Button>
+            {/* Cart Item */}
+
+            <div className={styles.cartItem}>
+              <div className={styles.listImg}>
+                <img src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2025/08/Volkswagon-Amarok-Gif.gif" />
+              </div>
+
+              <div className={styles.itemInfo}>
+                <h6>
+                  Electric Roller Cover for Next Gen Ranger Raptor for No Sports
+                  bar
+                </h6>
+                <div className={styles.itemPrice}>
+                  $3,300 <del>3300</del>
+                </div>
+                <div className={styles.itemBottom}>
+                  <div className={styles.qtyBlock}>
+                    <input placeholder={0} type="number" />
+                  </div>
+                  <a className={styles.removeLink} href="#">
+                    Remove
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.cartItem}>
+              <div className={styles.listImg}>
+                <img src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2025/08/Volkswagon-Amarok-Gif.gif" />
+              </div>
+
+              <div className={styles.itemInfo}>
+                <h6>
+                  Electric Roller Cover for Next Gen Ranger Raptor for No Sports
+                  bar
+                </h6>
+                <div className={styles.itemPrice}>
+                  $3,300 <del>3300</del>
+                </div>
+                <div className={styles.itemBottom}>
+                  <div className={styles.qtyBlock}>
+                    <input placeholder={0} type="number" />
+                  </div>
+                  <a className={styles.removeLink} href="#">
+                    Remove
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.cartTotal}>Subtotal: $3,300</div>
+
+            <Button className={styles.cartSubmitButton} size="large">
+              Check Out
+              <svg
+                fill="none"
+                height="34"
+                width="34"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M33.031 15.031v3.938H8.656l11.157 11.25L17 33.03.969 17 17 .969l2.813 2.812-11.157 11.25z"
+                  fill="#fff"
+                ></path>
+              </svg>
+            </Button>
+            <Button
+              className={styles.dismissButton}
+              onClick={handleCartToggle}
+              size="large"
+            >
+              Dismiss
+            </Button>
+          </div>
         </div>
-      </form>
-      {enquiryModalOpened && (
-        <EnquiryModal
-          enquiryFormId={enquiryFormId}
-          freight={freight}
-          installationCost={variantInstallationPrice}
-          onClose={handleCloseModal}
-          productPrice={variantPrice ?? productPrice}
-          selectedProducts={
-            selectedVariant
-              ? [selectedVariant]
-              : variants?.length
-                ? [variants[0]]
-                : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
-          }
-          store={selectedStore}
-        />
       )}
-    </section>
+
+      <section className={styles.wrapper} ref={wrapperOuterRef}>
+        <form
+          action="#"
+          autoComplete="off"
+          className={styles.form}
+          onChange={onAnyInputChange}
+          ref={formRef}
+        >
+          <Select
+            id="product-variant"
+            label="Variant"
+            labelMarginBottom="20px"
+            marginTop="16px"
+            onChange={onVariantChange}
+            options={variantOptions}
+            placeholder="Variant"
+            size="large"
+            value={
+              selectedVariant?.variantSlug ||
+              (variantOptions?.length ? variantOptions?.value : '')
+            }
+          />
+
+          <div className={styles.price}>
+            {variantPrice > 0 && (
+              <span className={clsx(styles.productsPrice, 'h3')}>
+                {formatPrice(variantPrice)}
+              </span>
+            )}
+            {variantInstallationPrice > 0 && (
+              <span className={clsx(styles.installationPrice, 'h4')}>
+                +<span> {formatPrice(variantInstallationPrice)} </span>
+                <span> for installation </span>
+              </span>
+            )}
+          </div>
+          <div
+            className={styles.buttonWrapper}
+            onClick={handleButtonWrapperClick}
+          >
+            <Button
+              className={styles.submitButton}
+              onClick={handleCartToggle}
+              size="large"
+            >
+              Add to Cart
+            </Button>
+            <Button
+              className={styles.submitButton}
+              onClick={handleOpenModal}
+              size="large"
+            >
+              Make an enquiry
+            </Button>
+          </div>
+        </form>
+        {enquiryModalOpened && (
+          <EnquiryModal
+            allLocations={allLocations}
+            enquiryFormId={enquiryFormId}
+            freight={freight}
+            installationCost={variantInstallationPrice}
+            onClose={handleCloseModal}
+            productPrice={variantPrice ?? productPrice}
+            selectedProducts={
+              selectedVariant
+                ? [selectedVariant]
+                : variants?.length
+                  ? [variants[0]]
+                  : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
+            }
+            store={selectedStore}
+          />
+        )}
+      </section>
+    </>
   );
 }
