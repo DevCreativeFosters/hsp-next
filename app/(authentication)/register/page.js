@@ -1,0 +1,261 @@
+'use client';
+
+import { useState } from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { fetchAPI } from '@lib/fetch-api';
+
+import Container from '@components/container/container';
+import Layout from '@components/layout/layout';
+
+import Arrow from '@assets/images/arrow.svg';
+import banner from '@assets/images/banner.jpg';
+
+import './register.css';
+
+// we'll move CSS here later
+
+export default function RegisterPage() {
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    phone: '',
+    role: 'vendor',
+    username: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setMessage(null);
+    setLoading(true);
+
+    try {
+      console.log(formData);
+
+      const mutation = `
+        mutation RegisterUser(
+          $username: String!
+          $email: String!
+          $password: String!
+          $role: String!
+          $firstName: String
+          $lastName: String
+          $phone: String
+        ) {
+          userRegister(
+            input: {
+              username: $username
+              email: $email
+              password: $password
+              role: $role
+              firstName: $firstName
+              lastName: $lastName
+              phone: $phone
+            }
+          ) {
+            userId
+            error
+            message
+          }
+        }
+      `;
+
+      const res = await fetchAPI(mutation, { variables: formData });
+
+      const result = res?.userRegister;
+
+      if (result?.userId && !result?.error) {
+        setMessage({
+          text: result?.message || '✅ Account created successfully!',
+          type: 'success',
+        });
+      } else {
+        setMessage({
+          text: result?.message || result?.error || '❌ Registration failed.',
+          type: 'error',
+        });
+      }
+    } catch (err) {
+      setMessage({
+        text: '❌ Something went wrong. Please try again later.',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Layout title="Register">
+      <section className="accountContent">
+        <div className="registerMain">
+          <Container>
+            {/* Banner */}
+            <div className="formBanner">
+              <figure>
+                <Image
+                  alt="Register banner"
+                  fill
+                  src={banner}
+                  style={{ objectFit: 'cover' }}
+                />
+              </figure>
+            </div>
+
+            {/* Registration Form */}
+            {(message === null || (message && message?.type === 'error')) && (
+              <div className="formContent">
+                <div className="heading">
+                  <h2>LET’S GET YOU STARTED</h2>
+                  <p>You are one step closer to your Ute’s Ultimate Upgrades</p>
+                </div>
+
+                {message && message.type === 'error' && (
+                  <div
+                    style={{
+                      color: message.type === 'success' ? 'green' : 'red',
+                      marginBottom: '20px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {message.text}
+                  </div>
+                )}
+
+                <div className="formWrap">
+                  <form onSubmit={handleSubmit}>
+                    <div className="inputRow">
+                      <div className="inputFullCol">
+                        <div className="inputGroup">
+                          <input
+                            name="username"
+                            onChange={handleChange}
+                            placeholder="Username"
+                            required
+                            type="text"
+                            value={formData.username}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputHalfCol">
+                        <div className="inputGroup">
+                          <input
+                            name="firstName"
+                            onChange={handleChange}
+                            placeholder="First Name"
+                            required
+                            type="text"
+                            value={formData.firstName}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputHalfCol">
+                        <div className="inputGroup">
+                          <input
+                            name="lastName"
+                            onChange={handleChange}
+                            placeholder="Last Name"
+                            required
+                            type="text"
+                            value={formData.lastName}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputHalfCol">
+                        <div className="inputGroup">
+                          <input
+                            name="phone"
+                            onChange={handleChange}
+                            placeholder="Phone Number"
+                            type="text"
+                            value={formData.phone}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputHalfCol">
+                        <div className="inputGroup">
+                          <input
+                            name="email"
+                            onChange={handleChange}
+                            placeholder="Email"
+                            required
+                            type="email"
+                            value={formData.email}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputFullCol">
+                        <div className="inputGroup">
+                          <input
+                            name="password"
+                            onChange={handleChange}
+                            placeholder="Password"
+                            required
+                            type="password"
+                            value={formData.password}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="inputFullCol submitbtn">
+                        <div className="inputSubmitBtn">
+                          <button disabled={loading} type="submit">
+                            {loading
+                              ? 'Creating Account...'
+                              : 'CREATE MY ACCOUNT'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div className="formFooter">
+                  <p>
+                    Already have an account? <Link href="/login">Log In</Link>
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {message?.type === 'success' && (
+              <div className="formContent">
+                <div className="heading">
+                  <h2>Nearly There!</h2>
+                  <p>Please Check Your Email to Complete Account Creation</p>
+                </div>
+
+                <div className="backToLogin">
+                  <Link className="ctaButton" href="/login">
+                    Back To Login <Arrow />
+                  </Link>
+                </div>
+
+                <div className="formFooter">
+                  <p>
+                    Haven’t received the email? <a href="#">Click Here</a>
+                  </p>
+                </div>
+              </div>
+            )}
+          </Container>
+        </div>
+      </section>
+    </Layout>
+  );
+}
