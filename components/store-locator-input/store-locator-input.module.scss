@@ -63,6 +63,13 @@
   font-size: 14px;
 }
 
+.mapToggler {
+  grid-area: mapToggler;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
 .eventLabel {
   display: block;
   position: absolute;

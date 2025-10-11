@@ -1,17 +1,23 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import StoreLocatorContext from '@contexts/store-locator';
+
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
+import normalizeStores from '@lib/normalize-stores';
 import routes from '@lib/routes';
 
 import Button from '@components/button/button';
 import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import Loading from '@components/loading/loading';
-import StoreTile from '@components/store-tile/store-tile';
+import StoreList from '@components/store-list/store-list';
+import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import StoreSearchControls from '@components/store-search-controls/store-search-controls';
+import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import Tooltip from '@components/tooltip/tooltip';
 
 import DecorationImage from '@assets/images/bg-offroad.webp';
@@ -22,6 +28,7 @@ import EnquiryProduct from './enquiry-product';
 const InfoIcon = getIcon('info');
 
 export default function EnquiryModal({
+  allLocations,
   enquiryFormId,
   freight,
   installationCost,
@@ -33,7 +40,10 @@ export default function EnquiryModal({
   const [isLoading, setLoading] = useState(true);
   const [formIsSending, setFormIsSending] = useState(false);
   const [formIsSent, setFormIsSent] = useState(false);
+  const [showMoreResults, setShowMoreResults] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
+  const [highlight, setHighlight] = useState(false);
+  const [normalizedLocations, setNormalizedLocations] = useState([]);
   const formRef = useRef();
   const installCost = installationCost;
   const freightCost = freight;
@@ -47,6 +57,17 @@ export default function EnquiryModal({
         : secondaryValue
       : value;
   };
+
+  const {
+    filteredLocations,
+    filteredStores,
+    hasMapInteracted,
+    isMapVisible,
+    location,
+    searchGeolocation,
+    selectedStore,
+    setSelectedStore,
+  } = useContext(StoreLocatorContext);
 
   const products = selectedProducts
     ?.map(
@@ -62,6 +83,20 @@ export default function EnquiryModal({
     .join('|');
 
   const allSelectedProducts = products;
+  const isInlineResultListVisible = Boolean(location && searchGeolocation);
+
+  const interactWithDisabledForm = useCallback(() => {
+    if (selectedStore) {
+      setHighlight(Math.random());
+    }
+  }, [selectedStore]);
+  useEffect(
+    function normalizeStoreLocations() {
+      const normalized = normalizeStores(allLocations);
+      setNormalizedLocations(normalized);
+    },
+    [allLocations],
+  );
 
   const handleSubmitClick = () => {
     if (formRef.current) {
@@ -136,42 +171,6 @@ export default function EnquiryModal({
                 [styles.onSuccess]: formIsSent,
               })}
             >
-              <div
-                className={clsx(styles.formContainer, {
-                  [styles.onSuccess]: formIsSent,
-                })}
-              >
-                <>
-                  {enquiryFormId && (
-                    <GravityFormWrapper
-                      attributes={{ id: enquiryFormId }}
-                      hiddenInputs={[
-                        {
-                          inputName: 'storeId',
-                          value: store?.storeId || 'Not set',
-                        },
-                        {
-                          inputName: 'storeName',
-                          value: store?.name || 'Not set',
-                        },
-                        {
-                          inputName: 'products',
-                          value: allSelectedProducts,
-                        },
-                      ]}
-                      isDirty={isFormDirty}
-                      onError={onError}
-                      onLoad={onLoad}
-                      onReset={onReset}
-                      onSubmit={onSubmit}
-                      onSuccess={onSuccess}
-                      ref={formRef}
-                      submitButton={false}
-                    />
-                  )}
-                </>
-              </div>
-
               {!formIsSent && (
                 <div className={styles.enquirySummary}>
                   <div className={styles.label}>Products of interest:</div>
@@ -243,10 +242,98 @@ export default function EnquiryModal({
                     </table>
                   </div>
 
-                  <div className={styles.label}>Your local store:</div>
-                  <StoreTile item={store} />
+                  <StoreSearchControls
+                    allLocations={allLocations}
+                    interactWithDisabledForm={interactWithDisabledForm}
+                    isWide
+                  />
+
+                  {selectedStore ? (
+                    <ResultsStoreTile
+                      isHighlighted={highlight}
+                      item={selectedStore}
+                    />
+                  ) : (
+                    <>
+                      {isMapVisible && (
+                        <StoreLocatorMap
+                          locations={normalizedLocations}
+                          onMarkerClick={setSelectedStore}
+                        />
+                      )}
+
+                      <StoreList
+                        allLocations={allLocations}
+                        className={styles.results}
+                        hasMapInteracted={hasMapInteracted}
+                        itemInList={true}
+                        items={
+                          hasMapInteracted ? filteredStores : filteredLocations
+                        }
+                        noRowGap={true}
+                        onSelect={item => {
+                          setSelectedStore(item);
+                        }}
+                        show={isInlineResultListVisible}
+                        showCategory={true}
+                        showDisplays={true}
+                        showIndex={false}
+                        showMoreResults={showMoreResults}
+                      />
+                      {!showMoreResults &&
+                        isInlineResultListVisible &&
+                        filteredStores.length > 5 && (
+                          <div className={styles.showMoreWrapper}>
+                            <Button
+                              className={styles.showMoreButton}
+                              onClick={() => setShowMoreResults(true)}
+                              size="small"
+                              variant="septenary"
+                            >
+                              Load more results
+                            </Button>
+                          </div>
+                        )}
+                    </>
+                  )}
                 </div>
               )}
+
+              <div
+                className={clsx(styles.formContainer, {
+                  [styles.onSuccess]: formIsSent,
+                })}
+              >
+                <>
+                  {enquiryFormId && (
+                    <GravityFormWrapper
+                      attributes={{ id: enquiryFormId }}
+                      hiddenInputs={[
+                        {
+                          inputName: 'storeId',
+                          value: store?.storeId || 'Not set',
+                        },
+                        {
+                          inputName: 'storeName',
+                          value: store?.name || 'Not set',
+                        },
+                        {
+                          inputName: 'products',
+                          value: allSelectedProducts,
+                        },
+                      ]}
+                      isDirty={isFormDirty}
+                      onError={onError}
+                      onLoad={onLoad}
+                      onReset={onReset}
+                      onSubmit={onSubmit}
+                      onSuccess={onSuccess}
+                      ref={formRef}
+                      submitButton={false}
+                    />
+                  )}
+                </>
+              </div>
             </div>
           </div>
           {!formIsSent && (

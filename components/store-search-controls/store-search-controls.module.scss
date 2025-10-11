@@ -24,13 +24,6 @@
   flex-grow: 1;
 }
 
-.mapToggler {
-  grid-area: mapToggler;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
 .errorInput input {
   border-color: var(--color-error);
 }
