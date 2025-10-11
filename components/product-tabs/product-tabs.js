@@ -17,6 +17,7 @@ import Wysiwyg from '@components/wysiwyg/wysiwyg';
 import styles from './product-tabs.module.scss';
 
 export default function ProductTabs({
+  description,
   downloadFileFormId,
   featuresBoxes,
   featuresDescription,
@@ -29,6 +30,9 @@ export default function ProductTabs({
   const headerRef = useRef(null);
   const tabs = useMemo(
     () => ({
+      ...(description && {
+        description: 'Description',
+      }),
       ...((featuresDescription || featuresBoxes?.length > 0) && {
         features: 'Features',
       }),
@@ -38,6 +42,7 @@ export default function ProductTabs({
       ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
     }),
     [
+      description,
       featuresBoxes,
       featuresDescription,
       manualsLinks,
@@ -59,6 +64,14 @@ export default function ProductTabs({
       scrollIntoViewHorizontally(headerRef.current, activeTabButton, 24);
     },
     [activeTab],
+  );
+
+  const Description = () => (
+    <>
+      {description && (
+        <Wysiwyg className={styles.wysiwyg} content={description} />
+      )}
+    </>
   );
 
   const FeaturesContent = () => (
@@ -176,6 +189,14 @@ export default function ProductTabs({
       className={clsx(styles.productAccordion, styles.hideOnDesktop)}
       stickyOnMobile
     >
+      {tabs.description && (
+        <AccordionItem
+          className={styles.accordionItem}
+          triggerContent={tabs.description}
+        >
+          <Description />
+        </AccordionItem>
+      )}
       {tabs.features && (
         <AccordionItem
           className={styles.accordionItem}
@@ -222,6 +243,7 @@ export default function ProductTabs({
         ))}
       </div>
       <div className={styles.content}>
+        {activeTab === 'description' && <Description />}
         {activeTab === 'features' && <FeaturesContent />}
         {activeTab === 'specs' && <SpecsContent />}
         {activeTab === 'manuals' && <ManualsContent />}

@@ -168,17 +168,6 @@ export default function PageClientSidePartial({
             className={clsx(styles.productAccordion, styles.hideOnTablet)}
             stickyOnMobile
           >
-            {description && (
-              <AccordionItem
-                className={styles.productAccordionItem}
-                triggerContent="Description"
-              >
-                <div
-                  className={clsx(styles.productDescription, 'p-large')}
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
-              </AccordionItem>
-            )}
             {warrantyTimePeriod && (
               <AccordionItem
                 className={styles.productAccordionItem}
@@ -199,16 +188,6 @@ export default function PageClientSidePartial({
               </AccordionItem>
             )}
           </Accordion>
-          {description && (
-            <div
-              className={clsx(
-                styles.productDescription,
-                styles.hideOnMobile,
-                'p-large',
-              )}
-              dangerouslySetInnerHTML={{ __html: description }}
-            />
-          )}
         </div>
       </div>
       <ProductComboDeals
@@ -217,6 +196,7 @@ export default function PageClientSidePartial({
         variantSlug={variantSlug}
       />
       <ProductTabs
+        description={description}
         downloadFileFormId={downloadFileFormId}
         featuresBoxes={featuresBoxes}
         featuresDescription={featuresDescription}
