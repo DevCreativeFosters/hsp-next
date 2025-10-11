@@ -24,7 +24,7 @@ export default function RegisterPage() {
     lastName: '',
     password: '',
     phone: '',
-    role: 'vendor',
+    role: 'seller',
     username: '',
   });
   const [loading, setLoading] = useState(false);
@@ -40,8 +40,6 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      console.log(formData);
-
       const mutation = `
         mutation RegisterUser(
           $username: String!
