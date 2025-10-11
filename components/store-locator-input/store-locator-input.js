@@ -12,8 +12,6 @@ import { useIsMobile } from '@hooks/useIsMobile';
 import { STORE_LOCATOR_FULLSCREEN } from '@lib/class-names';
 import { getIcon } from '@lib/icons';
 
-import Switch from '@components/form/switch';
-
 import styles from './store-locator-input.module.scss';
 
 export default function Input({
@@ -37,8 +35,7 @@ export default function Input({
   const isFullScreen = useHasClass(STORE_LOCATOR_FULLSCREEN);
   const isMobile = useIsMobile();
 
-  const { isMapVisible, setMapVisible, setShowLocationError } =
-    useContext(StoreLocatorContext);
+  const { setShowLocationError } = useContext(StoreLocatorContext);
 
   useEffect(
     function syncValue() {
@@ -109,15 +106,6 @@ export default function Input({
             }}
           />
         )}
-      </div>
-      <div className={styles.mapToggler}>
-        <Switch
-          label="Show map"
-          onChange={() => {
-            setMapVisible(!isMapVisible);
-          }}
-          state={isMapVisible}
-        />
       </div>
     </>
   );

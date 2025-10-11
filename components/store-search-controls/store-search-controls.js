@@ -15,6 +15,7 @@ import {
 import normalizeStores from '@lib/normalize-stores';
 import { findLocationsInRadius } from '@lib/store-locations';
 
+import Switch from '@components/form/switch';
 import StoreLocatorInput from '@components/store-locator-input/store-locator-input';
 import StoreLocatorSuggestions from '@components/store-locator-suggestions/store-locator-suggestions';
 
@@ -31,6 +32,8 @@ export default function StoreSearchControls({
   const [suggestions, setSuggestions] = useState([]);
 
   const {
+    hasMapInteracted,
+    isMapVisible,
     location,
     locationInput,
     searchGeolocation,
@@ -39,6 +42,7 @@ export default function StoreSearchControls({
     setHasMapInteracted,
     setLocation,
     setLocationInput,
+    setMapVisible,
     setSearchGeolocation,
     setShowLocationError,
     showLocationError,
@@ -161,6 +165,15 @@ export default function StoreSearchControls({
           />
         </div>
       )}
+      <div className={styles.mapToggler}>
+        <Switch
+          label="Show map"
+          onChange={() => {
+            setMapVisible(!isMapVisible);
+          }}
+          state={isMapVisible}
+        />
+      </div>
     </div>
   );
 }
