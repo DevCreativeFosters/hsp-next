@@ -81,10 +81,11 @@ p {
   margin-bottom: 40px;
 }
 .formContent .heading h2 {
-  font-size: 46px;
+  font-size: clamp(46px, 2.4vw, 35px);
   text-transform: uppercase;
   margin: 0 0 10px;
   line-height: 1;
+  color: #000;
 }
 .formContent .heading p {
   font-size: 20px;
@@ -253,7 +254,7 @@ p {
   font-size: 50px;
   color: #fff;
   line-height: 1;
-  margin: 0;
+  margin: 0 0 10px;
 }
 .loginFooter .leftPart p {
   margin: 0;
@@ -264,6 +265,10 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.rightPart .ctaButton .arrow {
+  margin-left: 20px;
 }
 
 @media (max-width: 767px) {
@@ -288,9 +293,6 @@ p {
   }
   .rightPart .ctaButton {
     width: 100%;
-  }
-  .formContent .heading h2 {
-    font-size: 35px;
   }
   .formContent .heading p {
     font-size: 16px;

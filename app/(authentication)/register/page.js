@@ -240,7 +240,7 @@ export default function RegisterPage() {
 
                 <div className="backToLogin">
                   <Link className="ctaButton" href="/login">
-                    Back To Login <Arrow />
+                    Back To Login <Arrow className="arrow" />
                   </Link>
                 </div>
 

@@ -162,6 +162,25 @@ export default function EnquiryForm({
     [highlight],
   );
 
+  const [quantity, setQuantity] = useState(0);
+
+  const handleIncrement = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 0) {
+      setQuantity(prevQuantity => prevQuantity - 1);
+    }
+  };
+
+  const handleInputChange = event => {
+    const newValue = parseInt(event.target.value, 10);
+    if (!isNaN(newValue) && newValue >= 0) {
+      setQuantity(newValue);
+    }
+  };
+
   return (
     <>
       {isCartPopupOpen && (
@@ -170,6 +189,8 @@ export default function EnquiryForm({
             className={styles.cartWrapper}
             onClick={e => e.stopPropagation()}
           >
+            <h2>Shopping Cart:</h2>
+
             {/* Cart Item */}
 
             <div className={styles.cartItem}>
@@ -187,7 +208,18 @@ export default function EnquiryForm({
                 </div>
                 <div className={styles.itemBottom}>
                   <div className={styles.qtyBlock}>
-                    <input placeholder={0} type="number" />
+                    <span className={styles.minus} onClick={handleDecrement}>
+                      _
+                    </span>
+                    <input
+                      min="0"
+                      onChange={handleInputChange}
+                      type="number"
+                      value={quantity}
+                    />
+                    <span className={styles.plus} onClick={handleIncrement}>
+                      +
+                    </span>
                   </div>
                   <a className={styles.removeLink} href="#">
                     Remove
@@ -211,7 +243,18 @@ export default function EnquiryForm({
                 </div>
                 <div className={styles.itemBottom}>
                   <div className={styles.qtyBlock}>
-                    <input placeholder={0} type="number" />
+                    <span className={styles.minus} onClick={handleDecrement}>
+                      _
+                    </span>
+                    <input
+                      min="0"
+                      onChange={handleInputChange}
+                      type="number"
+                      value={quantity}
+                    />
+                    <span className={styles.plus} onClick={handleIncrement}>
+                      +
+                    </span>
                   </div>
                   <a className={styles.removeLink} href="#">
                     Remove

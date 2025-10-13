@@ -170,7 +170,7 @@ export default function LoginPage() {
                 </div>
                 <div className="rightPart">
                   <Link className="ctaButton" href="/register">
-                    CREATE AN ACCOUNT <Arrow />
+                    CREATE AN ACCOUNT <Arrow className="arrow" />
                   </Link>
                 </div>
               </div>
