@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { fetchAPI } from '@lib/fetch-api';
 
@@ -32,6 +33,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ password: '', username: '' });
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const router = useRouter();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -55,6 +57,8 @@ export default function LoginPage() {
         localStorage.setItem('userRole', loginResponse.role);
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
+
+        router.push('/electric-roller-cover/ldv/t60');
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }
