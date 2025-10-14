@@ -85,12 +85,12 @@
     background-color: #000;
     padding: 30px;
     border-radius: 24px 0 0 24px;
-
-    // min-width: 390px;
     width: 100%;
     border: solid 24px var(--color-primary-100);
     max-height: 100vh;
     overflow: auto;
+    transition: 0.5s all;
+    transform: translateX(100%);
 
     @media (width <=767px) {
       border-width: 12px;
@@ -141,6 +141,11 @@
       font-weight: 700;
       font-family: var(--font-primary);
       margin: 50px 0 15px;
+    }
+
+    &.slideIn {
+      /* End state: Visible on the screen */
+      transform: translateX(0);
     }
   }
 
@@ -254,4 +259,95 @@
 
 .locationBlock {
   display: block;
+}
+
+.stockStatus {
+  display: flex;
+  align-items: center;
+
+  .qtyBlock {
+    margin-right: 13px;
+    max-width: 94px;
+    position: relative;
+
+    .plus {
+      font-weight: 500;
+      font-size: 27px;
+      position: absolute;
+      right: 2px;
+      z-index: 11;
+      cursor: pointer;
+      padding: 0 5px;
+      top: 3px;
+      color: #000;
+    }
+
+    .minus {
+      font-weight: 500;
+      font-size: 22px;
+      position: absolute;
+      left: 3px;
+      z-index: 11;
+      cursor: pointer;
+      padding: 0 5px 12px;
+      top: -4px;
+      color: #000;
+    }
+
+    input {
+      width: 100%;
+      background: #fff;
+      border: none;
+      min-height: 31px;
+      border-radius: 5px;
+      color: #000;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      height: 31px;
+      line-height: 22px;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+      }
+    }
+  }
+
+  .statusInstock {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-secondary);
+    color: #27ae60;
+
+    &::before {
+      height: 5px;
+      width: 5px;
+      border-radius: 100%;
+      margin-right: 8px;
+      content: '';
+      background: #27ae60;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  .statusOutOfstock {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-secondary);
+    color: #f76057;
+
+    &::before {
+      height: 5px;
+      width: 5px;
+      border-radius: 100%;
+      margin-right: 8px;
+      content: '';
+      background: #f76057;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
 }

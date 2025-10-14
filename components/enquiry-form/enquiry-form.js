@@ -31,6 +31,7 @@ export default function EnquiryForm({
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
 
   const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
+  const [isCartWrapperVisible, setIsCartWrapperVisible] = useState(false); // New state
 
   const [normalizedLocations, setNormalizedLocations] = useState([]);
 
@@ -131,8 +132,26 @@ export default function EnquiryForm({
     setEnquiryModalOpened(false);
   };
 
+  const closeCart = () => {
+    setIsCartWrapperVisible(false);
+    setTimeout(() => {
+      setIsCartPopupOpen(false);
+    }, 400);
+  };
+
+  const openCart = () => {
+    setIsCartPopupOpen(true);
+    setTimeout(() => {
+      setIsCartWrapperVisible(true);
+    }, 10);
+  };
+
   const handleCartToggle = () => {
-    setIsCartPopupOpen(prev => !prev);
+    if (isCartPopupOpen) {
+      closeCart();
+    } else {
+      openCart();
+    }
   };
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
@@ -186,7 +205,7 @@ export default function EnquiryForm({
       {isCartPopupOpen && (
         <div className={styles.cartMain} onClick={handleCartToggle}>
           <div
-            className={styles.cartWrapper}
+            className={`${styles.cartWrapper} ${isCartWrapperVisible ? styles.slideIn : ''}`}
             onClick={e => e.stopPropagation()}
           >
             <h2>Shopping Cart:</h2>
@@ -325,6 +344,24 @@ export default function EnquiryForm({
                 <span> for installation </span>
               </span>
             )}
+          </div>
+          <div className={styles.stockStatus}>
+            <div className={styles.qtyBlock}>
+              <span className={styles.minus} onClick={handleDecrement}>
+                _
+              </span>
+              <input
+                min="0"
+                onChange={handleInputChange}
+                type="number"
+                value={quantity}
+              />
+              <span className={styles.plus} onClick={handleIncrement}>
+                +
+              </span>
+            </div>
+            <div className={styles.statusInstock}>In Stock</div>
+            <div className={styles.statusOutOfstock}>Out of Stock</div>
           </div>
           <div
             className={styles.buttonWrapper}
