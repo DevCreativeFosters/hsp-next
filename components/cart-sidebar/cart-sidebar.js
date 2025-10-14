@@ -1,56 +1,126 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useCart } from '@contexts/cart-context';
+
+import Button from '@components/button/button';
 
 import styles from './cart-sidebar.module.scss';
 
 export default function CartSidebar() {
-  const { cartItems, closeCart, isCartOpen } = useCart();
+  const {
+    cartItems,
+    cartTotal,
+    closeCart,
+    isCartOpen,
+    loading,
+    removeFromCart,
+    updateCart,
+  } = useCart();
+  const [isCartWrapperVisible, setIsCartWrapperVisible] = useState(false);
 
-  // Listen for the openCart event
   useEffect(() => {
-    const handleOpenCart = () => {
-      // This will be triggered from the ProductComboDeals component
-      // You might want to add logic here to fetch the latest cart items
-    };
-
-    window.addEventListener('openCart', handleOpenCart);
-    return () => window.removeEventListener('openCart', handleOpenCart);
-  }, []);
-
-  if (!isCartOpen) return null;
+    setTimeout(() => {
+      setIsCartWrapperVisible(isCartOpen);
+    }, 400);
+  }, [isCartOpen]);
 
   return (
-    <div className={styles.overlay} onClick={closeCart}>
-      <div className={styles.sidebar} onClick={e => e.stopPropagation()}>
-        <div className={styles.header}>
-          <h2>Your Cart</h2>
-          <button className={styles.closeButton} onClick={closeCart}>
-            ×
-          </button>
-        </div>
+    <div className={styles.cartMain}>
+      <div
+        className={`${styles.cartWrapper} ${isCartWrapperVisible ? styles.slideIn : ''}`}
+        onClick={e => e.stopPropagation()}
+      >
+        <h2>Shopping Cart:</h2>
+        {cartItems.map((item, index) => (
+          <div className={styles.cartItem} key={index}>
+            <div className={styles.listImg}>
+              <img src={item.product_image} />
+            </div>
 
-        <div className={styles.content}>
-          {cartItems.length === 0 ? (
-            <p>Your cart is empty</p>
-          ) : (
-            <ul className={styles.cartItems}>
-              {cartItems.map(item => (
-                <li className={styles.cartItem} key={item.key}>
-                  <span>{item.product.node.name}</span>
-                  <span>Qty: {item.quantity}</span>
-                  <span>Price: ${item.total}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+            <div className={styles.itemInfo}>
+              <h6>{item.product_name}</h6>
+              <div className={styles.itemPrice}>
+                ${item.price} <del>${item.price}</del>
+              </div>
+              <div className={styles.itemBottom}>
+                <div className={styles.qtyBlock}>
+                  <button
+                    className={styles.minus}
+                    disabled={loading}
+                    onClick={() =>
+                      updateCart(
+                        item.cart_item_key,
+                        item.product_id,
+                        item.quantity - 1,
+                      )
+                    }
+                  >
+                    -
+                  </button>
+                  <input
+                    disabled={true}
+                    min="0"
+                    onChange={e =>
+                      updateCart(
+                        item.cart_item_key,
+                        item.product_id,
+                        e.target.value,
+                      )
+                    }
+                    type="number"
+                    value={item.quantity}
+                  />
+                  <button
+                    className={styles.plus}
+                    disabled={loading}
+                    onClick={() =>
+                      updateCart(
+                        item.cart_item_key,
+                        item.product_id,
+                        item.quantity + 1,
+                      )
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+                <a
+                  className={styles.removeLink}
+                  href="#"
+                  onClick={() => removeFromCart(item.product_id)}
+                >
+                  Remove
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
 
-        <div className={styles.footer}>
-          <button className={styles.checkoutButton}>Proceed to Checkout</button>
-        </div>
+        <div className={styles.cartTotal}>Subtotal: ${cartTotal}</div>
+
+        <Button className={styles.cartSubmitButton} size="large">
+          Check Out
+          <svg
+            fill="none"
+            height="34"
+            width="34"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M33.031 15.031v3.938H8.656l11.157 11.25L17 33.03.969 17 17 .969l2.813 2.812-11.157 11.25z"
+              fill="#fff"
+            ></path>
+          </svg>
+        </Button>
+        <Button
+          className={styles.dismissButton}
+          onClick={() => closeCart()}
+          size="large"
+        >
+          Dismiss
+        </Button>
       </div>
     </div>
   );

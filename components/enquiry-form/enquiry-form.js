@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 
+import { useCart } from '@contexts/cart-context';
 import StoreLocatorContext from '@contexts/store-locator';
 
 import useMobileVh from '@hooks/useMobileVh';
@@ -29,11 +30,14 @@ export default function EnquiryForm({
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-
-  const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
-  const [isCartWrapperVisible, setIsCartWrapperVisible] = useState(false); // New state
+  const isOutOfStock =
+    productData.stockStatus === 'OUT_OF_STOCK' ||
+    productData.stockQuantity <= 0;
 
   const [normalizedLocations, setNormalizedLocations] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const { addToCart } = useCart();
 
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
@@ -82,18 +86,8 @@ export default function EnquiryForm({
       ? productInstallationPrice
       : null;
 
-  const {
-    filteredLocations,
-    filteredStores,
-    hasMapInteracted,
-    isMapVisible,
-    location,
-    searchGeolocation,
-    selectedStore,
-    setFilteredStores,
-    setSelectedStore,
-    setShowLocationError,
-  } = useContext(StoreLocatorContext);
+  const { location, searchGeolocation, selectedStore, setShowLocationError } =
+    useContext(StoreLocatorContext);
 
   useEffect(
     function normalizeStoreLocations() {
@@ -132,28 +126,6 @@ export default function EnquiryForm({
     setEnquiryModalOpened(false);
   };
 
-  const closeCart = () => {
-    setIsCartWrapperVisible(false);
-    setTimeout(() => {
-      setIsCartPopupOpen(false);
-    }, 400);
-  };
-
-  const openCart = () => {
-    setIsCartPopupOpen(true);
-    setTimeout(() => {
-      setIsCartWrapperVisible(true);
-    }, 10);
-  };
-
-  const handleCartToggle = () => {
-    if (isCartPopupOpen) {
-      closeCart();
-    } else {
-      openCart();
-    }
-  };
-
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
 
   const onAnyInputChange = useCallback(ev => {
@@ -181,18 +153,6 @@ export default function EnquiryForm({
     [highlight],
   );
 
-  const [quantity, setQuantity] = useState(0);
-
-  const handleIncrement = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 0) {
-      setQuantity(prevQuantity => prevQuantity - 1);
-    }
-  };
-
   const handleInputChange = event => {
     const newValue = parseInt(event.target.value, 10);
     if (!isNaN(newValue) && newValue >= 0) {
@@ -202,113 +162,6 @@ export default function EnquiryForm({
 
   return (
     <>
-      {isCartPopupOpen && (
-        <div className={styles.cartMain} onClick={handleCartToggle}>
-          <div
-            className={`${styles.cartWrapper} ${isCartWrapperVisible ? styles.slideIn : ''}`}
-            onClick={e => e.stopPropagation()}
-          >
-            <h2>Shopping Cart:</h2>
-
-            {/* Cart Item */}
-
-            <div className={styles.cartItem}>
-              <div className={styles.listImg}>
-                <img src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2025/08/Volkswagon-Amarok-Gif.gif" />
-              </div>
-
-              <div className={styles.itemInfo}>
-                <h6>
-                  Electric Roller Cover for Next Gen Ranger Raptor for No Sports
-                  bar
-                </h6>
-                <div className={styles.itemPrice}>
-                  $3,300 <del>3300</del>
-                </div>
-                <div className={styles.itemBottom}>
-                  <div className={styles.qtyBlock}>
-                    <span className={styles.minus} onClick={handleDecrement}>
-                      _
-                    </span>
-                    <input
-                      min="0"
-                      onChange={handleInputChange}
-                      type="number"
-                      value={quantity}
-                    />
-                    <span className={styles.plus} onClick={handleIncrement}>
-                      +
-                    </span>
-                  </div>
-                  <a className={styles.removeLink} href="#">
-                    Remove
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.cartItem}>
-              <div className={styles.listImg}>
-                <img src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2025/08/Volkswagon-Amarok-Gif.gif" />
-              </div>
-
-              <div className={styles.itemInfo}>
-                <h6>
-                  Electric Roller Cover for Next Gen Ranger Raptor for No Sports
-                  bar
-                </h6>
-                <div className={styles.itemPrice}>
-                  $3,300 <del>3300</del>
-                </div>
-                <div className={styles.itemBottom}>
-                  <div className={styles.qtyBlock}>
-                    <span className={styles.minus} onClick={handleDecrement}>
-                      _
-                    </span>
-                    <input
-                      min="0"
-                      onChange={handleInputChange}
-                      type="number"
-                      value={quantity}
-                    />
-                    <span className={styles.plus} onClick={handleIncrement}>
-                      +
-                    </span>
-                  </div>
-                  <a className={styles.removeLink} href="#">
-                    Remove
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.cartTotal}>Subtotal: $3,300</div>
-
-            <Button className={styles.cartSubmitButton} size="large">
-              Check Out
-              <svg
-                fill="none"
-                height="34"
-                width="34"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M33.031 15.031v3.938H8.656l11.157 11.25L17 33.03.969 17 17 .969l2.813 2.812-11.157 11.25z"
-                  fill="#fff"
-                ></path>
-              </svg>
-            </Button>
-            <Button
-              className={styles.dismissButton}
-              onClick={handleCartToggle}
-              size="large"
-            >
-              Dismiss
-            </Button>
-          </div>
-        </div>
-      )}
-
       <section className={styles.wrapper} ref={wrapperOuterRef}>
         <form
           action="#"
@@ -347,21 +200,35 @@ export default function EnquiryForm({
           </div>
           <div className={styles.stockStatus}>
             <div className={styles.qtyBlock}>
-              <span className={styles.minus} onClick={handleDecrement}>
+              <button
+                className={styles.minus}
+                disabled={isOutOfStock}
+                onClick={() => setQuantity(prevQuantity => prevQuantity - 1)}
+                type="button"
+              >
                 _
-              </span>
+              </button>
               <input
-                min="0"
+                min="1"
                 onChange={handleInputChange}
                 type="number"
                 value={quantity}
               />
-              <span className={styles.plus} onClick={handleIncrement}>
+              <button
+                className={styles.plus}
+                disabled={isOutOfStock}
+                onClick={() => setQuantity(prevQuantity => prevQuantity + 1)}
+                type="button"
+              >
                 +
-              </span>
+              </button>
             </div>
-            <div className={styles.statusInstock}>In Stock</div>
-            <div className={styles.statusOutOfstock}>Out of Stock</div>
+            {!isOutOfStock && (
+              <div className={styles.statusInstock}>In Stock</div>
+            )}
+            {isOutOfStock && (
+              <div className={styles.statusOutOfstock}>Out of Stock</div>
+            )}
           </div>
           <div
             className={styles.buttonWrapper}
@@ -369,7 +236,8 @@ export default function EnquiryForm({
           >
             <Button
               className={styles.submitButton}
-              onClick={handleCartToggle}
+              disabled={isOutOfStock}
+              onClick={() => addToCart(productData.databaseId, quantity)}
               size="large"
             >
               Add to Cart

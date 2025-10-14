@@ -1,70 +1,185 @@
-.overlay {
+.cartMain {
   position: fixed;
-  inset: 0;
-  background-color: rgb(0 0 0 / 50%);
-  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  justify-content: flex-end;
-}
-
-.sidebar {
-  width: 400px;
-  max-width: 90vw;
-  height: 100vh;
-  background: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
+  justify-content: center;
+  z-index: 9999;
 
-.closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
+  .cartWrapper {
+    background-color: #000;
+    padding: 30px;
+    border-radius: 24px 0 0 24px;
+    width: 100%;
+    border: solid 24px var(--color-primary-100);
+    max-height: 100vh;
+    overflow: auto;
+    transition: 0.5s all;
+    transform: translateX(100%);
 
-.content {
-  flex: 1;
-  overflow-y: auto;
-}
+    @media (width <=767px) {
+      border-width: 12px;
+      padding: 20px;
+    }
 
-.cartItems {
-  list-style: none;
-  padding: 0;
-}
+    h2 {
+      color: var(--color-primary-100);
+      margin-bottom: 25px;
+      font-size: clamp(40px, 2.4vw, 48px);
+    }
 
-.cartItem {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
+    .cartTitle {
+      color: var(--color-primary-100);
+      font-size: clamp(40px, 2.5vw, 48px);
+    }
 
-.footer {
-  margin-top: auto;
-  padding-top: 20px;
-}
+    .cartSubmitButton {
+      width: 100%;
+      font-size: 16px;
+      min-height: 40px;
+      height: 40px;
+      letter-spacing: 0.5px;
 
-.checkoutButton {
-  width: 100%;
-  padding: 15px;
-  background: #000;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+      svg {
+        transform: rotate(180deg) scale(0.45);
+        margin: 0 0 0 -13px;
+      }
+    }
 
-  &:hover {
-    background: #333;
+    .dismissButton {
+      margin-top: 15px;
+      border: solid 1px var(--color-primary-100);
+      background: #000;
+      width: 100%;
+      font-size: 16px;
+      min-height: 40px;
+      height: 40px;
+
+      &:hover {
+        background: var(--color-primary-100);
+        color: var(--color-white);
+      }
+    }
+
+    .cartTotal {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: var(--font-primary);
+      margin: 50px 0 15px;
+    }
+
+    &.slideIn {
+      /* End state: Visible on the screen */
+      transform: translateX(0);
+    }
+  }
+
+  .cartItem {
+    display: flex;
+    margin-bottom: 30px;
+
+    .listImg {
+      width: 50px;
+
+      img {
+        max-width: 50px;
+        max-height: 50px;
+        border-radius: 10px;
+      }
+    }
+
+    .itemInfo {
+      padding: 0 0 0 15px;
+      width: 100%;
+      max-width: 234px;
+
+      h6 {
+        font-size: 11px;
+        font-family: var(--font-primary);
+        font-weight: 400;
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+
+      .itemPrice {
+        font-weight: 700;
+        font-size: 16px;
+        font-family: var(--font-secondary);
+        color: var(--color-primary-100);
+        margin-bottom: 10px;
+
+        del {
+          color: #fff;
+          margin-left: 10px;
+        }
+      }
+
+      .itemBottom {
+        display: flex;
+        align-items: center;
+
+        .qtyBlock {
+          margin-right: 13px;
+          max-width: 66px;
+          position: relative;
+
+          .plus {
+            font-weight: 500;
+            font-size: 23px;
+            position: absolute;
+            right: 0;
+            z-index: 11;
+            cursor: pointer;
+            padding: 0 5px;
+            top: 1px;
+          }
+
+          .minus {
+            font-weight: 500;
+            font-size: 22px;
+            position: absolute;
+            left: 0;
+            z-index: 11;
+            cursor: pointer;
+            padding: 0 5px 12px;
+            top: -7px;
+          }
+
+          input {
+            width: 100%;
+            background: #333;
+            border: none;
+            min-height: 22px;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            height: 22px;
+            line-height: 22px;
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+              appearance: none;
+              margin: 0;
+            }
+          }
+        }
+
+        .removeLink {
+          font-weight: 500;
+          text-decoration: underline;
+          color: var(--color-primary-100);
+          transition: 0.5s all;
+          font-size: 14px;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+    }
   }
 }
