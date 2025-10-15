@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useCart } from '@contexts/cart-context';
 
 import Button from '@components/button/button';
@@ -18,7 +20,9 @@ export default function CartSidebar() {
     removeFromCart,
     updateCart,
   } = useCart();
+
   const [isCartWrapperVisible, setIsCartWrapperVisible] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
@@ -100,7 +104,11 @@ export default function CartSidebar() {
 
         <div className={styles.cartTotal}>Subtotal: ${cartTotal}</div>
 
-        <Button className={styles.cartSubmitButton} size="large">
+        <Button
+          className={styles.cartSubmitButton}
+          onClick={() => router.push('/checkout')}
+          size="large"
+        >
           Check Out
           <svg
             fill="none"
