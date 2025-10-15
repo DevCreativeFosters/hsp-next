@@ -6,6 +6,7 @@ import Script from 'next/script';
 import NextTopLoader from 'nextjs-toploader';
 
 import { CartProvider } from '@contexts/cart-context';
+import { WishlistProvider } from '@contexts/wishlist';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { GTM_ID } from '@lib/gtm-config';
@@ -83,13 +84,15 @@ export default async function RootLayout({ children }) {
       </Script>
       <body className="" data-rh="class">
         <CartProvider>
-          <ReCaptchaProvider useEnterprise>
-            <NextTopLoader color="#ed2935ff" />
-            {children}
-            <PreviewAlert />
-            <RootLayoutClient />
-            <CartSidebar />
-          </ReCaptchaProvider>
+          <WishlistProvider>
+            <ReCaptchaProvider useEnterprise>
+              <NextTopLoader color="#ed2935ff" />
+              {children}
+              <PreviewAlert />
+              <RootLayoutClient />
+              <CartSidebar />
+            </ReCaptchaProvider>
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

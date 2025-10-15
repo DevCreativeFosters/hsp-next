@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
+import { useWishlist } from '@contexts/wishlist';
 
 import routes from '@lib/routes';
 import { trimSlash } from '@lib/trim-slash';
@@ -16,6 +17,10 @@ import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import ProductComboDeals from '@components/product-combo-deals/product-combo-deals';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
+import StarRating from '@components/reviews/star-rating';
+
+import AddWishlist from '@assets/icons/add-wishlist.svg';
+import RemoveWishlist from '@assets/icons/remove-wishlist.svg';
 
 import styles from './page.module.scss';
 
@@ -53,6 +58,11 @@ export default function PageClientSidePartial({
     productVariants.find(
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
     ) || productVariants[0];
+
+  const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
+
+  const productId = firstMatchedProduct.databaseId;
+  const inWishlist = isInWishlist(productId);
 
   const properties = [
     'description',
@@ -110,6 +120,14 @@ export default function PageClientSidePartial({
 
   const router = useRouter();
 
+  const handleWishlistToggle = () => {
+    if (inWishlist) {
+      removeFromWishlist(productId);
+    } else {
+      addToWishlist(productId);
+    }
+  };
+
   const onVariantChange = useCallback(
     newVariantSlug => {
       const { makeSlug, modelSlug, slug } = pageParams;
@@ -150,6 +168,14 @@ export default function PageClientSidePartial({
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
               </div>
             )}
+            <div>
+              <StarRating color="yellow" score={3.5} />
+              {
+                <button onClick={handleWishlistToggle} type="button">
+                  {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+                </button>
+              }
+            </div>
           </div>
           <div className={styles.enquiryForm}>
             <StoreLocatorProvider>
