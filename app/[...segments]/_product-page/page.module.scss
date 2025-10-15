@@ -78,3 +78,35 @@
     display: none;
   }
 }
+
+.ratingBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .stars {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    gap: 10px;
+  }
+
+  button {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @media (width <=767px) {
+      gap: 5px;
+
+      svg {
+        transform: scale(0.8);
+      }
+    }
+  }
+
+  @media (width <=767px) {
+    font-size: 12px;
+  }
+}

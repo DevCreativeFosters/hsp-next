@@ -37,10 +37,9 @@ export default function EnquiryForm({
 
   const [normalizedLocations, setNormalizedLocations] = useState([]);
   const [quantity, setQuantity] = useState(1);
-  const [addingToCart, loaderAddToCart] = useState(false);
 
   // Assuming useCart provides isCartOpen
-  const { addToCart, isCartOpen } = useCart();
+  const { addToCart, loading } = useCart();
 
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
@@ -156,28 +155,10 @@ export default function EnquiryForm({
     [highlight],
   );
 
-  // New useEffect to hide loader if cart opens
-  useEffect(() => {
-    if (isCartOpen && addingToCart) {
-      loaderAddToCart(false);
-    }
-  }, [addingToCart, isCartOpen]);
-
   const handleInputChange = event => {
     const newValue = parseInt(event.target.value, 10);
     if (!isNaN(newValue) && newValue >= 0) {
       setQuantity(newValue);
-    }
-  };
-
-  const handleAddToCart = async () => {
-    loaderAddToCart(true); // Show loader
-    try {
-      await addToCart(productData.databaseId, quantity);
-      // Loader will be hidden by the useEffect when isCartOpen becomes true
-    } catch (error) {
-      console.error('Failed to add to cart', error);
-      loaderAddToCart(false); // Hide loader
     }
   };
 
@@ -257,13 +238,11 @@ export default function EnquiryForm({
           >
             <Button
               className={styles.submitButton}
-              disabled={isOutOfStock || addingToCart} // Disable button while adding to cart
-              onClick={handleAddToCart}
+              disabled={isOutOfStock || loading} // Disable button while adding to cart
+              onClick={() => addToCart(productData.databaseId, quantity)}
               size="large"
             >
-              Add to Cart{' '}
-              {addingToCart && <Loading color="white" size="small" />}{' '}
-              {/* Show loader */}
+              Add to Cart {loading && <Loading color="white" size="small" />}
             </Button>
             <Button
               className={styles.submitButton}

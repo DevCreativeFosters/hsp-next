@@ -168,8 +168,11 @@ export default function PageClientSidePartial({
                 Part No. <span className={styles.redColor}>{variant.sku}</span>
               </div>
             )}
-            <div>
-              <StarRating color="yellow" score={3.5} />
+            <div className={styles.ratingBlock}>
+              <div className={styles.stars}>
+                <StarRating color="yellow" score={3.5} />
+                (24 reviews)
+              </div>
               {
                 <button onClick={handleWishlistToggle} type="button">
                   {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist

@@ -142,7 +142,9 @@ export function WishlistProvider({ children }) {
                 }
             `;
 
-      const variables = { input: { productId, variantIdentifier } };
+      const variables = {
+        input: { productId, ...(variantIdentifier && { variantIdentifier }) },
+      };
 
       const res = await fetchAPI(query, { authToken, variables });
       const data = res?.removeFromWishlist;
