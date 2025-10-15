@@ -15,6 +15,7 @@ import { trimSlash } from '@lib/trim-slash';
 
 import Button from '@components/button/button';
 import Select from '@components/form/select';
+import Loading from '@components/loading/loading';
 
 import styles from './enquiry-form.module.scss';
 import EnquiryModal from './enquiry-modal';
@@ -36,8 +37,10 @@ export default function EnquiryForm({
 
   const [normalizedLocations, setNormalizedLocations] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const [addingToCart, loaderAddToCart] = useState(false);
 
-  const { addToCart } = useCart();
+  // Assuming useCart provides isCartOpen
+  const { addToCart, isCartOpen } = useCart();
 
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
@@ -153,10 +156,28 @@ export default function EnquiryForm({
     [highlight],
   );
 
+  // New useEffect to hide loader if cart opens
+  useEffect(() => {
+    if (isCartOpen && addingToCart) {
+      loaderAddToCart(false);
+    }
+  }, [addingToCart, isCartOpen]);
+
   const handleInputChange = event => {
     const newValue = parseInt(event.target.value, 10);
     if (!isNaN(newValue) && newValue >= 0) {
       setQuantity(newValue);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    loaderAddToCart(true); // Show loader
+    try {
+      await addToCart(productData.databaseId, quantity);
+      // Loader will be hidden by the useEffect when isCartOpen becomes true
+    } catch (error) {
+      console.error('Failed to add to cart', error);
+      loaderAddToCart(false); // Hide loader
     }
   };
 
@@ -181,7 +202,7 @@ export default function EnquiryForm({
             size="large"
             value={
               selectedVariant?.variantSlug ||
-              (variantOptions?.length ? variantOptions?.value : '')
+              (variantOptions?.length ? variantOptions?.[0].value : '') // Corrected initial value for select
             }
           />
 
@@ -202,7 +223,7 @@ export default function EnquiryForm({
             <div className={styles.qtyBlock}>
               <button
                 className={styles.minus}
-                disabled={isOutOfStock}
+                disabled={isOutOfStock || quantity <= 1} // Disable minus if quantity is 1
                 onClick={() => setQuantity(prevQuantity => prevQuantity - 1)}
                 type="button"
               >
@@ -236,11 +257,13 @@ export default function EnquiryForm({
           >
             <Button
               className={styles.submitButton}
-              disabled={isOutOfStock}
-              onClick={() => addToCart(productData.databaseId, quantity)}
+              disabled={isOutOfStock || addingToCart} // Disable button while adding to cart
+              onClick={handleAddToCart}
               size="large"
             >
-              Add to Cart
+              Add to Cart{' '}
+              {addingToCart && <Loading color="white" size="small" />}{' '}
+              {/* Show loader */}
             </Button>
             <Button
               className={styles.submitButton}

@@ -134,17 +134,19 @@
             cursor: pointer;
             padding: 0 5px;
             top: 1px;
+            color: #fff;
           }
 
           .minus {
             font-weight: 500;
-            font-size: 22px;
+            font-size: 25px;
             position: absolute;
             left: 0;
             z-index: 11;
             cursor: pointer;
             padding: 0 5px 12px;
-            top: -7px;
+            top: -2px;
+            color: #fff;
           }
 
           input {
