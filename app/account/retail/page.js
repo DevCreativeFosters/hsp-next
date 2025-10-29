@@ -1,10 +1,11 @@
 'use client';
 
-// 1. सुनिश्चित करें कि useState import किया गया है
 import { useState } from 'react';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
+
+import EditIconSvg from '@assets/icons/pencil-icon.svg';
 
 import styles from './retail.module.scss';
 
@@ -88,12 +89,20 @@ export default function RetailPage() {
               <div className={styles.dRow}>
                 <div className={styles.dTitle}>First Name</div>
                 <div className={styles.dDesc}>Ash</div>
-                <div className={styles.dAction}></div>
+                <div className={styles.dAction}>
+                  <a href="#">
+                    <EditIconSvg />
+                  </a>
+                </div>
               </div>
               <div className={styles.dRow}>
                 <div className={styles.dTitle}>Last Name</div>
                 <div className={styles.dDesc}>Bouyer</div>
-                <div className={styles.dAction}></div>
+                <div className={styles.dAction}>
+                  <a href="#">
+                    <EditIconSvg />
+                  </a>
+                </div>
               </div>
               <div className={styles.dRow}>
                 <div className={styles.dTitle}>Phone Number</div>
