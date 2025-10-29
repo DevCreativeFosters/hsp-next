@@ -58,7 +58,7 @@ export default function LoginPage() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push('/electric-roller-cover/ldv/t60');
+        router.push('/account/retail');
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }

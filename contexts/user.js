@@ -10,6 +10,7 @@ import {
 
 import { USER_EXAMPLE } from '@mockup/user';
 
+import { fetchAPI } from '@lib/fetch-api';
 import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
 
 const UserContext = createContext();
@@ -28,6 +29,41 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const getUserById = useCallback(async userId => {
+    try {
+      const query = `
+        query GetVendorProfile($userId: Int) {
+          vendorProfile(userId: $userId) {
+            id
+            username
+            email
+            firstName
+            lastName
+            shopName
+            shopUrl
+            phone
+            member_since
+            message
+          }
+        }
+      `;
+
+      const variables = { userId };
+      const res = await fetchAPI(query, { variables });
+
+      const data = res?.vendorProfile;
+
+      if (data) {
+        return data;
+      } else {
+        return {};
+      }
+    } catch (err) {
+      console.error('Error fetching cart:', err);
+      return {};
+    }
+  }, []);
+
   const handleSave = useCallback(() => {
     const userDataString = JSON.stringify(user);
     sessionStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
@@ -40,6 +76,7 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
+        getUserById,
         handleSave,
         setUser,
         user,
