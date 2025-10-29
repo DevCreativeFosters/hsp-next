@@ -1,0 +1,224 @@
+.accountHeader {
+  .headerWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 70px;
+    border-bottom: 1px solid #747474a3;
+    padding: 20px 0;
+
+    .btns {
+      .button {
+        background-color: transparent;
+        color: white;
+        padding: 0 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: solid 2px var(--color-primary-100);
+        font-family: var(--font-secondary);
+        font-size: 20px;
+        font-weight: 600;
+        min-height: 40px;
+        min-width: 217px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s all;
+
+        &:hover {
+          background-color: var(--color-primary-100);
+        }
+      }
+    }
+  }
+}
+
+/* ./retail.module.scss */
+
+.accountContent {
+  padding-bottom: 100px;
+
+  .tabsMain {
+    display: flex;
+
+    .tabsNav {
+      background: #fff;
+      padding: 10px 40px 80px;
+      border-radius: 10px;
+      width: 31%;
+
+      .tabButton {
+        display: block;
+        border-bottom: solid 2px #9d9d9d;
+        padding: 25px 0;
+        font-size: 20px;
+        font-family: var(--font-secondary);
+        font-weight: 600;
+        width: 100%;
+        text-align: left;
+        position: relative;
+
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          height: 6px;
+          width: 6px;
+          border-left: solid 2px #9d9d9d;
+          border-bottom: solid 2px #9d9d9d;
+          transition: 0.5s all;
+          transform: rotate(-135deg);
+          top: 0;
+          bottom: 0;
+          margin: auto;
+          right: 5px;
+        }
+
+        &.active {
+          color: var(--color-primary-100);
+          font-weight: 700;
+
+          &::after {
+            border-color: var(--color-primary-100);
+          }
+        }
+      }
+    }
+
+    .tabsMain {
+      width: 69%;
+      padding: 0 0 0 50px;
+    }
+  }
+}
+
+.wishlistBoxes {
+  width: 100%;
+
+  .wishlistBox {
+    background: #fff;
+    border-radius: 6px;
+    padding: 26px;
+    display: flex;
+    margin-bottom: 34px;
+
+    figure {
+      border: solid 1px #000;
+      border-radius: 8px;
+      max-width: 115px;
+      max-height: 115px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .wContent {
+      line-height: 1.8;
+      padding: 0 15px;
+
+      h4 {
+        font-size: 16px;
+        color: var(--color-primary-100);
+        margin-bottom: 5px;
+        font-family: var(--font-hind);
+      }
+
+      p {
+        font-size: 16px;
+        color: #000;
+        margin: 0;
+        line-height: 1.8;
+      }
+
+      .price {
+        color: var(--color-primary-100);
+        font-weight: 600;
+      }
+    }
+
+    .wActions {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      margin-left: auto;
+
+      .button {
+        background: var(--color-primary-100);
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+        border-radius: 8px;
+        font-family: var(--font-secondary);
+        padding: 0 20px;
+        min-height: 30px;
+        min-width: 111px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 0 10px;
+        transition: 0.5s all;
+
+        &:hover {
+          background-color: #000;
+        }
+      }
+
+      .link {
+        color: var(--color-primary-100);
+        text-decoration: underline;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: var(--font-hind);
+
+        &:hover {
+          color: #000;
+        }
+      }
+    }
+  }
+
+  .moreBtn {
+    text-align: center;
+    margin-top: 100px;
+
+    .button {
+      background-color: transparent;
+      color: white;
+      padding: 0 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: solid 2px var(--color-primary-100);
+      font-family: var(--font-secondary);
+      font-size: 20px;
+      font-weight: 600;
+      min-height: 40px;
+      min-width: 217px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s all;
+
+      &:hover {
+        background-color: var(--color-primary-100);
+      }
+    }
+  }
+}
+
+.accountDetails {
+  .info {
+    .dRow {
+      display: flex;
+      align-items: center;
+      border-bottom: solid 1px #c4c4c4;
+    }
+  }
+}
