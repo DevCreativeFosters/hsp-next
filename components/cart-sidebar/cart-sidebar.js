@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
@@ -33,7 +34,9 @@ export default function CartSidebar() {
   return (
     <div className={styles.cartMain}>
       <div
-        className={`${styles.cartWrapper} ${isCartWrapperVisible ? styles.slideIn : ''}`}
+        className={clsx(styles.cartWrapper, {
+          [styles.slideIn]: isCartWrapperVisible,
+        })}
         onClick={e => e.stopPropagation()}
       >
         <h2>Shopping Cart:</h2>
