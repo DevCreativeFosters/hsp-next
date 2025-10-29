@@ -1,7 +1,13 @@
 'use client';
 
-// 1. सुनिश्चित करें कि useState import किया गया है
 import { useState } from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+
+import { useWishlist } from '@contexts/wishlist';
+
+import { formatPrice } from '@lib/helpers';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -9,6 +15,8 @@ import Layout from '@components/layout/layout';
 import styles from './retail.module.scss';
 
 export default function RetailPage() {
+  const { removeFromWishlist, wishlistItems } = useWishlist();
+
   const [activeTab, setActiveTab] = useState('orders');
   const TabContent = ({ tab }) => {
     switch (tab) {
@@ -21,63 +29,43 @@ export default function RetailPage() {
       case 'wishlist':
         return (
           <div className={styles.wishlistBoxes}>
-            <div className={styles.wishlistBox}>
-              <figure>
-                <img
-                  alt="Sample Product"
-                  src="http://localhost:3000/_next/image?url=https%3A%2F%2Fwordpress-1505184-5847603.cloudwaysapps.com%2Fwp-content%2Fuploads%2F2023%2F12%2FP1014750-1-scaled.jpg&w=256&q=75"
-                />
-              </figure>
-              <div className={styles.wContent}>
-                <h4>Roll R Cover 3.5 for Ford Ranger Raptor</h4>
-                <p>
-                  <strong>Part No</strong> NGR42RS3.5
-                </p>
-                <p>
-                  <strong>Variant:</strong> Ranger Raptor suits no sport bars
-                </p>
-                <div className={styles.price}>$3,300.00</div>
+            {wishlistItems.map(item => (
+              <div className={styles.wishlistBox} key={item.productId}>
+                <figure>
+                  <Image alt="Sample Product" src={item.variantImage} />
+                </figure>
+                <div className={styles.wContent}>
+                  <h4>{item.productName}</h4>
+                  <p>
+                    <strong>Part No.</strong> {item.variantSlug}
+                  </p>
+                  <p>
+                    <strong>Variant:</strong> {item.variantName}
+                  </p>
+                  <div className={styles.price}>{formatPrice(item.price)}</div>
+                </div>
+                <div className={styles.wActions}>
+                  <Link
+                    className={styles.button}
+                    href={`/products/${item.productSlug}`}
+                  >
+                    View
+                  </Link>
+                  <a
+                    className={styles.link}
+                    href="#"
+                    onClick={() => removeFromWishlist(item.productId)}
+                  >
+                    Remove
+                  </a>
+                </div>
               </div>
-              <div className={styles.wActions}>
-                <a className={styles.button} href="#">
-                  View
-                </a>
-                <a className={styles.link} href="#">
-                  Remove
-                </a>
-              </div>
-            </div>
-            <div className={styles.wishlistBox}>
-              <figure>
-                <img
-                  alt="Sample Product"
-                  src="http://localhost:3000/_next/image?url=https%3A%2F%2Fwordpress-1505184-5847603.cloudwaysapps.com%2Fwp-content%2Fuploads%2F2023%2F12%2FP1014750-1-scaled.jpg&w=256&q=75"
-                />
-              </figure>
-              <div className={styles.wContent}>
-                <h4>Roll R Cover 3.5 for Ford Ranger Raptor</h4>
-                <p>
-                  <strong>Part No</strong> NGR42RS3.5
-                </p>
-                <p>
-                  <strong>Variant:</strong> Ranger Raptor suits no sport bars
-                </p>
-                <div className={styles.price}>$3,300.00</div>
-              </div>
-              <div className={styles.wActions}>
-                <a className={styles.button} href="#">
-                  View
-                </a>
-                <a className={styles.link} href="#">
-                  Remove
-                </a>
-              </div>
-            </div>
+            ))}
 
             <div className={styles.moreBtn}>
-              <a className={styles.button} href="#">
+              <Link className={styles.button} href="/products">
                 Add More Items to Wishlist
-              </a>
+              </Link>
             </div>
           </div>
         );

@@ -47,27 +47,30 @@ export function WishlistProvider({ children }) {
   // ✅ Fetch wishlist
   const getWishlistItems = useCallback(async () => {
     if (!userId) return;
-    console.log(typeof userId);
 
     setLoading(true);
 
-    console.log('getWishlistItems', authToken);
-
     try {
       const query = `
-                query WishlistItems($userId: Int!) {
-                getWishlistItems(id: $userId) {
-                    id
-                    productId
-                    variantIdentifier
-                    dateAdded
-                    productUrl
-                    variantNumber
-                    price
-                    removeItemUrl
-                }
-                }
-            `;
+        query WishlistItems($userId: Int!) {
+          getWishlistItems(id: $userId) {
+            id
+            productId
+            productName
+            productSlug
+            variantName
+            variantSlug
+            variantImage
+            dateAdded
+            productUrl
+            variantNumber
+            price
+            installation_cost
+            productUrl
+            removeItemUrl
+          }
+        }
+      `;
 
       const variables = { userId };
       const res = await fetchAPI(query, { authToken, variables });
@@ -86,20 +89,20 @@ export function WishlistProvider({ children }) {
   const addToWishlist = useCallback(
     async (productId, variantIdentifier = null) => {
       const query = `
-                mutation AddToWishlist($input: AddToWishlistInput!) {
-                addToWishlist(input: $input) {
-                    success
-                    message
-                    error
-                    wishlistItems {
-                    id
-                    productId
-                    variantIdentifier
-                    dateAdded
-                    }
-                }
-                }
-            `;
+        mutation AddToWishlist($input: AddToWishlistInput!) {
+          addToWishlist(input: $input) {
+            success
+            message
+            error
+            wishlistItems {
+              id
+              productId
+              variantIdentifier
+              dateAdded
+            }
+          }
+        }
+      `;
 
       const variables = { input: { productId, variantIdentifier } };
 
@@ -122,25 +125,25 @@ export function WishlistProvider({ children }) {
   const removeFromWishlist = useCallback(
     async (productId, variantIdentifier = null) => {
       const query = `
-                mutation RemoveFromWishlist($input: RemoveFromWishlistInput!) {
-                removeFromWishlist(input: $input) {
-                    success
-                    message
-                    error
-                    wishlistItems {
-                    id
-                    productId
-                    variantIdentifier
-                    dateAdded
-                    productUrl
-                    variantNumber
-                    price
-                    productUrl
-                    removeItemUrl
-                    }
-                }
-                }
-            `;
+        mutation RemoveFromWishlist($input: RemoveFromWishlistInput!) {
+          removeFromWishlist(input: $input) {
+              success
+              message
+              error
+              wishlistItems {
+                id
+                productId
+                variantIdentifier
+                dateAdded
+                productUrl
+                variantNumber
+                price
+                productUrl
+                removeItemUrl
+              }
+          }
+        }
+      `;
 
       const variables = {
         input: { productId, ...(variantIdentifier && { variantIdentifier }) },
