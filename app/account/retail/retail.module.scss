@@ -5,7 +5,12 @@
     align-items: center;
     margin-bottom: 70px;
     border-bottom: 1px solid #747474a3;
-    padding: 20px 0;
+    padding: 40px 0 20px;
+
+    @media (width <=991px) {
+      padding: 60px 0 15px;
+      margin-bottom: 30px;
+    }
 
     .btns {
       .button {
@@ -16,7 +21,7 @@
         text-decoration: none;
         border: solid 2px var(--color-primary-100);
         font-family: var(--font-secondary);
-        font-size: 20px;
+        font-size: clamp(16px, 2vw, 20px);
         font-weight: 600;
         min-height: 40px;
         min-width: 217px;
@@ -24,6 +29,10 @@
         align-items: center;
         justify-content: center;
         transition: 0.5s all;
+
+        @media (width <=991px) {
+          min-width: inherit;
+        }
 
         &:hover {
           background-color: var(--color-primary-100);
@@ -38,8 +47,13 @@
 .accountContent {
   padding-bottom: 100px;
 
+  @media (width <=767px) {
+    padding-bottom: 40px;
+  }
+
   .tabsMain {
     display: flex;
+    flex-wrap: wrap;
 
     .tabsNav {
       background: #fff;
@@ -47,16 +61,25 @@
       border-radius: 10px;
       width: 31%;
 
+      @media (width <=767px) {
+        width: 100%;
+        margin-bottom: 25px;
+      }
+
       .tabButton {
         display: block;
         border-bottom: solid 2px #9d9d9d;
         padding: 25px 0;
-        font-size: 20px;
+        font-size: clamp(16px, 2vw, 20px);
         font-family: var(--font-secondary);
         font-weight: 600;
         width: 100%;
         text-align: left;
         position: relative;
+
+        @media (width <=991px) {
+          padding: 15px 0;
+        }
 
         &::after {
           content: '';
@@ -83,11 +106,32 @@
           }
         }
       }
+
+      @media (width <=1199px) {
+        padding: 10px 25px 80px;
+      }
+
+      @media (width <=991px) {
+        padding: 10px 20px 60px;
+      }
+
+      @media (width <=767px) {
+        padding: 10px 20px 30px;
+      }
     }
 
     .tabsMain {
       width: 69%;
       padding: 0 0 0 50px;
+
+      @media (width <=1199px) {
+        padding: 0 0 0 25px;
+      }
+
+      @media (width <=767px) {
+        width: 100%;
+        padding: 0;
+      }
     }
   }
 }
@@ -101,6 +145,16 @@
     padding: 26px;
     display: flex;
     margin-bottom: 34px;
+    flex-wrap: wrap;
+
+    @media (width <=1199px) {
+      margin-bottom: 25px;
+    }
+
+    @media (width <=767px) {
+      padding: 20px;
+      justify-content: center;
+    }
 
     figure {
       border: solid 1px #000;
@@ -112,6 +166,11 @@
       align-items: center;
       justify-content: center;
 
+      @media (width <=767px) {
+        max-width: 80px;
+        max-height: 80px;
+      }
+
       img {
         max-width: 100%;
         max-height: 100%;
@@ -121,6 +180,11 @@
     .wContent {
       line-height: 1.8;
       padding: 0 15px;
+
+      @media (width <=767px) {
+        padding: 15px 0;
+        text-align: center;
+      }
 
       h4 {
         font-size: 16px;
@@ -134,6 +198,10 @@
         color: #000;
         margin: 0;
         line-height: 1.8;
+
+        @media (width <=767px) {
+          line-height: 1.5;
+        }
       }
 
       .price {
@@ -149,9 +217,13 @@
       align-items: center;
       margin-left: auto;
 
+      @media (width <=767px) {
+        margin: auto;
+      }
+
       .button {
         background: var(--color-primary-100);
-        font-size: 20px;
+        font-size: clamp(16px, 2vw, 20px);
         font-weight: 600;
         color: #fff;
         border-radius: 8px;
@@ -189,6 +261,10 @@
     text-align: center;
     margin-top: 100px;
 
+    @media (width <=1199px) {
+      margin-top: 50px;
+    }
+
     .button {
       background-color: transparent;
       color: white;
@@ -197,7 +273,7 @@
       text-decoration: none;
       border: solid 2px var(--color-primary-100);
       font-family: var(--font-secondary);
-      font-size: 20px;
+      font-size: clamp(16px, 2vw, 20px);
       font-weight: 600;
       min-height: 40px;
       min-width: 217px;
@@ -214,11 +290,73 @@
 }
 
 .accountDetails {
+  width: 100%;
+
   .info {
     .dRow {
       display: flex;
       align-items: center;
-      border-bottom: solid 1px #c4c4c4;
+      border-bottom: solid 1px rgb(116 116 116 / 64%);
+      padding: 25px 0;
+
+      @media (width <=991px) {
+        padding: 15px 0;
+      }
+
+      .dTitle {
+        width: 28%;
+        font-size: clamp(16px, 2vw, 20px);
+        font-family: var(--font-secondary);
+        font-weight: 500;
+      }
+
+      .dDesc {
+        width: 62%;
+        font-size: clamp(16px, 2vw, 20px);
+        font-weight: 300;
+        font-family: var(--font-hind);
+        padding: 0 15px;
+
+        a {
+          text-decoration: underline;
+
+          &:hover {
+            color: var(--color-primary-100);
+          }
+        }
+      }
+
+      .dAction {
+        width: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+    }
+  }
+
+  .currentStatus {
+    border-radius: 8px;
+    background: var(--color-primary-100);
+    color: #fff;
+    margin: 34px 0 0;
+    padding: 28px 40px;
+    display: flex;
+    font-size: clamp(18px, 2vw, 20px);
+    gap: 20px;
+
+    @media (width <=991px) {
+      padding: 20px;
+    }
+
+    .title {
+      font-family: var(--font-secondary);
+      font-weight: 600;
+    }
+
+    .date {
+      font-weight: 300;
     }
   }
 }
