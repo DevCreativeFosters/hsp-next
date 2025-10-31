@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
@@ -17,6 +18,36 @@ import Tabs from '@components/tabs/tabs';
 import EditIconSvg from '@assets/icons/pencil-icon.svg';
 
 import styles from './retail.module.scss';
+
+function CheckUser({ children }) {
+  const [isChecking, setIsChecking] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = localStorage.getItem('userId');
+
+    if (user) {
+      setIsLoggedIn(true);
+    } else {
+      router.replace('/login'); // redirect to login if not found
+    }
+
+    setIsChecking(false);
+  }, [router]);
+
+  if (isChecking) {
+    // Optional: You can show a loader or skeleton while checking
+    return <div>Loading...</div>;
+  }
+
+  if (!isLoggedIn) {
+    // Nothing to render because redirect will happen
+    return null;
+  }
+
+  return <>{children}</>;
+}
 
 function WishList() {
   const { removeFromWishlist, wishlistItems } = useWishlist();
@@ -162,34 +193,36 @@ function AccountHeader() {
 
 export default function RetailPage() {
   return (
-    <Layout title="Retail Account">
-      <Container>
-        <AccountHeader />
-        <Tabs
-          tabs={[
-            {
-              content: (
-                <div>
-                  <h3>Order</h3>
-                </div>
-              ),
-              slug: 'orders',
-              title: 'Orders',
-            },
-            {
-              content: <WishList />,
-              slug: 'wishlist',
-              title: 'Wishlist',
-            },
-            {
-              content: <AccountDetails />,
-              slug: 'accountdetails',
-              title: 'Account Details',
-            },
-          ]}
-          type="vertical"
-        />
-      </Container>
-    </Layout>
+    <CheckUser>
+      <Layout title="Retail Account">
+        <Container>
+          <AccountHeader />
+          <Tabs
+            tabs={[
+              {
+                content: (
+                  <div>
+                    <h3>Order</h3>
+                  </div>
+                ),
+                slug: 'orders',
+                title: 'Orders',
+              },
+              {
+                content: <WishList />,
+                slug: 'wishlist',
+                title: 'Wishlist',
+              },
+              {
+                content: <AccountDetails />,
+                slug: 'accountdetails',
+                title: 'Account Details',
+              },
+            ]}
+            type="vertical"
+          />
+        </Container>
+      </Layout>
+    </CheckUser>
   );
 }

@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { useWishlist } from '@contexts/wishlist';
+
 import { fetchAPI } from '@lib/fetch-api';
 
 import Container from '@components/container/container';
@@ -33,6 +35,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ password: '', username: '' });
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const { getWishlistItems } = useWishlist();
   const router = useRouter();
 
   const handleChange = e => {
@@ -55,6 +58,8 @@ export default function LoginPage() {
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
         localStorage.setItem('userRole', loginResponse.role);
+
+        await getWishlistItems();
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
