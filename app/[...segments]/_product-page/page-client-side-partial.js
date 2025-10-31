@@ -188,6 +188,7 @@ export default function PageClientSidePartial({
                 mainCategory={mainCategory}
                 onVariantChange={onVariantChange}
                 productData={firstMatchedProduct}
+                showStoreSearchcontrols={true}
                 variantSlug={variantSlug}
               />
             </StoreLocatorProvider>

@@ -35,6 +35,7 @@ export default function EnquiryModal({
   onClose,
   productPrice,
   selectedProducts,
+  showStoreSearchcontrols = false,
   store,
 }) {
   const [isLoading, setLoading] = useState(true);
@@ -92,8 +93,10 @@ export default function EnquiryModal({
   }, [selectedStore]);
   useEffect(
     function normalizeStoreLocations() {
-      const normalized = normalizeStores(allLocations);
-      setNormalizedLocations(normalized);
+      if (showStoreSearchcontrols) {
+        const normalized = normalizeStores(allLocations);
+        setNormalizedLocations(normalized);
+      }
     },
     [allLocations],
   );
@@ -242,11 +245,13 @@ export default function EnquiryModal({
                     </table>
                   </div>
 
-                  <StoreSearchControls
-                    allLocations={allLocations}
-                    interactWithDisabledForm={interactWithDisabledForm}
-                    isWide
-                  />
+                  {showStoreSearchcontrols && (
+                    <StoreSearchControls
+                      allLocations={allLocations}
+                      interactWithDisabledForm={interactWithDisabledForm}
+                      isWide
+                    />
+                  )}
 
                   {selectedStore ? (
                     <ResultsStoreTile

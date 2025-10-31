@@ -26,6 +26,7 @@ export default function EnquiryForm({
   mainCategory,
   onVariantChange: onVariantChangeCallback = slug => {},
   productData,
+  showStoreSearchcontrols,
   variantSlug,
 }) {
   const [_, setIsFormValid] = useState(false);
@@ -268,6 +269,7 @@ export default function EnquiryForm({
                   ? [variants[0]]
                   : [] // TODO: Refactor selectedProducts prop while working on UTE Builder form
             }
+            showStoreSearchcontrols={showStoreSearchcontrols}
             store={selectedStore}
           />
         )}
