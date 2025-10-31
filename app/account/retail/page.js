@@ -1,63 +1,194 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
+
+import { useUserContext } from '@contexts/user';
+import { useWishlist } from '@contexts/wishlist';
+
+import { formatPrice } from '@lib/helpers';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
-import VerticalTabs from '@components/vertical-tabs/vertical-tabs';
+import Tabs from '@components/tabs/tabs';
+
+import EditIconSvg from '@assets/icons/pencil-icon.svg';
 
 import styles from './retail.module.scss';
 
-export default function RetailPage() {
-  const [activeTab, setActiveTab] = useState('orders');
+function WishList() {
+  const { removeFromWishlist, wishlistItems } = useWishlist();
 
+  return (
+    <div className={styles.wishlistBoxes}>
+      {wishlistItems.length > 0 ? (
+        wishlistItems.map(item => (
+          <div className={styles.wishlistBox} key={item.productId}>
+            <figure>
+              <Image
+                alt={item.productName}
+                height={100}
+                src={item.variantImage}
+                width={100}
+              />
+            </figure>
+            <div className={styles.wContent}>
+              <h4>{item.productName}</h4>
+              <p>
+                <strong>Part No.</strong> {item.variantSlug}
+              </p>
+              <p>
+                <strong>Variant:</strong> {item.variantName}
+              </p>
+              <div className={styles.price}>{formatPrice(item.price)}</div>
+            </div>
+            <div className={styles.wActions}>
+              <Link
+                className={styles.button}
+                href={`/products/${item.productSlug}`}
+              >
+                View
+              </Link>
+              <a
+                className={styles.link}
+                href="#"
+                onClick={() => removeFromWishlist(item.productId)}
+              >
+                Remove
+              </a>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No items in wishlist.</p>
+      )}
+
+      <div className={styles.moreBtn}>
+        <Link className={styles.button} href="/products">
+          Add More Items to Wishlist
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+const AccountDetails = memo(function AccountDetailsComponent() {
+  const { getUserById } = useUserContext();
+
+  const [user, setUser] = useState(null);
+
+  // Fetch user data when the component mounts
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userId =
+        sessionStorage.getItem('userId') || localStorage.getItem('userId');
+      if (!userId) return;
+
+      try {
+        const userData = await getUserById(Number(userId));
+
+        setUser(userData);
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  return (
+    <div className={styles.accountDetails}>
+      <div className={styles.info}>
+        <div className={styles.dRow}>
+          <div className={styles.dTitle}>First Name</div>
+          <div className={styles.dDesc}>{user?.firstName}</div>
+          <div className={styles.dAction}>
+            <a href="#">
+              <EditIconSvg />
+            </a>
+          </div>
+        </div>
+        <div className={styles.dRow}>
+          <div className={styles.dTitle}>Last Name</div>
+          <div className={styles.dDesc}>{user?.lastName}</div>
+          <div className={styles.dAction}>
+            <a href="#">
+              <EditIconSvg />
+            </a>
+          </div>
+        </div>
+        <div className={styles.dRow}>
+          <div className={styles.dTitle}>Phone Number</div>
+          <div className={styles.dDesc}>{user?.phone}</div>
+        </div>
+        <div className={styles.dRow}>
+          <div className={styles.dTitle}>Email</div>
+          <div className={styles.dDesc}>
+            <a href={`mailto:${user?.email}`}>{user?.email}</a>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.currentStatus}>
+        <div className={styles.title}>Member Since</div>
+        <div className={styles.date}>{user?.member_since}</div>
+      </div>
+    </div>
+  );
+});
+
+function AccountHeader() {
+  const { handleLogout } = useUserContext();
+
+  return (
+    <section className={styles.accountHeader}>
+      <div className={styles.headerWrapper}>
+        <h1>Account</h1>
+        <div className={styles.btns}>
+          <button
+            className={styles.button}
+            onClick={() => handleLogout()}
+            type="button"
+          >
+            SIGN OUT
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function RetailPage() {
   return (
     <Layout title="Retail Account">
       <Container>
-        <section className={styles.accountHeader}>
-          <div className={styles.headerWrapper}>
-            <h1>Account</h1>
-            <div className={styles.btns}>
-              <Link className={styles.button} href="/login">
-                SIGN OUT
-              </Link>
-            </div>
-          </div>
-        </section>
-        <section className={styles.accountContent}>
-          <div className={styles.tabsMain}>
-            {/* START: Tab Nav */}
-            <div className={styles.tabsNav}>
-              <button
-                className={`${styles.tabButton} ${activeTab === 'orders' ? styles.active : ''}`}
-                onClick={() => setActiveTab('orders')}
-              >
-                Orders
-              </button>
-              <button
-                className={`${styles.tabButton} ${activeTab === 'wishlist' ? styles.active : ''}`}
-                onClick={() => setActiveTab('wishlist')}
-              >
-                Wishlist
-              </button>
-              <button
-                className={`${styles.tabButton} ${activeTab === 'accountdetails' ? styles.active : ''}`}
-                onClick={() => setActiveTab('accountdetails')}
-              >
-                Account Details
-              </button>
-            </div>
-            {/* END: Tab Nav */}
-
-            {/* START: Tab Content */}
-            <div className={styles.tabsMain}>
-              <VerticalTabs tab={activeTab} />
-            </div>
-            {/* END: Tab Content */}
-          </div>
-        </section>
+        <AccountHeader />
+        <Tabs
+          tabs={[
+            {
+              content: (
+                <div>
+                  <h3>Order</h3>
+                </div>
+              ),
+              slug: 'orders',
+              title: 'Orders',
+            },
+            {
+              content: <WishList />,
+              slug: 'wishlist',
+              title: 'Wishlist',
+            },
+            {
+              content: <AccountDetails />,
+              slug: 'accountdetails',
+              title: 'Account Details',
+            },
+          ]}
+          type="vertical"
+        />
       </Container>
     </Layout>
   );

@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import { USER_EXAMPLE } from '@mockup/user';
+import { useRouter } from 'next/navigation';
 
 import { fetchAPI } from '@lib/fetch-api';
 import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
@@ -17,6 +18,9 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(USER_EXAMPLE);
+
+  const router = useRouter();
+
   const getUserFromStorage = useCallback(() => {
     const userString = sessionStorage.getItem(SESSION_STORAGE_USER_DATA);
     if (userString) {
@@ -64,6 +68,13 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    router.push('/login');
+  }, []);
+
   const handleSave = useCallback(() => {
     const userDataString = JSON.stringify(user);
     sessionStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
@@ -77,6 +88,7 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         getUserById,
+        handleLogout,
         handleSave,
         setUser,
         user,
