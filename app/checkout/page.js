@@ -9,6 +9,9 @@ import { useCart } from '@contexts/cart-context';
 
 import { formatPrice } from '@lib/helpers';
 
+import ClickCollect from '@components/checkout-drawers/click-collect';
+import DeliverToDoor from '@components/checkout-drawers/deliver-to-door';
+import LocalInstallation from '@components/checkout-drawers/local-installation';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Loading from '@components/loading/loading';
@@ -19,33 +22,6 @@ import TruckIcon from '@assets/icons/truck-icon.svg';
 
 import styles from './checkout.module.scss';
 
-function LocalInstallationDrawer() {
-  return (
-    <div className={styles.drawerContent}>
-      <h3>Local Installation</h3>
-      <p>Choose a local HSP fitter to get your accessories installed</p>
-    </div>
-  );
-}
-
-function ClickCollectDrawer() {
-  return (
-    <div className={styles.drawerContent}>
-      <h3>Click & Collect</h3>
-      <p>Convenient Local Pickup</p>
-    </div>
-  );
-}
-
-function DeliverToDoorDrawer({ cartItems }) {
-  return (
-    <div className={styles.drawerContent}>
-      <h3>Deliver to Door</h3>
-      <p>{cartItems.length} items</p>
-    </div>
-  );
-}
-
 export default function CheckoutPage() {
   const { cartItems, cartSubTotal, cartTotal, loading } = useCart();
 
@@ -53,27 +29,26 @@ export default function CheckoutPage() {
     {
       description:
         'Choose a local HSP fitter to get your accessories installed',
-      drawerContent: <LocalInstallationDrawer />,
+      drawerContent: <LocalInstallation />,
       icon: <SettingIcon />,
       id: 'local-installation',
       title: 'Local Installation',
     },
     {
       description: 'Convenient Local Pickup',
-      drawerContent: <ClickCollectDrawer />,
+      drawerContent: <ClickCollect />,
       icon: <LocationIcon />,
       id: 'click-collect',
       title: 'Click & Collect',
     },
     {
       description: 'Sent within 1-3 business days',
-      drawerContent: <DeliverToDoorDrawer cartItems={cartItems} />,
+      drawerContent: <DeliverToDoor cartItems={cartItems} />,
       icon: <TruckIcon />,
       id: 'deliver-door',
       title: 'Deliver to Door',
     },
   ]);
-
   const [openDrawer, setOpenDrawer] = useState('');
 
   const handleSelectOption = id => {
@@ -83,7 +58,8 @@ export default function CheckoutPage() {
 
       // if selected is already first → toggle drawer
       if (prev[0].id === id) {
-        setOpenDrawer(openDrawer === id ? '' : id);
+        // setOpenDrawer(openDrawer === id ? '' : id);
+        setOpenDrawer(id);
         return prev; // keep order the same
       }
 
