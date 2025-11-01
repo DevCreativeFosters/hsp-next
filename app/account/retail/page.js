@@ -76,10 +76,7 @@ function WishList() {
               <div className={styles.price}>{formatPrice(item.price)}</div>
             </div>
             <div className={styles.wActions}>
-              <Link
-                className={styles.button}
-                href={`/products/${item.productSlug}`}
-              >
+              <Link className={styles.button} href={item.productSlug}>
                 View
               </Link>
               <a

@@ -145,7 +145,6 @@
     padding: 26px;
     display: flex;
     margin-bottom: 34px;
-    flex-wrap: wrap;
 
     @media (width <=1199px) {
       margin-bottom: 25px;
@@ -154,6 +153,7 @@
     @media (width <=767px) {
       padding: 20px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     figure {
@@ -161,6 +161,7 @@
       border-radius: 8px;
       max-width: 115px;
       max-height: 115px;
+      min-width: 115px;
       margin: 0;
       display: flex;
       align-items: center;
@@ -174,6 +175,7 @@
       img {
         max-width: 100%;
         max-height: 100%;
+        width: auto;
       }
     }
 
@@ -184,6 +186,7 @@
       @media (width <=767px) {
         padding: 15px 0;
         text-align: center;
+        width: 100%;
       }
 
       h4 {

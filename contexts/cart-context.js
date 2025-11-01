@@ -42,6 +42,38 @@ import {
 import { fetchAPI } from '@lib/fetch-api';
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -85,7 +117,8 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [cartSubTotal, setCartSubTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -100,13 +133,20 @@ export function CartProvider({ children }) {
             message
             cartCount
             cartTotal
+            cartSubTotal
             items {
               cart_item_key
               product_id
               quantity
               price
               installation_cost
+              subtotal
               total
+              price_total
+              variantName
+              variantSlug
+              freight
+              largeItem
               product_name
               product_slug
               product_image
@@ -124,6 +164,7 @@ export function CartProvider({ children }) {
         setCartItems(data.items || []);
         setCartCount(data.cartCount || 0);
         setCartTotal(data.cartTotal || 0);
+        setCartSubTotal(data.cartSubTotal || 0);
       }
     } catch (err) {
       console.error('Error fetching cart:', err);
@@ -215,8 +256,10 @@ export function CartProvider({ children }) {
 
   // 🔹 Auto-fetch cart on first load
   useEffect(() => {
-    getCartItems();
-  }, [getCartItems]);
+    (async () => {
+      await getCartItems();
+    })();
+  }, []);
 
   return (
     <CartContext.Provider
@@ -224,6 +267,7 @@ export function CartProvider({ children }) {
         addToCart,
         cartCount,
         cartItems,
+        cartSubTotal,
         cartTotal,
         closeCart,
         getCartItems,

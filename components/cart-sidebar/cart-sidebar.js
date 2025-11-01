@@ -14,7 +14,7 @@ import styles from './cart-sidebar.module.scss';
 export default function CartSidebar() {
   const {
     cartItems,
-    cartTotal,
+    cartSubTotal,
     closeCart,
     isCartOpen,
     loading,
@@ -105,7 +105,7 @@ export default function CartSidebar() {
           </div>
         ))}
 
-        <div className={styles.cartTotal}>Subtotal: ${cartTotal}</div>
+        <div className={styles.cartTotal}>Subtotal: ${cartSubTotal}</div>
 
         <Button
           className={styles.cartSubmitButton}

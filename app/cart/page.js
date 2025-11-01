@@ -1,23 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+import { useCart } from '@contexts/cart-context';
+
+import { getGlobalOptions } from '@lib/api/get-global-options';
+import { getStores } from '@lib/api/get-stores';
+import { formatPrice } from '@lib/helpers';
 
 import Container from '@components/container/container';
+import EnquiryModal from '@components/enquiry-form/enquiry-modal';
 import Layout from '@components/layout/layout';
+import Loading from '@components/loading/loading';
 
 import processImage from '@assets/images/process-img.png';
 
 import styles from './cart.module.scss';
 
 export default function CartPage() {
-  const [quantity, setQuantity] = useState(1);
-  const handleIncrease = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
+  const [loading, setLoading] = useState(true);
+
+  const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
+  const [allLocations, setAllLocations] = useState([]);
+  const [globalOptions, setGlobalOptions] = useState(null);
+
+  const router = useRouter();
+
+  const {
+    cartItems,
+    cartSubTotal,
+    loading: cartLoading,
+    removeFromCart,
+    updateCart,
+  } = useCart();
+
+  const lastProductSlug =
+    cartItems.length > 0
+      ? `${cartItems[cartItems.length - 1].product_slug}`
+      : '/products';
+
+  useEffect(() => {
+    async function fetchData() {
+      const stores = await getStores();
+      const options = await getGlobalOptions();
+      setAllLocations(stores);
+      setGlobalOptions(options);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (!cartLoading) setLoading(false);
+  }, [cartLoading]);
+
+  const enquiryFormId = globalOptions?.enquiryFormId;
+
+  const handleOpenModal = () => {
+    setEnquiryModalOpened(true);
   };
-  const handleDecrease = () => {
-    setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+
+  const handleCloseModal = () => {
+    setEnquiryModalOpened(false);
   };
 
   return (
@@ -29,73 +75,113 @@ export default function CartPage() {
           </div>
           <div className={styles.cartWrapper}>
             <div className={styles.cartItemsBoxes}>
-              <div className={styles.itemBox}>
-                <figure>{/* <img src=""> */}</figure>
-                <div className={styles.wContent}>
-                  <h4>Roll R Cover 3.5 for Ford Ranger Raptor</h4>
-                  <p>
-                    <strong>Part No.</strong> NGR42RS3.5
-                  </p>
-                  <p>
-                    <strong>Variant:</strong> Ranger Raptor suits no sport bars
-                  </p>
-                  <div className={styles.price}>$3,300.00</div>
+              {loading ? (
+                <div className={styles.loading}>
+                  <Loading size="large" />
                 </div>
-                <div className={styles.wActions}>
-                  <div className={styles.qtyBlock}>
-                    <button className={styles.minus} onClick={handleDecrease}>
-                      -
-                    </button>
-                    <input min="1" readOnly type="number" value={quantity} />
-                    <button className={styles.plus} onClick={handleIncrease}>
-                      +
-                    </button>
+              ) : (
+                cartItems.map((item, index) => (
+                  <div className={styles.itemBox} key={index}>
+                    <figure>
+                      <Image
+                        alt={item.product_name}
+                        height={100}
+                        src={item.product_image}
+                        width={100}
+                      />
+                    </figure>
+                    <div className={styles.wContent}>
+                      <h4>{item.product_name}</h4>
+                      <p>
+                        <strong>Part No.</strong> {item.variantSlug}
+                      </p>
+                      <p>
+                        <strong>Variant:</strong> {item.variantName}
+                      </p>
+                      <div className={styles.price}>
+                        {formatPrice(item.price)}
+                      </div>
+                    </div>
+                    <div className={styles.wActions}>
+                      <div className={styles.qtyBlock}>
+                        <button
+                          className={styles.minus}
+                          disabled={cartLoading}
+                          onClick={() =>
+                            updateCart(
+                              item.cart_item_key,
+                              item.product_id,
+                              item.quantity - 1,
+                            )
+                          }
+                        >
+                          -
+                        </button>
+                        <input
+                          disabled={true}
+                          min="0"
+                          onChange={e =>
+                            updateCart(
+                              item.cart_item_key,
+                              item.product_id,
+                              e.target.value,
+                            )
+                          }
+                          type="number"
+                          value={item.quantity}
+                        />
+                        <button
+                          className={styles.plus}
+                          disabled={cartLoading}
+                          onClick={() =>
+                            updateCart(
+                              item.cart_item_key,
+                              item.product_id,
+                              item.quantity + 1,
+                            )
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                      <button
+                        className={styles.link}
+                        onClick={() => removeFromCart(item.product_id)}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
-                  <button className={styles.link}>Remove</button>
-                </div>
-              </div>
-
-              <div className={styles.itemBox}>
-                <figure>{/* <img src=""> */}</figure>
-                <div className={styles.wContent}>
-                  <h4>Roll R Cover 3.5 for Ford Ranger Raptor</h4>
-                  <p>
-                    <strong>Part No.</strong> NGR42RS3.5
-                  </p>
-                  <p>
-                    <strong>Variant:</strong> Ranger Raptor suits no sport bars
-                  </p>
-                  <div className={styles.price}>$3,300.00</div>
-                </div>
-                <div className={styles.wActions}>
-                  <div className={styles.qtyBlock}>
-                    <button className={styles.minus} onClick={handleDecrease}>
-                      -
-                    </button>
-                    <input min="1" readOnly type="number" value={quantity} />
-                    <button className={styles.plus} onClick={handleIncrease}>
-                      +
-                    </button>
-                  </div>
-                  <button className={styles.link}>Remove</button>
-                </div>
-              </div>
+                ))
+              )}
             </div>
 
             <div className={styles.cartTotal}>
               <div className={styles.totalWrap}>
-                <h3>Subtotal: $6,500.00</h3>
+                <h3>Subtotal: {formatPrice(cartSubTotal)}</h3>
                 <p>
                   GST Included.
                   <br />
                   Fitting or Shipping confirmed in the checkout.
                 </p>
-                <button className={styles.button}>CHECK OUT</button>
+                <button
+                  className={styles.button}
+                  onClick={() => router.push('/checkout')}
+                >
+                  CHECK OUT
+                </button>
                 <button className={styles.link}>Email me my Cart/ Quote</button>
               </div>
               <div className={styles.btns}>
-                <button className={styles.button}>CONTINUE SHOPPING</button>
-                <button className={styles.button}>MAKE AN ENQUIRY</button>
+                <button
+                  className={styles.button}
+                  onClick={() => router.push('/')}
+                >
+                  CONTINUE SHOPPING
+                </button>
+                <button className={styles.button} onClick={handleOpenModal}>
+                  MAKE AN ENQUIRY
+                </button>
               </div>
             </div>
           </div>
@@ -110,9 +196,21 @@ export default function CartPage() {
             </p>
           </div>
           <div className={styles.processWrapper}>
-            <Image src={processImage} />
+            <Image alt="Checkout Process" src={processImage} />
           </div>
         </section>
+
+        {enquiryModalOpened && (
+          <EnquiryModal
+            enquiryFormId={globalOptions?.enquiryFormId}
+            freight={priceSummary.freight}
+            installationCost={priceSummary.installationCost}
+            onClose={handleCloseModal}
+            productPrice={priceSummary.price}
+            selectedProducts={selectedProducts}
+            store={selectedStore}
+          />
+        )}
       </Container>
     </Layout>
   );
