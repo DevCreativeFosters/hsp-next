@@ -15,6 +15,7 @@
     "@googlemaps/js-api-loader": "^1.16.2",
     "@googlemaps/markerclusterer": "^2.5.0",
     "@next/third-parties": "^14.2.13",
+    "@react-google-maps/api": "^2.20.7",
     "@sentry/nextjs": "^8",
     "@svgr/webpack": "^8.0.1",
     "@vercel/functions": "^2.0.0",
