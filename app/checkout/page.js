@@ -16,9 +16,12 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Loading from '@components/loading/loading';
 
+import DeliveryIcon from '@assets/icons/delivery-icon.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
+import PaymentIcons from '@assets/images/payment-icon.png';
+import PaypalIcon from '@assets/images/paypal.png';
 
 import styles from './checkout.module.scss';
 
@@ -190,6 +193,55 @@ export default function CheckoutPage() {
                   ))
                 )}
               </div>
+
+              <div className={styles.editSelection}>
+                <div className={styles.heading}>
+                  <h2>
+                    <DeliveryIcon /> Delivery
+                  </h2>
+                  <button className={styles.link}>Edit Selection</button>
+                </div>
+                <div className={styles.deliveryAddressBox}>
+                  Delivery Address: 66/322 Blackwood Street, Melbourne, 3000,
+                  Australia
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.checkOutPayment}>
+              <div className={styles.heading}>
+                <h2>Payment</h2>
+                <p>All transactions are secure and encrypted</p>
+              </div>
+              <div className={styles.couponBox}>
+                <input type="text" />
+                <button disabled>Apply</button>
+              </div>
+
+              <div className={styles.paymenSelection}>
+                <div className={styles.payBox}>
+                  <input name="payment" type="radio" />
+                  <span>Credit Card</span>
+                  <Image
+                    alt={'Cards'}
+                    height={43}
+                    src={PaymentIcons}
+                    width={154}
+                  />
+                </div>
+                <div className={styles.payBox}>
+                  <input name="payment" type="radio" />
+                  <span>PayPal</span>
+                  <Image
+                    alt={'Cards'}
+                    height={49}
+                    src={PaypalIcon}
+                    width={112}
+                  />
+                </div>
+              </div>
+
+              <button className={styles.placeOrderBtn}>Place Order</button>
             </div>
           </div>
 

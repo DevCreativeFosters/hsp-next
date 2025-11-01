@@ -1,5 +1,81 @@
-.checkfresh {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.deliveryForm {
+  .formRow {
+    display: flex;
+    gap: 14px;
+
+    @media (width <=767px) {
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .formCol {
+      width: 100%;
+      margin: 7px 0;
+      position: relative;
+
+      input {
+        min-height: 51px;
+        border-radius: 8px;
+        padding: 0 12px;
+        width: 100%;
+        border: 0;
+        outline: none;
+      }
+
+      select {
+        min-height: 51px;
+        border-radius: 8px;
+        padding: 0 12px;
+        width: 100%;
+        border: 0;
+        outline: none;
+      }
+
+      .searchBtn {
+        position: absolute;
+        right: 0;
+        z-index: 1;
+        top: 0;
+        height: 100%;
+        opacity: 0.5;
+        padding: 0 10px;
+      }
+
+      .lblSelect {
+        position: relative;
+
+        span {
+          font-size: 12px;
+          color: #707070;
+          position: absolute;
+          left: 16px;
+          top: 7px;
+        }
+
+        select {
+          padding-top: 12px;
+        }
+      }
+    }
+  }
+}
+
+.redBoxContent {
+  padding: 30px 16px;
+  border-radius: 6px;
+  background: #ed2935;
+  margin: 30px 0 18px;
+
+  h5 {
+    font-size: clamp(16px, 1vw, 18px);
+    font-family: var(--font-primary);
+    line-height: 1.3;
+    margin: 0 0 15px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+  }
 }

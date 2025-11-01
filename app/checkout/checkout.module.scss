@@ -231,6 +231,225 @@
         }
       }
     }
+
+    .editSelection {
+      padding: 24px;
+      border-radius: 6px;
+      background: #000;
+
+      .heading {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+
+        h2 {
+          color: #fff;
+          font-size: 20px;
+          display: inline-flex;
+          align-items: center;
+          gap: 11px;
+        }
+
+        .link {
+          font-size: 14px;
+          font-weight: 500;
+          color: #fff;
+          text-decoration: underline;
+
+          &:hover {
+            color: var(--color-primary-100);
+          }
+        }
+      }
+
+      .deliveryAddressBox {
+        font-size: 15px;
+        padding: 10px 23px;
+        min-height: 53px;
+        border-radius: 6px;
+        background: var(--color-primary-100);
+        display: flex;
+        align-items: center;
+        line-height: 1.2;
+      }
+    }
+
+    .checkOutPayment {
+      background: #fff;
+      padding: 40px;
+      border-radius: 6px;
+      margin-top: 20px;
+
+      @media (width <=1199px) {
+        padding: var(--content-padding-sm);
+      }
+
+      .heading {
+        margin-bottom: 40px;
+
+        h2 {
+          color: #000;
+          font-family: var(--font-primary);
+          font-size: 26px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          color: #444;
+          font-size: 15px;
+          margin-top: 0;
+        }
+      }
+
+      .couponBox {
+        display: flex;
+        gap: 12px;
+
+        input {
+          min-height: 40px;
+          padding: 0 15px;
+          border: solid 1px #181616;
+          border-radius: 3px;
+          outline: none;
+
+          @media (width <=480px) {
+            width: 100%;
+          }
+        }
+
+        button {
+          font-size: 14px;
+          color: #fff;
+          background: #000;
+          border-radius: 3px;
+          min-width: 96px;
+          font-weight: 700;
+          text-transform: uppercase;
+
+          &:disabled {
+            opacity: 0.5;
+          }
+        }
+      }
+
+      .paymenSelection {
+        .payBox {
+          padding: 20px;
+          border: solid 1px #000;
+          border-radius: 6px;
+          display: block;
+          margin: 24px 0;
+          position: relative;
+
+          @media (width <= 767px) {
+            padding: 12px;
+            margin: 14px 0;
+          }
+
+          input {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            height: 100%;
+            top: 0;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 1;
+
+            &:checked + span::after {
+              opacity: 1;
+            }
+          }
+
+          span {
+            position: relative;
+            color: #4e4344;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+
+            @media (width <= 767px) {
+              gap: 8px;
+            }
+
+            &::before {
+              content: '';
+              width: 25px;
+              height: 25px;
+              border: solid 1px #000;
+              border-radius: 100%;
+              display: inline-block;
+
+              @media (width <= 767px) {
+                width: 18px;
+                height: 18px;
+              }
+            }
+
+            &::after {
+              content: '';
+              width: 15px;
+              height: 15px;
+              background: #ed2935;
+              border-radius: 100%;
+              position: absolute;
+              top: 6px;
+              left: 6px;
+              opacity: 0;
+
+              @media (width <= 767px) {
+                width: 10px;
+                height: 10px;
+                left: 5px;
+                top: 5px;
+              }
+            }
+          }
+
+          img {
+            position: absolute;
+            right: 16px;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            height: auto;
+
+            @media (width <= 767px) {
+              right: 10px;
+              max-width: 80px;
+            }
+          }
+        }
+      }
+
+      .placeOrderBtn {
+        background-color: var(--color-primary-100);
+        color: white;
+        padding: 0 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 18px;
+        min-height: 43px;
+        min-width: 239px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s all;
+
+        @media (width <=991px) {
+          min-width: inherit;
+        }
+
+        @media (width <=480px) {
+          width: 100%;
+        }
+
+        &:hover {
+          background-color: #000;
+        }
+      }
+    }
   }
 
   .checkOutRight {

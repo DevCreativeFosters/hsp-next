@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 
+import SearchIcon from '@assets/icons/search.svg';
+
 import styles from './deliver-to-door.module.scss';
 
 const libraries = ['places'];
@@ -62,69 +64,99 @@ function DeliveryAddressForm() {
 
   return (
     <div className={styles.deliveryForm}>
-      <h3>Delivery Address</h3>
+      <div className={styles.redBoxContent}>
+        <h5>
+          Certain Items In Your Cart Cannot Be Delivered to a Residential
+          Address{' '}
+        </h5>
+        <p>
+          Due to the size and nature of products like the Electric Roll Cover,
+          Armour Bar, and Load Slides, we can only accommodate shipments to
+          commercial or business addresses.
+        </p>
+      </div>
 
       <div className={styles.formRow}>
-        <input
-          name="firstName"
-          onChange={handleChange}
-          placeholder="First name"
-          value={formData.firstName}
-        />
-        <input
-          name="lastName"
-          onChange={handleChange}
-          placeholder="Last name"
-          value={formData.lastName}
-        />
+        <div className={styles.formCol}>
+          <div className={styles.lblSelect}>
+            <span>Country/Region</span>
+            <select name="state" onChange={handleChange} value={formData.state}>
+              <option value="CA">Australia</option>
+              <option value="NY">New York</option>
+              <option value="TX">Texas</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.formRow}>
+        <div className={styles.formCol}>
+          <input
+            name="company-name"
+            onChange=""
+            placeholder="Company Name (Optional)"
+            value=""
+          />
+        </div>
       </div>
 
       <Autocomplete
         onLoad={ref => (autocompleteRef.current = ref)}
         onPlaceChanged={handlePlaceChanged}
       >
-        <input
-          name="address"
-          onChange={handleChange}
-          placeholder="Address"
-          value={formData.address}
-        />
+        <div className={styles.formRow}>
+          <div className={styles.formCol}>
+            <input
+              name="address"
+              onChange={handleChange}
+              placeholder="Address"
+              value={formData.address}
+            />
+            <button className={styles.searchBtn}>
+              <SearchIcon />
+            </button>
+          </div>
+        </div>
       </Autocomplete>
-
-      <input
-        name="apartment"
-        onChange={handleChange}
-        placeholder="Apartment, suite, etc. (optional)"
-        value={formData.apartment}
-      />
-
       <div className={styles.formRow}>
-        <input
-          name="city"
-          onChange={handleChange}
-          placeholder="City"
-          value={formData.city}
-        />
-        <input
-          name="state"
-          onChange={handleChange}
-          placeholder="State"
-          value={formData.state}
-        />
-        <input
-          name="zip"
-          onChange={handleChange}
-          placeholder="PIN code"
-          value={formData.zip}
-        />
+        <div className={styles.formCol}>
+          <input
+            name="apartment"
+            onChange={handleChange}
+            placeholder="Apartment, suite, etc. (optional)"
+            value={formData.apartment}
+          />
+        </div>
       </div>
 
-      <input
-        name="phone"
-        onChange={handleChange}
-        placeholder="Phone"
-        value={formData.phone}
-      />
+      <div className={styles.formRow}>
+        <div className={styles.formCol}>
+          <input
+            name="city"
+            onChange={handleChange}
+            placeholder="City"
+            value={formData.city}
+          />
+        </div>
+        <div className={styles.formCol}>
+          <div className={styles.lblSelect}>
+            <span>State/territory</span>
+            <select name="state" onChange={handleChange} value={formData.state}>
+              <option value="CA">California</option>
+              <option value="NY">New York</option>
+              <option value="TX">Texas</option>
+            </select>
+          </div>
+        </div>
+        <div className={styles.formCol}>
+          <input
+            name="zip"
+            onChange={handleChange}
+            placeholder="PIN code"
+            value={formData.zip}
+          />
+        </div>
+      </div>
     </div>
   );
 }
