@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -32,8 +33,8 @@ export default function CheckoutPage() {
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
     address: '',
-    company: '',
     city: '',
+    company: '',
     country: 'AU',
     deliveryCompanyName: '',
     email: '',
@@ -137,9 +138,9 @@ export default function CheckoutPage() {
     <Layout title="Checkout | HSP">
       <Container>
         <section className={styles.checkoutMain}>
-          {/* Checkout Left */}
-          <div className={styles.checkOutLeft}>
-            <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
+            {/* Checkout Left */}
+            <div className={styles.checkOutLeft}>
               {/* Contact Details */}
               <div className={styles.contactDetails}>
                 <div className={styles.heading}>
@@ -403,88 +404,94 @@ export default function CheckoutPage() {
                   </Button>
                 </div>
               )}
-            </form>
-          </div>
+            </div>
 
-          {/* Checkout Right */}
-          <div className={styles.checkOutRight}>
-            <div className={styles.checkOutItemsMain}>
-              <h3>Products</h3>
-              {loading ? (
-                <div className={styles.loading}>
-                  <Loading size="large" />
-                </div>
-              ) : (
-                cartItems.map((item, index) => (
-                  <div className={styles.checkOutItem} key={item.product_id}>
-                    <div className={styles.itemImg}>
-                      <Image
-                        alt={item.product_name}
-                        height={100}
-                        src={item.product_image}
-                        width={100}
-                      />
+            {/* Checkout Right */}
+            <div className={styles.checkOutRight}>
+              <div className={styles.checkOutItemsMain}>
+                <h3>Products</h3>
+                {loading ? (
+                  <div className={styles.loading}>
+                    <Loading size="large" />
+                  </div>
+                ) : (
+                  cartItems.map((item, index) => (
+                    <div className={styles.checkOutItem} key={item.product_id}>
+                      <div className={styles.itemImg}>
+                        <Image
+                          alt={item.product_name}
+                          height={100}
+                          src={item.product_image}
+                          width={100}
+                        />
+                      </div>
+                      <div className={styles.itemInfo}>
+                        <h6>{item.product_name}</h6>
+                        <p>
+                          Qty: {item.quantity}{' '}
+                          <Link href={item.product_slug}>View Details</Link>
+                        </p>
+                      </div>
+                      <div className={styles.itemPrice}>
+                        {formatPrice(item.price)}
+                      </div>
                     </div>
-                    <div className={styles.itemInfo}>
-                      <h6>{item.product_name}</h6>
-                      <p>
-                        Qty: {item.quantity}{' '}
-                        <Link href={item.product_slug}>View Details</Link>
-                      </p>
+                  ))
+                )}
+                <div className={styles.couponBlock}>
+                  <input placeholder="Coupon Code" type="text" />
+                  <button className={styles.couponBtn} disabled>
+                    Apply
+                  </button>
+                </div>
+                <div className={styles.checkoutSummary}>
+                  <h3>Summary</h3>
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>Subtotal</div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(cartSubTotal)}
                     </div>
-                    <div className={styles.itemPrice}>
-                      {formatPrice(item.price)}
+                  </div>
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>
+                      Installation Cost
+                    </div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(
+                        cartItems.reduce(
+                          (total, item) =>
+                            total + item.installation_cost * item.quantity,
+                          0,
+                        ),
+                      )}
                     </div>
                   </div>
-                ))
-              )}
-              <div className={styles.couponBlock}>
-                <input placeholder="Coupon Code" type="text" />
-                <button className={styles.couponBtn} disabled>
-                  Apply
-                </button>
-              </div>
-              <div className={styles.checkoutSummary}>
-                <h3>Summary</h3>
-                <div className={styles.subTotal}>
-                  <div className={styles.subTotaltitle}>Subtotal</div>
-                  <div className={styles.subTotalPrice}>
-                    {formatPrice(cartSubTotal)}
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>Freight</div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(
+                        cartItems.reduce(
+                          (total, item) => total + item.freight * item.quantity,
+                          0,
+                        ),
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className={styles.subTotal}>
-                  <div className={styles.subTotaltitle}>Installation Cost</div>
-                  <div className={styles.subTotalPrice}>
-                    {formatPrice(
-                      cartItems.reduce(
-                        (total, item) =>
-                          total + item.installation_cost * item.quantity,
-                        0,
-                      ),
-                    )}
+                  <div className={clsx(styles.subTotal, styles.discount)}>
+                    <div className={styles.subTotaltitle}>Discount</div>
+                    <div className={styles.subTotalPrice}>-$150</div>
                   </div>
-                </div>
-                <div className={styles.subTotal}>
-                  <div className={styles.subTotaltitle}>Freight</div>
-                  <div className={styles.subTotalPrice}>
-                    {formatPrice(
-                      cartItems.reduce(
-                        (total, item) => total + item.freight * item.quantity,
-                        0,
-                      ),
-                    )}
-                  </div>
-                </div>
-                <div className={styles.finalTotal}>
-                  <div className={styles.finalTotaltitle}>TOTAL</div>
-                  <div className={styles.finalTotalPrice}>
-                    {formatPrice(cartTotal)}
-                    <span>(incl. 10% GST)</span>
+                  <div className={styles.finalTotal}>
+                    <div className={styles.finalTotaltitle}>TOTAL</div>
+                    <div className={styles.finalTotalPrice}>
+                      {formatPrice(cartTotal)}
+                      <span>(incl. 10% GST)</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         </section>
       </Container>
     </Layout>
