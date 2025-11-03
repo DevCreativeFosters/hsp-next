@@ -28,6 +28,8 @@ import styles from './checkout.module.scss';
 export default function CheckoutPage() {
   const { cartItems, cartSubTotal, cartTotal, loading } = useCart();
 
+  const [isFormFilled, setIsFormFilled] = useState(false);
+
   const [deliveryOptions, setDeliveryOptions] = useState([
     {
       description:
@@ -46,7 +48,12 @@ export default function CheckoutPage() {
     },
     {
       description: 'Sent within 1-3 business days',
-      drawerContent: <DeliverToDoor cartItems={cartItems} />,
+      drawerContent: (
+        <DeliverToDoor
+          isFormFilled={isFormFilled}
+          setIsFormFilled={setIsFormFilled}
+        />
+      ),
       icon: <TruckIcon />,
       id: 'deliver-door',
       title: 'Deliver to Door',
@@ -167,6 +174,24 @@ export default function CheckoutPage() {
                   <div className={styles.loading}>
                     <Loading size="large" />
                   </div>
+                ) : isFormFilled ? (
+                  <div className={styles.editSelection}>
+                    <div className={styles.heading}>
+                      <h2>
+                        <DeliveryIcon /> Delivery
+                      </h2>
+                      <button
+                        className={styles.link}
+                        onClick={() => setIsFormFilled(false)}
+                      >
+                        Edit Selection
+                      </button>
+                    </div>
+                    <div className={styles.deliveryAddressBox}>
+                      Delivery Address: 66/322 Blackwood Street, Melbourne,
+                      3000, Australia
+                    </div>
+                  </div>
                 ) : (
                   deliveryOptions.map(option => (
                     <div
@@ -185,7 +210,20 @@ export default function CheckoutPage() {
                         {openDrawer === option.id &&
                           deliveryOptions[0].id === option.id && (
                             <div className={styles.drawer}>
-                              {option.drawerContent}
+                              {/* hello */}
+                              {/* {option.drawerContent} */}
+                              {option.id === 'local-installation' && (
+                                <LocalInstallation />
+                              )}
+                              {option.id === 'click-collect' && (
+                                <ClickCollect />
+                              )}
+                              {option.id === 'deliver-door' && (
+                                <DeliverToDoor
+                                  isFormFilled={isFormFilled}
+                                  setIsFormFilled={setIsFormFilled}
+                                />
+                              )}
                             </div>
                           )}
                       </div>
@@ -193,56 +231,50 @@ export default function CheckoutPage() {
                   ))
                 )}
               </div>
+            </div>
 
-              <div className={styles.editSelection}>
+            {/* After Filling the form this will be appeared */}
+            {isFormFilled && (
+              <div className={styles.checkOutPayment}>
                 <div className={styles.heading}>
-                  <h2>
-                    <DeliveryIcon /> Delivery
-                  </h2>
-                  <button className={styles.link}>Edit Selection</button>
+                  <h2>Payment</h2>
+                  <p>All transactions are secure and encrypted</p>
                 </div>
-                <div className={styles.deliveryAddressBox}>
-                  Delivery Address: 66/322 Blackwood Street, Melbourne, 3000,
-                  Australia
+                <div className={styles.couponBox}>
+                  <input type="text" />
+                  <button disabled>Apply</button>
                 </div>
-              </div>
-            </div>
 
-            <div className={styles.checkOutPayment}>
-              <div className={styles.heading}>
-                <h2>Payment</h2>
-                <p>All transactions are secure and encrypted</p>
-              </div>
-              <div className={styles.couponBox}>
-                <input type="text" />
-                <button disabled>Apply</button>
-              </div>
-
-              <div className={styles.paymenSelection}>
-                <div className={styles.payBox}>
-                  <input name="payment" type="radio" />
-                  <span>Credit Card</span>
-                  <Image
-                    alt={'Cards'}
-                    height={43}
-                    src={PaymentIcons}
-                    width={154}
-                  />
+                <div className={styles.paymenSelection}>
+                  <div className={styles.payBox}>
+                    <input name="payment" type="radio" />
+                    <span>Credit Card</span>
+                    <Image
+                      alt={'Cards'}
+                      height={43}
+                      src={PaymentIcons}
+                      width={154}
+                    />
+                  </div>
+                  <div className={styles.payBox}>
+                    <input name="payment" type="radio" />
+                    <span>PayPal</span>
+                    <Image
+                      alt={'Cards'}
+                      height={49}
+                      src={PaypalIcon}
+                      width={112}
+                    />
+                  </div>
+                  <div className={styles.payBox}>
+                    <input name="payment" type="radio" />
+                    <span>COD (Cash on Delivery)</span>
+                  </div>
                 </div>
-                <div className={styles.payBox}>
-                  <input name="payment" type="radio" />
-                  <span>PayPal</span>
-                  <Image
-                    alt={'Cards'}
-                    height={49}
-                    src={PaypalIcon}
-                    width={112}
-                  />
-                </div>
-              </div>
 
-              <button className={styles.placeOrderBtn}>Place Order</button>
-            </div>
+                <button className={styles.placeOrderBtn}>Place Order</button>
+              </div>
+            )}
           </div>
 
           {/* Checkout Right */}

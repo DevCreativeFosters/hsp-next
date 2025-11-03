@@ -1,3 +1,28 @@
+.drawerContent {
+  margin-top: 15px;
+
+  .contentWrap {
+    max-width: 250px;
+    margin: auto;
+
+    h3 {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      font-size: 20px;
+      font-family: var(--font-primary);
+      margin-bottom: 25px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+}
+
 .deliveryForm {
   .formRow {
     display: flex;
@@ -39,6 +64,10 @@
         height: 100%;
         opacity: 0.5;
         padding: 0 10px;
+
+        svg {
+          margin-top: 5px;
+        }
       }
 
       .lblSelect {
@@ -57,6 +86,10 @@
         }
       }
     }
+  }
+
+  .submitBtn {
+    margin-top: 10px;
   }
 }
 

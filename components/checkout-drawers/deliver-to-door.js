@@ -4,17 +4,24 @@ import { useRef, useState } from 'react';
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 
+import { useCart } from '@contexts/cart-context';
+
+import Button from '@components/button/button';
+
 import SearchIcon from '@assets/icons/search.svg';
 
 import styles from './deliver-to-door.module.scss';
 
 const libraries = ['places'];
 
-function DeliveryAddressForm() {
+function DeliveryAddressForm({ setIsFormFilled }) {
+  const { cartItems } = useCart();
   const [formData, setFormData] = useState({
     address: '',
     apartment: '',
     city: '',
+    companyName: '',
+    country: 'Australia',
     firstName: '',
     lastName: '',
     phone: '',
@@ -25,13 +32,13 @@ function DeliveryAddressForm() {
   const autocompleteRef = useRef(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, // your maps ID here
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
   const handlePlaceChanged = () => {
-    const place = autocompleteRef.current.getPlace();
-    if (!place) return;
+    const place = autocompleteRef.current?.getPlace?.();
+    if (!place || !place.address_components) return;
 
     const address = place.formatted_address || '';
     let city = '';
@@ -64,109 +71,124 @@ function DeliveryAddressForm() {
 
   return (
     <div className={styles.deliveryForm}>
-      <div className={styles.redBoxContent}>
-        <h5>
-          Certain Items In Your Cart Cannot Be Delivered to a Residential
-          Address{' '}
-        </h5>
-        <p>
-          Due to the size and nature of products like the Electric Roll Cover,
-          Armour Bar, and Load Slides, we can only accommodate shipments to
-          commercial or business addresses.
-        </p>
-      </div>
-
-      <div className={styles.formRow}>
-        <div className={styles.formCol}>
-          <div className={styles.lblSelect}>
-            <span>Country/Region</span>
-            <select name="state" onChange={handleChange} value={formData.state}>
-              <option value="CA">Australia</option>
-              <option value="NY">New York</option>
-              <option value="TX">Texas</option>
-            </select>
+      {cartItems.some(item => item.largeItem) ? (
+        <div className={styles.redBoxContent}>
+          <h5>
+            Certain Items In Your Cart Cannot Be Delivered to a Residential
+            Address{' '}
+          </h5>
+          <p>
+            Due to the size and nature of products like the Electric Roll Cover,
+            Armour Bar, and Load Slides, we can only accommodate shipments to
+            commercial or business addresses.
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Country */}
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <div className={styles.lblSelect}>
+                <span>Country/Region</span>
+                <select
+                  name="country"
+                  onChange={handleChange}
+                  value={formData.country}
+                >
+                  <option value="Australia">Australia</option>
+                </select>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className={styles.formRow}>
-        <div className={styles.formCol}>
-          <input
-            name="company-name"
-            onChange=""
-            placeholder="Company Name (Optional)"
-            value=""
-          />
-        </div>
-      </div>
-
-      <Autocomplete
-        onLoad={ref => (autocompleteRef.current = ref)}
-        onPlaceChanged={handlePlaceChanged}
-      >
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <input
-              name="address"
-              onChange={handleChange}
-              placeholder="Address"
-              value={formData.address}
-            />
-            <button className={styles.searchBtn}>
-              <SearchIcon />
-            </button>
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <input
+                name="companyName"
+                onChange={handleChange}
+                placeholder="Company Name (Optional)"
+                value={formData.companyName}
+              />
+            </div>
           </div>
-        </div>
-      </Autocomplete>
-      <div className={styles.formRow}>
-        <div className={styles.formCol}>
-          <input
-            name="apartment"
-            onChange={handleChange}
-            placeholder="Apartment, suite, etc. (optional)"
-            value={formData.apartment}
-          />
-        </div>
-      </div>
 
-      <div className={styles.formRow}>
-        <div className={styles.formCol}>
-          <input
-            name="city"
-            onChange={handleChange}
-            placeholder="City"
-            value={formData.city}
-          />
-        </div>
-        <div className={styles.formCol}>
-          <div className={styles.lblSelect}>
-            <span>State/territory</span>
-            <select name="state" onChange={handleChange} value={formData.state}>
-              <option value="CA">California</option>
-              <option value="NY">New York</option>
-              <option value="TX">Texas</option>
-            </select>
+          {/* Address Autocomplete */}
+          <Autocomplete
+            onLoad={ref => (autocompleteRef.current = ref)}
+            onPlaceChanged={handlePlaceChanged}
+          >
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="address"
+                  onChange={handleChange}
+                  placeholder="Address"
+                  value={formData.address}
+                />
+                <button className={styles.searchBtn} type="button">
+                  <SearchIcon />
+                </button>
+              </div>
+            </div>
+          </Autocomplete>
+
+          {/* Apartment */}
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <input
+                name="apartment"
+                onChange={handleChange}
+                placeholder="Apartment, suite, etc. (optional)"
+                value={formData.apartment}
+              />
+            </div>
           </div>
-        </div>
-        <div className={styles.formCol}>
-          <input
-            name="zip"
-            onChange={handleChange}
-            placeholder="PIN code"
-            value={formData.zip}
-          />
-        </div>
-      </div>
+
+          {/* City, State, Zip */}
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <input
+                name="city"
+                onChange={handleChange}
+                placeholder="City"
+                value={formData.city}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <input
+                name="state"
+                onChange={handleChange}
+                placeholder="State/Territory"
+                value={formData.state}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <input
+                name="zip"
+                onChange={handleChange}
+                placeholder="Postcode"
+                value={formData.zip}
+              />
+            </div>
+          </div>
+
+          <Button
+            className={styles.submitBtn}
+            onClick={() => setIsFormFilled(true)}
+            size="large"
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </div>
   );
 }
 
-function DeliverToDoor({ cartItems }) {
+export default function DeliverToDoor({ setIsFormFilled }) {
   return (
-    <div>
-      <DeliveryAddressForm />
+    <div className={styles.drawerContent}>
+      <DeliveryAddressForm setIsFormFilled={setIsFormFilled} />
     </div>
   );
 }
-
-export default DeliverToDoor;
