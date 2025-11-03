@@ -33,22 +33,22 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
     const address = place.formatted_address || '';
     let city = '';
     let state = '';
-    let zip = '';
+    let postcode = '';
 
     place.address_components.forEach(component => {
       const types = component.types;
       if (types.includes('locality')) city = component.long_name;
       if (types.includes('administrative_area_level_1'))
         state = component.long_name;
-      if (types.includes('postal_code')) zip = component.long_name;
+      if (types.includes('postal_code')) postcode = component.long_name;
     });
 
     setFormData(prev => ({
       ...prev,
       address,
       city,
+      postcode,
       state,
-      zip,
     }));
   };
 
@@ -158,7 +158,7 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
             </div>
           </div>
 
-          {/* City, State, Zip */}
+          {/* City, State, postcode */}
           <div className={styles.formRow}>
             <div className={styles.formCol}>
               <input
@@ -186,10 +186,10 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
             </div>
             <div className={styles.formCol}>
               <input
-                name="zip"
+                name="postcode"
                 onChange={handleChange}
                 placeholder="Postcode"
-                value={formData.zip}
+                value={formData.postcode}
               />
             </div>
           </div>
@@ -201,7 +201,7 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
               !formData.address ||
               !formData.city ||
               !formData.state ||
-              !formData.zip
+              !formData.postcode
             }
             onClick={() => setIsFormFilled(true)}
             size="large"

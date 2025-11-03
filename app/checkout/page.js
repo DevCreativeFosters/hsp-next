@@ -32,21 +32,21 @@ export default function CheckoutPage() {
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
     address: '',
-    companyName: '',
+    company: '',
     city: '',
     country: 'AU',
     deliveryCompanyName: '',
     email: '',
-    firstName: '',
+    first_name: '',
 
-    lastName: '',
+    last_name: '',
     marketing: true,
-    paymentMethod: '',
+    payment_method: '',
     phone: '',
+    postcode: '',
     state: '',
-    termsAndConditions: true,
 
-    zip: '', // 👈 add this
+    termsAndConditions: true,
   });
 
   const [deliveryOptions, setDeliveryOptions] = useState([
@@ -109,7 +109,7 @@ export default function CheckoutPage() {
   const handleRadioChange = event => {
     setFormData({
       ...formData,
-      paymentMethod: event.target.value,
+      payment_method: event.target.value,
     });
   };
 
@@ -117,14 +117,14 @@ export default function CheckoutPage() {
     e.preventDefault();
     console.log(formData);
     if (
-      !formData.firstName ||
-      !formData.lastName ||
+      !formData.first_name ||
+      !formData.last_name ||
       !formData.email ||
       !formData.phone ||
-      !formData.companyName ||
+      !formData.company ||
       !formData.termsAndConditions ||
       !formData.marketing ||
-      !formData.paymentMethod
+      !formData.payment_method
     ) {
       console.warn('Please fill all required fields');
       return;
@@ -153,10 +153,10 @@ export default function CheckoutPage() {
                         First Name<span className={styles.reqStar}>*</span>
                       </label>
                       <input
-                        name="firstName"
+                        name="first_name"
                         onChange={handleChange}
                         type="text"
-                        value={formData.firstName}
+                        value={formData.first_name}
                       />
                     </div>
                   </div>
@@ -166,10 +166,10 @@ export default function CheckoutPage() {
                         Last Name<span className={styles.reqStar}>*</span>
                       </label>
                       <input
-                        name="lastName"
+                        name="last_name"
                         onChange={handleChange}
                         type="text"
-                        value={formData.lastName}
+                        value={formData.last_name}
                       />
                     </div>
                   </div>
@@ -206,10 +206,10 @@ export default function CheckoutPage() {
                         <span className={styles.reqStar}>*</span>
                       </label>
                       <input
-                        name="companyName"
+                        name="company"
                         onChange={handleChange}
                         type="text"
-                        value={formData.companyName}
+                        value={formData.company}
                       />
                     </div>
                   </div>
@@ -343,8 +343,8 @@ export default function CheckoutPage() {
                   <div className={styles.paymenSelection}>
                     <div className={styles.payBox}>
                       <input
-                        checked={formData.paymentMethod === 'credit-card'}
-                        name="paymentMethod"
+                        checked={formData.payment_method === 'credit-card'}
+                        name="payment_method"
                         onChange={handleRadioChange}
                         type="radio"
                         value="credit-card"
@@ -359,8 +359,8 @@ export default function CheckoutPage() {
                     </div>
                     <div className={styles.payBox}>
                       <input
-                        checked={formData.paymentMethod === 'paypal'}
-                        name="paymentMethod"
+                        checked={formData.payment_method === 'paypal'}
+                        name="payment_method"
                         onChange={handleRadioChange}
                         type="radio"
                         value="paypal"
@@ -375,8 +375,8 @@ export default function CheckoutPage() {
                     </div>
                     <div className={styles.payBox}>
                       <input
-                        checked={formData.paymentMethod === 'cod'}
-                        name="paymentMethod"
+                        checked={formData.payment_method === 'cod'}
+                        name="payment_method"
                         onChange={handleRadioChange}
                         type="radio"
                         value="cod"
@@ -388,14 +388,14 @@ export default function CheckoutPage() {
                   <Button
                     className={styles.placeOrderBtn}
                     disabled={
-                      !formData.firstName ||
-                      !formData.lastName ||
+                      !formData.first_name ||
+                      !formData.last_name ||
                       !formData.email ||
                       !formData.phone ||
-                      !formData.companyName ||
+                      !formData.company ||
                       !formData.termsAndConditions ||
                       !formData.marketing ||
-                      !formData.paymentMethod
+                      !formData.payment_method
                     }
                     type="submit"
                   >
