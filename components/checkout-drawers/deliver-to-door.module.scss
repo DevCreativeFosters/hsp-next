@@ -27,6 +27,7 @@
   .formRow {
     display: flex;
     gap: 14px;
+    position: relative;
 
     @media (width <=767px) {
       gap: 0;
@@ -111,4 +112,8 @@
     line-height: 1.4;
     margin: 0;
   }
+}
+
+.autocomplete {
+  visibility: visible;
 }

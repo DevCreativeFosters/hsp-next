@@ -9,6 +9,7 @@ import { useCart } from '@contexts/cart-context';
 
 import { formatPrice } from '@lib/helpers';
 
+import Button from '@components/button/button';
 import ClickCollect from '@components/checkout-drawers/click-collect';
 import DeliverToDoor from '@components/checkout-drawers/deliver-to-door';
 import LocalInstallation from '@components/checkout-drawers/local-installation';
@@ -29,6 +30,24 @@ export default function CheckoutPage() {
   const { cartItems, cartSubTotal, cartTotal, loading } = useCart();
 
   const [isFormFilled, setIsFormFilled] = useState(false);
+  const [formData, setFormData] = useState({
+    address: '',
+    companyName: '',
+    city: '',
+    country: 'AU',
+    deliveryCompanyName: '',
+    email: '',
+    firstName: '',
+
+    lastName: '',
+    marketing: true,
+    paymentMethod: '',
+    phone: '',
+    state: '',
+    termsAndConditions: true,
+
+    zip: '', // 👈 add this
+  });
 
   const [deliveryOptions, setDeliveryOptions] = useState([
     {
@@ -79,202 +98,312 @@ export default function CheckoutPage() {
     });
   };
 
+  const handleChange = e =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleCheckboxChange = event => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.checked,
+    });
+  };
+  const handleRadioChange = event => {
+    setFormData({
+      ...formData,
+      paymentMethod: event.target.value,
+    });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log(formData);
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.companyName ||
+      !formData.termsAndConditions ||
+      !formData.marketing ||
+      !formData.paymentMethod
+    ) {
+      console.warn('Please fill all required fields');
+      return;
+    }
+
+    console.log('submitted');
+  };
+
   return (
     <Layout title="Checkout | HSP">
       <Container>
         <section className={styles.checkoutMain}>
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
-            {/* Contact Details */}
-            <div className={styles.contactDetails}>
-              <div className={styles.heading}>
-                <h2>Contact Details</h2>
-                <p>How Can We Reach You About Your Order?</p>
-              </div>
-              <div className={styles.formRow}>
-                <div className={styles.colHalf}>
-                  <div className={styles.inputGroup}>
-                    <label>
-                      First Name<span className={styles.reqStar}>*</span>
-                    </label>
-                    <input type="text" />
-                  </div>
+            <form onSubmit={handleSubmit}>
+              {/* Contact Details */}
+              <div className={styles.contactDetails}>
+                <div className={styles.heading}>
+                  <h2>Contact Details</h2>
+                  <p>How Can We Reach You About Your Order?</p>
                 </div>
-                <div className={styles.colHalf}>
-                  <div className={styles.inputGroup}>
-                    <label>
-                      Last Name<span className={styles.reqStar}>*</span>
-                    </label>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div className={styles.colFull}>
-                  <div className={styles.inputGroup}>
-                    <label>
-                      Email Address<span className={styles.reqStar}>*</span>
-                    </label>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div className={styles.colFull}>
-                  <div className={styles.inputGroup}>
-                    <label>
-                      Mobile Number<span className={styles.reqStar}>*</span>
-                    </label>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div className={styles.colFull}>
-                  <div className={styles.inputGroup}>
-                    <label>
-                      Company Name (Optional)
-                      <span className={styles.reqStar}>*</span>
-                    </label>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div className={styles.colFull}>
-                  <div className={styles.inputGroup}>
-                    <div className={styles.selectOption}>
+                <div className={styles.formRow}>
+                  <div className={styles.colHalf}>
+                    <div className={styles.inputGroup}>
                       <label>
-                        <input type="checkbox" />{' '}
-                        <span>
-                          I accept the Privacy Policy and Terms & Conditions
-                          <Link href="/privacy-terms-and-conditions">
-                            Read our T&Cs
-                          </Link>
-                        </span>
+                        First Name<span className={styles.reqStar}>*</span>
                       </label>
+                      <input
+                        name="firstName"
+                        onChange={handleChange}
+                        type="text"
+                        value={formData.firstName}
+                      />
                     </div>
                   </div>
-                </div>
-                <div className={styles.colFull}>
-                  <div className={styles.inputGroup}>
-                    <div className={styles.selectOption}>
+                  <div className={styles.colHalf}>
+                    <div className={styles.inputGroup}>
                       <label>
-                        <input type="checkbox" />{' '}
-                        <span>
-                          I agree to receiving Marketing and Promotional emails
-                          from HSP
-                        </span>
+                        Last Name<span className={styles.reqStar}>*</span>
                       </label>
+                      <input
+                        name="lastName"
+                        onChange={handleChange}
+                        type="text"
+                        value={formData.lastName}
+                      />
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            {/* Receive Details */}
-            <div className={styles.checkOutInfo}>
-              <div className={styles.heading}>
-                <h2>How would you like to Receive your Order?</h2>
-                <p>Choose a Delivery or Install Method</p>
-              </div>
-              <div className={styles.blackBoxes}>
-                {loading ? (
-                  <div className={styles.loading}>
-                    <Loading size="large" />
-                  </div>
-                ) : isFormFilled ? (
-                  <div className={styles.editSelection}>
-                    <div className={styles.heading}>
-                      <h2>
-                        <DeliveryIcon /> Delivery
-                      </h2>
-                      <button
-                        className={styles.link}
-                        onClick={() => setIsFormFilled(false)}
-                      >
-                        Edit Selection
-                      </button>
-                    </div>
-                    <div className={styles.deliveryAddressBox}>
-                      Delivery Address: 66/322 Blackwood Street, Melbourne,
-                      3000, Australia
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <label>
+                        Email Address<span className={styles.reqStar}>*</span>
+                      </label>
+                      <input
+                        name="email"
+                        onChange={handleChange}
+                        type="email"
+                        value={formData.email}
+                      />
                     </div>
                   </div>
-                ) : (
-                  deliveryOptions.map(option => (
-                    <div
-                      className={styles.boxItem}
-                      key={option.id}
-                      onClick={() => handleSelectOption(option.id)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <div className={styles.contentBox}>
-                        <div className={styles.contentWrap}>
-                          <h3>
-                            {option.icon} {option.title}
-                          </h3>
-                          <p>{option.description}</p>
-                        </div>
-                        {openDrawer === option.id &&
-                          deliveryOptions[0].id === option.id && (
-                            <div className={styles.drawer}>
-                              {/* hello */}
-                              {/* {option.drawerContent} */}
-                              {option.id === 'local-installation' && (
-                                <LocalInstallation />
-                              )}
-                              {option.id === 'click-collect' && (
-                                <ClickCollect />
-                              )}
-                              {option.id === 'deliver-door' && (
-                                <DeliverToDoor
-                                  isFormFilled={isFormFilled}
-                                  setIsFormFilled={setIsFormFilled}
-                                />
-                              )}
-                            </div>
-                          )}
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <label>
+                        Mobile Number<span className={styles.reqStar}>*</span>
+                      </label>
+                      <input
+                        name="phone"
+                        onChange={handleChange}
+                        type="text"
+                        value={formData.phone}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <label>
+                        Company Name (Optional)
+                        <span className={styles.reqStar}>*</span>
+                      </label>
+                      <input
+                        name="companyName"
+                        onChange={handleChange}
+                        type="text"
+                        value={formData.companyName}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.termsAndConditions}
+                            name="termsAndConditions"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I accept the Privacy Policy and Terms & Conditions
+                            <Link href="/privacy-terms-and-conditions">
+                              Read our T&Cs
+                            </Link>
+                          </span>
+                        </label>
                       </div>
                     </div>
-                  ))
-                )}
+                  </div>
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.marketing}
+                            name="marketing"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I agree to receiving Marketing and Promotional
+                            emails from HSP
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* After Filling the form this will be appeared */}
-            {isFormFilled && (
-              <div className={styles.checkOutPayment}>
+              {/* Receive Details */}
+              <div className={styles.checkOutInfo}>
                 <div className={styles.heading}>
-                  <h2>Payment</h2>
-                  <p>All transactions are secure and encrypted</p>
+                  <h2>How would you like to Receive your Order?</h2>
+                  <p>Choose a Delivery or Install Method</p>
                 </div>
-                <div className={styles.couponBox}>
-                  <input type="text" />
-                  <button disabled>Apply</button>
+                <div className={styles.blackBoxes}>
+                  {loading ? (
+                    <div className={styles.loading}>
+                      <Loading size="large" />
+                    </div>
+                  ) : isFormFilled ? (
+                    <div className={styles.editSelection}>
+                      <div className={styles.heading}>
+                        <h2>
+                          <DeliveryIcon /> Delivery
+                        </h2>
+                        <button
+                          className={styles.link}
+                          onClick={() => setIsFormFilled(false)}
+                        >
+                          Edit Selection
+                        </button>
+                      </div>
+                      <div className={styles.deliveryAddressBox}>
+                        Delivery Address: 66/322 Blackwood Street, Melbourne,
+                        3000, Australia
+                      </div>
+                    </div>
+                  ) : (
+                    deliveryOptions.map(option => (
+                      <div
+                        className={styles.boxItem}
+                        key={option.id}
+                        onClick={() => handleSelectOption(option.id)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <div className={styles.contentBox}>
+                          <div className={styles.contentWrap}>
+                            <h3>
+                              {option.icon} {option.title}
+                            </h3>
+                            <p>{option.description}</p>
+                          </div>
+                          {openDrawer === option.id &&
+                            deliveryOptions[0].id === option.id && (
+                              <div className={styles.drawer}>
+                                {/* hello */}
+                                {/* {option.drawerContent} */}
+                                {option.id === 'local-installation' && (
+                                  <LocalInstallation />
+                                )}
+                                {option.id === 'click-collect' && (
+                                  <ClickCollect />
+                                )}
+                                {option.id === 'deliver-door' && (
+                                  <DeliverToDoor
+                                    formData={formData}
+                                    isFormFilled={isFormFilled}
+                                    setFormData={setFormData}
+                                    setIsFormFilled={setIsFormFilled}
+                                  />
+                                )}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-
-                <div className={styles.paymenSelection}>
-                  <div className={styles.payBox}>
-                    <input name="payment" type="radio" />
-                    <span>Credit Card</span>
-                    <Image
-                      alt={'Cards'}
-                      height={43}
-                      src={PaymentIcons}
-                      width={154}
-                    />
-                  </div>
-                  <div className={styles.payBox}>
-                    <input name="payment" type="radio" />
-                    <span>PayPal</span>
-                    <Image
-                      alt={'Cards'}
-                      height={49}
-                      src={PaypalIcon}
-                      width={112}
-                    />
-                  </div>
-                  <div className={styles.payBox}>
-                    <input name="payment" type="radio" />
-                    <span>COD (Cash on Delivery)</span>
-                  </div>
-                </div>
-
-                <button className={styles.placeOrderBtn}>Place Order</button>
               </div>
-            )}
+
+              {/* After Filling the form this will be appeared */}
+              {isFormFilled && (
+                <div className={styles.checkOutPayment}>
+                  <div className={styles.heading}>
+                    <h2>Payment</h2>
+                    <p>All transactions are secure and encrypted</p>
+                  </div>
+                  <div className={styles.couponBox}>
+                    <input placeholder="Gift Card Number" type="text" />
+                    <button disabled type="button">
+                      Apply
+                    </button>
+                  </div>
+
+                  <div className={styles.paymenSelection}>
+                    <div className={styles.payBox}>
+                      <input
+                        checked={formData.paymentMethod === 'credit-card'}
+                        name="paymentMethod"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="credit-card"
+                      />
+                      <span>Credit Card</span>
+                      <Image
+                        alt={'Cards'}
+                        height={43}
+                        src={PaymentIcons}
+                        width={154}
+                      />
+                    </div>
+                    <div className={styles.payBox}>
+                      <input
+                        checked={formData.paymentMethod === 'paypal'}
+                        name="paymentMethod"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="paypal"
+                      />
+                      <span>PayPal</span>
+                      <Image
+                        alt={'Cards'}
+                        height={49}
+                        src={PaypalIcon}
+                        width={112}
+                      />
+                    </div>
+                    <div className={styles.payBox}>
+                      <input
+                        checked={formData.paymentMethod === 'cod'}
+                        name="paymentMethod"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="cod"
+                      />
+                      <span>COD (Cash on Delivery)</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    className={styles.placeOrderBtn}
+                    disabled={
+                      !formData.firstName ||
+                      !formData.lastName ||
+                      !formData.email ||
+                      !formData.phone ||
+                      !formData.companyName ||
+                      !formData.termsAndConditions ||
+                      !formData.marketing ||
+                      !formData.paymentMethod
+                    }
+                    type="submit"
+                  >
+                    Place Order
+                  </Button>
+                </div>
+              )}
+            </form>
           </div>
 
           {/* Checkout Right */}
@@ -310,7 +439,7 @@ export default function CheckoutPage() {
                 ))
               )}
               <div className={styles.couponBlock}>
-                <input type="text" />
+                <input placeholder="Coupon Code" type="text" />
                 <button className={styles.couponBtn} disabled>
                   Apply
                 </button>

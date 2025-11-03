@@ -58,7 +58,9 @@
           }
         }
 
-        input[type='text'] {
+        input[type='text'],
+        input[type='phone'],
+        input[type='email'] {
           min-height: 36px;
           border-radius: 8px;
           border: solid 1px #4b4b4b;

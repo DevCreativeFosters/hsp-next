@@ -24,6 +24,7 @@
     "clsx": "^2.0.0",
     "commander": "^11.1.0",
     "copy-to-clipboard": "^3.3.3",
+    "country-state-city": "^3.2.1",
     "graphql": "^16.8.1",
     "html-entities": "^2.4.0",
     "html-react-parser": "^4.2.2",

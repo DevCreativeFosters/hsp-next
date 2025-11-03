@@ -1,8 +1,10 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
+import { clsx } from 'clsx';
+import { State } from 'country-state-city';
 
 import { useCart } from '@contexts/cart-context';
 
@@ -14,20 +16,8 @@ import styles from './deliver-to-door.module.scss';
 
 const libraries = ['places'];
 
-function DeliveryAddressForm({ setIsFormFilled }) {
+function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
   const { cartItems } = useCart();
-  const [formData, setFormData] = useState({
-    address: '',
-    apartment: '',
-    city: '',
-    companyName: '',
-    country: 'Australia',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    state: '',
-    zip: '',
-  });
 
   const autocompleteRef = useRef(null);
 
@@ -95,7 +85,10 @@ function DeliveryAddressForm({ setIsFormFilled }) {
                   onChange={handleChange}
                   value={formData.country}
                 >
-                  <option value="Australia">Australia</option>
+                  {/* {Country.getAllCountries().map((c) => (
+                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
+                  ))} */}
+                  <option value="AU">Australia</option>
                 </select>
               </div>
             </div>
@@ -104,26 +97,47 @@ function DeliveryAddressForm({ setIsFormFilled }) {
           <div className={styles.formRow}>
             <div className={styles.formCol}>
               <input
-                name="companyName"
+                name="deliveryCompanyName"
                 onChange={handleChange}
                 placeholder="Company Name (Optional)"
-                value={formData.companyName}
+                value={formData.deliveryCompanyName}
               />
             </div>
           </div>
 
           {/* Address Autocomplete */}
           <Autocomplete
-            onLoad={ref => (autocompleteRef.current = ref)}
+            onLoad={autocomplete => {
+              autocompleteRef.current = autocomplete;
+              autocomplete.setComponentRestrictions({
+                country: formData.country.toLowerCase(),
+              });
+
+              // 👇 Move the dropdown inside your component for styling
+              setTimeout(() => {
+                const pacContainer = document.querySelector('.pac-container');
+                pacContainer.classList.add('pacContainer');
+
+                const formWrapper = document.querySelector(
+                  `.${styles.autocomplete}`,
+                );
+                if (pacContainer && formWrapper) {
+                  formWrapper.parentNode.insertBefore(
+                    pacContainer,
+                    formWrapper,
+                  );
+                }
+              }, 500);
+            }}
             onPlaceChanged={handlePlaceChanged}
           >
             <div className={styles.formRow}>
-              <div className={styles.formCol}>
+              <div className={clsx(styles.formCol, styles.autocomplete)}>
                 <input
-                  name="address"
-                  onChange={handleChange}
+                  // name="address"
+                  // onChange={handleChange}
                   placeholder="Address"
-                  value={formData.address}
+                  // value={formData.address}
                 />
                 <button className={styles.searchBtn} type="button">
                   <SearchIcon />
@@ -136,10 +150,10 @@ function DeliveryAddressForm({ setIsFormFilled }) {
           <div className={styles.formRow}>
             <div className={styles.formCol}>
               <input
-                name="apartment"
+                name="address"
                 onChange={handleChange}
-                placeholder="Apartment, suite, etc. (optional)"
-                value={formData.apartment}
+                placeholder="Apartment, suite, etc."
+                value={formData.address}
               />
             </div>
           </div>
@@ -155,12 +169,20 @@ function DeliveryAddressForm({ setIsFormFilled }) {
               />
             </div>
             <div className={styles.formCol}>
-              <input
-                name="state"
-                onChange={handleChange}
-                placeholder="State/Territory"
-                value={formData.state}
-              />
+              <div className={styles.lblSelect}>
+                <span>State/territory</span>
+                <select
+                  name="state"
+                  onChange={handleChange}
+                  value={formData.state}
+                >
+                  {State.getStatesOfCountry(formData.country).map(s => (
+                    <option key={s.isoCode} value={s.name}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className={styles.formCol}>
               <input
@@ -174,6 +196,13 @@ function DeliveryAddressForm({ setIsFormFilled }) {
 
           <Button
             className={styles.submitBtn}
+            disabled={
+              !formData.country ||
+              !formData.address ||
+              !formData.city ||
+              !formData.state ||
+              !formData.zip
+            }
             onClick={() => setIsFormFilled(true)}
             size="large"
           >
@@ -185,10 +214,18 @@ function DeliveryAddressForm({ setIsFormFilled }) {
   );
 }
 
-export default function DeliverToDoor({ setIsFormFilled }) {
+export default function DeliverToDoor({
+  formData,
+  setFormData,
+  setIsFormFilled,
+}) {
   return (
     <div className={styles.drawerContent}>
-      <DeliveryAddressForm setIsFormFilled={setIsFormFilled} />
+      <DeliveryAddressForm
+        formData={formData}
+        setFormData={setFormData}
+        setIsFormFilled={setIsFormFilled}
+      />
     </div>
   );
 }
