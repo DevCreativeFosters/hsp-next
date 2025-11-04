@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
+import { CheckoutProvider, useCheckout } from '@contexts/checkout';
 
+import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
 
 import Button from '@components/button/button';
@@ -18,7 +21,6 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Loading from '@components/loading/loading';
 
-import DeliveryIcon from '@assets/icons/delivery-icon.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
@@ -27,59 +29,107 @@ import PaypalIcon from '@assets/images/paypal.png';
 
 import styles from './checkout.module.scss';
 
-export default function CheckoutPage() {
-  const { cartItems, cartSubTotal, cartTotal, loading } = useCart();
+function CheckoutPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const {
+    cartItems,
+    cartSubTotal,
+    cartTotal,
+    getCartItems,
+    loading: cartLoading,
+  } = useCart();
+
+  const {
+    appliedCoupons,
+    applyCoupon,
+    checkoutOrder,
+    loading: checkoutLoading,
+  } = useCheckout();
+  const [couponCode, setCouponCode] = useState('');
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
+    
     address: '',
-    city: '',
-    company: '',
-    country: 'AU',
-    deliveryCompanyName: '',
-    email: '',
-    first_name: '',
+    
 
+company: '',
+    
+
+
+city: '',
+    
+
+// Deliver to Door
+country: 'AU',
+    
+
+deliveryCompanyName: '',
+    
+
+email: '',
+    
+// Contact Details
+first_name: '',
+
+    
     last_name: '',
-    marketing: true,
+    marketing: false,
     payment_method: '',
     phone: '',
     postcode: '',
     state: '',
 
-    termsAndConditions: true,
+    termsAndConditions: false,
   });
 
   const [deliveryOptions, setDeliveryOptions] = useState([
     {
       description:
         'Choose a local HSP fitter to get your accessories installed',
-      drawerContent: <LocalInstallation />,
-      icon: <SettingIcon />,
+      icon: SettingIcon,
       id: 'local-installation',
+      selectedAddress: {
+        btnTitle: 'Change Method',
+        title: 'Local Installation',
+      },
       title: 'Local Installation',
     },
     {
       description: 'Convenient Local Pickup',
-      drawerContent: <ClickCollect />,
-      icon: <LocationIcon />,
+      icon: LocationIcon,
       id: 'click-collect',
+      selectedAddress: {
+        btnTitle: 'Edit Selection',
+        title: 'Click & Collect',
+      },
       title: 'Click & Collect',
     },
     {
       description: 'Sent within 1-3 business days',
-      drawerContent: (
-        <DeliverToDoor
-          isFormFilled={isFormFilled}
-          setIsFormFilled={setIsFormFilled}
-        />
-      ),
-      icon: <TruckIcon />,
+      icon: TruckIcon,
       id: 'deliver-door',
+      selectedAddress: {
+        btnTitle: 'Edit Selection',
+        title: 'Delivery',
+      },
       title: 'Deliver to Door',
     },
   ]);
   const [openDrawer, setOpenDrawer] = useState('');
+
+  const [allStores, setAllStores] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const stores = await getStores();
+      setAllStores(stores);
+    }
+    fetchData();
+  }, []);
 
   const handleSelectOption = id => {
     setDeliveryOptions(prev => {
@@ -114,24 +164,43 @@ export default function CheckoutPage() {
     });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(formData);
-    if (
-      !formData.first_name ||
-      !formData.last_name ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.company ||
-      !formData.termsAndConditions ||
-      !formData.marketing ||
-      !formData.payment_method
-    ) {
-      console.warn('Please fill all required fields');
+
+    setLoading(true);
+
+    const requiredFields = [
+      'first_name',
+      'last_name',
+      'email',
+      'phone',
+      'company',
+      'termsAndConditions',
+      'marketing',
+      'payment_method',
+    ];
+
+    const isMissing = requiredFields.some(field => !formData[field]);
+    if (isMissing) {
+      alert('⚠️ Please fill all required fields.');
       return;
     }
 
-    console.log('submitted');
+    const payload = {
+      ...formData,
+      ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
+    };
+
+    const result = await checkoutOrder(payload);
+    if (result?.order_id) {
+      await getCartItems();
+      setLoading(false);
+      router.push(`/order-status/${result.order_id}`);
+    } else {
+      alert(`❌ ${result?.message || 'Order failed'}`);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -262,7 +331,7 @@ export default function CheckoutPage() {
                   <p>Choose a Delivery or Install Method</p>
                 </div>
                 <div className={styles.blackBoxes}>
-                  {loading ? (
+                  {cartLoading ? (
                     <div className={styles.loading}>
                       <Loading size="large" />
                     </div>
@@ -270,18 +339,22 @@ export default function CheckoutPage() {
                     <div className={styles.editSelection}>
                       <div className={styles.heading}>
                         <h2>
-                          <DeliveryIcon /> Delivery
+                          {(() => {
+                            const Icon = deliveryOptions[0].icon;
+                            return <Icon className={styles.icon} />;
+                          })()}
+                          {deliveryOptions[0].selectedAddress.title}
                         </h2>
                         <button
                           className={styles.link}
                           onClick={() => setIsFormFilled(false)}
                         >
-                          Edit Selection
+                          {deliveryOptions[0].selectedAddress.btnTitle}
                         </button>
                       </div>
                       <div className={styles.deliveryAddressBox}>
-                        Delivery Address: 66/322 Blackwood Street, Melbourne,
-                        3000, Australia
+                        Delivery Address: {formData.address}, {formData.city},{' '}
+                        {formData.state} {formData.postcode}, {formData.country}
                       </div>
                     </div>
                   ) : (
@@ -295,7 +368,7 @@ export default function CheckoutPage() {
                         <div className={styles.contentBox}>
                           <div className={styles.contentWrap}>
                             <h3>
-                              {option.icon} {option.title}
+                              <option.icon /> {option.title}
                             </h3>
                             <p>{option.description}</p>
                           </div>
@@ -305,10 +378,10 @@ export default function CheckoutPage() {
                                 {/* hello */}
                                 {/* {option.drawerContent} */}
                                 {option.id === 'local-installation' && (
-                                  <LocalInstallation />
+                                  <LocalInstallation allStores={allStores} />
                                 )}
                                 {option.id === 'click-collect' && (
-                                  <ClickCollect />
+                                  <ClickCollect allStores={allStores} />
                                 )}
                                 {option.id === 'deliver-door' && (
                                   <DeliverToDoor
@@ -396,7 +469,9 @@ export default function CheckoutPage() {
                       !formData.company ||
                       !formData.termsAndConditions ||
                       !formData.marketing ||
-                      !formData.payment_method
+                      !formData.payment_method ||
+                      loading ||
+                      cartItems.length === 0
                     }
                     type="submit"
                   >
@@ -410,7 +485,7 @@ export default function CheckoutPage() {
             <div className={styles.checkOutRight}>
               <div className={styles.checkOutItemsMain}>
                 <h3>Products</h3>
-                {loading ? (
+                {cartLoading ? (
                   <div className={styles.loading}>
                     <Loading size="large" />
                   </div>
@@ -439,9 +514,21 @@ export default function CheckoutPage() {
                   ))
                 )}
                 <div className={styles.couponBlock}>
-                  <input placeholder="Coupon Code" type="text" />
-                  <button className={styles.couponBtn} disabled>
-                    Apply
+                  <input
+                    onChange={e => setCouponCode(e.target.value)}
+                    placeholder="Coupon Code"
+                    type="text"
+                    value={couponCode}
+                  />
+                  <button
+                    className={styles.couponBtn}
+                    disabled={checkoutLoading || !couponCode}
+                    onClick={() => {
+                      if (applyCoupon(couponCode)) setCouponCode('');
+                    }}
+                    type="button"
+                  >
+                    {checkoutLoading ? 'Applying...' : 'Apply'}
                   </button>
                 </div>
                 <div className={styles.checkoutSummary}>
@@ -477,10 +564,24 @@ export default function CheckoutPage() {
                       )}
                     </div>
                   </div>
-                  <div className={clsx(styles.subTotal, styles.discount)}>
-                    <div className={styles.subTotaltitle}>Discount</div>
-                    <div className={styles.subTotalPrice}>-$150</div>
-                  </div>
+                  {appliedCoupons.length > 0 &&
+                    appliedCoupons.map((coupon, index) => (
+                      <div
+                        className={clsx(styles.subTotal, styles.discount)}
+                        key={index}
+                      >
+                        <div className={styles.subTotaltitle}>
+                          Discount ({coupon.code})
+                        </div>
+                        <div className={styles.subTotalPrice}>
+                          -
+                          {coupon.discount_type === 'percent'
+                            ? `${coupon.amount}%`
+                            : formatPrice(coupon.amount)}
+                        </div>
+                      </div>
+                    ))}
+
                   <div className={styles.finalTotal}>
                     <div className={styles.finalTotaltitle}>TOTAL</div>
                     <div className={styles.finalTotalPrice}>
@@ -497,3 +598,13 @@ export default function CheckoutPage() {
     </Layout>
   );
 }
+
+function Checkout() {
+  return (
+    <CheckoutProvider>
+      <CheckoutPage />
+    </CheckoutProvider>
+  );
+}
+
+export default Checkout;
