@@ -11,6 +11,7 @@ export const CheckoutProvider = ({ children }) => {
   const [couponMessage, setCouponMessage] = useState('');
   const [orderResponse, setOrderResponse] = useState(null);
   const [appliedCoupons, setAppliedCoupons] = useState([]);
+  const [totalDiscount, setTotalDiscount] = useState(0);
 
   // Get All Applied Coupons
   const getAllAppliedCoupons = async () => {
@@ -30,6 +31,14 @@ export const CheckoutProvider = ({ children }) => {
       `;
 
       const data = await fetchAPI(query);
+      if (data?.getAppliedCoupons?.coupons?.length > 0) {
+        setTotalDiscount(
+          data?.getAppliedCoupons?.coupons?.reduce(
+            (acc, curr) => acc + curr.amount,
+            0,
+          ) || 0,
+        );
+      }
       setAppliedCoupons(data?.getAppliedCoupons?.coupons || []);
     } catch (err) {
       console.error('Error getting applied coupons:', err);
@@ -112,6 +121,7 @@ export const CheckoutProvider = ({ children }) => {
         couponMessage,
         loading,
         orderResponse,
+        totalDiscount,
       }}
     >
       {children}

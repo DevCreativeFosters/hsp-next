@@ -614,3 +614,20 @@
     }
   }
 }
+
+.noInstallationCost {
+  margin-top: 10px;
+  background-color: #ed2935;
+  border-radius: 6px;
+  padding: 10px 20px;
+
+  * {
+    color: #fff;
+  }
+
+  .instruction {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+}

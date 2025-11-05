@@ -14,7 +14,7 @@ import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
 
 import styles from './store-locator-results-and-map.module.scss';
 
-export default function StoreLocatorResultsAndMap({ allLocations }) {
+export default function StoreLocatorResultsAndMap({ allLocations, onSelect }) {
   const resultsRef = useRef(null);
   const {
     allMapLocations,
@@ -70,6 +70,7 @@ export default function StoreLocatorResultsAndMap({ allLocations }) {
               allLocations={allLocations}
               filteredStores={filteredStores}
               normalizeStores={normalizeStores}
+              onSelect={onSelect}
               selectedStore={selectedStore}
             />
           </div>

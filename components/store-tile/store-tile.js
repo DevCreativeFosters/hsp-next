@@ -28,6 +28,7 @@ export default function StoreTile({
     storeIcon,
     tel,
   },
+  onSelect = () => {},
   selected,
 }) {
   let storeTypeLabel = label;
@@ -57,6 +58,7 @@ export default function StoreTile({
     <li
       className={clsx(styles.tile, { [styles.isSelected]: selected })}
       id={geoHash}
+      onClick={() => onSelect(addressStringPure)}
     >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
       <div className={styles.storeCategory}>

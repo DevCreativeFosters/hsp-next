@@ -1,15 +1,22 @@
+import { StoreLocatorProvider } from '@contexts/store-locator';
 
+import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
+import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
 
-function LocalInstallation({ allStores }) {
+function LocalInstallation({ allStores, onSelect }) {
   return (
-    <div>
-      <h3>Local Installation</h3>
-      <p>Choose a local HSP fitter to get your accessories installed</p>
-    </div>
-    // <StoreLocatorProvider>
-    //   <StoreLocatorSearch allLocations={allStores} />
-    //   <StoreLocatorResultsAndMap allLocations={allStores} minHeightLarge />
-    // </StoreLocatorProvider>
+    <StoreLocatorProvider>
+      <StoreLocatorSearch
+        addClass={'checkout'}
+        allLocations={allStores}
+        onSelect={onSelect}
+      />
+      <StoreLocatorResultsAndMap
+        allLocations={allStores}
+        minHeightLarge
+        onSelect={onSelect}
+      />
+    </StoreLocatorProvider>
   );
 }
 export default LocalInstallation;

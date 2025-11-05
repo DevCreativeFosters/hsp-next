@@ -1,3 +1,11 @@
+.checkout {
+  background: transparent !important;
+
+  .label {
+    display: none;
+  }
+}
+
 .wrapper {
   position: relative;
   z-index: var(--z-index-store-search);

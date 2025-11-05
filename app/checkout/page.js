@@ -47,40 +47,37 @@ function CheckoutPage() {
     applyCoupon,
     checkoutOrder,
     loading: checkoutLoading,
+    totalDiscount,
   } = useCheckout();
   const [couponCode, setCouponCode] = useState('');
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
-    
     address: '',
-    
 
-company: '',
-    
+    city: '',
 
+    company: '',
 
-city: '',
-    
+    // Deliver to Door
+    country: 'AU',
 
-// Deliver to Door
-country: 'AU',
-    
+    deliveryCompanyName: '',
 
-deliveryCompanyName: '',
-    
+    email: '',
 
-email: '',
-    
-// Contact Details
-first_name: '',
+    // Contact Details
+    first_name: '',
 
-    
     last_name: '',
     marketing: false,
+    orderType: '',
     payment_method: '',
     phone: '',
     postcode: '',
+
+    selectedStore: '',
+
     state: '',
 
     termsAndConditions: false,
@@ -122,6 +119,12 @@ first_name: '',
   const [openDrawer, setOpenDrawer] = useState('');
 
   const [allStores, setAllStores] = useState([]);
+  const [selectedStore, setSelectedStore] = useState('');
+
+  const onSelect = item => {
+    setSelectedStore(item);
+    setIsFormFilled(true);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -140,6 +143,8 @@ first_name: '',
       if (prev[0].id === id) {
         // setOpenDrawer(openDrawer === id ? '' : id);
         setOpenDrawer(id);
+        setFormData({ ...formData, orderType: id });
+        // setSelectedStore('');
         return prev; // keep order the same
       }
 
@@ -178,6 +183,7 @@ first_name: '',
       'termsAndConditions',
       'marketing',
       'payment_method',
+      'orderType',
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -188,6 +194,7 @@ first_name: '',
 
     const payload = {
       ...formData,
+      selectedStore,
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
     };
 
@@ -352,10 +359,18 @@ first_name: '',
                           {deliveryOptions[0].selectedAddress.btnTitle}
                         </button>
                       </div>
-                      <div className={styles.deliveryAddressBox}>
-                        Delivery Address: {formData.address}, {formData.city},{' '}
-                        {formData.state} {formData.postcode}, {formData.country}
-                      </div>
+                      {deliveryOptions[0].id === 'deliver-door' ? (
+                        <div className={styles.deliveryAddressBox}>
+                          Delivery Address: {formData.address}, {formData.city},{' '}
+                          {formData.state} {formData.postcode},{' '}
+                          {formData.country}
+                        </div>
+                      ) : (
+                        <div className={styles.deliveryAddressBox}>
+                          Selected Address: <b>HSP Vehicle Accessories</b>{' '}
+                          {selectedStore}{' '}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     deliveryOptions.map(option => (
@@ -378,10 +393,16 @@ first_name: '',
                                 {/* hello */}
                                 {/* {option.drawerContent} */}
                                 {option.id === 'local-installation' && (
-                                  <LocalInstallation allStores={allStores} />
+                                  <LocalInstallation
+                                    allStores={allStores}
+                                    onSelect={onSelect}
+                                  />
                                 )}
                                 {option.id === 'click-collect' && (
-                                  <ClickCollect allStores={allStores} />
+                                  <ClickCollect
+                                    allStores={allStores}
+                                    onSelect={onSelect}
+                                  />
                                 )}
                                 {option.id === 'deliver-door' && (
                                   <DeliverToDoor
@@ -536,7 +557,7 @@ first_name: '',
                   <div className={styles.subTotal}>
                     <div className={styles.subTotaltitle}>Subtotal</div>
                     <div className={styles.subTotalPrice}>
-                      {formatPrice(cartSubTotal)}
+                      {formatPrice(cartSubTotal)}.00
                     </div>
                   </div>
                   <div className={styles.subTotal}>
@@ -551,6 +572,7 @@ first_name: '',
                           0,
                         ),
                       )}
+                      .00
                     </div>
                   </div>
                   <div className={styles.subTotal}>
@@ -562,6 +584,7 @@ first_name: '',
                           0,
                         ),
                       )}
+                      .00
                     </div>
                   </div>
                   {appliedCoupons.length > 0 &&
@@ -578,6 +601,7 @@ first_name: '',
                           {coupon.discount_type === 'percent'
                             ? `${coupon.amount}%`
                             : formatPrice(coupon.amount)}
+                          .00
                         </div>
                       </div>
                     ))}
@@ -585,10 +609,46 @@ first_name: '',
                   <div className={styles.finalTotal}>
                     <div className={styles.finalTotaltitle}>TOTAL</div>
                     <div className={styles.finalTotalPrice}>
-                      {formatPrice(cartTotal)}
+                      {formatPrice(cartTotal - totalDiscount, 'AUD ')}.00
                       <span>(incl. 10% GST)</span>
                     </div>
                   </div>
+
+                  {formData.orderType === 'local-installation' && (
+                    <div className={styles.noInstallationCost}>
+                      <div className={styles.finalTotal}>
+                        <div className={styles.finalTotaltitle}>Due Now</div>
+                        <div className={styles.finalTotalPrice}>
+                          {formatPrice(
+                            cartTotal -
+                              cartItems.reduce(
+                                (total, item) =>
+                                  total +
+                                  item.installation_cost * item.quantity,
+                                0,
+                              ) -
+                              totalDiscount,
+                            'AUD ',
+                          )}
+                          .00
+                        </div>
+                      </div>
+                      <div className={styles.instruction}>
+                        <p>
+                          Fitting cost to be paid to the store on the day of the
+                          installation
+                        </p>
+                        {formatPrice(
+                          cartItems.reduce(
+                            (total, item) =>
+                              total + item.installation_cost * item.quantity,
+                            0,
+                          ),
+                        )}
+                        .00
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

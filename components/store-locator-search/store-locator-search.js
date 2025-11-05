@@ -27,7 +27,11 @@ import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
 
 import styles from './store-locator-search.module.scss';
 
-export default function StoreLocatorSearch({ allLocations }) {
+export default function StoreLocatorSearch({
+  addClass,
+  allLocations,
+  onSelect = () => {},
+}) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -66,9 +70,7 @@ export default function StoreLocatorSearch({ allLocations }) {
 
   const onAnyInputChange = useCallback(
     ev => {
-      setIsFormValid(
-        formRef.current?.checkValidity() && location !== undefined,
-      );
+      setIsFormValid(locationInput.trim() !== '' && location !== undefined);
     },
     [location],
   );
@@ -246,7 +248,7 @@ export default function StoreLocatorSearch({ allLocations }) {
 
   return (
     <section
-      className={clsx(styles.wrapper, {
+      className={clsx(styles.wrapper, styles[addClass], {
         [styles.isFullScreen]: isFullScreen,
         [styles.showingResults]: isInlineResultListVisible,
       })}
@@ -269,12 +271,12 @@ export default function StoreLocatorSearch({ allLocations }) {
             {!isFullScreen && (
               <span className={clsx(styles.label, 'h4')}>Locate a store</span>
             )}
-            <form
-              action="#"
+            <div
               autoComplete="off"
               className={styles.form}
               onChange={onAnyInputChange}
               ref={formRef}
+              role="form"
             >
               <div className={styles.searchPhraseWrapper}>
                 <StoreLocatorInput
@@ -307,11 +309,12 @@ export default function StoreLocatorSearch({ allLocations }) {
                     allLocations={allLocations}
                     filteredStores={filteredLocations}
                     normalizeStores={normalizeStores}
+                    onSelect={onSelect}
                     selectedStore={currentResult}
                   />
                 </div>
               )}
-            </form>
+            </div>
           </div>
         </div>
       </Container>

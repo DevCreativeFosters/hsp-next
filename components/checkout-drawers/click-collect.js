@@ -1,15 +1,22 @@
+import { StoreLocatorProvider } from '@contexts/store-locator';
 
+import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
+import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
 
-function ClickCollect({ allStores }) {
+function ClickCollect({ allStores, onSelect }) {
   return (
-    <div>
-      <h3>Click & Collect</h3>
-      <p>Convenient Local Pickup</p>
-    </div>
-    // <StoreLocatorProvider>
-    //   <StoreLocatorSearch allLocations={allStores} />
-    //   <StoreLocatorResultsAndMap allLocations={allStores} minHeightLarge />
-    // </StoreLocatorProvider>
+    <StoreLocatorProvider>
+      <StoreLocatorSearch
+        addClass={'checkout'}
+        allLocations={allStores}
+        onSelect={onSelect}
+      />
+      <StoreLocatorResultsAndMap
+        allLocations={allStores}
+        minHeightLarge
+        onSelect={onSelect}
+      />
+    </StoreLocatorProvider>
   );
 }
 

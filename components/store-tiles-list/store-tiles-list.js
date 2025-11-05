@@ -8,6 +8,7 @@ export default function StoreTilesList({
   allLocations = null,
   filteredStores = [],
   normalizeStores = stores => stores,
+  onSelect = () => {},
   selectedStore = null,
 }) {
   // Find and normalize superstore if needed
@@ -37,7 +38,12 @@ export default function StoreTilesList({
               selectedStore?.geolocation?.lat === result.geolocation.lat &&
               selectedStore?.geolocation?.lng === result.geolocation.lng;
             return (
-              <StoreTile item={result} key={index} selected={isSelected} />
+              <StoreTile
+                item={result}
+                key={index}
+                onSelect={onSelect}
+                selected={isSelected}
+              />
             );
           })}
         </ul>
@@ -48,7 +54,11 @@ export default function StoreTilesList({
           </div>
           {normalizedSuperStore && (
             <ul className={styles.resultList}>
-              <StoreTile item={normalizedSuperStore} selected={false} />
+              <StoreTile
+                item={normalizedSuperStore}
+                onSelect={onSelect}
+                selected={false}
+              />
             </ul>
           )}
         </>
