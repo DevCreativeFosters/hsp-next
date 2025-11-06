@@ -9,11 +9,13 @@ function LocalInstallation({ allStores, onSelect }) {
       <StoreLocatorSearch
         addClass={'checkout'}
         allLocations={allStores}
+        noPadding={true}
         onSelect={onSelect}
       />
       <StoreLocatorResultsAndMap
         allLocations={allStores}
         minHeightLarge
+        noPadding={true}
         onSelect={onSelect}
       />
     </StoreLocatorProvider>

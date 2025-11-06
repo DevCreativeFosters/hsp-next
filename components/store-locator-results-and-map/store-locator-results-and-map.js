@@ -14,7 +14,11 @@ import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
 
 import styles from './store-locator-results-and-map.module.scss';
 
-export default function StoreLocatorResultsAndMap({ allLocations, onSelect }) {
+export default function StoreLocatorResultsAndMap({
+  allLocations,
+  noPadding,
+  onSelect,
+}) {
   const resultsRef = useRef(null);
   const {
     allMapLocations,
@@ -63,7 +67,7 @@ export default function StoreLocatorResultsAndMap({ allLocations, onSelect }) {
 
   return (
     <div className={styles.wrapper} id="store-search">
-      <Container className={styles.container}>
+      <Container className={styles.container} noPadding={noPadding}>
         <div className={styles.visualContainer}>
           <div className={styles.results} ref={resultsRef}>
             <StoreTilesList

@@ -30,6 +30,7 @@ import styles from './store-locator-search.module.scss';
 export default function StoreLocatorSearch({
   addClass,
   allLocations,
+  noPadding = false,
   onSelect = () => {},
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
@@ -254,7 +255,7 @@ export default function StoreLocatorSearch({
       })}
       ref={wrapperOuterRef}
     >
-      <Container>
+      <Container noPadding={noPadding}>
         <div className={styles.viewContainer}>
           {isFullScreen && (
             <Button

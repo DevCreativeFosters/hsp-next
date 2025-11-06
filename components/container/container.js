@@ -9,6 +9,7 @@ export default function Container({
   collapseMargin,
   collapseTopMargin,
   flexibleBlockPadding,
+  noPadding,
   relative,
 }) {
   return (
@@ -20,6 +21,7 @@ export default function Container({
           [styles.collapseTopMargin]: collapseTopMargin,
           [styles.collapseBottomMargin]: collapseBottomMargin,
           [styles.collapseMargin]: collapseMargin,
+          [styles.noPadding]: noPadding,
           [styles.flexibleBlockPadding]: flexibleBlockPadding,
         },
         className,
