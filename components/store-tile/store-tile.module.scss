@@ -42,6 +42,7 @@
   color: var(--color-white-80);
   font-size: 14px;
   line-height: 1.28;
+  text-align: left;
 
   @include bp(large) {
     gap: var(--gap-global-sm);

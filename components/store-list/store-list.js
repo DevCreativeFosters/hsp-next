@@ -36,7 +36,7 @@ export default function StoreList({
 
       return (
         <>
-          <div className={styles.noResultsNotice}>
+          <div className={clsx(styles.noResultsNotice, 'noResultText')}>
             {constants.NO_RESULTS_NOTICE}
           </div>
 

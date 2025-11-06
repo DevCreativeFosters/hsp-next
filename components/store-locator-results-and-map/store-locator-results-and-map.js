@@ -2,6 +2,8 @@
 
 import { useContext, useEffect, useRef } from 'react';
 
+import clsx from 'clsx';
+
 import StoreLocatorContext from '@contexts/store-locator';
 
 import { getGeoHash } from '@lib/get-geo-hash';
@@ -69,7 +71,10 @@ export default function StoreLocatorResultsAndMap({
     <div className={styles.wrapper} id="store-search">
       <Container className={styles.container} noPadding={noPadding}>
         <div className={styles.visualContainer}>
-          <div className={styles.results} ref={resultsRef}>
+          <div
+            className={clsx(styles.results, 'storeSearchResults')}
+            ref={resultsRef}
+          >
             <StoreTilesList
               allLocations={allLocations}
               filteredStores={filteredStores}

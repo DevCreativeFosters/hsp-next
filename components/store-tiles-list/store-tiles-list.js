@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import constants from '@lib/constants';
 
 import StoreTile from '@components/store-tile/store-tile';
@@ -49,11 +51,11 @@ export default function StoreTilesList({
         </ul>
       ) : (
         <>
-          <div className={styles.noResultsNotice}>
+          <div className={clsx(styles.noResultsNotice, 'noResultsNotice')}>
             {constants.NO_RESULTS_NOTICE}
           </div>
           {normalizedSuperStore && (
-            <ul className={styles.resultList}>
+            <ul className={clsx(styles.resultList, 'resultLeft')}>
               <StoreTile
                 item={normalizedSuperStore}
                 onSelect={onSelect}

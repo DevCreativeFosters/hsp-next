@@ -212,8 +212,8 @@ function CheckoutPage() {
 
   return (
     <Layout title="Checkout | HSP">
-      <Container>
-        <section className={styles.checkoutMain}>
+      <Container className={styles.checkoutContainer}>
+        <section className={clsx(styles.checkoutMain, 'checkoutMain')}>
           <form onSubmit={handleSubmit}>
             {/* Checkout Left */}
             <div className={styles.checkOutLeft}>
@@ -367,8 +367,10 @@ function CheckoutPage() {
                         </div>
                       ) : (
                         <div className={styles.deliveryAddressBox}>
-                          Selected Address: <b>HSP Vehicle Accessories</b>{' '}
-                          {selectedStore}{' '}
+                          <div className={styles.left}>
+                            Selected Address: <b>HSP Vehicle Accessories</b>{' '}
+                          </div>
+                          <div className={styles.right}>{selectedStore} </div>
                         </div>
                       )}
                     </div>
@@ -387,33 +389,35 @@ function CheckoutPage() {
                             </h3>
                             <p>{option.description}</p>
                           </div>
-                          {openDrawer === option.id &&
-                            deliveryOptions[0].id === option.id && (
-                              <div className={styles.drawer}>
-                                {/* hello */}
-                                {/* {option.drawerContent} */}
-                                {option.id === 'local-installation' && (
-                                  <LocalInstallation
-                                    allStores={allStores}
-                                    onSelect={onSelect}
-                                  />
-                                )}
-                                {option.id === 'click-collect' && (
-                                  <ClickCollect
-                                    allStores={allStores}
-                                    onSelect={onSelect}
-                                  />
-                                )}
-                                {option.id === 'deliver-door' && (
-                                  <DeliverToDoor
-                                    formData={formData}
-                                    isFormFilled={isFormFilled}
-                                    setFormData={setFormData}
-                                    setIsFormFilled={setIsFormFilled}
-                                  />
-                                )}
-                              </div>
-                            )}
+                          <div className={styles.storeLocate}>
+                            {openDrawer === option.id &&
+                              deliveryOptions[0].id === option.id && (
+                                <div className={styles.drawer}>
+                                  {/* hello */}
+                                  {/* {option.drawerContent} */}
+                                  {option.id === 'local-installation' && (
+                                    <LocalInstallation
+                                      allStores={allStores}
+                                      onSelect={onSelect}
+                                    />
+                                  )}
+                                  {option.id === 'click-collect' && (
+                                    <ClickCollect
+                                      allStores={allStores}
+                                      onSelect={onSelect}
+                                    />
+                                  )}
+                                  {option.id === 'deliver-door' && (
+                                    <DeliverToDoor
+                                      formData={formData}
+                                      isFormFilled={isFormFilled}
+                                      setFormData={setFormData}
+                                      setIsFormFilled={setIsFormFilled}
+                                    />
+                                  )}
+                                </div>
+                              )}
+                          </div>
                         </div>
                       </div>
                     ))
@@ -634,18 +638,22 @@ function CheckoutPage() {
                         </div>
                       </div>
                       <div className={styles.instruction}>
-                        <p>
-                          Fitting cost to be paid to the store on the day of the
-                          installation
-                        </p>
-                        {formatPrice(
-                          cartItems.reduce(
-                            (total, item) =>
-                              total + item.installation_cost * item.quantity,
-                            0,
-                          ),
-                        )}
-                        .00
+                        <div className={styles.left}>
+                          <p>
+                            Fitting cost to be paid to the store on the day of
+                            the installation
+                          </p>
+                        </div>
+                        <div className={styles.right}>
+                          {formatPrice(
+                            cartItems.reduce(
+                              (total, item) =>
+                                total + item.installation_cost * item.quantity,
+                              0,
+                            ),
+                          )}
+                          .00
+                        </div>
                       </div>
                     </div>
                   )}

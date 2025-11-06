@@ -1,5 +1,8 @@
 .checkout {
   background: transparent !important;
+  padding-block: 0 !important;
+  padding-bottom: 0;
+  padding-top: var(--gap-global) !important;
 
   .label {
     display: none;
@@ -32,6 +35,10 @@
       overflow: hidden;
       transition: height 0.3s 0.07s;
     }
+
+    @media (width<=767px) {
+      margin-bottom: 65px;
+    }
   }
 
   &.isCloseToHeader {
@@ -39,10 +46,10 @@
       padding-block: 8px;
     }
 
-    input,
-    a {
-      max-height: 32px;
-    }
+    // input,
+    // a {
+    //   max-height: 32px;
+    // }
 
     button {
       width: 36px;
