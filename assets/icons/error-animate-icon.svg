@@ -1,0 +1,20 @@
+<svg
+    width="115px"
+    height="115px"
+    viewBox="0 0 133 133"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    className="mb-4"
+>
+    <g
+        stroke="none"
+        strokeWidth="2"
+        fill="none"
+        fillRule="evenodd"
+    >
+        <circle fill="#ed2935" cx="66.5" cy="66.5" r="54.5" />
+        <polyline stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points="45 45 88 88" />
+        <polyline stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points="88 45 45 88" />
+    </g>
+</svg>
