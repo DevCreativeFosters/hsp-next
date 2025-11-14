@@ -52,81 +52,34 @@ function CheckoutPage() {
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
-    
     address: '',
-    
-
-
-
-company: '',
-    
-
-
-
-
-
-
-city: '',
-    
-
-
-
-// End
-// Deliver to Door (deliver-door)
-// Start
-country: 'AU',
-    
-
-
-
-deliveryCompanyName: '',
-    
-
-
-
-email: '',
-    
-
-
-// Start
-first_name: '',
-    
-
-    
-    
+    city: '',
+    company: '',
+    // End
+    // Deliver to Door (deliver-door)
+    // Start
+    country: 'AU',
+    deliveryCompanyName: '',
+    email: '',
+    // Start
+    first_name: '',
     last_name: '',
     marketing: false,
     // End
-orderType: '',
-    
-payment_method: '',
-    
-phone: '',
-    
-postcode: '',
-    
+    orderType: '',
 
-    
-    
-    
-// End
-// Local Installation (local-installation), Click & Collect (click-collect)
-// Start
-selectedStore: '',
-    
+    payment_method: '',
 
-    
+    phone: '',
 
+    postcode: '',
+    // End
+    // Local Installation (local-installation), Click & Collect (click-collect)
+    // Start
+    selectedStore: '',
+    state: '',
 
-
-
-
-state: '',
-
-    
-
-
-termsAndConditions: false,
+    termsAndConditions: false,
   });
 
   const [deliveryOptions, setDeliveryOptions] = useState([
