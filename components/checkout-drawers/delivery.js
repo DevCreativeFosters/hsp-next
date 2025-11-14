@@ -12,7 +12,7 @@ import Button from '@components/button/button';
 
 import SearchIcon from '@assets/icons/search.svg';
 
-import styles from './deliver-to-door.module.scss';
+import styles from './delivery.module.scss';
 
 const libraries = ['places'];
 
@@ -214,11 +214,7 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
   );
 }
 
-export default function DeliverToDoor({
-  formData,
-  setFormData,
-  setIsFormFilled,
-}) {
+export default function Delivery({ formData, setFormData, setIsFormFilled }) {
   return (
     <div className={styles.drawerContent}>
       <DeliveryAddressForm

@@ -14,9 +14,8 @@ import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
 
 import Button from '@components/button/button';
-import ClickCollect from '@components/checkout-drawers/click-collect';
-import DeliverToDoor from '@components/checkout-drawers/deliver-to-door';
-import LocalInstallation from '@components/checkout-drawers/local-installation';
+import Delivery from '@components/checkout-drawers/delivery';
+import SelectLocation from '@components/checkout-drawers/select-location';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Loading from '@components/loading/loading';
@@ -53,34 +52,81 @@ function CheckoutPage() {
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
+    
     address: '',
+    
 
-    city: '',
 
-    company: '',
 
-    // Deliver to Door
-    country: 'AU',
+company: '',
+    
 
-    deliveryCompanyName: '',
 
-    email: '',
 
-    // Contact Details
-    first_name: '',
 
+
+
+city: '',
+    
+
+
+
+// End
+// Deliver to Door (deliver-door)
+// Start
+country: 'AU',
+    
+
+
+
+deliveryCompanyName: '',
+    
+
+
+
+email: '',
+    
+
+
+// Start
+first_name: '',
+    
+
+    
+    
     last_name: '',
     marketing: false,
-    orderType: '',
-    payment_method: '',
-    phone: '',
-    postcode: '',
+    // End
+orderType: '',
+    
+payment_method: '',
+    
+phone: '',
+    
+postcode: '',
+    
 
-    selectedStore: '',
+    
+    
+    
+// End
+// Local Installation (local-installation), Click & Collect (click-collect)
+// Start
+selectedStore: '',
+    
 
-    state: '',
+    
 
-    termsAndConditions: false,
+
+
+
+
+state: '',
+
+    
+
+
+termsAndConditions: false,
   });
 
   const [deliveryOptions, setDeliveryOptions] = useState([
@@ -393,22 +439,15 @@ function CheckoutPage() {
                             {openDrawer === option.id &&
                               deliveryOptions[0].id === option.id && (
                                 <div className={styles.drawer}>
-                                  {/* hello */}
-                                  {/* {option.drawerContent} */}
-                                  {option.id === 'local-installation' && (
-                                    <LocalInstallation
-                                      allStores={allStores}
-                                      onSelect={onSelect}
-                                    />
-                                  )}
-                                  {option.id === 'click-collect' && (
-                                    <ClickCollect
+                                  {(option.id === 'click-collect' ||
+                                    option.id === 'local-installation') && (
+                                    <SelectLocation
                                       allStores={allStores}
                                       onSelect={onSelect}
                                     />
                                   )}
                                   {option.id === 'deliver-door' && (
-                                    <DeliverToDoor
+                                    <Delivery
                                       formData={formData}
                                       isFormFilled={isFormFilled}
                                       setFormData={setFormData}

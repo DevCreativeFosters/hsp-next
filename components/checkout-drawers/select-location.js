@@ -3,7 +3,7 @@ import { StoreLocatorProvider } from '@contexts/store-locator';
 import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
 import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
 
-function LocalInstallation({ allStores, onSelect }) {
+function SelectLocation({ allStores, onSelect }) {
   return (
     <StoreLocatorProvider>
       <StoreLocatorSearch
@@ -21,4 +21,4 @@ function LocalInstallation({ allStores, onSelect }) {
     </StoreLocatorProvider>
   );
 }
-export default LocalInstallation;
+export default SelectLocation;
