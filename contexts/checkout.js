@@ -4,9 +4,12 @@ import { createContext, useContext, useState } from 'react';
 
 import { fetchAPI } from '@lib/fetch-api';
 
+import { useUserContext } from './user';
+
 const CheckoutContext = createContext();
 
 export const CheckoutProvider = ({ children }) => {
+  const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
   const [couponMessage, setCouponMessage] = useState('');
   const [orderResponse, setOrderResponse] = useState(null);
@@ -87,7 +90,7 @@ export const CheckoutProvider = ({ children }) => {
   const checkoutOrder = async input => {
     setLoading(true);
     try {
-      const query = `
+      let query = `
         mutation CheckoutOrder($input: CheckoutOrderInput!) {
           checkoutOrder(input: $input) {
             status
@@ -97,10 +100,24 @@ export const CheckoutProvider = ({ children }) => {
           }
         }
       `;
+
+      if (user.role === 'b2b') {
+        query = `
+          mutation B2BCheckoutOrder($input: B2bCheckoutOrderInput!) {
+            b2bCheckoutOrder(input: $input) {
+              status
+              message
+              order_id
+              order_total
+            }
+          }
+        `;
+      }
+
       const variables = { input };
 
       const res = await fetchAPI(query, { variables });
-      const data = res?.checkoutOrder;
+      const data = res?.checkoutOrder ?? res?.b2bCheckoutOrder;
 
       setOrderResponse(data);
       return data;

@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
 import { CheckoutProvider, useCheckout } from '@contexts/checkout';
+import { UserProvider } from '@contexts/user';
+import { useUserContext } from '@contexts/user';
 
 import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
@@ -20,6 +22,7 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Loading from '@components/loading/loading';
 
+import DropShipping from '@assets/icons/drop-shipping.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
@@ -30,6 +33,7 @@ import styles from './checkout.module.scss';
 
 function CheckoutPage() {
   const router = useRouter();
+  const { user } = useUserContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -52,19 +56,28 @@ function CheckoutPage() {
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
+    additionalCustomerInfo: {
+      customer_email: '',
+      customer_first_name: '',
+      customer_last_name: '',
+    },
     address: '',
     city: '',
+
     company: '',
     // End
     // Deliver to Door (deliver-door)
     // Start
     country: 'AU',
     deliveryCompanyName: '',
+
     email: '',
     // Start
     first_name: '',
     last_name: '',
+
     marketing: false,
+
     // End
     orderType: '',
 
@@ -73,48 +86,199 @@ function CheckoutPage() {
     phone: '',
 
     postcode: '',
+
+    purchaseOrderNumber: '',
+
     // End
     // Local Installation (local-installation), Click & Collect (click-collect)
     // Start
     selectedStore: '',
-    state: '',
 
+    state: '',
     termsAndConditions: false,
   });
 
-  const [deliveryOptions, setDeliveryOptions] = useState([
+  const allDeliveryOptions = [
     {
+      allowDelivery: false,
+      askCutomerInfo: false,
       description:
         'Choose a local HSP fitter to get your accessories installed',
       icon: SettingIcon,
       id: 'local-installation',
+      noteContent: <></>,
+      role: 'retail',
       selectedAddress: {
         btnTitle: 'Change Method',
+        title: 'Local Installation',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Choose a local HSP fitter to get your accessories installed. Your
+              selected store will reach out to you to book a suitable fitting
+              time.
+            </p>
+          </>
+        ),
         title: 'Local Installation',
       },
       title: 'Local Installation',
     },
     {
+      allowDelivery: false,
+      askCutomerInfo: false,
       description: 'Convenient Local Pickup',
       icon: LocationIcon,
       id: 'click-collect',
+      noteContent: <></>,
+      role: 'retail',
       selectedAddress: {
         btnTitle: 'Edit Selection',
+        title: 'Click & Collect',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Your Selected Store Will Reach Out To You To Provide a Collection
+              Time.
+            </p>
+          </>
+        ),
         title: 'Click & Collect',
       },
       title: 'Click & Collect',
     },
     {
+      allowDelivery: false,
+      askCutomerInfo: false,
       description: 'Sent within 1-3 business days',
       icon: TruckIcon,
       id: 'deliver-door',
+      noteContent: <></>,
+      role: 'retail',
       selectedAddress: {
         btnTitle: 'Edit Selection',
         title: 'Delivery',
       },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Appropriate delivery costs will be added to the final order
+              summary
+            </p>
+          </>
+        ),
+        title: 'Deliver to Door',
+      },
       title: 'Deliver to Door',
     },
-  ]);
+    {
+      allowDelivery: true,
+      askCutomerInfo: false,
+      description:
+        'Get your products dispatched to your store within 1-2 business days*',
+      icon: TruckIcon,
+      id: 'standard-delivery',
+      noteContent: (
+        <>
+          <p>
+            <strong>Please Note:</strong> Freight times will vary depending on
+            location
+          </p>
+        </>
+      ),
+      role: 'b2b',
+      selectedAddress: {
+        btnTitle: 'Edit Selection',
+        title: 'Deliver to You',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Appropriate delivery costs will be added to the final order
+              summary
+            </p>
+            <p>
+              <strong>Please Note:</strong> Freight times will vary depending on
+              location
+            </p>
+          </>
+        ),
+        title: 'Deliver to You',
+      },
+      title: 'Standard Delivery',
+    },
+    {
+      allowDelivery: false,
+      askCutomerInfo: false,
+      description: 'Arrange your own freight pickup from HSP HQ',
+      icon: LocationIcon,
+      id: 'pickup-from-hsp',
+      noteContent: (
+        <>
+          <p>
+            <strong>Please Note:</strong> The team at HSP will reach out to you
+            once the order is ready for collection
+          </p>
+        </>
+      ),
+      role: 'b2b',
+      selectedAddress: {
+        btnTitle: 'Edit Selection',
+        title: 'Pickup From HSP',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>Arrange your own freight pickup from HSP HQ</p>
+          </>
+        ),
+        title: 'Pickup From HSP',
+      },
+      title: 'Pickup From HSP',
+    },
+    {
+      allowDelivery: false,
+      askCutomerInfo: true,
+      description: 'Get your products sent directly to a customers address',
+      icon: DropShipping,
+      id: 'drop-shipping',
+      noteContent: (
+        <>
+          <p>
+            <strong>Please Note:</strong> Freight times will vary depending on
+            location
+          </p>
+        </>
+      ),
+      role: 'b2b',
+      selectedAddress: {
+        btnTitle: 'Edit Selection',
+        title: 'Drop Shipping',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Appropriate delivery costs will be added to the final order
+              summary
+            </p>
+          </>
+        ),
+        title: 'Drop Shipping',
+      },
+      title: 'Drop Shipping',
+    },
+  ];
+
+  const role = user.role;
+
+  const [deliveryOptions, setDeliveryOptions] = useState([]);
   const [openDrawer, setOpenDrawer] = useState('');
 
   const [allStores, setAllStores] = useState([]);
@@ -132,6 +296,15 @@ function CheckoutPage() {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const filteredOptions = allDeliveryOptions.filter(
+        opt => opt.role === role,
+      );
+      setDeliveryOptions(filteredOptions);
+    }
+  }, [user]);
 
   const handleSelectOption = id => {
     setDeliveryOptions(prev => {
@@ -170,6 +343,8 @@ function CheckoutPage() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log(formData);
+    // return;
 
     setLoading(true);
 
@@ -275,12 +450,14 @@ function CheckoutPage() {
                       />
                     </div>
                   </div>
-                  <div className={styles.colFull}>
+                  <div
+                    className={clsx({
+                      [styles.colHalf]: role === 'b2b',
+                      [styles.colFull]: role !== 'b2b',
+                    })}
+                  >
                     <div className={styles.inputGroup}>
-                      <label>
-                        Company Name (Optional)
-                        <span className={styles.reqStar}>*</span>
-                      </label>
+                      <label>Company Name</label>
                       <input
                         name="company"
                         onChange={handleChange}
@@ -289,6 +466,19 @@ function CheckoutPage() {
                       />
                     </div>
                   </div>
+                  {role === 'b2b' && (
+                    <div className={styles.colHalf}>
+                      <div className={styles.inputGroup}>
+                        <label>Purchase Order Number</label>
+                        <input
+                          name="purchaseOrderNumber"
+                          onChange={handleChange}
+                          type="text"
+                          value={formData.purchaseOrderNumber}
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className={styles.colFull}>
                     <div className={styles.inputGroup}>
                       <div className={styles.selectOption}>
@@ -300,9 +490,13 @@ function CheckoutPage() {
                             type="checkbox"
                           />{' '}
                           <span>
-                            I accept the Privacy Policy and Terms & Conditions
+                            I accept the
                             <Link href="/privacy-terms-and-conditions">
-                              Read our T&Cs
+                              Privacy Policy
+                            </Link>{' '}
+                            and{' '}
+                            <Link href="/privacy-terms-and-conditions">
+                              Terms and Conditions
                             </Link>
                           </span>
                         </label>
@@ -358,13 +552,39 @@ function CheckoutPage() {
                           {deliveryOptions[0].selectedAddress.btnTitle}
                         </button>
                       </div>
-                      {deliveryOptions[0].id === 'deliver-door' ? (
-                        <div className={styles.deliveryAddressBox}>
-                          Delivery Address: {formData.address}, {formData.city},{' '}
-                          {formData.state} {formData.postcode},{' '}
-                          {formData.country}
-                        </div>
-                      ) : (
+                      {[
+                        'deliver-door',
+                        'standard-delivery',
+                        'drop-shipping',
+                      ].some(id => id === deliveryOptions[0].id) && (
+                        <>
+                          <div className={styles.deliveryAddressBox}>
+                            {deliveryOptions[0].askCutomerInfo && (
+                              <p>
+                                Customer Name:{' '}
+                                {
+                                  formData.additionalCustomerInfo
+                                    .customer_first_name
+                                }{' '}
+                                {
+                                  formData.additionalCustomerInfo
+                                    .customer_last_name
+                                }
+                              </p>
+                            )}
+                            <p>
+                              Delivery Address: {formData.address},{' '}
+                              {formData.city}, {formData.state}{' '}
+                              {formData.postcode}, {formData.country}
+                            </p>
+                          </div>
+                        </>
+                      )}
+                      {[
+                        'local-installation',
+                        'click-collect',
+                        'pickup-from-hsp',
+                      ].some(id => id === deliveryOptions[0].id) && (
                         <div className={styles.deliveryAddressBox}>
                           <div className={styles.left}>
                             Selected Address: <b>HSP Vehicle Accessories</b>{' '}
@@ -372,6 +592,9 @@ function CheckoutPage() {
                           <div className={styles.right}>{selectedStore} </div>
                         </div>
                       )}
+                      <div className={clsx(styles.note)}>
+                        {deliveryOptions[0].noteContent}
+                      </div>
                     </div>
                   ) : (
                     deliveryOptions.map(option => (
@@ -382,25 +605,48 @@ function CheckoutPage() {
                         style={{ cursor: 'pointer' }}
                       >
                         <div className={styles.contentBox}>
-                          <div className={styles.contentWrap}>
-                            <h3>
-                              <option.icon /> {option.title}
-                            </h3>
-                            <p>{option.description}</p>
+                          <div
+                            className={clsx(styles.contentWrap, {
+                              [styles.selected]:
+                                openDrawer === option.id &&
+                                deliveryOptions[0].id === option.id,
+                            })}
+                          >
+                            {openDrawer === option.id &&
+                            deliveryOptions[0].id === option.id ? (
+                              <>
+                                <h3>
+                                  <option.icon /> {option.selectedMenu.title}
+                                </h3>
+                                <div>{option.selectedMenu.content}</div>
+                              </>
+                            ) : (
+                              <>
+                                <h3>
+                                  <option.icon /> {option.title}
+                                </h3>
+                                <p>{option.description}</p>
+                              </>
+                            )}
                           </div>
                           <div className={styles.storeLocate}>
                             {openDrawer === option.id &&
                               deliveryOptions[0].id === option.id && (
                                 <div className={styles.drawer}>
                                   {(option.id === 'click-collect' ||
-                                    option.id === 'local-installation') && (
+                                    option.id === 'local-installation' ||
+                                    option.id === 'pickup-from-hsp') && (
                                     <SelectLocation
                                       allStores={allStores}
                                       onSelect={onSelect}
                                     />
                                   )}
-                                  {option.id === 'deliver-door' && (
+                                  {(option.id === 'deliver-door' ||
+                                    option.id === 'standard-delivery' ||
+                                    option.id === 'drop-shipping') && (
                                     <Delivery
+                                      allowDelivery={option.allowDelivery}
+                                      askCutomerInfo={option.askCutomerInfo}
                                       formData={formData}
                                       isFormFilled={isFormFilled}
                                       setFormData={setFormData}
@@ -661,9 +907,11 @@ function CheckoutPage() {
 
 function Checkout() {
   return (
-    <CheckoutProvider>
-      <CheckoutPage />
-    </CheckoutProvider>
+    <UserProvider>
+      <CheckoutProvider>
+        <CheckoutPage />
+      </CheckoutProvider>
+    </UserProvider>
   );
 }
 

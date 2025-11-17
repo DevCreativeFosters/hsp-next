@@ -18,11 +18,12 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(USER_EXAMPLE);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   const router = useRouter();
 
   const getUserFromStorage = useCallback(() => {
-    const userString = sessionStorage.getItem(SESSION_STORAGE_USER_DATA);
+    const userString = localStorage.getItem(SESSION_STORAGE_USER_DATA);
     if (userString) {
       try {
         const userParsed = JSON.parse(userString);
@@ -72,16 +73,21 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole');
+    localStorage.removeItem(SESSION_STORAGE_USER_DATA);
     router.push('/login');
   }, []);
 
   const handleSave = useCallback(() => {
-    const userDataString = JSON.stringify(user);
-    sessionStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
+    if (initialLoad) {
+      const userDataString = JSON.stringify(user);
+      localStorage.setItem(SESSION_STORAGE_USER_DATA, userDataString);
+    } else {
+      setInitialLoad(true);
+    }
   }, [user]);
 
   // TODO: replace with actual authentication
-  useEffect(handleSave, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(handleSave, [user]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(getUserFromStorage, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

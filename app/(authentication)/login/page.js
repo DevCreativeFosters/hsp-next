@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { UserProvider, useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
 
 import { fetchAPI } from '@lib/fetch-api';
@@ -31,7 +32,8 @@ const LOGIN_MUTATION = `
   }
 `;
 
-export default function LoginPage() {
+function LoginPage() {
+  const { setUser } = useUserContext();
   const [formData, setFormData] = useState({ password: '', username: '' });
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
@@ -58,6 +60,11 @@ export default function LoginPage() {
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
         localStorage.setItem('userRole', loginResponse.role);
+        setUser({
+          id: loginResponse.userId,
+          role: loginResponse.role,
+          token: loginResponse.token,
+        });
 
         await getWishlistItems();
 
@@ -184,5 +191,15 @@ export default function LoginPage() {
         </div>
       </section>
     </Layout>
+  );
+}
+
+export default function Login() {
+  return (
+    <>
+      <UserProvider>
+        <LoginPage />
+      </UserProvider>
+    </>
   );
 }

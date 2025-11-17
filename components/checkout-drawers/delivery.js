@@ -16,7 +16,13 @@ import styles from './delivery.module.scss';
 
 const libraries = ['places'];
 
-function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
+function DeliveryAddressForm({
+  allowDelivery,
+  askCutomerInfo,
+  formData,
+  setFormData,
+  setIsFormFilled,
+}) {
   const { cartItems } = useCart();
 
   const autocompleteRef = useRef(null);
@@ -54,14 +60,30 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    setFormData(prev => {
+      const keys = name.split('.');
+      const updated = { ...prev };
+      let obj = updated;
+
+      keys.forEach((key, index) => {
+        if (index === keys.length - 1) {
+          obj[key] = value; // final key assign
+        } else {
+          obj[key] = { ...obj[key] }; // clone before going deeper
+          obj = obj[key]; // go deeper
+        }
+      });
+
+      return updated;
+    });
   };
 
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
   return (
     <div className={styles.deliveryForm}>
-      {cartItems.some(item => item.largeItem) ? (
+      {cartItems.some(item => item.largeItem) && !allowDelivery ? (
         <div className={styles.redBoxContent}>
           <h5>
             Certain Items In Your Cart Cannot Be Delivered to a Residential
@@ -75,6 +97,46 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
         </div>
       ) : (
         <>
+          {askCutomerInfo && (
+            <>
+              <p className={styles.heading}>
+                <strong>Customer Info:</strong>
+              </p>
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="additionalCustomerInfo.customer_first_name"
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    value={formData.additionalCustomerInfo?.customer_first_name}
+                  />
+                </div>
+                <div className={styles.formCol}>
+                  <input
+                    name="additionalCustomerInfo.customer_last_name"
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    value={formData.additionalCustomerInfo?.customer_last_name}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="additionalCustomerInfo.customer_email"
+                    onChange={handleChange}
+                    placeholder="Customer Email"
+                    value={formData.additionalCustomerInfo?.customer_email}
+                  />
+                </div>
+              </div>
+              <p className={styles.heading}>
+                <strong>Shipping Info:</strong>
+              </p>
+            </>
+          )}
+
           {/* Country */}
           <div className={styles.formRow}>
             <div className={styles.formCol}>
@@ -94,16 +156,18 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
             </div>
           </div>
 
-          <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <input
-                name="deliveryCompanyName"
-                onChange={handleChange}
-                placeholder="Company Name (Optional)"
-                value={formData.deliveryCompanyName}
-              />
+          {!askCutomerInfo && (
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="deliveryCompanyName"
+                  onChange={handleChange}
+                  placeholder="Company Name (Optional)"
+                  value={formData.deliveryCompanyName}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Address Autocomplete */}
           <Autocomplete
@@ -214,10 +278,18 @@ function DeliveryAddressForm({ formData, setFormData, setIsFormFilled }) {
   );
 }
 
-export default function Delivery({ formData, setFormData, setIsFormFilled }) {
+export default function Delivery({
+  allowDelivery,
+  askCutomerInfo,
+  formData,
+  setFormData,
+  setIsFormFilled,
+}) {
   return (
     <div className={styles.drawerContent}>
       <DeliveryAddressForm
+        allowDelivery={allowDelivery}
+        askCutomerInfo={askCutomerInfo}
         formData={formData}
         setFormData={setFormData}
         setIsFormFilled={setIsFormFilled}

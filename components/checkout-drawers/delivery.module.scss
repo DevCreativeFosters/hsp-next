@@ -24,6 +24,12 @@
 }
 
 .deliveryForm {
+  .heading {
+    text-align: left;
+    cursor: none;
+    margin-bottom: 8px;
+  }
+
   .formRow {
     display: flex;
     gap: 14px;
