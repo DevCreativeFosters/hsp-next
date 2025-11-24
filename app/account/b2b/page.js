@@ -15,6 +15,9 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Tabs from '@components/tabs/tabs';
 
+import LinkIcon from '@assets/icons/link-icon.svg';
+import PdfIcon from '@assets/icons/pdf-icon.svg';
+import AccessImg from '@assets/images/access-img.png';
 import GoldIcon from '@assets/images/gold-icon.png';
 import Logo2 from '@assets/images/load-bar.png';
 import Logo1 from '@assets/images/rollcover.png';
@@ -245,36 +248,6 @@ const AccountDetails = memo(function AccountDetailsComponent() {
           To Edit Any Business Information, Please <a href="#">Contact Us</a>
         </p>
       </div>
-      {/* <div className={styles.info}>
-        <div className={styles.dRow}>
-          <div className={styles.dTitle}>First Name</div>
-          <div className={styles.dDesc}>{user?.firstName}</div>
-          <div className={styles.dAction}>
-            <a href="#">
-              <EditIconSvg />
-            </a>
-          </div>
-        </div>
-        <div className={styles.dRow}>
-          <div className={styles.dTitle}>Last Name</div>
-          <div className={styles.dDesc}>{user?.lastName}</div>
-          <div className={styles.dAction}>
-            <a href="#">
-              <EditIconSvg />
-            </a>
-          </div>
-        </div>
-        <div className={styles.dRow}>
-          <div className={styles.dTitle}>Phone Number</div>
-          <div className={styles.dDesc}>{user?.phone}</div>
-        </div>
-        <div className={styles.dRow}>
-          <div className={styles.dTitle}>Email</div>
-          <div className={styles.dDesc}>
-            <a href={`mailto:${user?.email}`}>{user?.email}</a>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 });
@@ -384,31 +357,54 @@ export default function RetailPage() {
               },
               {
                 content: (
-                  <div className={orderBox}>
+                  <div className={styles.orderBox}>
                     <div className={styles.orderWrap}>
                       <div className={styles.heading}>
                         <div className={styles.left}>
                           <h5>Order #245678</h5>
                           <h6>2 Products | 13:45pm Nov 10, 2025</h6>
                         </div>
-                        <div className={styles.left}>
+                        <div className={styles.right}>
                           <button className={styles.statusButton}>
                             Awaiting Collection
                           </button>
                         </div>
                       </div>
                       <div className={styles.orderBody}>
-                        <div className={styles.orderRow}>
-                          <div className={styles.title}>Order Total:</div>
-                          <div className={styles.descPrice}>
-                            <del>RRP $3694</del>$2000
+                        <div className={styles.productInfo}>
+                          <div className={styles.orderRow}>
+                            <div className={styles.title}>Order Total:</div>
+                            <div className={styles.desc}>
+                              <del>RRP $3694</del>
+                              <strong>$2000</strong>
+                            </div>
+                          </div>
+                          <div className={styles.orderRow}>
+                            <div className={styles.title}>
+                              Fulfillment Method:
+                            </div>
+                            <div className={styles.desc}>Pickup from HSP</div>
+                          </div>
+                          <div className={styles.orderRow}>
+                            <div className={styles.title}>
+                              Collection Address:
+                            </div>
+                            <div className={styles.desc}>40 Overseas Drive</div>
+                          </div>
+                          <div className={styles.orderRow}>
+                            <div className={styles.title}>
+                              Purchase Order Number:
+                            </div>
+                            <div className={styles.desc}>12345678901203</div>
                           </div>
                         </div>
-                        <div className={styles.orderRow}>
-                          <div className={styles.title}>Order Total:</div>
-                          <div className={styles.desc}>
-                            <del>RRP $3694</del>$2000
-                          </div>
+                        <div className={styles.orderBottom}>
+                          <a className={styles.button} href="#">
+                            Download Invoice
+                          </a>
+                          <a className={styles.outlineButton} href="#">
+                            See Products
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -421,6 +417,112 @@ export default function RetailPage() {
                 content: <WishList />,
                 slug: 'wishlist',
                 title: 'Wishlist',
+              },
+              {
+                content: (
+                  <div className={styles.resourceMain}>
+                    <h3 className={styles.sectionTitle}>Marketing Resources</h3>
+                    <ul>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">HSP Logos & Branding Guides</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Social Media Posts</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Product Photos</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Editable Flyers</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Lifestyle Images</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Display Signage Options</a>
+                      </li>
+                    </ul>
+
+                    <div className={styles.lmsBlock}>
+                      <div className={styles.left}>
+                        <h4>Learning Management System</h4>
+                        <p>
+                          The Learning Module System (LMS) is an online training
+                          platform designed to equip your new and existing staff
+                          with in-depth knowledge of HSP products, so they can
+                          deliver exceptional service and drive sales.
+                        </p>
+                        <a className={styles.button} href="#">
+                          Access LMS Here
+                        </a>
+                      </div>
+                      <div className={styles.right}>
+                        <figure>
+                          <Image
+                            alt={'HSP Logo'}
+                            height={188}
+                            src={AccessImg}
+                            width={417}
+                          />
+                        </figure>
+                      </div>
+                    </div>
+                  </div>
+                ),
+                slug: 'resources',
+                title: 'Resources',
+              },
+              {
+                content: (
+                  <div className={styles.warrantyBlock}>
+                    <h3 className={styles.sectionTitle}>Warranty Procedures</h3>
+                    <p>
+                      At HSP Vehicle Accessories, we take immense pride in our
+                      after-sales service, ensuring that our customers receive
+                      exceptional support long after their purchase. We’ve
+                      established clear and thorough warranty procedures,
+                      ensuring prompt resolution of any issues that may arise.
+                    </p>
+                    <ul>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Roll Cover Warranty Guide</a>
+                      </li>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Load Racks and Load Bar Warranty Guide</a>
+                      </li>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Armour Bar Warranty Guide</a>
+                      </li>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Load Slide Warranty Guide</a>
+                      </li>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Tail Lock Warranty Guide</a>
+                      </li>
+                      <li>
+                        <PdfIcon />
+                        <a href="#">Tail Assist Warranty Guide </a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Spare Parts Price List</a>
+                      </li>
+                    </ul>
+                  </div>
+                ),
+                slug: 'support',
+                title: 'Support',
               },
             ]}
             type="vertical"
