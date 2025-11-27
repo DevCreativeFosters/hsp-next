@@ -51,6 +51,39 @@
     padding-bottom: 40px;
   }
 
+  &.horizontal {
+    .tabsMain {
+      .tabsNav {
+        display: inline-flex;
+        padding: 5px;
+        border-radius: 3px;
+        background: #333;
+        width: auto;
+        margin: 0 0 20px;
+
+        .tabButton {
+          background: transparent;
+          padding: 10px 20px;
+          white-space: nowrap;
+          color: #fff;
+          border: 0;
+          font-family: var(--font-hind);
+          font-size: 16px;
+          font-weight: 500;
+
+          &::after {
+            display: none;
+          }
+
+          &.active {
+            background: #fff;
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+
   .tabsMain {
     display: flex;
     flex-wrap: wrap;
@@ -363,5 +396,32 @@
     .date {
       font-weight: 300;
     }
+  }
+}
+
+/* HORIZONTAL TABS */
+.horizontal {
+  .tabsMain {
+    flex-direction: column;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .tabsNav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background: #2b2b2b;
+    border-radius: 8px;
+  }
+
+  .tabButton {
+    border-radius: 4px;
+    background: transparent;
+  }
+
+  .active {
+    background: #fff;
+    color: #000;
   }
 }

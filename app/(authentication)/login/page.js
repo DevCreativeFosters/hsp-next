@@ -70,7 +70,7 @@ function LoginPage() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push('/account/retail');
+        router.push(`/account/${loginResponse.role}`);
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }

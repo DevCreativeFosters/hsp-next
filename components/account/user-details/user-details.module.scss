@@ -1,0 +1,71 @@
+.accountDetails {
+  width: 100%;
+
+  .info {
+    .dRow {
+      display: flex;
+      align-items: center;
+      border-bottom: solid 1px rgb(116 116 116 / 64%);
+      padding: 25px 0;
+
+      @media (width <=991px) {
+        padding: 15px 0;
+      }
+
+      .dTitle {
+        width: 28%;
+        font-size: clamp(16px, 2vw, 20px);
+        font-family: var(--font-secondary);
+        font-weight: 500;
+      }
+
+      .dDesc {
+        width: 62%;
+        font-size: clamp(16px, 2vw, 20px);
+        font-weight: 300;
+        font-family: var(--font-hind);
+        padding: 0 15px;
+
+        a {
+          text-decoration: underline;
+
+          &:hover {
+            color: var(--color-primary-100);
+          }
+        }
+      }
+
+      .dAction {
+        width: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+    }
+  }
+
+  .currentStatus {
+    border-radius: 8px;
+    background: var(--color-primary-100);
+    color: #fff;
+    margin: 34px 0 0;
+    padding: 28px 40px;
+    display: flex;
+    font-size: clamp(18px, 2vw, 20px);
+    gap: 20px;
+
+    @media (width <=991px) {
+      padding: 20px;
+    }
+
+    .title {
+      font-family: var(--font-secondary);
+      font-weight: 600;
+    }
+
+    .date {
+      font-weight: 300;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+.accountHeader {
+  .headerWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 70px;
+    border-bottom: 1px solid #747474a3;
+    padding: 40px 0 20px;
+
+    @media (width <=991px) {
+      padding: 60px 0 15px;
+      margin-bottom: 30px;
+    }
+
+    .btns {
+      .button {
+        background-color: transparent;
+        color: white;
+        padding: 0 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: solid 2px var(--color-primary-100);
+        font-family: var(--font-secondary);
+        font-size: clamp(16px, 2vw, 20px);
+        font-weight: 600;
+        min-height: 40px;
+        min-width: 217px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s all;
+
+        @media (width <=991px) {
+          min-width: inherit;
+        }
+
+        &:hover {
+          background-color: var(--color-primary-100);
+        }
+      }
+    }
+  }
+}

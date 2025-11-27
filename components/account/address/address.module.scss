@@ -1,0 +1,78 @@
+.addressBlock {
+  width: 100%;
+
+  .info {
+    .dRow {
+      display: flex;
+      align-items: center;
+      border-bottom: solid 1px rgb(116 116 116 / 64%);
+      padding: 25px 0;
+
+      @media (width <=991px) {
+        padding: 15px 0;
+      }
+
+      .dTitle {
+        width: 18.5%;
+        font-size: clamp(14px, 2vw, 20px);
+        font-family: var(--font-secondary);
+        font-weight: 500;
+
+        @media (width <=991px) {
+          width: 30%;
+        }
+      }
+
+      .dDesc {
+        width: 62%;
+        font-size: clamp(14px, 2vw, 20px);
+        font-weight: 300;
+        font-family: var(--font-hind);
+        padding: 0 15px;
+
+        a {
+          text-decoration: underline;
+
+          &:hover {
+            color: var(--color-primary-100);
+          }
+        }
+      }
+
+      .dAction {
+        width: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+    }
+
+    .halfColInfo {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -20px;
+
+      .colInfo {
+        padding: 0 20px;
+        width: 50%;
+
+        @media (width <=991px) {
+          width: 100%;
+        }
+
+        .dRow {
+          .dTitle {
+            width: 40%;
+
+            @media (width <=991px) {
+              width: 30%;
+            }
+          }
+        }
+      }
+    }
+
+    margin-bottom: 50px;
+  }
+}
