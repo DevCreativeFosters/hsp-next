@@ -19,6 +19,10 @@
   margin-top: 60px;
   margin-bottom: 60px;
 
+  @media (width <=1199px) {
+    padding: var(--container-inline-padding);
+  }
+
   form {
     display: flex;
     flex-wrap: wrap;
@@ -180,6 +184,10 @@
         .heading {
           margin-bottom: 40px;
 
+          @media (width <=767px) {
+            margin-bottom: 24px;
+          }
+
           h2 {
             color: #000;
             font-family: var(--font-primary);
@@ -202,7 +210,7 @@
           .boxItem {
             padding: 0 2.5px;
             margin-bottom: 5px;
-            width: 50%;
+            width: 100%;
 
             @media (width <=480px) {
               width: 100%;
@@ -211,8 +219,9 @@
             .contentBox {
               background: #000;
               border-radius: 6px;
-              padding: 30px 18px;
-              text-align: center;
+
+              // padding: 30px 18px;
+              text-align: left;
               width: 49.5%;
               height: 100%;
 
@@ -221,11 +230,40 @@
               }
 
               .contentWrap {
-                max-width: 250px;
-                margin: auto;
+                // max-width: 250px;
+                // margin: auto;
+                padding: 30px 18px 30px 70px;
+                position: relative;
+
+                @media (width <=767px) {
+                  padding: 16px 16px 16px 55px;
+                }
+
+                &::before {
+                  height: 20px;
+                  width: 20px;
+                  outline: solid 1px #fff;
+                  border-radius: 100%;
+                  position: absolute;
+                  top: 0;
+                  bottom: 0;
+                  margin: auto;
+                  content: '';
+                  left: 25px;
+                  background: #fff;
+                  outline-offset: 2px;
+
+                  @media (width <=767px) {
+                    left: 16px;
+                  }
+                }
 
                 &.selected {
                   max-width: 100%;
+
+                  &::before {
+                    background: #ed2935;
+                  }
                 }
 
                 h3 {
@@ -235,13 +273,32 @@
                   gap: 15px;
                   font-size: 20px;
                   font-family: var(--font-primary);
-                  margin-bottom: 25px;
+                  margin-bottom: 12px;
                 }
 
                 p {
                   font-size: 15px;
                   line-height: 1.5;
                   margin: 0;
+                }
+              }
+
+              .storeLocate {
+                .drawer {
+                  padding: 0 18px;
+
+                  @media (width <=767px) {
+                    padding-bottom: 20px;
+                  }
+
+                  section {
+                    padding: 0 !important;
+
+                    @media (width <=767px) {
+                      top: 0;
+                      margin-bottom: 0;
+                    }
+                  }
                 }
               }
             }
@@ -685,7 +742,7 @@
 
 .noInstallationCost {
   margin-top: 10px;
-  background-color: #ed2935;
+  background-color: #af1b1b;
   border-radius: 6px;
   padding: 10px 20px;
 

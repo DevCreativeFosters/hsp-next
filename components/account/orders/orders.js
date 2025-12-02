@@ -2,11 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
+import Image from 'next/image';
+
 import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
 
+import Accordion from '@components/accordion/accordion';
+import AccordionItem from '@components/accordion/accordion-item';
 import Loading from '@components/loading/loading';
 import Tabs from '@components/tabs/tabs';
+
+import AccessImg from '@assets/images/productimg.png';
 
 import styles from './orders.module.scss';
 
@@ -88,11 +95,99 @@ function Order({ item }) {
               {item.total_items} Products | {item.order_date}
             </h6>
           </div>
-          {/* <div className={styles.right}>
-                        <button className={styles.statusButton}>
-                            Awaiting Collection
-                        </button>
-                    </div> */}
+          <div className={styles.right}>
+            {/* <div>
+                <button className={styles.statusButton}>
+                    Awaiting Collection
+                </button>
+              </div> */}
+
+            {/* <div>
+                <div className={styles.lblIcon}>
+                  <label>Store Placed Order</label>
+                  <TruckIcon />
+                </div>
+              </div> */}
+
+            {/* <div>
+                <button className={styles.greyButton}>
+                    In Transit
+                </button>
+              </div> */}
+
+            {/* <div>
+                <div className={styles.lblIcon}>
+                  <label>Click & Collect Order</label>
+                  <MapPinIcon />
+                </div>
+              </div> */}
+
+            {/* <div>
+                <button className={styles.greyButton}>
+                    Awaiting Collection
+                </button>
+              </div> */}
+
+            {/* <div>
+                <div className={styles.lblIcon}>
+                  <label>Local Install Order</label>
+                  <SettingIcon />
+                </div>
+              </div> */}
+
+            {/* <div>
+                <button className={styles.greyButton}>
+                    Fitting Pending
+                </button>
+              </div> */}
+
+            {/* <div>
+                <button className={styles.statusButton}>
+                    Mark Fitting as Competed
+                    <CheckLargeIcon />
+                </button>
+              </div> */}
+
+            {/* <div>
+                <div className={styles.greenCheck}>
+                    <CheckLargeIcon />
+                </div>
+              </div> */}
+
+            {/* <div>
+                <div className={styles.redCross}>
+                    <ErrorIcon />
+                </div>
+              </div> */}
+
+            {/* <div>
+                <button className={styles.confirmButton}>
+                    Awaiting Collection 
+                    <CheckIcon />
+                </button>
+              </div> */}
+
+            <div>
+              <button className={styles.confirmButton}>Completed</button>
+            </div>
+
+            {/* <div>
+                <div className={styles.wonORloss}>
+                  <button className={styles.wonBtn}>
+                    Won <CheckLargeIcon />
+                  </button>
+                  <button className={styles.lostBtn}>
+                    Lost <ErrorIcon />
+                  </button>
+                </div>
+              </div>   */}
+
+            {/* <div>
+                <button className={styles.outlineButton} href="#">
+                <InfoIcon />Requires Changes
+                </button>
+              </div> */}
+          </div>
         </div>
         <div className={styles.orderBody}>
           <div className={styles.productInfo}>
@@ -125,6 +220,66 @@ function Order({ item }) {
             <a className={styles.outlineButton} href="#">
               See Products
             </a>
+          </div>
+          <div className={styles.recentLists}>
+            <div className={styles.productBox}>
+              <figure>
+                <Image
+                  alt={'HSP Logo'}
+                  height={93}
+                  src={AccessImg}
+                  width={100}
+                />
+              </figure>
+              <div className={styles.info}>
+                <div className={styles.desc}>
+                  <div className={styles.left}>
+                    <h6>
+                      Electric Roller Cover for Next Gen Ranger Raptor for No
+                      Sports bar
+                    </h6>
+                    <p>SKU: NGR4RS3.5</p>
+                  </div>
+                  <div className={styles.right}>
+                    <div className={styles.sNo}>
+                      <p>
+                        <strong>$3300</strong>
+                      </p>
+                      <h5>+ 450 Fitting</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.productBox}>
+              <figure>
+                <Image
+                  alt={'HSP Logo'}
+                  height={93}
+                  src={AccessImg}
+                  width={100}
+                />
+              </figure>
+              <div className={styles.info}>
+                <div className={styles.desc}>
+                  <div className={styles.left}>
+                    <h6>
+                      Electric Roller Cover for Next Gen Ranger Raptor for No
+                      Sports bar
+                    </h6>
+                    <p>SKU: NGR4RS3.5</p>
+                  </div>
+                  <div className={styles.right}>
+                    <div className={styles.sNo}>
+                      <p>
+                        <strong>$3300</strong>
+                      </p>
+                      <h5>+ 450 Fitting</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -192,6 +347,101 @@ function Orders() {
               )),
               slug: 'referrals',
               title: 'Referrals',
+            },
+            {
+              content: (
+                <Accordion
+                  allowMultipleOpen
+                  className={clsx(
+                    styles.productAccordion,
+                    styles.hideOnDesktop,
+                  )}
+                  stickyOnMobile
+                >
+                  {/* Static Description Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="How much space is there between the side rails of our Roll R Cover?"
+                  >
+                    <p>
+                      This is the static content for the product description
+                      tab.
+                    </p>
+                    <p>
+                      It no longer relies on the {'<Description />'} component.
+                    </p>
+                  </AccordionItem>
+
+                  {/* Static Features Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="How is the Electric Roller Cover Canister Made?"
+                  >
+                    <ul>
+                      <li>Static Feature 1</li>
+                      <li>Static Feature 2</li>
+                      <li>Static Feature 3</li>
+                    </ul>
+                  </AccordionItem>
+
+                  {/* Static Specs Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="Is the Ute Roller Cover waterproof or dustproof?"
+                  >
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Attribute</th>
+                          <th>Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Weight</td>
+                          <td>5 kg</td>
+                        </tr>
+                        <tr>
+                          <td>Color</td>
+                          <td>Black</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </AccordionItem>
+
+                  {/* Static Manuals Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="How much space will i have underneath the roll top when its closed?"
+                  >
+                    <p>
+                      Download the user manual <a href="#">here</a>.
+                    </p>
+                  </AccordionItem>
+
+                  {/* Static Manuals Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="How much does the Roll R Cover weigh?"
+                  >
+                    <p>
+                      Download the user manual <a href="#">here</a>.
+                    </p>
+                  </AccordionItem>
+
+                  {/* Static Manuals Tab */}
+                  <AccordionItem
+                    className={styles.accordionItem}
+                    triggerContent="How much weight can you put on the Roll R Cover itself?"
+                  >
+                    <p>
+                      Download the user manual <a href="#">here</a>.
+                    </p>
+                  </AccordionItem>
+                </Accordion>
+              ),
+              slug: 'faqs',
+              title: 'FAQs',
             },
           ]}
           type="horizontal"

@@ -1,5 +1,5 @@
 .drawerContent {
-  margin-top: 15px;
+  margin-top: 0;
 
   .contentWrap {
     max-width: 250px;
@@ -24,6 +24,8 @@
 }
 
 .deliveryForm {
+  padding: 0 0 30px;
+
   .heading {
     text-align: left;
     cursor: none;

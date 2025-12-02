@@ -710,6 +710,8 @@
 
           .title {
             font-weight: 600;
+            min-width: 85px;
+            margin-right: 8px;
           }
 
           .desc {
@@ -837,6 +839,38 @@
       }
     }
   }
+
+  .cartButton {
+    button {
+      background-color: transparent;
+      color: white;
+      padding: 0 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: solid 2px var(--color-primary-100);
+      font-family: var(--font-secondary);
+      font-weight: 600;
+      min-height: 48px;
+      min-width: 164px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s all;
+      font-size: clamp(18px, 1.04vw, 20px);
+
+      svg {
+        margin-right: 10px;
+      }
+
+      @media (width <=991px) {
+        min-width: inherit;
+      }
+
+      &:hover {
+        background-color: var(--color-primary-100);
+      }
+    }
+  }
 }
 
 .lmsBlock {
@@ -872,12 +906,11 @@
 
     .button {
       background: var(--color-primary-100);
-      font-size: 15px;
       font-weight: 600;
       color: #fff;
       border-radius: 9px;
       padding: 0 20px;
-      min-height: 35px;
+      min-height: 48px;
       min-width: 205px;
       text-align: center;
       display: inline-flex;
@@ -885,6 +918,9 @@
       justify-content: center;
       margin: 5px 0 0;
       transition: 0.5s all;
+      width: 100%;
+      font-family: var(--font-secondary);
+      font-size: clamp(18px, 1.04vw, 20px);
 
       &:hover {
         background-color: #000;
@@ -914,6 +950,8 @@
 }
 
 .warrantyBlock {
+  padding: 30px 0 0;
+
   .sectionTitle {
     font-size: clamp(22px, 1.3vw, 25px);
     font-family: var(--font-hind);

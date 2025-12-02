@@ -49,6 +49,20 @@
 
   @media (width <=767px) {
     padding-bottom: 40px;
+
+    &.clickedState {
+      &:not(.horizontal) {
+        .tabsMain {
+          .tabsNav {
+            display: none;
+          }
+
+          .tabsContent {
+            display: block;
+          }
+        }
+      }
+    }
   }
 
   &.horizontal {
@@ -56,10 +70,14 @@
       .tabsNav {
         display: inline-flex;
         padding: 5px;
-        border-radius: 3px;
-        background: #333;
+        border-radius: 5px;
+        background: #2e2e2e;
         width: auto;
         margin: 0 0 20px;
+
+        @media (width <=767px) {
+          margin: 0 0 8px;
+        }
 
         .tabButton {
           background: transparent;
@@ -68,8 +86,8 @@
           color: #fff;
           border: 0;
           font-family: var(--font-hind);
-          font-size: 16px;
-          font-weight: 500;
+          font-size: 20px;
+          font-weight: 400;
 
           &::after {
             display: none;
@@ -77,7 +95,13 @@
 
           &.active {
             background: #fff;
-            color: #333;
+            color: #2e2e2e;
+            font-weight: 400;
+          }
+
+          @media (width <=767px) {
+            font-size: 16px;
+            padding: 9px 10px;
           }
         }
       }
@@ -86,30 +110,50 @@
 
   .tabsMain {
     display: flex;
-    flex-wrap: wrap;
     align-items: flex-start;
 
     .tabsNav {
       background: #fff;
-      padding: 10px 40px 80px;
+      padding: 10px 40px 40px;
       border-radius: 10px;
       width: 31%;
 
       @media (width <=767px) {
         width: 100%;
         margin-bottom: 25px;
+        background: transparent;
       }
 
       .tabButton {
         display: block;
-        border-bottom: solid 2px #9d9d9d;
+        border-bottom: 2px solid #9d9d9d;
         padding: 25px 0;
-        font-size: clamp(16px, 2vw, 20px);
+        font-size: 20px;
         font-family: var(--font-secondary);
         font-weight: 600;
         width: 100%;
         text-align: left;
         position: relative;
+
+        @media (width <=767px) {
+          color: #fff;
+          border-bottom: 1px solid var(--color-white-20);
+        }
+
+        span {
+          width: 24px;
+          height: 24px;
+          border-radius: 100%;
+          font-family: var(--font-secondary);
+          background: #ed2935;
+          color: #fff;
+          margin: 0 0 0 8px;
+          display: inline-block;
+          font-size: 16px;
+          vertical-align: middle;
+          text-align: center;
+          line-height: 24px;
+        }
 
         @media (width <=991px) {
           padding: 15px 0;
@@ -129,6 +173,10 @@
           bottom: 0;
           margin: auto;
           right: 5px;
+
+          @media (width <=767px) {
+            border-color: #fff;
+          }
         }
 
         &.active {
@@ -150,13 +198,48 @@
       }
 
       @media (width <=767px) {
-        padding: 10px 20px 30px;
+        padding: 0;
       }
     }
 
-    .tabsMain {
+    .tabsContent {
       width: 69%;
       padding: 0 0 0 50px;
+      flex-wrap: wrap;
+
+      & > div {
+        width: 100%;
+
+        & > div {
+          border-width: 1px;
+        }
+      }
+
+      .mobileTile {
+        font-size: 20px;
+        font-family: var(--font-secondary);
+        font-weight: 600;
+        color: #ed2935;
+        margin: 0 0 20px;
+        position: relative;
+        display: none;
+
+        &::before {
+          content: '';
+          height: 8px;
+          width: 8px;
+          border-left: solid 2px #fff;
+          border-bottom: solid 2px #fff;
+          display: inline-block;
+          transform: rotate(45deg);
+          vertical-align: middle;
+          margin: 0 10px 0 0;
+        }
+
+        @media (width <=767px) {
+          display: block;
+        }
+      }
 
       @media (width <=1199px) {
         padding: 0 0 0 25px;
@@ -164,6 +247,11 @@
 
       @media (width <=767px) {
         width: 100%;
+        padding: 0;
+        display: none;
+      }
+
+      .withBackground {
         padding: 0;
       }
     }
@@ -413,6 +501,12 @@
     justify-content: flex-start;
     background: #2b2b2b;
     border-radius: 8px;
+  }
+
+  .tabsContent {
+    display: block;
+    width: 100% !important;
+    padding: 0 !important;
   }
 
   .tabButton {

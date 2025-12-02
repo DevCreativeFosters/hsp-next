@@ -7,13 +7,17 @@
     border-radius: 25px;
     padding: 20px;
 
+    @media (width <=767px) {
+      border-radius: 16px;
+    }
+
     .heading {
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
 
       @media (width <=767px) {
-        flex-wrap: wrap;
+        // flex-wrap: wrap;
         margin-bottom: 15px;
       }
 
@@ -34,6 +38,55 @@
       }
 
       .right {
+        text-align: right;
+
+        .lblIcon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 8px;
+          font-family: var(--font-secondary);
+          font-weight: 600;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .greenCheck {
+          svg {
+            fill: #319f18;
+
+            rect {
+              stroke: #319f18;
+            }
+
+            path {
+              stroke: #fff;
+            }
+          }
+        }
+
+        .greyButton {
+          background-color: #4b4b4b;
+          color: #fff;
+          padding: 0 24px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-family: var(--font-secondary);
+          font-size: clamp(16px, 2vw, 20px);
+          font-weight: 600;
+          min-height: 44px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 8px;
+
+          @media (width <=767px) {
+            min-height: 25px;
+            font-size: 14px;
+            padding: 0 10px;
+          }
+        }
+
         .statusButton {
           background-color: transparent;
           color: #f9ac47;
@@ -44,12 +97,194 @@
           font-family: var(--font-secondary);
           font-size: clamp(16px, 2vw, 20px);
           font-weight: 600;
-          min-height: 40px;
+          min-height: 48px;
           min-width: 187px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          transition: 0.5s all;
+          margin-bottom: 8px;
+
+          svg {
+            margin-left: 10px;
+          }
+
+          @media (width <=767px) {
+            min-height: 25px;
+            font-size: 14px;
+            padding: 0 10px;
+            min-width: inherit;
+
+            svg {
+              transform: scale(0.5);
+              margin: 0 -11px 0 0;
+            }
+          }
+        }
+
+        .confirmButton {
+          background-color: #319f18;
+          color: #fff;
+          padding: 0 20px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-family: var(--font-secondary);
+          font-weight: 600;
+          min-height: 48px;
+          min-width: 187px;
+          display: inline-flex;
+          align-items: center;
+          font-size: clamp(16px, 1.04vw, 20px);
+          justify-content: center;
+          margin-bottom: 8px;
+
+          svg {
+            margin: 0 0 0 10px;
+          }
+
+          @media (width <=767px) {
+            min-height: 25px;
+            font-size: 14px;
+            padding: 0 10px;
+            min-width: inherit;
+          }
+        }
+
+        .wonORloss {
+          display: flex;
+          gap: 8px;
+          justify-content: flex-end;
+          margin-bottom: 8px;
+
+          button {
+            font-family: var(--font-secondary);
+            font-size: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            border-radius: 8px;
+            color: #fff;
+            gap: 10px;
+            min-height: 48px;
+            border: solid 2px #fff;
+            padding: 0 14px;
+
+            @media (width <=767px) {
+              min-height: 25px;
+              font-size: 14px;
+              padding: 0 10px;
+              min-width: inherit;
+
+              svg {
+                transform: scale(0.7);
+                margin: 0 -5px;
+              }
+            }
+
+            &.wonBtn {
+              border-color: #319f18;
+
+              svg {
+                rect {
+                  stroke: #319f18;
+                }
+
+                path {
+                  stroke: #319f18;
+                }
+              }
+
+              &:hover {
+                background: #319f18;
+
+                svg {
+                  rect {
+                    stroke: #fff;
+                    fill: #fff;
+                  }
+
+                  path {
+                    stroke: #319f18;
+                  }
+                }
+              }
+            }
+
+            &.lostBtn {
+              border-color: #ed2935;
+
+              svg {
+                outline: solid 2px #ed2935;
+                border-radius: 100%;
+                outline-offset: -2px;
+
+                rect {
+                  fill: transparent;
+                }
+
+                path {
+                  stroke: #ed2935;
+                }
+              }
+
+              &:hover {
+                background: #ed2935;
+
+                svg {
+                  outline: none;
+
+                  rect {
+                    fill: #fff;
+                  }
+
+                  path {
+                    stroke: #ed2935;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .outlineButton {
+          background-color: transparent;
+          color: white;
+          padding: 0 20px;
+          border-radius: 8px;
+          text-decoration: none;
+          border: solid 2px var(--color-primary-100);
+          font-family: var(--font-secondary);
+          font-size: 16px;
+          font-weight: 600;
+          min-height: 36px;
+          min-width: 164px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          svg {
+            margin-right: 10px;
+          }
+
+          @media (width <=991px) {
+            min-width: inherit;
+          }
+
+          @media (width <=767px) {
+            min-height: 25px;
+            font-size: 14px;
+            padding: 0 10px;
+            min-width: inherit;
+            gap: 4px;
+
+            svg {
+              transform: scale(0.8);
+              margin: 0 0 0 -5px;
+            }
+          }
+
+          &:hover {
+            background-color: var(--color-primary-100);
+          }
         }
       }
     }
@@ -149,6 +384,104 @@
 
           &:hover {
             background-color: var(--color-primary-100);
+          }
+        }
+      }
+
+      .recentLists {
+        padding: 30px 0 0;
+
+        .productBox {
+          padding: 0;
+          border: 0;
+          display: flex;
+          margin-bottom: 16px;
+
+          figure {
+            margin: 0 16px 0 0;
+            background: #fff;
+            border-radius: 10px;
+            height: 80px;
+            width: 80px;
+            min-width: 80px;
+
+            img {
+              height: auto;
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+
+          .info {
+            margin: auto 0;
+            width: 100%;
+
+            .desc {
+              display: flex;
+
+              @media (width <=767px) {
+                flex-flow: column;
+              }
+
+              .left {
+                @media (width <=767px) {
+                  margin-bottom: 8px;
+                }
+
+                h6 {
+                  font-family: var(--font-hind);
+                  font-size: 14px;
+                  font-weight: 600;
+                  margin-bottom: 8px;
+                  max-width: 75%;
+                  line-height: 1.2;
+
+                  @media (width <=767px) {
+                    margin-bottom: 5px;
+                    max-width: 100%;
+                  }
+                }
+
+                p {
+                  font-size: 11px;
+                  margin: 0;
+                }
+              }
+
+              .right {
+                margin: auto 0 auto auto;
+                text-align: right;
+
+                @media (width <=767px) {
+                  text-align: left;
+                  margin: 0 0 1px;
+                }
+
+                .sNo {
+                  p {
+                    font-size: 16px;
+                    margin: 0 0 4px;
+                    font-weight: 700;
+
+                    @media (width <=767px) {
+                      margin: 0;
+                      font-size: 14px;
+                    }
+                  }
+
+                  h5 {
+                    font-size: 14px;
+                    margin: 0;
+                    font-family: var(--font-hind);
+                    color: #ed2935;
+
+                    @media (width <=767px) {
+                      font-size: 11px;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

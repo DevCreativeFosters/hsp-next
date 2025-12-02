@@ -14,6 +14,7 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Tabs from '@components/tabs/tabs';
 
+import CartIcon from '@assets/icons/cart-icon-basket.svg';
 import LinkIcon from '@assets/icons/link-icon.svg';
 import PdfIcon from '@assets/icons/pdf-icon.svg';
 import AccessImg from '@assets/images/access-img.png';
@@ -46,7 +47,7 @@ export default async function RetailPage() {
             {
               content: <Orders />,
               slug: 'orderdashboard',
-              title: 'Order Dashboard',
+              title: 'Order',
             },
             {
               content: <WishlistItems />,
@@ -84,6 +85,12 @@ export default async function RetailPage() {
                     </li>
                   </ul>
 
+                  <div className={styles.cartButton}>
+                    <button>
+                      <CartIcon /> Access My Dealership Assets
+                    </button>
+                  </div>
+
                   <div className={styles.lmsBlock}>
                     <div className={styles.left}>
                       <h4>Learning Management System</h4>
@@ -93,9 +100,9 @@ export default async function RetailPage() {
                         with in-depth knowledge of HSP products, so they can
                         deliver exceptional service and drive sales.
                       </p>
-                      <a className={styles.button} href="#">
+                      <button className={styles.button} href="#">
                         Access LMS Here
-                      </a>
+                      </button>
                     </div>
                     <div className={styles.right}>
                       <figure>

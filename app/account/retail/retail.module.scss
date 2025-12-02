@@ -158,3 +158,144 @@
     }
   }
 }
+
+.registerProducts {
+  width: 100%;
+
+  .heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 24px;
+
+    @media (width <=767px) {
+      display: block;
+      margin: 0 0 8px;
+    }
+
+    button {
+      background: var(--color-primary-100);
+      font-size: clamp(16px, 1.31vw, 22px);
+      font-weight: 600;
+      color: #fff;
+      border-radius: 9px;
+      font-family: var(--font-secondary);
+      padding: 0 20px;
+      min-height: 46px;
+      min-width: 240px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s all;
+
+      @media (width <=767px) {
+        min-height: 38px;
+        width: 100%;
+      }
+
+      &:hover {
+        background-color: #000;
+      }
+    }
+  }
+
+  .lists {
+    .productBox {
+      padding: 13px;
+      border: solid 3px #2d2d2d;
+      border-radius: 16px;
+      display: flex;
+      margin-bottom: 8px;
+
+      figure {
+        margin: 0 16px 0 0;
+        background: #fff;
+        border-radius: 16px;
+        height: 93px;
+        width: 100px;
+        min-width: 100px;
+
+        img {
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        @media (width <=767px) {
+          height: 100px;
+        }
+      }
+
+      .info {
+        margin: auto 0;
+        width: 100%;
+
+        h6 {
+          font-family: var(--font-hind);
+          font-size: 15px;
+          font-weight: 700;
+          margin-bottom: 20px;
+
+          @media (width <=767px) {
+            margin-bottom: 8px;
+          }
+        }
+
+        .desc {
+          display: flex;
+
+          @media (width <=767px) {
+            flex-flow: column-reverse;
+          }
+
+          .left {
+            p {
+              font-size: 11px;
+              margin: 0 0 8px;
+              font-weight: 700;
+
+              @media (width <=767px) {
+                margin: 0;
+                line-height: 1.4;
+              }
+            }
+          }
+
+          .right {
+            margin-top: auto;
+            text-align: right;
+            margin-left: auto;
+
+            @media (width <=767px) {
+              text-align: left;
+              margin: 0 0 1px;
+            }
+
+            .sNo {
+              p {
+                font-size: 11px;
+                margin: 0 0 8px;
+                font-weight: 700;
+
+                @media (width <=767px) {
+                  margin: 0;
+                }
+              }
+
+              h4 {
+                font-size: 17px;
+                margin: 0;
+                font-family: var(--font-hind);
+
+                @media (width <=767px) {
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
