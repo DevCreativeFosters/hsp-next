@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 
+import clsx from 'clsx';
 import { notFound } from 'next/navigation';
 
 import { getPageData } from '@lib/api/get-page-data';
@@ -11,6 +12,7 @@ import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
@@ -18,8 +20,9 @@ import PageGrid from '@components/page-grid/page-grid';
 import Sidebar from '@components/sidebar/sidebar';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
+import Arrow from '@assets/images/arrow.svg';
+
 import styles from './page.module.scss';
-import clsx from 'clsx';
 
 export async function generateMetadata({ params }) {
   const supportPagePath = `${routes.support()}/${params.slug}`;
@@ -77,6 +80,36 @@ export default async function SupportSubpage({ params }) {
                     content={content?.content}
                   />
                 )}
+
+                <div className={styles.registerFooter}>
+                  <div className={styles.halfcontentPart}>
+                    <h5>Already have an account?</h5>
+                    <Button variant="primary">
+                      Log In to complete registration{' '}
+                      <Arrow className="arrow" />
+                    </Button>
+                    <p>
+                      Log in to quickly auto-fill your details and keep all your
+                      product registrations in one place.
+                    </p>
+                  </div>
+                  <div className={styles.halfcontentPart}>
+                    <h5>New to HSP?</h5>
+                    <Button variant="secondary">
+                      Create an account <Arrow className="arrow" />
+                    </Button>
+                    <p>
+                      Log in to quickly auto-fill your details and keep all your
+                      product registrations in one place.
+                    </p>
+                  </div>
+                  <div className={styles.fullcontentPart}>
+                    <h5>Prefer not to sign up right now?</h5>
+                    <Button variant="tertiary">
+                      Continue without an account.
+                    </Button>
+                  </div>
+                </div>
               </div>
             </PageGrid>
           </PageContainer>
