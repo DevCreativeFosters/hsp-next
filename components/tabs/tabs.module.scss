@@ -43,6 +43,11 @@
 }
 
 /* ./retail.module.scss */
+@media (width <= 767px) {
+  .accountContent.clickedState:not(.horizontal) .tabsNav {
+    display: none;
+  }
+}
 
 .accountContent {
   padding-bottom: 100px;
@@ -53,10 +58,6 @@
     &.clickedState {
       &:not(.horizontal) {
         .tabsMain {
-          .tabsNav {
-            display: none;
-          }
-
           .tabsContent {
             display: block;
           }
@@ -489,6 +490,12 @@
 
 /* HORIZONTAL TABS */
 .horizontal {
+  .mobileTile {
+    @media (width <=767px) {
+      display: none !important;
+    }
+  }
+
   .tabsMain {
     flex-direction: column;
     width: 100% !important;

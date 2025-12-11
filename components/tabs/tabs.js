@@ -48,7 +48,7 @@ export default function Tabs({ tabs, type }) {
 
         <div className={styles.tabsContent}>
           <div className={styles.mobileTile} onClick={handleMobileTileClick}>
-            Mobile Title
+            {tabs.find(tab => tab.slug === activeTab).title}
           </div>
           {activeContent}
         </div>

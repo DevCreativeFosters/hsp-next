@@ -7,6 +7,8 @@ import { useWishlist } from '@contexts/wishlist';
 
 import { formatPrice } from '@lib/helpers';
 
+import Button from '@components/button/button';
+
 import styles from './wishlist-items.module.scss';
 
 function WishlistItems() {
@@ -54,9 +56,9 @@ function WishlistItems() {
       )}
 
       <div className={styles.moreBtn}>
-        <Link className={styles.button} href="/products">
-          Add More Items to Wishlist
-        </Link>
+        <Button href="/products" size="large" variant="secondary">
+          Add More Items to Wishlists
+        </Button>
       </div>
     </div>
   );

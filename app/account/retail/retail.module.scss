@@ -172,32 +172,6 @@
       display: block;
       margin: 0 0 8px;
     }
-
-    button {
-      background: var(--color-primary-100);
-      font-size: clamp(16px, 1.31vw, 22px);
-      font-weight: 600;
-      color: #fff;
-      border-radius: 9px;
-      font-family: var(--font-secondary);
-      padding: 0 20px;
-      min-height: 46px;
-      min-width: 240px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.5s all;
-
-      @media (width <=767px) {
-        min-height: 38px;
-        width: 100%;
-      }
-
-      &:hover {
-        background-color: #000;
-      }
-    }
   }
 
   .lists {

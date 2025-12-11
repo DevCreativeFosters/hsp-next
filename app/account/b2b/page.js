@@ -9,6 +9,7 @@ import AccountDetails from '@components/account/account-details/account-details'
 import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
+import Referrals from '@components/account/referrals/referrals';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -47,7 +48,12 @@ export default async function RetailPage() {
             {
               content: <Orders />,
               slug: 'orderdashboard',
-              title: 'Order',
+              title: 'Orders',
+            },
+            {
+              content: <Referrals />,
+              slug: 'referrals',
+              title: 'Referrals',
             },
             {
               content: <WishlistItems />,

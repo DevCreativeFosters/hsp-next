@@ -433,7 +433,8 @@
                   font-size: 14px;
                   font-weight: 600;
                   margin-bottom: 8px;
-                  max-width: 75%;
+
+                  // max-width: 75%;
                   line-height: 1.2;
 
                   @media (width <=767px) {
@@ -486,5 +487,9 @@
         }
       }
     }
+  }
+
+  button {
+    text-transform: capitalize;
   }
 }

@@ -17,6 +17,7 @@ import SectionIntro from '@components/section-intro/section-intro';
 import styles from './faq.module.scss';
 
 export default function FAQ({
+  block = false,
   buttons,
   description,
   questions,
@@ -64,7 +65,7 @@ export default function FAQ({
   );
 
   return (
-    <div className={styles.layout}>
+    <div className={clsx(styles.layout, { [styles.block]: block })}>
       <div className={styles.intro}>
         <SectionIntro
           description={description}
