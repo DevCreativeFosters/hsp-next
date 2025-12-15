@@ -208,7 +208,7 @@
           margin: 0 -5px;
 
           .boxItem {
-            padding: 0 2.5px;
+            padding: 0;
             margin-bottom: 5px;
             width: 100%;
 
@@ -328,16 +328,16 @@
             align-items: center;
             gap: 11px;
           }
+        }
 
-          .link {
-            font-size: 14px;
-            font-weight: 500;
-            color: #fff;
-            text-decoration: underline;
+        .link {
+          font-size: 14px;
+          font-weight: 500;
+          color: #fff;
+          text-decoration: underline;
 
-            &:hover {
-              color: var(--color-primary-100);
-            }
+          &:hover {
+            color: var(--color-primary-100);
           }
         }
 
@@ -383,8 +383,6 @@
         }
 
         .note {
-          text-align: center;
-
           p {
             margin-bottom: 0;
           }
