@@ -1,10 +1,15 @@
 .footer {
   width: 100%;
+
+  @media (width<=767px) {
+    padding-top: 48px;
+  }
 }
 
 .footerContainerA {
   position: relative;
-  overflow-x: hidden;
+
+  // overflow-x: hidden;
 }
 
 .footerContainerB {
@@ -32,6 +37,36 @@
   @include bp(large) {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Mobile Footer */
+.mobileFooter {
+  display: none;
+
+  @media (width<=767px) {
+    display: block;
+  }
+
+  .footerContainerC {
+    display: flex;
+    flex-wrap: wrap;
+
+    .column {
+      width: 46%;
+
+      &:first-child {
+        width: 100%;
+      }
+
+      .menuList {
+        .menuItem {
+          a {
+            width: auto;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -116,6 +151,12 @@
 
 .text {
   margin: 0;
+
+  @media (width<=767px) {
+    line-height: 1.5;
+    max-width: 90%;
+    font-size: 14px;
+  }
 }
 
 .menuList {
@@ -149,6 +190,18 @@
   }
 }
 
+.copyrightTextMobile {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-white-80);
+  margin-bottom: 0;
+  display: none;
+
+  @media (width<=767px) {
+    display: block;
+  }
+}
+
 .copyrightText,
 .recaptchaText {
   color: var(--color-white-80);
@@ -156,13 +209,19 @@
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.5;
   margin: 0;
 }
 
 .copyrightText {
   &:first-child {
     text-transform: uppercase;
+  }
+
+  @media (width<=767px) {
+    &:last-child {
+      display: none;
+    }
   }
 }
 

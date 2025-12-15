@@ -53,6 +53,19 @@ export default function ProductMakeGrid({
     return products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [itemsPerPage, page, products]);
 
+  console.log(
+    alignment,
+    bodyText,
+    products,
+    productsPerPage,
+    productsPerPageMobile,
+    productsTitleTag,
+    productsTitleTagStyle,
+    title,
+    titleTag,
+    titleTagStyle,
+  );
+
   return (
     <Container flexibleBlockPadding>
       {title && (
@@ -65,35 +78,132 @@ export default function ProductMakeGrid({
           {title}
         </DynamicTitle>
       )}
-      {bodyText && (
-        <div
-          className={clsx(
-            styles.description,
-            styles[alignment] || styles.left,
-            'p-large',
-          )}
-          dangerouslySetInnerHTML={{ __html: bodyText }}
-        />
-      )}
+      <div className={styles.topFilter}>
+        <ul>
+          <li>
+            <button>Electric Roll Tops</button>
+          </li>
+          <li>
+            <button>Roll Up Tonneau Cover</button>
+          </li>
+          <li>
+            <button>Ute Tray Slides</button>
+          </li>
+          <li>
+            <button>Ladder Racks</button>
+          </li>
+          <li>
+            <button>Tailgate Accessories</button>
+          </li>
+        </ul>
+      </div>
+      <div className={styles.productMain}>
+        <div className={styles.leftPart}>
+          <div className={styles.priceFilter}>
+            <div className={styles.pWrap}>
+              <div className={styles.title}>Sort By:</div>
+              <div className={styles.selectBox}>
+                <select>
+                  <option>Price High To Low</option>
+                  <option>Price Low To High</option>
+                  <option>Popularity</option>
+                  <option>Newest Arrivals</option>
+                </select>
+                <div className={styles.arrow}></div>
+              </div>
+            </div>
+          </div>
 
-      {!products || totalProducts === 0 ? (
-        <p>No products available.</p>
-      ) : (
-        <div className={styles.grid}>
-          {currentProducts.map((product, index) => (
-            <ProductCard
-              imageUrl={product.productImage?.node?.mediaItemUrl}
-              key={`product-${index}-${product.title?.replace(/\s+/g, '-').toLowerCase()}`}
-              name={product.title}
-              price={product.startingPrice}
-              removeBorder={true}
-              titleTag={productsTitleTag}
-              titleTagStyle={productsTitleTagStyle}
-              url={product.link?.url}
-            />
-          ))}
+          <div className={styles.chekboxLists}>
+            <div className={styles.filterClick}>
+              <div className={styles.filterTitle}>Brands:</div>
+            </div>
+            <div className={styles.filterContent}>
+              <ul>
+                <li>
+                  <label>
+                    <input id="1" name="filtername" type="checkbox" />
+                    <span>Ford</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Volkswagen</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Kia</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Mitsubishi</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Nissan</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>MG</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>BYD</span>
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Chevrolet</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-      )}
+        <div className={styles.rightPart}>
+          {bodyText && (
+            <div
+              className={clsx(
+                styles.description,
+                styles[alignment] || styles.left,
+                'p-large',
+              )}
+              dangerouslySetInnerHTML={{ __html: bodyText }}
+            />
+          )}
+
+          {!products || totalProducts === 0 ? (
+            <p>No products available.</p>
+          ) : (
+            <div className={styles.grid}>
+              {currentProducts.map((product, index) => (
+                <ProductCard
+                  imageUrl={product.productImage?.node?.mediaItemUrl}
+                  key={`product-${index}-${product.title?.replace(/\s+/g, '-').toLowerCase()}`}
+                  name={product.title}
+                  price={product.startingPrice}
+                  removeBorder={true}
+                  titleTag={productsTitleTag}
+                  titleTagStyle={productsTitleTagStyle}
+                  url={product.link?.url}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       {totalPages > 1 && (
         <Pagination

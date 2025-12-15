@@ -32,18 +32,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -58,18 +58,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -86,18 +86,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -114,18 +114,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -142,18 +142,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -168,18 +168,18 @@ export default function Footer({ menus, text }) {
                         <Button
                           footer={true}
                           href={menu.url}
+                          inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
                       ) : (
                         <Button
                           href={menu.url}
+                          inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
-                          inlineOffsetByPadding
                         >
                           {menu.label}
                         </Button>
@@ -187,6 +187,191 @@ export default function Footer({ menus, text }) {
                     </li>
                   ))}
                 </ul>
+              </div>
+            </div>
+            <div className={styles.mobileFooter}>
+              <div className={styles.footerContainerC}>
+                <div className={styles.column}>
+                  <div className={styles.logoColumn}>
+                    <div className={styles.logo}>
+                      <Image
+                        alt={'HSP Logo'}
+                        height={24}
+                        src={Logo}
+                        width={65}
+                      />
+                    </div>
+                    <p className={clsx(styles.text, 'p-small')}>{text}</p>
+                  </div>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.hsp.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.lifestyle.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.products.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.services.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.resources.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.column}>
+                  <ul className={styles.menuList}>
+                    {menus.legal.map((menu, idx) => (
+                      <li className={styles.menuItem} key={menu.label + idx}>
+                        {idx === 0 ? (
+                          <Button
+                            footer={true}
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            rightIcon="arrow-forward"
+                            variant="tertiary"
+                          >
+                            {menu.label}
+                          </Button>
+                        ) : (
+                          <Button
+                            href={menu.url}
+                            inlineOffsetByPadding
+                            size="xsmall"
+                            variant="footer-item"
+                          >
+                            {menu.label}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
             <div className={styles.copyright}>
@@ -215,6 +400,7 @@ export default function Footer({ menus, text }) {
               </a>{' '}
               <span> apply. </span>
             </p>
+            <p className={styles.copyrightTextMobile}>Made by Xfive</p>
           </div>
         </div>
       </Container>

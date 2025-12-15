@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +14,7 @@ import Layout from '@components/layout/layout';
 import Arrow from '@assets/images/arrow.svg';
 import banner from '@assets/images/banner.jpg';
 
-import './register.css';
+import styles from './register.module.scss';
 
 // we'll move CSS here later
 
@@ -95,11 +96,11 @@ export default function RegisterPage() {
 
   return (
     <Layout title="Register">
-      <section className="accountContent">
-        <div className="registerMain">
+      <section className={styles.accountContent}>
+        <div className={styles.registerMain}>
           <Container>
             {/* Banner */}
-            <div className="formBanner">
+            <div className={styles.formBanner}>
               <figure>
                 <Image
                   alt="Register banner"
@@ -112,8 +113,8 @@ export default function RegisterPage() {
 
             {/* Registration Form */}
             {(message === null || (message && message?.type === 'error')) && (
-              <div className="formContent">
-                <div className="heading">
+              <div className={styles.formContent}>
+                <div className={styles.heading}>
                   <h2>LET’S GET YOU STARTED</h2>
                   <p>You are one step closer to your Ute’s Ultimate Upgrades</p>
                 </div>
@@ -130,11 +131,11 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                <div className="formWrap">
+                <div className={styles.formWrap}>
                   <form onSubmit={handleSubmit}>
-                    <div className="inputRow">
-                      <div className="inputFullCol">
-                        <div className="inputGroup">
+                    <div className={styles.inputRow}>
+                      <div className={styles.inputFullCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="username"
                             onChange={handleChange}
@@ -146,8 +147,8 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className="inputHalfCol">
-                        <div className="inputGroup">
+                      <div className={styles.inputHalfCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="firstName"
                             onChange={handleChange}
@@ -159,8 +160,8 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className="inputHalfCol">
-                        <div className="inputGroup">
+                      <div className={styles.inputHalfCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="lastName"
                             onChange={handleChange}
@@ -172,8 +173,8 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className="inputHalfCol">
-                        <div className="inputGroup">
+                      <div className={styles.inputHalfCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="phone"
                             onChange={handleChange}
@@ -184,8 +185,8 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className="inputHalfCol">
-                        <div className="inputGroup">
+                      <div className={styles.inputHalfCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="email"
                             onChange={handleChange}
@@ -197,8 +198,8 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className="inputFullCol">
-                        <div className="inputGroup">
+                      <div className={styles.inputFullCol}>
+                        <div className={styles.inputGroup}>
                           <input
                             name="password"
                             onChange={handleChange}
@@ -209,9 +210,20 @@ export default function RegisterPage() {
                           />
                         </div>
                       </div>
+                      <div className={styles.inputFullCol}>
+                        <div className={styles.acceptCheckbox}>
+                          <label>
+                            <input type="checkbox" />
+                            <span>I accept the Terms and Conditions</span>
+                            <button>Read our T&Cs</button>
+                          </label>
+                        </div>
+                      </div>
 
-                      <div className="inputFullCol submitbtn">
-                        <div className="inputSubmitBtn">
+                      <div
+                        className={clsx(styles.inputFullCol, styles.submitbtn)}
+                      >
+                        <div className={styles.inputSubmitBtn}>
                           <button disabled={loading} type="submit">
                             {loading
                               ? 'Creating Account...'
@@ -223,7 +235,7 @@ export default function RegisterPage() {
                   </form>
                 </div>
 
-                <div className="formFooter">
+                <div className={styles.formFooter}>
                   <p>
                     Already have an account? <Link href="/login">Log In</Link>
                   </p>
@@ -232,19 +244,19 @@ export default function RegisterPage() {
             )}
 
             {message?.type === 'success' && (
-              <div className="formContent">
-                <div className="heading">
+              <div className={styles.formContent}>
+                <div className={styles.heading}>
                   <h2>Nearly There!</h2>
                   <p>Please Check Your Email to Complete Account Creation</p>
                 </div>
 
-                <div className="backToLogin">
-                  <Link className="ctaButton" href="/login">
+                <div className={styles.backToLogin}>
+                  <Link className={styles.ctaButton} href="/login">
                     Back To Login <Arrow className="arrow" />
                   </Link>
                 </div>
 
-                <div className="formFooter">
+                <div className={styles.formFooter}>
                   <p>
                     Haven’t received the email? <a href="#">Click Here</a>
                   </p>

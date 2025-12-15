@@ -1,104 +1,71 @@
-body {
-  margin: 0;
-  font-family: 'Khand', sans-serif;
-}
-figure {
-  margin: 0;
-}
 .wrapper {
   background: #181616;
 }
+
 .accountContent {
   max-width: 1133px;
   margin: auto;
-  padding: 100px 20px;
-}
-* {
-  box-sizing: border-box;
-}
-p {
-  font-family: 'Hind', sans-serif;
-}
-/*login*/
-.loginMain {
-  margin: 0 0 100px;
-}
-.loginWrap {
-  display: flex;
-  flex-wrap: wrap;
-}
-.loginWrap .loginLeft {
-  width: 50%;
-}
-.loginWrap .loginLeft figure {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-.loginWrap .loginLeft figure img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: cover;
-  height: 100%;
-  width: 100%;
-}
-.loginWrap .loginRight {
-  width: 50%;
-  background: #fff;
-}
-.loginWrap .loginRight .submitbtn {
-  margin-top: 5px;
-}
-.loginWrap .loginRight .formContent {
-  max-width: 307px;
-  margin: auto;
-}
-.loginWrap .inputSubmitBtn button {
-  width: 100%;
-  max-width: 100%;
+  padding: 100px 0;
 }
 
-/*registerMain*/
-.formBanner figure {
-  min-height: 278px;
-  position: relative;
-  overflow: hidden;
+/* registerMain */
+.formBanner {
+  figure {
+    min-height: 278px;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+
+    @media (width<=767px) {
+      display: none;
+    }
+
+    img {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 }
-.formBanner figure img {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
+
 .formContent {
   padding: 50px 0;
   background: #fff;
+
+  .heading {
+    text-align: center;
+    margin-bottom: 40px;
+
+    @media (width<=767px) {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: clamp(38px, 2.6vw, 50px);
+      text-transform: uppercase;
+      margin: 0 0 10px;
+      line-height: 1;
+      color: #000;
+    }
+
+    p {
+      font-size: 20px;
+      color: #5d5d5dcc;
+      line-height: 1.5;
+    }
+  }
 }
-.formContent .heading {
-  text-align: center;
-  margin-bottom: 40px;
-}
-.formContent .heading h2 {
-  font-size: clamp(46px, 2.4vw, 35px);
-  text-transform: uppercase;
-  margin: 0 0 10px;
-  line-height: 1;
-  color: #000;
-}
-.formContent .heading p {
-  font-size: 20px;
-  color: #5d5d5dcc;
-  line-height: 1.5;
-}
+
 .formContent .formWrap {
   max-width: 642px;
   margin: auto;
 }
+
 .formContent p {
   margin: 0 0 1rem;
 }
+
 .formContent input[type='text'],
 .formContent input[type='phone'],
 .formContent input[type='password'],
@@ -108,6 +75,7 @@ p {
   padding: 0 20px !important;
   width: 100% !important;
   outline: none !important;
+  font-size: 20px;
 }
 
 .formContent select {
@@ -123,13 +91,20 @@ p {
   flex-wrap: wrap;
   margin: 0 -20px;
 }
+
 .inputRow .inputHalfCol {
   width: 50%;
   padding: 0 20px;
 }
+
 .inputGroup {
   margin-bottom: 19px;
+
+  @media (width<=767px) {
+    margin-bottom: 16px;
+  }
 }
+
 .inputGroup a {
   color: #797979;
   text-decoration: none;
@@ -137,9 +112,11 @@ p {
   display: inline-block;
   line-height: 1;
 }
+
 .inputGroup a:hover {
   color: #000;
 }
+
 .inputRow .inputFullCol {
   width: 100%;
   padding: 0 20px;
@@ -151,7 +128,7 @@ p {
 .inputSubmitBtn button {
   background: #ed2935;
   color: #fff;
-  font-size: 20px;
+  font-size: clamp(18px, 1.04vw, 20px);
   text-transform: uppercase;
   border: 0;
   min-height: 52px;
@@ -159,13 +136,18 @@ p {
   padding: 0 15px;
   transition: 0.5s all;
   cursor: pointer;
-  font-family: 'Khand', sans-serif;
+  font-family: var(--font-secondary);
   font-weight: 600;
   min-width: 300px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+
+  @media (width<=767px) {
+    min-width: inherit;
+    width: 100%;
+  }
 }
 
 .ctaButton img {
@@ -183,9 +165,10 @@ p {
   position: relative;
   padding: 0 0 0 25px;
   cursor: pointer;
-  font-family: 'Hind', sans-serif;
+  font-family: Hind, sans-serif;
 }
-.selectOption label span:before {
+
+.selectOption label span::before {
   border: solid 1px #000;
   border-radius: 4px;
   height: 16px;
@@ -195,7 +178,8 @@ p {
   left: 0;
   top: 3px;
 }
-.selectOption label span:after {
+
+.selectOption label span::after {
   content: '';
   position: absolute;
   left: 3px;
@@ -207,28 +191,38 @@ p {
   width: 10px;
   transform: rotate(-45deg);
 }
+
 .selectOption input {
   position: absolute;
   opacity: 0;
 }
-.selectOption input:checked + span:before {
+
+.selectOption input:checked + span::before {
   background: #000;
 }
-.selectOption input:checked + span:after {
+
+.selectOption input:checked + span::after {
   opacity: 1;
 }
 
 .submitbtn {
   text-align: center;
   margin: 30px 0 15px;
+
+  @media (width<=767px) {
+    margin-top: 24px;
+  }
 }
+
 .formFooter {
   text-align: center;
   color: #797979;
 }
+
 .formFooter p {
   line-height: 1.5;
 }
+
 .formFooter a {
   font-weight: 700;
   color: #797979;
@@ -237,6 +231,7 @@ p {
   display: inline-block;
   line-height: 1;
 }
+
 .formFooter a:hover {
   color: #000;
 }
@@ -246,67 +241,103 @@ p {
   margin-bottom: 15px;
 }
 
-.loginFooter {
-  border: solid 5px #ed2935;
-  padding: 20px 30px;
-}
-.loginFooter .leftPart h2 {
-  font-size: 50px;
-  color: #fff;
-  line-height: 1;
-  margin: 0 0 10px;
-}
-.loginFooter .leftPart p {
-  margin: 0;
-  color: #fff;
-  opacity: 0.8;
-}
-.loginFooter .lfWrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .rightPart .ctaButton .arrow {
   margin-left: 20px;
 }
 
-@media (max-width: 767px) {
-  .loginWrap .loginLeft {
-    width: 100%;
-  }
-  .loginWrap .loginRight {
-    width: 100%;
-  }
-  .loginFooter .lfWrap {
-    flex-wrap: wrap;
-  }
-  .loginFooter {
-    padding: 30px 20px;
-  }
-  .loginFooter .leftPart {
-    width: 100%;
-    margin: 0 0 20px;
-  }
-  .loginFooter .rightPart {
-    width: 100%;
-  }
+@media (width <= 767px) {
   .rightPart .ctaButton {
     width: 100%;
   }
+
   .formContent .heading p {
     font-size: 16px;
   }
+
   .ctaButton,
   .inputSubmitBtn input[type='button'],
   .inputSubmitBtn input[type='submit'],
   .inputSubmitBtn button {
     min-width: inherit;
   }
+
   .inputRow .inputHalfCol {
     width: 100%;
   }
+
   .registerMain .formContent {
     padding: 40px 20px;
+  }
+}
+
+.acceptCheckbox {
+  label {
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    cursor: pointer;
+    position: relative;
+    padding: 0 0 0 28px;
+
+    @media (width<=767px) {
+      gap: 5px;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      &::before {
+        height: 16px;
+        min-width: 16px;
+        border-radius: 5px;
+        border: solid 2px #9b9b9b;
+        content: '';
+        display: block;
+        left: 0;
+        position: absolute;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        height: 5px;
+        width: 10px;
+        border-left: solid 2px #fff;
+        border-bottom: solid 2px #fff;
+        left: 4px;
+        top: 3px;
+        transform: rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+
+      &:checked + span {
+        &::before {
+          background: #2c2c2c;
+          border-color: #2c2c2c;
+        }
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    button {
+      color: #555;
+      border-bottom: solid 1px #000;
+      padding: 0;
+      margin: 0;
+    }
   }
 }

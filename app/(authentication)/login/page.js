@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,10 +15,11 @@ import { fetchAPI } from '@lib/fetch-api';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 
+import PasswordShowIcon from '@assets/icons/pwd-cross.svg';
 import Arrow from '@assets/images/arrow.svg';
-import banner from '@assets/images/banner.jpg';
+import banner from '@assets/images/loginbanner.jpg';
 
-import './login.css';
+import styles from './login.module.scss';
 
 // --- GraphQL mutation for login
 const LOGIN_MUTATION = `
@@ -37,6 +39,7 @@ function LoginPage() {
   const [formData, setFormData] = useState({ password: '', username: '' });
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { getWishlistItems } = useWishlist();
   const router = useRouter();
 
@@ -81,109 +84,137 @@ function LoginPage() {
     }
   };
 
+  const togglePasswordVisibility = e => {
+    e.preventDefault();
+    setShowPassword(prev => !prev);
+  };
+
   return (
     <Layout title="Login - HSP">
-      <section className="accountContent">
-        <div className="loginMain">
-          <Container>
-            <div className="loginWrap">
-              {/* LEFT IMAGE SIDE */}
-              <div className="loginLeft">
-                <figure>
-                  <Image
-                    alt="Login Banner"
-                    fill
-                    src={banner}
-                    style={{ objectFit: 'cover' }}
-                  />
-                </figure>
-              </div>
+      <section className={styles.accountContent}>
+        <div className={styles.mobilebg}>
+          <figure>
+            <Image
+              alt="Login Banner"
+              fill
+              src={banner}
+              style={{ objectFit: 'cover' }}
+            />
+          </figure>
+        </div>
+        <div className={styles.loginMain}>
+          <Container className={styles.loginBG}>
+            <div className={styles.loginBGWrap}>
+              <div className={styles.loginWrap}>
+                {/* LEFT IMAGE SIDE */}
+                <div className={styles.loginLeft}>
+                  <figure>
+                    <Image
+                      alt="Login Banner"
+                      fill
+                      src={banner}
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </figure>
+                </div>
 
-              {/* RIGHT FORM SIDE */}
-              <div className="loginRight">
-                <div className="formContent">
-                  <div className="heading">
-                    <h2>WELCOME BACK!</h2>
-                    <p>Please log in to your account.</p>
-                  </div>
+                {/* RIGHT FORM SIDE */}
+                <div className={styles.loginRight}>
+                  <div className={styles.formContent}>
+                    <div className={styles.heading}>
+                      <h2>WELCOME BACK!</h2>
+                    </div>
 
-                  <div className="formWrap">
-                    <form onSubmit={handleSubmit}>
-                      <div className="inputRow">
-                        <div className="inputFullCol">
-                          <div className="inputGroup">
-                            <input
-                              name="username"
-                              onChange={handleChange}
-                              placeholder="Username"
-                              required
-                              type="text"
-                              value={formData.username}
-                            />
+                    <div className={styles.formWrap}>
+                      <form onSubmit={handleSubmit}>
+                        <div className={styles.inputRow}>
+                          <div className={styles.inputFullCol}>
+                            <div className={styles.inputGroup}>
+                              <input
+                                name="username"
+                                onChange={handleChange}
+                                placeholder="Username"
+                                required
+                                type="text"
+                                value={formData.username}
+                              />
+                            </div>
+                          </div>
+
+                          <div className={styles.inputFullCol}>
+                            <div className={styles.inputGroup}>
+                              <input
+                                name="password"
+                                onChange={handleChange}
+                                placeholder="Password"
+                                required
+                                type={showPassword ? 'text' : 'password'}
+                                value={formData.password}
+                              />
+                              <button
+                                className={styles.showPwd}
+                                onClick={togglePasswordVisibility}
+                                type="button"
+                              >
+                                <PasswordShowIcon />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Status Message */}
+                          {loginMessage && (
+                            <div className={styles.inputFullCol}>
+                              <p
+                                style={{
+                                  color: loginMessage.startsWith('✅')
+                                    ? 'green'
+                                    : 'red',
+                                  fontWeight: 500,
+                                  textAlign: 'center',
+                                }}
+                              >
+                                {loginMessage}
+                              </p>
+                            </div>
+                          )}
+
+                          <div
+                            className={clsx(
+                              styles.inputFullCol,
+                              styles.submitbtn,
+                            )}
+                          >
+                            <div className={styles.inputSubmitBtn}>
+                              <button disabled={loading} type="submit">
+                                {loading ? 'Logging in...' : 'LOGIN'}
+                              </button>
+                            </div>
                           </div>
                         </div>
+                      </form>
+                    </div>
 
-                        <div className="inputFullCol">
-                          <div className="inputGroup">
-                            <input
-                              name="password"
-                              onChange={handleChange}
-                              placeholder="Password"
-                              required
-                              type="password"
-                              value={formData.password}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Status Message */}
-                        {loginMessage && (
-                          <div className="inputFullCol">
-                            <p
-                              style={{
-                                color: loginMessage.startsWith('✅')
-                                  ? 'green'
-                                  : 'red',
-                                fontWeight: 500,
-                                textAlign: 'center',
-                              }}
-                            >
-                              {loginMessage}
-                            </p>
-                          </div>
-                        )}
-
-                        <div className="inputFullCol submitbtn">
-                          <div className="inputSubmitBtn">
-                            <button disabled={loading} type="submit">
-                              {loading ? 'Logging in...' : 'LOGIN'}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-
-                  <div className="formFooter">
-                    <p>
-                      <Link href="/forgot-password">Forgot Password?</Link>
-                    </p>
+                    <div className={styles.formFooter}>
+                      <p>
+                        <Link href="/forgot-password">Forgot Password?</Link>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* LOGIN FOOTER */}
-            <div className="loginFooter">
-              <div className="lfWrap">
-                <div className="leftPart">
-                  <h2>New to HSP?</h2>
-                  <p>We’re happy to have you here!</p>
-                </div>
-                <div className="rightPart">
-                  <Link className="ctaButton" href="/register">
-                    CREATE AN ACCOUNT <Arrow className="arrow" />
-                  </Link>
+              {/* LOGIN FOOTER */}
+              <div className={styles.loginFooter}>
+                <div className={styles.lfWrap}>
+                  <div className={styles.leftPart}>
+                    <h2>New to HSP?</h2>
+                    <p>We’re happy to have you here!</p>
+                  </div>
+                  <div className={styles.rightPart}>
+                    <Link className={styles.ctaButton} href="/register">
+                      CREATE AN ACCOUNT <Arrow className="arrow" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
