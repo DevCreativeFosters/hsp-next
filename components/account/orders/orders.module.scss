@@ -493,3 +493,35 @@
     text-transform: capitalize;
   }
 }
+
+.noOrders {
+  text-align: center;
+  margin: 100px 0 0;
+  line-height: 1.5;
+
+  @media (width<=767px) {
+    margin: 50px 0 0;
+  }
+
+  h3 {
+    font-size: clamp(20px, 1.4vw, 27px);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: clamp(18px, 1.04vw, 20px);
+
+    button {
+      color: #fff;
+      border-color: #fff;
+      border-bottom: solid 1px #fff;
+      padding: 0;
+      line-height: 1;
+
+      &:hover {
+        color: var(--color-primary-100);
+        border-color: var(--color-primary-100);
+      }
+    }
+  }
+}
