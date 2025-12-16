@@ -563,21 +563,36 @@ function CheckoutPage() {
                                   'drop-shipping',
                                 ].some(id => id === deliveryOption.id) && (
                                   <>
-                                    <div className={styles.deliveryAddressBox}>
+                                    <div
+                                      className={clsx(
+                                        styles.deliveryAddressBox,
+                                        styles.delivery,
+                                      )}
+                                    >
                                       {deliveryOption.askCutomerInfo && (
                                         <div className={styles.customerInfo}>
-                                          <p>Customer Info: </p>
+                                          <div className={styles.smallTitle}>
+                                            Customer Info:{' '}
+                                          </div>
                                           <p>
-                                            <strong>
-                                              {
-                                                formData.additionalCustomerInfo
-                                                  .customer_first_name
-                                              }{' '}
-                                              {
-                                                formData.additionalCustomerInfo
-                                                  .customer_last_name
-                                              }
-                                            </strong>
+                                            <div>
+                                              <strong>
+                                                {
+                                                  formData
+                                                    .additionalCustomerInfo
+                                                    .customer_first_name
+                                                }{' '}
+                                              </strong>
+                                            </div>
+                                            <div>
+                                              <strong>
+                                                {
+                                                  formData
+                                                    .additionalCustomerInfo
+                                                    .customer_last_name
+                                                }
+                                              </strong>
+                                            </div>
                                           </p>
                                           <p>
                                             <strong>
@@ -589,11 +604,18 @@ function CheckoutPage() {
                                           </p>
                                         </div>
                                       )}
-                                      <p>
-                                        Delivery Address: {formData.address},{' '}
-                                        {formData.city}, {formData.state}{' '}
-                                        {formData.postcode}, {formData.country}
-                                      </p>
+                                      <div className={styles.customerInfo}>
+                                        <div className={styles.smallTitle}>
+                                          Delivery Address:{' '}
+                                        </div>
+                                        <div>
+                                          <strong>
+                                            {formData.address}, {formData.city},{' '}
+                                            {formData.state} {formData.postcode}
+                                            , {formData.country}
+                                          </strong>
+                                        </div>
+                                      </div>
                                     </div>
                                   </>
                                 )}
@@ -604,7 +626,6 @@ function CheckoutPage() {
                                 ].some(id => id === deliveryOption.id) && (
                                   <div className={styles.deliveryAddressBox}>
                                     <div className={styles.left}>
-                                      Selected Address:{' '}
                                       <b>HSP Vehicle Accessories</b>{' '}
                                     </div>
                                     <div className={styles.right}>

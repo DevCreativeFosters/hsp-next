@@ -254,7 +254,7 @@
                   outline-offset: 2px;
 
                   @media (width <=767px) {
-                    left: 16px;
+                    left: 18px;
                   }
                 }
 
@@ -311,10 +311,14 @@
       }
 
       .editSelection {
-        padding: 24px;
+        padding: 0 24px 24px;
         border-radius: 6px;
         background: #000;
         width: 100%;
+
+        @media (width <=767px) {
+          padding: 0 16px 16px;
+        }
 
         .heading {
           display: flex;
@@ -335,6 +339,7 @@
           font-weight: 500;
           color: #fff;
           text-decoration: underline;
+          padding-left: 0;
 
           &:hover {
             color: var(--color-primary-100);
@@ -343,7 +348,7 @@
 
         .deliveryAddressBox {
           font-size: 15px;
-          padding: 10px 23px;
+          padding: 10px;
           min-height: 53px;
           border-radius: 6px;
           background: var(--color-primary-100);
@@ -351,11 +356,33 @@
           flex-wrap: wrap;
           align-items: center;
           line-height: 1.2;
-          padding-top: 0;
-          padding-bottom: 0;
+          margin-bottom: 32px;
 
-          p:not(:last-child) {
-            margin-bottom: 0;
+          @media (width <=767px) {
+            margin-bottom: 16px;
+          }
+
+          &.delivery {
+            display: block;
+
+            .customerInfo {
+              display: block;
+              font-size: 14px;
+
+              .smallTitle {
+                font-size: 14px;
+                margin: 0 0 2px;
+              }
+
+              p {
+                font-size: 16px;
+                margin: 10px 0;
+
+                strong {
+                  font-weight: 600;
+                }
+              }
+            }
           }
 
           .left {
@@ -373,6 +400,7 @@
             .left {
               width: 100%;
               margin-bottom: 10px;
+              font-size: 16px;
             }
 
             .right {
