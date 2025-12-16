@@ -1,6 +1,13 @@
 .accountDetails {
   width: 100%;
 
+  @media (width<=767px) {
+    background: #fff;
+    color: #000;
+    padding: 16px;
+    border-radius: 20px;
+  }
+
   .info {
     .dRow {
       display: flex;
@@ -12,11 +19,24 @@
         padding: 15px 0;
       }
 
+      @media (width <=767px) {
+        padding: 8px 0;
+        display: block;
+        position: relative;
+      }
+
       .dTitle {
         width: 28%;
         font-size: clamp(16px, 2vw, 20px);
         font-family: var(--font-secondary);
         font-weight: 500;
+
+        @media (width <=767px) {
+          width: 100%;
+          font-weight: 700;
+          font-size: 14px;
+          margin-bottom: 5px;
+        }
       }
 
       .dDesc {
@@ -25,6 +45,10 @@
         font-weight: 300;
         font-family: var(--font-hind);
         padding: 0 15px;
+
+        @media (width <=767px) {
+          padding: 0;
+        }
 
         a {
           text-decoration: underline;
@@ -41,6 +65,20 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
+
+        @media (width<=767px) {
+          position: absolute;
+          right: 0;
+          bottom: 5px;
+          margin: auto;
+
+          svg {
+            path {
+              fill: #000;
+              fill-opacity: 1;
+            }
+          }
+        }
       }
     }
   }
@@ -52,11 +90,16 @@
     margin: 34px 0 0;
     padding: 28px 40px;
     display: flex;
-    font-size: clamp(18px, 2vw, 20px);
+    font-size: clamp(16px, 2vw, 20px);
     gap: 20px;
 
     @media (width <=991px) {
       padding: 20px;
+    }
+
+    @media (width <=767px) {
+      margin: 16px 0 0;
+      padding: 10px;
     }
 
     .title {

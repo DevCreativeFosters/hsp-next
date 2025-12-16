@@ -419,9 +419,22 @@ function Orders({ onlyReturns = false }) {
       title: 'Current',
     },
     {
-      content: allorders
-        .filter(item => item.status === 'completed')
-        .map(item => <Order item={item} key={item.order_id} />),
+      content: (
+        <>
+          <div className={styles.noOrders}>
+            <h3>Looks like you haven’t placed an order yet</h3>
+            <p>
+              Get your next ute upgrade here: <button>browse products</button>
+            </p>
+          </div>
+
+          {allorders
+            .filter(item => item.status === 'completed')
+            .map(item => (
+              <Order item={item} key={item.order_id} />
+            ))}
+        </>
+      ),
       slug: 'completed',
       title: 'Completed',
     },
