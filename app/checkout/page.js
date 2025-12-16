@@ -297,10 +297,11 @@ function CheckoutPage() {
   }, [user]);
 
   const handleSelectOption = id => {
-    if (isFormFilled) {
+    const currentOpenDrawer = openDrawer === id ? '' : id;
+
+    if (isFormFilled && currentOpenDrawer === '') {
       return;
     }
-    const currentOpenDrawer = openDrawer === id ? '' : id;
 
     setOpenDrawer(currentOpenDrawer); // toggle open/close
     setFormData({ ...formData, orderType: currentOpenDrawer });
