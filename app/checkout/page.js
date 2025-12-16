@@ -109,47 +109,18 @@ function CheckoutPage() {
       noteContent: <></>,
       role: 'retail',
       selectedAddress: {
-        btnTitle: 'Change Method',
+        btnTitle: 'Change Store',
         title: 'Local Installation',
       },
       selectedMenu: {
         content: (
           <>
-            <p>
-              Choose a local HSP fitter to get your accessories installed. Your
-              selected store will reach out to you to book a suitable fitting
-              time.
-            </p>
+            <p>Choose a local HSP fitter to get your accessories installed</p>
           </>
         ),
         title: 'Local Installation',
       },
       title: 'Local Installation',
-    },
-    {
-      allowDelivery: false,
-      askCutomerInfo: false,
-      description: 'Convenient Local Pickup',
-      icon: LocationIcon,
-      id: 'click-collect',
-      noteContent: <></>,
-      role: 'retail',
-      selectedAddress: {
-        btnTitle: 'Edit Selection',
-        title: 'Click & Collect',
-      },
-      selectedMenu: {
-        content: (
-          <>
-            <p>
-              Your Selected Store Will Reach Out To You To Provide a Collection
-              Time.
-            </p>
-          </>
-        ),
-        title: 'Click & Collect',
-      },
-      title: 'Click & Collect',
     },
     {
       allowDelivery: false,
@@ -160,16 +131,13 @@ function CheckoutPage() {
       noteContent: <></>,
       role: 'retail',
       selectedAddress: {
-        btnTitle: 'Edit Selection',
-        title: 'Delivery',
+        btnTitle: 'Edit Address',
+        title: 'Deliver to Door',
       },
       selectedMenu: {
         content: (
           <>
-            <p>
-              Appropriate delivery costs will be added to the final order
-              summary
-            </p>
+            <p>Sent within 1-3 business days</p>
           </>
         ),
         title: 'Deliver to Door',
@@ -177,10 +145,34 @@ function CheckoutPage() {
       title: 'Deliver to Door',
     },
     {
+      allowDelivery: false,
+      askCutomerInfo: false,
+      description: 'Convenient Local Pickup',
+      icon: LocationIcon,
+      id: 'click-collect',
+      noteContent: <></>,
+      role: 'retail',
+      selectedAddress: {
+        btnTitle: 'Change Store',
+        title: 'Click & Collect',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Your selected store will reach out to you to provide a collection
+              time.
+            </p>
+          </>
+        ),
+        title: 'Click & Collect',
+      },
+      title: 'Click & Collect',
+    },
+    {
       allowDelivery: true,
       askCutomerInfo: false,
-      description:
-        'Get your products dispatched to your store within 1-2 business days*',
+      description: 'Get your order delivered to your Store',
       icon: TruckIcon,
       id: 'standard-delivery',
       noteContent: (
@@ -193,8 +185,8 @@ function CheckoutPage() {
       ),
       role: 'b2b',
       selectedAddress: {
-        btnTitle: 'Edit Selection',
-        title: 'Deliver to You',
+        btnTitle: 'Edit Address',
+        title: 'Deliver to Store',
       },
       selectedMenu: {
         content: (
@@ -209,14 +201,14 @@ function CheckoutPage() {
             </p>
           </>
         ),
-        title: 'Deliver to You',
+        title: 'Deliver to Store',
       },
-      title: 'Standard Delivery',
+      title: 'Deliver to Store',
     },
     {
       allowDelivery: false,
       askCutomerInfo: false,
-      description: 'Arrange your own freight pickup from HSP HQ',
+      description: 'Pickup from HSP HQ in Noble Park North VIC 3977',
       icon: LocationIcon,
       id: 'pickup-from-hsp',
       noteContent: (
@@ -245,7 +237,8 @@ function CheckoutPage() {
     {
       allowDelivery: false,
       askCutomerInfo: true,
-      description: 'Get your products sent directly to a customers address',
+      description:
+        'Get your products sent directly to your customers COMMERCIAL address',
       icon: DropShipping,
       id: 'drop-shipping',
       noteContent: (
@@ -258,21 +251,18 @@ function CheckoutPage() {
       ),
       role: 'b2b',
       selectedAddress: {
-        btnTitle: 'Edit Selection',
-        title: 'Drop Shipping',
+        btnTitle: 'Edit Delivery Details',
+        title: 'Drop Ship to Customer',
       },
       selectedMenu: {
         content: (
           <>
-            <p>
-              Appropriate delivery costs will be added to the final order
-              summary
-            </p>
+            <p>Get your products sent directly to a customers address</p>
           </>
         ),
-        title: 'Drop Shipping',
+        title: 'Drop Ship to Customer',
       },
-      title: 'Drop Shipping',
+      title: 'Drop Ship to Customer',
     },
   ];
 
@@ -307,6 +297,9 @@ function CheckoutPage() {
   }, [user]);
 
   const handleSelectOption = id => {
+    if (isFormFilled) {
+      return;
+    }
     const currentOpenDrawer = openDrawer === id ? '' : id;
 
     setOpenDrawer(currentOpenDrawer); // toggle open/close
@@ -539,7 +532,8 @@ function CheckoutPage() {
                               }
                               style={{ cursor: 'pointer' }}
                             >
-                              {openDrawer === deliveryOption.id ? (
+                              {openDrawer === deliveryOption.id &&
+                              !isFormFilled ? (
                                 <>
                                   <h3>
                                     <deliveryOption.icon />{' '}
@@ -570,17 +564,29 @@ function CheckoutPage() {
                                   <>
                                     <div className={styles.deliveryAddressBox}>
                                       {deliveryOption.askCutomerInfo && (
-                                        <p>
-                                          Customer Name:{' '}
-                                          {
-                                            formData.additionalCustomerInfo
-                                              .customer_first_name
-                                          }{' '}
-                                          {
-                                            formData.additionalCustomerInfo
-                                              .customer_last_name
-                                          }
-                                        </p>
+                                        <div className={styles.customerInfo}>
+                                          <p>Customer Info: </p>
+                                          <p>
+                                            <strong>
+                                              {
+                                                formData.additionalCustomerInfo
+                                                  .customer_first_name
+                                              }{' '}
+                                              {
+                                                formData.additionalCustomerInfo
+                                                  .customer_last_name
+                                              }
+                                            </strong>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              {
+                                                formData.additionalCustomerInfo
+                                                  .customer_email
+                                              }
+                                            </strong>
+                                          </p>
+                                        </div>
                                       )}
                                       <p>
                                         Delivery Address: {formData.address},{' '}
@@ -605,6 +611,8 @@ function CheckoutPage() {
                                     </div>
                                   </div>
                                 )}
+
+                                {deliveryOption.noteContent}
 
                                 <button
                                   className={styles.link}

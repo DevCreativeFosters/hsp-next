@@ -270,7 +270,7 @@ function DeliveryAddressForm({
             onClick={() => setIsFormFilled(true)}
             size="large"
           >
-            Submit
+            Confirm Address
           </Button>
         </>
       )}
