@@ -11,10 +11,7 @@
 .headerInner {
   @include center;
 
-  height: var(
-    --header-height
-  ); // height variable referenced in choose-you-vehicle-block
-
+  height: var(--header-height);
   padding-inline: var(--container-inline-padding);
   background: var(--color-black-100);
 }
@@ -28,6 +25,10 @@
   width: 100%;
   height: 100%;
   align-items: center;
+
+  @media (width<=767px) {
+    gap: 16px;
+  }
 
   @include bp(large) {
     grid-template-areas:
@@ -88,7 +89,6 @@
 .secondaryMenu {
   grid-area: secondaryMenu;
   justify-self: flex-end;
-  transform: translateX(12px); // = --inline-padding for buttons
 }
 
 .mainMenuList,
@@ -144,6 +144,46 @@
   @include center;
 
   font-size: 16px;
+
+  &.cartButton {
+    a {
+      padding: 0;
+
+      &:hover {
+        background: transparent;
+
+        svg {
+          path {
+            stroke: var(--color-primary-100);
+          }
+        }
+      }
+    }
+  }
+
+  &.wishlistButton {
+    a {
+      padding: 0;
+
+      &:hover {
+        background: transparent;
+
+        svg {
+          path {
+            fill: var(--color-primary-100);
+          }
+        }
+      }
+    }
+  }
+
+  &.profileButton {
+    a {
+      font-family: var(--font-primary);
+      font-size: 14px;
+      padding: 6px 15px;
+    }
+  }
 }
 
 .socialMenuItem {
@@ -167,6 +207,14 @@
   align-items: center;
   gap: 16px;
   grid-area: call;
+
+  @media (width<=767px) {
+    gap: 0;
+
+    a {
+      padding: 5px !important;
+    }
+  }
 
   @include bp(large) {
     display: none;
@@ -216,11 +264,5 @@
 
   @include bp(full) {
     gap: 16px;
-  }
-
-  :global(html.store-locator-fullscreen) & {
-    @include bp-below(medium) {
-      display: none;
-    }
   }
 }

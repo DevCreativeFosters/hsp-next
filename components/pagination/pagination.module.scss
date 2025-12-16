@@ -6,7 +6,7 @@
   margin: var(--gap) 0;
 
   @include bp(large) {
-    gap: var(--gap-global-sm);
+    gap: 12px;
   }
 
   > * {

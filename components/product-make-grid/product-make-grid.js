@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -12,6 +12,13 @@ import Pagination from '@components/pagination/pagination';
 import ProductCard from '@components/product-card/product-card';
 
 import styles from './product-make-grid.module.scss';
+
+const sortOptions = [
+  { label: 'Price High To Low', value: 'price_desc' },
+  { label: 'Price Low To High', value: 'price_asc' },
+  { label: 'Popularity', value: 'popularity' },
+  { label: 'Newest Arrivals', value: 'newest' },
+];
 
 export default function ProductMakeGrid({
   alignment,
@@ -27,6 +34,26 @@ export default function ProductMakeGrid({
 }) {
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
+  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(true);
+
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
+  const sortDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        sortDropdownRef.current &&
+        !sortDropdownRef.current.contains(event.target)
+      ) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setPage(1);
@@ -46,25 +73,25 @@ export default function ProductMakeGrid({
     setPage(pageNumber);
   };
 
+  const handleBrandsFilterToggle = () => {
+    setIsBrandsFilterOpen(prev => !prev);
+  };
+
+  const handleSortToggle = () => {
+    setIsSortDropdownOpen(prev => !prev);
+  };
+
+  const handleSortSelect = option => {
+    setSelectedSortOption(option);
+    setIsSortDropdownOpen(false);
+  };
+
   const currentProducts = useMemo(() => {
     if (!products || !Array.isArray(products) || products.length === 0) {
       return [];
     }
     return products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [itemsPerPage, page, products]);
-
-  console.log(
-    alignment,
-    bodyText,
-    products,
-    productsPerPage,
-    productsPerPageMobile,
-    productsTitleTag,
-    productsTitleTagStyle,
-    title,
-    titleTag,
-    titleTagStyle,
-  );
 
   return (
     <Container flexibleBlockPadding>
@@ -99,76 +126,136 @@ export default function ProductMakeGrid({
       </div>
       <div className={styles.productMain}>
         <div className={styles.leftPart}>
-          <div className={styles.priceFilter}>
-            <div className={styles.pWrap}>
-              <div className={styles.title}>Sort By:</div>
-              <div className={styles.selectBox}>
-                <select>
-                  <option>Price High To Low</option>
-                  <option>Price Low To High</option>
-                  <option>Popularity</option>
-                  <option>Newest Arrivals</option>
-                </select>
-                <div className={styles.arrow}></div>
+          <div className={styles.mobileTitle}>Sort By:</div>
+          <div className={styles.leftwrap}>
+            <div className={styles.priceFilter}>
+              <div className={styles.pWrap}>
+                <div className={styles.title}>Sort By:</div>
+
+                <div
+                  className={clsx(styles.customSelectBox, {
+                    [styles.open]: isSortDropdownOpen,
+                  })}
+                  ref={sortDropdownRef}
+                >
+                  <div
+                    aria-controls="sort-options-list"
+                    aria-expanded={isSortDropdownOpen}
+                    className={styles.selectedOption}
+                    onClick={handleSortToggle}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleSortToggle();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    {selectedSortOption.label}
+                    <div className={styles.arrow}></div>
+                  </div>
+
+                  {isSortDropdownOpen && (
+                    <ul className={styles.optionsList} id="sort-options-list">
+                      {sortOptions.map(option => (
+                        <li
+                          aria-selected={
+                            option.value === selectedSortOption.value
+                          }
+                          className={clsx({
+                            [styles.selected]:
+                              option.value === selectedSortOption.value,
+                          })}
+                          key={option.value}
+                          onClick={() => handleSortSelect(option)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              handleSortSelect(option);
+                            }
+                          }}
+                          role="option"
+                          tabIndex={0}
+                        >
+                          {option.label}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className={styles.chekboxLists}>
-            <div className={styles.filterClick}>
-              <div className={styles.filterTitle}>Brands:</div>
-            </div>
-            <div className={styles.filterContent}>
-              <ul>
-                <li>
-                  <label>
-                    <input id="1" name="filtername" type="checkbox" />
-                    <span>Ford</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>Volkswagen</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>Kia</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>Mitsubishi</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>Nissan</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>MG</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>BYD</span>
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox" />
-                    <span>Chevrolet</span>
-                  </label>
-                </li>
-              </ul>
+            <div className={styles.chekboxLists}>
+              <div
+                className={clsx(styles.filterClick, {
+                  [styles.open]: isBrandsFilterOpen,
+                })}
+                onClick={handleBrandsFilterToggle}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleBrandsFilterToggle();
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
+                <div className={styles.filterTitle}>Brands:</div>
+              </div>
+              <div
+                className={clsx(styles.filterContent, {
+                  [styles.open]: isBrandsFilterOpen,
+                })}
+              >
+                <ul>
+                  <li>
+                    <label>
+                      <input id="1" name="filtername" type="checkbox" />
+                      <span>Ford</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>Volkswagen</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>Kia</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>Mitsubishi</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>Nissan</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>MG</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>BYD</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                      <span>Chevrolet</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

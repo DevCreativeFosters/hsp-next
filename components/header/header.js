@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -164,16 +165,9 @@ export default function Header({
                     </li>
                   ),
                 )}
-                <li className={styles.secondaryMenuItem}>
-                  <Button
-                    background="dark"
-                    href="/products"
-                    rightIcon="add-wishlist"
-                    size="xsmall"
-                    variant="tertiary"
-                  />
-                </li>
-                <li className={styles.secondaryMenuItem}>
+                <li
+                  className={clsx(styles.secondaryMenuItem, styles.cartButton)}
+                >
                   <Button
                     background="dark"
                     href="/cart"
@@ -186,7 +180,28 @@ export default function Header({
                     )}
                   </Button>
                 </li>
-                <li className={styles.secondaryMenuItem}>
+
+                <li
+                  className={clsx(
+                    styles.secondaryMenuItem,
+                    styles.wishlistButton,
+                  )}
+                >
+                  <Button
+                    background="dark"
+                    href="/products"
+                    rightIcon="add-wishlist"
+                    size="xsmall"
+                    variant="tertiary"
+                  />
+                </li>
+
+                <li
+                  className={clsx(
+                    styles.secondaryMenuItem,
+                    styles.profileButton,
+                  )}
+                >
                   <Button
                     background="dark"
                     href={user?.id ? `/account/${user?.role}` : '/register'}
