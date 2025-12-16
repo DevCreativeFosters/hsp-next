@@ -265,4 +265,12 @@
   @include bp(full) {
     gap: 16px;
   }
+
+  /* stylelint-disable selector-pseudo-class-no-unknown */
+  :global(html.store-locator-fullscreen) & {
+    /* stylelint-enable selector-pseudo-class-no-unknown */
+    @include bp-below(medium) {
+      display: none;
+    }
+  }
 }
