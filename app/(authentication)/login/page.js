@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -47,6 +47,10 @@ function LoginPage() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    setUser({});
+  }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();

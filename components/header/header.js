@@ -6,6 +6,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
+import { useCart } from '@contexts/cart-context';
+import { useUserContext } from '@contexts/user';
+
 import { useClickOutside } from '@hooks/useClickOutside';
 
 import Button from '@components/button/button';
@@ -28,6 +31,9 @@ export default function Header({
   products,
   secondaryMenu,
 }) {
+  const { user } = useUserContext();
+  const { cartCount } = useCart();
+
   const headerRef = useRef(null);
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
   const [currentSubmenu, setCurrentSubmenu] = useState(null);
@@ -71,7 +77,7 @@ export default function Header({
 
             <div className={styles.callButtonContainer}>
               {secondaryMenu?.map(item => {
-                if (item.mobileDisplay === true ) {
+                if (item.mobileDisplay === true) {
                   return (
                     <Button
                       background="dark"
@@ -84,6 +90,24 @@ export default function Header({
                   );
                 }
               })}
+              <Button
+                background="dark"
+                href="/products"
+                rightIcon="add-wishlist"
+                size="small"
+                variant="tertiary"
+              />
+              <Button
+                background="dark"
+                href="/cart"
+                rightIcon="cart"
+                size="small"
+                variant="tertiary"
+              >
+                {cartCount > 0 && (
+                  <span className={styles.cartCount}>{cartCount}</span>
+                )}
+              </Button>
             </div>
 
             <nav className={styles.mainMenu} ref={mainMenuRef}>
@@ -140,6 +164,46 @@ export default function Header({
                     </li>
                   ),
                 )}
+                <li className={styles.secondaryMenuItem}>
+                  <Button
+                    background="dark"
+                    href="/products"
+                    rightIcon="add-wishlist"
+                    size="xsmall"
+                    variant="tertiary"
+                  />
+                </li>
+                <li className={styles.secondaryMenuItem}>
+                  <Button
+                    background="dark"
+                    href="/cart"
+                    rightIcon="cart"
+                    size="xsmall"
+                    variant="tertiary"
+                  >
+                    {cartCount > 0 && (
+                      <span className={styles.cartCount}>{cartCount}</span>
+                    )}
+                  </Button>
+                </li>
+                <li className={styles.secondaryMenuItem}>
+                  <Button
+                    background="dark"
+                    href={user?.id ? `/account/${user?.role}` : '/register'}
+                    rightIcon="account-profile"
+                    size="xsmall"
+                    style={{ borderRadius: '24px' }}
+                    variant="primary"
+                  >
+                    {user?.id
+                      ? user?.role === 'retail'
+                        ? 'Account'
+                        : 'Dealer Account'
+                      : cartCount > 0
+                        ? ''
+                        : 'Login / Sign Up'}
+                  </Button>
+                </li>
               </ul>
             </nav>
 

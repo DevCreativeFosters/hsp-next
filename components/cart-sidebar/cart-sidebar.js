@@ -32,7 +32,12 @@ export default function CartSidebar() {
   }, [isCartOpen]);
 
   return (
-    <div className={styles.cartMain}>
+    <div
+      className={styles.cartMain}
+      style={{
+        visibility: isCartOpen ? 'visible' : 'hidden',
+      }}
+    >
       <div
         className={clsx(styles.cartWrapper, {
           [styles.slideIn]: isCartWrapperVisible,
