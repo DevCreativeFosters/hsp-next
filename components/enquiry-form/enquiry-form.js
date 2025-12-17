@@ -202,56 +202,59 @@ export default function EnquiryForm({
             )}
           </div>
           <div className={styles.stockStatus}>
-            <div className={styles.qtyBlock}>
-              <button
-                className={styles.minus}
-                disabled={isOutOfStock || quantity <= 1} // Disable minus if quantity is 1
-                onClick={() => setQuantity(prevQuantity => prevQuantity - 1)}
-                type="button"
-              >
-                _
-              </button>
-              <input
-                min="1"
-                onChange={handleInputChange}
-                type="number"
-                value={quantity}
-              />
-              <button
-                className={styles.plus}
-                disabled={isOutOfStock}
-                onClick={() => setQuantity(prevQuantity => prevQuantity + 1)}
-                type="button"
-              >
-                +
-              </button>
-            </div>
             {!isOutOfStock && (
               <div className={styles.statusInstock}>In Stock</div>
             )}
             {isOutOfStock && (
               <div className={styles.statusOutOfstock}>Out of Stock</div>
             )}
-          </div>
-          <div
-            className={styles.buttonWrapper}
-            onClick={handleButtonWrapperClick}
-          >
-            <Button
-              className={styles.submitButton}
-              disabled={isOutOfStock || loading} // Disable button while adding to cart
-              onClick={() => addToCart(productData.databaseId, quantity)}
-              size="large"
-            >
-              Add to Cart {loading && <Loading color="white" size="small" />}
-            </Button>
-            <Button
-              className={styles.submitButton}
-              onClick={handleOpenModal}
-              size="large"
-            >
-              Make an enquiry
-            </Button>
+            <div className={styles.qtyAndBtns}>
+              <div className={styles.qtyBlock}>
+                <button
+                  className={styles.minus}
+                  disabled={isOutOfStock || quantity <= 1} // Disable minus if quantity is 1
+                  onClick={() => setQuantity(prevQuantity => prevQuantity - 1)}
+                  type="button"
+                >
+                  _
+                </button>
+                <input
+                  min="1"
+                  onChange={handleInputChange}
+                  type="number"
+                  value={quantity}
+                />
+                <button
+                  className={styles.plus}
+                  disabled={isOutOfStock}
+                  onClick={() => setQuantity(prevQuantity => prevQuantity + 1)}
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <div
+                className={styles.buttonWrapper}
+                onClick={handleButtonWrapperClick}
+              >
+                <Button
+                  className={styles.submitButton}
+                  disabled={isOutOfStock || loading} // Disable button while adding to cart
+                  onClick={() => addToCart(productData.databaseId, quantity)}
+                  size="large"
+                >
+                  Add to Cart{' '}
+                  {loading && <Loading color="white" size="small" />}
+                </Button>
+                <Button
+                  className={styles.submitButton}
+                  onClick={handleOpenModal}
+                  size="large"
+                >
+                  Make an enquiry
+                </Button>
+              </div>
+            </div>
           </div>
         </form>
         {enquiryModalOpened && (

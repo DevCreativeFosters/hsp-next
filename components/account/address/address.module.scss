@@ -2,6 +2,8 @@
   width: 100%;
 
   .info {
+    margin-bottom: 50px;
+
     .dRow {
       display: flex;
       align-items: center;
@@ -25,7 +27,7 @@
 
       .dDesc {
         width: 62%;
-        font-size: clamp(14px, 2vw, 20px);
+        font-size: clamp(16px, 1.04vw, 20px);
         font-weight: 300;
         font-family: var(--font-hind);
         padding: 0 15px;
@@ -73,7 +75,30 @@
       }
     }
 
-    margin-bottom: 50px;
+    @media (width <=767px) {
+      background: #fff;
+      padding: 10px 16px 16px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+
+      .dRow {
+        color: #000;
+        flex-wrap: wrap;
+        padding: 8px 0;
+
+        .dTitle {
+          font-weight: 700;
+          font-size: 14px;
+          width: 100%;
+          margin-bottom: 5px;
+        }
+
+        .dDesc {
+          width: 100%;
+          padding: 0;
+        }
+      }
+    }
   }
 }
 
@@ -94,6 +119,7 @@
     padding-bottom: 1px;
     font-weight: 600;
     transition: 0.5s all;
+    line-height: 1;
 
     &:hover {
       color: #ed2935;

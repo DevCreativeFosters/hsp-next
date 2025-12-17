@@ -71,8 +71,8 @@
   }
 
   .borderBox {
-    padding: 20px;
-    border: solid 1px #919191;
+    padding: 20px 32px;
+    border: solid 2px rgb(255 255 255 / 20%);
     border-radius: 16px;
     margin-bottom: 28px;
 
@@ -80,7 +80,7 @@
       margin-bottom: 30px;
 
       h5 {
-        font-size: 16px;
+        font-size: clamp(16px, 0.93vw, 18px);
         margin-bottom: 12px;
       }
 
@@ -90,7 +90,7 @@
         overflow: auto;
 
         table {
-          padding: 20px 50px;
+          padding: 14px 30px;
           width: 100%;
 
           @media (width <=767px) {
@@ -108,6 +108,7 @@
             &:first-child {
               font-family: var(--font-secondary);
               width: 40%;
+              font-weight: 600;
             }
           }
         }
@@ -136,6 +137,32 @@
           figure {
             margin: 0;
           }
+        }
+      }
+
+      .thankYouMsg {
+        padding: 20px 0 0;
+        line-height: 1.5;
+
+        // display:none;
+        h4 {
+          font-weight: 600;
+          margin: 0 0 10px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #38ff38;
+
+          svg {
+            rect,
+            path {
+              stroke: #38ff38;
+            }
+          }
+        }
+
+        p {
+          margin: 0;
         }
       }
     }
@@ -207,6 +234,8 @@
 
     p {
       line-height: 1.5;
+      font-size: 15px;
+      color: #d5d5d5;
 
       @media (width <=767px) {
         font-size: 14px;
@@ -216,8 +245,8 @@
     a {
       display: inline-block;
       border-bottom: solid 1px #fff;
-      padding-bottom: 1px;
       font-weight: 600;
+      line-height: 1;
       transition: 0.5s all;
 
       &:hover {
