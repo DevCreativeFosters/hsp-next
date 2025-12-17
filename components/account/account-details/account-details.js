@@ -244,11 +244,6 @@ function AccountDetails() {
                 </table>
               </div>
             </div>
-
-            <div className={styles.currentStatus}>
-              <div className={styles.title}>HSP Reseller Since</div>
-              <div className={styles.date}>21st July, 2025</div>
-            </div>
           </div>
 
           <div className={styles.borderBox}>
