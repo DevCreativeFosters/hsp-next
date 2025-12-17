@@ -12,6 +12,8 @@ import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 import StoreDisplays from '@components/store-displays/store-displays';
 
+import ThanksIcon from '@assets/icons/checklargeicon.svg';
+
 import styles from './account-details.module.scss';
 
 const GET_STORE_BY_ID = `
@@ -157,6 +159,8 @@ function AccountDetails() {
     getStoreDetails();
   }, []);
 
+  const [showThanks, setShowThanks] = useState(false);
+
   return (
     <>
       {loading ? (
@@ -255,10 +259,27 @@ function AccountDetails() {
                 hideSeparator
               />
               <div className={styles.btns}>
-                <Button size="large" variant="secondary">
+                <Button
+                  className={styles.requestbutton}
+                  onClick={() => setShowThanks(true)}
+                  size="large"
+                  variant="secondary"
+                >
                   Request Display Pricing
                 </Button>
               </div>
+              {showThanks && (
+                <div className={styles.thankYouMsg}>
+                  <h4>
+                    <ThanksIcon />
+                    Thank You for being a valued HSP Reseller!
+                  </h4>
+                  <p>
+                    Thank you for your enquiry. A member of our team will be in
+                    touch shortly for pricing info on in-store displays.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

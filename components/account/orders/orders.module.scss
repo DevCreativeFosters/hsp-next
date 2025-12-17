@@ -1,14 +1,14 @@
 .orderBox {
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 
   .orderWrap {
     border: solid 2px rgb(255 255 255 / 20%);
-    border-radius: 25px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 20px 32px;
 
     @media (width <=767px) {
-      border-radius: 16px;
+      padding: 16px;
     }
 
     .heading {
@@ -23,17 +23,20 @@
 
       .left {
         @media (width <=767px) {
-          margin-bottom: 10px;
+          margin-bottom: 0;
         }
 
         h5 {
           color: #ed2935;
           margin-bottom: 3px;
+          text-transform: uppercase;
+          font-size: clamp(18px, 1.04vw, 20px);
         }
 
         h6 {
           font-weight: 600;
           font-size: 15px;
+          color: #d5d5d5;
         }
       }
 
@@ -291,9 +294,9 @@
 
     .orderBody {
       .productInfo {
-        display: flex;
-        flex-wrap: wrap;
-        margin: 30px 0;
+        // display: flex;
+        // flex-wrap: wrap;
+        margin: 24px 0;
 
         @media (width <=767px) {
           margin: 15px 0;
@@ -302,26 +305,41 @@
         .orderRow {
           display: flex;
           font-family: var(--font-secondary);
-          width: 50%;
-          padding: 5px 0;
+
+          // width: 50%;
+          padding: 8px 0;
           gap: 10px;
           font-size: 15px;
+          color: #d5d5d5;
 
-          @media (width <=991px) {
-            width: 100%;
+          // @media (width <=991px) {
+          //   width: 100%;
+          // }
+          @media (width <=767px) {
+            font-size: 14px;
+            line-height: 1.15;
           }
 
           .title {
             font-weight: 600;
+            width: 22%;
+
+            @media (width <=767px) {
+              width: 40%;
+            }
           }
 
           .desc {
             font-weight: 400;
+            width: 78%;
+
+            @media (width <=767px) {
+              width: 60%;
+            }
 
             strong {
               font-weight: 600;
               color: #ed2935;
-              margin: 0 0 0 8px;
             }
           }
         }
@@ -335,18 +353,19 @@
         @media (width <=767px) {
           margin: 15px 0 0;
           flex-wrap: wrap;
-          gap: 12px;
+          gap: 8px;
         }
 
         .button {
           background: var(--color-primary-100);
-          font-size: clamp(16px, 1.31vw, 22px);
+          font-size: clamp(16px, 1.04vw, 20px);
           font-weight: 600;
           color: #fff;
-          border-radius: 9px;
+          border-radius: 8px;
           font-family: var(--font-secondary);
+          border: solid 2px var(--color-primary-100);
           padding: 0 20px;
-          min-height: 40px;
+          min-height: 48px;
           min-width: 240px;
           text-align: center;
           display: flex;
@@ -355,8 +374,14 @@
           transition: 0.5s all;
           flex: 1;
 
+          @media (width <=767px) {
+            min-height: 38px;
+            min-width: inherit;
+            padding: 0 12px;
+          }
+
           &:hover {
-            background-color: #000;
+            background-color: transparent;
           }
         }
 
@@ -380,6 +405,11 @@
 
           @media (width <=991px) {
             min-width: inherit;
+          }
+
+          @media (width <=767px) {
+            min-height: 38px;
+            padding: 0 20px;
           }
 
           &:hover {
