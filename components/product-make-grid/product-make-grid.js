@@ -17,6 +17,7 @@ import ProductCard from '@components/product-card/product-card';
 import styles from './product-make-grid.module.scss';
 
 const sortOptions = [
+  { label: 'Popularity', value: 'popularity' },
   { label: 'Price High To Low', value: 'price_desc' },
   { label: 'Price Low To High', value: 'price_asc' },
   { label: 'Newest Arrivals', value: 'newest' },
@@ -134,6 +135,11 @@ export default function ProductMakeGrid({
       case 'newest':
         return sorted.sort(
           (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded),
+        );
+
+      case 'popularity':
+        return sorted.sort(
+          (a, b) => (a.popularity || 5000) - (b.popularity || 5000),
         );
 
       default:
