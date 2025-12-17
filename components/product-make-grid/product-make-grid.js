@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+import Link from 'next/link';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { getAllMakes } from '@lib/api/get-all-makes';
+
 import Container from '@components/container/container';
-import DynamicTitle from '@components/dynamic-title/dynamic-title';
+import Loading from '@components/loading/loading';
 import Pagination from '@components/pagination/pagination';
 import ProductCard from '@components/product-card/product-card';
 
@@ -16,7 +19,6 @@ import styles from './product-make-grid.module.scss';
 const sortOptions = [
   { label: 'Price High To Low', value: 'price_desc' },
   { label: 'Price Low To High', value: 'price_asc' },
-  { label: 'Popularity', value: 'popularity' },
   { label: 'Newest Arrivals', value: 'newest' },
 ];
 
@@ -38,6 +40,8 @@ export default function ProductMakeGrid({
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
+  const [allMakes, setAllMakes] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const sortDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -56,6 +60,15 @@ export default function ProductMakeGrid({
   }, []);
 
   useEffect(() => {
+    function loadAllMakes() {
+      getAllMakes().then(makes => {
+        setAllMakes(makes);
+      });
+    }
+    loadAllMakes();
+  }, []);
+
+  useEffect(() => {
     setPage(1);
   }, [isMobile]);
 
@@ -66,7 +79,19 @@ export default function ProductMakeGrid({
     return productsPerPage || 16;
   }, [isMobile, productsPerPage, productsPerPageMobile]);
 
-  const totalProducts = products?.length || 0;
+  const filteredProducts = useMemo(() => {
+    if (!products || !Array.isArray(products)) return [];
+
+    // If no brand selected → show all products
+    if (selectedBrands.length === 0) return products;
+
+    return products.filter(product => {
+      const url = product?.link?.url?.toLowerCase() || '';
+      return selectedBrands.some(slug => url.includes(`/${slug}/`));
+    });
+  }, [products, selectedBrands]);
+
+  const totalProducts = filteredProducts.length;
   const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
   const handlePageClick = pageNumber => {
@@ -86,15 +111,47 @@ export default function ProductMakeGrid({
     setIsSortDropdownOpen(false);
   };
 
-  const currentProducts = useMemo(() => {
-    if (!products || !Array.isArray(products) || products.length === 0) {
-      return [];
+  const handleBrandChange = slug => {
+    setSelectedBrands(prev =>
+      prev.includes(slug) ? prev.filter(s => s !== slug) : [...prev, slug],
+    );
+  };
+
+  const sortedProducts = useMemo(() => {
+    const sorted = [...filteredProducts];
+
+    switch (selectedSortOption.value) {
+      case 'price_desc':
+        return sorted.sort(
+          (a, b) => (b.startingPrice || 0) - (a.startingPrice || 0),
+        );
+
+      case 'price_asc':
+        return sorted.sort(
+          (a, b) => (a.startingPrice || 0) - (b.startingPrice || 0),
+        );
+
+      case 'newest':
+        return sorted.sort(
+          (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded),
+        );
+
+      default:
+        return sorted;
     }
-    return products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [itemsPerPage, page, products]);
+  }, [filteredProducts, selectedSortOption]);
+
+  const currentProducts = useMemo(() => {
+    return sortedProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  }, [itemsPerPage, page, sortedProducts]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [selectedBrands, selectedSortOption]);
 
   return (
-    <Container flexibleBlockPadding>
+    <Container collapseTopPadding flexibleBlockPadding>
+      {/*
       {title && (
         <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
@@ -105,22 +162,23 @@ export default function ProductMakeGrid({
           {title}
         </DynamicTitle>
       )}
+      */}
       <div className={styles.topFilter}>
         <ul>
           <li>
-            <button>Electric Roll Tops</button>
+            <Link href="/electric-roller-cover">Electric Roll Tops</Link>
           </li>
           <li>
-            <button>Roll Up Tonneau Cover</button>
+            <Link href="/roll-up-tonneau-cover">Roll Up Tonneau Cover</Link>
           </li>
           <li>
-            <button>Ute Tray Slides</button>
+            <Link href="/ute-tray-slide">Ute Tray Slides</Link>
           </li>
           <li>
-            <button>Ladder Racks</button>
+            <Link href="/ladder-rack">Ladder Racks</Link>
           </li>
           <li>
-            <button>Tailgate Accessories</button>
+            <Link href="/tailgate-assist">Tailgate Accessories</Link>
           </li>
         </ul>
       </div>
@@ -205,56 +263,28 @@ export default function ProductMakeGrid({
                   [styles.open]: isBrandsFilterOpen,
                 })}
               >
-                <ul>
-                  <li>
-                    <label>
-                      <input id="1" name="filtername" type="checkbox" />
-                      <span>Ford</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>Volkswagen</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>Kia</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>Mitsubishi</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>Nissan</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>MG</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>BYD</span>
-                    </label>
-                  </li>
-                  <li>
-                    <label>
-                      <input type="checkbox" />
-                      <span>Chevrolet</span>
-                    </label>
-                  </li>
-                </ul>
+                {allMakes.length === 0 ? (
+                  <ul>
+                    <li>
+                      <Loading />
+                    </li>
+                  </ul>
+                ) : (
+                  <ul>
+                    {allMakes.map((make, index) => (
+                      <li key={make.slug}>
+                        <label>
+                          <input
+                            checked={selectedBrands.includes(make.slug)}
+                            onChange={() => handleBrandChange(make.slug)}
+                            type="checkbox"
+                          />
+                          <span>{make.name}</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           </div>
@@ -271,7 +301,7 @@ export default function ProductMakeGrid({
             />
           )}
 
-          {!products || totalProducts === 0 ? (
+          {filteredProducts.length === 0 ? (
             <p>No products available.</p>
           ) : (
             <div className={styles.grid}>

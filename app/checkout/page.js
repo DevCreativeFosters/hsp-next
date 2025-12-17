@@ -266,7 +266,7 @@ function CheckoutPage() {
     },
   ];
 
-  const role = user.role;
+  const role = user?.role ?? 'retail';
 
   const [deliveryOptions, setDeliveryOptions] = useState([]);
   const [openDrawer, setOpenDrawer] = useState('');

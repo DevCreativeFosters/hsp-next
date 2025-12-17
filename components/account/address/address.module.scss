@@ -76,3 +76,27 @@
     margin-bottom: 50px;
   }
 }
+
+.bottomText {
+  margin: 15px 0 0;
+
+  p {
+    line-height: 1.5;
+
+    @media (width <=767px) {
+      font-size: 14px;
+    }
+  }
+
+  a {
+    display: inline-block;
+    border-bottom: solid 1px #fff;
+    padding-bottom: 1px;
+    font-weight: 600;
+    transition: 0.5s all;
+
+    &:hover {
+      color: #ed2935;
+    }
+  }
+}

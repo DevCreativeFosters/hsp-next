@@ -37,16 +37,12 @@
 
 .contentContainer {
   border-radius: var(--border-radius-md);
-  background-color: transparent;
-
-  @include bp(large) {
-    background-color: var(--color-black-100);
-  }
 }
 
 .content {
   padding-block: 0.1px;
   position: relative;
+  background-color: transparent !important;
 
   @include bp(medium) {
     padding: var(--content-padding-lg);

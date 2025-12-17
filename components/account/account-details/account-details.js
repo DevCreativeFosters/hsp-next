@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
@@ -264,7 +265,7 @@ function AccountDetails() {
           <div className={styles.bottomText}>
             <p>
               To Edit Any Business Information, Please{' '}
-              <a href="#">Contact Us</a>
+              <Link href="/contact-us">Contact Us</Link>
             </p>
           </div>
         </div>

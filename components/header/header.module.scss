@@ -140,6 +140,19 @@
   }
 }
 
+.cartCount {
+  height: 12px;
+  width: 12px;
+  background: #ed2935;
+  border-radius: 100%;
+  font-size: 12px;
+  text-align: center;
+  color: #000;
+  position: absolute;
+  right: -5px;
+  top: -1px;
+}
+
 .secondaryMenuItem {
   @include center;
 

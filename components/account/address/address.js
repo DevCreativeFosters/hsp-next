@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 
+import Link from 'next/link';
+
+import { useUserContext } from '@contexts/user';
+
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
@@ -47,6 +51,8 @@ const GET_USER_ADDRESS = `
 `;
 
 function AddressForm({ data }) {
+  const { user } = useUserContext();
+
   return (
     <>
       <div className={styles.info}>
@@ -107,7 +113,17 @@ function AddressForm({ data }) {
           </div>
         </div>
       </div>
-      <Button size="large">Edit Saved Address</Button>
+      {user?.role === 'retail' && (
+        <Button size="large">Edit Saved Address</Button>
+      )}
+      {user?.role === 'b2b' && (
+        <div className={styles.bottomText}>
+          <p>
+            To Edit Any Business Information, Please{' '}
+            <Link href="/contact-us">Contact Us</Link>
+          </p>
+        </div>
+      )}
     </>
   );
 }

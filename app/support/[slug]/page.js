@@ -12,7 +12,6 @@ import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
 import BreadcrumbsSupport from '@components/breadcrumbs-support/breadcrumbs-support';
-import Button from '@components/button/button';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
@@ -20,7 +19,6 @@ import PageGrid from '@components/page-grid/page-grid';
 import Sidebar from '@components/sidebar/sidebar';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
-import Arrow from '@assets/images/arrow.svg';
 
 import styles from './page.module.scss';
 
@@ -81,6 +79,7 @@ export default async function SupportSubpage({ params }) {
                   />
                 )}
 
+                {/*
                 <div className={styles.registerFooter}>
                   <div className={styles.halfcontentPart}>
                     <h5>Already have an account?</h5>
@@ -110,6 +109,7 @@ export default async function SupportSubpage({ params }) {
                     </Button>
                   </div>
                 </div>
+                */}
               </div>
             </PageGrid>
           </PageContainer>
