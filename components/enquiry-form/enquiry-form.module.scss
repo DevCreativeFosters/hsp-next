@@ -172,11 +172,10 @@
     }
   }
 
-  .statusInstock {
+  .productStatus {
     font-size: 14px;
     font-weight: 700;
     font-family: var(--font-secondary);
-    color: #27ae60;
     margin-bottom: 20px;
 
     &::before {
@@ -185,27 +184,24 @@
       border-radius: 100%;
       margin-right: 8px;
       content: '';
-      background: #27ae60;
       display: inline-block;
       vertical-align: middle;
     }
   }
 
+  .statusInstock {
+    color: #27ae60;
+
+    &::before {
+      background: #27ae60;
+    }
+  }
+
   .statusOutOfstock {
-    font-size: 14px;
-    font-weight: 700;
-    font-family: var(--font-secondary);
     color: #f76057;
 
     &::before {
-      height: 5px;
-      width: 5px;
-      border-radius: 100%;
-      margin-right: 8px;
-      content: '';
       background: #f76057;
-      display: inline-block;
-      vertical-align: middle;
     }
   }
 }

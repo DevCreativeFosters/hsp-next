@@ -203,10 +203,16 @@ export default function EnquiryForm({
           </div>
           <div className={styles.stockStatus}>
             {!isOutOfStock && (
-              <div className={styles.statusInstock}>In Stock</div>
+              <div className={clsx(styles.productStatus, styles.statusInstock)}>
+                In Stock
+              </div>
             )}
             {isOutOfStock && (
-              <div className={styles.statusOutOfstock}>Out of Stock</div>
+              <div
+                className={clsx(styles.productStatus, styles.statusOutOfstock)}
+              >
+                Out of Stock
+              </div>
             )}
             <div className={styles.qtyAndBtns}>
               <div className={styles.qtyBlock}>
