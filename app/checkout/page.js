@@ -92,7 +92,7 @@ function CheckoutPage() {
     // End
     // Local Installation (local-installation), Click & Collect (click-collect)
     // Start
-    selectedStore: '',
+    selectedStoreAddress: '',
 
     state: '',
     termsAndConditions: false,
@@ -272,7 +272,7 @@ function CheckoutPage() {
   const [openDrawer, setOpenDrawer] = useState('');
 
   const [allStores, setAllStores] = useState([]);
-  const [selectedStore, setSelectedStore] = useState('');
+  const [selectedStore, setSelectedStore] = useState({});
 
   const onSelect = item => {
     setSelectedStore(item);
@@ -326,7 +326,6 @@ function CheckoutPage() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log(formData);
     // return;
 
     setLoading(true);
@@ -351,9 +350,13 @@ function CheckoutPage() {
 
     const payload = {
       ...formData,
-      selectedStore,
+      ...(selectedStore?.id && {
+        selectedStoreID: (selectedStore?.id).toString(),
+      }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
     };
+
+    // console.log(payload);
 
     const result = await checkoutOrder(payload);
     if (result?.order_id) {
@@ -623,16 +626,30 @@ function CheckoutPage() {
                                   'local-installation',
                                   'click-collect',
                                   'pickup-from-hsp',
-                                ].some(id => id === deliveryOption.id) && (
-                                  <div className={styles.deliveryAddressBox}>
-                                    <div className={styles.left}>
-                                      <b>HSP Vehicle Accessories</b>{' '}
-                                    </div>
-                                    <div className={styles.right}>
-                                      {selectedStore}{' '}
-                                    </div>
-                                  </div>
-                                )}
+                                ].some(id => id === deliveryOption.id) &&
+                                  (() => {
+                                    const {
+                                      address,
+                                      city,
+                                      country,
+                                      postalCode,
+                                      stateAbbr,
+                                      street,
+                                    } = selectedStore.location;
+
+                                    return (
+                                      <div
+                                        className={styles.deliveryAddressBox}
+                                      >
+                                        <div className={styles.left}>
+                                          <b>HSP Vehicle Accessories</b>
+                                        </div>
+                                        <div className={styles.right}>
+                                          {`${street}, ${city}, ${stateAbbr} ${postalCode}, ${country}`}
+                                        </div>
+                                      </div>
+                                    );
+                                  })()}
 
                                 {deliveryOption.noteContent}
 

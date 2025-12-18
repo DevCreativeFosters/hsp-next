@@ -15,8 +15,8 @@ import styles from './store-tile.module.scss';
 const LocationIcon = getIcon('location');
 const PhoneIcon = getIcon('phone');
 
-export default function StoreTile({
-  item: {
+export default function StoreTile({ item, onSelect = () => {}, selected }) {
+  const {
     address,
     color,
     displays,
@@ -27,10 +27,8 @@ export default function StoreTile({
     name,
     storeIcon,
     tel,
-  },
-  onSelect = () => {},
-  selected,
-}) {
+  } = item;
+
   let storeTypeLabel = label;
 
   const geoHash = getGeoHash(geolocation);
@@ -58,7 +56,7 @@ export default function StoreTile({
     <li
       className={clsx(styles.tile, { [styles.isSelected]: selected })}
       id={geoHash}
-      onClick={() => onSelect(addressStringPure)}
+      onClick={() => onSelect(item)}
     >
       <div className={styles.name} dangerouslySetInnerHTML={{ __html: name }} />
       <div className={styles.storeCategory}>
