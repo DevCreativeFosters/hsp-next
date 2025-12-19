@@ -44,6 +44,23 @@
   }
 }
 
+.flexStoresList {
+  .toggle {
+    font-family: var(--font-secondary);
+    font-size: 20px;
+  }
+
+  .displays {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    img {
+      width: max-content;
+    }
+  }
+}
+
 .wideDisplays {
   @include bp(large) {
     margin-top: var(--gap-global-xs) !important;

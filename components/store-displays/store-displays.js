@@ -33,7 +33,9 @@ const renderLogo = product => {
 export default function StoreDisplays({
   alwaysOpen = false,
   displays,
+  flexStoresList = false,
   hideSeparator = false,
+  showNumberOfProducts = true,
 }) {
   if (!displays?.length) return null;
 
@@ -54,12 +56,17 @@ export default function StoreDisplays({
   );
 
   return (
-    <div className={styles.container}>
+    <div
+      className={clsx(styles.container, {
+        [styles.flexStoresList]: flexStoresList,
+      })}
+    >
       {!hideSeparator && <div className={styles.separator} />}
       {alwaysOpen ? (
         <div className={styles.alwaysOpen}>
           <div className={styles.toggle}>
-            In-store Displays: <span>{displayText}</span>
+            In-store Displays:{' '}
+            {showNumberOfProducts && <span>{displayText}</span>}
           </div>
           {displayLogos}
         </div>

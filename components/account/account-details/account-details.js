@@ -277,7 +277,9 @@ function AccountDetails() {
               <StoreDisplays
                 alwaysOpen
                 displays={storeDetails?.inStoreDisplays}
+                flexStoresList
                 hideSeparator
+                showNumberOfProducts={false}
               />
               <div className={styles.btns}>
                 <Button
