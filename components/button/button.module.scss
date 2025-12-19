@@ -258,6 +258,13 @@
   }
 }
 
+.ghost {
+  --font-color: var(--color-black-100);
+  --bg-color: var(--color-gray-100);
+  --hover-font-color: var(--color-black-100);
+  --hover-bg-color: var(--color-gray-100);
+}
+
 .optionalToggleWrapper {
   display: flex;
   align-items: center;

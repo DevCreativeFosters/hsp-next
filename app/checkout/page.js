@@ -466,46 +466,7 @@ function CheckoutPage() {
                     </div>
                   )}
                   <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.termsAndConditions}
-                            name="termsAndConditions"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I accept the
-                            <Link href="/privacy-terms-and-conditions">
-                              Privacy Policy
-                            </Link>{' '}
-                            and{' '}
-                            <Link href="/privacy-terms-and-conditions">
-                              Terms and Conditions
-                            </Link>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.marketing}
-                            name="marketing"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I agree to receiving Marketing and Promotional
-                            emails from HSP
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                    <Button variant="ghost">Submit Details</Button>
                   </div>
                 </div>
               </div>
@@ -760,6 +721,47 @@ function CheckoutPage() {
                         value="cod"
                       />
                       <span>COD (Cash on Delivery)</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.groupTerms}>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                              <Link href="/privacy-terms-and-conditions">
+                                Read our T&Cs
+                              </Link>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
 

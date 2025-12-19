@@ -15,6 +15,98 @@
   }
 }
 
+.inputGroup {
+  margin-bottom: 20px;
+
+  label {
+    font-size: 15px;
+    color: #000;
+    display: block;
+    margin-bottom: 9px;
+
+    .reqStar {
+      color: #e02b27;
+    }
+  }
+
+  input[type='text'],
+  input[type='phone'],
+  input[type='email'] {
+    min-height: 36px;
+    border-radius: 8px;
+    border: solid 1px #4b4b4b;
+    width: 100%;
+    padding: 0 12px;
+    outline: none;
+  }
+}
+
+.selectOption {
+  label {
+    position: relative;
+    padding: 0 0 0 25px;
+    margin: 0;
+    display: inline-block;
+    cursor: pointer;
+    font-family: Hind, sans-serif;
+
+    span {
+      &::before {
+        border: solid 1px #000;
+        border-radius: 4px;
+        height: 16px;
+        width: 16px;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 4px;
+        border-left: solid 2px #fff;
+        border-bottom: solid 2px #fff;
+        opacity: 0;
+        height: 4px;
+        width: 10px;
+        transform: rotate(-45deg);
+      }
+    }
+
+    a {
+      border-bottom: solid 1px #999;
+      margin: 0 0 0 5px;
+      display: inline-block;
+
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+
+    &:checked + span {
+      &::before {
+        background: #000;
+      }
+
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.groupTerms {
+  margin: 35px 0;
+}
+
 .checkoutMain {
   margin-top: 60px;
   margin-bottom: 60px;
@@ -59,94 +151,6 @@
             color: #444;
             font-size: 15px;
             margin-top: 0;
-          }
-        }
-
-        .inputGroup {
-          margin-bottom: 20px;
-
-          label {
-            font-size: 15px;
-            color: #000;
-            display: block;
-            margin-bottom: 9px;
-
-            .reqStar {
-              color: #e02b27;
-            }
-          }
-
-          input[type='text'],
-          input[type='phone'],
-          input[type='email'] {
-            min-height: 36px;
-            border-radius: 8px;
-            border: solid 1px #4b4b4b;
-            width: 100%;
-            padding: 0 12px;
-            outline: none;
-          }
-        }
-
-        .selectOption {
-          label {
-            position: relative;
-            padding: 0 0 0 25px;
-            margin: 0;
-            display: inline-block;
-            cursor: pointer;
-            font-family: Hind, sans-serif;
-
-            span {
-              &::before {
-                border: solid 1px #000;
-                border-radius: 4px;
-                height: 16px;
-                width: 16px;
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-              }
-
-              &::after {
-                content: '';
-                position: absolute;
-                left: 3px;
-                top: 4px;
-                border-left: solid 2px #fff;
-                border-bottom: solid 2px #fff;
-                opacity: 0;
-                height: 4px;
-                width: 10px;
-                transform: rotate(-45deg);
-              }
-            }
-
-            a {
-              border-bottom: solid 1px #999;
-              margin: 0 0 0 5px;
-              display: inline-block;
-
-              &:hover {
-                color: #000;
-              }
-            }
-          }
-
-          input {
-            position: absolute;
-            opacity: 0;
-
-            &:checked + span {
-              &::before {
-                background: #000;
-              }
-
-              &::after {
-                opacity: 1;
-              }
-            }
           }
         }
 

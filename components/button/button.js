@@ -52,6 +52,7 @@ function ButtonWithRef(
     [styles.septenary]: variant === 'septenary',
     [styles.footerItem]: variant === 'footer-item',
     [styles.relatedPost]: variant === 'related-post',
+    [styles.ghost]: variant === 'ghost',
     [styles.darkBackground]: background === 'dark',
     [styles.lightBackground]: background === 'light',
     [styles.leftIcon]: leftIcon || leftIconUrl,
