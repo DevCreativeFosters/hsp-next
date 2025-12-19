@@ -6,8 +6,7 @@
     border-radius: 6px;
     padding: 26px;
     display: flex;
-    margin-bottom: 34px;
-    flex-wrap: wrap;
+    margin-bottom: 32px;
 
     @media (width <=1199px) {
       margin-bottom: 25px;
@@ -16,21 +15,25 @@
     @media (width <=767px) {
       padding: 20px;
       justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
     }
 
     figure {
       border: solid 1px #000;
       border-radius: 8px;
-      max-width: 115px;
-      max-height: 115px;
+      width: 115px;
+      height: 115px;
+      min-width: 115px;
       margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
 
       @media (width <=767px) {
-        max-width: 80px;
-        max-height: 80px;
+        width: 110px;
+        height: 110px;
+        min-width: 110px;
       }
 
       img {
@@ -44,19 +47,19 @@
       padding: 0 15px;
 
       @media (width <=767px) {
-        padding: 15px 0;
-        text-align: center;
+        padding-right: 0;
+        width: calc(100% - 110px);
       }
 
       h4 {
-        font-size: 16px;
+        font-size: clamp(14px, 0.83vw, 16px);
         color: var(--color-primary-100);
         margin-bottom: 5px;
         font-family: var(--font-hind);
       }
 
       p {
-        font-size: 16px;
+        font-size: clamp(14px, 0.83vw, 16px);
         color: #000;
         margin: 0;
         line-height: 1.8;
@@ -69,6 +72,7 @@
       .price {
         color: var(--color-primary-100);
         font-weight: 600;
+        font-size: clamp(14px, 0.83vw, 16px);
       }
     }
 
@@ -80,7 +84,11 @@
       margin-left: auto;
 
       @media (width <=767px) {
-        margin: auto;
+        flex-flow: row;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        width: 100%;
+        margin: 8px 0 0;
       }
 
       .button {
@@ -90,15 +98,20 @@
         color: #fff;
         border-radius: 8px;
         font-family: var(--font-secondary);
-        padding: 0 20px;
-        min-height: 30px;
-        min-width: 111px;
+        padding: 0 15px;
+        min-height: 36px;
+        min-width: 80px;
         text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 0 10px;
         transition: 0.5s all;
+
+        @media (width <=767px) {
+          margin: 0;
+          width: calc(100% - 125px);
+        }
 
         &:hover {
           background-color: #000;
@@ -112,6 +125,11 @@
         font-weight: 500;
         font-family: var(--font-hind);
 
+        @media (width <=767px) {
+          width: 110px;
+          text-align: center;
+        }
+
         &:hover {
           color: #000;
         }
@@ -122,6 +140,18 @@
   .moreBtn {
     @media (width <=1199px) {
       margin-top: 50px;
+    }
+
+    @media (width <=991px) {
+      margin-top: 30px;
+    }
+
+    @media (width <=767px) {
+      margin-top: 16px;
+
+      a {
+        width: 100%;
+      }
     }
   }
 }

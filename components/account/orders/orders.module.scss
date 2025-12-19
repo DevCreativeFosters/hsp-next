@@ -324,6 +324,10 @@
             font-weight: 600;
             width: 22%;
 
+            @media (width <=991px) {
+              width: 30%;
+            }
+
             @media (width <=767px) {
               width: 40%;
             }
@@ -332,6 +336,10 @@
           .desc {
             font-weight: 400;
             width: 78%;
+
+            @media (width <=991px) {
+              width: 70%;
+            }
 
             @media (width <=767px) {
               width: 60%;

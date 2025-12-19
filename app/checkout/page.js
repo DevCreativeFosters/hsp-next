@@ -268,6 +268,16 @@ function CheckoutPage() {
 
   const role = user?.role ?? 'retail';
 
+  const [submitContactDetails, setSubmitContactDetails] = useState(false);
+
+  const handleSubmitContactDetails = () => {
+    setSubmitContactDetails(true);
+  };
+
+  const handleEditContactDetails = () => {
+    setSubmitContactDetails(false);
+  };
+
   const [deliveryOptions, setDeliveryOptions] = useState([]);
   const [openDrawer, setOpenDrawer] = useState('');
 
@@ -378,98 +388,128 @@ function CheckoutPage() {
             {/* Checkout Left */}
             <div className={styles.checkOutLeft}>
               {/* Contact Details */}
-              <div className={styles.contactDetails}>
-                <div className={styles.heading}>
-                  <h2>Contact Details</h2>
-                  <p>How Can We Reach You About Your Order?</p>
+              {submitContactDetails ? (
+                <div
+                  className={clsx(styles.contactDetails, styles.editDetailMain)}
+                >
+                  <div className={styles.heading}>
+                    <h2>Contact Details</h2>
+                    <Button
+                      onClick={handleEditContactDetails}
+                      size="large"
+                      variant="ghost"
+                    >
+                      Edit Details
+                    </Button>
+                  </div>
+                  <div className={styles.submittedInfo}>
+                    <p>
+                      {formData.first_name} {formData.last_name}
+                    </p>
+                    <p>{formData.email}</p>
+                    <p>{formData.phone}</p>
+                  </div>
                 </div>
-                <div className={styles.formRow}>
-                  <div className={styles.colHalf}>
-                    <div className={styles.inputGroup}>
-                      <label>
-                        First Name<span className={styles.reqStar}>*</span>
-                      </label>
-                      <input
-                        name="first_name"
-                        onChange={handleChange}
-                        type="text"
-                        value={formData.first_name}
-                      />
-                    </div>
+              ) : (
+                <div className={styles.contactDetails}>
+                  <div className={styles.heading}>
+                    <h2>Contact Details</h2>
+                    <p>How Can We Reach You About Your Order?</p>
                   </div>
-                  <div className={styles.colHalf}>
-                    <div className={styles.inputGroup}>
-                      <label>
-                        Last Name<span className={styles.reqStar}>*</span>
-                      </label>
-                      <input
-                        name="last_name"
-                        onChange={handleChange}
-                        type="text"
-                        value={formData.last_name}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <label>
-                        Email Address<span className={styles.reqStar}>*</span>
-                      </label>
-                      <input
-                        name="email"
-                        onChange={handleChange}
-                        type="email"
-                        value={formData.email}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <label>
-                        Mobile Number<span className={styles.reqStar}>*</span>
-                      </label>
-                      <input
-                        name="phone"
-                        onChange={handleChange}
-                        type="text"
-                        value={formData.phone}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    className={clsx({
-                      [styles.colHalf]: role === 'b2b',
-                      [styles.colFull]: role !== 'b2b',
-                    })}
-                  >
-                    <div className={styles.inputGroup}>
-                      <label>Company Name</label>
-                      <input
-                        name="company"
-                        onChange={handleChange}
-                        type="text"
-                        value={formData.company}
-                      />
-                    </div>
-                  </div>
-                  {role === 'b2b' && (
+                  <div className={styles.formRow}>
                     <div className={styles.colHalf}>
                       <div className={styles.inputGroup}>
-                        <label>Purchase Order Number</label>
+                        <label>
+                          First Name<span className={styles.reqStar}>*</span>
+                        </label>
                         <input
-                          name="purchaseOrderNumber"
+                          name="first_name"
                           onChange={handleChange}
                           type="text"
-                          value={formData.purchaseOrderNumber}
+                          value={formData.first_name}
                         />
                       </div>
                     </div>
-                  )}
-                  <div className={styles.colFull}>
-                    <Button variant="ghost">Submit Details</Button>
+                    <div className={styles.colHalf}>
+                      <div className={styles.inputGroup}>
+                        <label>
+                          Last Name<span className={styles.reqStar}>*</span>
+                        </label>
+                        <input
+                          name="last_name"
+                          onChange={handleChange}
+                          type="text"
+                          value={formData.last_name}
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <label>
+                          Email Address<span className={styles.reqStar}>*</span>
+                        </label>
+                        <input
+                          name="email"
+                          onChange={handleChange}
+                          type="email"
+                          value={formData.email}
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <label>
+                          Mobile Number<span className={styles.reqStar}>*</span>
+                        </label>
+                        <input
+                          name="phone"
+                          onChange={handleChange}
+                          type="text"
+                          value={formData.phone}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className={clsx({
+                        [styles.colHalf]: role === 'b2b',
+                        [styles.colFull]: role !== 'b2b',
+                      })}
+                    >
+                      <div className={styles.inputGroup}>
+                        <label>Company Name</label>
+                        <input
+                          name="company"
+                          onChange={handleChange}
+                          type="text"
+                          value={formData.company}
+                        />
+                      </div>
+                    </div>
+                    {role === 'b2b' && (
+                      <div className={styles.colHalf}>
+                        <div className={styles.inputGroup}>
+                          <label>Purchase Order Number</label>
+                          <input
+                            name="purchaseOrderNumber"
+                            onChange={handleChange}
+                            type="text"
+                            value={formData.purchaseOrderNumber}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <div className={clsx(styles.colFull, styles.submitBtn)}>
+                      <Button
+                        onClick={handleSubmitContactDetails}
+                        size="large"
+                        variant="primary"
+                      >
+                        Submit Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Receive Details */}
               <div className={styles.checkOutInfo}>

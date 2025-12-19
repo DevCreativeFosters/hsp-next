@@ -18,11 +18,19 @@
 .inputGroup {
   margin-bottom: 20px;
 
+  @media (width<=767px) {
+    margin-bottom: 16px;
+  }
+
   label {
     font-size: 15px;
     color: #000;
     display: block;
-    margin-bottom: 9px;
+    margin-bottom: 8px;
+
+    @media (width<=767px) {
+      font-size: 14px;
+    }
 
     .reqStar {
       color: #e02b27;
@@ -140,17 +148,30 @@
         .heading {
           margin-bottom: 40px;
 
+          @media (width<=767px) {
+            margin-bottom: 30px;
+          }
+
           h2 {
             color: #000;
             font-family: var(--font-primary);
             font-size: 26px;
             margin-bottom: 10px;
+
+            @media (width<=767px) {
+              font-size: 21px;
+              margin-bottom: 5px;
+            }
           }
 
           p {
             color: #444;
             font-size: 15px;
             margin-top: 0;
+
+            @media (width<=767px) {
+              font-size: 14px;
+            }
           }
         }
 
@@ -171,6 +192,61 @@
           .colFull {
             width: 100%;
             padding: 0 10px;
+          }
+
+          .submitBtn {
+            margin-top: 10px;
+
+            @media (width<767px) {
+              margin: 0;
+            }
+
+            button {
+              border: solid 1px var(--color-primary-100);
+
+              @media (width<767px) {
+                font-size: 16px;
+                min-height: 38px;
+                padding: 0 15px;
+              }
+            }
+          }
+        }
+
+        &.editDetailMain {
+          .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 0 20px;
+
+            h2 {
+              margin: 0;
+
+              @media (width<767px) {
+                font-size: 21px;
+              }
+            }
+
+            button {
+              @media (width<767px) {
+                font-size: 16px;
+                min-height: 31px;
+                padding: 0 17px;
+              }
+            }
+          }
+
+          .submittedInfo {
+            p {
+              color: #000;
+              line-height: 1.5;
+              margin: 5px 0;
+
+              @media (width<767px) {
+                font-size: 14px;
+              }
+            }
           }
         }
       }
@@ -197,6 +273,10 @@
             font-family: var(--font-primary);
             font-size: 26px;
             margin-bottom: 10px;
+
+            @media (width<=767px) {
+              font-size: 21px;
+            }
           }
 
           p {
@@ -209,7 +289,6 @@
         .blackBoxes {
           display: flex;
           flex-wrap: wrap;
-          margin: 0 -5px;
 
           .boxItem {
             padding: 0;
@@ -617,6 +696,10 @@
         background: #fff;
         padding: 20px;
         border-radius: 6px;
+
+        @media (width<=1199px) {
+          padding: 16px;
+        }
 
         h3 {
           font-size: 26px;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -159,7 +160,6 @@ function AccountDetails() {
             ...storeDetails.storesCustomFields,
           };
 
-          console.log('my store details', store);
           setStoreDetails(store);
         }
       } catch (e) {
@@ -209,7 +209,7 @@ function AccountDetails() {
             ))}
           </div>
 
-          <div className={styles.borderBox}>
+          <div className={clsx(styles.borderBox, styles.mobWhiteBox)}>
             <div className={styles.tableInfo}>
               <h5>Business Details</h5>
               <div className={styles.tableWrapper}>
@@ -272,6 +272,13 @@ function AccountDetails() {
             </div>
           </div>
 
+          <div className={clsx(styles.bottomText, styles.forMobile)}>
+            <p>
+              To Edit Any Business Information, Please{' '}
+              <Link href="/contact-us">Contact Us</Link>
+            </p>
+          </div>
+
           <div className={styles.borderBox}>
             <div className={styles.logosList}>
               <StoreDisplays
@@ -306,7 +313,7 @@ function AccountDetails() {
             </div>
           </div>
 
-          <div className={styles.bottomText}>
+          <div className={clsx(styles.bottomText, styles.forDesktop)}>
             <p>
               To Edit Any Business Information, Please{' '}
               <Link href="/contact-us">Contact Us</Link>
