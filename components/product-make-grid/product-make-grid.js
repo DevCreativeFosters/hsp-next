@@ -23,6 +23,7 @@ const sortOptions = [
   { label: 'Newest Arrivals', value: 'newest' },
 ];
 
+// TODO: Check to give the filter or not
 export default function ProductMakeGrid({
   alignment,
   bodyText,
