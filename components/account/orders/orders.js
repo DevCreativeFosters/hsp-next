@@ -395,8 +395,6 @@ function Orders({ onlyReturns = false }) {
 
         const data = res?.fetchUserOrdersByStatus;
 
-        console.log(data.orders);
-
         if (data?.success) {
           setOutOrders(data.orders);
         }

@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useUserContext } from '@contexts/user';
+
 import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
 
@@ -108,7 +110,18 @@ const GET_STORE_BY_USER_ID = `
   }
 `;
 
+const REQUEST_DISPLAY_PRICING = `
+  mutation {
+    requestDisplayPricing(input: {}) {
+      success
+      message
+    }
+  }
+`;
+
 function AccountDetails() {
+  const { user } = useUserContext();
+
   const [loading, setLoading] = useState(true);
   const [storeDetails, setStoreDetails] = useState({});
 
@@ -160,6 +173,19 @@ function AccountDetails() {
   }, []);
 
   const [showThanks, setShowThanks] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    const res = await fetchAPI(REQUEST_DISPLAY_PRICING, {
+      authToken: user?.token,
+    });
+
+    if (res?.requestDisplayPricing?.success) {
+      setLoading(false);
+      setShowThanks(true);
+      setTimeout(() => setShowThanks(false), 5000);
+    }
+  };
 
   return (
     <>
@@ -256,7 +282,7 @@ function AccountDetails() {
               <div className={styles.btns}>
                 <Button
                   className={styles.requestbutton}
-                  onClick={() => setShowThanks(true)}
+                  onClick={handleClick}
                   size="large"
                   variant="secondary"
                 >
