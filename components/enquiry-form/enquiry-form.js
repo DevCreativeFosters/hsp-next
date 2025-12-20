@@ -3,6 +3,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+import Image from 'next/image';
 
 import { useCart } from '@contexts/cart-context';
 import StoreLocatorContext from '@contexts/store-locator';
@@ -16,6 +17,8 @@ import { trimSlash } from '@lib/trim-slash';
 import Button from '@components/button/button';
 import Select from '@components/form/select';
 import Loading from '@components/loading/loading';
+
+import PlusIcon from '@assets/icons/plus.svg';
 
 import styles from './enquiry-form.module.scss';
 import EnquiryModal from './enquiry-modal';
@@ -261,6 +264,55 @@ export default function EnquiryForm({
                 </Button>
               </div>
             </div>
+            {productData?.compatibleProduct?.selectProduct?.length > 0 && (
+              <div className={styles.cmpProduct}>
+                <div className={styles.title}>Also Compatible with:</div>
+                {productData.compatibleProduct.selectProduct.map(
+                  (item, index) => {
+                    const img = item?.uploadProductImage?.node;
+                    const product = item?.product?.nodes[0];
+                    const variant = product?.productFields?.variants[0];
+
+                    return (
+                      <div className={styles.cmpBox} key={product?.databaseId}>
+                        <figure>
+                          <Image
+                            alt={img.altText}
+                            height={55}
+                            src={img.sourceUrl}
+                            width={55}
+                          />
+                        </figure>
+                        <div className={styles.info}>
+                          <h5>
+                            {product?.title}{' '}
+                            <PlusIcon
+                              className={styles.icon}
+                              onClick={() => addToCart(product?.databaseId, 1)}
+                            />
+                          </h5>
+                          <div className={styles.price}>
+                            <div className={styles.one}>
+                              {formatPrice(variant?.variantDetails?.price)}
+                            </div>
+                            <div className={styles.two}>
+                              {formatPrice(variant?.variantDetails?.price)}
+                            </div>
+                            <div className={styles.three}>
+                              +{' '}
+                              {formatPrice(
+                                variant?.variantDetails?.installationCost,
+                              )}{' '}
+                              for install
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  },
+                )}
+              </div>
+            )}
           </div>
         </form>
         {enquiryModalOpened && (

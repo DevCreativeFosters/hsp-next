@@ -19,8 +19,8 @@ import ProductImageCarousel from '@components/product-image-carousel/product-ima
 import ProductTabs from '@components/product-tabs/product-tabs';
 import StarRating from '@components/reviews/star-rating';
 
-import AddWishlist from '@assets/icons/add-wishlist.svg';
-import RemoveWishlist from '@assets/icons/remove-wishlist.svg';
+import AddWishlist from '@assets/icons/heart.svg';
+import RemoveWishlist from '@assets/icons/heart.svg';
 
 import styles from './page.module.scss';
 
@@ -154,9 +154,33 @@ export default function PageClientSidePartial({
   return (
     <>
       <div className={styles.header}>
+        <div className={clsx(styles.meta, styles.mobile)}>
+          <h1 className={clsx(styles.name, 'h2')}>
+            {mainCategoryName} <br />
+            {mainCategoryName !== variantName && (
+              <span className={styles.variant}>{variantName}</span>
+            )}
+          </h1>
+          {variant?.sku && (
+            <div className={clsx(styles.sku, 'h5')}>
+              Part No. <span className={styles.redColor}>{variant.sku}</span>
+            </div>
+          )}
+          <div className={styles.ratingBlock}>
+            <div className={styles.stars}>
+              <StarRating color="yellow" score={3.5} />
+              (24 reviews)
+            </div>
+            {
+              <button onClick={handleWishlistToggle} type="button">
+                {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+              </button>
+            }
+          </div>
+        </div>
         <ProductImageCarousel images={carouselImages} />
         <div className={styles.details}>
-          <div className={styles.meta}>
+          <div className={clsx(styles.meta, styles.desktop)}>
             <h1 className={clsx(styles.name, 'h2')}>
               {mainCategoryName} <br />
               {mainCategoryName !== variantName && (

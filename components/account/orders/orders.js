@@ -49,8 +49,8 @@ const GET_ORDERS = `
 `;
 
 const OUT_ORDERS = `
-mutation FetchUserOrders($userId: Int!, $orderStatus: String) {
-  fetchUserOrdersByStatus(input: { userId: $userId, orderStatus: $orderStatus }) {
+mutation fetchOutstandingOrders($userId: Int!) {
+  fetchOutstandingOrders(input: { userId: $userId }) {
     success
     message
     orders {
@@ -391,9 +391,9 @@ function Orders({ onlyReturns = false }) {
         return;
       }
       try {
-        const res = await fetchAPI(OUT_ORDERS, { variables: { userId: 74 } });
+        const res = await fetchAPI(OUT_ORDERS, { variables: { userId } });
 
-        const data = res?.fetchUserOrdersByStatus;
+        const data = res?.fetchOutstandingOrders;
 
         if (data?.success) {
           setOutOrders(data.orders);
@@ -445,9 +445,7 @@ function Orders({ onlyReturns = false }) {
 
   const b2bTabs = [
     {
-      content: outOrders
-        .filter(item => item.selected_store_user_id !== null)
-        .map(item => <Order item={item} key={item.order_id} />),
+      content: outOrders.map(item => <Order item={item} key={item.order_id} />),
       slug: 'outstandingordersreceived',
       title: 'Outstanding Orders Received',
     },
