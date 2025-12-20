@@ -5,7 +5,7 @@
   .orderWrap {
     border: solid 2px rgb(255 255 255 / 20%);
     border-radius: 16px;
-    padding: 20px 32px;
+    padding: 24px 32px;
 
     @media (width <=767px) {
       padding: 16px;
@@ -447,6 +447,7 @@
               height: auto;
               max-width: 100%;
               max-height: 100%;
+              border-radius: 10px;
             }
           }
 
@@ -523,6 +524,10 @@
             }
           }
         }
+
+        & :last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
@@ -549,7 +554,7 @@
   p {
     font-size: clamp(18px, 1.04vw, 20px);
 
-    button {
+    a {
       color: #fff;
       border-color: #fff;
       border-bottom: solid 1px #fff;
@@ -561,5 +566,21 @@
         border-color: var(--color-primary-100);
       }
     }
+  }
+}
+
+.onlyReturns {
+  .orderBottom {
+    display: none !important;
+  }
+
+  .recentLists {
+    padding: 0 !important;
+  }
+
+  .productBox {
+    padding: 8px !important;
+    border: solid 2px rgb(255 255 255 / 20%) !important;
+    border-radius: 8px !important;
   }
 }

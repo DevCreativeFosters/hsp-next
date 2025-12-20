@@ -131,6 +131,13 @@
 }
 
 .orderStatus {
+  margin-top: 60px;
+  margin-bottom: 60px;
+
+  @media (width <=767px) {
+    margin-bottom: 25px;
+  }
+
   figure {
     margin: 0;
     line-height: 0;

@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 
+import { clsx } from 'clsx';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
@@ -96,7 +98,7 @@ function Order({ item, onlyReturns = false }) {
   const { user } = useUserContext();
   const role = user?.role;
 
-  const [showProducts, setShowProducts] = useState(false);
+  const [showProducts, setShowProducts] = useState(onlyReturns);
 
   const orderTypes = {
     'click-collect': 'Click & Collect',
@@ -126,7 +128,9 @@ function Order({ item, onlyReturns = false }) {
   }
 
   return (
-    <div className={styles.orderBox}>
+    <div
+      className={clsx(styles.orderBox, { [styles.onlyReturns]: onlyReturns })}
+    >
       <div className={styles.orderWrap}>
         <div className={styles.heading}>
           <div className={styles.left}>
@@ -147,7 +151,7 @@ function Order({ item, onlyReturns = false }) {
 
               if (onlyReturns) {
                 return (
-                  <Button variant="secondary">
+                  <Button size="large" variant="secondary">
                     {item.status.replace('-', ' ')}
                   </Button>
                 );
@@ -186,21 +190,21 @@ function Order({ item, onlyReturns = false }) {
                   switch (item.order_type) {
                     case 'standard-delivery':
                       return (
-                        <Button variant="secondary">
+                        <Button size="large" variant="secondary">
                           <InfoIcon />
                           Requires Changes
                         </Button>
                       );
                     case 'pickup-from-hsp':
                       return (
-                        <Button variant="secondary">
+                        <Button size="large" variant="secondary">
                           <InfoIcon />
                           Requires Changes
                         </Button>
                       );
                     case 'drop-shipping':
                       return (
-                        <Button variant="secondary">
+                        <Button size="large" variant="secondary">
                           <InfoIcon />
                           Requires Changes
                         </Button>
@@ -349,6 +353,16 @@ function Order({ item, onlyReturns = false }) {
   );
 }
 
+const CheckNoOrders = ({ children, onlyReturns = false, orders }) => {
+  return orders.length == 0 ? (
+    <div className={styles.noOrders}>{children}</div>
+  ) : (
+    orders.map(item => (
+      <Order item={item} key={item.order_id} onlyReturns={onlyReturns} />
+    ))
+  );
+};
+
 function Orders({ onlyReturns = false }) {
   const { user } = useUserContext();
   const role = user?.role;
@@ -408,36 +422,49 @@ function Orders({ onlyReturns = false }) {
     getOutAllOrders();
   }, []);
 
+  const currentOrders = allorders.filter(o => o.status !== 'completed');
+  const completedOrders = allorders.filter(o => o.status === 'completed');
+  const returnedOrders = allorders.filter(
+    o => o.status === 'refunded' || o.status === 'refund-initiated',
+  );
+
   const retailTabs = [
     {
-      content: allorders
-        .filter(item => item.status !== 'completed')
-        .map(item => <Order item={item} key={item.order_id} />),
+      content: (
+        <CheckNoOrders orders={currentOrders}>
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+          <p>
+            Get your next ute upgrade here:{' '}
+            <Link href="/shop-by-ute-make">browse products</Link>
+          </p>
+        </CheckNoOrders>
+      ),
       slug: 'current',
       title: 'Current',
     },
     {
       content: (
-        <>
-          <div className={styles.noOrders}>
-            <h3>Looks like you haven’t placed an order yet</h3>
-            <p>
-              Get your next ute upgrade here: <button>browse products</button>
-            </p>
-          </div>
-
-          {allorders
-            .filter(item => item.status === 'completed')
-            .map(item => (
-              <Order item={item} key={item.order_id} />
-            ))}
-        </>
+        <CheckNoOrders orders={completedOrders}>
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+          <p>
+            Get your next ute upgrade here:{' '}
+            <Link href="/shop-by-ute-make">browse products</Link>
+          </p>
+        </CheckNoOrders>
       ),
       slug: 'completed',
       title: 'Completed',
     },
     {
-      content: allorders.map(item => <Order item={item} key={item.order_id} />),
+      content: (
+        <CheckNoOrders orders={allorders}>
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+          <p>
+            Get your next ute upgrade here:{' '}
+            <Link href="/shop-by-ute-make">browse products</Link>
+          </p>
+        </CheckNoOrders>
+      ),
       slug: 'allorders',
       title: 'All Orders',
     },
@@ -445,11 +472,23 @@ function Orders({ onlyReturns = false }) {
 
   const b2bTabs = [
     {
-      content: outOrders.map(item => <Order item={item} key={item.order_id} />),
+      content: (
+        <CheckNoOrders orders={outOrders}>
+          <h3>Looks like didn&apos;t receive an order yet</h3>
+        </CheckNoOrders>
+      ),
       slug: 'outstandingordersreceived',
       title: 'Outstanding Orders Received',
     },
     {
+      content: (
+        <CheckNoOrders orders={allorders}>
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+          <p>
+            <Link href="/shop-by-ute-make">browse products</Link>
+          </p>
+        </CheckNoOrders>
+      ),
       content: allorders.map(item => <Order item={item} key={item.order_id} />),
       slug: 'outstandingordersplaced',
       title: 'Outstanding Orders Placed',
@@ -461,14 +500,13 @@ function Orders({ onlyReturns = false }) {
       {loading ? (
         <Loading color="white" size="large" />
       ) : onlyReturns ? (
-        allorders
-          .filter(
-            item =>
-              item.status === 'refunded' || item.status === 'refund-initiated',
-          )
-          .map(item => (
-            <Order item={item} key={item.order_id} onlyReturns={onlyReturns} />
-          ))
+        <CheckNoOrders onlyReturns={onlyReturns} orders={returnedOrders}>
+          <h3>It looks like you don&apos;t have any returns at this time</h3>
+          <p>
+            To initiate a return, please{' '}
+            <Link href="/contact-us">contact us</Link>
+          </p>
+        </CheckNoOrders>
       ) : (
         <Tabs
           tabs={role === 'retail' ? retailTabs : b2bTabs}
