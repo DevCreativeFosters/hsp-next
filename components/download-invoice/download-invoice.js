@@ -11,14 +11,14 @@ export default function DownloadInvoiceButton({ orderId }) {
     try {
       const res = await fetchAPI(
         `
-                    mutation GenerateOrderPDF($orderId: Int!) {
-                        generateOrderPDF(input: { orderId: $orderId }) {
-                            success
-                            message
-                            pdfUrl
-                        }
-                    }
-                `,
+          mutation GenerateOrderPDF($orderId: Int!) {
+            generateOrderPDF(input: { orderId: $orderId }) {
+              success
+              message
+              pdfUrl
+            }
+          }
+        `,
         { variables: { orderId: parseInt(orderId) } },
       );
 

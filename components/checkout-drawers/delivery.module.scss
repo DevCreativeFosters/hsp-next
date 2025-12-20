@@ -99,6 +99,10 @@
 
   .submitBtn {
     margin-top: 10px;
+
+    @include bp(medium-large) {
+      margin-top: 32px;
+    }
   }
 }
 
