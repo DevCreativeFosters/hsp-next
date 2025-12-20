@@ -500,6 +500,14 @@ function CheckoutPage() {
                     )}
                     <div className={clsx(styles.colFull, styles.submitBtn)}>
                       <Button
+                        disabled={
+                          !formData.first_name ||
+                          !formData.last_name ||
+                          !formData.email ||
+                          !formData.phone ||
+                          loading ||
+                          cartItems.length === 0
+                        }
                         onClick={handleSubmitContactDetails}
                         size="large"
                         variant="primary"
