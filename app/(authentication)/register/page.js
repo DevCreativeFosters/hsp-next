@@ -16,8 +16,6 @@ import banner from '@assets/images/banner.jpg';
 
 import styles from './register.module.scss';
 
-// we'll move CSS here later
-
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     email: '',
