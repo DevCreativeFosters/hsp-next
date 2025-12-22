@@ -63,37 +63,19 @@ function CheckoutPage() {
     },
     address: '',
     city: '',
-
     company: '',
-    // End
-    // Deliver to Door (deliver-door)
-    // Start
     country: 'AU',
     deliveryCompanyName: '',
-
     email: '',
-    // Start
     first_name: '',
     last_name: '',
-
     marketing: false,
-
-    // End
     orderType: '',
-
     payment_method: '',
-
     phone: '',
-
     postcode: '',
-
     purchaseOrderNumber: '',
-
-    // End
-    // Local Installation (local-installation), Click & Collect (click-collect)
-    // Start
     selectedStoreAddress: '',
-
     state: '',
     termsAndConditions: false,
   });
@@ -174,7 +156,7 @@ function CheckoutPage() {
       askCutomerInfo: false,
       description: 'Get your order delivered to your Store',
       icon: TruckIcon,
-      id: 'standard-delivery',
+      id: 'deliver-to-store',
       noteContent: (
         <>
           <p>
@@ -240,7 +222,7 @@ function CheckoutPage() {
       description:
         'Get your products sent directly to your customers COMMERCIAL address',
       icon: DropShipping,
-      id: 'drop-shipping',
+      id: 'drop-ship-to-customer',
       noteContent: (
         <>
           <p>
@@ -370,7 +352,6 @@ function CheckoutPage() {
 
     const result = await checkoutOrder(payload);
     if (result?.order_id) {
-      await getCartItems();
       setLoading(false);
       router.push(`/order-status/${result.order_id}`);
     } else {
@@ -571,8 +552,8 @@ function CheckoutPage() {
                               <div className={styles.editSelection}>
                                 {[
                                   'deliver-door',
-                                  'standard-delivery',
-                                  'drop-shipping',
+                                  'deliver-to-store',
+                                  'drop-ship-to-customer',
                                 ].some(id => id === deliveryOption.id) && (
                                   <>
                                     <div
@@ -685,9 +666,9 @@ function CheckoutPage() {
                                     )}
                                     {(deliveryOption.id === 'deliver-door' ||
                                       deliveryOption.id ===
-                                        'standard-delivery' ||
+                                        'deliver-to-store' ||
                                       deliveryOption.id ===
-                                        'drop-shipping') && (
+                                        'drop-ship-to-customer') && (
                                       <Delivery
                                         allowDelivery={
                                           deliveryOption.allowDelivery

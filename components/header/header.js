@@ -204,7 +204,7 @@ export default function Header({
                 >
                   <Button
                     background="dark"
-                    href={user?.id ? `/account/${user?.role}` : '/register'}
+                    href={user?.id ? `/account/${user?.role}` : '/login'}
                     rightIcon="account-profile"
                     size="xsmall"
                     style={{ borderRadius: '24px' }}

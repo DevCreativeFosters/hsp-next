@@ -2,7 +2,6 @@ import Image from 'next/image';
 
 import { fetchAPI } from '@lib/fetch-api';
 
-import Button from '@components/button/button';
 import Container from '@components/container/container';
 import DownloadInvoiceButton from '@components/download-invoice/download-invoice';
 import Layout from '@components/layout/layout';
@@ -43,13 +42,13 @@ async function page({ params }) {
     variables: { orderId: parseInt(orderId) },
   });
 
-  const orderStatuses = {
+  const orderTypes = {
     'click-collect': `Thanks, We'll let you know when your order is ready to collect.`,
     'deliver-door': `Thanks, You'll get an order confirmation email and a tracking number once your order is ready.`,
-    'drop-shipping': `We'll send the items directly to your customer and update you once the shipment has been sent.`,
+    'deliver-to-store': `Thanks for your order. We'll be in touch shortly to book a fitting time.`,
+    'drop-ship-to-customer': `We'll send the items directly to your customer and update you once the shipment has been sent.`,
     'local-installation': `Thanks, We'll get in touch with you to book a fitting time.`,
     'pickup-from-hsp': `The HSP team will contact you when your order is ready for collection from HSP HQ.`,
-    'standard-delivery': `Thanks for your order. We'll be in touch shortly to book a fitting time.`,
   };
 
   return (
@@ -63,19 +62,11 @@ async function page({ params }) {
             <div className={styles.desc}>
               <h2>Order Confirmed</h2>
               <p>
-                {
-                  orderStatuses[
-                    data?.checkOrderStatusData?.orderData?.order_type
-                  ]
-                }
+                {orderTypes[data?.checkOrderStatusData?.orderData?.order_type]}
               </p>
               <div className={styles.btns}>
                 <DownloadInvoiceButton orderId={orderId} />
               </div>
-              <p>
-                Haven&apos;t received the email?{' '}
-                <Button href="#">Click Here</Button>
-              </p>
             </div>
           </div>
         </section>

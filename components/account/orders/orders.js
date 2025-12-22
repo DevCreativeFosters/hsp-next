@@ -103,10 +103,10 @@ function Order({ item, onlyReturns = false }) {
   const orderTypes = {
     'click-collect': 'Click & Collect',
     'deliver-door': 'Deliver to Door',
-    'drop-shipping': 'Drop Shipping',
+    'deliver-to-store': 'Deliver to Store',
+    'drop-ship-to-customer': 'Drop Ship to Customer',
     'local-installation': 'Local Installation',
-    'pickup-from-hsp': 'Pickup from HSP',
-    'standard-delivery': 'Standard Delivery',
+    'pickup-from-hsp': 'Pickup From HSP',
   };
 
   async function handleDownloadInvoice() {
@@ -188,7 +188,7 @@ function Order({ item, onlyReturns = false }) {
                   break;
                 case 'b2b':
                   switch (item.order_type) {
-                    case 'standard-delivery':
+                    case 'deliver-to-store':
                       return (
                         <Button size="large" variant="secondary">
                           <InfoIcon />
@@ -202,7 +202,7 @@ function Order({ item, onlyReturns = false }) {
                           Requires Changes
                         </Button>
                       );
-                    case 'drop-shipping':
+                    case 'drop-ship-to-customer':
                       return (
                         <Button size="large" variant="secondary">
                           <InfoIcon />
