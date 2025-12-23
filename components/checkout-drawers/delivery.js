@@ -1,12 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 import { clsx } from 'clsx';
 import { State } from 'country-state-city';
 
 import { useCart } from '@contexts/cart-context';
+import { useUserContext } from '@contexts/user';
 
 import Button from '@components/button/button';
 
@@ -24,6 +25,12 @@ function DeliveryAddressForm({
   setIsFormFilled,
 }) {
   const { cartItems } = useCart();
+  const { user } = useUserContext();
+  const [acceptDeliveryTerms, setAcceptDeliveryTerms] = useState(false);
+
+  useEffect(() => {
+    if (user?.role === 'b2b') setAcceptDeliveryTerms(true);
+  }, [user?.role]);
 
   const autocompleteRef = useRef(null);
 
@@ -257,20 +264,28 @@ function DeliveryAddressForm({
               />
             </div>
           </div>
-          <div className={styles.formRow}>
-            <div className={styles.inputFullCol}>
-              <div className={styles.acceptCheckbox}>
-                <label>
-                  <input type="checkbox" />
-                  <span>
-                    I confirm that my delivery address is a commercial address,
-                    and I understand that any additional fees arising from
-                    providing a residential address will be my responsibility.
-                  </span>
-                </label>
+          {user?.role !== 'b2b' && (
+            <div className={styles.formRow}>
+              <div className={styles.inputFullCol}>
+                <div className={styles.acceptCheckbox}>
+                  <label>
+                    <input
+                      checked={acceptDeliveryTerms}
+                      name="acceptDeliveryTerms"
+                      onChange={e => setAcceptDeliveryTerms(e.target.checked)}
+                      type="checkbox"
+                    />
+                    <span>
+                      I confirm that my delivery address is a commercial
+                      address, and I understand that any additional fees arising
+                      from providing a residential address will be my
+                      responsibility.
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <Button
             className={styles.submitBtn}
@@ -279,7 +294,8 @@ function DeliveryAddressForm({
               !formData.address ||
               !formData.city ||
               !formData.state ||
-              !formData.postcode
+              !formData.postcode ||
+              !acceptDeliveryTerms
             }
             onClick={() => setIsFormFilled(true)}
             size="large"
