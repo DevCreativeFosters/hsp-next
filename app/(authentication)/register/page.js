@@ -67,7 +67,9 @@ export default function RegisterPage() {
         }
       `;
 
-      const res = await fetchAPI(mutation, { variables: formData });
+      const res = await fetchAPI(mutation, {
+        variables: { ...formData, username: formData.email },
+      });
 
       const result = res?.userRegister;
 
@@ -132,19 +134,6 @@ export default function RegisterPage() {
                 <div className={styles.formWrap}>
                   <form onSubmit={handleSubmit}>
                     <div className={styles.inputRow}>
-                      <div className={styles.inputFullCol}>
-                        <div className={styles.inputGroup}>
-                          <input
-                            name="username"
-                            onChange={handleChange}
-                            placeholder="Username"
-                            required
-                            type="text"
-                            value={formData.username}
-                          />
-                        </div>
-                      </div>
-
                       <div className={styles.inputHalfCol}>
                         <div className={styles.inputGroup}>
                           <input
@@ -171,7 +160,7 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className={styles.inputHalfCol}>
+                      <div className={styles.inputFullCol}>
                         <div className={styles.inputGroup}>
                           <input
                             name="phone"
@@ -183,7 +172,7 @@ export default function RegisterPage() {
                         </div>
                       </div>
 
-                      <div className={styles.inputHalfCol}>
+                      <div className={styles.inputFullCol}>
                         <div className={styles.inputGroup}>
                           <input
                             name="email"
@@ -250,7 +239,7 @@ export default function RegisterPage() {
 
                 <div className={styles.backToLogin}>
                   <Link className={styles.ctaButton} href="/login">
-                    Back To Login <Arrow className="arrow" />
+                    Back To Login <Arrow className={styles.arrow} />
                   </Link>
                 </div>
 
