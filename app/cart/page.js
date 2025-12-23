@@ -175,7 +175,7 @@ export default function CartPage() {
               <div className={styles.btns}>
                 <button
                   className={styles.button}
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push('/products')}
                 >
                   CONTINUE SHOPPING
                 </button>
