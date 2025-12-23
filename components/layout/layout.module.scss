@@ -3,7 +3,7 @@
   margin-top: var(--header-height);
   transition: margin-top 0.3s ease-in-out;
 
-  @media (width<=767px) {
+  @media (width<=1279px) {
     margin-top: calc(var(--header-height) + 50px);
   }
 
