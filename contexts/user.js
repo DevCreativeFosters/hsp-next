@@ -69,6 +69,37 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const updateUserById = useCallback(async (userId, userData) => {
+    try {
+      const query = `
+        mutation UpdateProfile($input: UpdateProfileInput!) {
+          updateProfile(input: $input) {
+            success
+            message
+            error
+            profileData
+          }
+        }
+      `;
+
+      const variables = { input: { userId, ...userData } };
+      const res = await fetchAPI(query, { variables });
+
+      const data = res?.updateProfile;
+
+      if (data?.success) {
+        const parsedJSON = JSON.parse(data.profileData);
+
+        setUser(prevUser => ({
+          ...prevUser,
+          ...parsedJSON,
+        }));
+      }
+    } catch (err) {
+      console.error('Error updating user:', err);
+    }
+  }, []);
+
   const handleLogout = useCallback(() => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
@@ -97,6 +128,7 @@ export const UserProvider = ({ children }) => {
         handleLogout,
         handleSave,
         setUser,
+        updateUserById,
         user,
       }}
     >

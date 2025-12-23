@@ -10,7 +10,7 @@ import SaveIconSvg from '@assets/icons/save.svg';
 import styles from './user-details.module.scss';
 
 function UserDetails() {
-  const { getUserById, setUser, user } = useUserContext();
+  const { getUserById, setUser, updateUserById, user } = useUserContext();
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState('');
 
@@ -33,11 +33,12 @@ function UserDetails() {
 
   const handleSave = async field => {
     try {
-      setUser(prev => ({
-        ...prev,
+      await updateUserById(Number(user.id), {
         [field]: tempValue,
-      }));
-      setEditingField(null);
+      }).then(() => {
+        setEditingField(null);
+        setTempValue('');
+      });
     } catch (err) {
       console.error('Failed to save:', err);
     }
