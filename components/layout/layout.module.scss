@@ -3,6 +3,10 @@
   margin-top: var(--header-height);
   transition: margin-top 0.3s ease-in-out;
 
+  @media (width<=767px) {
+    margin-top: calc(var(--header-height) + 50px);
+  }
+
   [class*='store-locator-fullscreen'] & {
     margin-top: 0;
   }

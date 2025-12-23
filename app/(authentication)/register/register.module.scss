@@ -6,6 +6,10 @@
   max-width: 1133px;
   margin: auto;
   padding: 100px 0;
+
+  @media (width <= 767px) {
+    padding: 0;
+  }
 }
 
 /* registerMain */
@@ -221,6 +225,7 @@
 
 .formFooter p {
   line-height: 1.5;
+  margin: 0;
 }
 
 .formFooter a {
@@ -267,6 +272,12 @@
 
   .registerMain .formContent {
     padding: 40px 20px;
+  }
+
+  .registerMain {
+    & > div {
+      padding: 0;
+    }
   }
 }
 
