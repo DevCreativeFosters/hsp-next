@@ -257,6 +257,20 @@ function DeliveryAddressForm({
               />
             </div>
           </div>
+          <div className={styles.formRow}>
+            <div className={styles.inputFullCol}>
+              <div className={styles.acceptCheckbox}>
+                <label>
+                  <input type="checkbox" />
+                  <span>
+                    I confirm that my delivery address is a commercial address,
+                    and I understand that any additional fees arising from
+                    providing a residential address will be my responsibility.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
 
           <Button
             className={styles.submitBtn}

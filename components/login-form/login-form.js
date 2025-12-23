@@ -130,6 +130,7 @@ function LoginForm() {
                 style={{
                   color: loginMessage.startsWith('✅') ? 'green' : 'red',
                   fontWeight: 500,
+                  marginBottom: '24px',
                   textAlign: 'center',
                 }}
               >
