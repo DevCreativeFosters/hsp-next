@@ -327,7 +327,6 @@ function CheckoutPage() {
       'last_name',
       'email',
       'phone',
-      'company',
       'termsAndConditions',
       'marketing',
       'payment_method',
@@ -450,14 +449,16 @@ function CheckoutPage() {
                         />
                       </div>
                     </div>
-                    <div
-                      className={clsx({
-                        [styles.colHalf]: role === 'b2b',
-                        [styles.colFull]: role !== 'b2b',
-                      })}
-                    >
+                    <div className={clsx(styles.colFull)}>
                       <div className={styles.inputGroup}>
-                        <label>Company Name</label>
+                        <label>
+                          Company Name
+                          {role === 'b2b' ? (
+                            <span className={styles.reqStar}>*</span>
+                          ) : (
+                            ' (Optional)'
+                          )}
+                        </label>
                         <input
                           name="company"
                           onChange={handleChange}
@@ -466,19 +467,6 @@ function CheckoutPage() {
                         />
                       </div>
                     </div>
-                    {role === 'b2b' && (
-                      <div className={styles.colHalf}>
-                        <div className={styles.inputGroup}>
-                          <label>Purchase Order Number</label>
-                          <input
-                            name="purchaseOrderNumber"
-                            onChange={handleChange}
-                            type="text"
-                            value={formData.purchaseOrderNumber}
-                          />
-                        </div>
-                      </div>
-                    )}
                     <div className={clsx(styles.colFull, styles.submitBtn)}>
                       <Button
                         disabled={
@@ -801,7 +789,6 @@ function CheckoutPage() {
                       !formData.last_name ||
                       !formData.email ||
                       !formData.phone ||
-                      !formData.company ||
                       !formData.termsAndConditions ||
                       !formData.marketing ||
                       !formData.payment_method ||
