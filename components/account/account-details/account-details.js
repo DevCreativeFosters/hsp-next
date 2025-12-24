@@ -224,52 +224,64 @@ function AccountDetails() {
                         {storeDetails?.addressFields?.postalCode}
                       </td>
                     </tr>
-                    <tr>
-                      <td>Communications Email:</td>
-                      <td>
-                        <a href="mailto:info@canopieswa.com.au">
-                          {storeDetails?.communication_email}
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Accounts Email:</td>
-                      <td>
-                        <a href="mailto:accounts@canopieswa.com.au">
-                          {storeDetails?.account_email}
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Phone Number:</td>
-                      <td>
-                        <a href="tel:+1300498432">
-                          {storeDetails?.phoneNumber}
-                        </a>
-                      </td>
-                    </tr>
+                    {storeDetails?.communication_email && (
+                      <tr>
+                        <td>Communications Email:</td>
+                        <td>
+                          <a href="mailto:info@canopieswa.com.au">
+                            {storeDetails?.communication_email}
+                          </a>
+                        </td>
+                      </tr>
+                    )}
+                    {storeDetails?.account_email && (
+                      <tr>
+                        <td>Accounts Email:</td>
+                        <td>
+                          <a href="mailto:accounts@canopieswa.com.au">
+                            {storeDetails?.account_email}
+                          </a>
+                        </td>
+                      </tr>
+                    )}
+                    {storeDetails?.phoneNumber && (
+                      <tr>
+                        <td>Phone Number:</td>
+                        <td>
+                          <a href="tel:+1300498432">
+                            {storeDetails?.phoneNumber}
+                          </a>
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
 
-            <div className={styles.tableInfo}>
-              <h5>Account Terms</h5>
-              <div className={styles.tableWrapper}>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>Credit Limit:</td>
-                      <td>{formatPrice(storeDetails?.credit_limit)}</td>
-                    </tr>
-                    <tr>
-                      <td>Payment Terms:</td>
-                      <td>{storeDetails?.payment_terms}</td>
-                    </tr>
-                  </tbody>
-                </table>
+            {(storeDetails?.credit_limit || storeDetails?.payment_terms) && (
+              <div className={styles.tableInfo}>
+                <h5>Account Terms</h5>
+                <div className={styles.tableWrapper}>
+                  <table>
+                    <tbody>
+                      {storeDetails?.credit_limit && (
+                        <tr>
+                          <td>Credit Limit:</td>
+                          <td>{formatPrice(storeDetails?.credit_limit)}</td>
+                        </tr>
+                      )}
+                      {storeDetails?.payment_terms && (
+                        <tr>
+                          <td>Payment Terms:</td>
+                          <td>{storeDetails?.payment_terms}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className={clsx(styles.bottomText, styles.forMobile)}>
@@ -281,13 +293,28 @@ function AccountDetails() {
 
           <div className={styles.borderBox}>
             <div className={styles.logosList}>
-              <StoreDisplays
-                alwaysOpen
-                displays={storeDetails?.inStoreDisplays}
-                flexStoresList
-                hideSeparator
-                showNumberOfProducts={false}
-              />
+              {storeDetails?.inStoreDisplays ? (
+                <StoreDisplays
+                  alwaysOpen
+                  displays={storeDetails?.inStoreDisplays}
+                  flexStoresList
+                  hideSeparator
+                  showNumberOfProducts={false}
+                />
+              ) : (
+                <div className={styles.noDisplays}>
+                  <h4>In-Store Displays</h4>
+                  <p>
+                    Currently, there are no in-store displays at your location —
+                    take advantage of this opportunity to drive more attention
+                    and increase sales by ordering one today!
+                  </p>
+                  <p>
+                    Already have a display? Let us know so we can update our
+                    records. <Link href="/contact-us">Contact Us</Link>
+                  </p>
+                </div>
+              )}
               <div className={styles.btns}>
                 <Button
                   className={styles.requestbutton}

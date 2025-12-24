@@ -489,7 +489,6 @@ function Orders({ onlyReturns = false }) {
           </p>
         </CheckNoOrders>
       ),
-      content: allorders.map(item => <Order item={item} key={item.order_id} />),
       slug: 'outstandingordersplaced',
       title: 'Outstanding Orders Placed',
     },

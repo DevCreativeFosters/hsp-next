@@ -218,6 +218,20 @@
           margin: 0;
         }
       }
+
+      .noDisplays {
+        margin-bottom: 2rem;
+
+        h4 {
+          font-weight: 600;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          line-height: 1.5;
+          margin: 0 0 1rem;
+        }
+      }
     }
   }
 
