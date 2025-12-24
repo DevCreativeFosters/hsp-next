@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
 
+import { formatPrice } from '@lib/helpers';
+
 import Button from '@components/button/button';
 
 import styles from './cart-sidebar.module.scss';
@@ -54,7 +56,10 @@ export default function CartSidebar() {
             <div className={styles.itemInfo}>
               <h6>{item.product_name}</h6>
               <div className={styles.itemPrice}>
-                ${item.price} <del>${item.price}</del>
+                {formatPrice(item.price)}{' '}
+                {!!item?.compareAtPrice && (
+                  <del>{formatPrice(item.compareAtPrice)}</del>
+                )}
               </div>
               <div className={styles.itemBottom}>
                 <div className={styles.qtyBlock}>

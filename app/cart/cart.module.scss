@@ -105,6 +105,11 @@
       .price {
         color: var(--color-primary-100);
         font-weight: 600;
+
+        del {
+          color: black;
+          margin-left: 8px;
+        }
       }
     }
 
@@ -246,7 +251,7 @@
 
   .totalWrap {
     background: #fff;
-    padding: 26px;
+    padding: 24px 32px;
     border-radius: 6px;
 
     h3 {
@@ -271,11 +276,11 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-secondary);
-      margin-bottom: 14px;
       font-weight: 700;
       width: 100%;
       transition: 0.5s all;
       font-size: 20px;
+      border-radius: 8px;
 
       &:hover {
         background-color: #000;
@@ -321,7 +326,7 @@
       width: 100%;
       transition: 0.5s all;
       font-size: 20px;
-      border-radius: 6px;
+      border-radius: 8px;
 
       &:hover {
         background-color: #000;

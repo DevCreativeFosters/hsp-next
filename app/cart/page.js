@@ -99,7 +99,10 @@ export default function CartPage() {
                         <strong>Variant:</strong> {item.variantName}
                       </p>
                       <div className={styles.price}>
-                        {formatPrice(item.price)}
+                        {formatPrice(item.price)}{' '}
+                        {!!item?.compareAtPrice && (
+                          <del>{formatPrice(item.compareAtPrice)}</del>
+                        )}
                       </div>
                     </div>
                     <div className={styles.wActions}>
@@ -168,19 +171,18 @@ export default function CartPage() {
                   className={styles.button}
                   onClick={() => router.push('/checkout')}
                 >
-                  CHECK OUT
+                  Check Out
                 </button>
-                <button className={styles.link}>Email me my Cart/ Quote</button>
               </div>
               <div className={styles.btns}>
                 <button
                   className={styles.button}
                   onClick={() => router.push('/products')}
                 >
-                  CONTINUE SHOPPING
+                  Continue Shopping
                 </button>
                 <button className={styles.button} onClick={handleOpenModal}>
-                  MAKE AN ENQUIRY
+                  Make an Enquiry
                 </button>
               </div>
             </div>
