@@ -33,9 +33,39 @@ export default function ProductTabs({
 }) {
   const isMobile = useIsMobile();
   const headerRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   // const [rating, setRating] = useState(0);
   // const [hover, setHover] = useState(0);
+
+  // --- Select Box State ---
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const [selectedSortOption, setSelectedSortOption] = useState('Newest');
+  const sortOptions = [
+    'Newest',
+    'Oldest',
+    'Price: Low to High',
+    'Price: High to Low',
+  ];
+
+  const handleSortToggle = () => setIsSortDropdownOpen(prev => !prev);
+
+  const handleSortSelect = option => {
+    setSelectedSortOption(option);
+    setIsSortDropdownOpen(false);
+    // Add logic here to actually sort the "reviews" array if needed
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const tabs = useMemo(
     () => ({
@@ -198,16 +228,66 @@ export default function ProductTabs({
     <div className={styles.reviewsWrapper}>
       <div className={styles.reviewWrap}>
         <div className={styles.heading}>
-          <Button size="large" variant="primary">
+          <Button
+            className={styles.reviewButton}
+            size="large"
+            variant="primary"
+          >
             Leave A Review
           </Button>
-          <select>
-            <option value="5">5 Stars</option>
-            <option value="4">4 Stars</option>
-            <option value="3">3 Stars</option>
-            <option value="2">2 Stars</option>
-            <option value="1">1 Star</option>
-          </select>
+
+          <div className={styles.pWrap}>
+            <div className={styles.title}>Sort By:</div>
+            <div
+              className={clsx(styles.customSelectBox, {
+                [styles.open]: isSortDropdownOpen,
+              })}
+              ref={dropdownRef}
+            >
+              <div
+                aria-controls="sort-options-list"
+                aria-expanded={isSortDropdownOpen}
+                className={styles.selectedOption}
+                onClick={handleSortToggle}
+                onKeyDown={e => e.key === 'Enter' && handleSortToggle()}
+                role="button"
+                tabIndex="0"
+              >
+                {selectedSortOption}
+                <div
+                  className={clsx(styles.arrow, {
+                    [styles.open]: isSortDropdownOpen,
+                  })}
+                ></div>
+              </div>
+
+              {isSortDropdownOpen && (
+                <ul
+                  className={styles.optionsList}
+                  id="sort-options-list"
+                  role="listbox"
+                >
+                  {sortOptions.map(option => (
+                    <li
+                      aria-selected={selectedSortOption === option}
+                      className={clsx({
+                        [styles.selected]: selectedSortOption === option,
+                      })}
+                      key={option}
+                      onClick={() => handleSortSelect(option)}
+                      onKeyDown={e =>
+                        e.key === 'Enter' && handleSortSelect(option)
+                      }
+                      role="option"
+                      tabIndex="0"
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
         </div>
 
         {/*
