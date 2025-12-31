@@ -689,12 +689,27 @@ function CheckoutPage() {
                     <h2>Payment</h2>
                     <p>All transactions are secure and encrypted</p>
                   </div>
-                  <div className={styles.couponBox}>
-                    <input placeholder="Gift Card Number" type="text" />
-                    <button disabled type="button">
-                      Apply
-                    </button>
-                  </div>
+                  {role === 'retail' && (
+                    <div className={styles.couponBox}>
+                      <input placeholder="Gift Card Number" type="text" />
+                      <button disabled type="button">
+                        Apply
+                      </button>
+                    </div>
+                  )}
+
+                  {role === 'b2b' && (
+                    <div className={styles.couponBox}>
+                      <input
+                        maxLength={15}
+                        name="purchaseOrderNumber"
+                        onChange={handleChange}
+                        placeholder="Purchase Order Number *"
+                        type="text"
+                        value={formData.purchaseOrderNumber}
+                      />
+                    </div>
+                  )}
 
                   <div className={styles.paymenSelection}>
                     <div className={styles.payBox}>

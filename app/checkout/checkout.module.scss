@@ -511,7 +511,11 @@
         }
 
         .heading {
-          margin-bottom: 40px;
+          margin-bottom: 32px;
+
+          @media (width <= 991px) {
+            margin-bottom: 24px;
+          }
 
           h2 {
             color: #000;
