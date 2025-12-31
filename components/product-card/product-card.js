@@ -11,6 +11,7 @@ import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import styles from './product-card.module.scss';
 
 export default function ProductCard({
+  hasFilters = false,
   imageUrl,
   name,
   price,
@@ -23,7 +24,9 @@ export default function ProductCard({
 
   return (
     <LinkOrDiv
-      className={clsx(styles.product, removeBorder ? styles.removeBorder : '')}
+      className={clsx(styles.product, removeBorder ? styles.removeBorder : '', {
+        [styles.hasFilters]: hasFilters,
+      })}
       href={url}
     >
       {imageUrl && (

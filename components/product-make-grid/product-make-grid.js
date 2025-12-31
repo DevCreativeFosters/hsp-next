@@ -10,6 +10,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 import { getAllMakes } from '@lib/api/get-all-makes';
 
 import Container from '@components/container/container';
+import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import Loading from '@components/loading/loading';
 import Pagination from '@components/pagination/pagination';
 import ProductCard from '@components/product-card/product-card';
@@ -27,11 +28,13 @@ const sortOptions = [
 export default function ProductMakeGrid({
   alignment,
   bodyText,
+  categoryPages,
   products,
   productsPerPage,
   productsPerPageMobile,
   productsTitleTag,
   productsTitleTagStyle,
+  showFilters,
   title,
   titleTag,
   titleTagStyle,
@@ -157,8 +160,7 @@ export default function ProductMakeGrid({
   }, [selectedBrands, selectedSortOption]);
 
   return (
-    <Container collapseTopPadding flexibleBlockPadding>
-      {/*
+    <Container collapseTopPadding={showFilters} flexibleBlockPadding>
       {title && (
         <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
@@ -169,79 +171,117 @@ export default function ProductMakeGrid({
           {title}
         </DynamicTitle>
       )}
-      */}
-      <div className={styles.topFilter}>
-        <ul>
-          <li>
-            <Link href="/electric-roller-cover">Electric Roll Tops</Link>
-          </li>
-          <li>
-            <Link href="/roll-up-tonneau-cover">Roll Up Tonneau Cover</Link>
-          </li>
-          <li>
-            <Link href="/ute-tray-slide">Ute Tray Slides</Link>
-          </li>
-          <li>
-            <Link href="/ladder-rack">Ladder Racks</Link>
-          </li>
-          <li>
-            <Link href="/tailgate-assist">Tailgate Accessories</Link>
-          </li>
-        </ul>
-      </div>
+      {categoryPages && (
+        <div className={styles.topFilter}>
+          <ul>
+            {categoryPages.map(({ link }) => (
+              <li key={link.url}>
+                <Link href={link.url}>{link.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className={styles.productMain}>
-        <div className={styles.leftPart}>
-          <div className={styles.mobileTitle}>Sort By:</div>
-          <div className={styles.leftwrap}>
-            <div className={styles.priceFilter}>
-              <div className={styles.pWrap}>
-                <div className={styles.title}>Sort By:</div>
+        {showFilters && (
+          <div className={styles.leftPart}>
+            <div className={styles.mobileTitle}>Sort By:</div>
+            <div className={styles.leftwrap}>
+              <div className={styles.priceFilter}>
+                <div className={styles.pWrap}>
+                  <div className={styles.title}>Sort By:</div>
 
-                <div
-                  className={clsx(styles.customSelectBox, {
-                    [styles.open]: isSortDropdownOpen,
-                  })}
-                  ref={sortDropdownRef}
-                >
                   <div
-                    aria-controls="sort-options-list"
-                    aria-expanded={isSortDropdownOpen}
-                    className={styles.selectedOption}
-                    onClick={handleSortToggle}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        handleSortToggle();
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
+                    className={clsx(styles.customSelectBox, {
+                      [styles.open]: isSortDropdownOpen,
+                    })}
+                    ref={sortDropdownRef}
                   >
-                    {selectedSortOption.label}
-                    <div className={styles.arrow}></div>
-                  </div>
+                    <div
+                      aria-controls="sort-options-list"
+                      aria-expanded={isSortDropdownOpen}
+                      className={styles.selectedOption}
+                      onClick={handleSortToggle}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          handleSortToggle();
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      {selectedSortOption.label}
+                      <div className={styles.arrow}></div>
+                    </div>
 
-                  {isSortDropdownOpen && (
-                    <ul className={styles.optionsList} id="sort-options-list">
-                      {sortOptions.map(option => (
-                        <li
-                          aria-selected={
-                            option.value === selectedSortOption.value
-                          }
-                          className={clsx({
-                            [styles.selected]:
-                              option.value === selectedSortOption.value,
-                          })}
-                          key={option.value}
-                          onClick={() => handleSortSelect(option)}
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              handleSortSelect(option);
+                    {isSortDropdownOpen && (
+                      <ul className={styles.optionsList} id="sort-options-list">
+                        {sortOptions.map(option => (
+                          <li
+                            aria-selected={
+                              option.value === selectedSortOption.value
                             }
-                          }}
-                          role="option"
-                          tabIndex={0}
-                        >
-                          {option.label}
+                            className={clsx({
+                              [styles.selected]:
+                                option.value === selectedSortOption.value,
+                            })}
+                            key={option.value}
+                            onClick={() => handleSortSelect(option)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                handleSortSelect(option);
+                              }
+                            }}
+                            role="option"
+                            tabIndex={0}
+                          >
+                            {option.label}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.chekboxLists}>
+                <div
+                  className={clsx(styles.filterClick, {
+                    [styles.open]: isBrandsFilterOpen,
+                  })}
+                  onClick={handleBrandsFilterToggle}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleBrandsFilterToggle();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className={styles.filterTitle}>Brands:</div>
+                </div>
+                <div
+                  className={clsx(styles.filterContent, {
+                    [styles.open]: isBrandsFilterOpen,
+                  })}
+                >
+                  {allMakes.length === 0 ? (
+                    <ul>
+                      <li>
+                        <Loading />
+                      </li>
+                    </ul>
+                  ) : (
+                    <ul>
+                      {allMakes.map((make, index) => (
+                        <li key={make.slug}>
+                          <label>
+                            <input
+                              checked={selectedBrands.includes(make.slug)}
+                              onChange={() => handleBrandChange(make.slug)}
+                              type="checkbox"
+                            />
+                            <span>{make.name}</span>
+                          </label>
                         </li>
                       ))}
                     </ul>
@@ -249,54 +289,14 @@ export default function ProductMakeGrid({
                 </div>
               </div>
             </div>
-            <div className={styles.chekboxLists}>
-              <div
-                className={clsx(styles.filterClick, {
-                  [styles.open]: isBrandsFilterOpen,
-                })}
-                onClick={handleBrandsFilterToggle}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleBrandsFilterToggle();
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                <div className={styles.filterTitle}>Brands:</div>
-              </div>
-              <div
-                className={clsx(styles.filterContent, {
-                  [styles.open]: isBrandsFilterOpen,
-                })}
-              >
-                {allMakes.length === 0 ? (
-                  <ul>
-                    <li>
-                      <Loading />
-                    </li>
-                  </ul>
-                ) : (
-                  <ul>
-                    {allMakes.map((make, index) => (
-                      <li key={make.slug}>
-                        <label>
-                          <input
-                            checked={selectedBrands.includes(make.slug)}
-                            onChange={() => handleBrandChange(make.slug)}
-                            type="checkbox"
-                          />
-                          <span>{make.name}</span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
           </div>
-        </div>
-        <div className={styles.rightPart}>
+        )}
+        <div
+          className={clsx({
+            [styles.noFilters]: !showFilters,
+            [styles.rightPart]: showFilters,
+          })}
+        >
           {bodyText && (
             <div
               className={clsx(
@@ -314,6 +314,7 @@ export default function ProductMakeGrid({
             <div className={styles.grid}>
               {currentProducts.map((product, index) => (
                 <ProductCard
+                  hasFilters={showFilters}
                   imageUrl={product.productImage?.node?.mediaItemUrl}
                   key={`product-${index}-${product.title?.replace(/\s+/g, '-').toLowerCase()}`}
                   name={product.title}

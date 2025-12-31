@@ -10,6 +10,14 @@
 
   &.removeBorder {
     border: none;
+    padding: 0;
+
+    @include bp(large) {
+      padding: 8px 8px 0;
+    }
+  }
+
+  &.removeBorder.hasFilters {
     padding: 4px 4px 0;
     margin-bottom: 16px;
 
@@ -31,7 +39,7 @@ div.product {
   height: auto;
   aspect-ratio: 163/112;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
 
   @include bp(large) {
     aspect-ratio: 230/160;
@@ -40,19 +48,32 @@ div.product {
 
 .name {
   margin-top: 8px;
-  font-size: 15px;
-
-  @media (width<=767px) {
-    font-size: 14px;
-  }
 
   @include bp(large) {
-    margin-top: 15px;
+    margin-top: 16px;
   }
 }
 
 .price {
   color: var(--color-white-80);
-  margin-top: 2px;
-  font-size: 11px;
+  margin-top: 4px;
+}
+
+.hasFilters {
+  .name {
+    font-size: 15px;
+
+    @media (width<=767px) {
+      font-size: 14px;
+    }
+
+    @include bp(large) {
+      margin-top: 15px;
+    }
+  }
+
+  .price {
+    margin-top: 2px;
+    font-size: 11px;
+  }
 }
