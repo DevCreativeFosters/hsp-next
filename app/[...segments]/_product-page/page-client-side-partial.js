@@ -168,8 +168,33 @@ export default function PageClientSidePartial({
   return (
     <>
       <div className={styles.header}>
-        {window.innerWidth <= 1279 && (
-          <div className={clsx(styles.meta, styles.mobile)}>
+        <div className={clsx(styles.meta, styles.mobile)}>
+          <h1 className={clsx(styles.name, 'h2')}>
+            {mainCategoryName} <br />
+            {mainCategoryName !== variantName && (
+              <span className={styles.variant}>{variantName}</span>
+            )}
+          </h1>
+          {variant?.sku && (
+            <div className={clsx(styles.sku, 'h5')}>
+              Part No. <span className={styles.redColor}>{variant.sku}</span>
+            </div>
+          )}
+          <div className={styles.ratingBlock}>
+            <div className={styles.stars}>
+              <StarRating color="yellow" score={averageRating} />(
+              {firstMatchedProduct.commentCount} reviews)
+            </div>
+            {
+              <button onClick={handleWishlistToggle} type="button">
+                {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+              </button>
+            }
+          </div>
+        </div>
+        <ProductImageCarousel images={carouselImages} />
+        <div className={styles.details}>
+          <div className={clsx(styles.meta, styles.desktop)}>
             <h1 className={clsx(styles.name, 'h2')}>
               {mainCategoryName} <br />
               {mainCategoryName !== variantName && (
@@ -193,36 +218,6 @@ export default function PageClientSidePartial({
               }
             </div>
           </div>
-        )}
-        <ProductImageCarousel images={carouselImages} />
-        <div className={styles.details}>
-          {window.innerWidth > 1279 && (
-            <div className={clsx(styles.meta, styles.desktop)}>
-              <h1 className={clsx(styles.name, 'h2')}>
-                {mainCategoryName} <br />
-                {mainCategoryName !== variantName && (
-                  <span className={styles.variant}>{variantName}</span>
-                )}
-              </h1>
-              {variant?.sku && (
-                <div className={clsx(styles.sku, 'h5')}>
-                  Part No.{' '}
-                  <span className={styles.redColor}>{variant.sku}</span>
-                </div>
-              )}
-              <div className={styles.ratingBlock}>
-                <div className={styles.stars}>
-                  <StarRating color="yellow" score={averageRating} />(
-                  {firstMatchedProduct.commentCount} reviews)
-                </div>
-                {
-                  <button onClick={handleWishlistToggle} type="button">
-                    {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
-                  </button>
-                }
-              </div>
-            </div>
-          )}
           <div className={styles.enquiryForm}>
             <StoreLocatorProvider>
               <EnquiryForm

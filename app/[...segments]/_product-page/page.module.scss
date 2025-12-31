@@ -21,6 +21,26 @@
 
 .meta {
   margin-bottom: var(--gap-global-sm);
+
+  @media (width<=1279px) {
+    &.mobile {
+      display: block;
+    }
+
+    &.desktop {
+      display: none;
+    }
+  }
+
+  @media (width>1279px) {
+    &.desktop {
+      display: block;
+    }
+
+    &.mobile {
+      display: none;
+    }
+  }
 }
 
 .productAccordion {
