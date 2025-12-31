@@ -11,8 +11,11 @@ import { scrollIntoViewHorizontally } from '@lib/helpers';
 
 import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
+import Button from '@components/button/button';
 import DownloadFileButton from '@components/download-file-button/download-file-button';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
+
+import RatingStar from '@assets/icons/rating-star.svg';
 
 import styles from './product-tabs.module.scss';
 
@@ -23,11 +26,17 @@ export default function ProductTabs({
   featuresDescription,
   manualsDescription,
   manualsLinks,
+  productName,
+  reviews,
   specificationContent,
   specificationDescription,
 }) {
   const isMobile = useIsMobile();
   const headerRef = useRef(null);
+
+  // const [rating, setRating] = useState(0);
+  // const [hover, setHover] = useState(0);
+
   const tabs = useMemo(
     () => ({
       ...(description && {
@@ -40,6 +49,7 @@ export default function ProductTabs({
         specs: 'Technical Specifications',
       }),
       ...(manualsLinks?.length > 0 && { manuals: 'Manuals' }),
+      reviews: 'Reviews',
     }),
     [
       description,
@@ -61,7 +71,9 @@ export default function ProductTabs({
     function scrollActiveTabButtonIntoView() {
       const activeTabButton = document.getElementById(activeTab);
 
-      scrollIntoViewHorizontally(headerRef.current, activeTabButton, 24);
+      if (activeTabButton) {
+        scrollIntoViewHorizontally(headerRef.current, activeTabButton, 24);
+      }
     },
     [activeTab],
   );
@@ -182,7 +194,136 @@ export default function ProductTabs({
     </>
   );
 
-  // Mobile accordion view
+  const ReviewsContent = () => (
+    <div className={styles.reviewsWrapper}>
+      <div className={styles.reviewWrap}>
+        <div className={styles.heading}>
+          <Button size="large" variant="primary">
+            Leave A Review
+          </Button>
+          <select>
+            <option value="5">5 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="2">2 Stars</option>
+            <option value="1">1 Star</option>
+          </select>
+        </div>
+
+        {/*
+        <div className={styles.reviewForm}>
+          <h2>Leave A Review</h2>
+
+          <div className={styles.colFull}>
+            <div className={styles.inputGroup}>
+              <label>How Would You rate us ? <span className={styles.reqStar}>*</span></label>
+              <div className={styles.starRatingContainer}>
+                {[1, 2, 3, 4, 5].map((starValue) => (
+                  <button
+                    key={starValue}
+                    type="button"
+                    className={clsx(styles.starButton, {
+                      [styles.filled]: (hover || rating) >= starValue,
+                    })}
+                    onClick={() => setRating(starValue)}
+                    onMouseEnter={() => setHover(starValue)}
+                    onMouseLeave={() => setHover(0)}
+                  >
+                    <RatingStar />
+                  </button>
+                ))}
+              </div>
+              <input type="hidden" name="rating" value={rating} />
+            </div>
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.colHalf}>
+              <div className={styles.inputGroup}>
+                <label>Name<span className={styles.reqStar}>*</span></label>
+                <input
+                  name="first_name"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div className={styles.colHalf}>
+              <div className={styles.inputGroup}>
+                <label>Email<span className={styles.reqStar}>*</span></label>
+                <input
+                  name="email"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div className={styles.colFull}>
+              <div className={styles.inputGroup}>
+                <label>Upload Image<span className={styles.reqStar}>*</span></label>
+                <input
+                  name="upload_image"
+                  type="file"
+                />
+              </div>
+            </div>
+            <div className={styles.colFull}>
+              <div className={styles.inputGroup}>
+                <label>Comment<span className={styles.reqStar}>*</span></label>
+                <textarea></textarea>
+              </div>
+            </div>
+            <div className={clsx(styles.colFull, styles.submitBtn)}>
+              <div className={styles.inputGroup}>
+                <Button variant="primary" size="large">Submit Review</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        */}
+
+        <div className={styles.reviewLists}>
+          {reviews.map(review => {
+            const author = review?.author?.node;
+            const img = review?.reviewUploadImage?.uploadImage?.node;
+
+            return (
+              <div className={styles.reviewBox} key={review.databaseId}>
+                <div className={styles.left}>
+                  <div className={styles.ratingStars}>
+                    {Array.from({ length: review?.rating }, (_, i) => (
+                      <RatingStar key={i} />
+                    ))}
+                  </div>
+                  <div
+                    className={styles.desc}
+                    dangerouslySetInnerHTML={{ __html: review.content }}
+                  ></div>
+                  <div className={styles.reviewAuthor}>
+                    <p>
+                      <strong>{author?.name}</strong>
+                    </p>
+                    <span>Ordered the HSP {productName}</span>
+                  </div>
+                </div>
+                {img && (
+                  <div className={styles.right}>
+                    <figure>
+                      <Image
+                        alt={img.altText}
+                        height={160}
+                        src={img.sourceUrl}
+                        width={250}
+                      />
+                    </figure>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
   const mobileContent = (
     <Accordion
       allowMultipleOpen
@@ -221,10 +362,15 @@ export default function ProductTabs({
           <ManualsContent />
         </AccordionItem>
       )}
+      <AccordionItem
+        className={styles.accordionItem}
+        triggerContent={tabs.reviews}
+      >
+        <ReviewsContent />
+      </AccordionItem>
     </Accordion>
   );
 
-  // Desktop tabs view
   const desktopContent = (
     <div className={clsx(styles.tabs, styles.hideOnMobile)}>
       <div className={styles.headers} ref={headerRef}>
@@ -247,6 +393,7 @@ export default function ProductTabs({
         {activeTab === 'features' && <FeaturesContent />}
         {activeTab === 'specs' && <SpecsContent />}
         {activeTab === 'manuals' && <ManualsContent />}
+        {activeTab === 'reviews' && <ReviewsContent />}
       </div>
     </div>
   );

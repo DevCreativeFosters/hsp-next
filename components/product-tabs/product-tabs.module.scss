@@ -284,3 +284,222 @@
   display: grid;
   gap: 24px;
 }
+
+.inputGroup {
+  margin-bottom: 20px;
+
+  @media (width<=767px) {
+    margin-bottom: 16px;
+  }
+
+  label {
+    font-size: 15px;
+    color: #000;
+    display: block;
+    margin-bottom: 8px;
+
+    @media (width<=767px) {
+      font-size: 14px;
+    }
+
+    .reqStar {
+      color: #e02b27;
+    }
+  }
+
+  input[type='text'],
+  input[type='phone'],
+  input[type='email'] {
+    min-height: 36px;
+    border-radius: 8px;
+    border: solid 1px #4b4b4b;
+    width: 100%;
+    padding: 0 12px;
+    outline: none;
+  }
+
+  input[type='file'] {
+    min-height: 36px;
+    border-radius: 8px;
+    border: solid 1px #4b4b4b;
+    width: 100%;
+    padding: 5px 12px;
+    outline: none;
+  }
+
+  textarea {
+    width: 100%;
+    border: solid 1px #4b4b4b;
+    border-radius: 8px;
+    min-height: 120px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: var(--font-primary);
+    resize: vertical;
+
+    @media (width<=767px) {
+      font-size: 14px;
+    }
+  }
+}
+
+.reviewWrap {
+  .heading {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .reviewBox {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    display: flex;
+    flex: 1;
+
+    @media (width<=767px) {
+      flex-flow: column;
+      gap: 30px;
+    }
+
+    .left {
+      flex: 1;
+      margin-right: 24px;
+      display: flex;
+      flex-flow: column;
+
+      @media (width<=767px) {
+        margin-right: 0;
+      }
+
+      .reviewAuthor {
+        margin-top: auto;
+      }
+    }
+
+    .right {
+      width: 25%;
+
+      @media (width<=767px) {
+        width: 100%;
+      }
+
+      figure {
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        margin: 0;
+        line-height: 0;
+
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      }
+    }
+
+    .desc {
+      margin: 15px 0 24px;
+
+      @media (width<=767px) {
+        margin: 15px 0;
+      }
+
+      p {
+        margin: 0 0 10px;
+        color: rgb(0 0 0 / 70%);
+        line-height: 1.5;
+      }
+    }
+
+    .reviewAuthor {
+      margin-top: 12px;
+      color: rgb(0 0 0 / 50%);
+
+      p {
+        color: #000;
+        margin: 0;
+
+        strong {
+          font-weight: 600;
+        }
+      }
+
+      span {
+        display: block;
+        margin-top: 8px;
+        color: var(--color-primary-100);
+        font-size: 14px;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  .reviewForm {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+
+    @media (width<=767px) {
+      padding: 20px;
+    }
+
+    h2 {
+      color: var(--color-primary-100);
+      margin-bottom: 25px;
+    }
+
+    .formRow {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+
+      .colHalf {
+        width: 50%;
+        padding: 0 10px;
+
+        @media (width <=480px) {
+          width: 100%;
+        }
+      }
+
+      .colFull {
+        width: 100%;
+        padding: 0 10px;
+      }
+
+      .submitBtn {
+        margin-top: 10px;
+
+        @media (width<767px) {
+          margin: 0;
+        }
+
+        button {
+          border: solid 1px var(--color-primary-100);
+
+          @media (width<767px) {
+            font-size: 16px;
+            min-height: 38px;
+            padding: 0 15px;
+          }
+        }
+      }
+    }
+
+    .submitBtn {
+      margin: 0;
+
+      .inputGroup {
+        margin: 0;
+
+        button {
+          border: solid 1px var(--color-primary-100);
+        }
+      }
+    }
+  }
+}

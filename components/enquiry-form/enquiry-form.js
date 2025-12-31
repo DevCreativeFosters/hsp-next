@@ -271,7 +271,8 @@ export default function EnquiryForm({
                   (item, index) => {
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
-                    const variant = product?.productFields?.variants[0];
+                    const variantDetails =
+                      product?.productFields?.variants[0]?.variantDetails;
 
                     return (
                       <div className={styles.cmpBox} key={product?.databaseId}>
@@ -293,16 +294,15 @@ export default function EnquiryForm({
                           </h5>
                           <div className={styles.price}>
                             <div className={styles.one}>
-                              {formatPrice(variant?.variantDetails?.price)}
+                              {formatPrice(variantDetails?.price)}
                             </div>
-                            <div className={styles.two}>
-                              {formatPrice(variant?.variantDetails?.price)}
-                            </div>
+                            {variantDetails?.compareAtPrice && (
+                              <div className={styles.two}>
+                                {formatPrice(variantDetails?.compareAtPrice)}
+                              </div>
+                            )}
                             <div className={styles.three}>
-                              +{' '}
-                              {formatPrice(
-                                variant?.variantDetails?.installationCost,
-                              )}{' '}
+                              + {formatPrice(variantDetails?.installationCost)}{' '}
                               for install
                             </div>
                           </div>

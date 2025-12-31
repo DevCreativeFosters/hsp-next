@@ -151,36 +151,25 @@ export default function PageClientSidePartial({
     return `${make?.name || ''} ${modelName || ''}`.trim();
   }, [make, modelName]);
 
+  const { count, total } = firstMatchedProduct.comments.nodes.reduce(
+    (acc, c) => ({
+      count: acc.count + 1,
+      total: acc.total + c.rating,
+    }),
+    { count: 0, total: 0 },
+  );
+
+  const averageRating = count ? total / count : 0;
+
+  const productName =
+    mainCategoryName +
+    `${mainCategoryName !== variantName ? ' for ' + variantName : ''}`;
+
   return (
     <>
       <div className={styles.header}>
-        <div className={clsx(styles.meta, styles.mobile)}>
-          <h1 className={clsx(styles.name, 'h2')}>
-            {mainCategoryName} <br />
-            {mainCategoryName !== variantName && (
-              <span className={styles.variant}>{variantName}</span>
-            )}
-          </h1>
-          {variant?.sku && (
-            <div className={clsx(styles.sku, 'h5')}>
-              Part No. <span className={styles.redColor}>{variant.sku}</span>
-            </div>
-          )}
-          <div className={styles.ratingBlock}>
-            <div className={styles.stars}>
-              <StarRating color="yellow" score={3.5} />
-              (24 reviews)
-            </div>
-            {
-              <button onClick={handleWishlistToggle} type="button">
-                {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
-              </button>
-            }
-          </div>
-        </div>
-        <ProductImageCarousel images={carouselImages} />
-        <div className={styles.details}>
-          <div className={clsx(styles.meta, styles.desktop)}>
+        {window.innerWidth <= 1279 && (
+          <div className={clsx(styles.meta, styles.mobile)}>
             <h1 className={clsx(styles.name, 'h2')}>
               {mainCategoryName} <br />
               {mainCategoryName !== variantName && (
@@ -194,8 +183,8 @@ export default function PageClientSidePartial({
             )}
             <div className={styles.ratingBlock}>
               <div className={styles.stars}>
-                <StarRating color="yellow" score={3.5} />
-                (24 reviews)
+                <StarRating color="yellow" score={averageRating} />(
+                {firstMatchedProduct.commentCount} reviews)
               </div>
               {
                 <button onClick={handleWishlistToggle} type="button">
@@ -204,6 +193,36 @@ export default function PageClientSidePartial({
               }
             </div>
           </div>
+        )}
+        <ProductImageCarousel images={carouselImages} />
+        <div className={styles.details}>
+          {window.innerWidth > 1279 && (
+            <div className={clsx(styles.meta, styles.desktop)}>
+              <h1 className={clsx(styles.name, 'h2')}>
+                {mainCategoryName} <br />
+                {mainCategoryName !== variantName && (
+                  <span className={styles.variant}>{variantName}</span>
+                )}
+              </h1>
+              {variant?.sku && (
+                <div className={clsx(styles.sku, 'h5')}>
+                  Part No.{' '}
+                  <span className={styles.redColor}>{variant.sku}</span>
+                </div>
+              )}
+              <div className={styles.ratingBlock}>
+                <div className={styles.stars}>
+                  <StarRating color="yellow" score={averageRating} />(
+                  {firstMatchedProduct.commentCount} reviews)
+                </div>
+                {
+                  <button onClick={handleWishlistToggle} type="button">
+                    {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+                  </button>
+                }
+              </div>
+            </div>
+          )}
           <div className={styles.enquiryForm}>
             <StoreLocatorProvider>
               <EnquiryForm
@@ -258,6 +277,8 @@ export default function PageClientSidePartial({
         featuresDescription={featuresDescription}
         manualsDescription={manualsDescription}
         manualsLinks={manualPdfItems}
+        productName={productName}
+        reviews={firstMatchedProduct.comments.nodes}
         specificationContent={specification}
         specificationDescription={specificationDescription}
       />
