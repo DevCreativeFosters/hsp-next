@@ -34,19 +34,34 @@ export default function ProductTabs({
   const isMobile = useIsMobile();
   const headerRef = useRef(null);
   const dropdownRef = useRef(null);
+  const sortOptions = [
+    { label: 'Newest', value: 'newest' },
+    { label: 'Oldest', value: 'oldest' },
+  ];
 
   // const [rating, setRating] = useState(0);
   // const [hover, setHover] = useState(0);
 
   // --- Select Box State ---
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
-  const [selectedSortOption, setSelectedSortOption] = useState('Newest');
-  const sortOptions = [
-    'Newest',
-    'Oldest',
-    'Price: Low to High',
-    'Price: High to Low',
-  ];
+  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
+
+  const sortedReviews = useMemo(() => {
+    if (!reviews || !Array.isArray(reviews)) return [];
+
+    const sorted = [...reviews];
+
+    switch (selectedSortOption.value) {
+      case 'newest':
+        return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      case 'oldest':
+        return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      default:
+        return sorted;
+    }
+  }, [reviews, selectedSortOption]);
 
   const handleSortToggle = () => setIsSortDropdownOpen(prev => !prev);
 
@@ -253,7 +268,7 @@ export default function ProductTabs({
                 role="button"
                 tabIndex="0"
               >
-                {selectedSortOption}
+                {selectedSortOption.label}
                 <div
                   className={clsx(styles.arrow, {
                     [styles.open]: isSortDropdownOpen,
@@ -269,11 +284,12 @@ export default function ProductTabs({
                 >
                   {sortOptions.map(option => (
                     <li
-                      aria-selected={selectedSortOption === option}
+                      aria-selected={selectedSortOption.value === option.value}
                       className={clsx({
-                        [styles.selected]: selectedSortOption === option,
+                        [styles.selected]:
+                          selectedSortOption.value === option.value,
                       })}
-                      key={option}
+                      key={option.value}
                       onClick={() => handleSortSelect(option)}
                       onKeyDown={e =>
                         e.key === 'Enter' && handleSortSelect(option)
@@ -281,7 +297,7 @@ export default function ProductTabs({
                       role="option"
                       tabIndex="0"
                     >
-                      {option}
+                      {option.label}
                     </li>
                   ))}
                 </ul>
@@ -361,7 +377,7 @@ export default function ProductTabs({
         */}
 
         <div className={styles.reviewLists}>
-          {reviews.map(review => {
+          {sortedReviews.map(review => {
             const author = review?.author?.node;
             const img = review?.reviewUploadImage?.uploadImage?.node;
 
