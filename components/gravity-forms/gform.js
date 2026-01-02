@@ -11,6 +11,9 @@ import {
 
 import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
+import { usePathname } from 'next/navigation';
+
+import { useUserContext } from '@contexts/user';
 
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -56,6 +59,63 @@ export default function GForm({
   preventConfirmation,
   submitButton,
 }) {
+  const pathname = usePathname();
+  const { getUserById, setUser, user } = useUserContext();
+
+  if (pathname == '/support/register-your-product') {
+    submitButton = false;
+  }
+
+  const [showSubmitBtn, setShowSubmitBtn] = useState(submitButton);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserById(user.id);
+        setUser(prevUser => ({ ...prevUser, ...userData }));
+
+        console.log(userData);
+        dispatch({
+          payload: {
+            id: 1,
+            nameValues: {
+              first: userData.firstName || '',
+              last: userData.lastName || '',
+            },
+          },
+          type: 'updateFieldValue',
+        });
+        dispatch({
+          payload: {
+            emailValues: { value: userData.email || '' },
+            id: 2,
+          },
+          type: 'updateFieldValue',
+        });
+        dispatch({
+          payload: {
+            id: 3,
+            value: userData.phone || '',
+          },
+          type: 'updateFieldValue',
+        });
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+      }
+    };
+    if (user?.id && pathname == '/support/register-your-product') {
+      setShowSubmitBtn(true);
+      hiddenInputs = [
+        ...hiddenInputs,
+        {
+          inputName: 'userId',
+          value: user.id,
+        },
+      ];
+      fetchUser();
+    }
+  }, [pathname, user?.id]);
+
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
   const [confirmation, setConfirmation] = useState('');
@@ -212,7 +272,7 @@ export default function GForm({
               ref={submitRef}
               rightIcon={isLoading ? null : 'send'}
               size="large"
-              style={submitButton === false ? { display: 'none' } : {}}
+              style={showSubmitBtn === false ? { display: 'none' } : {}}
               type="submit"
             >
               {form?.button?.text || 'Submit'} {isLoading && <Loading />}

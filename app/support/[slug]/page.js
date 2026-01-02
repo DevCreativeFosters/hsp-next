@@ -16,9 +16,9 @@ import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import PageContainer from '@components/page-container/page-container';
 import PageGrid from '@components/page-grid/page-grid';
+import RegisterYourProduct from '@components/register-your-product/register-your-product';
 import Sidebar from '@components/sidebar/sidebar';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
-
 
 import styles from './page.module.scss';
 
@@ -79,37 +79,8 @@ export default async function SupportSubpage({ params }) {
                   />
                 )}
 
-                {/*
-                <div className={styles.registerFooter}>
-                  <div className={styles.halfcontentPart}>
-                    <h5>Already have an account?</h5>
-                    <Button variant="primary">
-                      Log In to complete registration{' '}
-                      <Arrow className="arrow" />
-                    </Button>
-                    <p>
-                      Log in to quickly auto-fill your details and keep all your
-                      product registrations in one place.
-                    </p>
-                  </div>
-                  <div className={styles.halfcontentPart}>
-                    <h5>New to HSP?</h5>
-                    <Button variant="secondary">
-                      Create an account <Arrow className="arrow" />
-                    </Button>
-                    <p>
-                      Log in to quickly auto-fill your details and keep all your
-                      product registrations in one place.
-                    </p>
-                  </div>
-                  <div className={styles.fullcontentPart}>
-                    <h5>Prefer not to sign up right now?</h5>
-                    <Button variant="tertiary">
-                      Continue without an account.
-                    </Button>
-                  </div>
-                </div>
-                */}
+                {/* Only for '/support/register-your-product' */}
+                {<RegisterYourProduct />}
               </div>
             </PageGrid>
           </PageContainer>
