@@ -163,7 +163,7 @@ export default function GForm({
       variables: {
         input: {
           fieldValues: state,
-          id: form.formId,
+          id: form.databaseId,
         },
       },
     })

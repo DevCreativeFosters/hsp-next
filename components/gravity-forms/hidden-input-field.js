@@ -7,7 +7,7 @@ const DEFAULT_VALUE = '';
 export default function HiddenInputField({ field, form, hiddenInputs }) {
   const { databaseId: id, inputName } = field;
   const { dispatch, state } = useGravityForm();
-  const formId = form.formId;
+  const formId = form.databaseId;
   const fieldValue = state.find(fieldValue => fieldValue.id === id);
   const value = fieldValue?.value || DEFAULT_VALUE;
 

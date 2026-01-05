@@ -48,7 +48,7 @@ function SingleFile({ errors, file, onRemove }) {
 }
 
 export default function FileUploadField({ field, fieldErrors, form }) {
-  const formId = form.formId;
+  const formId = form.databaseId;
   const [files, setFiles] = useState([]);
   const inputRef = useRef();
   const { dispatch } = useGravityForm();

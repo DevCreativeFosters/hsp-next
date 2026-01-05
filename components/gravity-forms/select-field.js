@@ -6,7 +6,7 @@ import Select from '@components/form/select';
 import InputWrapper from '@components/gravity-forms/input-wrapper';
 
 export default function SelectField({ field, fieldErrors, form }) {
-  const formId = form.formId;
+  const formId = form.databaseId;
   const { dispatch, state } = useGravityForm();
   const options = field.choices.map(({ text, value }) => ({
     label: text,
@@ -15,14 +15,14 @@ export default function SelectField({ field, fieldErrors, form }) {
   }));
 
   const stateValue = state.find(
-    fieldValue => fieldValue.id === field.id,
+    fieldValue => fieldValue.id === field.databaseId,
   )?.value;
 
   const valueCalculated = stateValue !== undefined ? stateValue : field.value;
 
   const fieldError = useMemo(() => {
-    return fieldErrors.find(fieldError => fieldError.id === field.id);
-  }, [field.id, fieldErrors]);
+    return fieldErrors.find(fieldError => fieldError.id === field.databaseId);
+  }, [field.databaseId, fieldErrors]);
 
   const oneOfValue = field.label === 'Country' ? 2 : 1;
 
@@ -30,13 +30,13 @@ export default function SelectField({ field, fieldErrors, form }) {
     <InputWrapper oneOf={oneOfValue}>
       <Select
         errorMessage={fieldError?.message}
-        id={`gform_${formId}_${field.id}`}
+        id={`gform_${formId}_${field.databaseId}`}
         label={field.label}
-        name={`gform_${formId}_${field.id}`}
+        name={`gform_${formId}_${field.databaseId}`}
         onChange={value =>
           dispatch({
             payload: {
-              id: field.id,
+              id: field.databaseId,
               value: options.find(o => o.value === value)?.label, // use this to match by label
               // value: value, // use this to match by value
             },

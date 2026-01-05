@@ -16,32 +16,34 @@ export default function DateField({
   max = new Date().toISOString().split('T')[0],
   min = '1990-01-01',
 }) {
-  const formId = form.formId;
-  const { id, isRequired, label, placeholder, value } = field;
+  const formId = form.databaseId;
+  const { databaseId, isRequired, label, placeholder, value } = field;
   const { dispatch, state } = useGravityForm();
 
-  const stateValue = state.find(fieldValue => fieldValue.id === id)?.value;
+  const stateValue = state.find(
+    fieldValue => fieldValue.id === databaseId,
+  )?.value;
   const valueCalculated =
     stateValue !== undefined ? stateValue : value || DEFAULT_VALUE;
 
   const fieldError = useMemo(() => {
-    return fieldErrors.find(fieldError => fieldError.id === id);
-  }, [fieldErrors, id]);
+    return fieldErrors.find(fieldError => fieldError.id === databaseId);
+  }, [databaseId, fieldErrors]);
 
   return (
     <InputWrapper oneOf={2}>
       <Input
         className={styles.dateInput}
         errorMessage={fieldError?.message}
-        id={`gform_${formId}_${id}`}
+        id={`gform_${formId}_${databaseId}`}
         label={label}
         max={max}
         min={min}
-        name={`gform_${formId}_${id}`}
+        name={`gform_${formId}_${databaseId}`}
         onChange={ev =>
           dispatch({
             payload: {
-              id,
+              id: databaseId,
               value: ev.target.value,
             },
             type: 'updateFieldValue',
