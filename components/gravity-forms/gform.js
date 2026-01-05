@@ -99,19 +99,19 @@ export default function GForm({
           },
           type: 'updateFieldValue',
         });
+        dispatch({
+          payload: {
+            id: 13,
+            value: user.id || '',
+          },
+          type: 'updateFieldValue',
+        });
       } catch (err) {
         console.error('Failed to fetch user:', err);
       }
     };
     if (user?.id && pathname == '/support/register-your-product') {
       setShowSubmitBtn(true);
-      hiddenInputs = [
-        ...hiddenInputs,
-        {
-          inputName: 'userId',
-          value: user.id,
-        },
-      ];
       fetchUser();
     }
   }, [pathname, user?.id]);
