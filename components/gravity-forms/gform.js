@@ -102,7 +102,7 @@ export default function GForm({
         dispatch({
           payload: {
             id: 13,
-            value: user.id || '',
+            value: String(user.id) || 'NA',
           },
           type: 'updateFieldValue',
         });
