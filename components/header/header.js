@@ -214,9 +214,7 @@ export default function Header({
                       ? user?.role === 'retail'
                         ? 'Account'
                         : 'Dealer Account'
-                      : cartCount > 0
-                        ? ''
-                        : 'Login / Sign Up'}
+                      : 'Login / Sign Up'}
                   </Button>
                 </li>
               </ul>
