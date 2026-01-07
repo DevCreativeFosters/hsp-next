@@ -89,6 +89,8 @@ export default function EnquiryForm({
       ? productPrice
       : null;
 
+  const variantCompareAtPrice = selectedVariant?.variantDetails?.compareAtPrice;
+
   const variantInstallationPrice = selectedVariant?.variantDetails
     ?.installationCost
     ? selectedVariant?.variantDetails.installationCost
@@ -197,12 +199,35 @@ export default function EnquiryForm({
 
           <div className={styles.price}>
             {variantPrice > 0 && (
-              <span className={clsx(styles.productsPrice, 'h3')}>
+              <span
+                className={clsx(
+                  styles.productPrices,
+                  styles.productsPrice,
+                  'h3',
+                )}
+              >
                 {formatPrice(variantPrice)}
               </span>
             )}
+            {variantCompareAtPrice > 0 && (
+              <span
+                className={clsx(
+                  styles.productPrices,
+                  styles.compareAtPrice,
+                  'h3',
+                )}
+              >
+                {formatPrice(variantCompareAtPrice)}
+              </span>
+            )}
             {variantInstallationPrice > 0 && (
-              <span className={clsx(styles.installationPrice, 'h4')}>
+              <span
+                className={clsx(
+                  styles.productPrices,
+                  styles.installationPrice,
+                  'h4',
+                )}
+              >
                 +<span> {formatPrice(variantInstallationPrice)} </span>
                 <span> for installation </span>
               </span>
