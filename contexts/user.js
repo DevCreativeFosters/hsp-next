@@ -17,12 +17,14 @@ import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(USER_EXAMPLE);
   const [initialLoad, setInitialLoad] = useState(false);
 
   const router = useRouter();
 
   const getUserFromStorage = useCallback(() => {
+    setLoading(true);
     const userString = localStorage.getItem(SESSION_STORAGE_USER_DATA);
     if (userString) {
       try {
@@ -32,6 +34,7 @@ export const UserProvider = ({ children }) => {
         console.error(err);
       }
     }
+    setLoading(false);
   }, []);
 
   const getUserById = useCallback(async userId => {
@@ -127,6 +130,7 @@ export const UserProvider = ({ children }) => {
         getUserById,
         handleLogout,
         handleSave,
+        loading,
         setUser,
         updateUserById,
         user,

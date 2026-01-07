@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import { useCart } from '@contexts/cart-context';
 import StoreLocatorContext from '@contexts/store-locator';
+import { useUserContext } from '@contexts/user';
 
 import useMobileVh from '@hooks/useMobileVh';
 
@@ -32,6 +33,9 @@ export default function EnquiryForm({
   showStoreSearchcontrols,
   variantSlug,
 }) {
+  const { loading: userLoading, user } = useUserContext();
+  const role = user?.role || 'retail';
+
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
@@ -264,11 +268,16 @@ export default function EnquiryForm({
                 </Button>
               </div>
             </div>
-            {productData?.compatibleProduct?.selectProduct?.length > 0 && (
+            {userLoading ? (
               <div className={styles.cmpProduct}>
-                <div className={styles.title}>Also Compatible with:</div>
-                {productData.compatibleProduct.selectProduct.map(
-                  (item, index) => {
+                <Loading color="white" size="large" />
+              </div>
+            ) : (
+              role === 'retail' &&
+              productData?.compatibleProduct?.selectProduct?.length > 0 && (
+                <div className={styles.cmpProduct}>
+                  <div className={styles.title}>Also Compatible with:</div>
+                  {productData.compatibleProduct.selectProduct.map(item => {
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
                     const variantDetails =
@@ -309,9 +318,9 @@ export default function EnquiryForm({
                         </div>
                       </div>
                     );
-                  },
-                )}
-              </div>
+                  })}
+                </div>
+              )
             )}
           </div>
         </form>
