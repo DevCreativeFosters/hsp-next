@@ -233,20 +233,17 @@ export default function EnquiryForm({
               </span>
             )}
           </div>
-          <div className={styles.stockStatus}>
-            {!isOutOfStock && (
-              <div className={clsx(styles.productStatus, styles.statusInstock)}>
-                In Stock
-              </div>
-            )}
-            {isOutOfStock && (
-              <div
-                className={clsx(styles.productStatus, styles.statusOutOfstock)}
-              >
-                Out of Stock
-              </div>
-            )}
+          <div className={styles.productActions}>
             <div className={styles.qtyAndBtns}>
+              <div
+                className={clsx(styles.productStatus, {
+                  [styles.statusOutOfstock]: isOutOfStock,
+                  [styles.statusInstock]: !isOutOfStock,
+                })}
+              >
+                {isOutOfStock && 'Out of Stock'}
+                {!isOutOfStock && 'In Stock'}
+              </div>
               <div className={styles.qtyBlock}>
                 <button
                   className={styles.minus}
@@ -289,7 +286,7 @@ export default function EnquiryForm({
                   onClick={handleOpenModal}
                   size="large"
                 >
-                  Make an enquiry
+                  Make Enquiry
                 </Button>
               </div>
             </div>

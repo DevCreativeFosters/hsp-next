@@ -182,7 +182,7 @@ export default function CartPage() {
                   Continue Shopping
                 </button>
                 <button className={styles.button} onClick={handleOpenModal}>
-                  Make an Enquiry
+                  Make Enquiry
                 </button>
               </div>
             </div>

@@ -63,38 +63,40 @@ export default async function RetailPage() {
             {
               content: (
                 <div className={styles.resourceMain}>
-                  <h3 className={styles.sectionTitle}>Marketing Resources</h3>
-                  <ul>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">HSP Logos & Branding Guides</a>
-                    </li>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">Social Media Posts</a>
-                    </li>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">Product Photos</a>
-                    </li>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">Editable Flyers</a>
-                    </li>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">Lifestyle Images</a>
-                    </li>
-                    <li>
-                      <LinkIcon />
-                      <a href="#">Display Signage Options</a>
-                    </li>
-                  </ul>
+                  <div className={styles.blackContentBox}>
+                    <h3 className={styles.sectionTitle}>Marketing Resources</h3>
+                    <ul>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">HSP Logos & Branding Guides</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Social Media Posts</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Product Photos</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Editable Flyers</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Lifestyle Images</a>
+                      </li>
+                      <li>
+                        <LinkIcon />
+                        <a href="#">Display Signage Options</a>
+                      </li>
+                    </ul>
 
-                  <div className={styles.cartButton}>
-                    <button>
-                      <CartIcon /> Access My Dealership Assets
-                    </button>
+                    <div className={styles.cartButton}>
+                      <button>
+                        <CartIcon /> Access My Dealership Assets
+                      </button>
+                    </div>
                   </div>
 
                   <div className={styles.lmsBlock}>

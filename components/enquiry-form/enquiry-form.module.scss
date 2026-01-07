@@ -66,8 +66,9 @@
 
 .buttonWrapper {
   display: flex;
-  flex: 1;
   gap: 10px;
+  order: 2;
+  width: 100%;
 
   button {
     width: 100%;
@@ -75,8 +76,9 @@
     padding: 0 12px;
   }
 
-  @media (width <=767px) {
-    margin-top: 24px;
+  @include bp(medium) {
+    flex: 1;
+    width: auto;
   }
 }
 
@@ -96,14 +98,11 @@
   display: block;
 }
 
-.stockStatus {
+.productActions {
   .qtyAndBtns {
     display: flex;
     align-items: center;
-
-    @media (width<=767px) {
-      display: block;
-    }
+    flex-wrap: wrap;
   }
 
   .qtyBlock {
@@ -111,6 +110,13 @@
     max-width: 64px;
     min-height: 48px;
     position: relative;
+    order: 0;
+    margin-bottom: 24px;
+
+    @include bp(medium) {
+      order: 1;
+      margin-bottom: 0;
+    }
 
     .plus {
       font-weight: 500;
@@ -183,17 +189,19 @@
         margin: 0;
       }
     }
-
-    @media (width<=767px) {
-      width: 100%;
-    }
   }
 
   .productStatus {
     font-size: 14px;
     font-weight: 700;
     font-family: var(--font-secondary);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    order: 1;
+
+    @include bp(medium) {
+      width: 100%;
+      order: 0;
+    }
 
     &::before {
       height: 5px;
