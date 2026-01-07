@@ -688,7 +688,7 @@ function CheckoutForm() {
                 )}
 
                 {role === 'b2b' && (
-                  <div className={styles.couponBox}>
+                  <div className={clsx(styles.couponBox, styles.orderNoBox)}>
                     <input
                       maxLength={15}
                       name="purchaseOrderNumber"

@@ -841,6 +841,8 @@
   }
 
   .cartButton {
+    margin-top: 20px;
+
     button {
       background-color: transparent;
       color: white;
@@ -939,11 +941,13 @@
       position: relative;
       overflow: hidden;
       margin: 0;
+      height: 100%;
 
       img {
         border-radius: 17px;
         width: 100%;
-        height: auto;
+        height: 100%;
+        object-fit: cover;
       }
     }
   }
