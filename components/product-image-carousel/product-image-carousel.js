@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -18,15 +18,18 @@ export default function ProductImageCarousel({ images }) {
     images?.length ? images[0] : null,
   );
 
+  const [imageIndex, setImageIndex] = useState(0);
+
   const mainImageContainerRef = useRef(null);
 
   const handleThumbnailClick = useCallback(selectedImageUrl => {
     setSelectedImage(selectedImageUrl);
-  }, []);
 
-  useEffect(() => {
-    setSelectedImage(images?.[0]);
-  }, [images]);
+    const index = images.findIndex(
+      image => image.sourceUrl === selectedImageUrl.sourceUrl,
+    );
+    setImageIndex(index);
+  }, []);
 
   const isNavigationVisible = images?.length > 4;
 
@@ -49,6 +52,17 @@ export default function ProductImageCarousel({ images }) {
 
     return itemTemplate;
   }, [handleThumbnailClick, selectedImage]);
+
+  const changeSlide = useCallback(
+    direction => () => {
+      const newSlideIndex = imageIndex + direction;
+      if (newSlideIndex >= 0 && newSlideIndex < images.length) {
+        setImageIndex(newSlideIndex);
+        setSelectedImage(images[newSlideIndex]);
+      }
+    },
+    [imageIndex, images],
+  );
 
   return (
     <div className={styles.container}>
@@ -80,6 +94,7 @@ export default function ProductImageCarousel({ images }) {
             <Button
               background="dark"
               className={clsx(styles.navigationButton, styles.prevButton)}
+              onClick={changeSlide(-1)}
               ref={buttonPrevRef}
               rightIcon="arrow-previous"
               variant="secondary"
@@ -87,6 +102,7 @@ export default function ProductImageCarousel({ images }) {
             <Button
               background="dark"
               className={clsx(styles.navigationButton, styles.nextButton)}
+              onClick={changeSlide(1)}
               ref={buttonNextRef}
               rightIcon="arrow-next"
               variant="secondary"
