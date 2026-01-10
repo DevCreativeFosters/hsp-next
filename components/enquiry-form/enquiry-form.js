@@ -204,6 +204,7 @@ export default function EnquiryForm({
                   styles.productPrices,
                   styles.productsPrice,
                   'h3',
+                  { red: variantCompareAtPrice > 0 },
                 )}
               >
                 {formatPrice(variantPrice)}
@@ -324,7 +325,11 @@ export default function EnquiryForm({
                             />
                           </h5>
                           <div className={styles.price}>
-                            <div className={styles.one}>
+                            <div
+                              className={clsx({
+                                red: variantDetails?.compareAtPrice,
+                              })}
+                            >
                               {formatPrice(variantDetails?.price)}
                             </div>
                             {variantDetails?.compareAtPrice && (

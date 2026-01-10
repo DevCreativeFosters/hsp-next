@@ -50,7 +50,6 @@
 
 .productsPrice {
   margin-bottom: 0;
-  color: var(--color-primary-100);
 }
 
 .compareAtPrice {
@@ -286,10 +285,6 @@
         font-size: 18px;
         font-family: var(--font-secondary);
         font-weight: 600;
-
-        .one {
-          color: #ed2935;
-        }
 
         .two {
           color: var(--color-white-100);

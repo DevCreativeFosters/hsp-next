@@ -230,3 +230,11 @@ a span[data-require-user-email] {
     text-align: left;
   }
 }
+
+.red {
+  color: var(--color-primary-100) !important;
+}
+
+.black {
+  color: var(--color-black-100) !important;
+}

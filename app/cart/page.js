@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -98,7 +99,11 @@ export default function CartPage() {
                       <p>
                         <strong>Variant:</strong> {item.variantName}
                       </p>
-                      <div className={styles.price}>
+                      <div
+                        className={clsx(styles.price, {
+                          black: !item?.compareAtPrice,
+                        })}
+                      >
                         {formatPrice(item.price)}{' '}
                         {!!item?.compareAtPrice && (
                           <del>{formatPrice(item.compareAtPrice)}</del>

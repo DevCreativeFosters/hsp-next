@@ -55,7 +55,11 @@ export default function CartSidebar() {
 
             <div className={styles.itemInfo}>
               <h6>{item.product_name}</h6>
-              <div className={styles.itemPrice}>
+              <div
+                className={clsx(styles.itemPrice, {
+                  red: item?.compareAtPrice,
+                })}
+              >
                 {formatPrice(item.price)}{' '}
                 {!!item?.compareAtPrice && (
                   <del>{formatPrice(item.compareAtPrice)}</del>
