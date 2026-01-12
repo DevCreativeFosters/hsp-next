@@ -49,6 +49,17 @@ export default function Header({
   const mainMenuRef = useRef(null);
   const productsRef = useRef(null);
 
+  const promoText = 'PROMO BANNER - SALE ENDS IN 5 DAYS!';
+  const isScrolling = false;
+
+  const itemCount = isScrolling ? 10 : 1;
+
+  const items = Array.from({ length: itemCount }).map((_, i) => (
+    <span className={styles.marqueeItem} key={i}>
+      {promoText}
+    </span>
+  ));
+
   useClickOutside(onElsewhereClick, [mainMenuRef, productsRef]);
 
   return (
@@ -60,6 +71,17 @@ export default function Header({
       </HelmetProvider>
 
       <header className={styles.header} ref={headerRef}>
+        <div className={styles.headerTop}>
+          <div
+            className={clsx(
+              styles.marqueeTrack,
+              isScrolling && styles.scrollingText,
+            )}
+          >
+            <div className={styles.marqueeGroup}>{items}</div>
+          </div>
+        </div>
+
         <FullscreenCollapse
           className={styles.headerInner}
           preventCollapse={preventHeaderCollapse}
@@ -148,6 +170,10 @@ export default function Header({
                     >
                       <Button
                         background="dark"
+                        className={{
+                          [styles.headerButton]:
+                            variant == 'tertiary' || variant === 'septenary',
+                        }}
                         href={url}
                         leftIcon={
                           iconPredefined[0] !== 'CUSTOM'

@@ -8,6 +8,57 @@
   width: 100%;
 }
 
+.headerTop {
+  overflow: hidden;
+  background: var(--color-primary-100);
+  display: flex;
+  justify-content: center;
+  height: 30px;
+
+  @include bp(large) {
+    height: 40px;
+  }
+
+  .marqueeTrack {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    min-height: clamp(30px, 2.08vw, 40px);
+    width: max-content;
+    justify-content: flex-start;
+
+    &.scrollingText {
+      animation: marquee 40s linear infinite;
+    }
+
+    .marqueeItem {
+      font-size: clamp(14px, 1.04vw, 20px);
+      font-family: var(--font-secondary);
+      font-weight: 600;
+      margin: 0 10px;
+      flex-shrink: 0;
+
+      @include bp(large) {
+        margin: 0 20px;
+      }
+    }
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.headerTop:hover .animateText {
+  animation-play-state: paused;
+}
+
 .headerInner {
   @include center;
 
@@ -89,6 +140,17 @@
 .secondaryMenu {
   grid-area: secondaryMenu;
   justify-self: flex-end;
+
+  button {
+    &.tertiary {
+      background: #f00 !important;
+    }
+  }
+
+  .headerButton {
+    background: transparent;
+    padding: 0;
+  }
 }
 
 .mainMenuList,
@@ -99,6 +161,11 @@
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.commonLinkButton {
+  background: transparent;
+  padding: 0;
 }
 
 .mainMenuList {
@@ -120,7 +187,7 @@
 }
 
 .secondaryMenuList {
-  gap: 8px;
+  gap: 16px;
   white-space: nowrap;
 }
 
@@ -221,12 +288,16 @@
   gap: 16px;
   grid-area: call;
 
-  @media (width<=767px) {
-    gap: 0;
+  @media (width<=1279px) {
+    gap: 10px;
 
     a {
       padding: 5px !important;
     }
+  }
+
+  @media (width<=374px) {
+    gap: 0;
   }
 
   @include bp(large) {

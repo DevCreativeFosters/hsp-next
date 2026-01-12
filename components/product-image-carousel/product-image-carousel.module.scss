@@ -10,6 +10,24 @@
   }
 }
 
+.commingSoonTag {
+  color: var(--color-primary-100);
+  font-size: clamp(26px, 1.875vw, 36px);
+  padding: 0 10px;
+  border-radius: 6px;
+  border: solid 2px var(--color-primary-100);
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  min-height: clamp(47px, 3.125vw, 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .container {
   width: 100%;
   position: relative;
