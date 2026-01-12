@@ -50,7 +50,7 @@ export default function Header({
   const productsRef = useRef(null);
 
   const promoText = 'PROMO BANNER - SALE ENDS IN 5 DAYS!';
-  const isScrolling = false;
+  const isScrolling = true;
 
   const itemCount = isScrolling ? 10 : 1;
 
