@@ -272,6 +272,7 @@ export default function PageClientSidePartial({
         featuresDescription={featuresDescription}
         manualsDescription={manualsDescription}
         manualsLinks={manualPdfItems}
+        productId={productId}
         productName={productName}
         reviews={firstMatchedProduct.comments.nodes}
         specificationContent={specification}

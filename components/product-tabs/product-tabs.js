@@ -11,13 +11,11 @@ import { scrollIntoViewHorizontally } from '@lib/helpers';
 
 import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
-import Button from '@components/button/button';
 import DownloadFileButton from '@components/download-file-button/download-file-button';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
 
-import RatingStar from '@assets/icons/rating-star.svg';
-
 import styles from './product-tabs.module.scss';
+import ReviewsContent from './reviews-content';
 
 export default function ProductTabs({
   description,
@@ -26,6 +24,7 @@ export default function ProductTabs({
   featuresDescription,
   manualsDescription,
   manualsLinks,
+  productId,
   productName,
   reviews,
   specificationContent,
@@ -33,54 +32,6 @@ export default function ProductTabs({
 }) {
   const isMobile = useIsMobile();
   const headerRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const sortOptions = [
-    { label: 'Newest', value: 'newest' },
-    { label: 'Oldest', value: 'oldest' },
-  ];
-
-  // const [rating, setRating] = useState(0);
-  // const [hover, setHover] = useState(0);
-
-  // --- Select Box State ---
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
-  const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
-
-  const sortedReviews = useMemo(() => {
-    if (!reviews || !Array.isArray(reviews)) return [];
-
-    const sorted = [...reviews];
-
-    switch (selectedSortOption.value) {
-      case 'newest':
-        return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      case 'oldest':
-        return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      default:
-        return sorted;
-    }
-  }, [reviews, selectedSortOption]);
-
-  const handleSortToggle = () => setIsSortDropdownOpen(prev => !prev);
-
-  const handleSortSelect = option => {
-    setSelectedSortOption(option);
-    setIsSortDropdownOpen(false);
-    // Add logic here to actually sort the "reviews" array if needed
-  };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsSortDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const tabs = useMemo(
     () => ({
@@ -239,187 +190,6 @@ export default function ProductTabs({
     </>
   );
 
-  const ReviewsContent = () => (
-    <div className={styles.reviewsWrapper}>
-      <div className={styles.reviewWrap}>
-        <div className={styles.heading}>
-          <Button
-            className={styles.reviewButton}
-            size="large"
-            variant="primary"
-          >
-            Leave A Review
-          </Button>
-
-          <div className={styles.pWrap}>
-            <div className={styles.title}>Sort By:</div>
-            <div
-              className={clsx(styles.customSelectBox, {
-                [styles.open]: isSortDropdownOpen,
-              })}
-              ref={dropdownRef}
-            >
-              <div
-                aria-controls="sort-options-list"
-                aria-expanded={isSortDropdownOpen}
-                className={styles.selectedOption}
-                onClick={handleSortToggle}
-                onKeyDown={e => e.key === 'Enter' && handleSortToggle()}
-                role="button"
-                tabIndex="0"
-              >
-                {selectedSortOption.label}
-                <div
-                  className={clsx(styles.arrow, {
-                    [styles.open]: isSortDropdownOpen,
-                  })}
-                ></div>
-              </div>
-
-              {isSortDropdownOpen && (
-                <ul
-                  className={styles.optionsList}
-                  id="sort-options-list"
-                  role="listbox"
-                >
-                  {sortOptions.map(option => (
-                    <li
-                      aria-selected={selectedSortOption.value === option.value}
-                      className={clsx({
-                        [styles.selected]:
-                          selectedSortOption.value === option.value,
-                      })}
-                      key={option.value}
-                      onClick={() => handleSortSelect(option)}
-                      onKeyDown={e =>
-                        e.key === 'Enter' && handleSortSelect(option)
-                      }
-                      role="option"
-                      tabIndex="0"
-                    >
-                      {option.label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/*
-        <div className={styles.reviewForm}>
-          <h2>Leave A Review</h2>
-
-          <div className={styles.colFull}>
-            <div className={styles.inputGroup}>
-              <label>How Would You rate us ? <span className={styles.reqStar}>*</span></label>
-              <div className={styles.starRatingContainer}>
-                {[1, 2, 3, 4, 5].map((starValue) => (
-                  <button
-                    key={starValue}
-                    type="button"
-                    className={clsx(styles.starButton, {
-                      [styles.filled]: (hover || rating) >= starValue,
-                    })}
-                    onClick={() => setRating(starValue)}
-                    onMouseEnter={() => setHover(starValue)}
-                    onMouseLeave={() => setHover(0)}
-                  >
-                    <RatingStar />
-                  </button>
-                ))}
-              </div>
-              <input type="hidden" name="rating" value={rating} />
-            </div>
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.colHalf}>
-              <div className={styles.inputGroup}>
-                <label>Name<span className={styles.reqStar}>*</span></label>
-                <input
-                  name="first_name"
-                  type="text"
-                />
-              </div>
-            </div>
-            <div className={styles.colHalf}>
-              <div className={styles.inputGroup}>
-                <label>Email<span className={styles.reqStar}>*</span></label>
-                <input
-                  name="email"
-                  type="text"
-                />
-              </div>
-            </div>
-            <div className={styles.colFull}>
-              <div className={styles.inputGroup}>
-                <label>Upload Image<span className={styles.reqStar}>*</span></label>
-                <input
-                  name="upload_image"
-                  type="file"
-                />
-              </div>
-            </div>
-            <div className={styles.colFull}>
-              <div className={styles.inputGroup}>
-                <label>Comment<span className={styles.reqStar}>*</span></label>
-                <textarea></textarea>
-              </div>
-            </div>
-            <div className={clsx(styles.colFull, styles.submitBtn)}>
-              <div className={styles.inputGroup}>
-                <Button variant="primary" size="large">Submit Review</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-        */}
-
-        <div className={styles.reviewLists}>
-          {sortedReviews.map(review => {
-            const author = review?.author?.node;
-            const img = review?.reviewUploadImage?.uploadImage?.node;
-
-            return (
-              <div className={styles.reviewBox} key={review.databaseId}>
-                <div className={styles.left}>
-                  <div className={styles.ratingStars}>
-                    {Array.from({ length: review?.rating }, (_, i) => (
-                      <RatingStar key={i} />
-                    ))}
-                  </div>
-                  <div
-                    className={styles.desc}
-                    dangerouslySetInnerHTML={{ __html: review.content }}
-                  ></div>
-                  <div className={styles.reviewAuthor}>
-                    <p>
-                      <strong>{author?.name}</strong>
-                    </p>
-                    <span>Ordered the HSP {productName}</span>
-                  </div>
-                </div>
-                {img && (
-                  <div className={styles.right}>
-                    <figure>
-                      <Image
-                        alt={img.altText}
-                        height={160}
-                        src={img.sourceUrl}
-                        width={250}
-                      />
-                    </figure>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-
   const mobileContent = (
     <Accordion
       allowMultipleOpen
@@ -462,7 +232,11 @@ export default function ProductTabs({
         className={styles.accordionItem}
         triggerContent={tabs.reviews}
       >
-        <ReviewsContent />
+        <ReviewsContent
+          productId={productId}
+          productName={productName}
+          reviews={reviews}
+        />
       </AccordionItem>
     </Accordion>
   );
@@ -489,7 +263,13 @@ export default function ProductTabs({
         {activeTab === 'features' && <FeaturesContent />}
         {activeTab === 'specs' && <SpecsContent />}
         {activeTab === 'manuals' && <ManualsContent />}
-        {activeTab === 'reviews' && <ReviewsContent />}
+        {activeTab === 'reviews' && (
+          <ReviewsContent
+            productId={productId}
+            productName={productName}
+            reviews={reviews}
+          />
+        )}
       </div>
     </div>
   );
