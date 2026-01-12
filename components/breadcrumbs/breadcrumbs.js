@@ -26,7 +26,12 @@ function addSeparators(items) {
   return results;
 }
 
-function Breadcrumbs({ items, product, showProductCompatibility }) {
+function Breadcrumbs({
+  items,
+  product,
+  showFullOnMobile = false,
+  showProductCompatibility,
+}) {
   const {
     checkingProductCompatibility,
     isProductCompatible,
@@ -88,20 +93,26 @@ function Breadcrumbs({ items, product, showProductCompatibility }) {
 
   return (
     <>
-      <div className={clsx(styles.container, styles.short)}>
-        {singleBreadcrumb && (
-          <Link
-            className={clsx(styles.itemLink, styles.strong)}
-            href={singleBreadcrumb.url || '#'}
-          >
-            <span className={styles.prevSymbol} />
-            {singleBreadcrumb.label}
-          </Link>
-        )}
-        {renderIncompatibleProductMessage}
-      </div>
+      {!showFullOnMobile && (
+        <div className={clsx(styles.container, styles.short)}>
+          {singleBreadcrumb && (
+            <Link
+              className={clsx(styles.itemLink, styles.strong)}
+              href={singleBreadcrumb.url || '#'}
+            >
+              <span className={styles.prevSymbol} />
+              {singleBreadcrumb.label}
+            </Link>
+          )}
+          {renderIncompatibleProductMessage}
+        </div>
+      )}
 
-      <div className={clsx(styles.container, styles.full)}>
+      <div
+        className={clsx(styles.container, styles.full, {
+          [styles.showFullOnMobile]: showFullOnMobile,
+        })}
+      >
         {itemsWithSeparators.map((item, index) => {
           if (item === SEPARATOR) {
             return (

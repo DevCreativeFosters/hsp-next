@@ -202,7 +202,10 @@ export default async function Product({ params, searchParams }) {
       {prepareSchemas(firstMatchedProduct?.schemaProSchemas)}
       <Container>
         <div className={styles.breadcrumbs}>
-          <BreadcrumbsProduct currentProduct={currentProduct} />
+          <BreadcrumbsProduct
+            currentProduct={currentProduct}
+            showFullOnMobile={true}
+          />
         </div>
         <ProductCompatibilityPopup />
         <PageClientSidePartial

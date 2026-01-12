@@ -15,9 +15,9 @@ import styles from './register-your-product.module.scss';
 
 function RegisterYourProduct() {
   const pathname = usePathname();
-  const { user } = useUserContext();
+  const { loading, user } = useUserContext();
 
-  if (pathname === '/support/register-your-product' && !user?.id) {
+  if (pathname === '/support/register-your-product' && !user?.id && !loading) {
     return (
       <div className={styles.registerFooter}>
         <div className={styles.halfcontentPart}>

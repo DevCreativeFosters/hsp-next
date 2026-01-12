@@ -16,7 +16,10 @@ import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
 
 const COOKIE_SAVED_VEHICLE = LOCAL_STORAGE_VEHICLE;
 
-export default function BreadcrumbsProduct({ currentProduct }) {
+export default function BreadcrumbsProduct({
+  currentProduct,
+  showFullOnMobile = false,
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const slug = currentProduct.mainCategory?.value;
@@ -161,7 +164,11 @@ export default function BreadcrumbsProduct({ currentProduct }) {
 
   return (
     <div ref={enteredProductPageRef}>
-      <Breadcrumbs items={items} showProductCompatibility />
+      <Breadcrumbs
+        items={items}
+        showFullOnMobile={showFullOnMobile}
+        showProductCompatibility
+      />
     </div>
   );
 }
