@@ -276,7 +276,15 @@ export default function EnquiryForm({
                 <Button
                   className={styles.submitButton}
                   disabled={isOutOfStock || loading} // Disable button while adding to cart
-                  onClick={() => addToCart(productData.databaseId, quantity)}
+                  onClick={() =>
+                    addToCart({
+                      productId: productData.databaseId,
+                      quantity: quantity,
+                      variant_name: selectedVariant?.variantName,
+                      variant_sku: selectedVariant?.sku,
+                      variant_slug: selectedVariant?.variantSlug,
+                    })
+                  }
                   size="large"
                 >
                   Add to Cart{' '}
@@ -303,8 +311,8 @@ export default function EnquiryForm({
                   {productData.compatibleProduct.selectProduct.map(item => {
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
-                    const variantDetails =
-                      product?.productFields?.variants[0]?.variantDetails;
+                    const selectedVariant = product?.productFields?.variants[0];
+                    const variantDetails = selectedVariant?.variantDetails;
 
                     return (
                       <div className={styles.cmpBox} key={product?.databaseId}>
@@ -321,7 +329,15 @@ export default function EnquiryForm({
                             {product?.title}{' '}
                             <PlusIcon
                               className={styles.icon}
-                              onClick={() => addToCart(product?.databaseId, 1)}
+                              onClick={() =>
+                                addToCart({
+                                  productId: product?.databaseId,
+                                  quantity: 1,
+                                  variant_name: selectedVariant?.variantName,
+                                  variant_sku: selectedVariant?.sku,
+                                  variant_slug: selectedVariant?.variantSlug,
+                                })
+                              }
                             />
                           </h5>
                           <div className={styles.price}>

@@ -106,6 +106,38 @@ import { fetchAPI } from '@lib/fetch-api';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -176,8 +208,10 @@ export function CartProvider({ children }) {
               subtotal
               total
               price_total
+              variant_price
               variantName
               variantSlug
+              variantSku
               freight
               largeItem
               product_name
@@ -208,25 +242,23 @@ export function CartProvider({ children }) {
 
   // 🔹 Add to Cart
   const addToCart = useCallback(
-    async (productId, quantity = 1) => {
+    async item => {
       const query = `
-      mutation AddToCart($input: AddToCartInput!) {
-        addToCart(input: $input) {
-          cart_item_key
-          product_id
-          quantity
-          product_name
-          product_image
-          cartCount
-          total
-          message
+        mutation AddToCart($input: AddToCartInput!) {
+          addToCart(input: $input) {
+            cart_item_key
+            product_id
+            quantity
+            product_name
+            product_image
+            cartCount
+            total
+            message
+          }
         }
-      }
-    `;
+      `;
 
-      const variables = { input: { productId, quantity } };
-
-      const data = await fetchAPI(query, { variables });
+      const data = await fetchAPI(query, { variables: { input: item } });
 
       await getCartItems(); // refresh cart
 
@@ -239,21 +271,19 @@ export function CartProvider({ children }) {
 
   // 🔹 Update Cart
   const updateCart = useCallback(
-    async (cartItemKey, productId, quantity) => {
+    async item => {
       const query = `
-      mutation UpdateCart($input: UpdateCartInput!) {
-        updateCart(input: $input) {
-          status
-          message
-          product_id
-          cartCount
+        mutation UpdateCart($input: UpdateCartInput!) {
+          updateCart(input: $input) {
+            status
+            message
+            product_id
+            cartCount
+          }
         }
-      }
-    `;
+      `;
 
-      const variables = { input: { cartItemKey, productId, quantity } };
-
-      await fetchAPI(query, { variables });
+      await fetchAPI(query, { variables: { input: item } });
 
       await getCartItems(); // refresh cart
     },
@@ -262,18 +292,18 @@ export function CartProvider({ children }) {
 
   // 🔹 Remove from Cart
   const removeFromCart = useCallback(
-    async productId => {
+    async cartItemKey => {
       const query = `
-      mutation RemoveFromCart($input: RemoveFromCartInput!) {
-        removeFromCart(input: $input) {
-          status
-          message
-          cartCount
+        mutation RemoveFromCart($input: RemoveFromCartInput!) {
+          removeFromCart(input: $input) {
+            status
+            message
+            cartCount
+          }
         }
-      }
-    `;
+      `;
 
-      const variables = { input: { productId } };
+      const variables = { input: { cartItemKey } };
 
       await fetchAPI(query, { variables });
 

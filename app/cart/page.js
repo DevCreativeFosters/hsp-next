@@ -116,11 +116,14 @@ export default function CartPage() {
                           className={styles.minus}
                           disabled={cartLoading}
                           onClick={() =>
-                            updateCart(
-                              item.cart_item_key,
-                              item.product_id,
-                              item.quantity - 1,
-                            )
+                            updateCart({
+                              cartItemKey: item.cart_item_key,
+                              productId: item.product_id,
+                              quantity: item.quantity - 1,
+                              variant_name: item.variantName,
+                              variant_sku: item.variantSku,
+                              variant_slug: item.variantSlug,
+                            })
                           }
                         >
                           -
@@ -129,11 +132,14 @@ export default function CartPage() {
                           disabled={true}
                           min="0"
                           onChange={e =>
-                            updateCart(
-                              item.cart_item_key,
-                              item.product_id,
-                              e.target.value,
-                            )
+                            updateCart({
+                              cartItemKey: item.cart_item_key,
+                              productId: item.product_id,
+                              quantity: e.target.value,
+                              variant_name: item.variantName,
+                              variant_sku: item.variantSku,
+                              variant_slug: item.variantSlug,
+                            })
                           }
                           type="number"
                           value={item.quantity}
@@ -142,11 +148,14 @@ export default function CartPage() {
                           className={styles.plus}
                           disabled={cartLoading}
                           onClick={() =>
-                            updateCart(
-                              item.cart_item_key,
-                              item.product_id,
-                              item.quantity + 1,
-                            )
+                            updateCart({
+                              cartItemKey: item.cart_item_key,
+                              productId: item.product_id,
+                              quantity: item.quantity + 1,
+                              variant_name: item.variantName,
+                              variant_sku: item.variantSku,
+                              variant_slug: item.variantSlug,
+                            })
                           }
                         >
                           +
@@ -154,7 +163,7 @@ export default function CartPage() {
                       </div>
                       <button
                         className={styles.link}
-                        onClick={() => removeFromCart(item.product_id)}
+                        onClick={() => removeFromCart(item.cart_item_key)}
                       >
                         Remove
                       </button>
