@@ -67,6 +67,7 @@ export default function ProductImageCarousel({ images }) {
   return (
     <div className={styles.container}>
       <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
+        <div className={styles.commingSoonTag}>Coming Soon</div>
         {selectedImage && (
           <Image
             alt={selectedImage.alt}
