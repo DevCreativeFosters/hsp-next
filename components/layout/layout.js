@@ -133,6 +133,13 @@ export default function Layout({
       !data.excludeChildrenId.includes(id),
   );
 
+  const promoBanner = {
+    backgroundColor: data?.globalOptions?.promoBackgroundColor,
+    content: data?.globalOptions?.promoContent,
+    scrollAnimation: data?.globalOptions?.scrollAnimation,
+    textColor: data?.globalOptions?.promoTextColor,
+  };
+
   return (
     <GravityFormsStaticDataProvider
       productSubCategories={productSubCategories}
@@ -154,6 +161,7 @@ export default function Layout({
               mobileMenu={normalizedMobileMenu}
               preventHeaderCollapse={preventHeaderCollapse}
               products={normalizedProductData}
+              promoBanner={promoBanner}
               secondaryMenu={topNavigationMenu}
             />
             <main className={styles.main}>

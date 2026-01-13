@@ -30,6 +30,7 @@ export default function Header({
   mobileMenu,
   preventHeaderCollapse = false,
   products,
+  promoBanner,
   secondaryMenu,
 }) {
   const { user } = useUserContext();
@@ -49,16 +50,31 @@ export default function Header({
   const mainMenuRef = useRef(null);
   const productsRef = useRef(null);
 
-  const promoText = 'PROMO BANNER - SALE ENDS IN 5 DAYS!';
-  const isScrolling = true;
+  const isScrolling = promoBanner?.scrollAnimation;
 
-  const itemCount = isScrolling ? 10 : 1;
+  const itemCount = isScrolling ? 20 : 1;
 
-  const items = Array.from({ length: itemCount }).map((_, i) => (
-    <span className={styles.marqueeItem} key={i}>
-      {promoText}
-    </span>
-  ));
+  const items = Array.from({ length: itemCount }).map((_, i) =>
+    promoBanner && promoBanner.content
+      ? promoBanner.content.map((item, j) => {
+          const img = item?.image?.node;
+
+          return (
+            <div className={styles.marqueeItem} key={`${i}-${j}`}>
+              {img && (
+                <Image
+                  alt={img?.altText}
+                  height={22}
+                  src={img?.sourceUrl}
+                  width={22}
+                />
+              )}
+              <span>{item.text}</span>
+            </div>
+          );
+        })
+      : [],
+  );
 
   useClickOutside(onElsewhereClick, [mainMenuRef, productsRef]);
 
@@ -71,16 +87,24 @@ export default function Header({
       </HelmetProvider>
 
       <header className={styles.header} ref={headerRef}>
-        <div className={styles.headerTop}>
+        {items && items.length > 0 && (
           <div
-            className={clsx(
-              styles.marqueeTrack,
-              isScrolling && styles.scrollingText,
-            )}
+            className={styles.headerTop}
+            style={{
+              background: promoBanner?.backgroundColor,
+              color: promoBanner?.textColor,
+            }}
           >
-            <div className={styles.marqueeGroup}>{items}</div>
+            <div
+              className={clsx(
+                styles.marqueeTrack,
+                isScrolling && styles.scrollingText,
+              )}
+            >
+              {items}
+            </div>
           </div>
-        </div>
+        )}
 
         <FullscreenCollapse
           className={styles.headerInner}
