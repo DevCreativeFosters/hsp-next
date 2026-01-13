@@ -192,7 +192,10 @@ export default function PageClientSidePartial({
             }
           </div>
         </div>
-        <ProductImageCarousel images={carouselImages} />
+        <ProductImageCarousel
+          images={carouselImages}
+          tag={variant?.variantDetails?.imageTag}
+        />
         <div className={styles.details}>
           <div className={clsx(styles.meta, styles.desktop)}>
             <h1 className={clsx(styles.name, 'h2')}>

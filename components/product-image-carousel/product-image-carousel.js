@@ -10,7 +10,7 @@ import TileCarousel from '@components/tile-carousel/tile-carousel';
 
 import styles from './product-image-carousel.module.scss';
 
-export default function ProductImageCarousel({ images }) {
+export default function ProductImageCarousel({ images, tag }) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
 
@@ -67,7 +67,7 @@ export default function ProductImageCarousel({ images }) {
   return (
     <div className={styles.container}>
       <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
-        <div className={styles.commingSoonTag}>Coming Soon</div>
+        {tag && <div className={styles.commingSoonTag}>{tag}</div>}
         {selectedImage && (
           <Image
             alt={selectedImage.alt}
