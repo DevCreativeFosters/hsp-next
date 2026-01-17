@@ -11,7 +11,6 @@ import {
 
 import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
-import { usePathname } from 'next/navigation';
 
 import { useUserContext } from '@contexts/user';
 
@@ -59,10 +58,9 @@ export default function GForm({
   preventConfirmation,
   submitButton,
 }) {
-  const pathname = usePathname();
   const { getUserById, setUser, user } = useUserContext();
 
-  if (pathname == '/support/register-your-product') {
+  if (form.databaseId == 4) {
     submitButton = false;
   }
 
@@ -73,8 +71,6 @@ export default function GForm({
       try {
         const userData = await getUserById(user.id);
         setUser(prevUser => ({ ...prevUser, ...userData }));
-
-        console.log(userData);
         dispatch({
           payload: {
             id: 1,
@@ -102,7 +98,7 @@ export default function GForm({
         dispatch({
           payload: {
             id: 13,
-            value: String(user.id) || 'NA',
+            value: String(user?.id),
           },
           type: 'updateFieldValue',
         });
@@ -110,11 +106,29 @@ export default function GForm({
         console.error('Failed to fetch user:', err);
       }
     };
-    if (user?.id && pathname == '/support/register-your-product') {
-      setShowSubmitBtn(true);
-      fetchUser();
+    if (form.databaseId == 4) {
+      if (user?.id) {
+        setShowSubmitBtn(true);
+        fetchUser();
+      } else {
+        dispatch({
+          payload: {
+            id: 13,
+            value: 'NA',
+          },
+          type: 'updateFieldValue',
+        });
+      }
+      dispatch({
+        payload: {
+          hide: true,
+          id: 9,
+          value: '',
+        },
+        type: 'updateFieldValue',
+      });
     }
-  }, [pathname, user?.id]);
+  }, [form.databaseId, user?.id]);
 
   const [isLoading, setLoading] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);

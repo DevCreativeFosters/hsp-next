@@ -16,6 +16,8 @@ export default function TextAreaField({ field, fieldErrors, form }) {
     return fieldErrors.find(fieldError => fieldError.id === id);
   }, [fieldErrors, id]);
 
+  if (fieldValue?.hide) return null;
+
   return (
     <Textarea
       errorMessage={fieldError?.message}

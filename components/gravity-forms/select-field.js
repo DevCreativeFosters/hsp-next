@@ -33,16 +33,27 @@ export default function SelectField({ field, fieldErrors, form }) {
         id={`gform_${formId}_${field.databaseId}`}
         label={field.label}
         name={`gform_${formId}_${field.databaseId}`}
-        onChange={value =>
+        onChange={value => {
+          const selectedOption = options.find(o => o.value === value)?.label;
+          if (formId == 4 && field.databaseId == 8) {
+            dispatch({
+              payload: {
+                hide: selectedOption == 'My store is not listed' ? false : true,
+                id: 9,
+                value: '',
+              },
+              type: 'updateFieldValue',
+            });
+          }
           dispatch({
             payload: {
               id: field.databaseId,
-              value: options.find(o => o.value === value)?.label, // use this to match by label
+              value: selectedOption, // use this to match by label
               // value: value, // use this to match by value
             },
             type: 'updateFieldValue',
-          })
-        }
+          });
+        }}
         options={options}
         placeholder={field.placeholder}
         required={Boolean(field.isRequired)}
