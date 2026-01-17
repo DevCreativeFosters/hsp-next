@@ -228,6 +228,14 @@
       background: #f76057;
     }
   }
+
+  .statusBackorder {
+    color: #f6ff00;
+
+    &::before {
+      background: #f6ff00;
+    }
+  }
 }
 
 .cmpProduct {

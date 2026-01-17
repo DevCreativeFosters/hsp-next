@@ -35,13 +35,11 @@ export default function EnquiryForm({
 }) {
   const { loading: userLoading, user } = useUserContext();
   const role = user?.role || 'retail';
+  const [formId, setFormId] = useState(0);
 
   const [_, setIsFormValid] = useState(false);
   const [highlight, setHighlight] = useState(false);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
-  const isOutOfStock =
-    productData.stockStatus === 'OUT_OF_STOCK' ||
-    productData.stockQuantity <= 0;
 
   const [normalizedLocations, setNormalizedLocations] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -81,6 +79,32 @@ export default function EnquiryForm({
 
     selectedVariant.productName = productData.title;
     selectedVariant.image = getProductImage(selectedVariant, productData);
+  }
+
+  const selectedVariantSlug = selectedVariant?.variantSlug;
+
+  let inStock = false;
+  let isOutOfStock = true;
+  let onBackOrder = false;
+
+  if (selectedVariantSlug) {
+    const variableProduct = productData.acfVariants.find(
+      variant => variant.sku === selectedVariantSlug,
+    );
+
+    inStock =
+      variableProduct?.stockStatus === 'instock' &&
+      variableProduct?.stockQuantity > 0;
+
+    isOutOfStock =
+      variableProduct?.stockStatus === 'outofstock' &&
+      variableProduct?.stockQuantity <= 0;
+
+    onBackOrder =
+      variableProduct?.stockStatus === 'onbackorder' &&
+      variableProduct?.stockQuantity <= 0;
+  } else {
+    console.log('No Slug available');
   }
 
   const variantPrice = selectedVariant?.variantDetails?.price
@@ -130,7 +154,8 @@ export default function EnquiryForm({
     }
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = id => {
+    setFormId(id);
     setEnquiryModalOpened(true);
   };
 
@@ -239,11 +264,13 @@ export default function EnquiryForm({
               <div
                 className={clsx(styles.productStatus, {
                   [styles.statusOutOfstock]: isOutOfStock,
-                  [styles.statusInstock]: !isOutOfStock,
+                  [styles.statusInstock]: inStock,
+                  [styles.statusBackorder]: onBackOrder,
                 })}
               >
                 {isOutOfStock && 'Out of Stock'}
-                {!isOutOfStock && 'In Stock'}
+                {inStock && 'In Stock'}
+                {onBackOrder && 'Pre-Order'}
               </div>
               <div className={styles.qtyBlock}>
                 <button
@@ -273,26 +300,38 @@ export default function EnquiryForm({
                 className={styles.buttonWrapper}
                 onClick={handleButtonWrapperClick}
               >
+                {onBackOrder ? (
+                  <Button
+                    className={styles.submitButton}
+                    onClick={() => handleOpenModal(20)}
+                    size="large"
+                    variant="secondary"
+                  >
+                    Notify Me{' '}
+                    {loading && <Loading color="white" size="small" />}
+                  </Button>
+                ) : (
+                  <Button
+                    className={styles.submitButton}
+                    disabled={isOutOfStock || loading} // Disable button while adding to cart
+                    onClick={() =>
+                      addToCart({
+                        productId: productData.databaseId,
+                        quantity: quantity,
+                        variant_name: selectedVariant?.variantName,
+                        variant_sku: selectedVariant?.sku,
+                        variant_slug: selectedVariant?.variantSlug,
+                      })
+                    }
+                    size="large"
+                  >
+                    Add to Cart{' '}
+                    {loading && <Loading color="white" size="small" />}
+                  </Button>
+                )}
                 <Button
                   className={styles.submitButton}
-                  disabled={isOutOfStock || loading} // Disable button while adding to cart
-                  onClick={() =>
-                    addToCart({
-                      productId: productData.databaseId,
-                      quantity: quantity,
-                      variant_name: selectedVariant?.variantName,
-                      variant_sku: selectedVariant?.sku,
-                      variant_slug: selectedVariant?.variantSlug,
-                    })
-                  }
-                  size="large"
-                >
-                  Add to Cart{' '}
-                  {loading && <Loading color="white" size="small" />}
-                </Button>
-                <Button
-                  className={styles.submitButton}
-                  onClick={handleOpenModal}
+                  onClick={() => handleOpenModal(enquiryFormId)}
                   size="large"
                 >
                   Make Enquiry
@@ -367,10 +406,10 @@ export default function EnquiryForm({
             )}
           </div>
         </form>
-        {enquiryModalOpened && (
+        {enquiryModalOpened && formId && (
           <EnquiryModal
             allLocations={allLocations}
-            enquiryFormId={enquiryFormId}
+            enquiryFormId={formId}
             freight={freight}
             installationCost={variantInstallationPrice}
             onClose={handleCloseModal}

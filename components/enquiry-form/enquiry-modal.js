@@ -20,7 +20,7 @@ import StoreSearchControls from '@components/store-search-controls/store-search-
 import ResultsStoreTile from '@components/store-tile/result-store-tile';
 import Tooltip from '@components/tooltip/tooltip';
 
-import DecorationImage from '@assets/images/bg-offroad.webp';
+import DecorationImage from '@assets/images/bg-offroad.png';
 
 import styles from './enquiry-modal.module.scss';
 import EnquiryProduct from './enquiry-product';
@@ -39,6 +39,7 @@ export default function EnquiryModal({
   store,
 }) {
   const [isLoading, setLoading] = useState(true);
+  const [isEnquiryForm, setIsEnquiryForm] = useState(enquiryFormId != 20);
   const [formIsSending, setFormIsSending] = useState(false);
   const [formIsSent, setFormIsSent] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
@@ -158,9 +159,15 @@ export default function EnquiryModal({
               rightIcon="arrow-backward-large"
               variant="tertiary"
             />
-            <h3 className={styles.title}>
-              {formIsSent ? 'Enquiry sent!' : 'Send enquiry'}
-            </h3>
+            {isEnquiryForm ? (
+              <h3 className={styles.title}>
+                {formIsSent ? 'Enquiry sent!' : 'Send enquiry'}
+              </h3>
+            ) : (
+              <h3 className={styles.title}>
+                {formIsSent ? '' : 'Product Availability Reminder'}
+              </h3>
+            )}
             <Button
               className={styles.closeButton}
               onClick={onClose}
@@ -209,96 +216,102 @@ export default function EnquiryModal({
                       },
                     )}
                   </div>
-                  <div className={styles.label}>
-                    Total cost:
-                    <Tooltip
-                      attributes={{
-                        content: `Removal and/ or re-installation of existing or non-compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
-                        title: '*Installation Terms',
-                      }}
-                    />
-                  </div>
-                  <div className={styles.priceSummaryWrapper}>
-                    <table className={styles.priceSummary}>
-                      <tbody>
-                        <tr>
-                          <td>Products</td>
-                          <td>{formatPrice(productPrice)}</td>
-                        </tr>
-                        <tr>
-                          <td>Installation*</td>
-                          <td>{formatPrice(installationCost)}</td>
-                        </tr>
-                        <tr>
-                          <td>Freight</td>
-                          <td>{formatPrice(freight) || '$0'}</td>
-                        </tr>
-                        <tr className={styles.total}>
-                          <td>Total</td>
-                          <td>
-                            {formatPrice(
-                              productPrice + installationCost + freight,
-                            )}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {showStoreSearchcontrols && (
-                    <StoreSearchControls
-                      allLocations={allLocations}
-                      interactWithDisabledForm={interactWithDisabledForm}
-                      isWide
-                    />
-                  )}
-
-                  {selectedStore ? (
-                    <ResultsStoreTile
-                      isHighlighted={highlight}
-                      item={selectedStore}
-                    />
-                  ) : (
+                  {isEnquiryForm && (
                     <>
-                      {isMapVisible && (
-                        <StoreLocatorMap
-                          locations={normalizedLocations}
-                          onMarkerClick={setSelectedStore}
+                      <div className={styles.label}>
+                        Total cost:
+                        <Tooltip
+                          attributes={{
+                            content: `Removal and/ or re-installation of existing or non-compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
+                            title: '*Installation Terms',
+                          }}
+                        />
+                      </div>
+                      <div className={styles.priceSummaryWrapper}>
+                        <table className={styles.priceSummary}>
+                          <tbody>
+                            <tr>
+                              <td>Products</td>
+                              <td>{formatPrice(productPrice)}</td>
+                            </tr>
+                            <tr>
+                              <td>Installation*</td>
+                              <td>{formatPrice(installationCost)}</td>
+                            </tr>
+                            <tr>
+                              <td>Freight</td>
+                              <td>{formatPrice(freight) || '$0'}</td>
+                            </tr>
+                            <tr className={styles.total}>
+                              <td>Total</td>
+                              <td>
+                                {formatPrice(
+                                  productPrice + installationCost + freight,
+                                )}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {showStoreSearchcontrols && (
+                        <StoreSearchControls
+                          allLocations={allLocations}
+                          interactWithDisabledForm={interactWithDisabledForm}
+                          isWide
                         />
                       )}
 
-                      <StoreList
-                        allLocations={allLocations}
-                        className={styles.results}
-                        hasMapInteracted={hasMapInteracted}
-                        itemInList={true}
-                        items={
-                          hasMapInteracted ? filteredStores : filteredLocations
-                        }
-                        noRowGap={true}
-                        onSelect={item => {
-                          setSelectedStore(item);
-                        }}
-                        show={isInlineResultListVisible}
-                        showCategory={true}
-                        showDisplays={true}
-                        showIndex={false}
-                        showMoreResults={showMoreResults}
-                      />
-                      {!showMoreResults &&
-                        isInlineResultListVisible &&
-                        filteredStores.length > 5 && (
-                          <div className={styles.showMoreWrapper}>
-                            <Button
-                              className={styles.showMoreButton}
-                              onClick={() => setShowMoreResults(true)}
-                              size="small"
-                              variant="septenary"
-                            >
-                              Load more results
-                            </Button>
-                          </div>
-                        )}
+                      {selectedStore ? (
+                        <ResultsStoreTile
+                          isHighlighted={highlight}
+                          item={selectedStore}
+                        />
+                      ) : (
+                        <>
+                          {isMapVisible && (
+                            <StoreLocatorMap
+                              locations={normalizedLocations}
+                              onMarkerClick={setSelectedStore}
+                            />
+                          )}
+
+                          <StoreList
+                            allLocations={allLocations}
+                            className={styles.results}
+                            hasMapInteracted={hasMapInteracted}
+                            itemInList={true}
+                            items={
+                              hasMapInteracted
+                                ? filteredStores
+                                : filteredLocations
+                            }
+                            noRowGap={true}
+                            onSelect={item => {
+                              setSelectedStore(item);
+                            }}
+                            show={isInlineResultListVisible}
+                            showCategory={true}
+                            showDisplays={true}
+                            showIndex={false}
+                            showMoreResults={showMoreResults}
+                          />
+                          {!showMoreResults &&
+                            isInlineResultListVisible &&
+                            filteredStores.length > 5 && (
+                              <div className={styles.showMoreWrapper}>
+                                <Button
+                                  className={styles.showMoreButton}
+                                  onClick={() => setShowMoreResults(true)}
+                                  size="small"
+                                  variant="septenary"
+                                >
+                                  Load more results
+                                </Button>
+                              </div>
+                            )}
+                        </>
+                      )}
                     </>
                   )}
                 </div>
