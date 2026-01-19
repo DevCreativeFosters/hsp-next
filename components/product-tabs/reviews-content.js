@@ -339,7 +339,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
         <div className={styles.reviewLists}>
           {sortedReviews.map(review => {
             const author = review?.author?.node;
-            const img = review?.reviewUploadImage?.uploadImage?.node;
+            const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
 
             return (
               <div className={styles.reviewBox} key={review.databaseId}>
