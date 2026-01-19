@@ -272,7 +272,7 @@ export default function EnquiryForm({
               >
                 {isOutOfStock && 'Out of Stock'}
                 {inStock && 'In Stock'}
-                {(onBackOrder && variableProduct.backorderNote) || 'Pre-Order'}
+                {onBackOrder && (variableProduct.backorderNote || 'Pre-Order')}
               </div>
               <div className={styles.qtyBlock}>
                 <button
