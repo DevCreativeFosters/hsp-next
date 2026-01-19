@@ -13,46 +13,39 @@ import RatingStar from '@assets/icons/rating-star.svg';
 
 import styles from './product-tabs.module.scss';
 
-const UPLOAD_IMAGE_MUTATION = `
-  mutation UploadReviewImage($file: Upload!) {
-    uploadMedia(input: { file: $file }) {
-      mediaItem {
-        sourceUrl
+const CREATE_REVIEW_MUTATION = `
+  mutation CreateProductReviewWithImages(
+    $productId: Int!
+    $rating: Int!
+    $authorName: String!
+    $authorEmail: String!
+    $content: String!
+    $images: [String!]
+  ) {
+    createProductReviewWithImages(
+      input: {
+        productId: $productId
+        rating: $rating
+        authorName: $authorName
+        authorEmail: $authorEmail
+        content: $content
+        images: $images
       }
+    ) {
+      success
+      commentId
+      message
     }
   }
 `;
 
-const CREATE_REVIEW_MUTATION = `
-  mutation CreateProductReview(
-    $productId: Int!
-    $rating: Int!
-    $author: String!
-    $authorEmail: String!
-    $content: String!
-    $uploadImage: String
-  ) {
-    createProductReview(
-      input: {
-        productId: $productId
-        rating: $rating
-        author: $author
-        authorEmail: $authorEmail
-        content: $content
-        uploadImage: $uploadImage
-      }
-    ) {
-        success
-        message
-        review {
-            commentId
-            uploadImage
-            authorName
-            authorEmail
-        }
-    }
-  }
-`;
+const fileToBase64 = file =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 export default function ReviewsContent({ productId, productName, reviews }) {
   const dropdownRef = useRef(null);
@@ -122,32 +115,30 @@ export default function ReviewsContent({ productId, productName, reviews }) {
       const form = e.currentTarget;
       const formData = new FormData(form);
 
-      let imageUrl = null;
+      const files = formData
+        .getAll('uploadImage')
+        .filter(f => f instanceof File && f.size > 0);
 
-      const file = formData.get('uploadImage');
-      if (file && file instanceof File && file.size > 0) {
-        const uploadRes = await fetchAPI(UPLOAD_IMAGE_MUTATION, {
-          variables: { file },
-        });
+      let images = [];
 
-        imageUrl = uploadRes?.uploadMedia?.mediaItem?.sourceUrl;
+      if (files.length) {
+        images = await Promise.all(files.map(fileToBase64));
       }
 
       const variables = {
-        author: formData.get('author'),
         authorEmail: formData.get('authorEmail'),
+        authorName: formData.get('authorName'),
         content: formData.get('content'),
+        images,
         productId,
-        rating,
-        uploadImage:
-          'https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2025/08/P1289162-HDR-1-scaled-e1755038975487.jpg',
+        rating, // Base64 array
       };
 
       const res = await fetchAPI(CREATE_REVIEW_MUTATION, {
         variables,
       });
 
-      const reviewRes = res?.createProductReview;
+      const reviewRes = res?.createProductReviewWithImages;
 
       if (reviewRes?.success) {
         form.reset();
@@ -279,7 +270,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                   <label>
                     Name<span className={styles.reqStar}>*</span>
                   </label>
-                  <input name="author" required type="text" />
+                  <input name="authorName" required type="text" />
                 </div>
               </div>
 
@@ -295,7 +286,12 @@ export default function ReviewsContent({ productId, productName, reviews }) {
               <div className={styles.colFull}>
                 <div className={styles.inputGroup}>
                   <label>Upload Image</label>
-                  <input name="uploadImage" type="file" />
+                  <input
+                    accept="image/*"
+                    multiple
+                    name="uploadImage"
+                    type="file"
+                  />
                 </div>
               </div>
 
