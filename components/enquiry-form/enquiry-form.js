@@ -87,8 +87,10 @@ export default function EnquiryForm({
   let isOutOfStock = true;
   let onBackOrder = false;
 
+  let variableProduct = {};
+
   if (selectedVariantSlug) {
-    const variableProduct = productData.acfVariants.find(
+    variableProduct = productData.acfVariants.find(
       variant => variant.sku === selectedVariantSlug,
     );
 
@@ -270,7 +272,7 @@ export default function EnquiryForm({
               >
                 {isOutOfStock && 'Out of Stock'}
                 {inStock && 'In Stock'}
-                {onBackOrder && 'Pre-Order'}
+                {(onBackOrder && variableProduct.backorderNote) || 'Pre-Order'}
               </div>
               <div className={styles.qtyBlock}>
                 <button
