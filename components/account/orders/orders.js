@@ -15,7 +15,9 @@ import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 import Tabs from '@components/tabs/tabs';
 
-import InfoIcon from '@assets/icons/info-outline-icon.svg';
+import MapPinIcon from '@assets/icons/mappin-small.svg';
+import SettingIcon from '@assets/icons/setting-small-icon.svg';
+import TruckIcon from '@assets/icons/truck-small.svg';
 
 import styles from './orders.module.scss';
 
@@ -27,6 +29,7 @@ const GET_ORDERS = `
       orders {
         order_id
         status
+        statusColor
         order_total
         order_date
         payment
@@ -34,6 +37,7 @@ const GET_ORDERS = `
         total_quantity
         order_type
         selected_store
+        store_name
         purchase_order_number
         items {
           name
@@ -59,6 +63,7 @@ mutation fetchOutstandingOrders($userId: Int!) {
       order_id
       order_date
       status
+      statusColor
       installation
       freight
       gst
@@ -68,10 +73,10 @@ mutation fetchOutstandingOrders($userId: Int!) {
       total_quantity
       order_type
       selected_store
+      store_name
       purchase_order_number
       selected_store_user_id
       selected_store_user_name
-   
       items {
         name
         quantity
@@ -94,7 +99,22 @@ const GENERATE_ORDER_PDF = `
   }
 `;
 
-function Order({ item, onlyReturns = false }) {
+const renderButton = (status, statusColor) => {
+  return (
+    <div>
+      <button
+        className={styles.customStatusButton}
+        style={{
+          backgroundColor: statusColor,
+        }}
+      >
+        {status.replace('-', ' ')}
+      </button>
+    </div>
+  );
+};
+
+function Order({ item, onlyReturns = false, received = false }) {
   const { user } = useUserContext();
   const role = user?.role;
 
@@ -106,7 +126,7 @@ function Order({ item, onlyReturns = false }) {
     'deliver-to-store': 'Deliver to Store',
     'drop-ship-to-customer': 'Drop Ship to Customer',
     'local-installation': 'Local Installation',
-    'pickup-from-hsp': 'Pickup From HSP',
+    'pickup-from-hsp': `Pickup From ${item?.store_name}`,
   };
 
   async function handleDownloadInvoice() {
@@ -157,87 +177,97 @@ function Order({ item, onlyReturns = false }) {
                 );
               }
 
-              switch (role) {
-                case 'retail':
-                  switch (item.order_type) {
-                    case 'click-collect':
-                      return (
-                        <div>
-                          <button className={styles.greyButton}>
-                            Awaiting Collection
-                          </button>
-                        </div>
-                      );
-                    case 'deliver-door':
-                      return (
-                        <div>
-                          <button className={styles.greyButton}>
-                            In Transit
-                          </button>
-                        </div>
-                      );
-                    case 'local-installation':
-                      return (
-                        <div>
-                          <button className={styles.greyButton}>
-                            Fitting Pending
-                          </button>
-                        </div>
-                      );
-                  }
-                  break;
-                case 'b2b':
-                  switch (item.order_type) {
-                    case 'deliver-to-store':
-                      return (
-                        <Button size="large" variant="secondary">
-                          <InfoIcon />
-                          Requires Changes
-                        </Button>
-                      );
-                    case 'pickup-from-hsp':
-                      return (
-                        <Button size="large" variant="secondary">
-                          <InfoIcon />
-                          Requires Changes
-                        </Button>
-                      );
-                    case 'drop-ship-to-customer':
-                      return (
-                        <Button size="large" variant="secondary">
-                          <InfoIcon />
-                          Requires Changes
-                        </Button>
-                      );
-                  }
-                  break;
-              }
+              const orderTypeConfig = {
+                'click-collect': {
+                  Icon: MapPinIcon,
+                  label: 'Click & Collect Order',
+                },
+                'deliver-door': {
+                  Icon: TruckIcon,
+                  label: 'Store Placed Order',
+                },
+                'local-installation': {
+                  Icon: SettingIcon,
+                  label: 'Local Install Order',
+                },
+              };
+
+              const orderType = orderTypeConfig[item.order_type];
+
+              return (
+                <>
+                  {role === 'b2b' && orderType && (
+                    <div>
+                      <div className={styles.lblIcon}>
+                        <label>{orderType.label}</label>
+                        <orderType.Icon />
+                      </div>
+                    </div>
+                  )}
+                  {renderButton(item.status, item.statusColor)}
+                </>
+              );
+
+              // switch (role) {
+              // case 'retail':
+              //   switch (item.order_type) {
+              //     case 'click-collect':
+              //       return (
+              //         <div>
+              //           <button className={styles.greyButton}>
+              //             Awaiting Collection
+              //           </button>
+              //         </div>
+              //       );
+              //     case 'deliver-door':
+              //       return (
+              //         <div>
+              //           <button className={styles.greyButton}>
+              //             In Transit
+              //           </button>
+              //         </div>
+              //       );
+              //     case 'local-installation':
+              //       return (
+              //         <div>
+              //           <button className={styles.greyButton}>
+              //             Fitting Pending
+              //           </button>
+              //         </div>
+              //       );
+              //   }
+              //   break;
+              // case 'b2b':
+              //   switch (item.order_type) {
+              //     case 'deliver-to-store':
+              //       return (
+              //         <Button size="large" variant="secondary">
+              //           <InfoIcon />
+              //           Requires Changes
+              //         </Button>
+              //       );
+              //     case 'pickup-from-hsp':
+              //       return (
+              //         <Button size="large" variant="secondary">
+              //           <InfoIcon />
+              //           Requires Changes
+              //         </Button>
+              //       );
+              //     case 'drop-ship-to-customer':
+              //       return (
+              //         <Button size="large" variant="secondary">
+              //           <InfoIcon />
+              //           Requires Changes
+              //         </Button>
+              //       );
+              //   }
+              //   break;
+              // }
             })()}
             {/* <div>
                 <button className={styles.statusButton}>
                     Awaiting Collection
                 </button>
-              </div> */}
-
-            {/* <div>
-                <div className={styles.lblIcon}>
-                  <label>Store Placed Order</label>
-                  <TruckIcon />
-                </div>
-              </div> */}
-
-            {/* <div>
-                <div className={styles.lblIcon}>
-                  <label>Click & Collect Order</label>
-                  <MapPinIcon />
-                </div>
-              </div> */}
-
-            {/* <div>
-                <div className={styles.lblIcon}>
-                  <label>Local Install Order</label>
-                  <SettingIcon />
-                </div>
               </div> */}
 
             {/* <div>
@@ -293,7 +323,13 @@ function Order({ item, onlyReturns = false }) {
             </div>
             <div className={styles.orderRow}>
               <div className={styles.title}>Fulfillment Method:</div>
-              <div className={styles.desc}>{orderTypes[item.order_type]}</div>
+              <div className={styles.desc}>
+                {received
+                  ? item.order_type === 'local-installation'
+                    ? 'On-Site Fitting'
+                    : `Pickup From ${item?.store_name}`
+                  : orderTypes[item.order_type]}
+              </div>
             </div>
             {item.selected_store && (
               <div className={styles.orderRow}>
@@ -353,12 +389,22 @@ function Order({ item, onlyReturns = false }) {
   );
 }
 
-const CheckNoOrders = ({ children, onlyReturns = false, orders }) => {
+const CheckNoOrders = ({
+  children,
+  onlyReturns = false,
+  orders,
+  received = false,
+}) => {
   return orders.length == 0 ? (
     <div className={styles.noOrders}>{children}</div>
   ) : (
     orders.map(item => (
-      <Order item={item} key={item.order_id} onlyReturns={onlyReturns} />
+      <Order
+        item={item}
+        key={item.order_id}
+        onlyReturns={onlyReturns}
+        received={received}
+      />
     ))
   );
 };
@@ -473,7 +519,7 @@ function Orders({ onlyReturns = false }) {
   const b2bTabs = [
     {
       content: (
-        <CheckNoOrders orders={outOrders}>
+        <CheckNoOrders orders={outOrders} received={true}>
           <h3>Looks like didn&apos;t receive an order yet</h3>
         </CheckNoOrders>
       ),

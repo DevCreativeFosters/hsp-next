@@ -90,6 +90,28 @@
           }
         }
 
+        .customStatusButton {
+          color: #fff;
+          padding: 0 24px;
+          border-radius: 8px;
+          text-decoration: none;
+          text-transform: capitalize;
+          font-family: var(--font-secondary);
+          font-size: clamp(16px, 2vw, 20px);
+          font-weight: 600;
+          min-height: 44px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 8px;
+
+          @media (width <=767px) {
+            min-height: 25px;
+            font-size: 14px;
+            padding: 0 10px;
+          }
+        }
+
         .statusButton {
           background-color: transparent;
           color: #f9ac47;
