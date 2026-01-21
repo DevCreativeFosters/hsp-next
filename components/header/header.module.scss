@@ -12,7 +12,6 @@
   overflow: hidden;
   background: var(--color-primary-100);
   display: flex;
-  justify-content: center;
   height: 30px;
 
   @include bp(large) {
@@ -26,14 +25,23 @@
     min-height: clamp(30px, 2.08vw, 40px);
     width: max-content;
     justify-content: flex-start;
-    gap: 65px;
-
-    @include bp(large) {
-      gap: 90px;
-    }
+    will-change: transform;
 
     &.scrollingText {
-      animation: marquee 40s linear infinite;
+      animation: marquee 80s linear infinite;
+    }
+
+    .trackGroup {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 50px;
+      padding: 0 25px;
+
+      @media (width<=767px) {
+        gap: 40px;
+        padding: 0 20px;
+      }
     }
 
     .marqueeItem {

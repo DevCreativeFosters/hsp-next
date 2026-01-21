@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -37,8 +37,20 @@ export default function Header({
   const { cartCount } = useCart();
 
   const headerRef = useRef(null);
+  const mainMenuRef = useRef(null);
+  const productsRef = useRef(null);
+
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
   const [currentSubmenu, setCurrentSubmenu] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const toggleMenu = useCallback(() => {
     setIsMobileMenuActive(!isMobileMenuActive);
   }, [isMobileMenuActive]);
@@ -47,34 +59,35 @@ export default function Header({
     setCurrentSubmenu(null);
   }, []);
 
-  const mainMenuRef = useRef(null);
-  const productsRef = useRef(null);
-
   const isScrolling = promoBanner?.scrollAnimation;
 
-  const itemCount = isScrolling ? 20 : 1;
+  const promoContent = useMemo(() => {
+    const rawContent = promoBanner?.content || [];
+    if (rawContent.length === 0) return null;
 
-  const items = Array.from({ length: itemCount }).map((_, i) =>
-    promoBanner && promoBanner.content
-      ? promoBanner.content.map((item, j) => {
-          const img = item?.image?.node;
+    const multiplier = isScrolling
+      ? Math.max(10, Math.ceil((windowWidth * 2) / 300))
+      : 1;
 
-          return (
-            <div className={styles.marqueeItem} key={`${i}-${j}`}>
-              {img && (
-                <Image
-                  alt={img?.altText}
-                  height={22}
-                  src={img?.sourceUrl}
-                  width={22}
-                />
-              )}
-              <span>{item.text}</span>
-            </div>
-          );
-        })
-      : [],
-  );
+    return Array.from({ length: multiplier }).flatMap((_, i) =>
+      rawContent.map((item, j) => {
+        const img = item?.image?.node;
+        return (
+          <div className={styles.marqueeItem} key={`${i}-${j}`}>
+            {img && (
+              <Image
+                alt={img?.altText || ''}
+                height={22}
+                src={img?.sourceUrl}
+                width={22}
+              />
+            )}
+            <span>{item.text}</span>
+          </div>
+        );
+      }),
+    );
+  }, [isScrolling, promoBanner, windowWidth]);
 
   useClickOutside(onElsewhereClick, [mainMenuRef, productsRef]);
 
@@ -87,7 +100,7 @@ export default function Header({
       </HelmetProvider>
 
       <header className={styles.header} ref={headerRef}>
-        {items && items.length > 0 && (
+        {promoContent && (
           <div
             className={styles.headerTop}
             style={{
@@ -101,7 +114,8 @@ export default function Header({
                 isScrolling && styles.scrollingText,
               )}
             >
-              {items}
+              <div className={styles.trackGroup}>{promoContent}</div>
+              <div className={styles.trackGroup}>{promoContent}</div>
             </div>
           </div>
         )}
