@@ -164,6 +164,7 @@ export default function RegisterForm() {
                           name="phone"
                           onChange={handleChange}
                           placeholder="Phone Number"
+                          required
                           type="text"
                           value={formData.phone}
                         />
@@ -198,7 +199,7 @@ export default function RegisterForm() {
                     <div className={styles.inputFullCol}>
                       <div className={styles.acceptCheckbox}>
                         <label>
-                          <input type="checkbox" />
+                          <input required type="checkbox" />
                           <span>I accept the Terms and Conditions</span>
                           <button>Read our T&Cs</button>
                         </label>
