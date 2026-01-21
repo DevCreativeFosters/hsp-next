@@ -15,7 +15,6 @@ import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 import StoreDisplays from '@components/store-displays/store-displays';
 
-import ThanksIcon from '@assets/icons/checklargeicon.svg';
 
 import styles from './account-details.module.scss';
 
@@ -328,8 +327,8 @@ function AccountDetails() {
               {showThanks && (
                 <div className={styles.thankYouMsg}>
                   <h4>
-                    <ThanksIcon />
-                    Thank You for being a valued HSP Reseller!
+                    {/* <ThanksIcon /> */}
+                    Your Pricing Request Has Been Sent
                   </h4>
                   <p>
                     Thank you for your enquiry. A member of our team will be in
