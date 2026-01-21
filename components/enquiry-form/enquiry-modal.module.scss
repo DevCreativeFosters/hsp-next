@@ -22,14 +22,16 @@ $desktop-height: 1160px;
   display: none;
 
   .isSent & {
-    @include bp(large) {
-      display: block;
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 230px;
-      background: red;
+    background: #fff;
+    width: 100%;
+    display: block;
+    line-height: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 200px;
     }
   }
 }
@@ -77,15 +79,24 @@ $desktop-height: 1160px;
   padding: 48px 16px 96px;
   min-height: inherit;
 
+  .isSent & {
+    padding: 0;
+    border-radius: var(--border-radius-lg);
+
+    @media (width<=1279px) {
+      width: calc(100% - 40px);
+      margin: 40px auto;
+      border-radius: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
   @include bp(large) {
     display: flex;
     flex-direction: column;
     padding: 0;
     max-height: calc(100vh - 2 * var(--viewport-margin));
-  }
-
-  .isSent & {
-    padding-inline: 0;
   }
 }
 
@@ -102,18 +113,16 @@ $desktop-height: 1160px;
     margin-bottom: 0;
     box-shadow: 0 1px 16px 0 rgb(0 0 0 / 25%);
 
-    @media screen and (height >= $desktop-height) {
+    @media screen and (height >=$desktop-height) {
       padding: 48px var(--padding-horizontal) 24px;
     }
   }
 
   .isSent & {
     box-shadow: none;
-    padding-inline: 24px;
-
-    @include bp(large) {
-      padding: 48px var(--padding-horizontal) 24px;
-    }
+    padding: 0;
+    gap: 0;
+    margin: 0;
   }
 }
 
@@ -124,6 +133,10 @@ $desktop-height: 1160px;
   margin-left: -8px;
 
   @include bp(large) {
+    display: none;
+  }
+
+  .isSent & {
     display: none;
   }
 }
@@ -145,13 +158,16 @@ $desktop-height: 1160px;
     align-self: center;
     justify-content: center;
 
-    @media screen and (height >= $desktop-height) {
+    @media screen and (height >=$desktop-height) {
       top: -12px;
     }
   }
 
-  svg {
-    filter: drop-shadow(2px 2px 2px var(--color-black-100));
+  .isSent & {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: block;
   }
 }
 
@@ -177,6 +193,19 @@ $desktop-height: 1160px;
   &.onSuccess {
     display: block;
   }
+
+  .isSent & {
+    padding: 72px var(--padding-horizontal);
+    background: #fff;
+
+    @media (width<=1279px) {
+      padding: 64px var(--padding-horizontal);
+    }
+
+    @media (width<=767px) {
+      padding: 64px 20px;
+    }
+  }
 }
 
 .formContainer {
@@ -194,6 +223,12 @@ $desktop-height: 1160px;
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
+
+    .isSent & {
+      gap: 0;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   p {
