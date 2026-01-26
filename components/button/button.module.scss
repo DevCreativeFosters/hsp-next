@@ -142,6 +142,39 @@
   }
 }
 
+.fullWidth {
+  --gap: 12px;
+  --block-padding: 10px;
+  --only-icon-padding: 16px;
+  --min-height: 48px;
+
+  width: 100%;
+
+  @include bp(medium) {
+    --only-icon-padding: 20px;
+  }
+
+  &.leftIcon {
+    padding-left: var(--icon-side-padding);
+  }
+
+  &.rightIcon {
+    padding-right: var(--icon-side-padding);
+  }
+
+  &.noText {
+    padding: var(--only-icon-padding);
+  }
+
+  &.toggleable {
+    --toggler-padding: 20px;
+
+    @include bp(large) {
+      --toggler-padding: 32px;
+    }
+  }
+}
+
 .mixed {
   --gap: 0;
   --block-padding: 0;

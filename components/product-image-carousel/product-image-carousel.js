@@ -10,7 +10,11 @@ import TileCarousel from '@components/tile-carousel/tile-carousel';
 
 import styles from './product-image-carousel.module.scss';
 
-export default function ProductImageCarousel({ images, tag }) {
+export default function ProductImageCarousel({
+  images,
+  showMainImage = true,
+  tag,
+}) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
 
@@ -66,18 +70,20 @@ export default function ProductImageCarousel({ images, tag }) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
-        {tag && <div className={styles.commingSoonTag}>{tag}</div>}
-        {selectedImage && (
-          <Image
-            alt={selectedImage.alt}
-            className={styles.mainImage}
-            fill
-            src={selectedImage.sourceUrl}
-            style={{ objectFit: 'cover' }}
-          />
-        )}
-      </div>
+      {showMainImage && (
+        <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
+          {tag && <div className={styles.commingSoonTag}>{tag}</div>}
+          {selectedImage && (
+            <Image
+              alt={selectedImage.alt}
+              className={styles.mainImage}
+              fill
+              src={selectedImage.sourceUrl}
+              style={{ objectFit: 'cover' }}
+            />
+          )}
+        </div>
+      )}
       <TileCarousel
         buttonNextRef={buttonNextRef}
         buttonPrevRef={buttonPrevRef}
