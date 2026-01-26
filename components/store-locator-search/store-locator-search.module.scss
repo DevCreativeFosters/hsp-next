@@ -142,3 +142,17 @@
     overflow: auto;
   }
 }
+
+.insideResultsAndMap {
+  border: solid 1px var(--color-black-200);
+
+  &.wrapper {
+    background: transparent;
+    position: unset;
+    padding-block: 12px;
+
+    .store-locator-search {
+      background: var(--color-primary-100);
+    }
+  }
+}

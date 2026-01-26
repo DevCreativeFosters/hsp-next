@@ -62,34 +62,36 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
       <div className={styles.storeCategory}>
         <StoreCategory color={color} icon={storeIcon} label={storeTypeLabel} />
       </div>
-      <div className={styles.location}>
-        <div className={styles.icon}>
-          <LocationIcon />
-        </div>
-        <div onClick={copyAddressToClipboard}>
-          {street || city || stateAbbr || postalCode || country ? (
-            <>
-              {street && <div>{street}</div>}
-              <div>
-                {city && <span>{city}, </span>}
-                {stateAbbr && <span>{stateAbbr} </span>}
-                {postalCode && <span>{postalCode}</span>}
-              </div>
-              {country && <div>{country}</div>}
-            </>
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: addressString }}></div>
-          )}
-        </div>
-      </div>
-      {tel && (
-        <a className={styles.tel} href={`tel:${telNormalized}`}>
+      <div className={'callUs'}>
+        <div className={styles.location}>
           <div className={styles.icon}>
-            <PhoneIcon />
+            <LocationIcon />
           </div>
-          {tel}
-        </a>
-      )}
+          <div onClick={copyAddressToClipboard}>
+            {street || city || stateAbbr || postalCode || country ? (
+              <>
+                {street && <div>{street}</div>}
+                <div>
+                  {city && <span>{city}, </span>}
+                  {stateAbbr && <span>{stateAbbr} </span>}
+                  {postalCode && <span>{postalCode}</span>}
+                </div>
+                {country && <div>{country}</div>}
+              </>
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: addressString }}></div>
+            )}
+          </div>
+        </div>
+        {tel && (
+          <a className={styles.tel} href={`tel:${telNormalized}`}>
+            <div className={styles.icon}>
+              <PhoneIcon />
+            </div>
+            {tel}
+          </a>
+        )}
+      </div>
       <div className={styles.extra}>
         {directionsUrl && (
           <Button
@@ -112,7 +114,7 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
             rightIcon="external-link"
             size="small"
             target="_blank"
-            variant="primary"
+            variant="quinary"
           >
             {learnMoreButton?.title && learnMoreButton?.title !== ''
               ? learnMoreButton?.title

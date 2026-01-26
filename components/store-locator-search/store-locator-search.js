@@ -255,7 +255,7 @@ export default function StoreLocatorSearch({
       })}
       ref={wrapperOuterRef}
     >
-      <Container noPadding={noPadding}>
+      <Container className={addClass} noPadding={noPadding}>
         <div className={styles.viewContainer}>
           {isFullScreen && (
             <Button
@@ -278,6 +278,7 @@ export default function StoreLocatorSearch({
               onChange={onAnyInputChange}
               ref={formRef}
               role="form"
+              variant="quinary"
             >
               <div className={styles.searchPhraseWrapper}>
                 <StoreLocatorInput

@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -12,26 +12,49 @@ import { getLocationsToDisplay } from '@lib/store-locations';
 
 import Container from '@components/container/container';
 import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
+import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
 import StoreTilesList from '@components/store-tiles-list/store-tiles-list';
+
+import FilterIconSvg from '@assets/icons/filter-button.svg';
 
 import styles from './store-locator-results-and-map.module.scss';
 
 export default function StoreLocatorResultsAndMap({
   allLocations,
+  label,
   noPadding,
   onSelect,
+  showStoreLocatorSearch = false,
 }) {
   const resultsRef = useRef(null);
+  const filterRef = useRef(null); // Ref for outside click detection
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // Store multiple selected options in an array
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
   const {
     allMapLocations,
     filteredStores,
-    minHeightLarge,
     searchGeolocation,
     selectedStore,
     setAllMapLocations,
     setFilteredLocations,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
+
+  const options = ['roll cover', 'load rack', 'Rating', 'Latest'];
+
+  // Handle outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(
     function initializeAndSyncLocations() {
@@ -67,6 +90,15 @@ export default function StoreLocatorResultsAndMap({
     [selectedStore],
   );
 
+  // Toggle selection in the array
+  const handleCheckboxChange = option => {
+    setSelectedOptions(prev =>
+      prev.includes(option)
+        ? prev.filter(item => item !== option)
+        : [...prev, option],
+    );
+  };
+
   return (
     <div className={styles.wrapper} id="store-search">
       <Container className={styles.container} noPadding={noPadding}>
@@ -75,6 +107,61 @@ export default function StoreLocatorResultsAndMap({
             className={clsx(styles.results, 'storeSearchResults')}
             ref={resultsRef}
           >
+            {label && <h1 className={styles.label}>{label}</h1>}
+            {showStoreLocatorSearch && (
+              <StoreLocatorSearch
+                addClass={'insideResultsAndMap'}
+                allLocations={allLocations}
+              />
+            )}
+
+            <div className={styles.filterData}>
+              <div className={styles.dataWrap}>
+                <div className={styles.left}>
+                  {filteredStores?.length || 0} Stores Near You
+                </div>
+
+                {/* Wrapped in ref for outside click detection */}
+                <div className={styles.right} ref={filterRef}>
+                  <button
+                    className={clsx(
+                      styles.filterBtn,
+                      isFilterOpen && styles.active,
+                    )}
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  >
+                    {isFilterOpen ? 'Close' : 'Filter'}
+                    {isFilterOpen ? (
+                      <span className={styles.closeIcon}>✕</span>
+                    ) : (
+                      <FilterIconSvg />
+                    )}
+                  </button>
+
+                  {isFilterOpen && (
+                    <div className={styles.filterOptionsContainer}>
+                      <ul className={styles.filterList}>
+                        {options.map(option => (
+                          <li className={styles.filterListItem} key={option}>
+                            <label className={styles.checkboxLabel}>
+                              <input
+                                checked={selectedOptions.includes(option)}
+                                onChange={() => handleCheckboxChange(option)}
+                                type="checkbox"
+                              />
+                              <span className={styles.optionText}>
+                                {option}
+                              </span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
             <StoreTilesList
               allLocations={allLocations}
               filteredStores={filteredStores}

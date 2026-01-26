@@ -1,0 +1,17 @@
+.callUs {
+  display: flex;
+  gap: var(--gap-global-sm);
+}
+
+.insideResultsAndMap {
+  max-width: 100% !important;
+  padding: 0 !important;
+
+  .viewContainer {
+    border: solid 1px #f00;
+  }
+
+  .store-locator-search {
+    background: var(--color-primary-100) !important;
+  }
+}

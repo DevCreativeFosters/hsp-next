@@ -10,14 +10,9 @@ import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
 
-import Breadcrumbs from '@components/breadcrumbs/breadcrumbs';
-import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import Layout from '@components/layout/layout';
-import StoreLocatorHero from '@components/store-locator-hero/store-locator-hero';
 import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
-import StoreLocatorSearch from '@components/store-locator-search/store-locator-search';
 
-import styles from './page.module.scss';
 
 export async function generateMetadata() {
   const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`, 'store'];
@@ -49,25 +44,13 @@ export default async function StoreLocatorPage() {
     >
       {prepareSchemas(content?.schemaProSchemas)}
       <Suspense fallback={null}>
-        <FullscreenCollapse>
-          <div className={styles.breadcrumbs}>
-            <Breadcrumbs
-              items={[
-                {
-                  label: 'Support',
-                  url: routes.support(),
-                },
-                {},
-              ]}
-              withContainer={true}
-            />
-          </div>
-          <StoreLocatorHero />
-        </FullscreenCollapse>
-
         <StoreLocatorProvider>
-          <StoreLocatorSearch allLocations={allStores} />
-          <StoreLocatorResultsAndMap allLocations={allStores} minHeightLarge />
+          <StoreLocatorResultsAndMap
+            allLocations={allStores}
+            label="Locate your store"
+            minHeightLarge
+            showStoreLocatorSearch
+          />
         </StoreLocatorProvider>
       </Suspense>
     </Layout>

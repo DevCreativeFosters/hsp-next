@@ -12,6 +12,7 @@
   padding: var(--card-padding-sm);
   background: var(--color-black-100);
   margin-bottom: 10px;
+  line-height: 1.25;
 
   @include bp(large) {
     background: var(--color-black-60);
