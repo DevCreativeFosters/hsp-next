@@ -41,7 +41,7 @@ export default function ProductMakeGrid({
 }) {
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
-  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(true);
+  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(false);
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
@@ -257,7 +257,7 @@ export default function ProductMakeGrid({
                   role="button"
                   tabIndex={0}
                 >
-                  <div className={styles.filterTitle}>Brands:</div>
+                  <div className={styles.filterTitle}>Vehicle Brands:</div>
                 </div>
                 <div
                   className={clsx(styles.filterContent, {
