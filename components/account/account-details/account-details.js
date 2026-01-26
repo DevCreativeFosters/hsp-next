@@ -15,7 +15,6 @@ import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 import StoreDisplays from '@components/store-displays/store-displays';
 
-
 import styles from './account-details.module.scss';
 
 const GET_STORE_BY_ID = `
@@ -194,19 +193,28 @@ function AccountDetails() {
         <div className={styles.accountDetails}>
           <h2 className={styles.sectionTitle}>{storeDetails?.title}</h2>
 
-          <div className={styles.customBtns}>
-            {storeDetails.storeCategories.nodes.map((category, index) => (
-              <a className={styles.goldButton} href="#" key={index}>
-                <Image
-                  alt={category.name}
-                  height={50}
-                  src={category.storeCategoryCustomFields.icon.node.sourceUrl}
-                  width={50}
-                />
-                {category.name}
-              </a>
-            ))}
-          </div>
+          {storeDetails.storeCategories.nodes.length > 0 && (
+            <div className={styles.customBtns}>
+              {storeDetails.storeCategories.nodes.map((category, index) => (
+                <a
+                  className={styles.goldButton}
+                  href="#"
+                  key={index}
+                  style={{
+                    color: category.storeCategoryCustomFields.color,
+                  }}
+                >
+                  <Image
+                    alt={category.name}
+                    height={50}
+                    src={category.storeCategoryCustomFields.icon.node.sourceUrl}
+                    width={50}
+                  />
+                  {category.name}
+                </a>
+              ))}
+            </div>
+          )}
 
           <div className={clsx(styles.borderBox, styles.mobWhiteBox)}>
             <div className={styles.tableInfo}>
