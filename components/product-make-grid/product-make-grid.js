@@ -39,9 +39,13 @@ export default function ProductMakeGrid({
   titleTag,
   titleTagStyle,
 }) {
+  const availableBrands = products.map(
+    item => new URL(item.link.url).pathname.split('/')[2],
+  );
+
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
-  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(true);
+  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(false);
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
@@ -92,7 +96,7 @@ export default function ProductMakeGrid({
 
     return products.filter(product => {
       const url = product?.link?.url?.toLowerCase() || '';
-      return selectedBrands.some(slug => url.includes(`/${slug}/`));
+      return selectedBrands.some(slug => url.includes(`/${slug}`));
     });
   }, [products, selectedBrands]);
 
@@ -257,7 +261,7 @@ export default function ProductMakeGrid({
                   role="button"
                   tabIndex={0}
                 >
-                  <div className={styles.filterTitle}>Brands:</div>
+                  <div className={styles.filterTitle}>Vehicle Brands:</div>
                 </div>
                 <div
                   className={clsx(styles.filterContent, {
@@ -272,18 +276,20 @@ export default function ProductMakeGrid({
                     </ul>
                   ) : (
                     <ul>
-                      {allMakes.map((make, index) => (
-                        <li key={make.slug}>
-                          <label>
-                            <input
-                              checked={selectedBrands.includes(make.slug)}
-                              onChange={() => handleBrandChange(make.slug)}
-                              type="checkbox"
-                            />
-                            <span>{make.name}</span>
-                          </label>
-                        </li>
-                      ))}
+                      {allMakes
+                        .filter(make => availableBrands.includes(make.slug))
+                        .map((make, index) => (
+                          <li key={make.slug}>
+                            <label>
+                              <input
+                                checked={selectedBrands.includes(make.slug)}
+                                onChange={() => handleBrandChange(make.slug)}
+                                type="checkbox"
+                              />
+                              <span>{make.name}</span>
+                            </label>
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>
