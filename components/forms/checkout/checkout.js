@@ -385,6 +385,7 @@ function CheckoutForm() {
                   </p>
                   <p>{formData.email}</p>
                   <p>{formData.phone}</p>
+                  {role === 'b2b' && <p>{formData.company}</p>}
                 </div>
               </div>
             ) : (
@@ -471,6 +472,7 @@ function CheckoutForm() {
                         !formData.last_name ||
                         !formData.email ||
                         !formData.phone ||
+                        (role === 'b2b' && !formData.company) ||
                         loading ||
                         cartItems.length === 0
                       }
