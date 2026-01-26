@@ -64,7 +64,7 @@ export default function StoreDisplays({
       {!hideSeparator && <div className={styles.separator} />}
       {alwaysOpen ? (
         <div className={styles.alwaysOpen}>
-          <div className={styles.toggle}>
+          <div className={clsx(styles.toggle, 'in-store-displays')}>
             In-store Displays:{' '}
             {showNumberOfProducts && <span>{displayText}</span>}
           </div>
