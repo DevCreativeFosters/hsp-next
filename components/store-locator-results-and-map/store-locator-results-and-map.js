@@ -112,6 +112,7 @@ export default function StoreLocatorResultsAndMap({
               <StoreLocatorSearch
                 addClass={'insideResultsAndMap'}
                 allLocations={allLocations}
+                noPadding
               />
             )}
 
