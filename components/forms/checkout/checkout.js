@@ -326,7 +326,6 @@ function CheckoutForm() {
       'email',
       'phone',
       'termsAndConditions',
-      'marketing',
       'payment_method',
       'orderType',
     ];
@@ -796,7 +795,6 @@ function CheckoutForm() {
                     !formData.email ||
                     !formData.phone ||
                     !formData.termsAndConditions ||
-                    !formData.marketing ||
                     !formData.payment_method ||
                     loading ||
                     cartItems.length === 0

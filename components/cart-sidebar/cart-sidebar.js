@@ -134,7 +134,7 @@ export default function CartSidebar() {
           className={styles.cartSubmitButton}
           onClick={() => {
             closeCart();
-            router.push('/checkout');
+            router.push('/cart');
           }}
           size="large"
         >

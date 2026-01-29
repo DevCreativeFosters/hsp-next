@@ -12,6 +12,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
 
+import Button from '@components/button/button';
 import Container from '@components/container/container';
 import EnquiryModal from '@components/enquiry-form/enquiry-modal';
 import Layout from '@components/layout/layout';
@@ -27,6 +28,8 @@ export default function CartPage() {
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [allLocations, setAllLocations] = useState([]);
   const [globalOptions, setGlobalOptions] = useState(null);
+
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const router = useRouter();
 
@@ -80,7 +83,7 @@ export default function CartPage() {
                 <div className={styles.loading}>
                   <Loading size="large" />
                 </div>
-              ) : (
+              ) : cartItems.length > 0 ? (
                 cartItems.map((item, index) => (
                   <div className={styles.itemBox} key={index}>
                     <figure>
@@ -170,6 +173,17 @@ export default function CartPage() {
                     </div>
                   </div>
                 ))
+              ) : (
+                <div className={styles.emptyCart}>
+                  <h3>There are no products in your cart right now</h3>
+                  <Button
+                    onClick={() => router.push('/products')}
+                    size="large"
+                    variant="primary"
+                  >
+                    Start Shopping
+                  </Button>
+                </div>
               )}
             </div>
 
@@ -181,12 +195,27 @@ export default function CartPage() {
                   <br />
                   Fitting or Shipping confirmed in the checkout.
                 </p>
-                <button
+                <div className={styles.agreeCheckbox}>
+                  <label>
+                    <input
+                      checked={agreedToTerms}
+                      id="agreeTerms"
+                      onChange={e => setAgreedToTerms(e.target.checked)}
+                      type="checkbox"
+                    />
+                    <span>
+                      I understand that items in my cart are variant-specific
+                      and have confirmed the correct variant before checkout.
+                    </span>
+                  </label>
+                </div>
+                <Button
                   className={styles.button}
-                  onClick={() => router.push('/checkout')}
+                  disabled={!agreedToTerms || cartItems.length === 0}
+                  href="/checkout"
                 >
                   Check Out
-                </button>
+                </Button>
               </div>
               <div className={styles.btns}>
                 <button
