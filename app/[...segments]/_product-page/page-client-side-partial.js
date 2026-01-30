@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
+import { useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
 
 import routes from '@lib/routes';
@@ -19,8 +20,8 @@ import ProductImageCarousel from '@components/product-image-carousel/product-ima
 import ProductTabs from '@components/product-tabs/product-tabs';
 import StarRating from '@components/reviews/star-rating';
 
+import RemoveWishlist from '@assets/icons/filled-heart.svg';
 import AddWishlist from '@assets/icons/heart.svg';
-import RemoveWishlist from '@assets/icons/heart.svg';
 
 import styles from './page.module.scss';
 
@@ -59,6 +60,7 @@ export default function PageClientSidePartial({
       ({ variantSlug: slug }) => trimSlash(slug) === variantSlug,
     ) || productVariants[0];
 
+  const { user } = useUserContext();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
 
   const productId = firstMatchedProduct.databaseId;
@@ -185,11 +187,15 @@ export default function PageClientSidePartial({
               <StarRating color="yellow" score={averageRating} />(
               {firstMatchedProduct.commentCount} reviews)
             </div>
-            {
+            {user.id ? (
               <button onClick={handleWishlistToggle} type="button">
                 {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
               </button>
-            }
+            ) : (
+              <button onClick={() => router.push('/login')} type="button">
+                <AddWishlist /> Wishlist
+              </button>
+            )}
           </div>
         </div>
         <ProductImageCarousel
@@ -214,11 +220,15 @@ export default function PageClientSidePartial({
                 <StarRating color="yellow" score={averageRating} />(
                 {firstMatchedProduct.commentCount} reviews)
               </div>
-              {
+              {user.id ? (
                 <button onClick={handleWishlistToggle} type="button">
                   {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
                 </button>
-              }
+              ) : (
+                <button onClick={() => router.push('/login')} type="button">
+                  <AddWishlist /> Wishlist
+                </button>
+              )}
             </div>
           </div>
           <div className={styles.enquiryForm}>
