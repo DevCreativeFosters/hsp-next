@@ -13,6 +13,7 @@ import { useUserContext } from '@contexts/user';
 
 import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
+import normalizeStores from '@lib/normalize-stores';
 
 import Button from '@components/button/button';
 import Delivery from '@components/checkout-drawers/delivery';
@@ -201,7 +202,7 @@ function CheckoutForm() {
       ),
       role: 'b2b',
       selectedAddress: {
-        btnTitle: 'Edit Selection',
+        btnTitle: '',
         title: 'Pickup From HSP',
       },
       selectedMenu: {
@@ -287,6 +288,16 @@ function CheckoutForm() {
   }, [user]);
 
   const handleSelectOption = id => {
+    if (id === 'pickup-from-hsp') {
+      const findItem = allStores.find(store => store.databaseId == 2513);
+      const item = normalizeStores([findItem])[0];
+      setSelectedStore(item);
+      setFormData({ ...formData, orderType: id });
+      setOpenDrawer('pickup-from-hsp');
+      setIsFormFilled(true);
+      return;
+    }
+
     const currentOpenDrawer = openDrawer === id ? '' : id;
 
     if (isFormFilled && currentOpenDrawer === '') {
@@ -343,8 +354,6 @@ function CheckoutForm() {
       }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
     };
-
-    // console.log(payload);
 
     const result = await checkoutOrder(payload);
     if (result?.order_id) {
@@ -622,12 +631,14 @@ function CheckoutForm() {
 
                               {deliveryOption.noteContent}
 
-                              <button
-                                className={styles.link}
-                                onClick={() => setIsFormFilled(false)}
-                              >
-                                {deliveryOption.selectedAddress.btnTitle}
-                              </button>
+                              {deliveryOption.selectedAddress.btnTitle && (
+                                <button
+                                  className={styles.link}
+                                  onClick={() => setIsFormFilled(false)}
+                                >
+                                  {deliveryOption.selectedAddress.btnTitle}
+                                </button>
+                              )}
                             </div>
                           ) : (
                             <div className={styles.storeLocate}>
@@ -635,9 +646,7 @@ function CheckoutForm() {
                                 <div className={styles.drawer}>
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
-                                      'local-installation' ||
-                                    deliveryOption.id ===
-                                      'pickup-from-hsp') && (
+                                      'local-installation') && (
                                     <SelectLocation
                                       allStores={allStores}
                                       onSelect={onSelect}
