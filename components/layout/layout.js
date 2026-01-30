@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { CartProvider } from '@contexts/cart-context';
 import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
 import { UserProvider } from '@contexts/user';
 import { VehicleProvider } from '@contexts/vehicle';
+import { WishlistProvider } from '@contexts/wishlist';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getFooterMenus } from '@lib/api/get-footer-menus';
@@ -19,6 +21,7 @@ import normalizeMobileMenu from '@lib/normalize-mobile-menu';
 import normalizeProductData from '@lib/normalize-product-data';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 
+import CartSidebar from '@components/cart-sidebar/cart-sidebar';
 import Footer from '@components/footer/footer';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
 import Header from '@components/header/header';
@@ -149,56 +152,63 @@ export default function Layout({
         <VehicleProvider
           isProductPageWithoutMakeAndModel={isProductPageWithoutMakeAndModel}
         >
-          <div
-            className={
-              withFooter && stickyFooter ? styles.fullHeightWrapper : ''
-            }
-          >
-            <Header
-              mainMenu={normalizedMainMenu}
-              mainProductCategories={normalizedMainProductCategories}
-              makes={data.makes}
-              mobileMenu={normalizedMobileMenu}
-              preventHeaderCollapse={preventHeaderCollapse}
-              products={normalizedProductData}
-              promoBanner={promoBanner}
-              secondaryMenu={topNavigationMenu}
-            />
-            <main className={styles.main}>
-              {withMap && (
-                <div className={styles.background}>
-                  <Image
-                    alt="Shape of the Australian continent"
-                    className={styles.backgroundImage}
-                    fill={true}
-                    quality={80}
-                    src={BgContinent}
-                  />
-                </div>
-              )}
+          <CartProvider>
+            <WishlistProvider>
               <div
-                className={clsx(styles.content, {
-                  [styles.reserveSpaceForVehicleSelection]:
-                    reserveSpaceForVehicleSelection,
-                })}
+                className={
+                  withFooter && stickyFooter ? styles.fullHeightWrapper : ''
+                }
               >
-                {children}
+                <Header
+                  mainMenu={normalizedMainMenu}
+                  mainProductCategories={normalizedMainProductCategories}
+                  makes={data.makes}
+                  mobileMenu={normalizedMobileMenu}
+                  preventHeaderCollapse={preventHeaderCollapse}
+                  products={normalizedProductData}
+                  promoBanner={promoBanner}
+                  secondaryMenu={topNavigationMenu}
+                />
+                <main className={styles.main}>
+                  {withMap && (
+                    <div className={styles.background}>
+                      <Image
+                        alt="Shape of the Australian continent"
+                        className={styles.backgroundImage}
+                        fill={true}
+                        quality={80}
+                        src={BgContinent}
+                      />
+                    </div>
+                  )}
+                  <div
+                    className={clsx(styles.content, {
+                      [styles.reserveSpaceForVehicleSelection]:
+                        reserveSpaceForVehicleSelection,
+                    })}
+                  >
+                    {children}
+                  </div>
+                </main>
+                {withFooter && (
+                  <div className={styles.bottomSticky}>
+                    <FullscreenCollapse>
+                      {/* 
+                        <Newsletter
+                          description={newsletterDescription}
+                          googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
+                          title={newsletterTitle}
+                        />
+                      */}
+                      <Footer menus={normalizedFooterMenus} text={footerText} />
+                    </FullscreenCollapse>
+                  </div>
+                )}
+                <div id={MODAL_PORTAL_ID} />
               </div>
-            </main>
-            {withFooter && (
-              <div className={styles.bottomSticky}>
-                <FullscreenCollapse>
-                  {/* <Newsletter
-                  description={newsletterDescription}
-                  googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
-                  title={newsletterTitle}
-                /> */}
-                  <Footer menus={normalizedFooterMenus} text={footerText} />
-                </FullscreenCollapse>
-              </div>
-            )}
-            <div id={MODAL_PORTAL_ID} />
-          </div>
+              <CartSidebar />
+            </WishlistProvider>
+          </CartProvider>
         </VehicleProvider>
       </UserProvider>
     </GravityFormsStaticDataProvider>

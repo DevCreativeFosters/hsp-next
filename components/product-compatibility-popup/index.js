@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 
+import { useCart } from '@contexts/cart-context';
 import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
@@ -29,6 +30,8 @@ export default function ProductCompatibilityPopup() {
   const [userVehicleProductRoute, setUserVehicleProductRoute] = useState(null);
   const [shouldDisplayPopup, setShouldDisplayPopup] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+
+  const { closeCart, isCartOpen } = useCart();
   const {
     checkingProductCompatibility,
     enteredProductPageRef,
@@ -102,6 +105,7 @@ export default function ProductCompatibilityPopup() {
           (currentMaker && currentMaker !== (storedValues.maker || null)) ||
           (currentModel && currentModel !== (storedValues.model || null))
         ) {
+          closeCart();
           setPopupOpen(true);
         } else {
           setPopupOpen(false);
@@ -233,7 +237,7 @@ export default function ProductCompatibilityPopup() {
         </div>
       </div>
 
-      {shouldDisplayPopup && (
+      {shouldDisplayPopup && !isCartOpen && (
         <button
           aria-label="Open product compatibility popup"
           className={clsx(styles.notificationBell, {
@@ -241,6 +245,7 @@ export default function ProductCompatibilityPopup() {
               (!popupOpen || isDismissed) && !checkingProductCompatibility,
           })}
           onClick={() => {
+            closeCart();
             setPopupOpen(true);
             if (isDismissed) {
               setIsDismissed(false);

@@ -41,6 +41,40 @@ import {
 
 import { fetchAPI } from '@lib/fetch-api';
 
+import { useVehicleContext } from './vehicle';
+
+// 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
 // 'use client';
 // import { createContext, useContext, useState } from 'react';
 // const CartContext = createContext();
@@ -178,6 +212,8 @@ import { fetchAPI } from '@lib/fetch-api';
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
+  const { setPopupOpen } = useVehicleContext();
+
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
@@ -262,7 +298,7 @@ export function CartProvider({ children }) {
 
       await getCartItems(); // refresh cart
 
-      setIsCartOpen(true);
+      openCart();
 
       return data?.addToCart;
     },
@@ -312,7 +348,11 @@ export function CartProvider({ children }) {
     [getCartItems],
   );
 
-  // 🔹 Close the Cart
+  const openCart = useCallback(() => {
+    setPopupOpen(false);
+    setIsCartOpen(true);
+  }, []);
+
   const closeCart = useCallback(() => {
     setIsCartOpen(false);
   }, []);
@@ -336,6 +376,7 @@ export function CartProvider({ children }) {
         getCartItems,
         isCartOpen,
         loading,
+        openCart,
         removeFromCart,
         setIsCartOpen,
         updateCart,
