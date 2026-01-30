@@ -201,7 +201,23 @@ export default function RegisterForm() {
                         <label>
                           <input required type="checkbox" />
                           <span>I accept the Terms and Conditions</span>
-                          <button>Read our T&Cs</button>
+                          <button
+                            onClick={() =>
+                              window.open(
+                                '/privacy-terms-and-conditions',
+                                '_blank',
+                              )
+                            }
+                            type="button"
+                          >
+                            Read our T&Cs{' '}
+                            <s
+                              className="red"
+                              style={{ textDecoration: 'none' }}
+                            >
+                              *
+                            </s>
+                          </button>
                         </label>
                       </div>
                     </div>

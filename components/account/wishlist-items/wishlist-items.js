@@ -41,13 +41,12 @@ function WishlistItems() {
               <Link className={styles.button} href={item.productSlug}>
                 View
               </Link>
-              <a
+              <button
                 className={styles.link}
-                href="#"
                 onClick={() => removeFromWishlist(item.productId)}
               >
                 Remove
-              </a>
+              </button>
             </div>
           </div>
         ))

@@ -759,7 +759,10 @@ function CheckoutForm() {
                           />{' '}
                           <span>
                             I accept the Privacy Policy and Terms & Conditions
-                            <Link href="/privacy-terms-and-conditions">
+                            <Link
+                              href="/privacy-terms-and-conditions"
+                              target="_blank"
+                            >
                               Read our T&Cs{' '}
                               <span className={styles.reqStar}>*</span>
                             </Link>
