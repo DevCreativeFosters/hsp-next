@@ -760,7 +760,8 @@ function CheckoutForm() {
                           <span>
                             I accept the Privacy Policy and Terms & Conditions
                             <Link href="/privacy-terms-and-conditions">
-                              Read our T&Cs
+                              Read our T&Cs{' '}
+                              <span className={styles.reqStar}>*</span>
                             </Link>
                           </span>
                         </label>
@@ -796,6 +797,8 @@ function CheckoutForm() {
                     !formData.phone ||
                     !formData.termsAndConditions ||
                     !formData.payment_method ||
+                    (role === 'b2b' && !formData.company) ||
+                    (role === 'b2b' && !formData.purchaseOrderNumber) ||
                     loading ||
                     cartItems.length === 0
                   }
