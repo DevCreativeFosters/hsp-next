@@ -27,11 +27,14 @@ export default function ProductTabs({
   productId,
   productName,
   reviews,
+  selectedTab,
+  setSelectedTab,
   specificationContent,
   specificationDescription,
 }) {
   const isMobile = useIsMobile();
   const headerRef = useRef(null);
+  const contentRef = useRef(null);
 
   const tabs = useMemo(
     () => ({
@@ -60,8 +63,21 @@ export default function ProductTabs({
   const [activeTab, setActiveTab] = useState(Object.keys(tabs)[0]);
 
   useEffect(() => {
-    setActiveTab(Object.keys(tabs)[0]);
-  }, [tabs]);
+    if (selectedTab) {
+      setActiveTab(selectedTab);
+      // small timeout ensures content is rendered
+      requestAnimationFrame(() => {
+        contentRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+      setSelectedTab('');
+    }
+    // else {
+    //   setActiveTab(Object.keys(tabs)[0]);
+    // }
+  }, [selectedTab, tabs]);
 
   useEffect(
     function scrollActiveTabButtonIntoView() {
@@ -199,6 +215,7 @@ export default function ProductTabs({
       {tabs.description && (
         <AccordionItem
           className={styles.accordionItem}
+          isOpen={activeTab === 'description'}
           triggerContent={tabs.description}
         >
           <Description />
@@ -207,6 +224,7 @@ export default function ProductTabs({
       {tabs.features && (
         <AccordionItem
           className={styles.accordionItem}
+          isOpen={activeTab === 'features'}
           triggerContent={tabs.features}
         >
           <FeaturesContent />
@@ -215,6 +233,7 @@ export default function ProductTabs({
       {tabs.specs && (
         <AccordionItem
           className={styles.accordionItem}
+          isOpen={activeTab === 'specs'}
           triggerContent={tabs.specs}
         >
           <SpecsContent />
@@ -223,6 +242,7 @@ export default function ProductTabs({
       {tabs.manuals && (
         <AccordionItem
           className={styles.accordionItem}
+          isOpen={activeTab === 'manuals'}
           triggerContent={tabs.manuals}
         >
           <ManualsContent />
@@ -230,6 +250,7 @@ export default function ProductTabs({
       )}
       <AccordionItem
         className={styles.accordionItem}
+        isOpen={activeTab === 'reviews'}
         triggerContent={tabs.reviews}
       >
         <ReviewsContent
@@ -275,9 +296,9 @@ export default function ProductTabs({
   );
 
   return (
-    <>
+    <div className={styles.container} ref={contentRef}>
       {mobileContent}
       {desktopContent}
-    </>
+    </div>
   );
 }

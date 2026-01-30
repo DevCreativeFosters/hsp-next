@@ -61,9 +61,10 @@ export default function Accordion({
         (child, index) =>
           child &&
           React.cloneElement(child, {
-            isOpen: allowMultipleOpen
-              ? activeIndices.includes(index)
-              : index === activeIndex,
+            isOpen:
+              allowMultipleOpen || child.props.isOpen
+                ? activeIndices.includes(index)
+                : index === activeIndex,
             onToggle: () => toggleItem(index),
             stickyOnMobile: stickyOnMobile,
             stickyTopOffset: stickyTopOffset,

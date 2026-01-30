@@ -1,3 +1,11 @@
+.container {
+  scroll-margin-top: 200px;
+
+  @media (width <= 768px) {
+    scroll-margin-top: 70px;
+  }
+}
+
 .tabs {
   display: flex;
   flex-direction: column;

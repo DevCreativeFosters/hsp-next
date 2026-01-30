@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
@@ -121,6 +121,7 @@ export default function PageClientSidePartial({
         );
 
   const router = useRouter();
+  const [selectedTab, setSelectedTab] = useState('');
 
   const handleWishlistToggle = () => {
     if (inWishlist) {
@@ -183,7 +184,10 @@ export default function PageClientSidePartial({
             </div>
           )}
           <div className={styles.ratingBlock}>
-            <div className={styles.stars}>
+            <div
+              className={styles.stars}
+              onClick={() => setSelectedTab('reviews')}
+            >
               <StarRating color="yellow" score={averageRating} />(
               {firstMatchedProduct.commentCount} reviews)
             </div>
@@ -216,7 +220,10 @@ export default function PageClientSidePartial({
               </div>
             )}
             <div className={styles.ratingBlock}>
-              <div className={styles.stars}>
+              <div
+                className={styles.stars}
+                onClick={() => setSelectedTab('reviews')}
+              >
                 <StarRating color="yellow" score={averageRating} />(
                 {firstMatchedProduct.commentCount} reviews)
               </div>
@@ -288,6 +295,8 @@ export default function PageClientSidePartial({
         productId={productId}
         productName={productName}
         reviews={firstMatchedProduct.comments.nodes}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
         specificationContent={specification}
         specificationDescription={specificationDescription}
       />
