@@ -193,7 +193,14 @@ export default function PageClientSidePartial({
             </div>
             {user.id ? (
               <button onClick={handleWishlistToggle} type="button">
-                {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+                {inWishlist ? (
+                  <>
+                    <RemoveWishlist /> Added to
+                  </>
+                ) : (
+                  <AddWishlist />
+                )}{' '}
+                Wishlist
               </button>
             ) : (
               <button onClick={() => router.push('/login')} type="button">
@@ -229,7 +236,14 @@ export default function PageClientSidePartial({
               </div>
               {user.id ? (
                 <button onClick={handleWishlistToggle} type="button">
-                  {inWishlist ? <RemoveWishlist /> : <AddWishlist />} Wishlist
+                  {inWishlist ? (
+                    <>
+                      <RemoveWishlist /> Added to
+                    </>
+                  ) : (
+                    <AddWishlist />
+                  )}{' '}
+                  Wishlist
                 </button>
               ) : (
                 <button onClick={() => router.push('/login')} type="button">
