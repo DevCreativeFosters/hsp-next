@@ -14,9 +14,11 @@ function SelectLocation({ allStores, onSelect }) {
       />
       <StoreLocatorResultsAndMap
         allLocations={allStores}
+        hideOnMobile
         minHeightLarge
         noPadding={true}
         onSelect={onSelect}
+        showFilters={false}
       />
     </StoreLocatorProvider>
   );

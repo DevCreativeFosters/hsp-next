@@ -13,6 +13,7 @@ import { metadata } from '@lib/seo';
 import Layout from '@components/layout/layout';
 import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map/store-locator-results-and-map';
 
+import './page.scss';
 
 export async function generateMetadata() {
   const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`, 'store'];
@@ -47,8 +48,10 @@ export default async function StoreLocatorPage() {
         <StoreLocatorProvider>
           <StoreLocatorResultsAndMap
             allLocations={allStores}
+            hideOnMobile={false}
             label="Locate your store"
             minHeightLarge
+            showFilters
             showStoreLocatorSearch
           />
         </StoreLocatorProvider>

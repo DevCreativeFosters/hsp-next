@@ -39,27 +39,31 @@ export default async function StorePage({ params }) {
               <button
                 key={index}
                 style={{
-                  color: category.storeCategoryCustomFields.color,
+                  color: category?.storeCategoryCustomFields?.color,
                 }}
               >
                 <Image
-                  alt={category.name}
+                  alt={category?.name}
                   height={24}
-                  src={category.storeCategoryCustomFields.icon.node.sourceUrl}
+                  src={
+                    category?.storeCategoryCustomFields?.icon?.node?.sourceUrl
+                  }
                   width={24}
                 />
-                {category.name}
+                {category?.name}
               </button>
             ))}
           </div>
-          <div className={styles.featuredImage}>
-            <Image
-              alt={storesCustomFields.featuredImage.node.altText}
-              height={1000}
-              src={storesCustomFields.featuredImage.node.sourceUrl}
-              width={1000}
-            />
-          </div>
+          {storesCustomFields?.featuredImage?.node?.sourceUrl && (
+            <div className={styles.featuredImage}>
+              <Image
+                alt={storesCustomFields?.featuredImage?.node?.altText}
+                height={1000}
+                src={storesCustomFields?.featuredImage?.node?.sourceUrl}
+                width={1000}
+              />
+            </div>
+          )}
 
           <div className={styles.aboutInfo}>
             <div className={styles.aboutInfoContent}>
@@ -89,7 +93,7 @@ export default async function StorePage({ params }) {
             <div className={styles.leftPart}>
               <div className={styles.hrsBox}>
                 <h4>Trading Hours</h4>
-                {storesCustomFields.tradingHours.map((hour, index) => (
+                {storesCustomFields?.tradingHours?.map((hour, index) => (
                   <div className={styles.day} key={`${hour.day}-${index}`}>
                     <p>{hour.day}</p>
                     {hour.open && hour.close ? (

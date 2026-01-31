@@ -21,9 +21,11 @@ import styles from './store-locator-results-and-map.module.scss';
 
 export default function StoreLocatorResultsAndMap({
   allLocations,
+  hideOnMobile,
   label,
   noPadding,
   onSelect,
+  showFilters,
   showStoreLocatorSearch = false,
 }) {
   const resultsRef = useRef(null);
@@ -43,7 +45,7 @@ export default function StoreLocatorResultsAndMap({
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  const options = ['roll cover', 'load rack', 'Rating', 'Latest'];
+  const options = ['roll cover', 'load rack'];
 
   // Handle outside click
   useEffect(() => {
@@ -100,7 +102,12 @@ export default function StoreLocatorResultsAndMap({
   };
 
   return (
-    <div className={styles.wrapper} id="store-search">
+    <div
+      className={clsx({
+        [styles.wrapper]: hideOnMobile,
+      })}
+      id="store-search"
+    >
       <Container className={styles.container} noPadding={noPadding}>
         <div className={styles.visualContainer}>
           <div
@@ -116,52 +123,54 @@ export default function StoreLocatorResultsAndMap({
               />
             )}
 
-            <div className={styles.filterData}>
-              <div className={styles.dataWrap}>
-                <div className={styles.left}>
-                  {filteredStores?.length || 0} Stores Near You
-                </div>
+            {showFilters && (
+              <div className={styles.filterData}>
+                <div className={styles.dataWrap}>
+                  <div className={styles.left}>
+                    {filteredStores?.length || 0} Stores Near You
+                  </div>
 
-                {/* Wrapped in ref for outside click detection */}
-                <div className={styles.right} ref={filterRef}>
-                  <button
-                    className={clsx(
-                      styles.filterBtn,
-                      isFilterOpen && styles.active,
-                    )}
-                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  >
-                    {isFilterOpen ? 'Close' : 'Filter'}
-                    {isFilterOpen ? (
-                      <span className={styles.closeIcon}>✕</span>
-                    ) : (
-                      <FilterIconSvg />
-                    )}
-                  </button>
+                  {/* Wrapped in ref for outside click detection */}
+                  <div className={styles.right} ref={filterRef}>
+                    <button
+                      className={clsx(
+                        styles.filterBtn,
+                        isFilterOpen && styles.active,
+                      )}
+                      onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    >
+                      {isFilterOpen ? 'Close' : 'Filter'}
+                      {isFilterOpen ? (
+                        <span className={styles.closeIcon}>✕</span>
+                      ) : (
+                        <FilterIconSvg />
+                      )}
+                    </button>
 
-                  {isFilterOpen && (
-                    <div className={styles.filterOptionsContainer}>
-                      <ul className={styles.filterList}>
-                        {options.map(option => (
-                          <li className={styles.filterListItem} key={option}>
-                            <label className={styles.checkboxLabel}>
-                              <input
-                                checked={selectedOptions.includes(option)}
-                                onChange={() => handleCheckboxChange(option)}
-                                type="checkbox"
-                              />
-                              <span className={styles.optionText}>
-                                {option}
-                              </span>
-                            </label>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                    {isFilterOpen && (
+                      <div className={styles.filterOptionsContainer}>
+                        <ul className={styles.filterList}>
+                          {options.map(option => (
+                            <li className={styles.filterListItem} key={option}>
+                              <label className={styles.checkboxLabel}>
+                                <input
+                                  checked={selectedOptions.includes(option)}
+                                  onChange={() => handleCheckboxChange(option)}
+                                  type="checkbox"
+                                />
+                                <span className={styles.optionText}>
+                                  {option}
+                                </span>
+                              </label>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <StoreTilesList
               allLocations={allLocations}

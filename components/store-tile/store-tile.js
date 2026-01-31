@@ -25,6 +25,7 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
     learnMoreButton,
     location: { city, country, postalCode, stateAbbr, street },
     name,
+    slug,
     storeIcon,
     tel,
   } = item;
@@ -93,6 +94,17 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
         )}
       </div>
       <div className={styles.extra}>
+        <Button
+          className={styles.link}
+          href={`/store-locator/${slug}`}
+          rel="noopener noreferrer"
+          rightIcon="external-link"
+          size="small"
+          target="_blank"
+          variant="quinary"
+        >
+          Learn more
+        </Button>
         {directionsUrl && (
           <Button
             className={styles.link}
@@ -104,21 +116,6 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
             variant="quinary"
           >
             Directions
-          </Button>
-        )}
-        {learnMoreButton && (
-          <Button
-            className={styles.link}
-            href={learnMoreButton?.url}
-            rel="noopener noreferrer"
-            rightIcon="external-link"
-            size="small"
-            target="_blank"
-            variant="quinary"
-          >
-            {learnMoreButton?.title && learnMoreButton?.title !== ''
-              ? learnMoreButton?.title
-              : 'Learn more'}
           </Button>
         )}
       </div>
