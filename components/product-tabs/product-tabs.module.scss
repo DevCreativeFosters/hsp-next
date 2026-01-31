@@ -1,8 +1,8 @@
 .container {
-  scroll-margin-top: 200px;
+  scroll-margin-top: 30px;
 
-  @media (width <= 768px) {
-    scroll-margin-top: 70px;
+  @include bp(medium) {
+    scroll-margin-top: 200px;
   }
 }
 

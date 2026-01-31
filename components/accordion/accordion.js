@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 export default function Accordion({
   allowMultipleOpen = false,
@@ -54,6 +54,20 @@ export default function Accordion({
     ],
   );
 
+  useEffect(() => {
+    if (!allowMultipleOpen) return;
+
+    const derived = [];
+
+    React.Children.forEach(children, (child, index) => {
+      if (child?.props?.isOpen) {
+        derived.push(index);
+      }
+    });
+
+    setActiveIndices(derived);
+  }, [allowMultipleOpen, children]);
+
   return (
     <div className={className}>
       {React.Children.map(
@@ -61,10 +75,9 @@ export default function Accordion({
         (child, index) =>
           child &&
           React.cloneElement(child, {
-            isOpen:
-              allowMultipleOpen || child.props.isOpen
-                ? activeIndices.includes(index)
-                : index === activeIndex,
+            isOpen: allowMultipleOpen
+              ? activeIndices.includes(index)
+              : index === activeIndex,
             onToggle: () => toggleItem(index),
             stickyOnMobile: stickyOnMobile,
             stickyTopOffset: stickyTopOffset,
