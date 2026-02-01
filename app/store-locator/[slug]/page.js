@@ -4,7 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { StoreLocatorProvider } from '@contexts/store-locator';
+
 import { getStoreBySlug } from '@lib/api/get-store-by-slug';
+import { getStores } from '@lib/api/get-stores';
+import normalizeStores from '@lib/normalize-stores';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -17,6 +21,7 @@ import CallIcon from '@assets/icons/call-circle-icon.svg';
 import LocationIcon from '@assets/icons/location-circle-icon.svg';
 import WebIcon from '@assets/icons/web-circle-icon.svg';
 
+import ClientSideSDP from './client-side-sdp';
 import styles from './page.module.scss';
 import './styles.scss';
 
@@ -26,6 +31,9 @@ export default async function StorePage({ params }) {
   if (!store) {
     notFound();
   }
+
+  const allLocations = await getStores();
+  const selectedStore = normalizeStores([store])[0];
 
   const storesCustomFields = store.storesCustomFields || {};
 
@@ -75,9 +83,12 @@ export default async function StorePage({ params }) {
                 />
               </div>
               <div className={styles.rightPart}>
-                <Button size="full-width" variant="primary">
-                  Enquire With Store
-                </Button>
+                <StoreLocatorProvider>
+                  <ClientSideSDP
+                    allLocations={allLocations}
+                    selectedStore={selectedStore}
+                  />
+                </StoreLocatorProvider>
                 <Button
                   href={storesCustomFields.directionsLink}
                   size="full-width"

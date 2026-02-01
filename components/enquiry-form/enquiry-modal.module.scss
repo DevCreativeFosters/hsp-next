@@ -208,6 +208,12 @@ $desktop-height: 1160px;
   }
 }
 
+.swapContainers {
+  .enquirySummary {
+    order: 2;
+  }
+}
+
 .formContainer {
   display: flex;
   align-items: flex-start;

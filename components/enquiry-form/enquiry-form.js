@@ -424,6 +424,7 @@ export default function EnquiryForm({
         {enquiryModalOpened && formId && (
           <EnquiryModal
             allLocations={allLocations}
+            enquiryForm={!(formId == 20)}
             enquiryFormId={formId}
             freight={freight}
             installationCost={variantInstallationPrice}

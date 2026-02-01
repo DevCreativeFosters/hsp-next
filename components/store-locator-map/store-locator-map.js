@@ -254,6 +254,7 @@ export default function StoreLocatorMap({
       className={clsx(styles.mapWrapper, className, {
         [styles.minHeightLarge]: minHeightLarge,
       })}
+      id="store-locator-map"
     >
       <div className={clsx(styles.map, className)} ref={mapRef} />
     </div>

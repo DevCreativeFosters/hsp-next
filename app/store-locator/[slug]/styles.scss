@@ -35,3 +35,7 @@
     }
   }
 }
+
+button[aria-label='Clear chosen store'] {
+  display: none;
+}

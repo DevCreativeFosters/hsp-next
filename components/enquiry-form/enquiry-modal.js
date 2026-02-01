@@ -29,17 +29,21 @@ const InfoIcon = getIcon('info');
 
 export default function EnquiryModal({
   allLocations,
+  enquiryForm = true,
   enquiryFormId,
   freight,
   installationCost,
   onClose,
   productPrice,
   selectedProducts,
+  showSelectedProducts = true,
   showStoreSearchcontrols = false,
+  showTotalCost = true,
   store,
+  swapContainers = false,
 }) {
   const [isLoading, setLoading] = useState(true);
-  const [isEnquiryForm, setIsEnquiryForm] = useState(enquiryFormId != 20);
+  const [isEnquiryForm, setIsEnquiryForm] = useState(enquiryForm);
   const [formIsSending, setFormIsSending] = useState(false);
   const [formIsSent, setFormIsSent] = useState(false);
   const [showMoreResults, setShowMoreResults] = useState(false);
@@ -179,80 +183,89 @@ export default function EnquiryModal({
             <div
               className={clsx(styles.containers, {
                 [styles.onSuccess]: formIsSent,
+                [styles.swapContainers]: swapContainers,
               })}
             >
               {!formIsSent && (
                 <div className={styles.enquirySummary}>
-                  <div className={styles.label}>Products of interest:</div>
-                  <div className={styles.products}>
-                    {selectedProducts?.map(
-                      ({
-                        image,
-                        installationCost: itemInstallationCost,
-                        price,
-                        productName,
-                        sku,
-                        variantSlug: productSlug,
-                      }) => {
-                        const itemPrice =
-                          price === false
-                            ? 0
-                            : price === null
-                              ? productPrice
-                              : price;
-                        const installCost =
-                          itemInstallationCost || installationCost;
+                  {showSelectedProducts && (
+                    <>
+                      <div className={styles.label}>Products of interest:</div>
+                      <div className={styles.products}>
+                        {selectedProducts?.map(
+                          ({
+                            image,
+                            installationCost: itemInstallationCost,
+                            price,
+                            productName,
+                            sku,
+                            variantSlug: productSlug,
+                          }) => {
+                            const itemPrice =
+                              price === false
+                                ? 0
+                                : price === null
+                                  ? productPrice
+                                  : price;
+                            const installCost =
+                              itemInstallationCost || installationCost;
 
-                        return (
-                          <EnquiryProduct
-                            imageUrl={image}
-                            installationCost={installCost}
-                            key={productSlug}
-                            name={productName}
-                            price={itemPrice}
-                            sku={sku}
-                          />
-                        );
-                      },
-                    )}
-                  </div>
+                            return (
+                              <EnquiryProduct
+                                imageUrl={image}
+                                installationCost={installCost}
+                                key={productSlug}
+                                name={productName}
+                                price={itemPrice}
+                                sku={sku}
+                              />
+                            );
+                          },
+                        )}
+                      </div>
+                    </>
+                  )}
                   {isEnquiryForm && (
                     <>
-                      <div className={styles.label}>
-                        Total cost:
-                        <Tooltip
-                          attributes={{
-                            content: `Removal and/ or re-installation of existing or non-compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
-                            title: '*Installation Terms',
-                          }}
-                        />
-                      </div>
-                      <div className={styles.priceSummaryWrapper}>
-                        <table className={styles.priceSummary}>
-                          <tbody>
-                            <tr>
-                              <td>Products</td>
-                              <td>{formatPrice(productPrice)}</td>
-                            </tr>
-                            <tr>
-                              <td>Installation*</td>
-                              <td>{formatPrice(installationCost)}</td>
-                            </tr>
-                            <tr>
-                              <td>Freight</td>
-                              <td>{formatPrice(freight) || '$0'}</td>
-                            </tr>
-                            <tr className={styles.total}>
-                              <td>Total</td>
-                              <td>
-                                {formatPrice(
-                                  productPrice + installationCost + freight,
-                                )}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+                      {showTotalCost && (
+                        <>
+                          <div className={styles.label}>
+                            Total cost:
+                            <Tooltip
+                              attributes={{
+                                content: `Removal and/ or re-installation of existing or non-compatible products may incur additional costs. Please check the <a href="${routes.privacyAndTerms}">terms and conditions</a> for more information.`,
+                                title: '*Installation Terms',
+                              }}
+                            />
+                          </div>
+                          <div className={styles.priceSummaryWrapper}>
+                            <table className={styles.priceSummary}>
+                              <tbody>
+                                <tr>
+                                  <td>Products</td>
+                                  <td>{formatPrice(productPrice)}</td>
+                                </tr>
+                                <tr>
+                                  <td>Installation*</td>
+                                  <td>{formatPrice(installationCost)}</td>
+                                </tr>
+                                <tr>
+                                  <td>Freight</td>
+                                  <td>{formatPrice(freight) || '$0'}</td>
+                                </tr>
+                                <tr className={styles.total}>
+                                  <td>Total</td>
+                                  <td>
+                                    {formatPrice(
+                                      productPrice + installationCost + freight,
+                                    )}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </>
+                      )}
 
                       {showStoreSearchcontrols && (
                         <StoreSearchControls
