@@ -40,7 +40,6 @@ function CheckoutForm() {
     cartItems,
     cartSubTotal,
     cartTotal,
-    getCartItems,
     loading: cartLoading,
   } = useCart();
 
