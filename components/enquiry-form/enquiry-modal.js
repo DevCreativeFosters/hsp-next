@@ -165,7 +165,7 @@ export default function EnquiryModal({
             />
             {isEnquiryForm ? (
               <h3 className={styles.title}>
-                {formIsSent ? 'Enquiry sent!' : 'Send enquiry'}
+                {formIsSent ? '' : 'Send enquiry'}
               </h3>
             ) : (
               <h3 className={styles.title}>
