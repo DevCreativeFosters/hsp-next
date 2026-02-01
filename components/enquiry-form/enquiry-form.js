@@ -257,7 +257,20 @@ export default function EnquiryForm({
                   'h4',
                 )}
               >
-                +<span> {formatPrice(variantInstallationPrice)} </span>
+                <svg
+                  className={clsx(styles.plusIcon)}
+                  fill="none"
+                  height="10"
+                  viewBox="0 0 18 18"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 7H11V3C11 2.45 10.55 2 10 2H8C7.45 2 7 2.45 7 3V7H3C2.45 7 2 7.45 2 8V10C2 10.55 2.45 11 3 11H7V15C7 15.55 7.45 16 8 16H10C10.55 16 11 15.55 11 15V11H15C15.55 11 16 10.55 16 10V8C16 7.45 15.55 7 15 7Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>{' '}
+                <span> {formatPrice(variantInstallationPrice)} </span>
                 <span> for installation </span>
               </span>
             )}
@@ -408,7 +421,20 @@ export default function EnquiryForm({
                               </div>
                             )}
                             <div className={styles.three}>
-                              + {formatPrice(variantDetails?.installationCost)}{' '}
+                              <svg
+                                className={clsx(styles.plusIcon)}
+                                fill="none"
+                                height="8"
+                                viewBox="0 0 18 18"
+                                width="8"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M15 7H11V3C11 2.45 10.55 2 10 2H8C7.45 2 7 2.45 7 3V7H3C2.45 7 2 7.45 2 8V10C2 10.55 2.45 11 3 11H7V15C7 15.55 7.45 16 8 16H10C10.55 16 11 15.55 11 15V11H15C15.55 11 16 10.55 16 10V8C16 7.45 15.55 7 15 7Z"
+                                  fill="currentColor"
+                                ></path>
+                              </svg>{' '}
+                              {formatPrice(variantDetails?.installationCost)}{' '}
                               for install
                             </div>
                           </div>
