@@ -218,27 +218,13 @@
     }
   }
 
-  .statusInstock {
-    color: #27ae60;
+  --status-color: var(--color-white-100);
+
+  .statusColor {
+    color: var(--status-color);
 
     &::before {
-      background: #27ae60;
-    }
-  }
-
-  .statusOutOfstock {
-    color: #f76057;
-
-    &::before {
-      background: #f76057;
-    }
-  }
-
-  .statusBackorder {
-    color: #f6ff00;
-
-    &::before {
-      background: #f6ff00;
+      background: var(--status-color);
     }
   }
 }

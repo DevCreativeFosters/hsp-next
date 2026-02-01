@@ -84,31 +84,24 @@ export default function EnquiryForm({
 
   const selectedVariantSlug = selectedVariant?.variantSlug;
 
-  let inStock = false;
-  let isOutOfStock = true;
-  let onBackOrder = false;
+  const [inStock, setInStock] = useState(false);
+  const [isOutOfStock, setIsOutOfStock] = useState(true);
+  const [onBackOrder, setOnBackOrder] = useState(false);
 
-  let variableProduct = {};
+  const [variableProduct, setVariableProduct] = useState({});
 
-  if (selectedVariantSlug) {
-    variableProduct = productData.acfVariants.find(
-      variant => variant.sku === selectedVariantSlug,
-    );
+  useEffect(() => {
+    if (selectedVariantSlug) {
+      const product = productData.acfVariants.find(
+        variant => variant.sku === selectedVariantSlug,
+      );
 
-    inStock =
-      variableProduct?.stockStatus === 'instock' &&
-      variableProduct?.stockQuantity > 0;
-
-    isOutOfStock =
-      variableProduct?.stockStatus === 'outofstock' &&
-      variableProduct?.stockQuantity <= 0;
-
-    onBackOrder =
-      variableProduct?.stockStatus === 'onbackorder' &&
-      variableProduct?.stockQuantity <= 0;
-  } else {
-    console.log('No Slug available');
-  }
+      setVariableProduct(product);
+      setInStock(product?.stockStatus === 'instock');
+      setIsOutOfStock(product?.stockStatus === 'outofstock');
+      setOnBackOrder(product?.stockStatus === 'onbackorder');
+    }
+  }, [selectedVariantSlug]);
 
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant?.variantDetails.price
@@ -278,11 +271,10 @@ export default function EnquiryForm({
           <div className={styles.productActions}>
             <div className={styles.qtyAndBtns}>
               <div
-                className={clsx(styles.productStatus, {
-                  [styles.statusOutOfstock]: isOutOfStock,
-                  [styles.statusInstock]: inStock,
-                  [styles.statusBackorder]: onBackOrder,
-                })}
+                className={clsx(styles.productStatus, styles.statusColor)}
+                style={{
+                  '--status-color': variableProduct?.colorNote,
+                }}
               >
                 {isOutOfStock && 'Out of Stock'}
                 {inStock && 'In Stock'}
