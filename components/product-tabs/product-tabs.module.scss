@@ -593,6 +593,17 @@
     }
   }
 
+  .noReviews {
+    h3 {
+      text-align: center;
+      margin: 40px 0 15px;
+
+      @include bp(medium) {
+        margin: 60px 0 15px;
+      }
+    }
+  }
+
   .reviewForm {
     background: #fff;
     border-radius: 16px;

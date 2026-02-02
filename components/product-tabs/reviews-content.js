@@ -333,44 +333,50 @@ export default function ReviewsContent({ productId, productName, reviews }) {
         )}
 
         <div className={styles.reviewLists}>
-          {sortedReviews.map(review => {
-            const author = review?.author?.node;
-            const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
+          {sortedReviews?.length > 0 ? (
+            sortedReviews.map(review => {
+              const author = review?.author?.node;
+              const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
 
-            return (
-              <div className={styles.reviewBox} key={review.databaseId}>
-                <div className={styles.left}>
-                  <div className={styles.filled}>
-                    {Array.from({ length: review?.rating }, (_, i) => (
-                      <RatingStar key={i} />
-                    ))}
+              return (
+                <div className={styles.reviewBox} key={review.databaseId}>
+                  <div className={styles.left}>
+                    <div className={styles.filled}>
+                      {Array.from({ length: review?.rating }, (_, i) => (
+                        <RatingStar key={i} />
+                      ))}
+                    </div>
+                    <div
+                      className={styles.desc}
+                      dangerouslySetInnerHTML={{ __html: review.content }}
+                    ></div>
+                    <div className={styles.reviewAuthor}>
+                      <p>
+                        <strong>{author?.name}</strong>
+                      </p>
+                      <span>Ordered the HSP {productName}</span>
+                    </div>
                   </div>
-                  <div
-                    className={styles.desc}
-                    dangerouslySetInnerHTML={{ __html: review.content }}
-                  ></div>
-                  <div className={styles.reviewAuthor}>
-                    <p>
-                      <strong>{author?.name}</strong>
-                    </p>
-                    <span>Ordered the HSP {productName}</span>
-                  </div>
+                  {img && (
+                    <div className={styles.right}>
+                      <figure>
+                        <Image
+                          alt={img.altText}
+                          height={160}
+                          src={img.sourceUrl}
+                          width={250}
+                        />
+                      </figure>
+                    </div>
+                  )}
                 </div>
-                {img && (
-                  <div className={styles.right}>
-                    <figure>
-                      <Image
-                        alt={img.altText}
-                        height={160}
-                        src={img.sourceUrl}
-                        width={250}
-                      />
-                    </figure>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <div className={styles.noReviews}>
+              <h3>Be the first to review this product</h3>
+            </div>
+          )}
         </div>
       </div>
     </div>
