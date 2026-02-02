@@ -173,10 +173,12 @@ export default function GForm({
     setLoading(true);
     onSubmit();
 
+    const cleanedState = state.map(({ hide, ...rest }) => rest);
+
     await formSubmitMutation({
       variables: {
         input: {
-          fieldValues: state,
+          fieldValues: cleanedState,
           id: form.databaseId,
         },
       },
@@ -186,7 +188,7 @@ export default function GForm({
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
           // Combine field definitions with state values
-          const enrichedState = state.map(fieldState => {
+          const enrichedState = cleanedState.map(fieldState => {
             const fieldDef = formFields.find(
               f => f.databaseId === fieldState.id,
             );
