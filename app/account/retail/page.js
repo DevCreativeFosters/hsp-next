@@ -12,59 +12,14 @@ import FAQ from '@components/faq/faq';
 import Layout from '@components/layout/layout';
 import Tabs from '@components/tabs/tabs';
 
-
-const questions = [
-  {
-    answer:
-      '<p>There is a 3" gap between the side rails of our Roll R Cover.</p>',
-    question:
-      'How much space is there between the side rails of our Roll R Cover?',
-  },
-  {
-    answer:
-      '<p>The Electric Roller Cover Canister is made of durable PVC. It is made with a 3" gap between the side rails of our Roll R Cover.</p>',
-    question: 'How is the Electric Roller Cover Canister Made?',
-  },
-  {
-    answer:
-      '<p>The Ute Roller Cover is waterproof and dustproof. It is made with a 3" gap between the side rails of our Roll R Cover.</p>',
-    question: 'Is the Ute Roller Cover waterproof or dustproof?',
-  },
-  {
-    answer:
-      '<p>There is a 3" gap between the side rails of our Roll R Cover.</p>',
-    question:
-      'How much space will i have underneath the roll top when its closed?',
-  },
-  {
-    answer:
-      '<p>There is a 3" gap between the side rails of our Roll R Cover.</p>',
-    question: 'How much does the Roll R Cover weigh?',
-  },
-  {
-    answer:
-      '<p>There is a 3" gap between the side rails of our Roll R Cover.</p>',
-    question: 'How much weight can you put on the Roll R Cover itself?',
-  },
-  {
-    answer:
-      '<p>There is a 3" gap between the side rails of our Roll R Cover.</p>',
-    question:
-      'How much space is there between the side rails of our Roll R Cover?',
-  },
-  {
-    answer:
-      '<p>The Electric Roller Cover Canister is made of durable PVC. It is made with a 3" gap between the side rails of our Roll R Cover.</p>',
-    question: 'How is the Electric Roller Cover Canister Made?',
-  },
-];
-
 export default async function RetailPage() {
   const content = await getPageData('/account/retail');
 
   const contentBlocks = await Promise.all(
     content?.flexibleContent?.blocks?.map(renderBlock) || [],
   );
+
+  const faqBlock = contentBlocks[1].props.children.props.children.props;
 
   return (
     <Layout title="Retail Account">
@@ -105,8 +60,10 @@ export default async function RetailPage() {
                       content: (
                         <FAQ
                           block={true}
-                          questions={questions}
-                          title="Frequently Asked Questions"
+                          questions={faqBlock.questions || []}
+                          title={faqBlock.title}
+                          titleTag={faqBlock.titleTag}
+                          titleTagStyle={faqBlock.titleTagStyle}
                         />
                       ),
                       slug: 'faqs',
