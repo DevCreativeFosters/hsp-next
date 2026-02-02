@@ -58,7 +58,7 @@ function RegisteredProducts() {
         </Button>
       </div>
       <div className={styles.lists}>
-        {registeredProducts.length > 0 &&
+        {registeredProducts.length > 0 ? (
           registeredProducts.map(product => {
             const fields = JSON.parse(product?.fields);
 
@@ -100,7 +100,12 @@ function RegisteredProducts() {
                 </div>
               </div>
             );
-          })}
+          })
+        ) : (
+          <div className={styles.noOrders}>
+            <h3>Looks like you haven&apos;t registered any products yet.</h3>
+          </div>
+        )}
       </div>
     </div>
   );
