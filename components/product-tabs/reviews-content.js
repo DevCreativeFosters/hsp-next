@@ -54,6 +54,8 @@ export default function ReviewsContent({ productId, productName, reviews }) {
     { label: 'Oldest', value: 'oldest' },
   ];
 
+  const [showNoOfReviews, setShowNoOfReviews] = useState(4);
+
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
 
@@ -334,44 +336,59 @@ export default function ReviewsContent({ productId, productName, reviews }) {
 
         <div className={styles.reviewLists}>
           {sortedReviews?.length > 0 ? (
-            sortedReviews.map(review => {
-              const author = review?.author?.node;
-              const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
+            <>
+              {sortedReviews.map((review, index) => {
+                if (index >= showNoOfReviews) return null;
 
-              return (
-                <div className={styles.reviewBox} key={review.databaseId}>
-                  <div className={styles.left}>
-                    <div className={styles.filled}>
-                      {Array.from({ length: review?.rating }, (_, i) => (
-                        <RatingStar key={i} />
-                      ))}
+                const author = review?.author?.node;
+                const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
+
+                return (
+                  <div className={styles.reviewBox} key={review.databaseId}>
+                    <div className={styles.left}>
+                      <div className={styles.filled}>
+                        {Array.from({ length: review?.rating }, (_, i) => (
+                          <RatingStar key={i} />
+                        ))}
+                      </div>
+                      <div
+                        className={styles.desc}
+                        dangerouslySetInnerHTML={{ __html: review.content }}
+                      ></div>
+                      <div className={styles.reviewAuthor}>
+                        <p>
+                          <strong>{author?.name}</strong>
+                        </p>
+                        <span>Ordered the HSP {productName}</span>
+                      </div>
                     </div>
-                    <div
-                      className={styles.desc}
-                      dangerouslySetInnerHTML={{ __html: review.content }}
-                    ></div>
-                    <div className={styles.reviewAuthor}>
-                      <p>
-                        <strong>{author?.name}</strong>
-                      </p>
-                      <span>Ordered the HSP {productName}</span>
-                    </div>
+                    {img && (
+                      <div className={styles.right}>
+                        <figure>
+                          <Image
+                            alt={img.altText}
+                            height={160}
+                            src={img.sourceUrl}
+                            width={250}
+                          />
+                        </figure>
+                      </div>
+                    )}
                   </div>
-                  {img && (
-                    <div className={styles.right}>
-                      <figure>
-                        <Image
-                          alt={img.altText}
-                          height={160}
-                          src={img.sourceUrl}
-                          width={250}
-                        />
-                      </figure>
-                    </div>
-                  )}
-                </div>
-              );
-            })
+                );
+              })}
+              {sortedReviews.length > 4 &&
+                sortedReviews.length > showNoOfReviews && (
+                  <Button
+                    className={clsx(styles.buttonToggle)}
+                    onClick={() => setShowNoOfReviews(prev => prev + 4)}
+                    rightIcon={'arrow-forward'}
+                    type="button"
+                  >
+                    Show more
+                  </Button>
+                )}
+            </>
           ) : (
             <div className={styles.noReviews}>
               <h3>Be the first to review this product</h3>

@@ -670,3 +670,22 @@
     }
   }
 }
+
+.buttonToggle {
+  margin-left: auto;
+  float: right;
+
+  svg {
+    transform: rotate(90deg);
+  }
+
+  &.isActive {
+    svg {
+      transform: rotate(-90deg);
+    }
+  }
+
+  @include bp(medium) {
+    margin-top: 0;
+  }
+}
