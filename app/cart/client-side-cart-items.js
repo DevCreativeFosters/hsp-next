@@ -73,7 +73,11 @@ export default function ClientSideCartItems() {
           <h2>Shopping Cart</h2>
         </div>
         <div className={styles.cartWrapper}>
-          <div className={styles.cartItemsBoxes}>
+          <div
+            className={clsx(styles.cartItemsBoxes, {
+              [styles.empty]: cartItems.length === 0,
+            })}
+          >
             {loading ? (
               <div className={styles.loading}>
                 <Loading size="large" />
@@ -182,48 +186,50 @@ export default function ClientSideCartItems() {
             )}
           </div>
 
-          <div className={styles.cartTotal}>
-            <div className={styles.totalWrap}>
-              <h3>Subtotal: {formatPrice(cartSubTotal)}</h3>
-              <p>
-                GST Included.
-                <br />
-                Fitting or Shipping confirmed in the checkout.
-              </p>
-              <div className={styles.agreeCheckbox}>
-                <label>
-                  <input
-                    checked={agreedToTerms}
-                    id="agreeTerms"
-                    onChange={e => setAgreedToTerms(e.target.checked)}
-                    type="checkbox"
-                  />
-                  <span>
-                    I understand that items in my cart are variant-specific and
-                    have confirmed the correct variant before checkout.
-                  </span>
-                </label>
+          {cartItems.length > 0 && (
+            <div className={styles.cartTotal}>
+              <div className={styles.totalWrap}>
+                <h3>Subtotal: {formatPrice(cartSubTotal)}</h3>
+                <p>
+                  GST Included.
+                  <br />
+                  Fitting or Shipping confirmed in the checkout.
+                </p>
+                <div className={styles.agreeCheckbox}>
+                  <label>
+                    <input
+                      checked={agreedToTerms}
+                      id="agreeTerms"
+                      onChange={e => setAgreedToTerms(e.target.checked)}
+                      type="checkbox"
+                    />
+                    <span>
+                      I understand that items in my cart are variant-specific
+                      and have confirmed the correct variant before checkout.
+                    </span>
+                  </label>
+                </div>
+                <Button
+                  className={styles.button}
+                  disabled={!agreedToTerms || cartItems.length === 0}
+                  href="/checkout"
+                >
+                  Check Out
+                </Button>
               </div>
-              <Button
-                className={styles.button}
-                disabled={!agreedToTerms || cartItems.length === 0}
-                href="/checkout"
-              >
-                Check Out
-              </Button>
+              <div className={styles.btns}>
+                <button
+                  className={styles.button}
+                  onClick={() => router.push('/products')}
+                >
+                  Continue Shopping
+                </button>
+                <button className={styles.button} onClick={handleOpenModal}>
+                  Make Enquiry
+                </button>
+              </div>
             </div>
-            <div className={styles.btns}>
-              <button
-                className={styles.button}
-                onClick={() => router.push('/products')}
-              >
-                Continue Shopping
-              </button>
-              <button className={styles.button} onClick={handleOpenModal}>
-                Make Enquiry
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </section>
       {enquiryModalOpened && (

@@ -29,6 +29,10 @@
   margin-right: 1%;
   margin-bottom: 14px;
 
+  &.empty {
+    width: 100%;
+  }
+
   @media (width<=1199px) {
     margin-bottom: 0;
   }
