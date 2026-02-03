@@ -45,7 +45,7 @@ export default function StoreLocatorResultsAndMap({
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
-  const options = ['roll cover', 'load rack'];
+  const [options, setOptions] = useState([]);
 
   // Handle outside click
   useEffect(() => {
@@ -61,6 +61,19 @@ export default function StoreLocatorResultsAndMap({
   useEffect(
     function initializeAndSyncLocations() {
       const locationList = normalizeStores(allLocations, searchGeolocation);
+
+      const uniqueCategories = [
+        ...new Set(
+          locationList
+            .flatMap(store =>
+              store.displays?.map(d => d.productCategory?.nodes[0]?.name),
+            )
+            .filter(Boolean),
+        ),
+      ];
+
+      setOptions(uniqueCategories);
+
       setAllMapLocations(locationList);
 
       if (searchGeolocation) {
@@ -100,6 +113,26 @@ export default function StoreLocatorResultsAndMap({
         : [...prev, option],
     );
   };
+
+  useEffect(() => {
+    function filterStores() {
+      if (!selectedOptions.length) return;
+
+      const filtered = filteredStores.filter(store => {
+        const storeCategories =
+          store.displays
+            ?.map(d => d.productCategory?.nodes[0]?.name)
+            .filter(Boolean) || [];
+
+        // Match if store has ANY selected option
+        return selectedOptions.some(option => storeCategories.includes(option));
+      });
+
+      setFilteredLocations(filtered);
+    }
+
+    filterStores();
+  }, [selectedOptions]);
 
   return (
     <div
