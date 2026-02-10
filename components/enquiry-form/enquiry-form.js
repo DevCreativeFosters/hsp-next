@@ -99,7 +99,7 @@ export default function EnquiryForm({
       setVariableProduct(product);
       setInStock(product?.stockStatus === 'instock');
       setIsOutOfStock(product?.stockStatus === 'outofstock');
-      setOnBackOrder(product?.stockStatus === 'onbackorder');
+      setOnBackOrder(product?.backorderNote === 'Pre-Order');
     }
   }, [selectedVariantSlug]);
 
@@ -270,16 +270,16 @@ export default function EnquiryForm({
           </div>
           <div className={styles.productActions}>
             <div className={styles.qtyAndBtns}>
-              <div
-                className={clsx(styles.productStatus, styles.statusColor)}
-                style={{
-                  '--status-color': variableProduct?.colorNote,
-                }}
-              >
-                {isOutOfStock && 'Out of Stock'}
-                {inStock && 'In Stock'}
-                {onBackOrder && (variableProduct.backorderNote || 'Pre-Order')}
-              </div>
+              {variableProduct?.backorderNote && (
+                <div
+                  className={clsx(styles.productStatus, styles.statusColor)}
+                  style={{
+                    '--status-color': variableProduct?.colorNote,
+                  }}
+                >
+                  {variableProduct?.backorderNote}
+                </div>
+              )}
               <div className={styles.qtyBlock}>
                 <button
                   className={styles.minus}
