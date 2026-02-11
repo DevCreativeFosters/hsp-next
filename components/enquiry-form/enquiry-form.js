@@ -82,7 +82,7 @@ export default function EnquiryForm({
     selectedVariant.image = getProductImage(selectedVariant, productData);
   }
 
-  const selectedVariantSlug = selectedVariant?.variantSlug;
+  const selectedVariantSku = selectedVariant?.sku;
 
   const [inStock, setInStock] = useState(false);
   const [isOutOfStock, setIsOutOfStock] = useState(true);
@@ -91,9 +91,9 @@ export default function EnquiryForm({
   const [variableProduct, setVariableProduct] = useState({});
 
   useEffect(() => {
-    if (selectedVariantSlug) {
+    if (selectedVariantSku) {
       const product = productData.acfVariants.find(
-        variant => variant.sku === selectedVariantSlug,
+        variant => variant.sku === selectedVariantSku,
       );
 
       setVariableProduct(product);
@@ -101,7 +101,7 @@ export default function EnquiryForm({
       setIsOutOfStock(product?.stockStatus === 'outofstock');
       setOnBackOrder(product?.backorderNote === 'Pre-Order');
     }
-  }, [selectedVariantSlug]);
+  }, [selectedVariantSku]);
 
   const variantPrice = selectedVariant?.variantDetails?.price
     ? selectedVariant?.variantDetails.price
