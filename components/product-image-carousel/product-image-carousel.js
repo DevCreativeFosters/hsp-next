@@ -12,6 +12,7 @@ import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({
   images,
+  minImagesForNav = 4,
   showMainImage = true,
   tag,
 }) {
@@ -35,7 +36,7 @@ export default function ProductImageCarousel({
     setImageIndex(index);
   }, []);
 
-  const isNavigationVisible = images?.length > 4;
+  const isNavigationVisible = images?.length > minImagesForNav;
 
   const itemTpl = useMemo(() => {
     const itemTemplate = item => (

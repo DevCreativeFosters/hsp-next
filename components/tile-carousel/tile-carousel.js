@@ -252,7 +252,7 @@ export default function TileCarousel({
             ref={carouselRef}
           >
             <div
-              className={styles.container}
+              className={clsx(styles.container, `${carouselId}`)}
               id={carouselId}
               ref={containerRef}
               style={{ '--offset': `${carouselPosition}px` }}

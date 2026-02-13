@@ -1,0 +1,30 @@
+.galleryWithPopup .carousel-product-gallery {
+  gap: 23px !important;
+  flex-flow: column !important;
+
+  @include bp(medium) {
+    flex-flow: row !important;
+    gap: 0 !important;
+  }
+
+  & > div {
+    width: 100% !important;
+    padding: 0 10px;
+
+    img {
+      border-radius: 16px !important;
+      max-height: 219px;
+      border-width: 0 !important;
+    }
+
+    @include bp(medium) {
+      width: 85% !important;
+
+      img {
+        max-height: 280px;
+        border-width: 2px !important;
+        border-radius: 25px !important;
+      }
+    }
+  }
+}

@@ -671,15 +671,22 @@
   }
 }
 
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .buttonToggle {
   margin-left: auto;
-  float: right;
 
   svg {
     transform: rotate(90deg);
   }
 
   &.isActive {
+    margin-left: 0;
+
     svg {
       transform: rotate(-90deg);
     }

@@ -3,15 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import Image from 'next/image';
 
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
+import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 
 import RatingStar from '@assets/icons/rating-star.svg';
 
 import styles from './product-tabs.module.scss';
+import './styles.scss';
 
 const CREATE_REVIEW_MUTATION = `
   mutation CreateProductReviewWithImages(
@@ -54,7 +55,8 @@ export default function ReviewsContent({ productId, productName, reviews }) {
     { label: 'Oldest', value: 'oldest' },
   ];
 
-  const [showNoOfReviews, setShowNoOfReviews] = useState(4);
+  const INITIAL_VISIBLE = 4;
+  const [showNoOfReviews, setShowNoOfReviews] = useState(INITIAL_VISIBLE);
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
@@ -341,7 +343,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                 if (index >= showNoOfReviews) return null;
 
                 const author = review?.author?.node;
-                const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
+                const images = review?.reviewUploadImage?.uploadImage?.nodes;
 
                 return (
                   <div className={styles.reviewBox} key={review.databaseId}>
@@ -362,32 +364,46 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                         <span>Ordered the HSP {productName}</span>
                       </div>
                     </div>
-                    {img && (
-                      <div className={styles.right}>
-                        <figure>
-                          <Image
-                            alt={img.altText}
-                            height={160}
-                            src={img.sourceUrl}
-                            width={250}
-                          />
-                        </figure>
+                    {images?.length > 0 && (
+                      <div className={clsx('galleryWithPopup')}>
+                        <ProductImageCarousel
+                          images={images}
+                          minImagesForNav={1}
+                          showMainImage={false}
+                        />
                       </div>
                     )}
                   </div>
                 );
               })}
-              {sortedReviews.length > 4 &&
-                sortedReviews.length > showNoOfReviews && (
-                  <Button
-                    className={clsx(styles.buttonToggle)}
-                    onClick={() => setShowNoOfReviews(prev => prev + 4)}
-                    rightIcon={'arrow-forward'}
-                    type="button"
-                  >
-                    Show more
-                  </Button>
-                )}
+              {sortedReviews.length > INITIAL_VISIBLE && (
+                <div className={styles.buttonGroup}>
+                  {showNoOfReviews > INITIAL_VISIBLE && (
+                    <Button
+                      className={clsx(styles.buttonToggle, styles.isActive)}
+                      onClick={() =>
+                        setShowNoOfReviews(prev => prev - INITIAL_VISIBLE)
+                      }
+                      rightIcon={'arrow-forward'}
+                      type="button"
+                    >
+                      Show less
+                    </Button>
+                  )}
+                  {showNoOfReviews < sortedReviews.length && (
+                    <Button
+                      className={clsx(styles.buttonToggle)}
+                      onClick={() =>
+                        setShowNoOfReviews(prev => prev + INITIAL_VISIBLE)
+                      }
+                      rightIcon={'arrow-forward'}
+                      type="button"
+                    >
+                      Show more
+                    </Button>
+                  )}
+                </div>
+              )}
             </>
           ) : (
             <div className={styles.noReviews}>
