@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -10,6 +10,27 @@ export default function Tabs({ tabs, type }) {
   const [activeTab, setActiveTab] = useState(tabs[0].slug);
   const [hasClicked, setHasClicked] = useState(false);
 
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+
+    if (hash && tabs.some(tab => tab.slug === hash)) {
+      setActiveTab(hash);
+    }
+  }, [tabs]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+
+      if (hash && tabs.some(tab => tab.slug === hash)) {
+        setActiveTab(hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [tabs]);
+
   const activeContent = useMemo(() => {
     const currentTab = tabs.find(tab => tab.slug === activeTab);
     return currentTab ? currentTab.content : null;
@@ -18,6 +39,8 @@ export default function Tabs({ tabs, type }) {
   const handleTabClick = slug => {
     setActiveTab(slug);
     setHasClicked(true);
+
+    window.location.hash = slug;
   };
 
   const handleMobileTileClick = () => {
@@ -48,7 +71,7 @@ export default function Tabs({ tabs, type }) {
 
         <div className={styles.tabsContent}>
           <div className={styles.mobileTile} onClick={handleMobileTileClick}>
-            {tabs.find(tab => tab.slug === activeTab).title}
+            {tabs.find(tab => tab.slug === activeTab)?.title}
           </div>
           {activeContent}
         </div>
