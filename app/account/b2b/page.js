@@ -1,7 +1,5 @@
 import { Fragment } from 'react';
 
-import Image from 'next/image';
-
 import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 
@@ -10,15 +8,14 @@ import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
 import Referrals from '@components/account/referrals/referrals';
+import StoreResources from '@components/account/store-resources/store-resources';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Tabs from '@components/tabs/tabs';
 
-import CartIcon from '@assets/icons/cart-icon-basket.svg';
 import LinkIcon from '@assets/icons/link-icon.svg';
 import PdfIcon from '@assets/icons/pdf-icon.svg';
-import AccessImg from '@assets/images/access-img.png';
 
 import styles from './b2b.module.scss';
 
@@ -61,70 +58,7 @@ export default async function RetailPage() {
               title: 'Wishlist',
             },
             {
-              content: (
-                <div className={styles.resourceMain}>
-                  <div className={styles.blackContentBox}>
-                    <h3 className={styles.sectionTitle}>Marketing Resources</h3>
-                    <ul>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">HSP Logos & Branding Guides</a>
-                      </li>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">Social Media Posts</a>
-                      </li>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">Product Photos</a>
-                      </li>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">Editable Flyers</a>
-                      </li>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">Lifestyle Images</a>
-                      </li>
-                      <li>
-                        <LinkIcon />
-                        <a href="#">Display Signage Options</a>
-                      </li>
-                    </ul>
-
-                    <div className={styles.cartButton}>
-                      <button>
-                        <CartIcon /> Access My Dealership Assets
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className={styles.lmsBlock}>
-                    <div className={styles.left}>
-                      <h4>Learning Management System</h4>
-                      <p>
-                        The Learning Module System (LMS) is an online training
-                        platform designed to equip your new and existing staff
-                        with in-depth knowledge of HSP products, so they can
-                        deliver exceptional service and drive sales.
-                      </p>
-                      <button className={styles.button} href="#">
-                        Access LMS Here
-                      </button>
-                    </div>
-                    <div className={styles.right}>
-                      <figure>
-                        <Image
-                          alt={'HSP Logo'}
-                          height={188}
-                          src={AccessImg}
-                          width={417}
-                        />
-                      </figure>
-                    </div>
-                  </div>
-                </div>
-              ),
+              content: <StoreResources />,
               slug: 'resources',
               title: 'Resources',
             },
