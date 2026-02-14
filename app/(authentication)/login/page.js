@@ -41,21 +41,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* RIGHT FORM SIDE */}
-                <div className={styles.loginRight}>
-                  <div className={styles.formContent}>
-                    <div className={styles.heading}>
-                      <h2>WELCOME BACK!</h2>
-                    </div>
-
-                    <LoginForm />
-
-                    <div className={styles.formFooter}>
-                      <p>
-                        <Link href="/forgot-password">Forgot Password?</Link>
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <LoginForm />
               </div>
               <div className={styles.loginFooter}>
                 <div className={styles.lfWrap}>

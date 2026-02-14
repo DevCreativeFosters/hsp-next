@@ -64,6 +64,35 @@
   font-family: var(--font-secondary);
 }
 
+.formFooter {
+  text-align: center;
+  color: #797979;
+  font-size: 18px;
+
+  p {
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .link {
+    color: #797979;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .link:hover {
+    color: #000;
+  }
+
+  .message {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ed2935;
+  }
+}
+
 .inputSubmitBtn input[type='button'],
 .inputSubmitBtn input[type='submit'],
 .inputSubmitBtn button {
@@ -95,4 +124,85 @@
 .inputSubmitBtn input[type='submit']:hover,
 .inputSubmitBtn button:hover {
   background: #000;
+}
+
+.loginRight {
+  width: 50%;
+  background: #fff;
+
+  @media (width<=767px) {
+    width: 100%;
+  }
+
+  .formContent {
+    background: #fff;
+    max-width: 347px;
+    margin: auto;
+    padding: 80px 20px;
+
+    @media (width<=767px) {
+      padding: 32px 16px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 50px;
+
+      @media (width<=767px) {
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        font-size: clamp(38px, 2.6vw, 50px);
+        text-transform: uppercase;
+        margin: 0;
+        line-height: 1;
+        color: #000;
+      }
+
+      p {
+        font-size: clamp(16px, 1.04vw, 20px);
+        color: #5d5d5dcc;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .submitbtn {
+    margin-top: 0;
+  }
+}
+
+.formContent input[type='text'],
+.formContent input[type='phone'],
+.formContent input[type='password'],
+.formContent input[type='email'] {
+  min-height: 44px !important;
+  border: solid 2px #9b9b9b !important;
+  padding: 0 20px !important;
+  width: 100% !important;
+  outline: none !important;
+  font-size: 20px;
+}
+
+.formContent select {
+  min-height: 44px !important;
+  border: solid 2px #9b9b9b !important;
+  padding: 0 20px !important;
+  width: 100% !important;
+  outline: none !important;
+}
+
+@media (width <= 767px) {
+  .formContent .heading p {
+    font-size: 16px;
+  }
+
+  .formContent {
+    padding: 40px 20px;
+  }
 }

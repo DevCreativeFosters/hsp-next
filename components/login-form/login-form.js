@@ -30,6 +30,7 @@ const LOGIN_MUTATION = `
 function LoginForm() {
   const { setUser } = useUserContext();
   const [formData, setFormData] = useState({ password: '', username: '' });
+  const [showForgotPassword, setShowForgotPassword] = useState(true);
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -52,14 +53,13 @@ function LoginForm() {
 
     try {
       const data = await fetchAPI(LOGIN_MUTATION, { variables: formData });
-
       const loginResponse = data?.userLogin;
 
       if (loginResponse?.token) {
-        // Save token in localStorage for persistence
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
         localStorage.setItem('userRole', loginResponse.role);
+
         setUser({
           id: loginResponse.userId,
           role: loginResponse.role,
@@ -87,67 +87,94 @@ function LoginForm() {
   };
 
   return (
-    <div className={styles.formWrap}>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.inputRow}>
-          <div className={styles.inputFullCol}>
-            <div className={styles.inputGroup}>
-              <input
-                name="username"
-                onChange={handleChange}
-                placeholder="Username"
-                required
-                type="text"
-                value={formData.username}
-              />
-            </div>
-          </div>
-
-          <div className={styles.inputFullCol}>
-            <div className={styles.inputGroup}>
-              <input
-                name="password"
-                onChange={handleChange}
-                placeholder="Password"
-                required
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-              />
-              <button
-                className={styles.showPwd}
-                onClick={togglePasswordVisibility}
-                type="button"
-              >
-                <PasswordShowIcon />
-              </button>
-            </div>
-          </div>
-
-          {/* Status Message */}
-          {loginMessage && (
-            <div className={styles.inputFullCol}>
-              <p
-                style={{
-                  color: loginMessage.startsWith('✅') ? 'green' : 'red',
-                  fontWeight: 500,
-                  marginBottom: '24px',
-                  textAlign: 'center',
-                }}
-              >
-                {loginMessage}
-              </p>
-            </div>
-          )}
-
-          <div className={clsx(styles.inputFullCol, styles.submitbtn)}>
-            <div className={styles.inputSubmitBtn}>
-              <button disabled={loading} type="submit">
-                {loading ? 'Logging in...' : 'LOGIN'}
-              </button>
-            </div>
-          </div>
+    <div className={styles.loginRight}>
+      <div className={styles.formContent}>
+        <div className={styles.heading}>
+          <h2>WELCOME BACK!</h2>
         </div>
-      </form>
+
+        <div className={styles.formWrap}>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.inputRow}>
+              <div className={styles.inputFullCol}>
+                <div className={styles.inputGroup}>
+                  <input
+                    name="username"
+                    onChange={handleChange}
+                    placeholder="Username"
+                    required
+                    type="text"
+                    value={formData.username}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.inputFullCol}>
+                <div className={styles.inputGroup}>
+                  <input
+                    name="password"
+                    onChange={handleChange}
+                    placeholder="Password"
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                  />
+                  <button
+                    className={styles.showPwd}
+                    onClick={togglePasswordVisibility}
+                    type="button"
+                  >
+                    <PasswordShowIcon />
+                  </button>
+                </div>
+              </div>
+
+              {/* Status Message */}
+              {loginMessage && (
+                <div className={styles.inputFullCol}>
+                  <p
+                    style={{
+                      color: loginMessage.startsWith('✅') ? 'green' : 'red',
+                      fontWeight: 500,
+                      marginBottom: '24px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {loginMessage}
+                  </p>
+                </div>
+              )}
+
+              <div className={clsx(styles.inputFullCol, styles.submitbtn)}>
+                <div className={styles.inputSubmitBtn}>
+                  <button disabled={loading} type="submit">
+                    {loading ? 'Logging in...' : 'LOGIN'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className={styles.formFooter}>
+          {showForgotPassword ? (
+            <p
+              className={styles.link}
+              onClick={() => {
+                setShowForgotPassword(false);
+                setTimeout(() => {
+                  setShowForgotPassword(true);
+                }, 5000);
+              }}
+            >
+              Forgot Password?
+            </p>
+          ) : (
+            <p className={styles.message}>
+              A password reset link has been sent to your email!
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

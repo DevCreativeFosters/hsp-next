@@ -9,6 +9,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { useCart } from '@contexts/cart-context';
 import { useUserContext } from '@contexts/user';
+import { useWishlist } from '@contexts/wishlist';
 
 import { useClickOutside } from '@hooks/useClickOutside';
 
@@ -35,6 +36,7 @@ export default function Header({
 }) {
   const { user } = useUserContext();
   const { cartCount } = useCart();
+  const { wishlistItems } = useWishlist();
 
   const headerRef = useRef(null);
   const mainMenuRef = useRef(null);
@@ -50,6 +52,8 @@ export default function Header({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const hasWishlistItems = wishlistItems?.length > 0 && user?.id;
 
   const toggleMenu = useCallback(() => {
     setIsMobileMenuActive(!isMobileMenuActive);
@@ -153,8 +157,19 @@ export default function Header({
               })}
               <Button
                 background="dark"
-                href="/products"
-                rightIcon="add-wishlist"
+                className={clsx({
+                  [styles.hasWishlistItems]: hasWishlistItems,
+                })}
+                href={
+                  hasWishlistItems
+                    ? `/account/${user?.role}#wishlist`
+                    : user?.id
+                      ? '#'
+                      : '/login'
+                }
+                rightIcon={
+                  hasWishlistItems ? 'filled-add-wishlist' : 'add-wishlist'
+                }
                 size="small"
                 variant="tertiary"
               />
@@ -253,8 +268,19 @@ export default function Header({
                 >
                   <Button
                     background="dark"
-                    href="/products"
-                    rightIcon="add-wishlist"
+                    className={clsx({
+                      [styles.hasWishlistItems]: hasWishlistItems,
+                    })}
+                    href={
+                      hasWishlistItems
+                        ? `/account/${user?.role}#wishlist`
+                        : user?.id
+                          ? '#'
+                          : '/login'
+                    }
+                    rightIcon={
+                      hasWishlistItems ? 'filled-add-wishlist' : 'add-wishlist'
+                    }
                     size="xsmall"
                     variant="tertiary"
                   />
