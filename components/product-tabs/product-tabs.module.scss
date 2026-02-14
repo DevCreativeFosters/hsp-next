@@ -513,7 +513,7 @@
     display: flex;
     flex: 1;
 
-    @media (width<=767px) {
+    @media (width<=480px) {
       flex-flow: column;
       gap: 30px;
     }
@@ -524,7 +524,7 @@
       display: flex;
       flex-flow: column;
 
-      @media (width<=767px) {
+      @media (width<=480px) {
         margin-right: 0;
       }
 
@@ -536,7 +536,7 @@
     .right {
       width: 25%;
 
-      @media (width<=767px) {
+      @media (width<=480px) {
         width: 100%;
       }
 
@@ -559,14 +559,18 @@
     .desc {
       margin: 15px 0 24px;
 
-      @media (width<=767px) {
-        margin: 15px 0;
+      @media (width<=480px) {
+        margin: 13px 0 10px;
       }
 
       p {
         margin: 0 0 10px;
         color: rgb(0 0 0 / 70%);
-        line-height: 1.5;
+        line-height: 1.2;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
 
@@ -588,7 +592,7 @@
         margin-top: 8px;
         color: var(--color-primary-100);
         font-size: 14px;
-        line-height: 1.2;
+        line-height: 1.3;
       }
     }
   }

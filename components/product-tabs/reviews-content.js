@@ -369,6 +369,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                         <ProductImageCarousel
                           images={images}
                           minImagesForNav={1}
+                          modalService
                           showMainImage={false}
                         />
                       </div>

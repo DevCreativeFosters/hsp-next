@@ -215,10 +215,16 @@ export default function TileCarousel({
 
       if (buttonPrev) {
         buttonPrev.addEventListener('click', goToPrev);
+        const isAtStart = currentIndex <= 0;
+        buttonPrev.disabled = isAtStart;
+        buttonPrev.classList.toggle(styles.disabled, isAtStart);
       }
 
       if (buttonNext) {
         buttonNext.addEventListener('click', goToNext);
+        const isAtEnd = currentIndex >= maxIndex;
+        buttonNext.disabled = isAtEnd;
+        buttonNext.classList.toggle(styles.disabled, isAtEnd);
       }
 
       return () => {
@@ -243,7 +249,7 @@ export default function TileCarousel({
           })}
         >
           <div
-            className={clsx(styles.carousel, {
+            className={clsx('carousel', styles.carousel, {
               [styles.isDragging]: isDragging,
               [styles.resetStyle]: resetStyle,
               [styles.smallGaps]: smallGaps,

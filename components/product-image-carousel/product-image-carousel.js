@@ -1,6 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { createPortal } from 'react-dom';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -13,6 +15,7 @@ import styles from './product-image-carousel.module.scss';
 export default function ProductImageCarousel({
   images,
   minImagesForNav = 4,
+  modalService = false,
   showMainImage = true,
   tag,
 }) {
@@ -26,15 +29,40 @@ export default function ProductImageCarousel({
   const [imageIndex, setImageIndex] = useState(0);
 
   const mainImageContainerRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleThumbnailClick = useCallback(selectedImageUrl => {
-    setSelectedImage(selectedImageUrl);
+  const handleThumbnailClick = useCallback(
+    selectedImageUrl => {
+      setSelectedImage(selectedImageUrl);
+      const index = images.findIndex(
+        image => image.sourceUrl === selectedImageUrl.sourceUrl,
+      );
+      setImageIndex(index);
 
-    const index = images.findIndex(
-      image => image.sourceUrl === selectedImageUrl.sourceUrl,
-    );
-    setImageIndex(index);
+      if (modalService) openModal();
+    },
+    [images],
+  );
+
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
   }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  useEffect(() => {
+    const handleEsc = e => {
+      if (e.key === 'Escape') closeModal();
+    };
+    if (isModalOpen) {
+      window.addEventListener('keydown', handleEsc);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [closeModal, isModalOpen]);
 
   const isNavigationVisible = images?.length > minImagesForNav;
 
@@ -101,7 +129,11 @@ export default function ProductImageCarousel({
           <>
             <Button
               background="dark"
-              className={clsx(styles.navigationButton, styles.prevButton)}
+              className={clsx(
+                'navigationButton',
+                styles.navigationButton,
+                styles.prevButton,
+              )}
               onClick={changeSlide(-1)}
               ref={buttonPrevRef}
               rightIcon="arrow-previous"
@@ -109,7 +141,11 @@ export default function ProductImageCarousel({
             />
             <Button
               background="dark"
-              className={clsx(styles.navigationButton, styles.nextButton)}
+              className={clsx(
+                'navigationButton',
+                styles.navigationButton,
+                styles.nextButton,
+              )}
               onClick={changeSlide(1)}
               ref={buttonNextRef}
               rightIcon="arrow-next"
@@ -118,6 +154,35 @@ export default function ProductImageCarousel({
           </>
         )}
       </TileCarousel>
+
+      {typeof window !== 'undefined' &&
+        createPortal(
+          <div
+            className={clsx(styles.modalOverlay, {
+              [styles.show]: isModalOpen,
+            })}
+            onClick={closeModal}
+          >
+            <div
+              className={styles.modalContent}
+              onClick={e => e.stopPropagation()}
+            >
+              <button className={styles.closeButton} onClick={closeModal}>
+                ×
+              </button>
+              {selectedImage && (
+                <Image
+                  alt={selectedImage.alt}
+                  height={1200}
+                  src={selectedImage.sourceUrl}
+                  style={{ objectFit: 'contain' }}
+                  width={1200}
+                />
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
