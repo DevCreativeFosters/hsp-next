@@ -31,7 +31,8 @@
 
     @include bp-below(medium) {
       top: var(--header-height);
-      height: calc(100dvh - var(--header-height));
+
+      // height: calc(100dvh - var(--header-height));
       overflow: hidden;
       transition: height 0.3s 0.07s;
     }
@@ -149,7 +150,7 @@
   &.wrapper {
     background: transparent;
     position: unset;
-    padding-block: 12px;
+    padding-block: 16px;
 
     .store-locator-search {
       background: var(--color-primary-100);

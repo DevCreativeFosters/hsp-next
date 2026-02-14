@@ -9,6 +9,10 @@
 
   & > a {
     flex: 1;
+
+    @include bp-below(medium) {
+      display: none;
+    }
   }
 }
 
@@ -31,4 +35,9 @@ div[role='form'] {
 
 #store-locator-map {
   border-radius: 0;
+  margin: 0 -24px;
+
+  @include bp(medium) {
+    margin: 0;
+  }
 }
