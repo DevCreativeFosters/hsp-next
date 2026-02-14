@@ -161,7 +161,11 @@ export default function Header({
                   [styles.hasWishlistItems]: hasWishlistItems,
                 })}
                 href={
-                  hasWishlistItems ? `/account/${user?.role}#wishlist` : '#'
+                  hasWishlistItems
+                    ? `/account/${user?.role}#wishlist`
+                    : user?.id
+                      ? '#'
+                      : '/login'
                 }
                 rightIcon={
                   hasWishlistItems ? 'filled-add-wishlist' : 'add-wishlist'
@@ -268,7 +272,11 @@ export default function Header({
                       [styles.hasWishlistItems]: hasWishlistItems,
                     })}
                     href={
-                      hasWishlistItems ? `/account/${user?.role}#wishlist` : '#'
+                      hasWishlistItems
+                        ? `/account/${user?.role}#wishlist`
+                        : user?.id
+                          ? '#'
+                          : '/login'
                     }
                     rightIcon={
                       hasWishlistItems ? 'filled-add-wishlist' : 'add-wishlist'
