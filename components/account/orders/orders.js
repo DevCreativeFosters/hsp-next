@@ -55,37 +55,38 @@ const GET_ORDERS = `
 `;
 
 const OUT_ORDERS = `
-mutation fetchOutstandingOrders($userId: Int!) {
-  fetchOutstandingOrders(input: { userId: $userId }) {
-    success
-    message
-    orders {
-      order_id
-      order_date
-      status
-      statusColor
-      installation
-      freight
-      gst
-      order_total
-      payment
-      total_items
-      total_quantity
-      order_type
-      selected_store
-      store_name
-      purchase_order_number
-      selected_store_user_id
-      selected_store_user_name
-      items {
-        name
-        quantity
-        total
-        image
+  mutation fetchOutstandingOrders($userId: Int!) {
+    fetchOutstandingOrders(input: { userId: $userId }) {
+      success
+      message
+      orders {
+        order_id
+        order_date
+        status
+        statusColor
+        installation
+        freight
+        gst
+        order_total
+        payment
+        total_items
+        total_quantity
+        order_type
+        selected_store
+        store_name
+        purchase_order_number
+        selected_store_user_id
+        selected_store_user_name
+        items {
+          name
+          quantity
+          price
+          total
+          image
+        }
       }
     }
   }
-}
 `;
 
 const GENERATE_ORDER_PDF = `
@@ -364,8 +365,8 @@ function Order({ item, onlyReturns = false, received = false }) {
                   <div className={styles.info}>
                     <div className={styles.desc}>
                       <div className={styles.left}>
-                        <h6>{item.name}</h6>
-                        <p>SKU: NGR4RS3.5</p>
+                        <h6>{item.name.split(' - ')[0]}</h6>
+                        <p>SKU: {item.name.split(' - ')[1]}</p>
                       </div>
                       <div className={styles.right}>
                         <div className={styles.sNo}>
