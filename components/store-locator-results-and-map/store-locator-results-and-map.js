@@ -153,6 +153,7 @@ export default function StoreLocatorResultsAndMap({
                 addClass={'insideResultsAndMap'}
                 allLocations={allLocations}
                 noPadding
+                showInlineResultList={false}
               />
             )}
 

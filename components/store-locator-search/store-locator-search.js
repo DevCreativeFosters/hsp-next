@@ -32,6 +32,7 @@ export default function StoreLocatorSearch({
   allLocations,
   noPadding = false,
   onSelect = () => {},
+  showInlineResultList = true,
 }) {
   const [sessionToken, setSessionToken] = useState(uuidv4());
   const [isFormValid, setIsFormValid] = useState(false);
@@ -250,8 +251,9 @@ export default function StoreLocatorSearch({
   return (
     <section
       className={clsx(styles.wrapper, styles[addClass], {
-        [styles.isFullScreen]: isFullScreen,
-        [styles.showingResults]: isInlineResultListVisible,
+        [styles.isFullScreen]: isFullScreen && showInlineResultList,
+        [styles.showingResults]:
+          isInlineResultListVisible && showInlineResultList,
       })}
       ref={wrapperOuterRef}
     >
@@ -305,7 +307,7 @@ export default function StoreLocatorSearch({
                 />
               </div>
 
-              {isInlineResultListVisible && (
+              {isInlineResultListVisible && showInlineResultList && (
                 <div className={clsx(styles.mobileOnly, styles.storeList)}>
                   <StoreTilesList
                     allLocations={allLocations}

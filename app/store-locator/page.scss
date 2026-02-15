@@ -16,6 +16,21 @@
   }
 }
 
+#direction-btn {
+  @include bp-below(medium) {
+    display: none;
+  }
+}
+
+#phone-btn,
+#learn-more-btn {
+  @include bp-below(medium) {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+  }
+}
+
 div[role='form'] {
   background-color: #ed2935;
 }

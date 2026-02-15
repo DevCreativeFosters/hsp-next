@@ -94,7 +94,17 @@
   gap: var(--gap-global-sm);
   margin-top: var(--gap-global-sm);
 
+  .phoneBtn {
+    display: none;
+  }
+
   @include bp(large) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (width >=420px) and (width < 768px) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -106,10 +116,13 @@
   font-size: 16px;
   padding-inline: 8px !important;
   width: 100%;
-  background-color: var(--color-white-10);
 
-  &:hover {
-    background-color: var(--color-white-20);
+  &.background {
+    background-color: var(--color-white-10);
+
+    &:hover {
+      background-color: var(--color-white-20);
+    }
   }
 
   svg {
