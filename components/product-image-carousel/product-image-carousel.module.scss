@@ -10,24 +10,6 @@
   }
 }
 
-.commingSoonTag {
-  color: var(--color-primary-100);
-  font-size: clamp(26px, 1.875vw, 36px);
-  padding: 0 10px;
-  border-radius: 6px;
-  border: solid 2px var(--color-primary-100);
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 1;
-  font-family: var(--font-secondary);
-  font-weight: 600;
-  min-height: clamp(47px, 3.125vw, 60px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .container {
   width: 100%;
   position: relative;
@@ -72,6 +54,21 @@
   @include bp(large) {
     margin-bottom: 24px;
   }
+}
+
+.overlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.mainImage {
+  z-index: 1;
 }
 
 .thumbnailCarouselContainer {

@@ -7,20 +7,27 @@ import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import Button from '@components/button/button';
 import TileCarousel from '@components/tile-carousel/tile-carousel';
 
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({
+  imageTagDesktop,
+  imageTagMobile,
   images,
   minImagesForNav = 4,
   modalService = false,
   showMainImage = true,
-  tag,
 }) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
+
+  const isMobile = useIsMobile();
+
+  const [mounted, setMounted] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState(
     images?.length ? images[0] : null,
@@ -50,6 +57,10 @@ export default function ProductImageCarousel({
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -101,7 +112,31 @@ export default function ProductImageCarousel({
     <div className={styles.container}>
       {showMainImage && (
         <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
-          {tag && <div className={styles.commingSoonTag}>{tag}</div>}
+          {(imageTagMobile?.sourceUrl || imageTagDesktop?.sourceUrl) && (
+            <Image
+              alt={
+                (isMobile
+                  ? imageTagMobile?.altText
+                  : imageTagDesktop?.altText) || ''
+              }
+              className={styles.overlayImage}
+              height={
+                isMobile
+                  ? imageTagMobile?.mediaDetails?.height
+                  : imageTagDesktop?.mediaDetails?.height
+              }
+              src={
+                isMobile
+                  ? imageTagMobile?.sourceUrl
+                  : imageTagDesktop?.sourceUrl
+              }
+              width={
+                isMobile
+                  ? imageTagMobile?.mediaDetails?.width
+                  : imageTagDesktop?.mediaDetails?.width
+              }
+            />
+          )}
           {selectedImage && (
             <Image
               alt={selectedImage.alt}
@@ -155,7 +190,7 @@ export default function ProductImageCarousel({
         )}
       </TileCarousel>
 
-      {typeof window !== 'undefined' &&
+      {mounted &&
         createPortal(
           <div
             className={clsx(styles.modalOverlay, {
