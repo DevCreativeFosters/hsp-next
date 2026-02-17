@@ -3,16 +3,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+import Image from 'next/image';
+import Lightbox from 'yet-another-react-lightbox';
+import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import 'yet-another-react-lightbox/styles.css';
 
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
-import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 
 import RatingStar from '@assets/icons/rating-star.svg';
 
 import styles from './product-tabs.module.scss';
-import './styles.scss';
 
 const CREATE_REVIEW_MUTATION = `
   mutation CreateProductReviewWithImages(
@@ -57,6 +61,9 @@ export default function ReviewsContent({ productId, productName, reviews }) {
 
   const INITIAL_VISIBLE = 4;
   const [showNoOfReviews, setShowNoOfReviews] = useState(INITIAL_VISIBLE);
+
+  const [lightboxSlides, setLightboxSlides] = useState([]);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
@@ -343,6 +350,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                 if (index >= showNoOfReviews) return null;
 
                 const author = review?.author?.node;
+                const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
                 const images = review?.reviewUploadImage?.uploadImage?.nodes;
 
                 return (
@@ -364,14 +372,28 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                         <span>Ordered the HSP {productName}</span>
                       </div>
                     </div>
-                    {images?.length > 0 && (
-                      <div className={clsx('galleryWithPopup')}>
-                        <ProductImageCarousel
-                          images={images}
-                          minImagesForNav={1}
-                          modalService
-                          showMainImage={false}
-                        />
+                    {img && (
+                      <div
+                        className={styles.right}
+                        onClick={() => {
+                          const slides =
+                            images?.map(img => ({
+                              alt: img.altText || '',
+                              src: img.sourceUrl,
+                            })) || [];
+
+                          setLightboxSlides(slides);
+                          setLightboxOpen(true);
+                        }}
+                      >
+                        <figure>
+                          <Image
+                            alt={img.altText}
+                            height={160}
+                            src={img.sourceUrl}
+                            width={250}
+                          />
+                        </figure>
                       </div>
                     )}
                   </div>
@@ -382,9 +404,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                   {showNoOfReviews > INITIAL_VISIBLE && (
                     <Button
                       className={clsx(styles.buttonToggle, styles.isActive)}
-                      onClick={() =>
-                        setShowNoOfReviews(prev => prev - INITIAL_VISIBLE)
-                      }
+                      onClick={() => setShowNoOfReviews(INITIAL_VISIBLE)}
                       rightIcon={'arrow-forward'}
                       type="button"
                     >
@@ -412,6 +432,14 @@ export default function ReviewsContent({ productId, productName, reviews }) {
             </div>
           )}
         </div>
+
+        <Lightbox
+          carousel={{ finite: true }}
+          close={() => setLightboxOpen(false)}
+          open={lightboxOpen}
+          plugins={[Fullscreen, Thumbnails]}
+          slides={lightboxSlides}
+        />
       </div>
     </div>
   );
