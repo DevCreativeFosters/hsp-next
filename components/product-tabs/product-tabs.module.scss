@@ -546,12 +546,15 @@
         overflow: hidden;
         margin: 0;
         line-height: 0;
+        padding-bottom: 63.5%;
+        cursor: pointer;
 
         img {
-          width: 100%;
-          height: auto;
-          max-height: 175px;
           display: block;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
         }
       }
     }
@@ -698,5 +701,15 @@
 
   @include bp(medium) {
     margin-top: 0;
+  }
+}
+
+.thumbnails {
+  border: solid 10px #f00;
+
+  .thumbnail {
+    .placeholder {
+      display: none !important;
+    }
   }
 }
