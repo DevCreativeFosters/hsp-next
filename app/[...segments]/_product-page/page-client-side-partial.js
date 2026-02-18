@@ -210,8 +210,7 @@ export default function PageClientSidePartial({
           </div>
         </div>
         <ProductImageCarousel
-          imageTagDesktop={variant?.variantDetails?.imageTagDesktop?.node}
-          imageTagMobile={variant?.variantDetails?.imageTagMobile?.node}
+          imageOverlay={variant?.variantDetails?.imageOverlay?.node}
           images={carouselImages}
         />
         <div className={styles.details}>

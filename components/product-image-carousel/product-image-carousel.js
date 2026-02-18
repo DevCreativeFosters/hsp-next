@@ -15,8 +15,7 @@ import TileCarousel from '@components/tile-carousel/tile-carousel';
 import styles from './product-image-carousel.module.scss';
 
 export default function ProductImageCarousel({
-  imageTagDesktop,
-  imageTagMobile,
+  imageOverlay,
   images,
   minImagesForNav = 4,
   modalService = false,
@@ -112,29 +111,13 @@ export default function ProductImageCarousel({
     <div className={styles.container}>
       {showMainImage && (
         <div className={styles.mainImageContainer} ref={mainImageContainerRef}>
-          {(imageTagMobile?.sourceUrl || imageTagDesktop?.sourceUrl) && (
+          {imageOverlay?.sourceUrl && (
             <Image
-              alt={
-                (isMobile
-                  ? imageTagMobile?.altText
-                  : imageTagDesktop?.altText) || ''
-              }
+              alt={imageOverlay?.altText || ''}
               className={styles.overlayImage}
-              height={
-                isMobile
-                  ? imageTagMobile?.mediaDetails?.height
-                  : imageTagDesktop?.mediaDetails?.height
-              }
-              src={
-                isMobile
-                  ? imageTagMobile?.sourceUrl
-                  : imageTagDesktop?.sourceUrl
-              }
-              width={
-                isMobile
-                  ? imageTagMobile?.mediaDetails?.width
-                  : imageTagDesktop?.mediaDetails?.width
-              }
+              height={imageOverlay?.mediaDetails?.height}
+              src={imageOverlay?.sourceUrl}
+              width={imageOverlay?.mediaDetails?.width}
             />
           )}
           {selectedImage && (
