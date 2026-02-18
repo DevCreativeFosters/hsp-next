@@ -35,6 +35,7 @@ export default function ProductMakeGrid({
   productsTitleTag,
   productsTitleTagStyle,
   showFilters,
+  template,
   title,
   titleTag,
   titleTagStyle,
@@ -326,6 +327,7 @@ export default function ProductMakeGrid({
                   name={product.title}
                   price={product.startingPrice}
                   removeBorder={true}
+                  template={template}
                   titleTag={productsTitleTag}
                   titleTagStyle={productsTitleTagStyle}
                   url={product.link?.url}

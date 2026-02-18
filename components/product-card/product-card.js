@@ -19,11 +19,12 @@ export default function ProductCard({
   name,
   price,
   removeBorder = false,
+  template = '',
   titleTag,
   titleTagStyle,
   url = '',
 }) {
-  const showViewProductBtn = false;
+  const showViewProductBtn = template === 'showViewProductBtn';
   const LinkOrDiv = url && !showViewProductBtn ? Link : 'div';
 
   return (
