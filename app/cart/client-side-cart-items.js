@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
+import StoreLocatorContext from '@contexts/store-locator';
 
 import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getStores } from '@lib/api/get-stores';
@@ -18,8 +19,17 @@ import Loading from '@components/loading/loading';
 
 import styles from './cart.module.scss';
 
+const DEFAULT_PRICE_SUMMARY = {
+  freight: 0,
+  installationCost: 0,
+  price: 0,
+};
+
 export default function ClientSideCartItems() {
   const [loading, setLoading] = useState(true);
+
+  const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [allLocations, setAllLocations] = useState([]);
@@ -37,6 +47,8 @@ export default function ClientSideCartItems() {
     updateCart,
   } = useCart();
 
+  const { selectedStore } = useContext(StoreLocatorContext);
+
   const lastProductSlug =
     cartItems.length > 0
       ? `${cartItems[cartItems.length - 1].product_slug}`
@@ -51,6 +63,37 @@ export default function ClientSideCartItems() {
     }
     fetchData();
   }, []);
+
+  useEffect(
+    function calculatePrice() {
+      const products = cartItems.map(item => {
+        return {
+          ...item,
+          image: item.product_image,
+          installationCost: item.installation_cost,
+          productName: item.product_name,
+          sku: item.variantSku,
+        };
+      });
+
+      setSelectedProducts(products);
+
+      let newPriceSummary = products.reduce((accumulator, currentProduct) => {
+        const newAccumulator = {
+          freight: accumulator.freight + (currentProduct.freight || 0),
+          installationCost:
+            accumulator.installationCost +
+            (currentProduct.installationCost || 0),
+          price: accumulator.price + (currentProduct.price || 0),
+        };
+
+        return newAccumulator;
+      }, DEFAULT_PRICE_SUMMARY);
+
+      setPriceSummary(newPriceSummary);
+    },
+    [cartItems],
+  );
 
   useEffect(() => {
     if (!cartLoading) setLoading(false);
@@ -234,12 +277,14 @@ export default function ClientSideCartItems() {
       </section>
       {enquiryModalOpened && (
         <EnquiryModal
+          allLocations={allLocations}
           enquiryFormId={globalOptions?.enquiryFormId}
           freight={priceSummary.freight}
           installationCost={priceSummary.installationCost}
           onClose={handleCloseModal}
           productPrice={priceSummary.price}
           selectedProducts={selectedProducts}
+          showStoreSearchcontrols={true}
           store={selectedStore}
         />
       )}

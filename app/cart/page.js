@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import { StoreLocatorProvider } from '@contexts/store-locator';
+
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 
@@ -12,7 +14,9 @@ function page() {
   return (
     <Layout title="Cart | HSP">
       <Container>
-        <ClientSideCartItems />
+        <StoreLocatorProvider>
+          <ClientSideCartItems />
+        </StoreLocatorProvider>
         <section className={styles.checkoutProcess}>
           <div className={styles.heading}>
             <h2>Checkout Process </h2>
