@@ -90,7 +90,7 @@ const GENERATE_ORDER_PDF = `
   }
 `;
 
-function Order({ item }) {
+function Order({ item, onStatusChange }) {
   const [showProducts, setShowProducts] = useState(false);
   const { user } = useUserContext();
   const total = item?.variants.reduce(
@@ -101,7 +101,6 @@ function Order({ item }) {
   const [customerContacted, setCustomerContacted] = useState(
     item?.marksAsContact,
   );
-  const [updateIsWon, setUpdateIsWon] = useState(item?.updateIsWon);
 
   async function handleDownloadInvoice() {
     try {
@@ -143,9 +142,7 @@ function Order({ item }) {
         variables: { id, value },
       });
 
-      if (res?.updateIsWon?.success) {
-        setUpdateIsWon(value);
-      }
+      onStatusChange(res?.updateIsWon?.id, res?.updateIsWon?.isWon);
     } catch (err) {
       console.error('Error downloading invoice:', err);
     }
@@ -193,9 +190,9 @@ function Order({ item }) {
                         <path
                           d="M24 10L13 21L8 16"
                           stroke="#319F18"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2.5"
                         />
                       </svg>
                     </button>
@@ -308,11 +305,13 @@ function Order({ item }) {
   );
 }
 
-const CheckNoOrders = ({ children, orders }) => {
+const CheckNoOrders = ({ children, onStatusChange, orders }) => {
   return orders.length == 0 ? (
     <div className={styles.noOrders}>{children}</div>
   ) : (
-    orders.map(item => <Order item={item} key={item.order_id} />)
+    orders.map(item => (
+      <Order item={item} key={item.order_id} onStatusChange={onStatusChange} />
+    ))
   );
 };
 
@@ -345,6 +344,14 @@ function Orders() {
     getAllReferrals();
   }, [user?.token]);
 
+  function updateReferralStatus(id, value) {
+    setAllReferrals(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, updateIsWon: value } : item,
+      ),
+    );
+  }
+
   return (
     <div className={styles.orders}>
       {loading ? (
@@ -355,6 +362,7 @@ function Orders() {
             {
               content: (
                 <CheckNoOrders
+                  onStatusChange={updateReferralStatus}
                   orders={allReferrals.filter(
                     order => order.updateIsWon === null,
                   )}
@@ -368,6 +376,7 @@ function Orders() {
             {
               content: (
                 <CheckNoOrders
+                  onStatusChange={updateReferralStatus}
                   orders={allReferrals.filter(order => order.updateIsWon === 1)}
                 >
                   <h3>Looks like you haven&apos;t won any orders yet</h3>
@@ -379,6 +388,7 @@ function Orders() {
             {
               content: (
                 <CheckNoOrders
+                  onStatusChange={updateReferralStatus}
                   orders={allReferrals.filter(order => order.updateIsWon === 0)}
                 >
                   <h3>Looks like you haven&apos;t lost any orders yet</h3>
