@@ -173,7 +173,7 @@ export default function StoreLocatorResultsAndMap({
                       )}
                       onClick={() => setIsFilterOpen(!isFilterOpen)}
                     >
-                      {isFilterOpen ? 'Close' : 'Filter'}
+                      {isFilterOpen ? 'Close' : 'Filter by In-Store Display'}
                       {isFilterOpen ? (
                         <span className={styles.closeIcon}>✕</span>
                       ) : (
