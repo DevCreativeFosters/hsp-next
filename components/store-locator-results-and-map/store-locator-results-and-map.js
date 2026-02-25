@@ -48,6 +48,9 @@ export default function StoreLocatorResultsAndMap({
   } = useContext(StoreLocatorContext);
 
   const [options, setOptions] = useState([]);
+  const [categoryFilteredLocations, setCategoryFilteredLocations] = useState(
+    [],
+  );
 
   // Handle outside click
   useEffect(() => {
@@ -118,11 +121,11 @@ export default function StoreLocatorResultsAndMap({
 
   useEffect(() => {
     if (!selectedOptions.length) {
-      setFilteredLocations(allMapLocations);
+      setCategoryFilteredLocations(filteredLocations);
       return;
     }
 
-    const filtered = allMapLocations.filter(store => {
+    const filtered = filteredLocations.filter(store => {
       const storeCategories =
         store.displays
           ?.map(d => d.productCategory?.nodes[0]?.name)
@@ -131,8 +134,8 @@ export default function StoreLocatorResultsAndMap({
       return selectedOptions.some(option => storeCategories.includes(option));
     });
 
-    setFilteredLocations(filtered);
-  }, [allMapLocations, selectedOptions]);
+    setCategoryFilteredLocations(filtered);
+  }, [filteredLocations, selectedOptions]);
 
   return (
     <div
@@ -215,7 +218,7 @@ export default function StoreLocatorResultsAndMap({
             />
           </div>
           <StoreLocatorMap
-            locations={filteredLocations}
+            locations={categoryFilteredLocations}
             minHeightLarge
             onMarkerClick={setSelectedStore}
           />
