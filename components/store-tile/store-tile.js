@@ -94,17 +94,19 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
         )}
       </div>
       <div className={styles.extra}>
-        <Button
-          className={clsx(styles.link, styles.phoneBtn)}
-          href={`tel:${telNormalized}`}
-          id="phone-btn"
-          rel="noopener noreferrer"
-          rightIcon="phone"
-          size="small"
-          target="_blank"
-        >
-          {tel}
-        </Button>
+        {tel && (
+          <Button
+            className={clsx(styles.link, styles.phoneBtn)}
+            href={`tel:${telNormalized}`}
+            id="phone-btn"
+            rel="noopener noreferrer"
+            rightIcon="phone"
+            size="small"
+            target="_blank"
+          >
+            {tel}
+          </Button>
+        )}
         <Button
           className={clsx(styles.link, styles.background)}
           href={learnMoreButton?.url}
