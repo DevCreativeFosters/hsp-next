@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useUserContext } from '@contexts/user';
@@ -13,6 +14,15 @@ import { fetchAPI } from '@lib/fetch-api';
 import PasswordShowIcon from '@assets/icons/pwd-cross.svg';
 
 import styles from './login-form.module.scss';
+
+const FORGOT_PASSWORD_MUTATION = `
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(input: { email: $email }) {
+      success
+      message
+    }
+  }
+`;
 
 // --- GraphQL mutation for login
 const LOGIN_MUTATION = `
@@ -29,8 +39,8 @@ const LOGIN_MUTATION = `
 
 function LoginForm() {
   const { setUser } = useUserContext();
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [formData, setFormData] = useState({ password: '', username: '' });
-  const [showForgotPassword, setShowForgotPassword] = useState(true);
   const [loading, setLoading] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +62,24 @@ function LoginForm() {
     setLoading(true);
 
     try {
+      if (isForgotPassword) {
+        // ---- Forgot Password Flow ----
+        const data = await fetchAPI(FORGOT_PASSWORD_MUTATION, {
+          variables: { email: formData.username },
+        });
+
+        const response = data?.forgotPassword;
+
+        if (response?.success) {
+          setLoginMessage(`${response.message}`);
+        } else {
+          setLoginMessage(`❌ ${response?.message || 'Something went wrong'}`);
+        }
+
+        return;
+      }
+
+      // ---- Login Flow ----
       const data = await fetchAPI(LOGIN_MUTATION, { variables: formData });
       const loginResponse = data?.userLogin;
 
@@ -78,6 +106,9 @@ function LoginForm() {
       setLoginMessage(`❌ Something went wrong: ${err.message}`);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setLoginMessage('');
+      }, 5000);
     }
   };
 
@@ -90,7 +121,7 @@ function LoginForm() {
     <div className={styles.loginRight}>
       <div className={styles.formContent}>
         <div className={styles.heading}>
-          <h2>WELCOME BACK!</h2>
+          <h2>{isForgotPassword ? 'Reset Your Password' : 'WELCOME BACK!'}</h2>
         </div>
 
         <div className={styles.formWrap}>
@@ -101,30 +132,46 @@ function LoginForm() {
                   <input
                     name="username"
                     onChange={handleChange}
-                    placeholder="Username"
+                    placeholder={isForgotPassword ? 'Email' : 'Username'}
                     required
-                    type="text"
+                    type={isForgotPassword ? 'email' : 'text'}
                     value={formData.username}
                   />
                 </div>
               </div>
 
-              <div className={styles.inputFullCol}>
-                <div className={styles.inputGroup}>
-                  <input
-                    name="password"
-                    onChange={handleChange}
-                    placeholder="Password"
-                    required
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                  />
-                  <button
-                    className={styles.showPwd}
-                    onClick={togglePasswordVisibility}
-                    type="button"
-                  >
-                    <PasswordShowIcon />
+              {!isForgotPassword && (
+                <div className={styles.inputFullCol}>
+                  <div className={styles.inputGroup}>
+                    <input
+                      name="password"
+                      onChange={handleChange}
+                      placeholder="Password"
+                      required
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                    />
+                    <button
+                      className={styles.showPwd}
+                      onClick={togglePasswordVisibility}
+                      type="button"
+                    >
+                      <PasswordShowIcon />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className={clsx(styles.inputFullCol, styles.submitbtn)}>
+                <div className={styles.inputSubmitBtn}>
+                  <button disabled={loading} type="submit">
+                    {loading
+                      ? isForgotPassword
+                        ? 'Sending...'
+                        : 'Logging in...'
+                      : isForgotPassword
+                        ? 'Send Reset Link'
+                        : 'LOGIN'}
                   </button>
                 </div>
               </div>
@@ -135,7 +182,7 @@ function LoginForm() {
                   <p
                     style={{
                       color: loginMessage.startsWith('✅') ? 'green' : 'red',
-                      fontWeight: 500,
+                      fontWeight: 'bold',
                       marginBottom: '24px',
                       textAlign: 'center',
                     }}
@@ -144,36 +191,27 @@ function LoginForm() {
                   </p>
                 </div>
               )}
-
-              <div className={clsx(styles.inputFullCol, styles.submitbtn)}>
-                <div className={styles.inputSubmitBtn}>
-                  <button disabled={loading} type="submit">
-                    {loading ? 'Logging in...' : 'LOGIN'}
-                  </button>
-                </div>
-              </div>
             </div>
           </form>
         </div>
-        <div className={styles.formFooter}>
-          {showForgotPassword ? (
-            <p
-              className={styles.link}
-              onClick={() => {
-                setShowForgotPassword(false);
-                setTimeout(() => {
-                  setShowForgotPassword(true);
-                }, 5000);
-              }}
-            >
-              Forgot Password?
+
+        {!loginMessage && (
+          <div className={styles.formFooter}>
+            <p>
+              <Link
+                href="#"
+                onClick={e => {
+                  e.preventDefault();
+                  setIsForgotPassword(prev => !prev);
+                  setLoginMessage('');
+                  setFormData({ password: '', username: '' });
+                }}
+              >
+                {isForgotPassword ? 'Back to login' : 'Forgot Password?'}
+              </Link>
             </p>
-          ) : (
-            <p className={styles.message}>
-              A password reset link has been sent to your email!
-            </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
