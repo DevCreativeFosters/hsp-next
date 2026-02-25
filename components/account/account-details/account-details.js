@@ -23,6 +23,15 @@ query GetStoreById($id: ID!) {
     id
     title
     storesCustomFields {
+      priceList {
+        node {
+          id
+          title
+          sourceUrl
+          mediaItemUrl
+          mimeType
+        }
+      }
       addressFields {
         city
         cityTw
@@ -150,12 +159,14 @@ function AccountDetails() {
           });
 
           const storeDetails = storeData?.store;
-          storeDetails.storeCategories.nodes[0];
+
+          const priceList = storeDetails.storesCustomFields.priceList?.node;
 
           store = {
             ...store,
             ...storeDetails,
             ...storeDetails.storesCustomFields,
+            priceList,
           };
 
           setStoreDetails(store);
@@ -193,7 +204,8 @@ function AccountDetails() {
         <div className={styles.accountDetails}>
           <h2 className={styles.sectionTitle}>{storeDetails?.title}</h2>
 
-          {storeDetails.storeCategories.nodes.length > 0 && (
+          {(storeDetails?.storeCategories?.nodes?.length > 0 ||
+            storeDetails?.priceList) && (
             <div className={styles.customBtns}>
               {storeDetails.storeCategories.nodes.map((category, index) => (
                 <a
@@ -213,6 +225,27 @@ function AccountDetails() {
                   {category.name}
                 </a>
               ))}
+              {storeDetails?.priceList?.mediaItemUrl && (
+                <Link
+                  className={clsx(styles.goldButton, styles.priceListBtn)}
+                  href={storeDetails?.priceList?.mediaItemUrl}
+                  target="_blank"
+                >
+                  <svg
+                    fill="none"
+                    height="33"
+                    viewBox="0 0 32 33"
+                    width="32"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.54167 32.4583L0 26.9167L5.54167 21.375L7.79792 23.5917L6.05625 25.3333H25.6104L23.9083 23.5917L26.125 21.375L31.6667 26.9167L26.125 32.4583L23.8688 30.2417L25.6104 28.5H6.05625L7.75833 30.2417L5.54167 32.4583ZM15.8333 14.25C14.5139 14.25 13.3924 13.7882 12.4688 12.8646C11.5451 11.941 11.0833 10.8194 11.0833 9.5C11.0833 8.18056 11.5451 7.05903 12.4688 6.13542C13.3924 5.21181 14.5139 4.75 15.8333 4.75C17.1528 4.75 18.2743 5.21181 19.1979 6.13542C20.1215 7.05903 20.5833 8.18056 20.5833 9.5C20.5833 10.8194 20.1215 11.941 19.1979 12.8646C18.2743 13.7882 17.1528 14.25 15.8333 14.25ZM4.75 19C3.87917 19 3.13368 18.6899 2.51354 18.0698C1.8934 17.4497 1.58333 16.7042 1.58333 15.8333V3.16667C1.58333 2.29583 1.8934 1.55035 2.51354 0.930208C3.13368 0.310069 3.87917 0 4.75 0H26.9167C27.7875 0 28.533 0.310069 29.1531 0.930208C29.7733 1.55035 30.0833 2.29583 30.0833 3.16667V15.8333C30.0833 16.7042 29.7733 17.4497 29.1531 18.0698C28.533 18.6899 27.7875 19 26.9167 19H4.75ZM7.91667 15.8333H23.75C23.75 14.9625 24.0601 14.217 24.6802 13.5969C25.3004 12.9767 26.0458 12.6667 26.9167 12.6667V6.33333C26.0458 6.33333 25.3004 6.02326 24.6802 5.40312C24.0601 4.78299 23.75 4.0375 23.75 3.16667H7.91667C7.91667 4.0375 7.6066 4.78299 6.98646 5.40312C6.36632 6.02326 5.62083 6.33333 4.75 6.33333V12.6667C5.62083 12.6667 6.36632 12.9767 6.98646 13.5969C7.6066 14.217 7.91667 14.9625 7.91667 15.8333Z"
+                      fill="black"
+                    />
+                  </svg>
+                  Access Platinum Price List Here
+                </Link>
+              )}
             </div>
           )}
 
