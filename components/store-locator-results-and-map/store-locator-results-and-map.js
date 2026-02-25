@@ -37,6 +37,7 @@ export default function StoreLocatorResultsAndMap({
 
   const {
     allMapLocations,
+    filteredLocations,
     filteredStores,
     searchGeolocation,
     selectedStore,
@@ -116,29 +117,22 @@ export default function StoreLocatorResultsAndMap({
   };
 
   useEffect(() => {
-    function filterStores() {
-      console.log(selectedOptions, filteredStores);
-
-      if (!selectedOptions.length) setFilteredStores(filteredStores);
-      else {
-        const filtered = filteredStores.filter(store => {
-          const storeCategories =
-            store.displays
-              ?.map(d => d.productCategory?.nodes[0]?.name)
-              .filter(Boolean) || [];
-
-          // Match if store has ANY selected option
-          return selectedOptions.some(option =>
-            storeCategories.includes(option),
-          );
-        });
-
-        setFilteredStores(filtered);
-      }
+    if (!selectedOptions.length) {
+      setFilteredLocations(allMapLocations);
+      return;
     }
 
-    filterStores();
-  }, [selectedOptions]);
+    const filtered = allMapLocations.filter(store => {
+      const storeCategories =
+        store.displays
+          ?.map(d => d.productCategory?.nodes[0]?.name)
+          .filter(Boolean) || [];
+
+      return selectedOptions.some(option => storeCategories.includes(option));
+    });
+
+    setFilteredLocations(filtered);
+  }, [allMapLocations, selectedOptions]);
 
   return (
     <div
@@ -221,7 +215,7 @@ export default function StoreLocatorResultsAndMap({
             />
           </div>
           <StoreLocatorMap
-            locations={allMapLocations}
+            locations={filteredLocations}
             minHeightLarge
             onMarkerClick={setSelectedStore}
           />
