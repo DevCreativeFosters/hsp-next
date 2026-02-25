@@ -42,6 +42,7 @@ export default function StoreLocatorResultsAndMap({
     selectedStore,
     setAllMapLocations,
     setFilteredLocations,
+    setFilteredStores,
     setSelectedStore,
   } = useContext(StoreLocatorContext);
 
@@ -116,19 +117,24 @@ export default function StoreLocatorResultsAndMap({
 
   useEffect(() => {
     function filterStores() {
-      if (!selectedOptions.length) return;
+      console.log(selectedOptions, filteredStores);
 
-      const filtered = filteredStores.filter(store => {
-        const storeCategories =
-          store.displays
-            ?.map(d => d.productCategory?.nodes[0]?.name)
-            .filter(Boolean) || [];
+      if (!selectedOptions.length) setFilteredStores(filteredStores);
+      else {
+        const filtered = filteredStores.filter(store => {
+          const storeCategories =
+            store.displays
+              ?.map(d => d.productCategory?.nodes[0]?.name)
+              .filter(Boolean) || [];
 
-        // Match if store has ANY selected option
-        return selectedOptions.some(option => storeCategories.includes(option));
-      });
+          // Match if store has ANY selected option
+          return selectedOptions.some(option =>
+            storeCategories.includes(option),
+          );
+        });
 
-      setFilteredLocations(filtered);
+        setFilteredStores(filtered);
+      }
     }
 
     filterStores();
