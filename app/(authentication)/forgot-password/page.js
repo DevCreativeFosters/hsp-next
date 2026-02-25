@@ -1,7 +1,10 @@
+import { Suspense } from 'react';
+
 import Link from 'next/link';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
+import Loading from '@components/loading/loading';
 
 import Arrow from '@assets/images/arrow.svg';
 
@@ -16,7 +19,9 @@ export default function ForgotPassword() {
           <Container className={styles.loginBG}>
             <div className={styles.loginBGWrap}>
               <div className={styles.loginWrap}>
-                <ClientForgotForm />
+                <Suspense fallback={<Loading color="white" size="large" />}>
+                  <ClientForgotForm />
+                </Suspense>
               </div>
               <div className={styles.loginFooter}>
                 <div className={styles.lfWrap}>
