@@ -106,21 +106,15 @@ function ClientForgotForm() {
     <div className={styles.loginRight}>
       <div className={styles.formContent}>
         <div className={styles.heading}>
-          <h2>
-            {message?.message
-              ? message.success
-                ? 'SUCCESS!'
-                : 'WARNING!'
-              : 'FORGOT PASSWORD?'}
-          </h2>
+          <h2>{message?.success ? 'SUCCESS!' : 'FORGOT PASSWORD?'}</h2>
           <p>
-            {message?.message
+            {message?.success
               ? message.message
               : 'No Worries! Reset Your Password Below:'}
           </p>
         </div>
 
-        {message?.message ? (
+        {message?.message && message?.success ? (
           <div className={styles.formWrap}>
             <div className={clsx(styles.inputFullCol, styles.submitbtn)}>
               <div className={styles.inputSubmitBtn}>
@@ -189,6 +183,21 @@ function ClientForgotForm() {
                     </button>
                   </div>
                 </div>
+
+                {message?.message && (
+                  <div className={styles.inputFullCol}>
+                    <p
+                      style={{
+                        color: 'red',
+                        fontWeight: 'bold',
+                        marginBottom: '24px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {message?.message}
+                    </p>
+                  </div>
+                )}
               </div>
             </form>
           </div>
