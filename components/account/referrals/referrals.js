@@ -367,7 +367,10 @@ function Orders() {
                     order => order.updateIsWon === null,
                   )}
                 >
-                  <h3>Looks like didn&apos;t receive an order yet</h3>
+                  <h3>
+                    Looks like you haven&apos;t received any referrals yet
+                  </h3>
+                  <p>Please check back later to see any new referrals</p>
                 </CheckNoOrders>
               ),
               slug: 'requiringaction',
@@ -379,7 +382,10 @@ function Orders() {
                   onStatusChange={updateReferralStatus}
                   orders={allReferrals.filter(order => order.updateIsWon === 1)}
                 >
-                  <h3>Looks like you haven&apos;t won any orders yet</h3>
+                  <h3>
+                    Looks like you haven&apos;t received any referrals yet
+                  </h3>
+                  <p>Please check back later to see any new referrals</p>
                 </CheckNoOrders>
               ),
               slug: 'won',
@@ -391,7 +397,10 @@ function Orders() {
                   onStatusChange={updateReferralStatus}
                   orders={allReferrals.filter(order => order.updateIsWon === 0)}
                 >
-                  <h3>Looks like you haven&apos;t lost any orders yet</h3>
+                  <h3>
+                    Looks like you haven&apos;t received any referrals yet
+                  </h3>
+                  <p>Please check back later to see any new referrals</p>
                 </CheckNoOrders>
               ),
               slug: 'lost',
