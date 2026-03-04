@@ -125,6 +125,23 @@
         font-size: clamp(20px, 1.4vw, 27px);
         margin-bottom: 10px;
       }
+
+      p {
+        font-size: clamp(18px, 1.04vw, 20px);
+
+        a {
+          color: #fff;
+          border-color: #fff;
+          border-bottom: solid 1px #fff;
+          padding: 0;
+          line-height: 1;
+
+          &:hover {
+            color: var(--color-primary-100);
+            border-color: var(--color-primary-100);
+          }
+        }
+      }
     }
   }
 }

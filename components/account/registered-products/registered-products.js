@@ -57,7 +57,7 @@ function RegisteredProducts() {
   return (
     <div className={styles.registerProducts}>
       <div className={styles.heading}>
-        <h3>Product Registration</h3>
+        <h3>Registered Products</h3>
         <Button
           href="/support/register-your-product"
           size="large"
@@ -116,7 +116,7 @@ function RegisteredProducts() {
             })
           ) : (
             <div className={styles.noOrders}>
-              <h3>Looks like you haven&apos;t registered any products yet.</h3>
+              <p>Looks like you haven&apos;t registered any products yet.</p>
             </div>
           ))}
       </div>
