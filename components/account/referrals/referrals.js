@@ -27,6 +27,8 @@ const GET_REFERRALS = `
       lastName
       email
       phone
+      postCode
+      country
       products
       optionType
       totalAmount
@@ -102,23 +104,23 @@ function Order({ item, onStatusChange }) {
     item?.marksAsContact,
   );
 
-  async function handleDownloadInvoice() {
-    try {
-      const res = await fetchAPI(GENERATE_ORDER_PDF, {
-        variables: { orderId: item.order_id },
-      });
+  // async function handleDownloadInvoice() {
+  //   try {
+  //     const res = await fetchAPI(GENERATE_ORDER_PDF, {
+  //       variables: { orderId: item.order_id },
+  //     });
 
-      const pdf = res?.generateOrderPDF;
+  //     const pdf = res?.generateOrderPDF;
 
-      if (pdf?.success && pdf.pdfUrl) {
-        window.open(pdf.pdfUrl, '_blank');
-      } else {
-        console.error('PDF generation failed:', pdf?.message);
-      }
-    } catch (err) {
-      console.error('Error downloading invoice:', err);
-    }
-  }
+  //     if (pdf?.success && pdf.pdfUrl) {
+  //       window.open(pdf.pdfUrl, '_blank');
+  //     } else {
+  //       console.error('PDF generation failed:', pdf?.message);
+  //     }
+  //   } catch (err) {
+  //     console.error('Error downloading invoice:', err);
+  //   }
+  // }
 
   async function handleContact(id, value) {
     try {
@@ -247,17 +249,50 @@ function Order({ item, onStatusChange }) {
                 <div className={styles.desc}>{item.selected_store}</div>
               </div>
             )}
-            <div className={styles.orderRow}>
-              <div className={styles.title}>Customer Info:</div>
-              <div className={styles.desc}>
-                {item.firstName} {item.lastName}
+          </div>
+          <div className={styles.customerInfo}>
+            <div className={styles.heading}>
+              <div className={styles.left}>
+                <h5>Customer Info</h5>
+              </div>
+            </div>
+            <div className={styles.customerDetails}>
+              <div className={styles.custInfoRow}>
+                <div className={styles.left}>
+                  <strong>Name:</strong>
+                </div>
+                <div className={styles.right}>
+                  {item.firstName} {item.lastName}
+                </div>
+              </div>
+              <div className={styles.custInfoRow}>
+                <div className={styles.left}>
+                  <strong>Phone Number:</strong>
+                </div>
+                <div className={styles.right}>{item.phone}</div>
+              </div>
+              <div className={styles.custInfoRow}>
+                <div className={styles.left}>
+                  <strong>Address:</strong>
+                </div>
+                <div className={styles.right}>
+                  {item.postCode}, {item.country}
+                </div>
+              </div>
+              <div className={styles.custInfoRow}>
+                <div className={styles.left}>
+                  <strong>Email:</strong>
+                </div>
+                <div className={styles.right}>{item.email}</div>
               </div>
             </div>
           </div>
           <div className={styles.orderBottom}>
-            <button className={styles.button} onClick={handleDownloadInvoice}>
+            {/*
+            <button className={styles.button}>
               Download Invoice
             </button>
+            */}
             <button
               className={styles.outlineButton}
               onClick={() => setShowProducts(!showProducts)}

@@ -555,6 +555,39 @@
           margin-bottom: 0;
         }
       }
+
+      .customerInfo {
+        .heading {
+          margin-bottom: 10px;
+        }
+
+        .customerDetails {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+
+          .custInfoRow {
+            display: flex;
+            width: 100%;
+            margin-bottom: 10px;
+            color: #d5d5d5;
+            font-family: var(--font-secondary);
+            font-size: 15px;
+
+            .left {
+              width: 35%;
+            }
+
+            .right {
+              width: 65%;
+            }
+
+            @include bp(large) {
+              width: 50%;
+            }
+          }
+        }
+      }
     }
   }
 
