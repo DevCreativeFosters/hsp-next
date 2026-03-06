@@ -147,9 +147,7 @@ export default function ProductMakeGrid({
         );
 
       case 'popularity':
-        return sorted.sort(
-          (a, b) => (a.popularity || 5000) - (b.popularity || 5000),
-        );
+        return sorted;
 
       default:
         return sorted;
