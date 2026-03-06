@@ -1,11 +1,6 @@
 .footer {
   width: 100%;
 
-  .footerWrap {
-    max-width: 100%;
-    padding-inline: var(--container-inline-padding);
-  }
-
   @media (width<=767px) {
     padding-top: 48px;
   }
@@ -31,51 +26,17 @@
 }
 
 .footerContainerC {
-  // display: none;
-  display: flex;
+  display: none;
   gap: var(--gap-global);
 
-  @media (width<=991px) {
-    display: none;
+  @include bp(medium) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  // @include bp(medium) {
-  //   display: grid;
-  //   grid-template-columns: repeat(3, 1fr);
-  // }
-
-  // @include bp(large) {
-  //   display: grid;
-  //   grid-template-columns: repeat(5, 1fr);
-  // }
-  .leftPart {
-    width: 50%;
-
-    @media (width<=1800px) {
-      width: 30%;
-    }
-
-    @media (width<=1279px) {
-      width: 25%;
-    }
-  }
-
-  .rightPart {
-    display: flex;
-    flex-wrap: wrap;
-    width: 50%;
-
-    @media (width<=1800px) {
-      width: 70%;
-    }
-
-    @media (width<=1279px) {
-      width: 75%;
-    }
-
-    .column {
-      width: 25%;
-    }
+  @include bp(large) {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -83,7 +44,7 @@
 .mobileFooter {
   display: none;
 
-  @media (width<=991px) {
+  @media (width<=767px) {
     display: block;
   }
 
@@ -148,23 +109,23 @@
   flex-direction: column;
   gap: var(--gap-global);
 
-  // @include bp(medium) {
-  //   &:first-child {
-  //     grid-column: 1 / span 3;
-  //     display: flex;
-  //     flex-direction: row;
-  //   }
+  @include bp(medium) {
+    &:first-child {
+      grid-column: 1 / span 3;
+      display: flex;
+      flex-direction: row;
+    }
 
-  //   &:last-child {
-  //     grid-column: 1 / span 3;
-  //     display: grid;
-  //     grid-template-columns: repeat(3, 1fr);
-  //   }
+    &:last-child {
+      grid-column: 1 / span 3;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
 
-  //   &:nth-child(n + 2):nth-child(-n + 4) {
-  //     grid-column: span 1;
-  //   }
-  // }
+    &:nth-child(n + 2):nth-child(-n + 4) {
+      grid-column: span 1;
+    }
+  }
 
   @include bp(large) {
     &:first-child {
@@ -190,7 +151,6 @@
 
 .text {
   margin: 0;
-  max-width: 180px;
 
   @media (width<=767px) {
     line-height: 1.5;
