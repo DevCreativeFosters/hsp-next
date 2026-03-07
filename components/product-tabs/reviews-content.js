@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Lightbox from 'yet-another-react-lightbox';
+import Captions from 'yet-another-react-lightbox/plugins/captions';
+import 'yet-another-react-lightbox/plugins/captions.css';
 import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
@@ -379,7 +381,10 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                           const slides =
                             images?.map(img => ({
                               alt: img.altText || '',
+                              description:
+                                review.content.replace(/<[^>]+>/g, '') || '',
                               src: img.sourceUrl,
+                              title: author?.name || '',
                             })) || [];
 
                           setLightboxSlides(slides);
@@ -437,7 +442,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
           carousel={{ finite: true }}
           close={() => setLightboxOpen(false)}
           open={lightboxOpen}
-          plugins={[Fullscreen, Thumbnails]}
+          plugins={[Captions, Fullscreen, Thumbnails]}
           slides={lightboxSlides}
         />
       </div>
