@@ -91,6 +91,11 @@ export default async function RetailPage() {
               slug: 'product-registration',
               title: 'Product Registration',
             },
+            {
+              content: <Orders returnRequest={true} />,
+              slug: 'returnrequest',
+              title: 'Return Request',
+            },
           ]}
           type="vertical"
         />

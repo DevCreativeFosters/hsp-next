@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useUserContext } from '@contexts/user';
 
@@ -100,6 +101,22 @@ const GENERATE_ORDER_PDF = `
   }
 `;
 
+const UPDATE_ORDER_STATUS = `
+  mutation UpdateOrderStatus($orderId: Int!, $status: String!) {
+    updateOrderStatus(
+      input: {
+        orderId: $orderId
+        status: $status
+      }
+    ) {
+      success
+      message
+      orderId
+      status
+    }
+  }
+`;
+
 const renderButton = (status, statusColor) => {
   return (
     <div>
@@ -115,9 +132,16 @@ const renderButton = (status, statusColor) => {
   );
 };
 
-function Order({ item, onlyReturns = false, received = false }) {
+function Order({
+  item,
+  onlyReturns = false,
+  received = false,
+  returnRequest = false,
+}) {
   const { user } = useUserContext();
   const role = user?.role;
+
+  const router = useRouter();
 
   const [showProducts, setShowProducts] = useState(onlyReturns);
 
@@ -148,6 +172,20 @@ function Order({ item, onlyReturns = false, received = false }) {
     }
   }
 
+  async function handleUpdateStatus(status) {
+    try {
+      const res = await fetchAPI(UPDATE_ORDER_STATUS, {
+        variables: { orderId: item.order_id, status },
+      });
+
+      if (res?.updateOrderStatus?.success) {
+        router.push('/account/retail#support');
+      }
+    } catch (err) {
+      console.error('Error downloading invoice:', err);
+    }
+  }
+
   return (
     <div
       className={clsx(styles.orderBox, { [styles.onlyReturns]: onlyReturns })}
@@ -162,6 +200,18 @@ function Order({ item, onlyReturns = false, received = false }) {
           </div>
           <div className={styles.right}>
             {(() => {
+              if (returnRequest) {
+                return (
+                  <Button
+                    onClick={() => handleUpdateStatus('wc-refund-initiated')}
+                    size="large"
+                    variant="secondary"
+                  >
+                    Initiate Return
+                  </Button>
+                );
+              }
+
               if (item.status === 'completed') {
                 return (
                   <div>
@@ -395,6 +445,7 @@ const CheckNoOrders = ({
   onlyReturns = false,
   orders,
   received = false,
+  returnRequest = false,
 }) => {
   return orders.length == 0 ? (
     <div className={styles.noOrders}>{children}</div>
@@ -405,12 +456,13 @@ const CheckNoOrders = ({
         key={item.order_id}
         onlyReturns={onlyReturns}
         received={received}
+        returnRequest={returnRequest}
       />
     ))
   );
 };
 
-function Orders({ onlyReturns = false }) {
+function Orders({ onlyReturns = false, returnRequest = false }) {
   const { user } = useUserContext();
   const role = user?.role;
 
@@ -472,7 +524,10 @@ function Orders({ onlyReturns = false }) {
   const currentOrders = allorders.filter(o => o.status !== 'completed');
   const completedOrders = allorders.filter(o => o.status === 'completed');
   const returnedOrders = allorders.filter(
-    o => o.status === 'refunded' || o.status === 'refund-initiated',
+    o =>
+      o.status === 'refunded' ||
+      o.status === 'refund-initiated' ||
+      o.status === 'return-in-progress',
   );
 
   const retailTabs = [
@@ -541,25 +596,35 @@ function Orders({ onlyReturns = false }) {
     },
   ];
 
-  return (
-    <div className={styles.orders}>
-      {loading ? (
-        <Loading color="white" size="large" />
-      ) : onlyReturns ? (
-        <CheckNoOrders onlyReturns={onlyReturns} orders={returnedOrders}>
-          <h3>It looks like you don&apos;t have any returns at this time</h3>
-          <p>
-            To initiate a return, please{' '}
-            <Link href="/contact-us">contact us</Link>
-          </p>
-        </CheckNoOrders>
-      ) : (
-        <Tabs
-          tabs={role === 'retail' ? retailTabs : b2bTabs}
-          type="horizontal"
-        />
-      )}
-    </div>
-  );
+  let content;
+
+  if (loading) {
+    content = <Loading color="white" size="large" />;
+  } else if (onlyReturns) {
+    content = (
+      <CheckNoOrders onlyReturns={onlyReturns} orders={returnedOrders}>
+        <h3>It looks like you don&apos;t have any returns at this time</h3>
+        <p>
+          To initiate a return, please{' '}
+          <Link href="/contact-us">contact us</Link>
+        </p>
+      </CheckNoOrders>
+    );
+  } else if (returnRequest) {
+    content = (
+      <CheckNoOrders orders={completedOrders} returnRequest={returnRequest}>
+        <h3>Looks like you haven&apos;t placed an order yet</h3>
+        <p>
+          <Link href="/shop-by-ute-make">browse products</Link>
+        </p>
+      </CheckNoOrders>
+    );
+  } else {
+    content = (
+      <Tabs tabs={role === 'retail' ? retailTabs : b2bTabs} type="horizontal" />
+    );
+  }
+
+  return <div className={styles.orders}>{content}</div>;
 }
 export default Orders;
