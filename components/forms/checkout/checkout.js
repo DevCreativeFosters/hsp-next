@@ -150,7 +150,7 @@ function CheckoutForm() {
       title: 'Click & Collect',
     },
     {
-      allowDelivery: true,
+      allowDelivery: false,
       askCutomerInfo: false,
       description: 'Get your order delivered to your Store',
       icon: TruckIcon,
