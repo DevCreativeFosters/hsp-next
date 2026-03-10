@@ -92,14 +92,12 @@ function DeliveryAddressForm({
     <div className={styles.deliveryForm}>
       {cartItems.some(item => item.largeItem) && !allowDelivery ? (
         <div className={styles.redBoxContent}>
-          <h5>
-            Certain Items In Your Cart Cannot Be Delivered to a Residential
-            Address{' '}
-          </h5>
+          <h5>Commercial Address Required for Delivery</h5>
           <p>
-            Due to the size and nature of products like the Electric Roll Cover,
-            Armour Bar, and Load Slides, we can only accommodate shipments to
-            commercial or business addresses.
+            Some products — including the Electric Roll Cover, Armour Bar and
+            Load Slides — can only be delivered to commercial or business
+            addresses due to their size and handling requirements. Please update
+            your delivery address to continue.
           </p>
         </div>
       ) : (
