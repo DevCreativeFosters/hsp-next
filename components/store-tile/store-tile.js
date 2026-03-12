@@ -107,18 +107,20 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
             {tel}
           </Button>
         )}
-        <Button
-          className={clsx(styles.link, styles.background)}
-          href={learnMoreButton?.url}
-          id="learn-more-btn"
-          rel="noopener noreferrer"
-          rightIcon="external-link"
-          size="small"
-          target="_blank"
-          variant="quinary"
-        >
-          Learn more
-        </Button>
+        {learnMoreButton && (
+          <Button
+            className={clsx(styles.link, styles.background)}
+            href={learnMoreButton?.url}
+            id="learn-more-btn"
+            rel="noopener noreferrer"
+            rightIcon="external-link"
+            size="small"
+            target="_blank"
+            variant="quinary"
+          >
+            Learn more
+          </Button>
+        )}
         {directionsUrl && (
           <Button
             className={clsx(styles.link, styles.background)}
