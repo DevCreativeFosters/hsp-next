@@ -40,6 +40,8 @@ const GET_ORDERS = `
         selected_store
         store_name
         purchase_order_number
+        approve_for_return
+
         items {
           name
           quantity
@@ -612,7 +614,10 @@ function Orders({ onlyReturns = false, returnRequest = false }) {
     );
   } else if (returnRequest) {
     content = (
-      <CheckNoOrders orders={completedOrders} returnRequest={returnRequest}>
+      <CheckNoOrders
+        orders={completedOrders.filter(o => o.approve_for_return)}
+        returnRequest={returnRequest}
+      >
         <h3>Looks like you haven&apos;t placed an order yet</h3>
         <p>
           <Link href="/shop-by-ute-make">browse products</Link>
