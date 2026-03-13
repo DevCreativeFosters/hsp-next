@@ -9,8 +9,8 @@
   justify-content: center;
 
   @include bp(large) {
-    aspect-ratio: 696/409;
-    grid-column: span 8;
+    aspect-ratio: 1/0;
+    grid-column: span 7;
     max-height: 409px;
     border-radius: var(--border-radius-md);
   }
@@ -56,7 +56,7 @@
   z-index: calc(infinity - 1);
 
   @include bp(large) {
-    bottom: var(--gap-global-sm)
+    bottom: var(--gap-global-sm);
   }
 }
 

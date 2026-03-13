@@ -4,6 +4,21 @@
   gap: 12px;
   padding: 0;
   margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #262626 #0e0e0e;
+  min-height: 300px;
+  max-height: 532px;
+  overflow: auto;
+  direction: rtl;
+  margin-bottom: 30px;
+
+  @include bp(small) {
+    padding: 0 0 0 10px;
+  }
+
+  li {
+    direction: ltr;
+  }
 }
 
 .noResultsNotice {
