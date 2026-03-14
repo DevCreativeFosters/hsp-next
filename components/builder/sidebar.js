@@ -14,9 +14,6 @@ import normalizeStores from '@lib/normalize-stores';
 import Button from '@components/button/button';
 import EnquiryModal from '@components/enquiry-form/enquiry-modal';
 import StoreList from '@components/store-list/store-list';
-import StoreLocatorMap from '@components/store-locator-map/store-locator-map';
-import StoreSearchControls from '@components/store-search-controls/store-search-controls';
-import ResultsStoreTile from '@components/store-tile/result-store-tile';
 
 import ProductsList from './sidebar-products-list';
 import styles from './sidebar.module.scss';
@@ -183,69 +180,11 @@ export default function Sidebar({
           [styles.isDisabled]: stepNumber === 0,
         })}
       >
-        <Section
-          headerChildren={<span className="h4">Your Setup</span>}
-          headerClick={setOpenSection}
-          id="products"
-          isOpen={openSection === 'products'}
-        >
-          <ProductsList
-            removeProduct={removeProduct}
-            selectedProducts={selectedProducts}
-          />
-        </Section>
-        <Section
-          headerChildren={<span className="h4">Locate Your Store</span>}
-          headerClick={setOpenSection}
-          icon={selectedStore ? 'check-mark-circle' : 'error'}
-          id="store"
-          isOpen={openSection === 'store'}
-        >
-          <StoreSearchControls
-            allLocations={allLocations}
-            isSearchHidden={selectedStore}
-            label={null}
-            setShowLocationError={setShowLocationError}
-            showLocationError={showLocationError}
-          />
-          {selectedStore ? (
-            <div className={styles.resultStoreTile}>
-              <ResultsStoreTile
-                item={{ ...selectedStore, learnMoreButton: null }}
-              />
-            </div>
-          ) : (
-            <>
-              {isInlineMapVisible && (
-                <StoreLocatorMap
-                  className={styles.map}
-                  locations={normalizedLocations}
-                  onMarkerClick={setSelectedStore}
-                />
-              )}
-              {isInlineResultListVisible && (
-                <div className={styles.isMobileOnly}>
-                  <StoreList
-                    allLocations={allLocations}
-                    items={
-                      hasMapInteracted ? filteredStores : filteredLocations
-                    }
-                    onSelect={item => {
-                      setSelectedStore(item);
-                    }}
-                    show={isInlineResultListVisible}
-                    showCategory={false}
-                    showDisplays
-                    showIndex={false}
-                    style={{
-                      maxHeight: stepNumber > 0 ? 150 : null,
-                    }}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </Section>
+        <h4>Your Setup</h4>
+        <ProductsList
+          removeProduct={removeProduct}
+          selectedProducts={selectedProducts}
+        />
         <div className={styles.summary}>
           <button
             className={styles.mobileSidebarToggle}
@@ -276,11 +215,20 @@ export default function Sidebar({
           >
             <Button
               className={styles.summaryButton}
-              disabled={selectedProducts.length === 0 || !selectedStore}
+              disabled={selectedProducts.length === 0}
               onClick={handleOpenModal}
               size="large"
             >
-              Send Enquiry
+              Add to Cart
+            </Button>
+            <Button
+              className={styles.summaryButton}
+              disabled={selectedProducts.length === 0}
+              onClick={handleOpenModal}
+              size="large"
+              variant="secondary"
+            >
+              Make Enquiry
             </Button>
           </div>
         </div>
@@ -310,22 +258,32 @@ export default function Sidebar({
             {formatPrice(priceSummary.price)}
           </div>
           <Button
-            disabled={selectedProducts.length === 0 || !selectedStore}
+            disabled={selectedProducts.length === 0}
+            onClick={handleOpenModal}
+            size="large"
+            variant="secondary"
+          >
+            Make Enquiry
+          </Button>
+          <Button
+            disabled={selectedProducts.length === 0}
             onClick={handleOpenModal}
             size="large"
           >
-            Send enquiry
+            Add to Cart
           </Button>
         </div>
       </div>
       {enquiryModalOpened && (
         <EnquiryModal
+          allLocations={allLocations}
           enquiryFormId={globalOptions?.enquiryFormId}
           freight={priceSummary.freight}
           installationCost={priceSummary.installationCost}
           onClose={handleCloseModal}
           productPrice={priceSummary.price}
           selectedProducts={selectedProducts}
+          showStoreSearchcontrols={true}
           store={selectedStore}
         />
       )}

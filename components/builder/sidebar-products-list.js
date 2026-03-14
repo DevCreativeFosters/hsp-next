@@ -15,6 +15,9 @@ const CancelIcon = getIcon('cancel');
 export default function ProductsList({ removeProduct, selectedProducts }) {
   return (
     <>
+      <div className={styles.noProducts}>
+        Select products from the bottom of the screen to create a quote/order.
+      </div>
       {selectedProducts.length !== 0 ? (
         <ol className={styles.productsList}>
           {selectedProducts?.map((selectedProduct, index) => {
@@ -47,7 +50,6 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
         </ol>
       ) : (
         <div className={styles.noProducts}>
-          Select products from the bottom of the screen to create a quote.
           <div className={clsx(styles.productBox, styles.isEmpty)}>
             No products added yet
           </div>
