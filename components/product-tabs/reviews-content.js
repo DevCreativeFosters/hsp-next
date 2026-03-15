@@ -3,22 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import Image from 'next/image';
-import Lightbox from 'yet-another-react-lightbox';
-import Captions from 'yet-another-react-lightbox/plugins/captions';
-import 'yet-another-react-lightbox/plugins/captions.css';
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
-import 'yet-another-react-lightbox/styles.css';
 
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
+import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 
 import RatingStar from '@assets/icons/rating-star.svg';
 
 import styles from './product-tabs.module.scss';
+import './styles.scss';
 
 const CREATE_REVIEW_MUTATION = `
   mutation CreateProductReviewWithImages(
@@ -55,6 +49,8 @@ const fileToBase64 = file =>
   });
 
 export default function ReviewsContent({ productId, productName, reviews }) {
+  const [selectedReview, setSelectedReview] = useState(null);
+
   const dropdownRef = useRef(null);
   const sortOptions = [
     { label: 'Newest', value: 'newest' },
@@ -63,9 +59,6 @@ export default function ReviewsContent({ productId, productName, reviews }) {
 
   const INITIAL_VISIBLE = 4;
   const [showNoOfReviews, setShowNoOfReviews] = useState(INITIAL_VISIBLE);
-
-  const [lightboxSlides, setLightboxSlides] = useState([]);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
@@ -352,11 +345,15 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                 if (index >= showNoOfReviews) return null;
 
                 const author = review?.author?.node;
-                const img = review?.reviewUploadImage?.uploadImage?.nodes?.[0];
                 const images = review?.reviewUploadImage?.uploadImage?.nodes;
 
                 return (
-                  <div className={styles.reviewBox} key={review.databaseId}>
+                  <div
+                    className={styles.reviewBox}
+                    key={review.databaseId}
+                    onClick={() => setSelectedReview(review)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className={styles.left}>
                       <div className={styles.filled}>
                         {Array.from({ length: review?.rating }, (_, i) => (
@@ -374,31 +371,13 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                         <span>Ordered the HSP {productName}</span>
                       </div>
                     </div>
-                    {img && (
-                      <div
-                        className={styles.right}
-                        onClick={() => {
-                          const slides =
-                            images?.map(img => ({
-                              alt: img.altText || '',
-                              description:
-                                review.content.replace(/<[^>]+>/g, '') || '',
-                              src: img.sourceUrl,
-                              title: author?.name || '',
-                            })) || [];
-
-                          setLightboxSlides(slides);
-                          setLightboxOpen(true);
-                        }}
-                      >
-                        <figure>
-                          <Image
-                            alt={img.altText}
-                            height={160}
-                            src={img.sourceUrl}
-                            width={250}
-                          />
-                        </figure>
+                    {images?.length > 0 && (
+                      <div className={clsx('galleryWithPopup')}>
+                        <ProductImageCarousel
+                          images={images}
+                          minImagesForNav={1}
+                          showMainImage={false}
+                        />
                       </div>
                     )}
                   </div>
@@ -409,7 +388,9 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                   {showNoOfReviews > INITIAL_VISIBLE && (
                     <Button
                       className={clsx(styles.buttonToggle, styles.isActive)}
-                      onClick={() => setShowNoOfReviews(INITIAL_VISIBLE)}
+                      onClick={() =>
+                        setShowNoOfReviews(prev => prev - INITIAL_VISIBLE)
+                      }
                       rightIcon={'arrow-forward'}
                       type="button"
                     >
@@ -437,15 +418,51 @@ export default function ReviewsContent({ productId, productName, reviews }) {
             </div>
           )}
         </div>
-
-        <Lightbox
-          carousel={{ finite: true }}
-          close={() => setLightboxOpen(false)}
-          open={lightboxOpen}
-          plugins={[Captions, Fullscreen, Thumbnails]}
-          slides={lightboxSlides}
-        />
       </div>
+      {selectedReview && (
+        <div
+          className={styles.reviewModalOverlay}
+          onClick={() => setSelectedReview(null)}
+        >
+          <div
+            className={clsx(styles.reviewModal, styles.reviewBox)}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className={clsx(styles.left, styles.modalLeft)}>
+              <div className={styles.filled}>
+                {Array.from({ length: selectedReview?.rating }, (_, i) => (
+                  <RatingStar key={i} />
+                ))}
+              </div>
+
+              <div
+                className={styles.desc}
+                dangerouslySetInnerHTML={{ __html: selectedReview?.content }}
+              />
+
+              <div className={styles.reviewAuthor}>
+                <p>
+                  <strong>{selectedReview?.author?.node?.name}</strong>
+                </p>
+                <span>Ordered the HSP {productName}</span>
+              </div>
+            </div>
+
+            <div className={clsx(styles.right, styles.modalRight)}>
+              {selectedReview?.reviewUploadImage?.uploadImage?.nodes?.length >
+                0 && (
+                <div className={clsx('galleryModal')}>
+                  <ProductImageCarousel
+                    images={selectedReview.reviewUploadImage.uploadImage.nodes}
+                    minImagesForNav={1}
+                    showMainImage={false}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
