@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
+import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
@@ -59,7 +60,7 @@ function AddressForm({ data }) {
         <div className={styles.dRow}>
           <div className={styles.dTitle}>Address Name</div>
           <div className={styles.dDesc}>
-            <strong>{data.address_name}</strong>
+            <strong>{data?.address_name ?? data?.addressName}</strong>
           </div>
         </div>
         <div className={styles.halfColInfo}>
@@ -67,7 +68,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>Street Address</div>
               <div className={styles.dDesc}>
-                <strong>{data.address_1}</strong>
+                <strong>{data?.address_1 ?? data?.streetAddress}</strong>
               </div>
             </div>
           </div>
@@ -75,7 +76,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>Apt/Unit</div>
               <div className={styles.dDesc}>
-                <strong>{data.address_2}</strong>
+                <strong>{data?.address_2 ?? data?.aptunit}</strong>
               </div>
             </div>
           </div>
@@ -83,7 +84,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>City</div>
               <div className={styles.dDesc}>
-                <strong>{data.city}</strong>
+                <strong>{data?.city ?? data?.cityTw}</strong>
               </div>
             </div>
           </div>
@@ -91,7 +92,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>State</div>
               <div className={styles.dDesc}>
-                <strong>{data.state}</strong>
+                <strong>{data?.state ?? data?.stateMy ?? data?.stateNz}</strong>
               </div>
             </div>
           </div>
@@ -99,7 +100,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>Country</div>
               <div className={styles.dDesc}>
-                <strong>{data.country}</strong>
+                <strong>{data?.country}</strong>
               </div>
             </div>
           </div>
@@ -107,7 +108,7 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>Post Code</div>
               <div className={styles.dDesc}>
-                <strong>{data.postcode}</strong>
+                <strong>{data?.postcode ?? data?.postalCode}</strong>
               </div>
             </div>
           </div>
@@ -129,17 +130,21 @@ function AddressForm({ data }) {
 }
 
 function Address() {
+  const { user } = useUserContext();
+
   const [billing, setBilling] = useState(null);
   const [shipping, setShipping] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const userId = user?.id;
+
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
     async function loadAddress() {
-      const userId = parseInt(localStorage.getItem('userId'));
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
       try {
         const res = await fetchAPI(GET_USER_ADDRESS, { variables: { userId } });
 
@@ -151,13 +156,33 @@ function Address() {
         }
       } catch (e) {
         console.error('Address fetch error:', e);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
-    loadAddress();
-  }, []);
+    async function getStoreDetails() {
+      try {
+        const store = await getStoreByUserId(userId);
+        console.log(store?.billingAddress, store?.deliveryAddress);
+
+        if (store) {
+          setBilling(store?.billingAddress);
+          setShipping(store?.deliveryAddress);
+        }
+      } catch (e) {
+        console.error('Error getting orders:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user?.role === 'b2b') {
+      getStoreDetails();
+    } else if (user?.role === 'retail') {
+      loadAddress();
+    }
+  }, [user?.id, user?.role]);
 
   if (loading) return <Loading color="white" size="large" />;
   return (
