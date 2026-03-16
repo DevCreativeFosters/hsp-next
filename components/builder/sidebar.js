@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -19,7 +19,6 @@ import ProductsList from './sidebar-products-list';
 import styles from './sidebar.module.scss';
 
 const ExpandIcon = getIcon('expand-more-neutral');
-const CartIcon = getIcon('cart');
 const CarIcon = getIcon('car');
 
 const DEFAULT_PRICE_SUMMARY = {
@@ -67,13 +66,15 @@ export default function Sidebar({
   className,
   globalOptions,
   isMobile,
+  isOpen,
   openSection,
   removeProduct,
   selectedProducts,
+  setIsOpen,
   setOpenSection,
   stepNumber,
+  toggleOpen,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [normalizedLocations, setNormalizedLocations] = useState([]);
@@ -96,10 +97,6 @@ export default function Sidebar({
 
   const isInlineResultListVisible = Boolean(location && searchGeolocation);
   const isInlineMapVisible = Boolean(isMobile && isMapVisible);
-
-  const toggleOpen = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
 
   const handleButtonWrapperClick = () => {
     if (!selectedStore) {
@@ -186,50 +183,57 @@ export default function Sidebar({
           selectedProducts={selectedProducts}
         />
         <div className={styles.summary}>
-          <button
-            className={styles.mobileSidebarToggle}
-            onClick={toggleOpen}
-            type="button"
-          >
-            <CarIcon />
-          </button>
-          <div className={clsx(styles.summaryPrice, 'h4')}>
-            {formatPrice(priceSummary.price)}
-          </div>
-          <div className={clsx(styles.summaryInstallation, 'p-small')}>
-            +{' '}
-            {priceSummary.installationCost === 0 ? (
-              <>
-                installation <span className={styles.isDesktop}>cost</span>
-              </>
-            ) : (
-              <>
-                {formatPrice(priceSummary.installationCost)}
-                <span className={styles.isDesktop}> for installation</span>
-              </>
-            )}
-          </div>
-          <div
-            className={styles.summaryButtonWrapper}
-            onClick={handleButtonWrapperClick}
-          >
-            <Button
-              className={styles.summaryButton}
-              disabled={selectedProducts.length === 0}
-              onClick={handleOpenModal}
-              size="large"
+          <div className={styles.subTotalAndBtns}>
+            <div className={styles.subTotal}>
+              <div className={styles.leftPart}>
+                <h4>Subtotal</h4>
+              </div>
+              <div className={styles.rightPart}>
+                <div className={clsx(styles.summaryPrice, 'h4')}>
+                  {formatPrice(priceSummary.price)}
+                </div>
+                <div className={clsx(styles.summaryInstallation, 'p-small')}>
+                  +{' '}
+                  {priceSummary.installationCost === 0 ? (
+                    <>installation cost</>
+                  ) : (
+                    <>
+                      {formatPrice(priceSummary.installationCost)} installation
+                      cost
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <button
+              className={styles.mobileSidebarToggle}
+              onClick={toggleOpen}
+              type="button"
             >
-              Add to Cart
-            </Button>
-            <Button
-              className={styles.summaryButton}
-              disabled={selectedProducts.length === 0}
-              onClick={handleOpenModal}
-              size="large"
-              variant="secondary"
+              <CarIcon />
+            </button>
+            <div
+              className={styles.summaryButtonWrapper}
+              onClick={handleButtonWrapperClick}
             >
-              Make Enquiry
-            </Button>
+              <Button
+                className={styles.summaryButton}
+                disabled={selectedProducts.length === 0}
+                onClick={handleOpenModal}
+                size="large"
+              >
+                Add to Cart
+              </Button>
+              <Button
+                className={styles.summaryButton}
+                disabled={selectedProducts.length === 0}
+                onClick={handleOpenModal}
+                size="large"
+                variant="secondary"
+              >
+                Make Enquiry
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -238,24 +242,16 @@ export default function Sidebar({
           [styles.isHidden]: stepNumber === 0,
         })}
       >
-        <button
-          className={styles.mobileSidebarToggle}
-          onClick={toggleOpen}
-          type="button"
-        >
-          <CartIcon />
-          {selectedProducts.length > 0 && (
-            <div className={styles.productCounter}>
-              {selectedProducts.length}
-            </div>
-          )}
-        </button>
         <div
           className={styles.sidebarMobileBarSummary}
           onClick={handleButtonWrapperClick}
         >
           <div className={styles.sidebarMobileBarPrice}>
-            {formatPrice(priceSummary.price)}
+            <div className={styles.titleMobile}>
+              <h4>Subtotal</h4>
+              {formatPrice(priceSummary.price)}
+            </div>
+            <p>+ installation cost</p>
           </div>
           <Button
             disabled={selectedProducts.length === 0}

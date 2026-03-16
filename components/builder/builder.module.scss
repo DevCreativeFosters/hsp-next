@@ -10,6 +10,7 @@
     var(--color-black-100, #000) 0%,
     #181616 100%
   );
+  background: rgb(255 255 255 / 2%);
 
   @include bp(large) {
     --vertical-padding: var(--gap-global);

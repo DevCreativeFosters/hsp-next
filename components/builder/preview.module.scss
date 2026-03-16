@@ -11,8 +11,57 @@
   @include bp(large) {
     aspect-ratio: 1/0;
     grid-column: span 7;
-    max-height: 409px;
+
+    // max-height: 409px;
     border-radius: var(--border-radius-md);
+  }
+
+  .mobileSidebarToggle {
+    position: absolute;
+    z-index: 3;
+    background: #000;
+    height: 46px;
+    width: 46px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 69px;
+    right: 24px;
+
+    div {
+      height: 16px;
+      width: 16px;
+      background: #ed2935;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 18px;
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      color: #000;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    @include bp(large) {
+      display: none;
+    }
+  }
+
+  .downloadButton {
+    right: 78px;
+
+    --size: 46px;
+
+    bottom: 69px;
+    margin-left: 0;
+
+    @include bp(large) {
+      display: none;
+    }
   }
 }
 

@@ -100,7 +100,7 @@ const ProductsCarousel = forwardRef(function ProductsCarousel(
                 <Button
                   className={styles.badge}
                   onClick={() => removeProduct(selectedCover)}
-                  rightIcon="cancel"
+                  rightIcon="close"
                   size="small"
                   variant="secondary"
                 >

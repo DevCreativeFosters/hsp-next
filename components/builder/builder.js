@@ -61,6 +61,7 @@ export default function Builder({
   const [incompatibleCovers, setIncompatibleCovers] = useState(null);
   const [lastProductSlug, setLastProductSlug] = useState(null);
   const [normalizedLocations, setNormalizedLocations] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const topRef = useRef(null);
   const productsCarouselRef = useRef(null);
   const isMobile = useIsMobile(1280);
@@ -572,6 +573,10 @@ export default function Builder({
     [covers.length, stepNumber],
   );
 
+  const toggleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
+
   const isInlineMapVisible = Boolean(
     openSection === 'store' && !isMobile && isMapVisible,
   );
@@ -679,17 +684,25 @@ export default function Builder({
               allLocations={allLocations}
               globalOptions={globalOptions}
               isMobile={isMobile}
+              isOpen={isOpen}
               openSection={openSection}
               removeProduct={removeProduct}
               selectedProducts={selectedProducts}
+              setIsOpen={setIsOpen}
               setOpenSection={setOpenSection}
               stepNumber={stepNumber}
+              toggleOpen={toggleOpen}
             />
             {stepNumber > 0 ? (
               shouldShowListResults &&
               !selectedStore &&
               !isMapVisible ? null : (
-                <Preview handleResetAccept={handleResetAccept}>
+                <Preview
+                  handleResetAccept={handleResetAccept}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  toggleOpen={toggleOpen}
+                >
                   {/* Show map inside preview when map toggle is on or on mobile */}
                   {(isMapVisible || isInlineMapVisible) && (
                     <StoreLocatorMap

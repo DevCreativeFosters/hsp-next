@@ -10,6 +10,8 @@ import { useVehicleContext } from '@contexts/vehicle';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { getIcon } from '@lib/icons';
+
 import ActionModal from '@components/builder/action-modal';
 import FadeInImage from '@components/builder/fade-in-image';
 import Button from '@components/button/button';
@@ -21,7 +23,14 @@ import BgPicture from '@assets/images/bg-concrete.webp';
 
 import styles from './preview.module.scss';
 
-export default function Preview({ children, className, handleResetAccept }) {
+const CartIcon = getIcon('cart');
+
+export default function Preview({
+  children,
+  className,
+  handleResetAccept,
+  toggleOpen,
+}) {
   const [showResetModal, setShowResetModal] = useState(false);
   const {
     maker: make,
@@ -134,6 +143,18 @@ export default function Preview({ children, className, handleResetAccept }) {
           srcDesktop={modelImageDesktop}
           srcMobile={modelImageMobile}
         />
+        <button
+          className={styles.mobileSidebarToggle}
+          onClick={toggleOpen}
+          type="button"
+        >
+          <CartIcon />
+          {selectedProducts.length > 0 && (
+            <div className={styles.productCounter}>
+              {selectedProducts.length}
+            </div>
+          )}
+        </button>
         {!!mergeImages.length && (
           <DownloadButton
             className={styles.downloadButton}

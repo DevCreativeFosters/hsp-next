@@ -6,11 +6,15 @@
   display: none;
   flex-direction: column;
   position: fixed;
-  top: var(--header-height);
+
+  // top: var(--header-height);
+  top: 102px;
   left: 0;
   z-index: 2;
   width: 100vw;
-  height: calc(100dvh - var(--header-height));
+
+  // height: calc(100dvh - var(--header-height));
+  height: calc(100dvh - 102px);
   padding: 72px var(--container-inline-padding) var(--container-inline-padding);
   color: var(--color-white-80);
   background-color: var(--color-black-100);
@@ -73,7 +77,7 @@
   align-items: center;
   gap: 16px;
   padding: var(--gap-global-xs) var(--gap-global);
-  background: var(--color-white-40);
+  background: #000;
 
   @include bp(large) {
     display: none;
@@ -87,20 +91,32 @@
 .sidebarMobileBarSummary {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
+  width: 100%;
+
+  button {
+    font-size: 18px;
+    min-height: 38px;
+    padding: 0 12px;
+    margin-left: auto;
+
+    &:last-child {
+      margin-left: 0;
+    }
+  }
 }
 
 .mobileSidebarToggle {
   position: relative;
-  margin-right: auto;
-  width: 48px;
-  height: 48px;
+  min-width: 46px;
+  min-height: 46px;
   padding: 0;
   border-radius: var(--border-radius-sm);
   color: var(--font-color);
   background: var(--bg-color);
   display: grid;
   place-content: center;
+  margin: 24px 0 24px auto;
 
   .summary & {
     --font-color: var(--color-black-100);
@@ -116,6 +132,11 @@
     --bg-color: var(--color-black-100);
     --hover-font-color: var(--color-black-100);
     --hover-bg-color: var(--color-white-100);
+  }
+
+  .titleMobile {
+    display: flex;
+    border: solid 2px;
   }
 
   .nr {
@@ -243,14 +264,14 @@
 .noProducts {
   display: grid;
   gap: var(--gap-global-sm);
-  margin: 0 0 20px;
+  margin: 4px 0 20px;
   line-height: 1.3;
   font-size: clamp(14px, 2.5vw, 16px);
 }
 
 .productsList {
   display: grid;
-  row-gap: var(--gap-global-sm);
+  row-gap: var(--gap-global-xs);
   counter-reset: section;
   padding: 0;
   margin: 0;
@@ -258,7 +279,7 @@
   @include bp(large) {
     @include scrollbar;
 
-    max-height: 154px;
+    max-height: 200px;
     overflow: auto;
   }
 
@@ -284,6 +305,7 @@
 
 .productBox {
   display: flex;
+  align-items: center;
   gap: 16px;
   min-height: 40px;
   flex: 1;
@@ -299,6 +321,9 @@
 
   &.isEmpty {
     justify-content: center;
+    border: solid 2px rgb(255 255 255 / 20%);
+    border-radius: 10px;
+    align-items: center;
   }
 }
 
@@ -389,12 +414,14 @@
 
 // Summary
 .summary {
-  display: grid;
   grid-template-columns: 1fr auto auto;
   grid-template-areas: '. . button' 'toggle price button' 'toggle installation button' '. . button';
   column-gap: var(--gap-global-xs);
   margin-top: auto;
   margin-top: var(--gap-global-sm);
+  width: 100%;
+  height: 100%;
+  display: flex;
 
   @include bp(large) {
     grid-template-columns: 1fr auto;
@@ -415,14 +442,88 @@
 }
 
 .sidebarMobileBarPrice {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
+  font-family: var(--font-secondary);
+
+  .titleMobile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    h4 {
+      font-size: 18px;
+    }
+  }
+
+  p {
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    margin: 0;
+    text-align: right;
+  }
+}
+
+.subTotalAndBtns {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  flex-flow: column wrap;
+
+  .subTotal {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-top: solid 2px rgb(255 255 255 / 20%);
+    padding-top: 16px;
+
+    @include bp-below(large) {
+      padding-top: 0;
+      margin-bottom: auto;
+      border-top: 0;
+      border-bottom: solid 2px rgb(255 255 255 / 20%);
+      padding-bottom: 16px;
+    }
+
+    .leftPart {
+      h4 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #fff;
+
+        @include bp-below(medium) {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .rightPart {
+      text-align: right;
+    }
+  }
+
+  .summaryButtonWrapper {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+
+    @include bp-below(large) {
+      flex-direction: row-reverse;
+    }
+
+    button {
+      flex: 1;
+    }
+  }
 }
 
 .summaryInstallation {
   grid-area: installation;
 
-  @include bp-below(large) {
+  @include bp(large) {
     .isDesktop {
       display: none;
     }
