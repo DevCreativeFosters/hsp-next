@@ -28,14 +28,14 @@ export default async function RetailPage() {
         <Tabs
           tabs={[
             {
-              content: <Orders />,
-              slug: 'orderdashboard',
-              title: 'Orders',
-            },
-            {
               content: <UserDetails />,
               slug: 'userdetails',
               title: 'Account Details',
+            },
+            {
+              content: <Orders />,
+              slug: 'orderdashboard',
+              title: 'Orders',
             },
             {
               content: <WishlistItems />,
