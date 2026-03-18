@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { formatPrice } from '@lib/helpers';
 import { getIcon } from '@lib/icons';
 
-import PlaceImage from '@assets/images/placeholder-product.jpg';
 
 import styles from './sidebar.module.scss';
 
@@ -21,19 +20,22 @@ export default function ProductsList({ removeProduct, selectedProducts }) {
       {selectedProducts.length !== 0 ? (
         <ol className={styles.productsList}>
           {selectedProducts?.map((selectedProduct, index) => {
-            const { price, productName, slug } = selectedProduct;
+            const { image, productName, slug } = selectedProduct;
+            const { compareAtPrice, price } = selectedProduct?.variantDetails;
 
             return (
               <li className={styles.productsListItem} key={`${slug}_${index}`}>
                 <div className={styles.productBox}>
-                  <Image alt="Login Banner" src={PlaceImage} />
+                  <Image alt={productName} height="48" src={image} width="67" />
                   <div className={styles.infoRight}>
                     <span className={styles.productBoxName} title={productName}>
                       {productName}
                     </span>
                     <span className={styles.productBoxPrice}>
                       {formatPrice(price)}
-                      <span>$3,300</span>
+                      {compareAtPrice && (
+                        <span>{formatPrice(compareAtPrice)}</span>
+                      )}
                     </span>
                   </div>
                 </div>
