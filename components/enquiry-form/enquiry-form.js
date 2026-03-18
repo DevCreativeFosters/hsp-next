@@ -358,8 +358,19 @@ export default function EnquiryForm({
                   {productData.compatibleProduct.selectProduct.map(item => {
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
-                    const selectedVariant = product?.productFields?.variants[0];
+
+                    const selectedVariant = item?.variantSku
+                      ? product?.productFields?.variants?.find(
+                          variant => variant?.sku === item?.variantSku,
+                        )
+                      : product?.productFields?.variants[0];
+
                     const variantDetails = selectedVariant?.variantDetails;
+
+                    if (item?.variantPrice && !variantDetails?.compareAtPrice)
+                      variantDetails.compareAtPrice = variantDetails?.price;
+                    if (item?.variantPrice)
+                      variantDetails.price = item?.variantPrice;
 
                     return (
                       <div className={styles.cmpBox} key={product?.databaseId}>
