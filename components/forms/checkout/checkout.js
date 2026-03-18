@@ -215,7 +215,7 @@ function CheckoutForm() {
       title: 'Pickup From HSP',
     },
     {
-      allowDelivery: false,
+      allowDelivery: true,
       askCutomerInfo: true,
       description:
         'Get your products sent directly to your customers COMMERCIAL address',

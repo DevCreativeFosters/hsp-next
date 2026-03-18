@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 
+import { useCart } from '@contexts/cart-context';
 import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -75,6 +76,8 @@ export default function Sidebar({
   stepNumber,
   toggleOpen,
 }) {
+  const { addMultipleToCart } = useCart();
+
   const [priceSummary, setPriceSummary] = useState(DEFAULT_PRICE_SUMMARY);
   const [enquiryModalOpened, setEnquiryModalOpened] = useState(false);
   const [normalizedLocations, setNormalizedLocations] = useState([]);
@@ -112,6 +115,17 @@ export default function Sidebar({
 
   const handleOpenModal = () => {
     setEnquiryModalOpened(true);
+  };
+
+  const addToCart = () => {
+    const items = selectedProducts.map(item => ({
+      quantity: 1,
+      variant_name: item.variantName,
+      variant_sku: item.sku,
+      variant_slug: item.variantSlug,
+    }));
+
+    addMultipleToCart(items);
   };
 
   const handleCloseModal = () => {
@@ -219,7 +233,7 @@ export default function Sidebar({
               <Button
                 className={styles.summaryButton}
                 disabled={selectedProducts.length === 0}
-                onClick={handleOpenModal}
+                onClick={addToCart}
                 size="large"
               >
                 Add to Cart
@@ -263,7 +277,7 @@ export default function Sidebar({
           </Button>
           <Button
             disabled={selectedProducts.length === 0}
-            onClick={handleOpenModal}
+            onClick={addToCart}
             size="large"
           >
             Add to Cart
