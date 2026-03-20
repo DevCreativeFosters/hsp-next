@@ -15,6 +15,7 @@ import { trimSlash } from '@lib/trim-slash';
 import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
+import EGiftCard from '@components/gift-card/gift-card';
 // import ProductComboDeals from '@components/product-combo-deals/product-combo-deals';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
@@ -170,6 +171,8 @@ export default function PageClientSidePartial({
 
   return (
     <>
+      <EGiftCard />
+
       <div className={styles.header}>
         <div className={clsx(styles.meta, styles.mobile)}>
           <h1 className={clsx(styles.name, 'h2')}>

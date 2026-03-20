@@ -1,0 +1,499 @@
+.eGiftCardMain {
+  display: flex;
+
+  @media (width<=991px) {
+    flex-wrap: wrap;
+  }
+
+  .leftPart {
+    flex: 1;
+
+    h2 {
+      margin-bottom: 20px;
+      display: none;
+
+      @include bp-below(medium) {
+        display: block;
+      }
+
+      span {
+        display: block;
+        color: #ed2935;
+      }
+    }
+
+    .cardImgContent {
+      background-image: url('../../assets/images/card-bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 516px;
+      display: flex;
+      align-items: center;
+      padding: 50px;
+      border-radius: 8px;
+
+      img {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 30px;
+        border: solid 1px #ccc;
+      }
+    }
+
+    @media (width<=991px) {
+      width: 100%;
+      flex: auto;
+      margin-bottom: 16px;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .rightPart {
+    flex: 1;
+    padding: 0 0 0 42px;
+
+    @media (width<=991px) {
+      width: 100%;
+      flex: auto;
+      padding: 0;
+    }
+
+    h2 {
+      margin-bottom: 32px;
+
+      @include bp-below(medium) {
+        display: none;
+      }
+
+      span {
+        display: block;
+        color: #ed2935;
+      }
+    }
+
+    .formBlock {
+      border: 2px solid #4b4b4b;
+      padding: 24px 32px;
+      border-radius: 16px;
+
+      @include bp-below(medium) {
+        padding: 24px 16px;
+      }
+
+      .inputLabel {
+        font-size: 14px;
+        font-weight: 600;
+        color: #bfbfbf;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input[type='text'],
+      input[type='number'],
+      input[type='email'],
+      input[type='date'] {
+        width: 100%;
+        border: 2px solid #4b4b4b;
+        background: transparent;
+        min-height: 55px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 16px;
+        padding: 0 15px;
+        outline: none;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          appearance: none;
+          margin: 0;
+        }
+      }
+
+      .selectOptions {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        label {
+          position: relative;
+        }
+
+        input {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          left: 0;
+          top: 0;
+          cursor: pointer;
+          margin: 0;
+          opacity: 0;
+
+          &:hover:not(:checked) {
+            & + .option {
+              border: 2px solid rgb(255 255 255 / 100%);
+            }
+          }
+
+          &:checked {
+            & + .option {
+              background-color: #ed2935;
+              font-weight: 700;
+            }
+          }
+        }
+
+        .option {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 16px;
+          border-radius: 8px;
+          border: 2px solid rgb(255 255 255 / 20%);
+          cursor: pointer;
+          font-size: 20px;
+          transition: 0.3s all;
+          min-height: 58px;
+
+          @include bp-below(medium) {
+            font-size: 18px;
+            min-height: 54px;
+          }
+
+          &:hover {
+            border: 2px solid rgb(255 255 255 / 100%);
+          }
+        }
+      }
+
+      .custAndQty {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 32px;
+
+        .custInput {
+          .inputLabel {
+            margin-bottom: 16px;
+          }
+
+          input {
+            max-width: 180px;
+          }
+        }
+
+        .qtyBlock {
+          margin: 22px 0 0;
+          max-width: 66px;
+          position: relative;
+
+          .plus {
+            font-weight: 500;
+            font-size: 24px;
+            position: absolute;
+            right: 0;
+            z-index: 1;
+            cursor: pointer;
+            padding: 15px 15px 0;
+            top: 0;
+            line-height: 12px;
+            color: #888;
+            outline: none;
+          }
+
+          .minus {
+            font-weight: 500;
+            font-size: 22px;
+            position: absolute;
+            right: 0;
+            z-index: 1;
+            cursor: pointer;
+            padding: 0 14px 22px;
+            bottom: 0;
+            line-height: 6px;
+            color: #888;
+            outline: none;
+          }
+
+          input {
+            width: 100%;
+            background: #fff;
+            border: none;
+            min-height: 55px;
+            border-radius: 8px;
+            color: #000;
+            text-align: left;
+            font-size: 22px;
+            font-weight: 700;
+            height: 55px;
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+              appearance: none;
+              margin: 0;
+            }
+          }
+
+          @include bp-below(medium) {
+            max-width: 94px;
+
+            .plus {
+              color: #000;
+              font-size: 25px;
+              font-weight: 400;
+              height: 100%;
+              padding: 0 12px;
+            }
+
+            .minus {
+              font-weight: 400;
+              font-size: 22px;
+              padding: 0 12px 17px;
+              right: auto;
+              left: 0;
+              color: #000;
+              height: 100%;
+            }
+
+            input {
+              text-align: center;
+              font-size: 16px;
+              min-height: 38px;
+              height: 38px;
+            }
+          }
+        }
+      }
+
+      .chooseValue {
+        margin-bottom: 32px;
+
+        .inputLabel {
+          margin-bottom: 16px;
+        }
+      }
+
+      .chooseDesign {
+        margin-bottom: 32px;
+
+        .inputLabel {
+          margin-bottom: 16px;
+        }
+
+        .selectDesign {
+          display: flex;
+          gap: 16px;
+
+          .option {
+            position: relative;
+
+            input {
+              position: absolute;
+              height: 100%;
+              width: 100%;
+              left: 0;
+              top: 0;
+              cursor: pointer;
+              margin: 0;
+              opacity: 0;
+
+              &:checked {
+                & + .designOption {
+                  outline: 2px solid #ed2935;
+                  outline-offset: 2px;
+                }
+              }
+            }
+
+            .designOption {
+              border-radius: 13px;
+              position: relative;
+              overflow: hidden;
+              transition: 0.3s all;
+              border: solid 1px transparent;
+              line-height: 0;
+
+              img {
+                max-width: 100%;
+              }
+            }
+          }
+        }
+      }
+
+      .rsForm {
+        padding: 24px 16px;
+        border: solid 1px #4b4b4b;
+        border-radius: 16px;
+        margin: 0 -24px 40px;
+
+        @include bp-below(medium) {
+          margin: 0 -8px 32px;
+        }
+
+        .formRow {
+          display: flex;
+          gap: 16px;
+
+          .inputBlock {
+            width: 100%;
+            flex: 1;
+            margin-bottom: 24px;
+          }
+
+          &:last-child {
+            .inputBlock {
+              margin-bottom: 0;
+            }
+          }
+
+          @include bp-below(medium) {
+            flex-wrap: wrap;
+            gap: 0;
+
+            .inputBlock {
+              flex: auto;
+              margin-bottom: 15px;
+            }
+          }
+        }
+      }
+
+      .sendTime {
+        margin-bottom: 16px;
+
+        .inputLabel {
+          margin-bottom: 16px;
+        }
+
+        .formRow {
+          display: flex;
+          gap: 16px;
+
+          .inputBlock {
+            margin-bottom: 24px;
+
+            .timeOptions {
+              display: flex;
+              gap: 20px;
+
+              @include bp-below(medium) {
+                gap: 10px;
+              }
+
+              label {
+                position: relative;
+
+                input {
+                  position: absolute;
+                  height: 100%;
+                  width: 100%;
+                  left: 0;
+                  top: 0;
+                  cursor: pointer;
+                  margin: 0;
+                  opacity: 0;
+
+                  &:checked {
+                    & + .tOpt::before {
+                      background: #fff;
+                    }
+                  }
+                }
+
+                .tOpt {
+                  min-height: 57px;
+                  padding: 0 24px;
+                  border: 2px solid rgb(255 255 255 / 20%);
+                  border-radius: 8px;
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 16px;
+                  font-size: 14px;
+                  font-weight: 700;
+                  color: #bfbfbf;
+
+                  &::before {
+                    min-height: 25px;
+                    min-width: 25px;
+                    flex: 0 0 25px;
+                    border-radius: 100%;
+                    border: solid 2px #fff;
+                    content: '';
+                    display: inline-block;
+                  }
+
+                  @include bp-below(medium) {
+                    min-height: 49px;
+                    padding: 0 14px;
+                    gap: 12px;
+
+                    &::before {
+                      min-height: 20px;
+                      min-width: 20px;
+                      flex: 0 0 20px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .dateIcon {
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: #181616;
+              pointer-events: none;
+              line-height: 0;
+            }
+
+            .dateInput {
+              position: relative;
+              margin-bottom: 8px;
+            }
+
+            .dateNote {
+              font-size: 14px;
+              color: #bfbfbf;
+            }
+          }
+        }
+      }
+
+      .totalPayments {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        .amount {
+          color: #fff;
+          font-family: var(--font-secondary);
+          font-weight: 700;
+          white-space: nowrap;
+
+          span {
+            font-size: 50px;
+            display: inline-block;
+            margin-left: 8px;
+
+            @include bp-below(medium) {
+              font-size: 38px;
+            }
+          }
+        }
+
+        .checkoutBtn {
+          width: 100%;
+          font-size: 20px;
+          min-height: 52px;
+        }
+      }
+    }
+  }
+}
