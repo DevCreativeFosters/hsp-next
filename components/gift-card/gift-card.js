@@ -4,7 +4,12 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { useCart } from '@contexts/cart-context';
+
+import { fetchAPI } from '@lib/fetch-api';
+
 import Button from '@components/button/button';
+import Loading from '@components/loading/loading';
 
 import DateIcon from '@assets/icons/date-icon.svg';
 import GiftCardDesign1 from '@assets/images/design-1.png';
@@ -12,14 +17,34 @@ import GiftCardDesign2 from '@assets/images/design-2.png';
 
 import styles from './gift-card.module.scss';
 
-export default function EGiftCard() {
+export default function EGiftCard({ firstMatchedProduct, heading, product }) {
+  const [loading, setLoading] = useState(false);
+
+  const { getCartItems, openCart } = useCart();
   const [amount, setAmount] = useState(200);
   const [quantity, setQuantity] = useState(1);
   const [customValue, setCustomValue] = useState('');
-  const [sendTime, setSendTime] = useState('sendNow');
+  const [sendTime, setSendTime] = useState('now');
   const [sendDate, setSendDate] = useState('');
 
-  const [selectedDesign, setSelectedDesign] = useState('design1');
+  const [selectedDesign, setSelectedDesign] = useState(
+    product?.cardDesigns?.nodes?.[0]?.id,
+  );
+
+  const [giftDetails, setGiftDetails] = useState({
+    message: '',
+    recipientEmail: '',
+    recipientName: '',
+    senderName: '',
+  });
+
+  const handleGiftChange = e => {
+    const { name, value } = e.target;
+    setGiftDetails(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleQtyMinus = () => {
     if (quantity > 1) {
@@ -31,12 +56,51 @@ export default function EGiftCard() {
     setQuantity(prev => prev + 1);
   };
 
+  const handleAddToCart = async () => {
+    setLoading(true);
+
+    const query = `mutation AddGiftCard($input: AddGiftCardToCartInput!) {
+        addGiftCardToCart(input: $input) {
+          cartItemKey1
+          success
+          message
+        }
+      }
+    `;
+
+    const selectedDesignImage = product?.cardDesigns?.nodes?.find(
+      design => design.id === selectedDesign,
+    )?.sourceUrl;
+
+    try {
+      const data = await fetchAPI(query, {
+        variables: {
+          input: {
+            amount: amount,
+            customAmount: Number(customValue),
+            designImage: selectedDesignImage,
+            productId: firstMatchedProduct?.databaseId,
+            quantity: quantity,
+            ...giftDetails,
+            sendDate: sendDate,
+            sendType: sendTime,
+          },
+        },
+      });
+
+      await getCartItems();
+
+      openCart();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.eGiftCardMain}>
       <div className={styles.leftPart}>
-        <h2>
-          HSP Vehicle Accessories <span>eGift Cards</span>
-        </h2>
         <div className={styles.cardImgContent}>
           <Image
             alt="Gift Card Image"
@@ -50,9 +114,7 @@ export default function EGiftCard() {
       </div>
 
       <div className={styles.rightPart}>
-        <h2>
-          HSP Vehicle Accessories <span>eGift Cards</span>
-        </h2>
+        {heading}
 
         <div className={styles.formBlock}>
           <div className={styles.chooseValue}>
@@ -60,80 +122,22 @@ export default function EGiftCard() {
               Choose a Value & Quantity
             </label>
             <div className={styles.selectOptions}>
-              <label htmlFor="gift50">
-                <input
-                  checked={amount === 50}
-                  id="gift50"
-                  name="giftCardValue"
-                  onChange={e => {
-                    setAmount(Number(e.target.value));
-                    setCustomValue('');
-                  }}
-                  type="radio"
-                  value="50"
-                />
-                <div className={styles.option}>$50</div>
-              </label>
-
-              <label htmlFor="gift100">
-                <input
-                  checked={amount === 100}
-                  id="gift100"
-                  name="giftCardValue"
-                  onChange={e => {
-                    setAmount(Number(e.target.value));
-                    setCustomValue('');
-                  }}
-                  type="radio"
-                  value="100"
-                />
-                <div className={styles.option}>$100</div>
-              </label>
-
-              <label htmlFor="gift200">
-                <input
-                  checked={amount === 200}
-                  id="gift200"
-                  name="giftCardValue"
-                  onChange={e => {
-                    setAmount(Number(e.target.value));
-                    setCustomValue('');
-                  }}
-                  type="radio"
-                  value="200"
-                />
-                <div className={styles.option}>$200</div>
-              </label>
-
-              <label htmlFor="gift500">
-                <input
-                  checked={amount === 500}
-                  id="gift500"
-                  name="giftCardValue"
-                  onChange={e => {
-                    setAmount(Number(e.target.value));
-                    setCustomValue('');
-                  }}
-                  type="radio"
-                  value="500"
-                />
-                <div className={styles.option}>$500</div>
-              </label>
-
-              <label htmlFor="gift1000">
-                <input
-                  checked={amount === 1000}
-                  id="gift1000"
-                  name="giftCardValue"
-                  onChange={e => {
-                    setAmount(Number(e.target.value));
-                    setCustomValue('');
-                  }}
-                  type="radio"
-                  value="1000"
-                />
-                <div className={styles.option}>$1000</div>
-              </label>
+              {product?.giftCardAmounts?.map(({ amount: cardAmount }) => (
+                <label key={`gift-${cardAmount}`}>
+                  <input
+                    checked={amount === cardAmount}
+                    id={`gift${cardAmount}`}
+                    name="giftCardValue"
+                    onChange={e => {
+                      setAmount(Number(e.target.value));
+                      setCustomValue('');
+                    }}
+                    type="radio"
+                    value={cardAmount}
+                  />
+                  <div className={styles.option}>${cardAmount}</div>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -185,43 +189,30 @@ export default function EGiftCard() {
           <div className={styles.chooseDesign}>
             <label className={styles.inputLabel}>Choose a Design</label>
             <div className={styles.selectDesign}>
-              <label className={styles.option} htmlFor="design1">
-                <input
-                  checked={selectedDesign === 'design1'}
-                  id="design1"
-                  name="giftCardDesign"
-                  onChange={e => setSelectedDesign(e.target.value)}
-                  type="radio"
-                  value="design1"
-                />
-                <div className={styles.designOption}>
-                  <Image
-                    alt="Gift Card Image"
-                    height={81}
-                    src={GiftCardDesign1}
-                    width={143}
+              {product?.cardDesigns?.nodes?.map(cardDesign => (
+                <label
+                  className={styles.option}
+                  htmlFor={cardDesign?.id}
+                  key={cardDesign?.id}
+                >
+                  <input
+                    checked={selectedDesign === cardDesign?.id}
+                    id={cardDesign?.id}
+                    name="giftCardDesign"
+                    onChange={e => setSelectedDesign(e.target.value)}
+                    type="radio"
+                    value={cardDesign?.id}
                   />
-                </div>
-              </label>
-
-              <label className={styles.option} htmlFor="design2">
-                <input
-                  checked={selectedDesign === 'design2'}
-                  id="design2"
-                  name="giftCardDesign"
-                  onChange={e => setSelectedDesign(e.target.value)}
-                  type="radio"
-                  value="design2"
-                />
-                <div className={styles.designOption}>
-                  <Image
-                    alt="Gift Card Image"
-                    height={81}
-                    src={GiftCardDesign2}
-                    width={143}
-                  />
-                </div>
-              </label>
+                  <div className={styles.designOption}>
+                    <Image
+                      alt="Gift Card Image"
+                      height={81}
+                      src={cardDesign?.sourceUrl}
+                      width={143}
+                    />
+                  </div>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -231,11 +222,21 @@ export default function EGiftCard() {
                 <label className={styles.inputLabel}>
                   Recipient&apos;s Name
                 </label>
-                <input type="text" />
+                <input
+                  name="recipientName"
+                  onChange={handleGiftChange}
+                  type="text"
+                  value={giftDetails.recipientName}
+                />
               </div>
               <div className={styles.inputBlock}>
                 <label className={styles.inputLabel}>Sender&apos;s Name</label>
-                <input type="text" />
+                <input
+                  name="senderName"
+                  onChange={handleGiftChange}
+                  type="text"
+                  value={giftDetails.senderName}
+                />
               </div>
             </div>
 
@@ -244,7 +245,12 @@ export default function EGiftCard() {
                 <label className={styles.inputLabel}>
                   Recipient&apos;s Email Address
                 </label>
-                <input type="email" />
+                <input
+                  name="recipientEmail"
+                  onChange={handleGiftChange}
+                  type="email"
+                  value={giftDetails.recipientEmail}
+                />
               </div>
             </div>
 
@@ -253,7 +259,12 @@ export default function EGiftCard() {
                 <label className={styles.inputLabel}>
                   Personalised Message
                 </label>
-                <input type="text" />
+                <input
+                  name="message"
+                  onChange={handleGiftChange}
+                  type="text"
+                  value={giftDetails.message}
+                />
               </div>
             </div>
           </div>
@@ -263,26 +274,26 @@ export default function EGiftCard() {
             <div className={styles.formRow}>
               <div className={styles.inputBlock}>
                 <div className={styles.timeOptions}>
-                  <label htmlFor="sendNow">
+                  <label htmlFor="now">
                     <input
-                      checked={sendTime === 'sendNow'}
-                      id="sendNow"
+                      checked={sendTime === 'now'}
+                      id="now"
                       name="sendTime"
                       onChange={e => setSendTime(e.target.value)}
                       type="radio"
-                      value="sendNow"
+                      value="now"
                     />
                     <div className={styles.tOpt}>SEND NOW</div>
                   </label>
 
-                  <label htmlFor="sendLater">
+                  <label htmlFor="later">
                     <input
-                      checked={sendTime === 'sendLater'}
-                      id="sendLater"
+                      checked={sendTime === 'later'}
+                      id="later"
                       name="sendTime"
                       onChange={e => setSendTime(e.target.value)}
                       type="radio"
-                      value="sendLater"
+                      value="later"
                     />
                     <div className={styles.tOpt}>SEND LATER</div>
                   </label>
@@ -290,7 +301,7 @@ export default function EGiftCard() {
               </div>
             </div>
 
-            {sendTime === 'sendLater' && (
+            {sendTime === 'later' && (
               <div className={styles.formRow}>
                 <div className={styles.inputBlock}>
                   <label className={styles.inputLabel}>Pick a date</label>
@@ -319,10 +330,12 @@ export default function EGiftCard() {
             </div>
             <Button
               className={styles.checkoutBtn}
-              disabled={sendTime === 'sendLater' && !sendDate}
+              disabled={(sendTime === 'later' && !sendDate) || loading}
+              onClick={handleAddToCart}
               variant="primary"
             >
               Add to Cart
+              {loading && <Loading />}
             </Button>
           </div>
         </div>

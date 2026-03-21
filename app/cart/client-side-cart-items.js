@@ -138,12 +138,16 @@ export default function ClientSideCartItems() {
                   </figure>
                   <div className={styles.wContent}>
                     <h4>{item.product_name}</h4>
-                    <p>
-                      <strong>Part No.</strong> {item.variantSlug}
-                    </p>
-                    <p>
-                      <strong>Variant:</strong> {item.variantName}
-                    </p>
+                    {item.variantSlug && (
+                      <p>
+                        <strong>Part No.</strong> {item.variantSlug}
+                      </p>
+                    )}
+                    {item.variantName && (
+                      <p>
+                        <strong>Variant:</strong> {item.variantName}
+                      </p>
+                    )}
                     <div
                       className={clsx(styles.price, {
                         black: !item?.compareAtPrice,

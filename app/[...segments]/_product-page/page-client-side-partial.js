@@ -171,152 +171,171 @@ export default function PageClientSidePartial({
 
   return (
     <>
-      <EGiftCard />
-
-      <div className={styles.header}>
-        <div className={clsx(styles.meta, styles.mobile)}>
-          <h1 className={clsx(styles.name, 'h2')}>
-            {mainCategoryName} <br />
-            {mainCategoryName !== variantName && (
-              <span className={styles.variant}>{variantName}</span>
-            )}
-          </h1>
-          {variant?.sku && (
-            <div className={clsx(styles.sku, 'h5')}>
-              Part No. <span className={styles.redColor}>{variant.sku}</span>
-            </div>
-          )}
-          <div className={styles.ratingBlock}>
-            <div
-              className={styles.stars}
-              onClick={() => setSelectedTab('reviews')}
-            >
-              <StarRating color="yellow" score={averageRating} />(
-              {firstMatchedProduct.commentCount} reviews)
-            </div>
-            {user.id ? (
-              <button onClick={handleWishlistToggle} type="button">
-                {inWishlist ? (
-                  <>
-                    <RemoveWishlist /> Added to
-                  </>
-                ) : (
-                  <AddWishlist />
-                )}{' '}
-                Wishlist
-              </button>
-            ) : (
-              <button onClick={() => router.push('/login')} type="button">
-                <AddWishlist /> Wishlist
-              </button>
-            )}
-          </div>
-        </div>
-        <ProductImageCarousel
-          imageOverlay={variant?.variantDetails?.imageOverlay?.node}
-          images={carouselImages}
-        />
-        <div className={styles.details}>
-          <div className={clsx(styles.meta, styles.desktop)}>
+      {firstMatchedProduct?.giftCardSettingsFields?.giftCardAmounts ? (
+        <EGiftCard
+          firstMatchedProduct={firstMatchedProduct}
+          heading={
             <h1 className={clsx(styles.name, 'h2')}>
               {mainCategoryName} <br />
               {mainCategoryName !== variantName && (
                 <span className={styles.variant}>{variantName}</span>
               )}
             </h1>
-            {variant?.sku && (
-              <div className={clsx(styles.sku, 'h5')}>
-                Part No. <span className={styles.redColor}>{variant.sku}</span>
-              </div>
-            )}
-            <div className={styles.ratingBlock}>
-              <div
-                className={styles.stars}
-                onClick={() => setSelectedTab('reviews')}
-              >
-                <StarRating color="yellow" score={averageRating} />(
-                {firstMatchedProduct.commentCount} reviews)
-              </div>
-              {user.id ? (
-                <button onClick={handleWishlistToggle} type="button">
-                  {inWishlist ? (
-                    <>
-                      <RemoveWishlist /> Added to
-                    </>
-                  ) : (
-                    <AddWishlist />
-                  )}{' '}
-                  Wishlist
-                </button>
-              ) : (
-                <button onClick={() => router.push('/login')} type="button">
-                  <AddWishlist /> Wishlist
-                </button>
+          }
+          product={firstMatchedProduct?.giftCardSettingsFields}
+        />
+      ) : (
+        <>
+          <div className={styles.header}>
+            <div className={clsx(styles.meta, styles.mobile)}>
+              <h1 className={clsx(styles.name, 'h2')}>
+                {mainCategoryName} <br />
+                {mainCategoryName !== variantName && (
+                  <span className={styles.variant}>{variantName}</span>
+                )}
+              </h1>
+              {variant?.sku && (
+                <div className={clsx(styles.sku, 'h5')}>
+                  Part No.{' '}
+                  <span className={styles.redColor}>{variant.sku}</span>
+                </div>
               )}
+              <div className={styles.ratingBlock}>
+                <div
+                  className={styles.stars}
+                  onClick={() => setSelectedTab('reviews')}
+                >
+                  <StarRating color="yellow" score={averageRating} />(
+                  {firstMatchedProduct.commentCount} reviews)
+                </div>
+                {user.id ? (
+                  <button onClick={handleWishlistToggle} type="button">
+                    {inWishlist ? (
+                      <>
+                        <RemoveWishlist /> Added to
+                      </>
+                    ) : (
+                      <AddWishlist />
+                    )}{' '}
+                    Wishlist
+                  </button>
+                ) : (
+                  <button onClick={() => router.push('/login')} type="button">
+                    <AddWishlist /> Wishlist
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-          <div className={styles.enquiryForm}>
-            <StoreLocatorProvider>
-              <EnquiryForm
-                allLocations={allLocations}
-                enquiryFormId={enquiryFormId}
-                mainCategory={mainCategory}
-                onVariantChange={onVariantChange}
-                productData={firstMatchedProduct}
-                showStoreSearchcontrols={true}
-                variantSlug={variantSlug}
-              />
-            </StoreLocatorProvider>
-          </div>
-          <Accordion
-            allowMultipleOpen
-            className={clsx(styles.productAccordion, styles.hideOnTablet)}
-            stickyOnMobile
-          >
-            {warrantyTimePeriod && (
-              <AccordionItem
-                className={styles.productAccordionItem}
-                triggerContent={
-                  <span>
-                    Warranty{' '}
-                    <span className={styles.years}>
-                      +{warrantyTimePeriod} years
-                    </span>
-                  </span>
-                }
-              >
-                {warrantyDescription && (
-                  <div className={clsx(styles.warrantyDescription, 'p-large')}>
-                    {warrantyDescription}
+            <ProductImageCarousel
+              imageOverlay={variant?.variantDetails?.imageOverlay?.node}
+              images={carouselImages}
+            />
+            <div className={styles.details}>
+              <div className={clsx(styles.meta, styles.desktop)}>
+                <h1 className={clsx(styles.name, 'h2')}>
+                  {mainCategoryName} <br />
+                  {mainCategoryName !== variantName && (
+                    <span className={styles.variant}>{variantName}</span>
+                  )}
+                </h1>
+                {variant?.sku && (
+                  <div className={clsx(styles.sku, 'h5')}>
+                    Part No.{' '}
+                    <span className={styles.redColor}>{variant.sku}</span>
                   </div>
                 )}
-              </AccordionItem>
-            )}
-          </Accordion>
-        </div>
-      </div>
-      {/*
-      <ProductComboDeals
-        comboDeals={firstMatchedProduct.productComboDeals}
-        productData={firstMatchedProduct}
-        variantSlug={variantSlug}
-      />
-      */}
-      <ProductTabs
-        description={description}
-        downloadFileFormId={downloadFileFormId}
-        featuresBoxes={featuresBoxes}
-        featuresDescription={featuresDescription}
-        manualsDescription={manualsDescription}
-        manualsLinks={manualPdfItems}
-        productId={productId}
-        productName={productName}
-        reviews={firstMatchedProduct.comments.nodes}
-        selectedTab={selectedTab}
-        setSelectedTab={setSelectedTab}
-        specificationContent={specification}
-        specificationDescription={specificationDescription}
-      />
+                <div className={styles.ratingBlock}>
+                  <div
+                    className={styles.stars}
+                    onClick={() => setSelectedTab('reviews')}
+                  >
+                    <StarRating color="yellow" score={averageRating} />(
+                    {firstMatchedProduct.commentCount} reviews)
+                  </div>
+                  {user.id ? (
+                    <button onClick={handleWishlistToggle} type="button">
+                      {inWishlist ? (
+                        <>
+                          <RemoveWishlist /> Added to
+                        </>
+                      ) : (
+                        <AddWishlist />
+                      )}{' '}
+                      Wishlist
+                    </button>
+                  ) : (
+                    <button onClick={() => router.push('/login')} type="button">
+                      <AddWishlist /> Wishlist
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className={styles.enquiryForm}>
+                <StoreLocatorProvider>
+                  <EnquiryForm
+                    allLocations={allLocations}
+                    enquiryFormId={enquiryFormId}
+                    mainCategory={mainCategory}
+                    onVariantChange={onVariantChange}
+                    productData={firstMatchedProduct}
+                    showStoreSearchcontrols={true}
+                    variantSlug={variantSlug}
+                  />
+                </StoreLocatorProvider>
+              </div>
+              <Accordion
+                allowMultipleOpen
+                className={clsx(styles.productAccordion, styles.hideOnTablet)}
+                stickyOnMobile
+              >
+                {warrantyTimePeriod && (
+                  <AccordionItem
+                    className={styles.productAccordionItem}
+                    triggerContent={
+                      <span>
+                        Warranty{' '}
+                        <span className={styles.years}>
+                          +{warrantyTimePeriod} years
+                        </span>
+                      </span>
+                    }
+                  >
+                    {warrantyDescription && (
+                      <div
+                        className={clsx(styles.warrantyDescription, 'p-large')}
+                      >
+                        {warrantyDescription}
+                      </div>
+                    )}
+                  </AccordionItem>
+                )}
+              </Accordion>
+            </div>
+          </div>
+          {/*
+            <ProductComboDeals
+              comboDeals={firstMatchedProduct.productComboDeals}
+              productData={firstMatchedProduct}
+              variantSlug={variantSlug}
+            />
+          */}
+          <ProductTabs
+            description={description}
+            downloadFileFormId={downloadFileFormId}
+            featuresBoxes={featuresBoxes}
+            featuresDescription={featuresDescription}
+            manualsDescription={manualsDescription}
+            manualsLinks={manualPdfItems}
+            productId={productId}
+            productName={productName}
+            reviews={firstMatchedProduct.comments.nodes}
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            specificationContent={specification}
+            specificationDescription={specificationDescription}
+          />
+        </>
+      )}
     </>
   );
 }
