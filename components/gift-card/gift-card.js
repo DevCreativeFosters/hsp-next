@@ -12,8 +12,6 @@ import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 
 import DateIcon from '@assets/icons/date-icon.svg';
-import GiftCardDesign1 from '@assets/images/design-1.png';
-import GiftCardDesign2 from '@assets/images/design-2.png';
 
 import styles from './gift-card.module.scss';
 
@@ -30,6 +28,10 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
   const [selectedDesign, setSelectedDesign] = useState(
     product?.cardDesigns?.nodes?.[0]?.id,
   );
+
+  const selectedDesignImage = product?.cardDesigns?.nodes?.find(
+    design => design.id === selectedDesign,
+  )?.sourceUrl;
 
   const [giftDetails, setGiftDetails] = useState({
     message: '',
@@ -59,7 +61,8 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
   const handleAddToCart = async () => {
     setLoading(true);
 
-    const query = `mutation AddGiftCard($input: AddGiftCardToCartInput!) {
+    const query = `
+      mutation AddGiftCard($input: AddGiftCardToCartInput!) {
         addGiftCardToCart(input: $input) {
           cartItemKey1
           success
@@ -67,10 +70,6 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
         }
       }
     `;
-
-    const selectedDesignImage = product?.cardDesigns?.nodes?.find(
-      design => design.id === selectedDesign,
-    )?.sourceUrl;
 
     try {
       const data = await fetchAPI(query, {
@@ -105,9 +104,7 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
           <Image
             alt="Gift Card Image"
             height={516}
-            src={
-              selectedDesign === 'design1' ? GiftCardDesign1 : GiftCardDesign2
-            }
+            src={selectedDesignImage}
             width={516}
           />
         </div>
