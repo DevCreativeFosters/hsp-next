@@ -9,8 +9,8 @@
   justify-content: center;
 
   @include bp(large) {
-    aspect-ratio: 1/0;
-    grid-column: span 7;
+    aspect-ratio: 696/409;
+    grid-column: span 8;
 
     // max-height: 409px;
     border-radius: var(--border-radius-md);

@@ -100,6 +100,7 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
   return (
     <div className={styles.eGiftCardMain}>
       <div className={styles.leftPart}>
+        {heading}
         <div className={styles.cardImgContent}>
           <Image
             alt="Gift Card Image"

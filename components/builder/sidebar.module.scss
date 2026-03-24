@@ -42,7 +42,7 @@
     padding: var(--card-padding);
     background: transparent;
     overflow: unset;
-    grid-column: span 5;
+    grid-column: span 4;
     height: fit-content;
     border: var(--border-size) solid var(--border-color);
   }
@@ -305,8 +305,8 @@
 
 .productBox {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: start;
+  gap: 10px;
   min-height: 40px;
   flex: 1;
   overflow: hidden;
@@ -510,12 +510,13 @@
     display: flex;
     gap: 8px;
 
-    @include bp-below(large) {
-      flex-direction: row-reverse;
+    button {
+      padding: 0 12px;
+      flex: 1;
     }
 
-    button {
-      flex: 1;
+    @include bp-below(large) {
+      flex-direction: row-reverse;
     }
   }
 }

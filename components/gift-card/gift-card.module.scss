@@ -1,18 +1,26 @@
 .eGiftCardMain {
   display: flex;
 
-  @media (width<=991px) {
+  @include bp-below(medium-large) {
     flex-wrap: wrap;
+  }
+
+  @include bp-below(large) {
+    margin-bottom: 40px;
+  }
+
+  @include bp-below(medium) {
+    margin-bottom: 0;
   }
 
   .leftPart {
     flex: 1;
 
-    h2 {
+    h1 {
       margin-bottom: 20px;
       display: none;
 
-      @include bp-below(medium) {
+      @include bp-below(medium-large) {
         display: block;
       }
 
@@ -32,6 +40,12 @@
       align-items: center;
       padding: 50px;
       border-radius: 8px;
+      position: relative;
+
+      @include bp-below(medium) {
+        min-height: 358px;
+        padding: 30px;
+      }
 
       img {
         height: auto;
@@ -42,7 +56,7 @@
       }
     }
 
-    @media (width<=991px) {
+    @include bp-below(medium-large) {
       width: 100%;
       flex: auto;
       margin-bottom: 16px;
@@ -57,10 +71,14 @@
     flex: 1;
     padding: 0 0 0 42px;
 
-    @media (width<=991px) {
+    @include bp-below(medium-large) {
       width: 100%;
       flex: auto;
       padding: 0;
+
+      h1 {
+        display: none;
+      }
     }
 
     h2 {
