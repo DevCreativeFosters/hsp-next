@@ -495,203 +495,191 @@ function CheckoutForm() {
                 </div>
               </div>
             )}
-
-            {/* Receive Details */}
-            {noGiftCard && (
-              <div className={styles.checkOutInfo}>
-                <div className={styles.heading}>
-                  <h2>How would you like to Receive your Order?</h2>
-                  <p>Choose a Delivery or Install Method</p>
-                </div>
-                <div className={styles.blackBoxes}>
-                  {cartLoading ? (
-                    <div className={styles.loading}>
-                      <Loading size="large" />
-                    </div>
-                  ) : (
-                    deliveryOptions.map(deliveryOption => {
-                      return (
-                        <div className={styles.boxItem} key={deliveryOption.id}>
-                          <div className={styles.contentBox}>
-                            <div
-                              className={clsx(styles.contentWrap, {
-                                [styles.selected]:
-                                  openDrawer === deliveryOption.id,
-                              })}
-                              onClick={() =>
-                                handleSelectOption(deliveryOption.id)
-                              }
-                              style={{ cursor: 'pointer' }}
-                            >
-                              {openDrawer === deliveryOption.id &&
-                              !isFormFilled ? (
+            {/* Receive Details */}{' '}
+            <div className={styles.checkOutInfo}>
+              <div className={styles.heading}>
+                <h2>How would you like to Receive your Order?</h2>
+                <p>Choose a Delivery or Install Method</p>
+              </div>
+              <div className={styles.blackBoxes}>
+                {cartLoading ? (
+                  <div className={styles.loading}>
+                    <Loading size="large" />
+                  </div>
+                ) : (
+                  deliveryOptions.map(deliveryOption => {
+                    return (
+                      <div className={styles.boxItem} key={deliveryOption.id}>
+                        <div className={styles.contentBox}>
+                          <div
+                            className={clsx(styles.contentWrap, {
+                              [styles.selected]:
+                                openDrawer === deliveryOption.id,
+                            })}
+                            onClick={() =>
+                              handleSelectOption(deliveryOption.id)
+                            }
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {openDrawer === deliveryOption.id &&
+                            !isFormFilled ? (
+                              <>
+                                <h3>
+                                  <deliveryOption.icon />{' '}
+                                  {deliveryOption.selectedMenu.title}
+                                </h3>
+                                <div>{deliveryOption.selectedMenu.content}</div>
+                              </>
+                            ) : (
+                              <>
+                                <h3>
+                                  <deliveryOption.icon /> {deliveryOption.title}
+                                </h3>
+                                <p>{deliveryOption.description}</p>
+                              </>
+                            )}
+                          </div>
+                          {isFormFilled &&
+                          deliveryOption.id === formData.orderType ? (
+                            <div className={styles.editSelection}>
+                              {[
+                                'deliver-door',
+                                'deliver-to-store',
+                                'drop-ship-to-customer',
+                              ].some(id => id === deliveryOption.id) && (
                                 <>
-                                  <h3>
-                                    <deliveryOption.icon />{' '}
-                                    {deliveryOption.selectedMenu.title}
-                                  </h3>
-                                  <div>
-                                    {deliveryOption.selectedMenu.content}
-                                  </div>
-                                </>
-                              ) : (
-                                <>
-                                  <h3>
-                                    <deliveryOption.icon />{' '}
-                                    {deliveryOption.title}
-                                  </h3>
-                                  <p>{deliveryOption.description}</p>
-                                </>
-                              )}
-                            </div>
-                            {isFormFilled &&
-                            deliveryOption.id === formData.orderType ? (
-                              <div className={styles.editSelection}>
-                                {[
-                                  'deliver-door',
-                                  'deliver-to-store',
-                                  'drop-ship-to-customer',
-                                ].some(id => id === deliveryOption.id) && (
-                                  <>
-                                    <div
-                                      className={clsx(
-                                        styles.deliveryAddressBox,
-                                        styles.delivery,
-                                      )}
-                                    >
-                                      {deliveryOption.askCutomerInfo && (
-                                        <div className={styles.customerInfo}>
-                                          <div className={styles.smallTitle}>
-                                            Customer Info:{' '}
-                                          </div>
-                                          <p>
-                                            <div>
-                                              <strong>
-                                                {
-                                                  formData
-                                                    .additionalCustomerInfo
-                                                    .customer_first_name
-                                                }{' '}
-                                              </strong>
-                                            </div>
-                                            <div>
-                                              <strong>
-                                                {
-                                                  formData
-                                                    .additionalCustomerInfo
-                                                    .customer_last_name
-                                                }
-                                              </strong>
-                                            </div>
-                                          </p>
-                                          <p>
+                                  <div
+                                    className={clsx(
+                                      styles.deliveryAddressBox,
+                                      styles.delivery,
+                                    )}
+                                  >
+                                    {deliveryOption.askCutomerInfo && (
+                                      <div className={styles.customerInfo}>
+                                        <div className={styles.smallTitle}>
+                                          Customer Info:{' '}
+                                        </div>
+                                        <p>
+                                          <div>
                                             <strong>
                                               {
                                                 formData.additionalCustomerInfo
-                                                  .customer_email
+                                                  .customer_first_name
+                                              }{' '}
+                                            </strong>
+                                          </div>
+                                          <div>
+                                            <strong>
+                                              {
+                                                formData.additionalCustomerInfo
+                                                  .customer_last_name
                                               }
                                             </strong>
-                                          </p>
-                                        </div>
-                                      )}
-                                      <div className={styles.customerInfo}>
-                                        <div className={styles.smallTitle}>
-                                          Delivery Address:{' '}
-                                        </div>
-                                        <div>
+                                          </div>
+                                        </p>
+                                        <p>
                                           <strong>
-                                            {formData.address}, {formData.city},{' '}
-                                            {formData.state} {formData.postcode}
-                                            , {formData.country}
+                                            {
+                                              formData.additionalCustomerInfo
+                                                .customer_email
+                                            }
                                           </strong>
-                                        </div>
+                                        </p>
+                                      </div>
+                                    )}
+                                    <div className={styles.customerInfo}>
+                                      <div className={styles.smallTitle}>
+                                        Delivery Address:{' '}
+                                      </div>
+                                      <div>
+                                        <strong>
+                                          {formData.address}, {formData.city},{' '}
+                                          {formData.state} {formData.postcode},{' '}
+                                          {formData.country}
+                                        </strong>
                                       </div>
                                     </div>
-                                  </>
-                                )}
-                                {[
-                                  'local-installation',
-                                  'click-collect',
-                                  'pickup-from-hsp',
-                                ].some(id => id === deliveryOption.id) &&
-                                  (() => {
-                                    const {
-                                      address,
-                                      city,
-                                      country,
-                                      postalCode,
-                                      stateAbbr,
-                                      street,
-                                    } = selectedStore.location;
-
-                                    return (
-                                      <div
-                                        className={styles.deliveryAddressBox}
-                                      >
-                                        <div className={styles.left}>
-                                          <b>HSP Vehicle Accessories</b>
-                                        </div>
-                                        <div className={styles.right}>
-                                          {`${street}, ${city}, ${stateAbbr} ${postalCode}, ${country}`}
-                                        </div>
-                                      </div>
-                                    );
-                                  })()}
-
-                                {deliveryOption.noteContent}
-
-                                {deliveryOption.selectedAddress.btnTitle && (
-                                  <button
-                                    className={styles.link}
-                                    onClick={() => setIsFormFilled(false)}
-                                  >
-                                    {deliveryOption.selectedAddress.btnTitle}
-                                  </button>
-                                )}
-                              </div>
-                            ) : (
-                              <div className={styles.storeLocate}>
-                                {openDrawer === deliveryOption.id && (
-                                  <div className={styles.drawer}>
-                                    {(deliveryOption.id === 'click-collect' ||
-                                      deliveryOption.id ===
-                                        'local-installation') && (
-                                      <SelectLocation
-                                        allStores={allStores}
-                                        onSelect={onSelect}
-                                      />
-                                    )}
-                                    {(deliveryOption.id === 'deliver-door' ||
-                                      deliveryOption.id ===
-                                        'deliver-to-store' ||
-                                      deliveryOption.id ===
-                                        'drop-ship-to-customer') && (
-                                      <Delivery
-                                        allowDelivery={
-                                          deliveryOption.allowDelivery
-                                        }
-                                        askCutomerInfo={
-                                          deliveryOption.askCutomerInfo
-                                        }
-                                        formData={formData}
-                                        isFormFilled={isFormFilled}
-                                        setFormData={setFormData}
-                                        setIsFormFilled={setIsFormFilled}
-                                      />
-                                    )}
                                   </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            )}
+                                </>
+                              )}
+                              {[
+                                'local-installation',
+                                'click-collect',
+                                'pickup-from-hsp',
+                              ].some(id => id === deliveryOption.id) &&
+                                (() => {
+                                  const {
+                                    address,
+                                    city,
+                                    country,
+                                    postalCode,
+                                    stateAbbr,
+                                    street,
+                                  } = selectedStore.location;
 
+                                  return (
+                                    <div className={styles.deliveryAddressBox}>
+                                      <div className={styles.left}>
+                                        <b>HSP Vehicle Accessories</b>
+                                      </div>
+                                      <div className={styles.right}>
+                                        {`${street}, ${city}, ${stateAbbr} ${postalCode}, ${country}`}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
+
+                              {deliveryOption.noteContent}
+
+                              {deliveryOption.selectedAddress.btnTitle && (
+                                <button
+                                  className={styles.link}
+                                  onClick={() => setIsFormFilled(false)}
+                                >
+                                  {deliveryOption.selectedAddress.btnTitle}
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <div className={styles.storeLocate}>
+                              {openDrawer === deliveryOption.id && (
+                                <div className={styles.drawer}>
+                                  {(deliveryOption.id === 'click-collect' ||
+                                    deliveryOption.id ===
+                                      'local-installation') && (
+                                    <SelectLocation
+                                      allStores={allStores}
+                                      onSelect={onSelect}
+                                    />
+                                  )}
+                                  {(deliveryOption.id === 'deliver-door' ||
+                                    deliveryOption.id === 'deliver-to-store' ||
+                                    deliveryOption.id ===
+                                      'drop-ship-to-customer') && (
+                                    <Delivery
+                                      allowDelivery={
+                                        deliveryOption.allowDelivery
+                                      }
+                                      askCutomerInfo={
+                                        deliveryOption.askCutomerInfo
+                                      }
+                                      formData={formData}
+                                      isFormFilled={isFormFilled}
+                                      setFormData={setFormData}
+                                      setIsFormFilled={setIsFormFilled}
+                                    />
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
             {/* After Filling the form this will be appeared */}
             {isFormFilled && (
               <div className={styles.checkOutPayment}>
