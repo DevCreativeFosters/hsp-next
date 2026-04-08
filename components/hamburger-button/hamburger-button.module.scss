@@ -8,6 +8,10 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+
+  &.isActive {
+    transform: translateY(-32px);
+  }
 }
 
 .bars {

@@ -35,6 +35,10 @@
       transparent
     );
     pointer-events: none;
+
+    @include bp-below(full) {
+      display: none;
+    }
   }
 
   &::after {
@@ -53,7 +57,7 @@
 .mobileMenuList {
   position: absolute;
   inset: 0;
-  padding: 80px 12px 25px;
+  padding: 60px 12px 25px;
   margin: 0;
   display: flex;
   flex-direction: column;
