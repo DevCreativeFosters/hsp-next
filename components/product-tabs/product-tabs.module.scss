@@ -641,6 +641,8 @@
     margin: 15px 0 24px;
     overflow: auto;
     max-height: 160px;
+    scrollbar-color: #ccc #fff;
+    scrollbar-width: thin;
 
     @media (width<=480px) {
       margin: 13px 0 10px;

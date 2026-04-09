@@ -36,10 +36,7 @@
 
 .results {
   position: relative;
-  overflow-y: scroll;
   min-height: 300px;
-  scrollbar-width: thin;
-  scrollbar-color: #262626 #0e0e0e;
 
   @include bp(medium) {
     max-height: calc(
@@ -70,9 +67,17 @@
     background-color: #262626;
   }
 
-  @include bp(medium) {
+  @include bp(large) {
     width: 35%;
     padding-right: 8px;
+  }
+
+  @include bp-below(large) {
+    width: 43%;
+  }
+
+  @include bp-below(medium) {
+    width: 100%;
   }
 }
 

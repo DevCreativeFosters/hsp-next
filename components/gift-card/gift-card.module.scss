@@ -54,6 +54,25 @@
         border-radius: 30px;
         border: solid 1px #ccc;
       }
+
+      .overLayAmount {
+        position: absolute;
+        top: calc(50% + 12px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(48px, 4.444vw, 64px);
+        font-weight: 700;
+        color: #fff;
+        font-family: var(--font-secondary);
+
+        &.darkText {
+          color: #000;
+        }
+
+        @include bp-below(medium) {
+          font-size: 32px;
+        }
+      }
     }
 
     @include bp-below(medium-large) {
@@ -340,6 +359,15 @@
                 max-width: 100%;
               }
             }
+          }
+
+          .overLayAmount {
+            position: absolute;
+            z-index: 1;
+            left: 50%;
+            transform: translateX(-50%);
+            top: calc(50% + 4px);
+            font-weight: 700;
           }
         }
       }

@@ -34,9 +34,9 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: var(--gap-global-sm);
 
-  @media (width<=767px) {
+  @include bp-below(medium) {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   @include bp(medium) {
@@ -61,7 +61,7 @@
       width: 35%;
     }
 
-    @media (width<=767px) {
+    @include bp-below(medium) {
       width: max-content;
     }
 
@@ -91,17 +91,21 @@
     width: 75%;
     padding-left: 20px;
 
+    .grid {
+      gap: 30px;
+    }
+
     @media (width<=991px) {
       width: 65%;
     }
 
-    @media (width<=767px) {
+    @include bp-below(medium) {
       width: 100%;
       padding-left: 0;
-    }
 
-    .grid {
-      gap: 30px;
+      .grid {
+        gap: 10px;
+      }
     }
   }
 
@@ -171,8 +175,9 @@
     padding: 16px;
     align-items: flex-start;
     gap: 8px;
+    position: relative;
 
-    @media (width<=767px) {
+    @include bp-below(medium) {
       border-radius: 8px;
       font-size: 14px;
       white-space: nowrap;
@@ -199,6 +204,13 @@
           right: 3px;
           top: -2px;
           pointer-events: none;
+
+          @include bp-below(medium) {
+            top: 0;
+            right: 0;
+            width: 7px;
+            height: 7px;
+          }
         }
       }
 
@@ -215,8 +227,18 @@
         padding: 10px 0 0;
         margin: 0 0 0 -65px;
 
-        @media (width<=767px) {
+        @include bp-below(medium) {
           margin: 0;
+          position: absolute;
+          background: #fff;
+          padding: 15px;
+          border-radius: 10px;
+          border: solid 1px var(--color-primary-100);
+          max-height: 165px;
+          overflow-y: auto;
+          min-width: 150px;
+          left: 0;
+          top: 100%;
         }
 
         li {
@@ -298,16 +320,18 @@
       content: '';
       height: 10px;
       width: 10px;
-      border-left: solid 2px #ed2935;
-      border-bottom: solid 2px #ed2935;
+      border-left: solid 2px var(--color-primary-100);
+      border-bottom: solid 2px var(--color-primary-100);
       transform: rotate(-45deg);
       position: absolute;
       right: 20px;
       top: 14px;
 
-      @media (width<=767px) {
-        top: 8px;
-        right: 15px;
+      @include bp-below(medium) {
+        top: 10px;
+        right: 13px;
+        width: 7px;
+        height: 7px;
       }
     }
   }
@@ -316,6 +340,17 @@
     padding: 0 16px 16px;
     margin: 0;
     display: none;
+
+    @include bp-below(medium) {
+      position: absolute;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      border: solid 1px var(--color-primary-100);
+      max-height: 165px;
+      overflow-y: auto;
+      min-width: 200px;
+    }
 
     li {
       list-style-type: none;

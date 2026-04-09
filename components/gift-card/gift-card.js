@@ -108,6 +108,15 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
             src={selectedDesignImage}
             width={516}
           />
+
+          <div
+            className={styles.overLayAmount}
+            style={{
+              color: selectedDesignImage?.includes('white') ? 'black' : 'white',
+            }}
+          >
+            <span>${amount * quantity}</span>
+          </div>
         </div>
       </div>
 
@@ -208,6 +217,16 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
                       src={cardDesign?.sourceUrl}
                       width={143}
                     />
+                    <div
+                      className={styles.overLayAmount}
+                      style={{
+                        color: cardDesign?.sourceUrl?.includes('white')
+                          ? 'black'
+                          : 'white',
+                      }}
+                    >
+                      <span>${amount * quantity}</span>
+                    </div>
                   </div>
                 </label>
               ))}
