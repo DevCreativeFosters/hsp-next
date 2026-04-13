@@ -6,6 +6,8 @@ import Image from 'next/image';
 
 import { useCart } from '@contexts/cart-context';
 
+import { useIsMobile } from '@hooks/useIsMobile';
+
 import { fetchAPI } from '@lib/fetch-api';
 
 import Button from '@components/button/button';
@@ -24,6 +26,8 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
   const [customValue, setCustomValue] = useState('');
   const [sendTime, setSendTime] = useState('now');
   const [sendDate, setSendDate] = useState('');
+
+  const isMobile = useIsMobile();
 
   const [selectedDesign, setSelectedDesign] = useState(
     product?.cardDesigns?.nodes?.[0]?.id,
@@ -246,6 +250,19 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
                   value={giftDetails.recipientName}
                 />
               </div>
+              {isMobile && (
+                <div className={styles.inputBlock}>
+                  <label className={styles.inputLabel}>
+                    Recipient&apos;s Email Address
+                  </label>
+                  <input
+                    name="recipientEmail"
+                    onChange={handleGiftChange}
+                    type="email"
+                    value={giftDetails.recipientEmail}
+                  />
+                </div>
+              )}
               <div className={styles.inputBlock}>
                 <label className={styles.inputLabel}>Sender&apos;s Name</label>
                 <input
@@ -257,19 +274,21 @@ export default function EGiftCard({ firstMatchedProduct, heading, product }) {
               </div>
             </div>
 
-            <div className={styles.formRow}>
-              <div className={styles.inputBlock}>
-                <label className={styles.inputLabel}>
-                  Recipient&apos;s Email Address
-                </label>
-                <input
-                  name="recipientEmail"
-                  onChange={handleGiftChange}
-                  type="email"
-                  value={giftDetails.recipientEmail}
-                />
+            {!isMobile && (
+              <div className={styles.formRow}>
+                <div className={styles.inputBlock}>
+                  <label className={styles.inputLabel}>
+                    Recipient&apos;s Email Address
+                  </label>
+                  <input
+                    name="recipientEmail"
+                    onChange={handleGiftChange}
+                    type="email"
+                    value={giftDetails.recipientEmail}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className={styles.formRow}>
               <div className={styles.inputBlock}>
