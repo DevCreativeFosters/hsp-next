@@ -207,8 +207,7 @@ export default function EnquiryModal({
                                 : price === null
                                   ? productPrice
                                   : price;
-                            const installCost =
-                              itemInstallationCost || installationCost;
+                            const installCost = itemInstallationCost ?? 0;
 
                             return (
                               <EnquiryProduct

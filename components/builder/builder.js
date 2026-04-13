@@ -472,6 +472,14 @@ export default function Builder({
         }
 
         covers.forEach(cover => {
+          if (
+            selectedCover &&
+            !selectedCover?.productCategories?.includes(
+              cover?.productCategories?.nodes[0]?.slug,
+            )
+          )
+            return;
+
           cover.variants.forEach(variant => {
             const isCompatible =
               variant?.compatibleFactoryOptionsVariants?.includes(
@@ -593,9 +601,21 @@ export default function Builder({
     );
 
     if (selectedCover && !selectedCover.isNoCover) {
-      const baseVariant = covers
+      let baseVariant = covers
         .find(cover => cover.group === selectedCover.productSlug)
-        ?.variants.find(v => !v.compatibleFactoryOptionsVariants);
+        ?.variants.find(
+          v =>
+            !v.compatibleFactoryOptionsVariants &&
+            v.compatibleCategoriesVariants.includes(
+              currentProduct.productCategories[0],
+            ),
+        );
+
+      if (!baseVariant) {
+        baseVariant = covers
+          .find(cover => cover.group === selectedCover.productSlug)
+          ?.variants.find(v => !v.compatibleFactoryOptionsVariants);
+      }
 
       if (baseVariant) {
         newSelectedProducts[0] = baseVariant;
