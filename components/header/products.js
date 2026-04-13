@@ -34,7 +34,7 @@ function Products({ categories, isActive, products }, ref) {
             // Fixed: "All" button check should be currentCategoryId === null
             data-active={currentCategoryId === null}
           >
-            All <MenuArrow />
+            All Products <MenuArrow />
           </Button>
         </li>
         {categories?.map(({ id, name }) => (
@@ -86,6 +86,7 @@ function Products({ categories, isActive, products }, ref) {
             ))}
         </ul>
 
+        {/*
         <div className={styles.availableProducts}>
           <div className={styles.title}>
             Product categories available for Toyota
@@ -101,6 +102,7 @@ function Products({ categories, isActive, products }, ref) {
             </Link>
           </div>
         </div>
+        */}
       </div>
     </div>
   );
