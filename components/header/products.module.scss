@@ -16,7 +16,11 @@
   transition: opacity 150ms;
   opacity: 0;
   pointer-events: none;
-  border-bottom: solid 3px var(--color-primary-100);
+  border-bottom: solid 3px #c00;
+
+  @media (width <= 1799px) {
+    max-width: 1240px;
+  }
 
   @include bp-below(full) {
     max-width: 900px;
@@ -33,11 +37,12 @@
 }
 
 .filterList {
-  padding: 0;
+  padding: 8px 0 0;
   margin: 0;
   list-style: none;
   background: #111;
-  min-width: 219px;
+  min-width: 220px;
+  border-right: solid 1px #222;
 }
 
 .filterItem {
@@ -59,6 +64,7 @@
     text-align: left;
     justify-content: flex-start;
     border-left: solid 3px transparent;
+    border-right: solid 5px #111;
     border-radius: 0;
     color: #999;
 
@@ -70,13 +76,13 @@
     &[data-active='true'] {
       color: #fff;
       background: #1a1a1a;
-      border-color: var(--color-primary-100);
+      border-left-color: #c00;
     }
 
     svg {
       position: absolute;
-      right: 20px;
-      transform: scale(0.9);
+      right: 25px;
+      transform: scale(0.85);
     }
 
     @include bp-below(full) {
@@ -97,7 +103,7 @@
 
 .productList {
   list-style: none;
-  padding: 0 30px 0 0;
+  padding: 0 14px 0 0;
   margin: 0;
   display: grid;
   flex-grow: 1;
@@ -139,25 +145,7 @@
   overflow: hidden;
   border-radius: 8px;
   height: 100%;
-
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    z-index: -1;
-    inset: -8px;
-    background: var(--color-white-10);
-    border-radius: var(--border-radius-md);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 200ms;
-  }
-
-  &:hover::before {
-    @media (hover: hover) {
-      opacity: 1;
-    }
-  }
+  background: #141414;
 
   .productInfo {
     padding: 16px;
@@ -183,9 +171,9 @@
       a {
         font-size: 13px;
         font-weight: 600;
-        padding: 9px 8px 8px 10px;
-        border-radius: 5px;
-        color: var(--color-primary-100);
+        padding: 5px 8px 4px 10px;
+        border-radius: 8px;
+        color: #c00;
         background: transparent;
         display: flex;
         align-items: center;
@@ -205,11 +193,12 @@
         svg {
           path {
             transition: 0.5s all;
+            fill: #c00;
           }
         }
 
         &:hover {
-          background: var(--color-primary-100);
+          background: #c00;
           color: #fff;
 
           svg {
@@ -230,13 +219,15 @@
 
 .productImageWrapper {
   position: relative;
-  width: 125px;
-  height: 125px;
+  width: 130px;
+  flex: 0 0 130px;
+  height: 123px;
   overflow: hidden;
   background-color: var(--color-white-10);
 
   @include bp-below(full) {
     width: 90px;
+    flex: 0 0 90px;
     height: 90px;
   }
 }
@@ -248,7 +239,7 @@
 }
 
 .rightBlockMain {
-  padding: 30px 16px;
+  padding: 36px 16px;
   width: 100%;
 
   @include bp-below(full) {
@@ -256,8 +247,8 @@
   }
 
   .categoryTitle {
-    font-size: 15px;
-    margin-bottom: 15px;
+    font-size: 13px;
+    margin-bottom: 20px;
     font-family: var(--font-hind);
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -281,8 +272,8 @@
   }
 
   .title {
-    font-size: 15px;
-    margin-bottom: 15px;
+    font-size: 14px;
+    margin-bottom: 18px;
     font-family: var(--font-hind);
 
     @include bp-below(full) {
@@ -312,15 +303,15 @@
       }
 
       &:hover {
-        background: var(--color-primary-100);
+        background: #c00;
         color: #fff;
-        border-color: var(--color-primary-100);
+        border-color: #c00;
       }
     }
   }
 
   .viewAll {
-    margin: 30px 0 0;
+    margin: 20px 0 0;
 
     @include bp-below(full) {
       margin: 15px 0 0;
@@ -329,8 +320,10 @@
     a {
       display: inline-flex;
       align-items: center;
-      color: var(--color-primary-100);
+      color: #c00;
       transition: 0.5s all;
+      font-size: 15px;
+      font-weight: 600;
 
       @include bp-below(full) {
         font-size: 12px;
@@ -342,6 +335,7 @@
 
         path {
           transition: 0.5s all;
+          fill: #c00;
         }
 
         @include bp-below(full) {
