@@ -182,6 +182,10 @@ export default function ProductCompatibilityPopup() {
     };
   }, []);
 
+  if (true) {
+    return null;
+  }
+
   if (isAlreadyOnVehicleRoute()) {
     return null;
   }
