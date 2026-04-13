@@ -46,9 +46,11 @@ export default function ProductMakeGrid({
 
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
-  const [isBrandsFilterOpen, setIsBrandsFilterOpen] = useState(false);
 
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(null);
+  const isSortDropdownOpen = activeFilter === 'sort';
+  const isBrandsFilterOpen = activeFilter === 'brands';
+
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
   const [allMakes, setAllMakes] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -60,14 +62,14 @@ export default function ProductMakeGrid({
         sortDropdownRef.current &&
         !sortDropdownRef.current.contains(event.target)
       ) {
-        setIsSortDropdownOpen(false);
+        if (activeFilter === 'sort') setActiveFilter(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [activeFilter]);
 
   useEffect(() => {
     function loadAllMakes() {
@@ -109,16 +111,16 @@ export default function ProductMakeGrid({
   };
 
   const handleBrandsFilterToggle = () => {
-    setIsBrandsFilterOpen(prev => !prev);
+    setActiveFilter(prev => (prev === 'brands' ? null : 'brands'));
   };
 
   const handleSortToggle = () => {
-    setIsSortDropdownOpen(prev => !prev);
+    setActiveFilter(prev => (prev === 'sort' ? null : 'sort'));
   };
 
   const handleSortSelect = option => {
     setSelectedSortOption(option);
-    setIsSortDropdownOpen(false);
+    setActiveFilter(null);
   };
 
   const handleBrandChange = slug => {
