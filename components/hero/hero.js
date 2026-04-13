@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { clsx } from 'clsx';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
@@ -118,32 +119,63 @@ export default function Hero({ slides, transition = 'fade' }) {
                     (backgroundImage?.node?.sourceUrl ||
                       backgroundImageMobile?.node?.sourceUrl),
                 ) ? (
-                  <Image
-                    alt={
-                      isMobile
-                        ? backgroundImageMobile?.node?.altText ||
-                          backgroundImage?.node?.altText ||
-                          ''
-                        : backgroundImage?.node?.altText || ''
-                    }
-                    className={
-                      isMobile
-                        ? styles.backgroundImageMobile
-                        : styles.backgroundImage
-                    }
-                    fill={true}
-                    src={
-                      isMobile
-                        ? backgroundImageMobile?.node?.sourceUrl ||
-                          backgroundImage?.node?.sourceUrl
-                        : backgroundImage?.node?.sourceUrl
-                    }
-                    style={{
-                      objectPosition: isMobile
-                        ? backgroundImagePositionMobile
-                        : backgroundImagePosition,
-                    }}
-                  />
+                  currentSlide.title && currentSlide.description ? (
+                    <Image
+                      alt={
+                        isMobile
+                          ? backgroundImageMobile?.node?.altText ||
+                            backgroundImage?.node?.altText ||
+                            ''
+                          : backgroundImage?.node?.altText || ''
+                      }
+                      className={
+                        isMobile
+                          ? styles.backgroundImageMobile
+                          : styles.backgroundImage
+                      }
+                      fill={true}
+                      src={
+                        isMobile
+                          ? backgroundImageMobile?.node?.sourceUrl ||
+                            backgroundImage?.node?.sourceUrl
+                          : backgroundImage?.node?.sourceUrl
+                      }
+                      style={{
+                        objectPosition: isMobile
+                          ? backgroundImagePositionMobile
+                          : backgroundImagePosition,
+                      }}
+                    />
+                  ) : (
+                    <Link href={currentSlide.buttonLink.url}>
+                      <Image
+                        alt={
+                          isMobile
+                            ? backgroundImageMobile?.node?.altText ||
+                              backgroundImage?.node?.altText ||
+                              ''
+                            : backgroundImage?.node?.altText || ''
+                        }
+                        className={
+                          isMobile
+                            ? styles.backgroundImageMobile
+                            : styles.backgroundImage
+                        }
+                        fill={true}
+                        src={
+                          isMobile
+                            ? backgroundImageMobile?.node?.sourceUrl ||
+                              backgroundImage?.node?.sourceUrl
+                            : backgroundImage?.node?.sourceUrl
+                        }
+                        style={{
+                          objectPosition: isMobile
+                            ? backgroundImagePositionMobile
+                            : backgroundImagePosition,
+                        }}
+                      />
+                    </Link>
+                  )
                 ) : (
                   <div />
                 )}
@@ -153,61 +185,64 @@ export default function Hero({ slides, transition = 'fade' }) {
         )}
       </div>
 
-      <Container>
-        <div className={styles.content}>
-          <DynamicTitle
-            className={styles.title}
-            titleTag={currentSlide.titleTag}
-            titleTagStyle={currentSlide.titleTagStyle}
-          >
-            {currentSlide.title}
-          </DynamicTitle>
-          <div
-            className={clsx(styles.description, 'p-large')}
-            dangerouslySetInnerHTML={{ __html: currentSlide.description }}
-          />
-          <div className={styles.buttonContainer}>
-            {currentSlide.buttonLink?.url && currentSlide.buttonLink?.title ? (
-              <Button
-                className={styles.actionButton}
-                href={currentSlide.buttonLink.url}
-                size="large"
-                target={currentSlide.buttonLink?.target || null}
-              >
-                {currentSlide.buttonLink.title}
-              </Button>
-            ) : (
-              <div />
-            )}
-
-            <div className={styles.slideDots}>
-              {slides.map((_, index) => (
-                <div
-                  className={styles.dotContainer}
-                  key={index}
-                  onClick={() => handleSlideChange(index)}
+      {currentSlide.title && currentSlide.description && (
+        <Container>
+          <div className={styles.content}>
+            <DynamicTitle
+              className={styles.title}
+              titleTag={currentSlide.titleTag}
+              titleTagStyle={currentSlide.titleTagStyle}
+            >
+              {currentSlide.title}
+            </DynamicTitle>
+            <div
+              className={clsx(styles.description, 'p-large')}
+              dangerouslySetInnerHTML={{ __html: currentSlide.description }}
+            />
+            <div className={styles.buttonContainer}>
+              {currentSlide.buttonLink?.url &&
+              currentSlide.buttonLink?.title ? (
+                <Button
+                  className={styles.actionButton}
+                  href={currentSlide.buttonLink.url}
+                  size="large"
+                  target={currentSlide.buttonLink?.target || null}
                 >
-                  <span
-                    className={clsx(
-                      styles.slideDot,
-                      currentSlideIndex === index && styles.active,
-                    )}
-                  />
-                </div>
-              ))}
-            </div>
+                  {currentSlide.buttonLink.title}
+                </Button>
+              ) : (
+                <div />
+              )}
 
-            <div className={styles.navArrows}>
-              <button className={styles.prevButton} onClick={handlePrev}>
-                <ArrowLeft />
-              </button>
-              <button className={styles.nextButton} onClick={handleNext}>
-                <ArrowRight />
-              </button>
+              <div className={styles.slideDots}>
+                {slides.map((_, index) => (
+                  <div
+                    className={styles.dotContainer}
+                    key={index}
+                    onClick={() => handleSlideChange(index)}
+                  >
+                    <span
+                      className={clsx(
+                        styles.slideDot,
+                        currentSlideIndex === index && styles.active,
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.navArrows}>
+                <button className={styles.prevButton} onClick={handlePrev}>
+                  <ArrowLeft />
+                </button>
+                <button className={styles.nextButton} onClick={handleNext}>
+                  <ArrowRight />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      )}
     </div>
   );
 }
