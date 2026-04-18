@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AnimateHeight from 'react-animate-height';
 
 import StoreLocatorContext from '@contexts/store-locator';
@@ -29,6 +29,7 @@ import styles from './choose-your-vehicle.module.scss';
 
 export default function ChooseYourVehicle({ makes: makersAndModels }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const {
     dropdownOpened,
@@ -260,7 +261,7 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                   />
                   <Button
                     className={styles.save}
-                    disabled={!internalMaker && !internalModel}
+                    disabled={!internalModel}
                     onClick={() => {
                       if (pathname === routes.uteBuilder) {
                         if (
@@ -281,12 +282,13 @@ export default function ChooseYourVehicle({ makes: makersAndModels }) {
                           modelSlug: internalModel?.slug,
                         });
                       }
+                      router.push(`/collections/${internalModel?.slug}`);
                     }}
-                    rightIcon="save"
+                    rightIcon="arrow-forward"
                     size="large"
                     variant="primary"
                   >
-                    Save
+                    View Products
                   </Button>
                 </div>
               </div>

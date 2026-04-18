@@ -176,7 +176,7 @@ export default function ProductMakeGrid({
           {title}
         </DynamicTitle>
       )}
-      {categoryPages && (
+      {categoryPages && categoryPages.length > 0 && (
         <div className={styles.topFilter}>
           <ul>
             {categoryPages.map(({ link }) => (
