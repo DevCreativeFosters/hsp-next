@@ -356,3 +356,18 @@
     }
   }
 }
+
+.directButtonLinks {
+  .wrap {
+    padding: 15px;
+
+    .buttonItem {
+      margin-bottom: 10px;
+
+      .button {
+        width: 100%;
+        padding: 12px 10px;
+      }
+    }
+  }
+}

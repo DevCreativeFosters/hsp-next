@@ -11,7 +11,7 @@ import Arrow from '@assets/images/arrow-forward.svg';
 
 import styles from './products.module.scss';
 
-function Products({ categories, isActive }, ref) {
+function ShopByMake({ categories, isActive }, ref) {
   const [currentCategoryId, setCurrentCategoryId] = useState(0);
   const [activeCategory, setActiveCategory] = useState(categories[0]);
 
@@ -29,56 +29,28 @@ function Products({ categories, isActive }, ref) {
       className={clsx(styles.container, isActive && styles.isActive)}
       ref={ref}
     >
-      <div className={styles.leftBlock}>
-        <ul className={styles.filterList}>
-          {categories?.map((cat, index) => {
-            if (cat?.subItems?.length > 0) {
-              return (
-                <li className={styles.filterItem} key={index}>
-                  <Button
-                    data-active={currentCategoryId === index}
-                    variant={
-                      currentCategoryId === index ? 'quaternary' : 'tertiary'
-                    }
-                    // Correctly pass boolean to data-active
-                    onClick={() => setCurrentCategoryId(index)}
-                  >
-                    {cat.label} <MenuArrow />
-                  </Button>
-                </li>
-              );
-            }
-
-            return null;
-          })}
-        </ul>
-
-        <div className={styles.directButtonLinks}>
-          <div className={styles.wrap}>
-            {categories?.map((cat, index) => {
-              if (cat?.subItems?.length > 0) return null;
-
-              return (
-                <div className={styles.buttonItem} key={`button_${index}`}>
-                  <Button
-                    className={styles.button}
-                    href={cat.url}
-                    variant="secondary"
-                  >
-                    {cat.label}
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <ul className={styles.filterList}>
+        {categories?.map(({ label }, index) => (
+          <li className={styles.filterItem} key={index}>
+            <Button
+              onClick={() => setCurrentCategoryId(index)}
+              variant={currentCategoryId === index ? 'quaternary' : 'tertiary'}
+              // Correctly pass boolean to data-active
+              data-active={currentCategoryId === index}
+            >
+              {label} <MenuArrow />
+            </Button>
+          </li>
+        ))}
+      </ul>
 
       <div className={styles.rightBlockMain}>
-        <h2 className={styles.categoryTitle}>{activeCategory?.label}</h2>
+        <h2 className={styles.categoryTitle}>{activeCategory?.label} MODELS</h2>
 
         <ul className={styles.productList}>
           {activeCategory?.subItems?.map(({ image, label, url }, index) => {
+            if (!image?.node?.sourceUrl) return null;
+
             return (
               <li className={styles.productItem} key={index}>
                 <div className={styles.productLink}>
@@ -106,9 +78,41 @@ function Products({ categories, isActive }, ref) {
             );
           })}
         </ul>
+
+        <div className={styles.availableProducts}>
+          <div className={styles.title}>
+            Product categories available for {activeCategory?.label}
+          </div>
+          <div className={styles.allLinks}>
+            {activeCategory?.subItems?.map(({ image, label, url }, index) => {
+              if (
+                image?.node?.sourceUrl ||
+                index === activeCategory?.subItems?.length - 1
+              ) {
+                return null;
+              }
+
+              return (
+                <Link href={url} key={index}>
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+          <div className={styles.viewAll}>
+            <Link
+              href={
+                activeCategory?.subItems[activeCategory?.subItems?.length - 1]
+                  ?.url
+              }
+            >
+              View all {activeCategory?.label} accessories <Arrow />
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export default forwardRef(Products);
+export default forwardRef(ShopByMake);

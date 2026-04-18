@@ -19,6 +19,7 @@ import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-colla
 import HamburgerButton from '@components/hamburger-button/hamburger-button';
 import MobileMenu from '@components/header/mobile-menu';
 import Products from '@components/header/products';
+import Shopbymake from '@components/header/shopbymake';
 
 import Logo from '@assets/images/logo.png';
 
@@ -41,10 +42,18 @@ export default function Header({
   const headerRef = useRef(null);
   const mainMenuRef = useRef(null);
   const productsRef = useRef(null);
+  const shopByMakeRef = useRef(null);
 
   const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
   const [currentSubmenu, setCurrentSubmenu] = useState(null);
   const [windowWidth, setWindowWidth] = useState(0);
+
+  const shopByMakeMenu = mainMenu.find(
+    element => element.url === '/shop-by-ute-make/',
+  )?.subItems;
+  const productsMenu = mainMenu.find(
+    element => element.url === '/products/',
+  )?.subItems;
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -93,7 +102,7 @@ export default function Header({
     );
   }, [isScrolling, promoBanner, windowWidth]);
 
-  useClickOutside(onElsewhereClick, [mainMenuRef, productsRef]);
+  useClickOutside(onElsewhereClick, [mainMenuRef, productsRef, shopByMakeRef]);
 
   return (
     <>
@@ -192,7 +201,13 @@ export default function Header({
                   <li key={label + index}>
                     <Button
                       background="dark"
-                      href={url}
+                      href={
+                        subItems?.length > 0 &&
+                        (url.includes('/products/') ||
+                          url.includes('/shop-by-ute-make/'))
+                          ? null
+                          : url
+                      }
                       isToggled={currentSubmenu === name}
                       onToggleIconClick={() => {
                         const newValue = currentSubmenu === name ? null : name;
@@ -200,7 +215,9 @@ export default function Header({
                       }}
                       size="large"
                       toggleable={
-                        subItems?.length > 0 && url.includes('/products/')
+                        subItems?.length > 0 &&
+                        (url.includes('/products/') ||
+                          url.includes('/shop-by-ute-make/'))
                           ? 'neutral'
                           : null
                       }
@@ -318,10 +335,14 @@ export default function Header({
           </div>
 
           <Products
-            categories={mainProductCategories}
+            categories={productsMenu}
             isActive={currentSubmenu === 'products'}
-            products={products}
             ref={productsRef}
+          />
+          <Shopbymake
+            categories={shopByMakeMenu}
+            isActive={currentSubmenu === 'shop by make'}
+            ref={shopByMakeRef}
           />
         </FullscreenCollapse>
       </header>
