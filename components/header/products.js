@@ -34,7 +34,10 @@ function Products({ categories, isActive }, ref) {
           {categories?.map((cat, index) => {
             if (cat?.subItems?.length > 0) {
               return (
-                <li className={styles.filterItem} key={index}>
+                <li
+                  className={styles.filterItem}
+                  key={`filterItem_products_${index}`}
+                >
                   <Button
                     data-active={currentCategoryId === index}
                     variant={
@@ -59,7 +62,10 @@ function Products({ categories, isActive }, ref) {
               if (cat?.subItems?.length > 0) return null;
 
               return (
-                <div className={styles.buttonItem} key={`button_${index}`}>
+                <div
+                  className={styles.buttonItem}
+                  key={`buttonItem_products_${index}`}
+                >
                   <Button
                     className={styles.button}
                     href={cat.url}
@@ -80,7 +86,10 @@ function Products({ categories, isActive }, ref) {
         <ul className={styles.productList}>
           {activeCategory?.subItems?.map(({ image, label, url }, index) => {
             return (
-              <li className={styles.productItem} key={index}>
+              <li
+                className={styles.productItem}
+                key={`productItem_products_${index}`}
+              >
                 <div className={styles.productLink}>
                   <div className={styles.productImageWrapper}>
                     {image && (

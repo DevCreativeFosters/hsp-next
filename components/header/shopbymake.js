@@ -31,7 +31,10 @@ function ShopByMake({ categories, isActive }, ref) {
     >
       <ul className={styles.filterList}>
         {categories?.map(({ label }, index) => (
-          <li className={styles.filterItem} key={index}>
+          <li
+            className={styles.filterItem}
+            key={`filterItem_shopbymake_${index}`}
+          >
             <Button
               onClick={() => setCurrentCategoryId(index)}
               variant={currentCategoryId === index ? 'quaternary' : 'tertiary'}
@@ -52,7 +55,10 @@ function ShopByMake({ categories, isActive }, ref) {
             if (!image?.node?.sourceUrl) return null;
 
             return (
-              <li className={styles.productItem} key={index}>
+              <li
+                className={styles.productItem}
+                key={`productItem_shopbymake_${index}`}
+              >
                 <div className={styles.productLink}>
                   <div className={styles.productImageWrapper}>
                     {image && (
