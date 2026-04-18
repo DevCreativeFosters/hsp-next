@@ -165,6 +165,67 @@
   }
 }
 
+.navArrowsOnly {
+  display: none;
+
+  @include bp(medium) {
+    position: relative;
+    z-index: 2;
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    margin: 0 auto;
+  }
+}
+
+.overlayImageContainer {
+  display: none;
+
+  @include bp(medium) {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    transform: translate(20px, 30%);
+    top: 0;
+    left: 0;
+  }
+
+  @include bp(medium-large) {
+    transform: translate(10px, 10%);
+  }
+
+  @include bp(large) {
+    transform: translate(40px, 30%);
+  }
+
+  @include bp(full) {
+    transform: translate(50px, 5%);
+  }
+
+  img {
+    @include bp(medium) {
+      max-width: 320px;
+    }
+
+    @include bp(medium-large) {
+      max-width: 440px;
+    }
+
+    @include bp(large) {
+      max-width: 480px;
+    }
+
+    @include bp(full) {
+      max-width: 680px;
+    }
+
+    height: auto;
+    width: 100%;
+  }
+}
+
 .prevButton {
   border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
 }
