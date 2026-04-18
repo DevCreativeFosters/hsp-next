@@ -20,7 +20,7 @@ import PdfIcon from '@assets/icons/pdf-icon.svg';
 import styles from './b2b.module.scss';
 
 export default async function RetailPage() {
-  const content = await getPageData('/account/retail');
+  const content = await getPageData('/account/b2b');
 
   const contentBlocks = await Promise.all(
     content?.flexibleContent?.blocks?.map(renderBlock) || [],
