@@ -26,12 +26,14 @@ export async function generateMetadata() {
 }
 
 export default async function ProductsPage() {
-  const content = await getPageData('products');
+  const content = await getPageData('/products');
   const contentBlocks = await Promise.all(
     content?.flexibleContent?.blocks.map(renderBlock) || [],
   );
   const globalOptions = await getGlobalOptions();
   const excludeTree = getExcludeTree(globalOptions);
+  console.log(globalOptions?.noCoverCategory?.nodes[0].databaseId);
+
   const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
   const mainMenu = await getMenu('main-menu');
   const normalizedMainMenu = normalizeMainMenu(mainMenu);
@@ -44,11 +46,13 @@ export default async function ProductsPage() {
     normalizedMainMenu,
   );
 
+  console.log('sortedMainProductCategories', sortedMainProductCategories);
+
   return (
     <Layout>
       {prepareSchemas(content?.schemaProSchemas)}
       <Container>
-        {sortedMainProductCategories?.map(productCategory => (
+        {sortedMainProductCategories?.filter(Boolean)?.map(productCategory => (
           <ProductCategory
             category={productCategory}
             key={productCategory.databaseId}

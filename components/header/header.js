@@ -205,7 +205,7 @@ export default function Header({
                         subItems?.length > 0 &&
                         (url.includes('/products/') ||
                           url.includes('/shop-by-ute-make/'))
-                          ? null
+                          ? '#'
                           : url
                       }
                       isToggled={currentSubmenu === name}
