@@ -464,7 +464,7 @@ const CheckNoOrders = ({
   );
 };
 
-function Orders({ onlyReturns = false, returnRequest = false }) {
+function Orders({ onlyReturns = false }) {
   const { user } = useUserContext();
   const role = user?.role;
 
@@ -572,6 +572,21 @@ function Orders({ onlyReturns = false, returnRequest = false }) {
       slug: 'allorders',
       title: 'All Orders',
     },
+    {
+      content: (
+        <CheckNoOrders
+          orders={completedOrders.filter(o => o.approve_for_return)}
+          returnRequest={true}
+        >
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+          <p>
+            <Link href="/shop-by-ute-make">browse products</Link>
+          </p>
+        </CheckNoOrders>
+      ),
+      slug: 'returns',
+      title: 'Returns',
+    },
   ];
 
   const b2bTabs = [
@@ -609,18 +624,6 @@ function Orders({ onlyReturns = false, returnRequest = false }) {
         <p>
           To initiate a return, please{' '}
           <Link href="/contact-us">contact us</Link>
-        </p>
-      </CheckNoOrders>
-    );
-  } else if (returnRequest) {
-    content = (
-      <CheckNoOrders
-        orders={completedOrders.filter(o => o.approve_for_return)}
-        returnRequest={returnRequest}
-      >
-        <h3>Looks like you haven&apos;t placed an order yet</h3>
-        <p>
-          <Link href="/shop-by-ute-make">browse products</Link>
         </p>
       </CheckNoOrders>
     );
