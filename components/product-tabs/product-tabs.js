@@ -38,11 +38,11 @@ export default function ProductTabs({
 
   const tabs = useMemo(
     () => ({
-      ...(description && {
-        description: 'Description',
-      }),
       ...((featuresDescription || featuresBoxes?.length > 0) && {
         features: 'Features',
+      }),
+      ...(description && {
+        description: 'Description',
       }),
       ...((specificationDescription || specificationContent) && {
         specs: 'Technical Specifications',
