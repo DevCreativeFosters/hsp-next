@@ -134,18 +134,13 @@ const renderButton = (status, statusColor) => {
   );
 };
 
-function Order({
-  item,
-  onlyReturns = false,
-  received = false,
-  returnRequest = false,
-}) {
+function Order({ item, received = false, returnRequest = false }) {
   const { user } = useUserContext();
   const role = user?.role;
 
   const router = useRouter();
 
-  const [showProducts, setShowProducts] = useState(onlyReturns);
+  const [showProducts, setShowProducts] = useState(false);
 
   const orderTypes = {
     'click-collect': 'Click & Collect',
@@ -181,7 +176,7 @@ function Order({
       });
 
       if (res?.updateOrderStatus?.success) {
-        router.push('/account/retail#support');
+        router.push('/account/retail#orderdashboard');
       }
     } catch (err) {
       console.error('Error downloading invoice:', err);
@@ -189,9 +184,7 @@ function Order({
   }
 
   return (
-    <div
-      className={clsx(styles.orderBox, { [styles.onlyReturns]: onlyReturns })}
-    >
+    <div className={clsx(styles.orderBox)}>
       <div className={styles.orderWrap}>
         <div className={styles.heading}>
           <div className={styles.left}>
@@ -203,6 +196,18 @@ function Order({
           <div className={styles.right}>
             {(() => {
               if (returnRequest) {
+                if (
+                  item.status === 'refunded' ||
+                  item.status === 'refund-initiated' ||
+                  item.status === 'return-in-progress'
+                ) {
+                  return (
+                    <Button size="large" variant="secondary">
+                      {item.status.replace('-', ' ')}
+                    </Button>
+                  );
+                }
+
                 return (
                   <Button
                     onClick={() => handleUpdateStatus('wc-refund-initiated')}
@@ -219,14 +224,6 @@ function Order({
                   <div>
                     <button className={styles.confirmButton}>Completed</button>
                   </div>
-                );
-              }
-
-              if (onlyReturns) {
-                return (
-                  <Button size="large" variant="secondary">
-                    {item.status.replace('-', ' ')}
-                  </Button>
                 );
               }
 
@@ -444,7 +441,6 @@ function Order({
 
 const CheckNoOrders = ({
   children,
-  onlyReturns = false,
   orders,
   received = false,
   returnRequest = false,
@@ -456,7 +452,6 @@ const CheckNoOrders = ({
       <Order
         item={item}
         key={item.order_id}
-        onlyReturns={onlyReturns}
         received={received}
         returnRequest={returnRequest}
       />
@@ -464,7 +459,7 @@ const CheckNoOrders = ({
   );
 };
 
-function Orders({ onlyReturns = false }) {
+function Orders() {
   const { user } = useUserContext();
   const role = user?.role;
 
@@ -575,7 +570,10 @@ function Orders({ onlyReturns = false }) {
     {
       content: (
         <CheckNoOrders
-          orders={completedOrders.filter(o => o.approve_for_return)}
+          orders={[
+            ...completedOrders.filter(o => o.approve_for_return),
+            ...returnedOrders,
+          ]}
           returnRequest={true}
         >
           <h3>Looks like you haven&apos;t placed an order yet</h3>
@@ -617,16 +615,6 @@ function Orders({ onlyReturns = false }) {
 
   if (loading) {
     content = <Loading color="white" size="large" />;
-  } else if (onlyReturns) {
-    content = (
-      <CheckNoOrders onlyReturns={onlyReturns} orders={returnedOrders}>
-        <h3>It looks like you don&apos;t have any returns at this time</h3>
-        <p>
-          To initiate a return, please{' '}
-          <Link href="/contact-us">contact us</Link>
-        </p>
-      </CheckNoOrders>
-    );
   } else {
     content = (
       <Tabs tabs={role === 'retail' ? retailTabs : b2bTabs} type="horizontal" />

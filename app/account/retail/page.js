@@ -70,11 +70,6 @@ export default async function RetailPage() {
                       title: `FAQ's`,
                     },
                     {
-                      content: <Orders onlyReturns={true} />,
-                      slug: 'returns',
-                      title: 'Returns',
-                    },
-                    {
                       content: <></>,
                       slug: 'resources',
                       title: 'Resources',
