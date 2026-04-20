@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useIsMobile } from '@hooks/useIsMobile';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
+import { getProductCategories } from '@lib/api/get-product-categories';
 
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -34,7 +35,9 @@ export default function ProductMakeGrid({
   productsPerPageMobile,
   productsTitleTag,
   productsTitleTagStyle,
+  showCategories,
   showFilters,
+  showMakes,
   template,
   title,
   titleTag,
@@ -44,15 +47,21 @@ export default function ProductMakeGrid({
     item => new URL(item.link.url).pathname.split('/')[2],
   );
 
+  const availableCategories = products.map(
+    item => new URL(item.link.url).pathname.split('/')[1],
+  );
+
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
 
   const [activeFilter, setActiveFilter] = useState(null);
   const isSortDropdownOpen = activeFilter === 'sort';
   const isBrandsFilterOpen = activeFilter === 'brands';
+  const isCategoriesFilterOpen = activeFilter === 'categories';
 
   const [selectedSortOption, setSelectedSortOption] = useState(sortOptions[0]);
   const [allMakes, setAllMakes] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const sortDropdownRef = useRef(null);
 
@@ -72,12 +81,15 @@ export default function ProductMakeGrid({
   }, [activeFilter]);
 
   useEffect(() => {
-    function loadAllMakes() {
+    function loadData() {
       getAllMakes().then(makes => {
         setAllMakes(makes);
       });
+      getProductCategories().then(categories => {
+        setAllCategories(categories);
+      });
     }
-    loadAllMakes();
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -112,6 +124,10 @@ export default function ProductMakeGrid({
 
   const handleBrandsFilterToggle = () => {
     setActiveFilter(prev => (prev === 'brands' ? null : 'brands'));
+  };
+
+  const handleCategoriesFilterToggle = () => {
+    setActiveFilter(prev => (prev === 'categories' ? null : 'categories'));
   };
 
   const handleSortToggle = () => {
@@ -248,53 +264,106 @@ export default function ProductMakeGrid({
                   </div>
                 </div>
               </div>
-              <div className={styles.chekboxLists}>
-                <div
-                  className={clsx(styles.filterClick, {
-                    [styles.open]: isBrandsFilterOpen,
-                  })}
-                  onClick={handleBrandsFilterToggle}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleBrandsFilterToggle();
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className={styles.filterTitle}>Vehicle Brands:</div>
+              {showMakes && (
+                <div className={styles.chekboxLists}>
+                  <div
+                    className={clsx(styles.filterClick, {
+                      [styles.open]: isBrandsFilterOpen,
+                    })}
+                    onClick={handleBrandsFilterToggle}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleBrandsFilterToggle();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className={styles.filterTitle}>Vehicle Brands:</div>
+                  </div>
+                  <div
+                    className={clsx(styles.filterContent, {
+                      [styles.open]: isBrandsFilterOpen,
+                    })}
+                  >
+                    {allMakes.length === 0 ? (
+                      <ul>
+                        <li>
+                          <Loading />
+                        </li>
+                      </ul>
+                    ) : (
+                      <ul>
+                        {allMakes
+                          .filter(make => availableBrands.includes(make.slug))
+                          .map((make, index) => (
+                            <li key={make.slug}>
+                              <label>
+                                <input
+                                  checked={selectedBrands.includes(make.slug)}
+                                  onChange={() => handleBrandChange(make.slug)}
+                                  type="checkbox"
+                                />
+                                <span>{make.name}</span>
+                              </label>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
-                <div
-                  className={clsx(styles.filterContent, {
-                    [styles.open]: isBrandsFilterOpen,
-                  })}
-                >
-                  {allMakes.length === 0 ? (
-                    <ul>
-                      <li>
-                        <Loading />
-                      </li>
-                    </ul>
-                  ) : (
-                    <ul>
-                      {allMakes
-                        .filter(make => availableBrands.includes(make.slug))
-                        .map((make, index) => (
-                          <li key={make.slug}>
-                            <label>
-                              <input
-                                checked={selectedBrands.includes(make.slug)}
-                                onChange={() => handleBrandChange(make.slug)}
-                                type="checkbox"
-                              />
-                              <span>{make.name}</span>
-                            </label>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
+              )}
+              {showCategories && (
+                <div className={styles.chekboxLists}>
+                  <div
+                    className={clsx(styles.filterClick, {
+                      [styles.open]: isCategoriesFilterOpen,
+                    })}
+                    onClick={handleCategoriesFilterToggle}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleCategoriesFilterToggle();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className={styles.filterTitle}>Products:</div>
+                  </div>
+                  <div
+                    className={clsx(styles.filterContent, {
+                      [styles.open]: isCategoriesFilterOpen,
+                    })}
+                  >
+                    {allCategories.length === 0 ? (
+                      <ul>
+                        <li>
+                          <Loading />
+                        </li>
+                      </ul>
+                    ) : (
+                      <ul>
+                        {allCategories
+                          .filter(make =>
+                            availableCategories.includes(make.slug),
+                          )
+                          .map((make, index) => (
+                            <li key={make.slug}>
+                              <label>
+                                <input
+                                  checked={selectedBrands.includes(make.slug)}
+                                  onChange={() => handleBrandChange(make.slug)}
+                                  type="checkbox"
+                                />
+                                <span>{make.name}</span>
+                              </label>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}
