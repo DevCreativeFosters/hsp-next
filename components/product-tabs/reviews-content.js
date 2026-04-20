@@ -351,10 +351,12 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                   <div
                     className={styles.reviewBox}
                     key={review.databaseId}
-                    onClick={() => setSelectedReview(review)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <div className={styles.left}>
+                    <div
+                      className={styles.left}
+                      onClick={() => setSelectedReview(review)}
+                    >
                       <div className={styles.filled}>
                         {Array.from({ length: review?.rating }, (_, i) => (
                           <RatingStar key={i} />
