@@ -11,6 +11,7 @@ import {
 
 import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
+import { useRouter } from 'next/navigation';
 
 import { useUserContext } from '@contexts/user';
 
@@ -59,6 +60,7 @@ export default function GForm({
   submitButton,
 }) {
   const { getUserById, setUser, user } = useUserContext();
+  const router = useRouter();
 
   if (form.databaseId == 4) {
     submitButton = false;
@@ -187,6 +189,10 @@ export default function GForm({
         const gfFormConfirmation = response.data.submitGfForm.confirmation;
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
+          if (form.databaseId == 4 && user?.id) {
+            router.push(`/account/${user.role}#product-registration`);
+          }
+
           // Combine field definitions with state values
           const enrichedState = cleanedState.map(fieldState => {
             const fieldDef = formFields.find(
