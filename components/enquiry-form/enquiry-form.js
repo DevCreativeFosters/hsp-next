@@ -118,6 +118,12 @@ export default function EnquiryForm({
       ? productInstallationPrice
       : null;
 
+  const isProductInCart = cartItems.some(
+    item =>
+      item.variantSlug === selectedVariant?.variantSlug &&
+      item.product_id === productData.databaseId,
+  );
+
   const { location, searchGeolocation, selectedStore, setShowLocationError } =
     useContext(StoreLocatorContext);
 
@@ -385,30 +391,33 @@ export default function EnquiryForm({
                         <div className={styles.info}>
                           <h5>
                             {product?.title}{' '}
-                            {cartItems.some(
-                              item =>
-                                item.product_id === product?.databaseId &&
-                                item.variantSku === selectedVariant?.sku &&
-                                item.variantSlug ===
-                                  selectedVariant?.variantSlug &&
-                                item.variantName ===
-                                  selectedVariant?.variantName,
-                            ) ? (
-                              <CheckIcon className={styles.check} />
-                            ) : (
-                              <PlusIcon
-                                className={styles.icon}
-                                onClick={() =>
-                                  addToCart({
-                                    productId: product?.databaseId,
-                                    quantity: 1,
-                                    variant_name: selectedVariant?.variantName,
-                                    variant_sku: selectedVariant?.sku,
-                                    variant_slug: selectedVariant?.variantSlug,
-                                  })
-                                }
-                              />
-                            )}
+                            {isProductInCart &&
+                              (cartItems.some(
+                                item =>
+                                  item.product_id === product?.databaseId &&
+                                  item.variantSku === selectedVariant?.sku &&
+                                  item.variantSlug ===
+                                    selectedVariant?.variantSlug &&
+                                  item.variantName ===
+                                    selectedVariant?.variantName,
+                              ) ? (
+                                <CheckIcon className={styles.check} />
+                              ) : (
+                                <PlusIcon
+                                  className={styles.icon}
+                                  onClick={() =>
+                                    addToCart({
+                                      productId: product?.databaseId,
+                                      quantity: 1,
+                                      variant_name:
+                                        selectedVariant?.variantName,
+                                      variant_sku: selectedVariant?.sku,
+                                      variant_slug:
+                                        selectedVariant?.variantSlug,
+                                    })
+                                  }
+                                />
+                              ))}
                           </h5>
                           <div className={styles.price}>
                             <div
