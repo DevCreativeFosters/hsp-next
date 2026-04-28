@@ -6,7 +6,12 @@ import { useDownloadFileClick } from '@hooks/useDownloadFileClick';
 
 import replacePdfLinks from '@lib/replace-pdf-links';
 
-export default function DownloadLinkWrapper({ blockName, children, context }) {
+export default function DownloadLinkWrapper({
+  blockName,
+  children,
+  context,
+  tagId = '',
+}) {
   const containerRef = useRef();
   useEffect(function replaceLinks() {
     replacePdfLinks(containerRef.current);
@@ -20,7 +25,12 @@ export default function DownloadLinkWrapper({ blockName, children, context }) {
     return children;
   }
   return (
-    <div onClick={onDownloadFileClick} ref={containerRef}>
+    <div
+      id={tagId}
+      onClick={onDownloadFileClick}
+      ref={containerRef}
+      style={{ scrollMarginTop: '160px' }}
+    >
       {children}
       {Modal}
     </div>

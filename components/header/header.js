@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { useCart } from '@contexts/cart-context';
@@ -54,6 +55,44 @@ export default function Header({
   const productsMenu = mainMenu.find(
     element => element.url === '/products/',
   )?.subItems;
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleHashScroll = () => {
+      const hash = window.location.hash; // #hsp-blog
+
+      if (hash) {
+        const id = hash.replace('#', '');
+        const el = document.getElementById(id);
+
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      }
+    };
+
+    handleHashScroll();
+  }, [pathname]);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const id = window.location.hash.replace('#', '');
+      const el = document.getElementById(id);
+
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
+    window.addEventListener('hashchange', onHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+    };
+  }, []);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
