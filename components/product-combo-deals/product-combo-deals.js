@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import clsx from 'clsx';
 
-import { useAddComboToCart } from '@hooks/useAddComboToCart';
+import { useCart } from '@contexts/cart-context';
 
 import { formatPrice } from '@lib/helpers';
 import { trimSlash } from '@lib/trim-slash';
@@ -18,9 +18,8 @@ export default function ProductComboDeals({
   productData,
   variantSlug,
 }) {
-  const [addToCartMessage, setAddToCartMessage] = useState('');
-
-  const { addCombo, loading } = useAddComboToCart();
+  const [openAccordion, setOpenAccordion] = useState(null);
+  const { addMultipleToCart, loading } = useCart();
 
   if (
     !comboDeals ||
@@ -54,7 +53,9 @@ export default function ProductComboDeals({
 
   const totalRegularPrice =
     products.reduce(
-      (total, product) => total + (product.productFields?.price || 0),
+      (total, product) =>
+        total +
+        (product.productFields?.variants?.[0]?.variantDetails?.price || 0),
       0,
     ) + (variantPrice || 0);
 
@@ -71,185 +72,220 @@ export default function ProductComboDeals({
 
   const discountedPrice = totalRegularPrice - savings;
 
+  const totalInstallationCost =
+    (selectedVariant?.variantDetails?.installationCost || 0) +
+    products.reduce(
+      (total, product) =>
+        total +
+        (product.productFields?.variants?.[0]?.variantDetails
+          ?.installationCost || 0),
+      0,
+    );
+
   const getDiscountedItemPrice = itemPrice => {
     if (!itemPrice || totalRegularPrice === 0) return itemPrice;
     const ratio = itemPrice / totalRegularPrice;
     return discountedPrice * ratio;
   };
 
-  const handleAddToCart = async () => {
-    setAddToCartMessage('');
-
-    const parentProduct = {
-      databaseId: productData.databaseId,
-      regularPrice: formatPrice(variantPrice),
-      salePrice: formatPrice(getDiscountedItemPrice(variantPrice)),
-      title: productData.title,
-      variantSlug: selectedVariant?.variantSlug,
-    };
-
-    const otherComboProducts = products.map(product => ({
-      databaseId: product.databaseId,
-      regularPrice: formatPrice(product.productFields.price),
-      salePrice: formatPrice(
-        getDiscountedItemPrice(product.productFields.price),
-      ),
-      title: product.title,
-      variantSlug: product.productFields.variants[0].variantSlug,
-    }));
-
-    const { error, ok } = await addCombo({
-      products: [...otherComboProducts, parentProduct],
-      quantity: 1,
-    });
-
-    if (ok) {
-      setAddToCartMessage('✅ Combo added to cart successfully');
-      openCart();
-      // optionally refresh cart here
-    } else {
-      setAddToCartMessage(`❌ Failed to add combo: ${error}`);
-    }
-  };
-
-  // Function to open cart
-  const openCart = () => {
-    // Check if you have a cart sidebar component
-    if (typeof window !== 'undefined') {
-      // Dispatch a custom event to open the cart
-      window.dispatchEvent(new CustomEvent('openCart'));
-
-      // Alternatively, if you're using a state management solution:
-      // setCartOpen(true);
-
-      // Or redirect to cart page:
-      // window.location.href = '/cart';
-    }
-  };
-
   return (
     <>
       <div className={styles.comboDeals}>
         <div className={styles.header}>
-          <h3 className={clsx(styles.title, 'h4')}>Combo Deal</h3>
-          <div className={styles.badge}>
-            Save{' '}
-            {discountValue === 'percentage'
-              ? `${savingsPercentage}%`
-              : formatPrice(savings)}
-          </div>
+          <h3 className={clsx(styles.title, 'h4')}>Bundle & Save</h3>
         </div>
-
-        <div className={styles.products}>
-          {/* Current product variant */}
-          <div className={styles.productItem}>
-            <div className={styles.productImage}>
-              <img
-                alt={`${productData.title} | ${selectedVariant?.variantName}`}
-                height={80}
-                src={variantImage || '/placeholder-image.jpg'}
-                width={80}
-              />
-            </div>
-            <div className={styles.productInfo}>
-              <h4 className={clsx(styles.productTitle, 'p-large')}>
-                {`${productData.title} | ${selectedVariant?.variantName}`}
-              </h4>
-              <div className={clsx(styles.productPrice)}>
-                <div className={clsx(styles.regularPrice, 'p')}>
-                  {formatPrice(variantPrice)}
-                </div>
-                <div className={clsx(styles.bundlePrice, 'p')}>
-                  {formatPrice(getDiscountedItemPrice(variantPrice))}
-                </div>
+        <div className={styles.productWrap}>
+          <div className={styles.products}>
+            {/* Current product variant */}
+            <div className={styles.productItem}>
+              <div className={styles.productImage}>
+                <img
+                  alt={productData.title}
+                  height={80}
+                  src={variantImage || '/placeholder-image.jpg'}
+                  width={80}
+                />
               </div>
-            </div>
-            <div className={styles.plusSign}>+</div>
-          </div>
-
-          {/* Combo products */}
-          {products.map((product, index) => {
-            const variant = product.productFields?.variants?.[0];
-            const variantDetails = variant?.variantDetails;
-
-            return (
-              <div className={styles.productItem} key={product.id}>
-                <div className={styles.productImage}>
-                  <img
-                    alt={`${product.title} | ${variant?.variantName}`}
-                    height={80}
-                    src={
-                      variantDetails.images?.nodes?.[0]?.mediaItemUrl ||
-                      '/placeholder-image.jpg'
-                    }
-                    width={80}
-                  />
-                </div>
-                <div className={styles.productInfo}>
-                  <h4 className={clsx(styles.productTitle, 'p-large')}>
-                    {`${product.title} | ${variant?.variantName}`}
-                  </h4>
-                  <div className={clsx(styles.productPrice, 'p')}>
-                    <div className={clsx(styles.regularPrice, 'p')}>
-                      {formatPrice(variantDetails.price)}
-                    </div>
+              <div className={styles.productInfo}>
+                <h4
+                  className={clsx(styles.productTitle, 'p-large')}
+                  onClick={() => setOpenAccordion('main')}
+                >
+                  {productData.title}
+                  <div
+                    className={clsx(
+                      styles.accordionArrow,
+                      openAccordion === 'main' && styles.accordionArrowOpen,
+                    )}
+                  >
+                    <svg fill="none" height="8" viewBox="0 0 12 8" width="12">
+                      <path
+                        d="M1.406 0.000249863L6 4.59425L10.594 0.000249863L12 1.40625L6 7.40625L0 1.40625L1.406 0.000249863Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </div>
+                </h4>
+                <div
+                  className={clsx(
+                    styles.prdtailMain,
+                    styles.accordionBody,
+                    openAccordion === 'main' && styles.accordionBodyOpen,
+                  )}
+                >
+                  <div className={styles.prdskuTxt}>
+                    SKU: {selectedVariant?.sku}
+                  </div>
+                  <div className={clsx(styles.productPrice)}>
                     <div className={clsx(styles.bundlePrice, 'p')}>
-                      {formatPrice(
-                        getDiscountedItemPrice(variantDetails.price),
-                      )}
+                      {formatPrice(getDiscountedItemPrice(variantPrice))}
+                    </div>
+                    <div className={clsx(styles.regularPrice, 'p')}>
+                      {formatPrice(variantPrice)}
                     </div>
                   </div>
+                  <div className={styles.prdinstallTxt}>
+                    +{' '}
+                    {formatPrice(
+                      selectedVariant?.variantDetails?.installationCost,
+                    )}{' '}
+                    for Install
+                  </div>
                 </div>
-                {index < products.length - 1 && (
-                  <div className={styles.plusSign}>+</div>
-                )}
               </div>
-            );
-          })}
-        </div>
-
-        <div className={styles.pricing}>
-          <div className={styles.regularPrice}>
-            Regular: {formatPrice(totalRegularPrice)}
-          </div>
-          <div className={styles.bundlePrice}>
-            Bundle: {formatPrice(discountedPrice)}
-          </div>
-          <div className={styles.savings}>
-            You save: {formatPrice(savings)}
-            {discountValue === 'percentage' && ` (${savingsPercentage}%)`}
-          </div>
-        </div>
-
-        <div className={styles.discountInfo}>
-          <p className={clsx(styles.discountDescription, 'p')}>
-            {discountType}:{' '}
-            {discountValue === 'percentage'
-              ? `${savingsPercentage}% discount applied when purchased together`
-              : `${formatPrice(savings)} discount applied when purchased together`}
-          </p>
-        </div>
-        <div className={styles.addToCart}>
-          <Button
-            className={clsx(styles.addToCartButton, loading && styles.loading)}
-            disabled={loading}
-            onClick={handleAddToCart}
-            variant="primary"
-          >
-            {loading ? 'Adding to Cart...' : 'Add Combo to Cart'}
-          </Button>
-          {addToCartMessage && (
-            <div
-              className={clsx(
-                styles.message,
-                addToCartMessage.includes('success')
-                  ? styles.success
-                  : styles.error,
-              )}
-            >
-              {addToCartMessage}
+              <div className={styles.plusSign}>+</div>
             </div>
-          )}
+            {/* Combo products */}
+            {products.map((product, index) => {
+              const variant = product.productFields?.variants?.[0];
+              const variantDetails = variant?.variantDetails;
+              const variantImage =
+                variantDetails.images?.nodes?.[0]?.mediaItemUrl ||
+                product?.productFields?.images?.nodes?.[0]?.mediaItemUrl;
+
+              return (
+                <div className={styles.productItem} key={product.id}>
+                  <div className={styles.productImage}>
+                    <img
+                      alt={product.title}
+                      height={80}
+                      src={variantImage || '/placeholder-image.jpg'}
+                      width={80}
+                    />
+                  </div>
+                  <div className={styles.productInfo}>
+                    <h4 className={clsx(styles.productTitle, 'p-large')}>
+                      {product.title}
+                    </h4>
+                    <div className={styles.prdtailMain}>
+                      <div className={styles.prdskuTxt}>SKU: {variant.sku}</div>
+                      <div className={clsx(styles.productPrice, 'p')}>
+                        <div className={clsx(styles.bundlePrice, 'p')}>
+                          {formatPrice(
+                            getDiscountedItemPrice(variantDetails.price),
+                          )}
+                        </div>
+                        <div className={clsx(styles.regularPrice, 'p')}>
+                          {formatPrice(variantDetails.price)}
+                        </div>
+                      </div>
+                      <div className={styles.prdinstallTxt}>
+                        + {formatPrice(variantDetails?.installationCost)} for
+                        Install
+                      </div>
+                    </div>
+                  </div>
+                  {index < products.length - 1 && (
+                    <div className={styles.plusSign}>+</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className={styles.pricing}>
+            <div className={styles.prdPriceMain}>
+              <div className={styles.bundlePrice}>
+                {formatPrice(discountedPrice)}
+              </div>
+              <div className={styles.regularPrice}>
+                {formatPrice(totalRegularPrice)}
+              </div>
+            </div>
+            <div className={styles.prinstallTxt}>
+              + {formatPrice(totalInstallationCost)} for Install
+            </div>
+            <div className={styles.addToCart}>
+              <Button
+                className={clsx(
+                  styles.addToCartButton,
+                  loading && styles.loading,
+                )}
+                disabled={loading}
+                onClick={() => {
+                  const items = products.map(product => {
+                    const variant = product.productFields?.variants?.[0];
+                    return {
+                      quantity: 1,
+                      variant_name: variant?.variantName,
+                      variant_sku: variant?.sku,
+                      variant_slug: variant?.variantSlug,
+                    };
+                  });
+                  addMultipleToCart([
+                    {
+                      quantity: 1,
+                      variant_name: selectedVariant?.variantName,
+                      variant_sku: selectedVariant?.sku,
+                      variant_slug: selectedVariant?.variantSlug,
+                    },
+                    ...items,
+                  ]);
+                }}
+                variant="primary"
+              >
+                <svg
+                  fill="none"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clipPath="url(#clip0_4695_43393)">
+                    <path
+                      d="M6 16.5C6.41421 16.5 6.75 16.1642 6.75 15.75C6.75 15.3358 6.41421 15 6 15C5.58579 15 5.25 15.3358 5.25 15.75C5.25 16.1642 5.58579 16.5 6 16.5Z"
+                      stroke="white"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M14.25 16.5C14.6642 16.5 15 16.1642 15 15.75C15 15.3358 14.6642 15 14.25 15C13.8358 15 13.5 15.3358 13.5 15.75C13.5 16.1642 13.8358 16.5 14.25 16.5Z"
+                      stroke="white"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M1.53711 1.53906H3.03711L5.03211 10.8541C5.10529 11.1952 5.29511 11.5002 5.56889 11.7165C5.84267 11.9327 6.18329 12.0468 6.53211 12.0391H13.8671C14.2085 12.0385 14.5395 11.9215 14.8054 11.7074C15.0713 11.4933 15.2562 11.195 15.3296 10.8616L16.5671 5.28906H3.83961"
+                      stroke="white"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_4695_43393">
+                      <rect fill="white" height="18" width="18" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                {loading ? 'Adding to Cart...' : 'Add to Cart'}
+              </Button>
+            </div>
+            <div className={styles.priceNotesTxt}>
+              Total Bundle Discounts Applied at Checkout
+            </div>
+          </div>
         </div>
       </div>
     </>

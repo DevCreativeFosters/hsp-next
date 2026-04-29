@@ -16,7 +16,7 @@ import Accordion from '@components/accordion/accordion';
 import AccordionItem from '@components/accordion/accordion-item';
 import EnquiryForm from '@components/enquiry-form/enquiry-form';
 import EGiftCard from '@components/gift-card/gift-card';
-// import ProductComboDeals from '@components/product-combo-deals/product-combo-deals';
+import ProductComboDeals from '@components/product-combo-deals/product-combo-deals';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import ProductTabs from '@components/product-tabs/product-tabs';
 import StarRating from '@components/reviews/star-rating';
@@ -312,13 +312,6 @@ export default function PageClientSidePartial({
               </Accordion>
             </div>
           </div>
-          {/*
-            <ProductComboDeals
-              comboDeals={firstMatchedProduct.productComboDeals}
-              productData={firstMatchedProduct}
-              variantSlug={variantSlug}
-            />
-          */}
           <ProductTabs
             description={description}
             downloadFileFormId={downloadFileFormId}
@@ -333,6 +326,11 @@ export default function PageClientSidePartial({
             setSelectedTab={setSelectedTab}
             specificationContent={specification}
             specificationDescription={specificationDescription}
+          />
+          <ProductComboDeals
+            comboDeals={firstMatchedProduct.productComboDeals}
+            productData={firstMatchedProduct}
+            variantSlug={variantSlug}
           />
         </>
       )}
