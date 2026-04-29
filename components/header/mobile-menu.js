@@ -9,7 +9,6 @@ import Link from 'next/link';
 import ArrowForword from '@assets/icons/arrow-forward.svg';
 import ArrowIcon from '@assets/icons/arrow-next.svg';
 import CloseIcon from '@assets/icons/close.svg';
-import ProductImg from '@assets/images/WideSHotExt1.png';
 
 import MobileMenuItem from './mobile-menu-item';
 import styles from './mobile-menu.module.scss';
@@ -35,8 +34,6 @@ export default function MobileMenu({
   };
 
   const [item, setItem] = useState(null);
-
-  console.log(isLvl3Open, openLvl4, items);
 
   return (
     <div
@@ -149,7 +146,7 @@ export default function MobileMenu({
                                 <Image
                                   alt={'HSP'}
                                   height={282}
-                                  src={ProductImg}
+                                  src={image?.node?.sourceUrl}
                                   width={1133}
                                 />
                               </figure>
