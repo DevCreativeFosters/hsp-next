@@ -49,11 +49,13 @@ export default function Header({
   const [currentSubmenu, setCurrentSubmenu] = useState(null);
   const [windowWidth, setWindowWidth] = useState(0);
 
-  const shopByMakeMenu = mainMenu.find(
-    element => element.url === '/shop-by-ute-make/',
+  const [isLvl3Open, setIsLvl3Open] = useState(false);
+
+  const shopByMakeMenu = mainMenu.find(element =>
+    element.url.includes('/shop-by-ute-make/'),
   )?.subItems;
-  const productsMenu = mainMenu.find(
-    element => element.url === '/products/',
+  const productsMenu = mainMenu.find(element =>
+    element.url.includes('/products/'),
   )?.subItems;
 
   const pathname = usePathname();
@@ -177,12 +179,14 @@ export default function Header({
           preventCollapse={preventHeaderCollapse}
         >
           <div className={styles.grid}>
-            <div className={styles.hamburgerContainer}>
-              <HamburgerButton
-                isActive={isMobileMenuActive}
-                onClick={toggleMenu}
-              />
-            </div>
+            {!isLvl3Open && (
+              <div className={styles.hamburgerContainer}>
+                <HamburgerButton
+                  isActive={isMobileMenuActive}
+                  onClick={toggleMenu}
+                />
+              </div>
+            )}
 
             <Link className={styles.logo} href="/">
               <Image alt={'HSP Logo'} height={48} src={Logo} width={129} />
@@ -366,7 +370,12 @@ export default function Header({
               </ul>
             </nav>
 
-            <MobileMenu isMenuActive={isMobileMenuActive} items={mobileMenu} />
+            <MobileMenu
+              isMenuActive={isMobileMenuActive}
+              items={mobileMenu}
+              onCloseLvl3={() => setIsLvl3Open(false)}
+              onOpenLvl3={() => setIsLvl3Open(true)}
+            />
 
             <div className={styles.vehicleSelection}>
               <ChooseYourVehicle makes={makes} />

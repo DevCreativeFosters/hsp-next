@@ -1,14 +1,17 @@
 import { useCallback, useRef, useState } from 'react';
 
 import clsx from 'clsx';
-import AnimateHeight from 'react-animate-height';
 
 import Button from '@components/button/button';
+
+import ArrowIcon from '@assets/icons/arrow-next.svg';
+import LinkIcon from '@assets/icons/link-sq-icon.svg';
 
 import styles from './mobile-menu-item.module.scss';
 
 export default function MobileMenuItem({
   label,
+  onOpenLvl3,
   subItemGroups,
   subItems,
   url,
@@ -45,22 +48,6 @@ export default function MobileMenuItem({
               >
                 {subItem.label}
               </Button>
-              {subItem.subItems?.map((item, index) => (
-                <div
-                  className={styles.submenuItemsMobile}
-                  key={item.url + index}
-                >
-                  <Button
-                    background="dark"
-                    href={item.url}
-                    size="small"
-                    style={{ ...fontStyle }}
-                    variant="senary"
-                  >
-                    {item.label}
-                  </Button>
-                </div>
-              ))}
             </li>
           );
         })}
@@ -68,11 +55,19 @@ export default function MobileMenuItem({
     );
   }, []);
 
-  const toggleSubItems = useCallback(() => {
-    setSubMenuVisible(!isSubMenuVisible);
-  }, [isSubMenuVisible]);
-
   const hasChildren = subItems?.length > 0 || subItemGroups?.length > 0;
+
+  // const toggleSubItems = useCallback(() => {
+  //   // setSubMenuVisible(!isSubMenuVisible);
+
+  //   if (hasChildren && onOpenLvl3) {
+  //     onOpenLvl3();
+  //   }
+
+  // }, [isSubMenuVisible, hasChildren, onOpenLvl3]);
+  // const toggleSubItems = useCallback(() => {
+  //   onOpenLvl3();
+  // }, []);
 
   return (
     <li
@@ -83,19 +78,19 @@ export default function MobileMenuItem({
     >
       <Button
         background="dark"
-        href={url}
-        isToggled={isSubMenuVisible}
-        onClick={url ? null : toggleSubItems}
+        href={!hasChildren ? url : undefined}
+        onClick={hasChildren ? onOpenLvl3 : undefined}
         size="large"
-        toggleable={hasChildren ? 'primary' : null}
         variant="tertiary"
       >
-        {label}
+        {label} {hasChildren ? <ArrowIcon /> : <LinkIcon />}
       </Button>
-      {hasChildren && (
+
+      {/* {hasChildren && (
         <AnimateHeight duration={300} height={isSubMenuVisible ? 'auto' : 0}>
           <div ref={containerRef}>
             {renderSubItems(subItems)}
+
             {subItemGroups?.map(({ label, subItems }, index) => (
               <div key={label + index}>
                 <div className={styles.groupLabel}>{label}</div>
@@ -104,7 +99,7 @@ export default function MobileMenuItem({
             ))}
           </div>
         </AnimateHeight>
-      )}
+      )} */}
     </li>
   );
 }

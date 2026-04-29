@@ -87,6 +87,10 @@
   height: var(--header-height);
   padding-inline: var(--container-inline-padding);
   background: var(--color-black-100);
+
+  @include bp-below(large) {
+    padding-inline: 10px;
+  }
 }
 
 .grid {

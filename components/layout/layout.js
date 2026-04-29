@@ -17,7 +17,6 @@ import { getProductCategories } from '@lib/api/get-product-categories';
 import { getStores } from '@lib/api/get-stores';
 import { getExcludeTree, sortMainProductCategories } from '@lib/helpers';
 import normalizeMainMenu from '@lib/normalize-main-menu';
-import normalizeMobileMenu from '@lib/normalize-mobile-menu';
 import normalizeProductData from '@lib/normalize-product-data';
 import normalizeTopNavigationMenu from '@lib/normalize-top-navigation-menu';
 
@@ -91,7 +90,7 @@ export default function Layout({
   const footerText = data?.globalOptions?.footerText;
   const topNavigationMenu = normalizeTopNavigationMenu(data?.globalOptions);
   const normalizedMainMenu = normalizeMainMenu(data.mainMenu);
-  const normalizedMobileMenu = normalizeMobileMenu(data.mobileMenu);
+  const normalizedMobileMenu = normalizeMainMenu(data.mobileMenu);
   const normalizedProductData = normalizeProductData(
     data.mainProductCategories,
   );
