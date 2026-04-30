@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Button from '@components/button/button';
 
 import MenuArrow from '@assets/icons/arrow-next.svg';
 import Arrow from '@assets/images/arrow-forward.svg';
@@ -30,19 +29,26 @@ function ShopByMake({ categories, isActive }, ref) {
       ref={ref}
     >
       <ul className={styles.filterList}>
-        {categories?.map(({ label }, index) => (
+        {categories?.map(({ label, url }, index) => (
           <li
             className={styles.filterItem}
             key={`filterItem_shopbymake_${index}`}
           >
-            <Button
+            <div
+              className={clsx(styles.filterBox, {
+                [styles.active]: currentCategoryId === index,
+              })}
               onClick={() => setCurrentCategoryId(index)}
-              variant={currentCategoryId === index ? 'quaternary' : 'tertiary'}
-              // Correctly pass boolean to data-active
-              data-active={currentCategoryId === index}
             >
-              {label} <MenuArrow />
-            </Button>
+              <a
+                className={styles.filterText}
+                href={url || '#'}
+                onClick={e => e.stopPropagation()}
+              >
+                {label}
+              </a>
+              <MenuArrow />
+            </div>
           </li>
         ))}
       </ul>

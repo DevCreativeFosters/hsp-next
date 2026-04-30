@@ -18,7 +18,7 @@
   pointer-events: none;
   border-bottom: solid 3px #c00;
 
-  @media (width <= 1799px) {
+  @media (width<=1799px) {
     max-width: 1240px;
   }
 
@@ -55,7 +55,7 @@
     }
   }
 
-  button {
+  .filterBox {
     padding: 15px 16px;
     text-transform: uppercase;
     font-size: 15px;
@@ -67,13 +67,21 @@
     border-radius: 0;
     color: #999;
     font-weight: 500;
+    position: relative;
+    font-family: var(--font-secondary);
+    display: flex;
+    align-items: center;
+
+    a {
+      transition: 0.5s all;
+    }
 
     &:hover {
       background: #111;
       color: #fff;
     }
 
-    &[data-active='true'] {
+    &.active {
       color: #fff;
       background: #1a1a1a;
       border-left-color: #c00;
@@ -84,6 +92,10 @@
       position: absolute;
       right: 25px;
       transform: scale(0.85);
+
+      path {
+        fill: #999;
+      }
     }
 
     @include bp-below(full) {

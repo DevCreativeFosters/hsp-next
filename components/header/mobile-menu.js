@@ -127,15 +127,21 @@ export default function MobileMenu({
                     )}
                     key={index}
                   >
-                    <Link
-                      href="#"
-                      onClick={e => {
-                        e.preventDefault();
-                        setOpenLvl4(openLvl4 === index ? null : index);
-                      }}
+                    <div
+                      className={styles.menuRow}
+                      onClick={() =>
+                        setOpenLvl4(openLvl4 === index ? null : index)
+                      }
                     >
-                      {label} <ArrowIcon />
-                    </Link>
+                      <Link
+                        className={styles.menuText}
+                        href={url || '#'}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {label}
+                      </Link>
+                      <ArrowIcon />
+                    </div>
 
                     {subItems && (
                       <div className={styles.mainMenuLevel4}>
@@ -144,7 +150,7 @@ export default function MobileMenu({
                             <div className={styles.left}>
                               <figure>
                                 <Image
-                                  alt={'HSP'}
+                                  alt="HSP"
                                   height={282}
                                   src={image?.node?.sourceUrl}
                                   width={1133}

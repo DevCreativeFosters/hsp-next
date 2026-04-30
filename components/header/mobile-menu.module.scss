@@ -188,13 +188,8 @@
         border-top: solid 1px #333;
       }
 
-      a {
+      .menuRow {
         padding: 21px 18px;
-        display: block;
-        font-size: 15px;
-        font-family: var(--font-khand);
-        font-weight: 600;
-        letter-spacing: 0.4px;
         position: relative;
 
         svg {
@@ -211,12 +206,20 @@
         }
       }
 
+      a {
+        display: inline-block;
+        font-size: 15px;
+        font-family: var(--font-khand);
+        font-weight: 600;
+        letter-spacing: 0.4px;
+      }
+
       .mainMenuLevel4 {
         display: none;
       }
 
       &.open {
-        a {
+        .menuRow {
           svg {
             transform: rotate(-90deg);
           }
@@ -295,6 +298,10 @@
               max-width: 13px;
               transform: rotate(0deg);
               position: static;
+
+              path {
+                fill: #e60012;
+              }
             }
           }
         }

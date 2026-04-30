@@ -38,16 +38,21 @@ function Products({ categories, isActive }, ref) {
                   className={styles.filterItem}
                   key={`filterItem_products_${index}`}
                 >
-                  <Button
-                    data-active={currentCategoryId === index}
-                    variant={
-                      currentCategoryId === index ? 'quaternary' : 'tertiary'
-                    }
-                    // Correctly pass boolean to data-active
+                  <div
+                    className={clsx(styles.filterBox, {
+                      [styles.active]: currentCategoryId === index,
+                    })}
                     onClick={() => setCurrentCategoryId(index)}
                   >
-                    {cat.label} <MenuArrow />
-                  </Button>
+                    <Link
+                      className={styles.filterText}
+                      href={cat.url || '#'}
+                      onClick={e => e.stopPropagation()}
+                    >
+                      {cat.label}
+                    </Link>
+                    <MenuArrow />
+                  </div>
                 </li>
               );
             }
