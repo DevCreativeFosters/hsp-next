@@ -328,7 +328,7 @@ export default function PageClientSidePartial({
             specificationDescription={specificationDescription}
           />
           <ProductComboDeals
-            comboDeals={firstMatchedProduct.productComboDeals}
+            comboDeals={firstMatchedProduct?.productComboDeals}
             productData={firstMatchedProduct}
             variantSlug={variantSlug}
           />
