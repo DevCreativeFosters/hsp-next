@@ -87,39 +87,40 @@ function Products({ categories, isActive }, ref) {
 
       <div className={styles.rightBlockMain}>
         <h2 className={styles.categoryTitle}>{activeCategory?.label}</h2>
-
-        <ul className={styles.productList}>
-          {activeCategory?.subItems?.map(({ image, label, url }, index) => {
-            return (
-              <li
-                className={styles.productItem}
-                key={`productItem_products_${index}`}
-              >
-                <div className={styles.productLink}>
-                  <div className={styles.productImageWrapper}>
-                    {image && (
-                      <Image
-                        alt={label}
-                        className={styles.productImage}
-                        height={96}
-                        src={image?.node?.sourceUrl}
-                        width={144}
-                      />
-                    )}
-                  </div>
-                  <div className={styles.productInfo}>
-                    <div className={styles.productTitle}>{label}</div>
-                    <div className={styles.productLinkLabel}>
-                      <Link href={url}>
-                        View Accessories <Arrow />
-                      </Link>
+        <div className={styles.productsWrapper}>
+          <ul className={styles.productList}>
+            {activeCategory?.subItems?.map(({ image, label, url }, index) => {
+              return (
+                <li
+                  className={styles.productItem}
+                  key={`productItem_products_${index}`}
+                >
+                  <div className={styles.productLink}>
+                    <div className={styles.productImageWrapper}>
+                      {image && (
+                        <Image
+                          alt={label}
+                          className={styles.productImage}
+                          height={96}
+                          src={image?.node?.sourceUrl}
+                          width={144}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.productInfo}>
+                      <div className={styles.productTitle}>{label}</div>
+                      <div className={styles.productLinkLabel}>
+                        <Link href={url}>
+                          View Accessories <Arrow />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );

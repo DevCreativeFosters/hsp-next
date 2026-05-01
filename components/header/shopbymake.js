@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-
 import MenuArrow from '@assets/icons/arrow-next.svg';
 import Arrow from '@assets/images/arrow-forward.svg';
 
@@ -56,40 +55,42 @@ function ShopByMake({ categories, isActive }, ref) {
       <div className={styles.rightBlockMain}>
         <h2 className={styles.categoryTitle}>{activeCategory?.label} MODELS</h2>
 
-        <ul className={styles.productList}>
-          {activeCategory?.subItems?.map(({ image, label, url }, index) => {
-            if (!image?.node?.sourceUrl) return null;
+        <div className={styles.productsWrapper}>
+          <ul className={styles.productList}>
+            {activeCategory?.subItems?.map(({ image, label, url }, index) => {
+              if (!image?.node?.sourceUrl) return null;
 
-            return (
-              <li
-                className={styles.productItem}
-                key={`productItem_shopbymake_${index}`}
-              >
-                <div className={styles.productLink}>
-                  <div className={styles.productImageWrapper}>
-                    {image && (
-                      <Image
-                        alt={label}
-                        className={styles.productImage}
-                        height={96}
-                        src={image?.node?.sourceUrl}
-                        width={144}
-                      />
-                    )}
-                  </div>
-                  <div className={styles.productInfo}>
-                    <div className={styles.productTitle}>{label}</div>
-                    <div className={styles.productLinkLabel}>
-                      <Link href={url}>
-                        View Accessories <Arrow />
-                      </Link>
+              return (
+                <li
+                  className={styles.productItem}
+                  key={`productItem_shopbymake_${index}`}
+                >
+                  <div className={styles.productLink}>
+                    <div className={styles.productImageWrapper}>
+                      {image && (
+                        <Image
+                          alt={label}
+                          className={styles.productImage}
+                          height={96}
+                          src={image?.node?.sourceUrl}
+                          width={144}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.productInfo}>
+                      <div className={styles.productTitle}>{label}</div>
+                      <div className={styles.productLinkLabel}>
+                        <Link href={url}>
+                          View Accessories <Arrow />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
         <div className={styles.availableProducts}>
           <div className={styles.title}>
