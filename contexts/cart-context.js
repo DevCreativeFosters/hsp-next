@@ -236,6 +236,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -416,6 +448,45 @@ export function CartProvider({ children }) {
     [getCartItems],
   );
 
+  const addBundleToCart = useCallback(
+    async items => {
+      const query = `
+        mutation AddBundleToCart($input: AddBundleToCartInput!) {
+          addBundleToCart(input: $input) {
+            message
+            cartCount
+            cartTotal
+            items {
+              cart_item_key
+              product_id
+              product_name
+              quantity
+              total
+              variant_name
+              variant_slug
+              variant_sku
+            }
+          }
+        }
+      `;
+
+      const data = await fetchAPI(query, {
+        variables: {
+          input: {
+            items: items,
+          },
+        },
+      });
+
+      await getCartItems();
+
+      openCart();
+
+      return data?.addBundleToCart;
+    },
+    [getCartItems],
+  );
+
   // 🔹 Update Cart
   const updateCart = useCallback(
     async item => {
@@ -478,6 +549,7 @@ export function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
+        addBundleToCart,
         addMultipleToCart,
         addToCart,
         cartCount,

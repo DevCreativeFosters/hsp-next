@@ -169,6 +169,10 @@ export default function PageClientSidePartial({
     mainCategoryName +
     `${mainCategoryName !== variantName ? ' for ' + variantName : ''}`;
 
+  const comboDeals = firstMatchedProduct?.productFields?.variants?.find(
+    ({ sku }) => sku === variant?.sku,
+  )?.selectProducts;
+
   return (
     <>
       {firstMatchedProduct?.giftCardSettingsFields?.giftCardAmounts ? (
@@ -327,11 +331,9 @@ export default function PageClientSidePartial({
             specificationContent={specification}
             specificationDescription={specificationDescription}
           />
-          <ProductComboDeals
-            comboDeals={firstMatchedProduct?.productComboDeals}
-            productData={firstMatchedProduct}
-            variantSlug={variantSlug}
-          />
+          {comboDeals && comboDeals?.length > 0 && (
+            <ProductComboDeals comboDeals={comboDeals} />
+          )}
         </>
       )}
     </>
