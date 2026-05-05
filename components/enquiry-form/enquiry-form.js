@@ -365,13 +365,14 @@ export default function EnquiryForm({
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
 
-                    const selectedVariant = item?.variantSku
+                    const selectedCompatibleVariant = item?.variantSku
                       ? product?.productFields?.variants?.find(
                           variant => variant?.sku === item?.variantSku,
                         )
                       : product?.productFields?.variants[0];
 
-                    const variantDetails = selectedVariant?.variantDetails;
+                    const variantDetails =
+                      selectedCompatibleVariant?.variantDetails;
 
                     if (item?.variantPrice && !variantDetails?.compareAtPrice)
                       variantDetails.compareAtPrice = variantDetails?.price;
@@ -391,33 +392,55 @@ export default function EnquiryForm({
                         <div className={styles.info}>
                           <h5>
                             {product?.title}{' '}
-                            {isProductInCart &&
-                              (cartItems.some(
-                                item =>
-                                  item.product_id === product?.databaseId &&
-                                  item.variantSku === selectedVariant?.sku &&
-                                  item.variantSlug ===
-                                    selectedVariant?.variantSlug &&
-                                  item.variantName ===
-                                    selectedVariant?.variantName,
-                              ) ? (
-                                <CheckIcon className={styles.check} />
-                              ) : (
-                                <PlusIcon
-                                  className={styles.icon}
-                                  onClick={() =>
+                            {cartItems.some(
+                              item =>
+                                item.product_id === product?.databaseId &&
+                                item.variantSku ===
+                                  selectedCompatibleVariant?.sku &&
+                                item.variantSlug ===
+                                  selectedCompatibleVariant?.variantSlug &&
+                                item.variantName ===
+                                  selectedCompatibleVariant?.variantName,
+                            ) ? (
+                              <CheckIcon className={styles.check} />
+                            ) : (
+                              <PlusIcon
+                                className={styles.icon}
+                                onClick={() => {
+                                  const addMainProduct = () =>
+                                    addToCart(
+                                      {
+                                        productId: productData.databaseId,
+                                        quantity: 1,
+                                        variant_name:
+                                          selectedVariant?.variantName,
+                                        variant_sku: selectedVariant?.sku,
+                                        variant_slug:
+                                          selectedVariant?.variantSlug,
+                                      },
+                                      true,
+                                    );
+
+                                  const addCompatibleProduct = () =>
                                     addToCart({
                                       productId: product?.databaseId,
                                       quantity: 1,
                                       variant_name:
-                                        selectedVariant?.variantName,
-                                      variant_sku: selectedVariant?.sku,
+                                        selectedCompatibleVariant?.variantName,
+                                      variant_sku:
+                                        selectedCompatibleVariant?.sku,
                                       variant_slug:
-                                        selectedVariant?.variantSlug,
-                                    })
+                                        selectedCompatibleVariant?.variantSlug,
+                                    });
+
+                                  if (!isProductInCart) {
+                                    addMainProduct().then(addCompatibleProduct);
+                                  } else {
+                                    addCompatibleProduct();
                                   }
-                                />
-                              ))}
+                                }}
+                              />
+                            )}
                           </h5>
                           <div className={styles.price}>
                             <div
