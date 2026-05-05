@@ -11,6 +11,7 @@ import { useCart } from '@contexts/cart-context';
 import { useCheckout } from '@contexts/checkout';
 import { useUserContext } from '@contexts/user';
 
+import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
 import { formatPrice } from '@lib/helpers';
 import normalizeStores from '@lib/normalize-stores';
@@ -279,13 +280,37 @@ function CheckoutForm() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      const filteredOptions = allDeliveryOptions.filter(
-        opt => opt.role === role,
-      );
-      setDeliveryOptions(filteredOptions);
+  async function getStoreDeliveryOptions(userId) {
+    try {
+      const store = await getStoreByUserId(userId);
+      return store?.availableDeliveryOptions || [];
+    } catch (e) {
+      console.error('Error getting orders:', e);
+      return [];
     }
+  }
+
+  useEffect(() => {
+    const run = async () => {
+      setLoading(true);
+      if (user) {
+        let filteredOptions = allDeliveryOptions.filter(
+          opt => opt.role === role,
+        );
+
+        if (user?.id && user?.role === 'b2b') {
+          const options = await getStoreDeliveryOptions(user.id);
+          filteredOptions = filteredOptions.filter(opt =>
+            options.includes(opt.id),
+          );
+        }
+
+        setDeliveryOptions(filteredOptions);
+      }
+      setLoading(false);
+    };
+
+    run();
   }, [user]);
 
   const handleSelectOption = id => {
