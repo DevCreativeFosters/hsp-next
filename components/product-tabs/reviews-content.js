@@ -378,6 +378,7 @@ export default function ReviewsContent({ productId, productName, reviews }) {
                         <ProductImageCarousel
                           images={images}
                           minImagesForNav={1}
+                          onImageClick={() => setSelectedReview(review)}
                           showMainImage={false}
                         />
                       </div>

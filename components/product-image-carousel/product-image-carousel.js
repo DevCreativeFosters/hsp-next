@@ -19,6 +19,7 @@ export default function ProductImageCarousel({
   images,
   minImagesForNav = 4,
   modalService = false,
+  onImageClick = () => {},
   showMainImage = true,
 }) {
   const buttonPrevRef = useRef();
@@ -78,7 +79,7 @@ export default function ProductImageCarousel({
 
   const itemTpl = useMemo(() => {
     const itemTemplate = item => (
-      <div className={styles.thumbnailWrapper}>
+      <div className={styles.thumbnailWrapper} onClick={onImageClick}>
         <Image
           alt={item.alt}
           className={clsx(styles.thumbnail, {
@@ -140,6 +141,7 @@ export default function ProductImageCarousel({
         items={images}
         name="Product image carousel"
         nonOverflowWrapper
+        onImageClick={onImageClick}
         resetStyle
         xSmallGaps
       >
