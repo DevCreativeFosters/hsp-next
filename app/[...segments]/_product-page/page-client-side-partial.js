@@ -169,9 +169,12 @@ export default function PageClientSidePartial({
     mainCategoryName +
     `${mainCategoryName !== variantName ? ' for ' + variantName : ''}`;
 
-  const comboDeals = firstMatchedProduct?.productFields?.variants?.find(
+  const matchedVariant = firstMatchedProduct?.productFields?.variants?.find(
     ({ sku }) => sku === variant?.sku,
-  )?.selectProducts;
+  );
+
+  const comboDeals = matchedVariant?.selectProducts;
+  const dealName = matchedVariant?.dealName;
 
   return (
     <>
@@ -332,7 +335,7 @@ export default function PageClientSidePartial({
             specificationDescription={specificationDescription}
           />
           {comboDeals && comboDeals?.length > 0 && (
-            <ProductComboDeals comboDeals={comboDeals} />
+            <ProductComboDeals comboDeals={comboDeals} dealName={dealName} />
           )}
         </>
       )}

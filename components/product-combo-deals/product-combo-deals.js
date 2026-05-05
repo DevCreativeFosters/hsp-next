@@ -12,7 +12,7 @@ import Button from '@components/button/button';
 
 import styles from './product-combo-deals.module.scss';
 
-export default function ProductComboDeals({ comboDeals }) {
+export default function ProductComboDeals({ comboDeals, dealName }) {
   const [openAccordion, setOpenAccordion] = useState(null);
   const { addBundleToCart, loading } = useCart();
 
@@ -59,7 +59,7 @@ export default function ProductComboDeals({ comboDeals }) {
     <>
       <div className={styles.comboDeals}>
         <div className={styles.header}>
-          <h3 className={clsx(styles.title, 'h4')}>Bundle & Save</h3>
+          <h3 className={clsx(styles.title, 'h4')}>{dealName}</h3>
         </div>
         <div className={styles.productWrap}>
           <div className={styles.products}>
