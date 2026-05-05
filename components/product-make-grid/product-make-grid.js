@@ -51,6 +51,17 @@ export default function ProductMakeGrid({
     item => new URL(item.link.url).pathname.split('/')[1],
   );
 
+  const priorityOrder = [
+    'electric-roller-cover',
+    'roll-up-tonneau-cover',
+    'load-rack-pro', // if exists
+    'load-rack-jnr', // if exists
+    'nz-load-slide',
+    'ute-sports-bar',
+    'tailgate-lock',
+    'tailgate-assist',
+  ];
+
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
 
@@ -347,6 +358,18 @@ export default function ProductMakeGrid({
                           .filter(make =>
                             availableCategories.includes(make.slug),
                           )
+                          .sort((a, b) => {
+                            const aIndex = priorityOrder.indexOf(a.slug);
+                            const bIndex = priorityOrder.indexOf(b.slug);
+
+                            const aOrder = aIndex === -1 ? 999 : aIndex;
+                            const bOrder = bIndex === -1 ? 999 : bIndex;
+
+                            if (aOrder !== bOrder) return aOrder - bOrder;
+
+                            // fallback → alphabetical
+                            return a.name.localeCompare(b.name);
+                          })
                           .map((make, index) => (
                             <li key={make.slug}>
                               <label>
