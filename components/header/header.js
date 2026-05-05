@@ -257,6 +257,7 @@ export default function Header({
                         setCurrentSubmenu(newValue);
                       }}
                       size="large"
+                      toggleOnText={true}
                       toggleable={
                         subItems?.length > 0 &&
                         (url.includes('/products/') ||
