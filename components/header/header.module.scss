@@ -197,6 +197,10 @@
 .mainMenuList {
   white-space: nowrap;
 
+  button {
+    background: transparent;
+  }
+
   @include bp(large) {
     gap: var(--gap-global-xs);
   }

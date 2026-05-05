@@ -31,6 +31,7 @@ function ButtonWithRef(
     shortenable,
     size = 'small',
     target = null,
+    toggleOnText = false,
     toggleable,
     type = 'button',
     variant = 'primary',
@@ -122,7 +123,12 @@ function ButtonWithRef(
   const LinkOrButton = href ? Link : 'button';
 
   return (
-    <OptionalToggleWrapperEl {...optionalToggleWrapperElProps}>
+    <OptionalToggleWrapperEl
+      {...optionalToggleWrapperElProps}
+      {...(toggleable && toggleOnText
+        ? { onClick: ToggleContainerProps?.onClick }
+        : {})}
+    >
       {toggleable && (
         <ToggleContainer
           className={clsx(

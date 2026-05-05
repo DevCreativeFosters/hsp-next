@@ -27,36 +27,38 @@ function ShopByMake({ categories, isActive }, ref) {
       className={clsx(styles.container, isActive && styles.isActive)}
       ref={ref}
     >
-      <ul className={styles.filterList}>
-        {categories?.map(({ label, url }, index) => (
-          <li
-            className={styles.filterItem}
-            key={`filterItem_shopbymake_${index}`}
-          >
-            <div
-              className={clsx(styles.filterBox, {
-                [styles.active]: currentCategoryId === index,
-              })}
-              onClick={() => setCurrentCategoryId(index)}
+      <div className={clsx(styles.leftBlock, styles.shopByMake)}>
+        <ul className={styles.filterList}>
+          {categories?.map(({ label, url }, index) => (
+            <li
+              className={styles.filterItem}
+              key={`filterItem_shopbymake_${index}`}
             >
-              <a
-                className={styles.filterText}
-                href={url || '#'}
-                onClick={e => e.stopPropagation()}
+              <div
+                className={clsx(styles.filterBox, {
+                  [styles.active]: currentCategoryId === index,
+                })}
+                onClick={() => setCurrentCategoryId(index)}
               >
-                {label}
-              </a>
-              <MenuArrow />
-            </div>
-          </li>
-        ))}
-      </ul>
+                <a
+                  className={styles.filterText}
+                  href={url || '#'}
+                  onClick={e => e.stopPropagation()}
+                >
+                  {label}
+                </a>
+                <MenuArrow />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className={styles.rightBlockMain}>
         <h2 className={styles.categoryTitle}>{activeCategory?.label} MODELS</h2>
 
         <div className={styles.productsWrapper}>
-          <ul className={styles.productList}>
+          <ul className={clsx(styles.productList, styles.shopByMake)}>
             {activeCategory?.subItems?.map(({ image, label, url }, index) => {
               if (!image?.node?.sourceUrl) return null;
 

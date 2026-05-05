@@ -36,15 +36,27 @@
   }
 }
 
+.leftBlock {
+  background: #111;
+  border-right: solid 1px #222;
+
+  &.shopByMake {
+    margin: 0 0 -3px;
+  }
+}
+
 .filterList {
   padding: 8px 0 0;
   margin: 0;
   list-style: none;
   background: #111;
   min-width: 220px;
-  border-right: solid 1px #222;
   max-height: 70vh;
   overflow: auto;
+
+  @include bp-below(full) {
+    max-height: 418px;
+  }
 }
 
 .filterItem {
@@ -58,7 +70,7 @@
   }
 
   .filterBox {
-    padding: 15px 16px;
+    padding: 16px;
     text-transform: uppercase;
     font-size: 15px;
     width: 100%;
@@ -118,22 +130,30 @@
 
 .productList {
   list-style: none;
-  padding: 0 14px 0 0;
-  margin: 0;
+  padding: 0 14px 5px 0;
+  margin: 0 0 25px;
   display: grid;
   flex-grow: 1;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 28px;
+  grid-gap: 30px;
   max-height: calc(65vh - 158px);
   overflow: hidden auto;
+
+  &.shopByMake {
+    max-height: calc(50vh - 138px);
+
+    @include bp-below(full) {
+      max-height: 210px;
+    }
+  }
 
   @include scrollbar;
 
   @include bp-below(full) {
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
-    max-height: calc(40vh - 44px);
-    padding: 0 15px 0 0;
+    max-height: 304px;
+    padding: 0 15px 5px 0;
   }
 }
 
@@ -265,7 +285,7 @@
 
   .categoryTitle {
     font-size: 13px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     font-family: var(--font-hind);
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -327,7 +347,7 @@
   }
 
   .viewAll {
-    margin: 20px 0 0;
+    margin: 34px 0 0;
 
     @include bp-below(full) {
       margin: 15px 0 0;
