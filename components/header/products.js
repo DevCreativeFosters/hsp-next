@@ -44,13 +44,7 @@ function Products({ categories, isActive }, ref) {
                     })}
                     onClick={() => setCurrentCategoryId(index)}
                   >
-                    <Link
-                      className={styles.filterText}
-                      href={cat.url || '#'}
-                      onClick={e => e.stopPropagation()}
-                    >
-                      {cat.label}
-                    </Link>
+                    <span className={styles.filterText}>{cat.label}</span>
                     <MenuArrow />
                   </div>
                 </li>
