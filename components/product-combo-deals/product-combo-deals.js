@@ -12,17 +12,32 @@ import Button from '@components/button/button';
 
 import styles from './product-combo-deals.module.scss';
 
-export default function ProductComboDeals({ comboDeals, dealName }) {
+export default function ProductComboDeals({
+  comboDeals,
+  dealName,
+  mainProduct,
+}) {
   const [openAccordion, setOpenAccordion] = useState(null);
   const { addBundleToCart, loading } = useCart();
+
+  const resolveVariant = deal => {
+    const linkedProduct = deal.product.nodes[0];
+    let variant = linkedProduct?.productFields?.variants?.find(
+      v => v.sku === deal.variantSku,
+    );
+    if (!variant && mainProduct) {
+      variant = mainProduct.productFields?.variants?.find(
+        v => v.sku === deal.variantSku,
+      );
+    }
+    return variant;
+  };
 
   const { discountedPrice, totalInstallationCost, totalRegularPrice } = useMemo(
     () =>
       comboDeals.reduce(
         (acc, deal) => {
-          const variant = deal.product.nodes[0]?.productFields?.variants?.find(
-            v => v.sku === deal.variantSku,
-          );
+          const variant = resolveVariant(deal);
           return {
             discountedPrice: acc.discountedPrice + (deal.variantPrice ?? 0),
             totalInstallationCost:
@@ -34,16 +49,14 @@ export default function ProductComboDeals({ comboDeals, dealName }) {
         },
         { discountedPrice: 0, totalInstallationCost: 0, totalRegularPrice: 0 },
       ),
-    [comboDeals],
+    [comboDeals, mainProduct],
   );
 
   const products = comboDeals?.map(deal => deal.product.nodes[0]);
 
   const handleAddToCart = () => {
     const items = comboDeals.map(deal => {
-      const variant = deal.product.nodes[0]?.productFields?.variants?.find(
-        v => v.sku === deal.variantSku,
-      );
+      const variant = resolveVariant(deal);
       return {
         quantity: 1,
         variant_name: variant?.variantName,
@@ -65,14 +78,25 @@ export default function ProductComboDeals({ comboDeals, dealName }) {
           <div className={styles.productWrap}>
             <div className={styles.products}>
               {comboDeals.map((deal, index) => {
-                const product = deal.product.nodes[0];
-                const variant = product?.productFields?.variants?.find(
+                const linkedProduct = deal.product.nodes[0];
+                let variant = linkedProduct?.productFields?.variants?.find(
                   variant => variant.sku === deal.variantSku,
                 );
+                let product = linkedProduct;
+
+                if (!variant && mainProduct) {
+                  variant = mainProduct.productFields?.variants?.find(
+                    v => v.sku === deal.variantSku,
+                  );
+                  if (variant) product = mainProduct;
+                }
 
                 const variantDetails = variant?.variantDetails;
 
                 if (!product || !variant) return null;
+
+                const isShortName =
+                  variant.variantName && variant.variantName.length <= 20;
 
                 return (
                   <div
@@ -100,7 +124,18 @@ export default function ProductComboDeals({ comboDeals, dealName }) {
                     <div className={styles.productInfo}>
                       <h4 className={clsx(styles.productTitle, 'p-large')}>
                         {product.title}
+                        {isShortName && (
+                          <span className={styles.inlineDesc}>
+                            {' — '}
+                            {variant.variantName}
+                          </span>
+                        )}
                       </h4>
+                      {!isShortName && variant.variantName && (
+                        <p className={styles.variantDesc}>
+                          {variant.variantName}
+                        </p>
+                      )}
                       <div className={styles.prdtailMain}>
                         <div className={styles.prdskuTxt}>
                           SKU: {variant.sku}

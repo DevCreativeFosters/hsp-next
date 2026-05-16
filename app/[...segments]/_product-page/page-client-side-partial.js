@@ -335,7 +335,11 @@ export default function PageClientSidePartial({
             specificationDescription={specificationDescription}
           />
           {comboDeals && comboDeals?.length > 0 && (
-            <ProductComboDeals comboDeals={comboDeals} dealName={dealName} />
+            <ProductComboDeals
+              comboDeals={comboDeals}
+              dealName={dealName}
+              mainProduct={firstMatchedProduct}
+            />
           )}
         </>
       )}
