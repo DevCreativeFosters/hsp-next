@@ -84,7 +84,7 @@ async function VehicleSelector({ params }) {
         products={model.items.map(item => ({
           dateAdded: item.date,
           link: {
-            url: item.link,
+            url: item.link ? item.link.replace(/^https?:\/\/[^/]+/, '') : '',
           },
           productImage: {
             node: {
