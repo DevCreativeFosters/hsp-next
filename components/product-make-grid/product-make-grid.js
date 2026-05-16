@@ -44,11 +44,11 @@ export default function ProductMakeGrid({
   titleTagStyle,
 }) {
   const availableBrands = products.map(
-    item => new URL(item.link.url).pathname.split('/')[2],
+    item => new URL(item.link.url, 'http://_').pathname.split('/')[2],
   );
 
   const availableCategories = products.map(
-    item => new URL(item.link.url).pathname.split('/')[1],
+    item => new URL(item.link.url, 'http://_').pathname.split('/')[1],
   );
 
   const priorityOrder = [
