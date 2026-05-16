@@ -442,6 +442,11 @@ export default function EnquiryForm({
                               />
                             )}
                           </h5>
+                          {selectedCompatibleVariant?.variantName && (
+                            <p className={styles.cmpDesc}>
+                              {selectedCompatibleVariant.variantName}
+                            </p>
+                          )}
                           <div className={styles.price}>
                             <div
                               className={clsx({
