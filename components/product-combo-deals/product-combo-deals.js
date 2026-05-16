@@ -66,11 +66,13 @@ export default function ProductComboDeals({ comboDeals, dealName }) {
             <div className={styles.products}>
               {comboDeals.map((deal, index) => {
                 const product = deal.product.nodes[0];
-                const variant = product.productFields?.variants?.find(
+                const variant = product?.productFields?.variants?.find(
                   variant => variant.sku === deal.variantSku,
                 );
 
                 const variantDetails = variant?.variantDetails;
+
+                if (!product || !variant) return null;
 
                 return (
                   <div
@@ -109,7 +111,7 @@ export default function ProductComboDeals({ comboDeals, dealName }) {
                               {formatPrice(deal.variantPrice)}
                             </div>
                             <div className={clsx(styles.regularPrice, 'p')}>
-                              {formatPrice(variantDetails.price)}
+                              {formatPrice(variantDetails?.price)}
                             </div>
                           </div>
                           <div className={styles.prdinstallTxt}>
