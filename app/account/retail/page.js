@@ -19,7 +19,8 @@ export default async function RetailPage() {
     content?.flexibleContent?.blocks?.map(renderBlock) || [],
   );
 
-  const faqBlock = contentBlocks[1].props.children.props.children.props;
+  const faqBlock =
+    contentBlocks[1]?.props?.children?.props?.children?.props || {};
 
   return (
     <Layout title="Retail Account">
