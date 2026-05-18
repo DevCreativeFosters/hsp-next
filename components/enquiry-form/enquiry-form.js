@@ -391,7 +391,10 @@ export default function EnquiryForm({
                         </figure>
                         <div className={styles.info}>
                           <h5>
-                            {product?.title}{' '}
+                            {product?.title}
+                            {(item?.extraText ||
+                              selectedCompatibleVariant?.variantName) &&
+                              ` — ${item?.extraText || selectedCompatibleVariant?.variantName}`}{' '}
                             {cartItems.some(
                               item =>
                                 item.product_id === product?.databaseId &&
@@ -442,13 +445,6 @@ export default function EnquiryForm({
                               />
                             )}
                           </h5>
-                          {(item?.extraText ||
-                            selectedCompatibleVariant?.variantName) && (
-                            <p className={styles.cmpDesc}>
-                              {item?.extraText ||
-                                selectedCompatibleVariant?.variantName}
-                            </p>
-                          )}
                           <div className={styles.price}>
                             <div
                               className={clsx({
@@ -466,9 +462,9 @@ export default function EnquiryForm({
                               <svg
                                 className={clsx(styles.plusIcon)}
                                 fill="none"
-                                height="8"
+                                height="14"
                                 viewBox="0 0 18 18"
-                                width="8"
+                                width="14"
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path

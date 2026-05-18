@@ -96,8 +96,6 @@ export default function ProductComboDeals({
                 if (!product || !variant) return null;
 
                 const itemDescription = deal.extraText || variant.variantName;
-                const isShortName =
-                  itemDescription && itemDescription.length <= 20;
 
                 return (
                   <div
@@ -125,16 +123,8 @@ export default function ProductComboDeals({
                     <div className={styles.productInfo}>
                       <h4 className={clsx(styles.productTitle, 'p-large')}>
                         {product.title}
-                        {isShortName && (
-                          <span className={styles.inlineDesc}>
-                            {' — '}
-                            {itemDescription}
-                          </span>
-                        )}
+                        {itemDescription && ` — ${itemDescription}`}
                       </h4>
-                      {!isShortName && itemDescription && (
-                        <p className={styles.variantDesc}>{itemDescription}</p>
-                      )}
                       <div className={styles.prdtailMain}>
                         <div className={styles.prdskuTxt}>
                           SKU: {variant.sku}
