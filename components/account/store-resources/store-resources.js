@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useUserContext } from '@contexts/user';
 
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
+import { makeRelativeUrl } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
@@ -60,7 +61,7 @@ function StoreResources() {
                 {storeDetails.marketingResources.map(({ link }) => (
                   <li key={link.title}>
                     <LinkIcon />
-                    <Link href={link.url}>{link.title}</Link>
+                    <Link href={makeRelativeUrl(link.url)}>{link.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -83,7 +84,10 @@ function StoreResources() {
                 className={styles.description}
                 content={block.description}
               />
-              <Button className={styles.button} href={block.link.url}>
+              <Button
+                className={styles.button}
+                href={makeRelativeUrl(block.link.url)}
+              >
                 {block.link.title}
               </Button>
             </div>

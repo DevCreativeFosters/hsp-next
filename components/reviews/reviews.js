@@ -7,6 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import SectionButtons from '@components/section-buttons/section-buttons';
@@ -85,7 +87,7 @@ export default function Reviews({ data }) {
             )}
             <Button
               className={styles.allReviewsButton}
-              href={data?.allReviewsLink?.link?.url}
+              href={makeRelativeUrl(data?.allReviewsLink?.link?.url)}
               rightIcon="external-link"
             >
               {data?.allReviewsLink?.link?.title}

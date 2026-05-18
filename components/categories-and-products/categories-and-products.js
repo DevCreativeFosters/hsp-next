@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import styles from './categories-and-products.module.scss';
 
 export default function CategoriesAndProducts({ data }) {
@@ -28,7 +30,7 @@ export default function CategoriesAndProducts({ data }) {
                 <Link
                   className={styles.link}
                   dangerouslySetInnerHTML={{ __html: link.title }}
-                  href={link.url || ''}
+                  href={makeRelativeUrl(link.url) || ''}
                   onMouseEnter={() => setHoveredIndex(index)}
                 />
                 <ArrowForward />

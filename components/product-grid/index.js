@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -32,7 +34,7 @@ export default function ProductGrid({
                 <div className={styles.buttonContainer}>
                   <Button
                     className={styles.link}
-                    href={product.link?.url || '#'}
+                    href={makeRelativeUrl(product.link?.url) || '#'}
                     rightIcon="arrow-forward"
                     size="small"
                     variant="tertiary"
@@ -47,7 +49,7 @@ export default function ProductGrid({
                 </div>
                 <Link
                   className={styles.imageContainer}
-                  href={product.link?.url || '#'}
+                  href={makeRelativeUrl(product.link?.url) || '#'}
                   tabIndex="-1"
                 >
                   <Image

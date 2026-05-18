@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { formatPrice } from '@lib/helpers';
+import { formatPrice, makeRelativeUrl } from '@lib/helpers';
 
 import { slideImageSizes } from '@components/builder/products-carousel';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -9,7 +9,7 @@ import DynamicTitle from '@components/dynamic-title/dynamic-title';
 import styles from './product-card.module.scss';
 
 export default function ProductCard({ product }) {
-  const productLink = product.link?.url || '';
+  const productLink = makeRelativeUrl(product.link?.url) || '';
   const productTitle = product.title;
   const productTitleTag = product.titleTag;
   const productTitleStyle = product.titleTagStyle;

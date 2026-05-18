@@ -8,6 +8,8 @@ import Link from 'next/link';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -147,7 +149,7 @@ export default function Hero({ slides, transition = 'fade' }) {
                       }}
                     />
                   ) : (
-                    <Link href={currentSlide.buttonLink.url}>
+                    <Link href={makeRelativeUrl(currentSlide.buttonLink.url)}>
                       <Image
                         alt={
                           isMobile
@@ -204,7 +206,7 @@ export default function Hero({ slides, transition = 'fade' }) {
               currentSlide.buttonLink?.title ? (
                 <Button
                   className={styles.actionButton}
-                  href={currentSlide.buttonLink.url}
+                  href={makeRelativeUrl(currentSlide.buttonLink.url)}
                   size="large"
                   target={currentSlide.buttonLink?.target || null}
                 >

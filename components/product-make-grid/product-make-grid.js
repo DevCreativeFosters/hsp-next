@@ -9,6 +9,7 @@ import { useIsMobile } from '@hooks/useIsMobile';
 
 import { getAllMakes } from '@lib/api/get-all-makes';
 import { getProductCategories } from '@lib/api/get-product-categories';
+import { makeRelativeUrl } from '@lib/helpers';
 
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -208,7 +209,7 @@ export default function ProductMakeGrid({
           <ul>
             {categoryPages.map(({ link }) => (
               <li key={link.url}>
-                <Link href={link.url}>{link.title}</Link>
+                <Link href={makeRelativeUrl(link.url)}>{link.title}</Link>
               </li>
             ))}
           </ul>
@@ -422,7 +423,7 @@ export default function ProductMakeGrid({
                   template={template}
                   titleTag={productsTitleTag}
                   titleTagStyle={productsTitleTagStyle}
-                  url={product.link?.url}
+                  url={makeRelativeUrl(product.link?.url)}
                 />
               ))}
             </div>

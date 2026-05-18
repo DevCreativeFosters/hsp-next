@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
 
@@ -20,7 +22,7 @@ export default function ClickableLogos({
         <a
           aria-label={logo?.node?.altText || link?.title || 'Logo'}
           className={className}
-          href={link.url}
+          href={makeRelativeUrl(link.url)}
           target={link?.target || '_self'}
         >
           {children}

@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 
 import styles from './section-buttons.module.scss';
@@ -30,7 +32,7 @@ export default function SectionButtons({
       {buttons?.map(
         ({ label, link, variant, withArrowForwardIcon, ...props }, index) => (
           <Button
-            href={link?.url || link}
+            href={makeRelativeUrl(link?.url || link)}
             key={index}
             target={link?.target || null}
             {...props}
