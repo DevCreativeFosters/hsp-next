@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
 import routes from '@lib/routes';
 
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -25,7 +26,7 @@ export default function Tile({
   url,
   variant,
 }) {
-  const postUrl = url || link?.url || '#';
+  const postUrl = makeRelativeUrl(url || link?.url) || '#';
   const segments = postUrl.split('/').filter(Boolean);
   const slug = segments.pop();
   const imageNormalized = image?.node ? image.node : image;

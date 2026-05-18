@@ -1,3 +1,5 @@
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 import DynamicTitle from '@components/dynamic-title/dynamic-title';
@@ -37,7 +39,7 @@ export default function PromoWithTwoVideos({ data }) {
             )}
             {buttonLink && (
               <Button
-                href={buttonLink.url || ''}
+                href={makeRelativeUrl(buttonLink.url) || ''}
                 rightIcon="arrow-forward"
                 size="large"
                 style={{ maxWidth: 'fit-content' }}

@@ -7,7 +7,7 @@ import { getGlobalOptions } from '@lib/api/get-global-options';
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { renderBlock } from '@lib/block';
-import { removeLeadingSlash } from '@lib/helpers';
+import { makeRelativeUrl, removeLeadingSlash } from '@lib/helpers';
 import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
 import { metadata } from '@lib/seo';
@@ -62,7 +62,7 @@ export default async function ContactUs() {
               )}
               {servicesBox.length > 0 && (
                 <ContentBox>
-                  <h3 className='h3'>Services</h3>
+                  <h3 className="h3">Services</h3>
                   <div>
                     {servicesBox.map((serviceLink, index) => {
                       const link = serviceLink.link;
@@ -70,7 +70,7 @@ export default async function ContactUs() {
                       if (link) {
                         return (
                           <Button
-                            href={link?.url || ''}
+                            href={makeRelativeUrl(link?.url) || ''}
                             inlineOffsetByPadding
                             key={index}
                             rightIcon="arrow-forward"

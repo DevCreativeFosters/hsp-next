@@ -1,8 +1,12 @@
 'use client';
 
 import { useRef } from 'react';
+
 import clsx from 'clsx';
+
 import usePlaybackOnScroll from '@hooks/usePlaybackOnScroll';
+
+import { makeRelativeUrl } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import Container from '@components/container/container';
@@ -45,7 +49,11 @@ export default function VideoBackgroundHero({
             dangerouslySetInnerHTML={{ __html: description }}
           />
           {link && (
-            <Button href={link.url} rightIcon="play-button" size="large">
+            <Button
+              href={makeRelativeUrl(link.url)}
+              rightIcon="play-button"
+              size="large"
+            >
               {link.title}
             </Button>
           )}

@@ -1,4 +1,5 @@
 import { fetchAPI } from '@lib/fetch-api';
+import { makeRelativeUrl } from '@lib/helpers';
 
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -84,7 +85,7 @@ async function VehicleSelector({ params }) {
         products={model.items.map(item => ({
           dateAdded: item.date,
           link: {
-            url: item.link ? item.link.replace(/^https?:\/\/[^/]+/, '') : '',
+            url: makeRelativeUrl(item.link) || '',
           },
           productImage: {
             node: {
