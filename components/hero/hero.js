@@ -243,25 +243,14 @@ export default function Hero({ slides, transition = 'fade' }) {
           </div>
         </Container>
       ) : (
-        <>
-          <div className={styles.overlayImageContainer}>
-            <Image
-              alt=""
-              height="400"
-              src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2026/04/ChatGPT-Image-Apr-18-2026-04_31_54-PM.png"
-              title=""
-              width="500"
-            />
-          </div>
-          <div className={styles.navArrowsOnly}>
-            <button className={styles.prevButton} onClick={handlePrev}>
-              <ArrowLeft />
-            </button>
-            <button className={styles.nextButton} onClick={handleNext}>
-              <ArrowRight />
-            </button>
-          </div>
-        </>
+        <div className={styles.navArrowsOnly}>
+          <button className={styles.prevButton} onClick={handlePrev}>
+            <ArrowLeft />
+          </button>
+          <button className={styles.nextButton} onClick={handleNext}>
+            <ArrowRight />
+          </button>
+        </div>
       )}
     </div>
   );
