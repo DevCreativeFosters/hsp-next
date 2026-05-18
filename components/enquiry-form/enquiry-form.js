@@ -442,9 +442,11 @@ export default function EnquiryForm({
                               />
                             )}
                           </h5>
-                          {selectedCompatibleVariant?.variantName && (
+                          {(item?.extraText ||
+                            selectedCompatibleVariant?.variantName) && (
                             <p className={styles.cmpDesc}>
-                              {selectedCompatibleVariant.variantName}
+                              {item?.extraText ||
+                                selectedCompatibleVariant?.variantName}
                             </p>
                           )}
                           <div className={styles.price}>
