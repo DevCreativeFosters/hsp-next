@@ -25,7 +25,7 @@ export default async function HomePage() {
   );
 
   return (
-    <Layout withMap>
+    <Layout>
       {prepareSchemas(content?.schemaProSchemas)}
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
