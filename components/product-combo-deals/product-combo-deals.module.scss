@@ -50,6 +50,11 @@
   overflow: auto hidden;
   width: calc(100% - 295px);
   max-width: calc(100% - 295px);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   @include bp-below(medium) {
     flex-flow: row wrap;
