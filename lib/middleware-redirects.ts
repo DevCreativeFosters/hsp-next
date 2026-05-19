@@ -107,7 +107,21 @@ function refreshIfNecessary() {
   return global.cache;
 }
 
+// Paths owned by the Next.js app that should never be redirected by WP rules,
+// even if a stale entry exists in redirects.json
+const RESERVED_APP_PATHS = ['/register', '/login', '/forgot-password'];
+const RESERVED_APP_PREFIXES = ['/account/'];
+
 export async function redirectsMiddleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname.toLowerCase();
+
+  if (
+    RESERVED_APP_PATHS.includes(pathname) ||
+    RESERVED_APP_PREFIXES.some(prefix => pathname.startsWith(prefix))
+  ) {
+    return;
+  }
+
   let cache: CacheEntry[];
   try {
     cache = await refreshIfNecessary();
@@ -115,8 +129,6 @@ export async function redirectsMiddleware(request: NextRequest) {
     Sentry.captureException(e);
     return;
   }
-
-  const pathname = request.nextUrl.pathname.toLowerCase();
 
   const entry = cache.find(entry => entry.match_url === pathname);
 
