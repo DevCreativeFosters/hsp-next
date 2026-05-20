@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
-import { COUNTRY_OPTIONS } from '@mockup/countries';
+import { AU_STATE_OPTIONS, COUNTRY_OPTIONS } from '@mockup/countries';
 
 import useGravityForm from '@hooks/useGravityForm';
 
@@ -91,6 +91,8 @@ export default function AddressField({ field, fieldErrors, form }) {
         <InputWrapper key={childKey} oneOf={oneOfValue}>
           {childKey === 'country' ? (
             <Select {...sharedProps} options={COUNTRY_OPTIONS} />
+          ) : childKey === 'state' ? (
+            <Select {...sharedProps} options={AU_STATE_OPTIONS} />
           ) : (
             <Input type="text" {...sharedProps} />
           )}

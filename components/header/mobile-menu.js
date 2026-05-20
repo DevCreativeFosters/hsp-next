@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import ArrowForword from '@assets/icons/arrow-forward.svg';
 import ArrowIcon from '@assets/icons/arrow-next.svg';
 import CloseIcon from '@assets/icons/close.svg';
@@ -68,7 +70,7 @@ export default function MobileMenu({
 
               return (
                 <div className={styles.item} key={i}>
-                  <Link href={url}>
+                  <Link href={makeRelativeUrl(url)}>
                     <Image
                       alt={label}
                       height={25}
@@ -135,7 +137,7 @@ export default function MobileMenu({
                     >
                       <Link
                         className={styles.menuText}
-                        href={url || '#'}
+                        href={makeRelativeUrl(url) || '#'}
                         onClick={e => e.stopPropagation()}
                       >
                         {label}
@@ -165,7 +167,7 @@ export default function MobileMenu({
                                 </div>
 
                                 <div className={styles.rightSide}>
-                                  <Link href={url}>
+                                  <Link href={makeRelativeUrl(url)}>
                                     View <ArrowForword />
                                   </Link>
                                 </div>

@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import MenuArrow from '@assets/icons/arrow-next.svg';
 import Arrow from '@assets/images/arrow-forward.svg';
 
@@ -42,7 +44,7 @@ function ShopByMake({ categories, isActive }, ref) {
               >
                 <a
                   className={styles.filterText}
-                  href={url || '#'}
+                  href={makeRelativeUrl(url) || '#'}
                   onClick={e => e.stopPropagation()}
                 >
                   {label}
@@ -82,7 +84,7 @@ function ShopByMake({ categories, isActive }, ref) {
                     <div className={styles.productInfo}>
                       <div className={styles.productTitle}>{label}</div>
                       <div className={styles.productLinkLabel}>
-                        <Link href={url}>
+                        <Link href={makeRelativeUrl(url)}>
                           View Accessories <Arrow />
                         </Link>
                       </div>
@@ -108,7 +110,7 @@ function ShopByMake({ categories, isActive }, ref) {
               }
 
               return (
-                <Link href={url} key={index}>
+                <Link href={makeRelativeUrl(url)} key={index}>
                   {label}
                 </Link>
               );
