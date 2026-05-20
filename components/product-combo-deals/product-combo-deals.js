@@ -16,6 +16,7 @@ export default function ProductComboDeals({
   comboDeals,
   dealName,
   mainProduct,
+  totalComboDeal,
 }) {
   const [openAccordion, setOpenAccordion] = useState(null);
   const { addBundleToCart, loading } = useCart();
@@ -33,7 +34,11 @@ export default function ProductComboDeals({
     return variant;
   };
 
-  const { discountedPrice, totalInstallationCost, totalRegularPrice } = useMemo(
+  const {
+    discountedPrice: calculatedDiscountedPrice,
+    totalInstallationCost,
+    totalRegularPrice,
+  } = useMemo(
     () =>
       comboDeals.reduce(
         (acc, deal) => {
@@ -51,6 +56,13 @@ export default function ProductComboDeals({
       ),
     [comboDeals, mainProduct],
   );
+
+  // Use the editable WP total when set; otherwise fall back to the calculated sum
+  const parsedTotalComboDeal = Number(totalComboDeal);
+  const discountedPrice =
+    totalComboDeal && !Number.isNaN(parsedTotalComboDeal)
+      ? parsedTotalComboDeal
+      : calculatedDiscountedPrice;
 
   const products = comboDeals?.map(deal => deal.product.nodes[0]);
 

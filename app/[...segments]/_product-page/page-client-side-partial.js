@@ -175,6 +175,7 @@ export default function PageClientSidePartial({
 
   const comboDeals = matchedVariant?.selectProducts;
   const dealName = matchedVariant?.dealName;
+  const totalComboDeal = matchedVariant?.totalComboDeal;
 
   return (
     <>
@@ -339,6 +340,7 @@ export default function PageClientSidePartial({
               comboDeals={comboDeals}
               dealName={dealName}
               mainProduct={firstMatchedProduct}
+              totalComboDeal={totalComboDeal}
             />
           )}
         </>
