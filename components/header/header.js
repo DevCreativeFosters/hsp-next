@@ -14,6 +14,8 @@ import { useWishlist } from '@contexts/wishlist';
 
 import { useClickOutside } from '@hooks/useClickOutside';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
 import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-collapse';
@@ -198,7 +200,7 @@ export default function Header({
                   return (
                     <Button
                       background="dark"
-                      href={item.url || '#'}
+                      href={makeRelativeUrl(item.url) || '#'}
                       key={item.url}
                       rightIcon={item.iconPredefined[0] || item.icon}
                       size="small"
@@ -249,7 +251,7 @@ export default function Header({
                         (url.includes('/products/') ||
                           url.includes('/shop-by-ute-make/'))
                           ? '#'
-                          : url
+                          : makeRelativeUrl(url)
                       }
                       isToggled={currentSubmenu === name}
                       onToggleIconClick={() => {
@@ -288,7 +290,7 @@ export default function Header({
                           [styles.headerButton]:
                             variant == 'tertiary' || variant === 'septenary',
                         }}
-                        href={url}
+                        href={makeRelativeUrl(url)}
                         leftIcon={
                           iconPredefined[0] !== 'CUSTOM'
                             ? iconPredefined[0]

@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 
 import ArrowIcon from '@assets/icons/arrow-next.svg';
@@ -41,7 +43,7 @@ export default function MobileMenuItem({
                     ? styles.menuItemLabel
                     : styles.menuSubItem
                 }
-                href={subItem.url}
+                href={makeRelativeUrl(subItem.url)}
                 size="small"
                 style={subItem.special ? (j === 0 ? { ...fontStyle } : {}) : {}}
                 variant="tertiary"
@@ -78,7 +80,7 @@ export default function MobileMenuItem({
     >
       <Button
         background="dark"
-        href={!hasChildren ? url : undefined}
+        href={!hasChildren ? makeRelativeUrl(url) : undefined}
         onClick={hasChildren ? onOpenLvl3 : undefined}
         size="large"
         variant="tertiary"

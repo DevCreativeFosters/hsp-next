@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 
 import MenuArrow from '@assets/icons/arrow-next.svg';
@@ -67,7 +69,7 @@ function Products({ categories, isActive }, ref) {
                 >
                   <Button
                     className={styles.button}
-                    href={cat.url}
+                    href={makeRelativeUrl(cat.url)}
                     variant="secondary"
                   >
                     {cat.label}
@@ -104,7 +106,7 @@ function Products({ categories, isActive }, ref) {
                     <div className={styles.productInfo}>
                       <div className={styles.productTitle}>{label}</div>
                       <div className={styles.productLinkLabel}>
-                        <Link href={url}>
+                        <Link href={makeRelativeUrl(url)}>
                           View Accessories <Arrow />
                         </Link>
                       </div>

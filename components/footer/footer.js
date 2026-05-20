@@ -2,6 +2,8 @@ import Logo from '@images/logo.png';
 import clsx from 'clsx';
 import Image from 'next/image';
 
+import { makeRelativeUrl } from '@lib/helpers';
+
 import Button from '@components/button/button';
 import Container from '@components/container/container';
 
@@ -31,7 +33,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -40,7 +42,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -57,7 +59,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -66,7 +68,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -85,7 +87,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -94,7 +96,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -113,7 +115,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -122,7 +124,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -141,7 +143,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -150,7 +152,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -167,7 +169,7 @@ export default function Footer({ menus, text }) {
                       {idx === 0 ? (
                         <Button
                           footer={true}
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           rightIcon="arrow-forward"
                           variant="tertiary"
@@ -176,7 +178,7 @@ export default function Footer({ menus, text }) {
                         </Button>
                       ) : (
                         <Button
-                          href={menu.url}
+                          href={makeRelativeUrl(menu.url)}
                           inlineOffsetByPadding
                           size="xsmall"
                           variant="footer-item"
@@ -211,7 +213,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -220,7 +222,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
@@ -239,7 +241,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -248,7 +250,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
@@ -267,7 +269,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -276,7 +278,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
@@ -295,7 +297,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -304,7 +306,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
@@ -323,7 +325,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -332,7 +334,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
@@ -351,7 +353,7 @@ export default function Footer({ menus, text }) {
                         {idx === 0 ? (
                           <Button
                             footer={true}
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             rightIcon="arrow-forward"
                             variant="tertiary"
@@ -360,7 +362,7 @@ export default function Footer({ menus, text }) {
                           </Button>
                         ) : (
                           <Button
-                            href={menu.url}
+                            href={makeRelativeUrl(menu.url)}
                             inlineOffsetByPadding
                             size="xsmall"
                             variant="footer-item"
