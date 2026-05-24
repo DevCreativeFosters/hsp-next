@@ -591,11 +591,11 @@ function Orders() {
     {
       content: (
         <CheckNoOrders orders={outOrders} received={true}>
-          <h3>Looks like didn&apos;t receive an order yet</h3>
+          <h3>No outstanding orders yet</h3>
         </CheckNoOrders>
       ),
-      slug: 'outstandingordersreceived',
-      title: 'Outstanding Orders Received',
+      slug: 'outstanding',
+      title: 'Outstanding',
     },
     {
       content: (
@@ -606,8 +606,19 @@ function Orders() {
           </p>
         </CheckNoOrders>
       ),
-      slug: 'outstandingordersplaced',
-      title: 'Outstanding Orders Placed',
+      slug: 'allorders',
+      title: 'All Orders',
+    },
+    {
+      // NOTE: 'Invoices' shows completed orders (which have downloadable
+      // invoices). Swap to a dedicated invoices query if the API exposes one.
+      content: (
+        <CheckNoOrders orders={completedOrders}>
+          <h3>No invoices yet</h3>
+        </CheckNoOrders>
+      ),
+      slug: 'invoices',
+      title: 'Invoices',
     },
   ];
 

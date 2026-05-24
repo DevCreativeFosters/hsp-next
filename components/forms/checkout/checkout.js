@@ -24,6 +24,7 @@ import Loading from '@components/loading/loading';
 
 import DropShipping from '@assets/icons/drop-shipping.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
+import OnSiteFittingIcon from '@assets/icons/onsite-fitting-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
 import PaymentIcons from '@assets/images/payment-icon.png';
@@ -48,6 +49,7 @@ function CheckoutForm() {
     appliedCoupons,
     applyCoupon,
     checkoutOrder,
+    createQuote,
     loading: checkoutLoading,
     totalDiscount,
   } = useCheckout();
@@ -155,7 +157,8 @@ function CheckoutForm() {
     {
       allowDelivery: false,
       askCutomerInfo: false,
-      description: 'Get your order delivered to your Store',
+      description:
+        'Appropriate delivery costs will be added to the final order summary',
       icon: TruckIcon,
       id: 'deliver-to-store',
       noteContent: (
@@ -169,7 +172,7 @@ function CheckoutForm() {
       role: 'b2b',
       selectedAddress: {
         btnTitle: 'Edit Address',
-        title: 'Deliver to Store',
+        title: 'Deliver to Door',
       },
       selectedMenu: {
         content: (
@@ -184,14 +187,14 @@ function CheckoutForm() {
             </p>
           </>
         ),
-        title: 'Deliver to Store',
+        title: 'Deliver to Door',
       },
-      title: 'Deliver to Store',
+      title: 'Deliver to Door',
     },
     {
       allowDelivery: false,
       askCutomerInfo: false,
-      description: 'Pickup from HSP HQ in Noble Park North VIC 3977',
+      description: 'Arrange your own freight pickup from HSP HQ',
       icon: LocationIcon,
       id: 'pickup-from-hsp',
       noteContent: (
@@ -246,6 +249,32 @@ function CheckoutForm() {
         title: 'Drop Ship to Customer',
       },
       title: 'Drop Ship to Customer',
+    },
+    {
+      allowDelivery: false,
+      askCutomerInfo: false,
+      description:
+        'Get your products fitted on-site at your dealership from our local HSP specialists.',
+      icon: OnSiteFittingIcon,
+      id: 'on-site-fitting',
+      noteContent: <></>,
+      role: 'b2b',
+      selectedAddress: {
+        btnTitle: 'Change Store',
+        title: 'On-Site Fitting',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Get your products fitted on-site at your dealership from our local
+              HSP specialists.
+            </p>
+          </>
+        ),
+        title: 'On-Site Fitting',
+      },
+      title: 'On-Site Fitting',
     },
   ];
 
@@ -392,6 +421,23 @@ function CheckoutForm() {
     setLoading(false);
   };
 
+  const handleGetQuote = async () => {
+    setLoading(true);
+    const quote = await createQuote({
+      amount: cartTotal - totalDiscount,
+      notes: formData.purchaseOrderNumber
+        ? `PO: ${formData.purchaseOrderNumber}`
+        : '',
+    });
+    setLoading(false);
+
+    if (quote?.id) {
+      router.push(`/quote-status/${quote.id}`);
+    } else {
+      alert('❌ Could not create quote. Please try again.');
+    }
+  };
+
   return (
     <Container className={styles.checkoutContainer}>
       <section className={clsx(styles.checkoutMain, 'checkoutMain')}>
@@ -399,7 +445,7 @@ function CheckoutForm() {
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
             {/* Contact Details */}
-            {submitContactDetails ? (
+            {submitContactDetails && role !== 'b2b' ? (
               <div
                 className={clsx(styles.contactDetails, styles.editDetailMain)}
               >
@@ -425,7 +471,9 @@ function CheckoutForm() {
             ) : (
               <div className={styles.contactDetails}>
                 <div className={styles.heading}>
-                  <h2>Contact Details</h2>
+                  <h2>
+                    {role === 'b2b' ? 'Dealership Details' : 'Contact Details'}
+                  </h2>
                   <p>How Can We Reach You About Your Order?</p>
                 </div>
                 <div className={styles.formRow}>
@@ -499,24 +547,64 @@ function CheckoutForm() {
                       />
                     </div>
                   </div>
-                  <div className={clsx(styles.colFull, styles.submitBtn)}>
-                    <Button
-                      disabled={
-                        !formData.first_name ||
-                        !formData.last_name ||
-                        !formData.email ||
-                        !formData.phone ||
-                        (role === 'b2b' && !formData.company) ||
-                        loading ||
-                        cartItems.length === 0
-                      }
-                      onClick={handleSubmitContactDetails}
-                      size="large"
-                      variant="primary"
+                  {role === 'b2b' ? (
+                    <div
+                      className={clsx(styles.colFull, styles.dealershipTerms)}
                     >
-                      Submit Details
-                    </Button>
-                  </div>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.termsAndConditions}
+                            name="termsAndConditions"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I accept the Privacy Policy and Terms & Conditions
+                            <Link
+                              href="/privacy-terms-and-conditions"
+                              target="_blank"
+                            >
+                              Read our T&Cs{' '}
+                              <span className={styles.reqStar}>*</span>
+                            </Link>
+                          </span>
+                        </label>
+                      </div>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.marketing}
+                            name="marketing"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I agree to receiving Marketing and Promotional
+                            emails from HSP
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={clsx(styles.colFull, styles.submitBtn)}>
+                      <Button
+                        disabled={
+                          !formData.first_name ||
+                          !formData.last_name ||
+                          !formData.email ||
+                          !formData.phone ||
+                          loading ||
+                          cartItems.length === 0
+                        }
+                        onClick={handleSubmitContactDetails}
+                        size="large"
+                        variant="primary"
+                      >
+                        Submit Details
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -526,7 +614,11 @@ function CheckoutForm() {
                 <h2>How would you like to Receive your Order?</h2>
                 <p>Choose a Delivery or Install Method</p>
               </div>
-              <div className={styles.blackBoxes}>
+              <div
+                className={clsx(styles.blackBoxes, {
+                  [styles.blackBoxesFull]: role === 'b2b',
+                })}
+              >
                 {cartLoading ? (
                   <div className={styles.loading}>
                     <Loading size="large" />
@@ -631,6 +723,7 @@ function CheckoutForm() {
                                 'local-installation',
                                 'click-collect',
                                 'pickup-from-hsp',
+                                'on-site-fitting',
                               ].some(id => id === deliveryOption.id) &&
                                 (() => {
                                   const {
@@ -671,7 +764,9 @@ function CheckoutForm() {
                                 <div className={styles.drawer}>
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
-                                      'local-installation') && (
+                                      'local-installation' ||
+                                    deliveryOption.id ===
+                                      'on-site-fitting') && (
                                     <SelectLocation
                                       allStores={allStores}
                                       onSelect={onSelect}
@@ -780,50 +875,52 @@ function CheckoutForm() {
                   </div>
                 </div>
 
-                <div className={styles.groupTerms}>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.termsAndConditions}
-                            name="termsAndConditions"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I accept the Privacy Policy and Terms & Conditions
-                            <Link
-                              href="/privacy-terms-and-conditions"
-                              target="_blank"
-                            >
-                              Read our T&Cs{' '}
-                              <span className={styles.reqStar}>*</span>
-                            </Link>
-                          </span>
-                        </label>
+                {role !== 'b2b' && (
+                  <div className={styles.groupTerms}>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                              <Link
+                                href="/privacy-terms-and-conditions"
+                                target="_blank"
+                              >
+                                Read our T&Cs{' '}
+                                <span className={styles.reqStar}>*</span>
+                              </Link>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.marketing}
-                            name="marketing"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I agree to receiving Marketing and Promotional
-                            emails from HSP
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                )}
 
                 <Button
                   className={styles.placeOrderBtn}
@@ -996,6 +1093,17 @@ function CheckoutForm() {
                   </div>
                 )}
               </div>
+              {role === 'b2b' && (
+                <Button
+                  className={styles.getQuoteBtn}
+                  disabled={loading || cartItems.length === 0}
+                  onClick={handleGetQuote}
+                  type="button"
+                  variant="ghost"
+                >
+                  Get A Quote Instead
+                </Button>
+              )}
             </div>
           </div>
         </form>
