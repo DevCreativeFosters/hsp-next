@@ -103,8 +103,8 @@ export const CheckoutProvider = ({ children }) => {
 
       if (user.role === 'b2b') {
         query = `
-          mutation B2BCheckoutOrder($input: B2bCheckoutOrderInput!) {
-            b2bCheckoutOrder(input: $input) {
+          mutation DealerCheckoutOrder($input: DealerCheckoutOrderInput!) {
+            dealerCheckoutOrder(input: $input) {
               status
               message
               order_id
@@ -117,12 +117,44 @@ export const CheckoutProvider = ({ children }) => {
       const variables = { input };
 
       const res = await fetchAPI(query, { variables });
-      const data = res?.checkoutOrder ?? res?.b2bCheckoutOrder;
+      const data = res?.checkoutOrder ?? res?.dealerCheckoutOrder;
 
       setOrderResponse(data);
       return data;
     } catch (err) {
       console.error('Error creating checkout order:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 📝 Create a dealer quote (alternative to placing an order)
+  const createQuote = async ({ amount, notes = '' }) => {
+    setLoading(true);
+    try {
+      const query = `
+        mutation CreateDealerQuote {
+          createDealerQuote(input: {
+            user_id: ${parseInt(user.id)},
+            amount: "${amount}",
+            notes: ${JSON.stringify(notes)}
+          }) {
+            message
+            quote {
+              id
+              quote_number
+              amount
+              status
+            }
+          }
+        }
+      `;
+
+      const res = await fetchAPI(query);
+      return res?.createDealerQuote?.quote ?? null;
+    } catch (err) {
+      console.error('Error creating dealer quote:', err);
       return null;
     } finally {
       setLoading(false);
@@ -136,6 +168,7 @@ export const CheckoutProvider = ({ children }) => {
         applyCoupon,
         checkoutOrder,
         couponMessage,
+        createQuote,
         loading,
         orderResponse,
         totalDiscount,

@@ -84,13 +84,21 @@ function LoginForm() {
       const loginResponse = data?.userLogin;
 
       if (loginResponse?.token) {
+        // The dealer module returns role slugs like `dealer` / `dealership`,
+        // but the app's portal + checkout are built around `b2b`. Normalise
+        // all dealer-type roles to `b2b` so a real `b2b` stays unchanged.
+        const dealerRoles = ['b2b', 'dealer', 'dealership'];
+        const normalizedRole = dealerRoles.includes(loginResponse.role)
+          ? 'b2b'
+          : loginResponse.role;
+
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
-        localStorage.setItem('userRole', loginResponse.role);
+        localStorage.setItem('userRole', normalizedRole);
 
         setUser({
           id: loginResponse.userId,
-          role: loginResponse.role,
+          role: normalizedRole,
           token: loginResponse.token,
         });
 
@@ -98,7 +106,7 @@ function LoginForm() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push(`/account/${loginResponse.role}`);
+        router.push(`/account/${normalizedRole}`);
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }

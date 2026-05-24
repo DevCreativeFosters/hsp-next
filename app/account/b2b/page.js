@@ -4,11 +4,9 @@ import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 
 import AccountDetails from '@components/account/account-details/account-details';
-import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
-import Referrals from '@components/account/referrals/referrals';
-import StoreResources from '@components/account/store-resources/store-resources';
+import Quotes from '@components/account/quotes/quotes';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -38,29 +36,19 @@ export default async function RetailPage() {
               title: 'Account Details',
             },
             {
-              content: <Address />,
-              slug: 'address',
-              title: 'Address',
+              content: <Quotes />,
+              slug: 'quotes',
+              title: 'Quotes',
             },
             {
               content: <Orders />,
               slug: 'orderdashboard',
-              title: 'Orders',
-            },
-            {
-              content: <Referrals />,
-              slug: 'referrals',
-              title: 'Referrals',
+              title: 'Order Dashboard',
             },
             {
               content: <WishlistItems />,
               slug: 'wishlist',
               title: 'Wishlist',
-            },
-            {
-              content: <StoreResources />,
-              slug: 'resources',
-              title: 'Resources',
             },
             {
               content: (
