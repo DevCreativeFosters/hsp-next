@@ -15,7 +15,6 @@ import { getProductPreview } from '@lib/api/get-product-preview';
 import { getProductSeo } from '@lib/api/get-product-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
-import { getVehicleCarousel } from '@lib/api/get-vehicle-carousel';
 import { renderBlock } from '@lib/block';
 import { prepareSchemas } from '@lib/prepare-schemas';
 import { metadata } from '@lib/seo';
@@ -116,10 +115,6 @@ export default async function Product({ params, searchParams }) {
   };
 
   const allLocations = await getStores();
-
-  // "Vehicle flexible content" carousel lives on the Make_and_model (vehicle),
-  // keyed by the model slug.
-  const vehicleCarousel = await getVehicleCarousel(params.modelSlug);
 
   let products;
 
@@ -230,7 +225,9 @@ export default async function Product({ params, searchParams }) {
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
       ))}
-      <CarouselContentBlock block={vehicleCarousel} />
+      <CarouselContentBlock
+        block={firstMatchedProduct?.carouselFlexibleContentBlock?.block}
+      />
     </Layout>
   );
 }

@@ -31,7 +31,12 @@ export default function CarouselContentBlock({ block }) {
         {(title || description) && (
           <div className={styles.header}>
             {title && <h2 className={styles.title}>{title}</h2>}
-            {description && <p className={styles.description}>{description}</p>}
+            {description && (
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )}
           </div>
         )}
         {slides.length > 0 && (
