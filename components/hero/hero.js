@@ -99,92 +99,71 @@ export default function Hero({ slides, transition = 'fade' }) {
       ref={heroRef}
     >
       <div className={styles.track} data-index={currentSlideIndex}>
-        {slides.map(
-          (
-            {
-              backgroundImage,
-              backgroundImageMobile,
-              backgroundImagePosition,
-              backgroundImagePositionMobile,
-            },
-            index,
-          ) => {
-            return (
-              <div
-                className={clsx(styles.slide, {
-                  [styles.active]: index === currentSlideIndex,
-                })}
-                key={index}
-              >
-                {Boolean(
-                  preloadedAssets.includes(index) &&
-                    (backgroundImage?.node?.sourceUrl ||
-                      backgroundImageMobile?.node?.sourceUrl),
-                ) ? (
-                  currentSlide.title && currentSlide.description ? (
-                    <Image
-                      alt={
-                        isMobile
-                          ? backgroundImageMobile?.node?.altText ||
-                            backgroundImage?.node?.altText ||
-                            ''
-                          : backgroundImage?.node?.altText || ''
-                      }
-                      className={
-                        isMobile
-                          ? styles.backgroundImageMobile
-                          : styles.backgroundImage
-                      }
-                      fill={true}
-                      src={
-                        isMobile
-                          ? backgroundImageMobile?.node?.sourceUrl ||
-                            backgroundImage?.node?.sourceUrl
-                          : backgroundImage?.node?.sourceUrl
-                      }
-                      style={{
-                        objectPosition: isMobile
-                          ? backgroundImagePositionMobile
-                          : backgroundImagePosition,
-                      }}
-                    />
-                  ) : (
-                    <Link href={makeRelativeUrl(currentSlide.buttonLink.url)}>
-                      <Image
-                        alt={
-                          isMobile
-                            ? backgroundImageMobile?.node?.altText ||
-                              backgroundImage?.node?.altText ||
-                              ''
-                            : backgroundImage?.node?.altText || ''
-                        }
-                        className={
-                          isMobile
-                            ? styles.backgroundImageMobile
-                            : styles.backgroundImage
-                        }
-                        fill={true}
-                        src={
-                          isMobile
-                            ? backgroundImageMobile?.node?.sourceUrl ||
-                              backgroundImage?.node?.sourceUrl
-                            : backgroundImage?.node?.sourceUrl
-                        }
-                        style={{
-                          objectPosition: isMobile
-                            ? backgroundImagePositionMobile
-                            : backgroundImagePosition,
-                        }}
-                      />
-                    </Link>
-                  )
+        {slides.map((slide, index) => {
+          const {
+            backgroundImage,
+            backgroundImageMobile,
+            backgroundImagePosition,
+            backgroundImagePositionMobile,
+          } = slide;
+
+          const hasAsset = Boolean(
+            preloadedAssets.includes(index) &&
+              (backgroundImage?.node?.sourceUrl ||
+                backgroundImageMobile?.node?.sourceUrl),
+          );
+
+          const slideImage = (
+            <Image
+              alt={
+                isMobile
+                  ? backgroundImageMobile?.node?.altText ||
+                    backgroundImage?.node?.altText ||
+                    ''
+                  : backgroundImage?.node?.altText || ''
+              }
+              className={
+                isMobile ? styles.backgroundImageMobile : styles.backgroundImage
+              }
+              fill={true}
+              src={
+                isMobile
+                  ? backgroundImageMobile?.node?.sourceUrl ||
+                    backgroundImage?.node?.sourceUrl
+                  : backgroundImage?.node?.sourceUrl
+              }
+              style={{
+                objectPosition: isMobile
+                  ? backgroundImagePositionMobile
+                  : backgroundImagePosition,
+              }}
+            />
+          );
+
+          // Make the whole banner clickable (mobile + desktop) when the slide
+          // has a link. The CTA button / dots / arrows sit in a separate
+          // overlay, so they keep working.
+          const linkUrl = slide.buttonLink?.url;
+
+          return (
+            <div
+              className={clsx(styles.slide, {
+                [styles.active]: index === currentSlideIndex,
+              })}
+              key={index}
+            >
+              {hasAsset ? (
+                linkUrl ? (
+                  <Link href={makeRelativeUrl(linkUrl)}>{slideImage}</Link>
                 ) : (
-                  <div />
-                )}
-              </div>
-            );
-          },
-        )}
+                  slideImage
+                )
+              ) : (
+                <div />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {currentSlide.title && currentSlide.description ? (
