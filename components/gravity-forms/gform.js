@@ -19,6 +19,7 @@ import useGravityForm from '@hooks/useGravityForm';
 
 import { WORDPRESS_API_URL } from '@lib/config';
 import { updateGtagUserData } from '@lib/gtag-user-data';
+import { accountSlug } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import DisclaimerTC from '@components/disclaimer-tc/disclaimer-tc';
@@ -190,7 +191,9 @@ export default function GForm({
         const errors = response.data.submitGfForm.errors;
         if (!errors?.length) {
           if (form.databaseId == 4 && user?.id) {
-            router.push(`/account/${user.role}#product-registration`);
+            router.push(
+              `/account/${accountSlug(user.role)}#product-registration`,
+            );
           }
 
           // Combine field definitions with state values

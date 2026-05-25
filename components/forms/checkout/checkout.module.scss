@@ -852,6 +852,54 @@
           }
         }
 
+        .quoteForm {
+          margin-top: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          .inputGroup {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            label {
+              font-size: 14px;
+              font-weight: 600;
+              color: #000;
+            }
+
+            input,
+            textarea {
+              border: solid 1px #dedede;
+              border-radius: 6px;
+              padding: 10px 12px;
+              font-size: 14px;
+              width: 100%;
+              outline: none;
+              resize: vertical;
+              font-family: var(--font-secondary);
+            }
+          }
+
+          .getQuoteBtn {
+            margin-top: 4px;
+          }
+        }
+
+        .quoteCancel {
+          background: none;
+          border: 0;
+          color: #707070;
+          font-size: 14px;
+          cursor: pointer;
+          text-align: center;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
         .checkoutSummary {
           margin: 30px 0 0;
 

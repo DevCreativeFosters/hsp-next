@@ -332,6 +332,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -382,6 +414,22 @@ export function CartProvider({ children }) {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // When logged in, cart operations must be tied to the user's persistent
+  // cart. Otherwise items are added to the guest session, and the first
+  // authenticated request (e.g. wishlist) makes WooCommerce swap in the
+  // user's empty cart and wipe the guest cart. Passing the auth token (and
+  // userId) keeps add + read on the same user cart. Guests pass nothing.
+  const authConfig = () => {
+    if (typeof window === 'undefined') return {};
+    const authToken = localStorage.getItem('authToken');
+    return authToken ? { authToken } : {};
+  };
+  const currentUserId = () => {
+    if (typeof window === 'undefined') return null;
+    const id = parseInt(localStorage.getItem('userId'));
+    return Number.isNaN(id) ? null : id;
+  };
+
   // 🔹 Fetch Cart
   const getCartItems = useCallback(async () => {
     setLoading(true);
@@ -426,7 +474,7 @@ export function CartProvider({ children }) {
         }
       `;
 
-      const res = await fetchAPI(query);
+      const res = await fetchAPI(query, { ...authConfig() });
 
       const data = res?.getCartItems;
 
@@ -462,7 +510,11 @@ export function CartProvider({ children }) {
         }
       `;
 
-      const data = await fetchAPI(query, { variables: { input: item } });
+      const userId = currentUserId();
+      const data = await fetchAPI(query, {
+        variables: { input: { ...item, ...(userId && { userId }) } },
+        ...authConfig(),
+      });
 
       if (!compatibleWillBeAdded) {
         await getCartItems();
@@ -502,6 +554,7 @@ export function CartProvider({ children }) {
             items: items,
           },
         },
+        ...authConfig(),
       });
 
       await getCartItems();
@@ -541,6 +594,7 @@ export function CartProvider({ children }) {
             items: items,
           },
         },
+        ...authConfig(),
       });
 
       await getCartItems();
@@ -566,7 +620,7 @@ export function CartProvider({ children }) {
         }
       `;
 
-      await fetchAPI(query, { variables: { input: item } });
+      await fetchAPI(query, { variables: { input: item }, ...authConfig() });
 
       await getCartItems();
     },
@@ -588,7 +642,7 @@ export function CartProvider({ children }) {
 
       const variables = { input: { cartItemKey } };
 
-      await fetchAPI(query, { variables });
+      await fetchAPI(query, { variables, ...authConfig() });
 
       await getCartItems();
     },

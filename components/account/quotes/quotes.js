@@ -31,6 +31,9 @@ const GET_QUOTES = `
 // The accept/cancel/request mutations take a single `input` object whose type
 // name isn't exposed in the API collection, so we inline the values (matching
 // the Postman examples) rather than using GraphQL variables.
+const getAuthToken = () =>
+  typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+
 const runQuoteAction = async (mutation, quoteId, fieldName, fieldValue) => {
   const query = `
     mutation {
@@ -46,13 +49,21 @@ const runQuoteAction = async (mutation, quoteId, fieldName, fieldValue) => {
       }
     }
   `;
-  return fetchAPI(query);
+  // Quote mutations require the dealer auth token (same as createDealerQuote).
+  return fetchAPI(query, { authToken: getAuthToken() });
+};
+
+const isExpired = quote => {
+  if (quote.is_expired != null) return quote.is_expired;
+  if (!quote.expiry_date) return false;
+  const exp = new Date(quote.expiry_date);
+  return !Number.isNaN(exp.getTime()) && exp < new Date();
 };
 
 const isClosed = quote => {
   const status = (quote.status || '').toLowerCase();
   return (
-    quote.is_expired ||
+    isExpired(quote) ||
     /accept|cancel|expire|reject|close|complete/.test(status)
   );
 };
@@ -61,7 +72,7 @@ function Quote({ onChanged, quote }) {
   const [busy, setBusy] = useState(false);
   const closed = isClosed(quote);
 
-  const statusLabel = quote.is_expired
+  const statusLabel = isExpired(quote)
     ? 'Quote Expired'
     : `Quote ${(quote.status || '').charAt(0).toUpperCase()}${(
         quote.status || ''
@@ -171,7 +182,10 @@ export default function Quotes() {
       return;
     }
     try {
-      const res = await fetchAPI(GET_QUOTES, { variables: { userId } });
+      const res = await fetchAPI(GET_QUOTES, {
+        authToken: getAuthToken(),
+        variables: { userId },
+      });
       setQuotes(res?.dealerQuotes || []);
     } catch (e) {
       console.error('Error getting quotes:', e);

@@ -10,6 +10,7 @@ import { useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
 
 import { fetchAPI } from '@lib/fetch-api';
+import { accountSlug } from '@lib/helpers';
 
 import PasswordShowIcon from '@assets/icons/pwd-cross.svg';
 
@@ -106,7 +107,7 @@ function LoginForm() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push(`/account/${normalizedRole}`);
+        router.push(`/account/${accountSlug(normalizedRole)}`);
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }
