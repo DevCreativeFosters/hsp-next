@@ -14,7 +14,7 @@ import { useWishlist } from '@contexts/wishlist';
 
 import { useClickOutside } from '@hooks/useClickOutside';
 
-import { makeRelativeUrl } from '@lib/helpers';
+import { accountSlug, makeRelativeUrl } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import ChooseYourVehicle from '@components/choose-your-vehicle/choose-your-vehicle';
@@ -216,7 +216,7 @@ export default function Header({
                 })}
                 href={
                   hasWishlistItems
-                    ? `/account/${user?.role}#wishlist`
+                    ? `/account/${accountSlug(user?.role)}#wishlist`
                     : user?.id
                       ? '#'
                       : '/login'
@@ -336,7 +336,7 @@ export default function Header({
                     })}
                     href={
                       hasWishlistItems
-                        ? `/account/${user?.role}#wishlist`
+                        ? `/account/${accountSlug(user?.role)}#wishlist`
                         : user?.id
                           ? '#'
                           : '/login'
@@ -357,7 +357,11 @@ export default function Header({
                 >
                   <Button
                     background="dark"
-                    href={user?.id ? `/account/${user?.role}` : '/login'}
+                    href={
+                      user?.id
+                        ? `/account/${accountSlug(user?.role)}`
+                        : '/login'
+                    }
                     rightIcon="account-profile"
                     size="xsmall"
                     style={{ borderRadius: '24px' }}

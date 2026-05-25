@@ -55,6 +55,11 @@ function CheckoutForm() {
   } = useCheckout();
   const [couponCode, setCouponCode] = useState('');
 
+  // Dealer quote form (amount + notes) shown via "Get A Quote Instead"
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [quoteAmount, setQuoteAmount] = useState('');
+  const [quoteNotes, setQuoteNotes] = useState('');
+
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
     additionalCustomerInfo: {
@@ -329,9 +334,15 @@ function CheckoutForm() {
 
         if (user?.id && user?.role === 'b2b') {
           const options = await getStoreDeliveryOptions(user.id);
-          filteredOptions = filteredOptions.filter(opt =>
-            options.includes(opt.id),
-          );
+          // Only restrict to the store's configured options when it actually
+          // has some. If the dealer's store has none set (or no store linked),
+          // fall back to showing all default b2b options instead of a blank
+          // section.
+          if (options && options.length > 0) {
+            filteredOptions = filteredOptions.filter(opt =>
+              options.includes(opt.id),
+            );
+          }
         }
 
         setDeliveryOptions(filteredOptions);
@@ -421,13 +432,20 @@ function CheckoutForm() {
     setLoading(false);
   };
 
-  const handleGetQuote = async () => {
+  const openQuoteForm = () => {
+    setQuoteAmount(String(cartTotal - totalDiscount));
+    setQuoteNotes(
+      formData.purchaseOrderNumber ? `PO: ${formData.purchaseOrderNumber}` : '',
+    );
+    setShowQuoteForm(true);
+  };
+
+  const handleSubmitQuote = async () => {
+    if (!quoteAmount) return;
     setLoading(true);
     const quote = await createQuote({
-      amount: cartTotal - totalDiscount,
-      notes: formData.purchaseOrderNumber
-        ? `PO: ${formData.purchaseOrderNumber}`
-        : '',
+      amount: quoteAmount,
+      notes: quoteNotes,
     });
     setLoading(false);
 
@@ -1093,17 +1111,55 @@ function CheckoutForm() {
                   </div>
                 )}
               </div>
-              {role === 'b2b' && (
-                <Button
-                  className={styles.getQuoteBtn}
-                  disabled={loading || cartItems.length === 0}
-                  onClick={handleGetQuote}
-                  type="button"
-                  variant="ghost"
-                >
-                  Get A Quote Instead
-                </Button>
-              )}
+              {role === 'b2b' &&
+                (showQuoteForm ? (
+                  <div className={styles.quoteForm}>
+                    <div className={styles.inputGroup}>
+                      <label>Quote Amount (AUD)</label>
+                      <input
+                        min="0"
+                        onChange={e => setQuoteAmount(e.target.value)}
+                        step="0.01"
+                        type="number"
+                        value={quoteAmount}
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label>Notes</label>
+                      <textarea
+                        onChange={e => setQuoteNotes(e.target.value)}
+                        placeholder="Add any notes for this quote (optional)"
+                        rows={3}
+                        value={quoteNotes}
+                      />
+                    </div>
+                    <Button
+                      className={styles.getQuoteBtn}
+                      disabled={loading || !quoteAmount}
+                      onClick={handleSubmitQuote}
+                      type="button"
+                    >
+                      Submit Quote
+                    </Button>
+                    <button
+                      className={styles.quoteCancel}
+                      onClick={() => setShowQuoteForm(false)}
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <Button
+                    className={styles.getQuoteBtn}
+                    disabled={loading || cartItems.length === 0}
+                    onClick={openQuoteForm}
+                    type="button"
+                    variant="ghost"
+                  >
+                    Get A Quote Instead
+                  </Button>
+                ))}
             </div>
           </div>
         </form>

@@ -18,10 +18,11 @@ import PdfIcon from '@assets/icons/pdf-icon.svg';
 import styles from './b2b.module.scss';
 
 export default async function RetailPage() {
-  const content = await getPageData('/account/b2b');
-
-  const contentBlocks = await Promise.all(
-    content?.flexibleContent?.blocks?.map(renderBlock) || [],
+  // The dealer Support tab reuses the same "Contact Us" support form the retail
+  // account renders (the b2b WP page has no form block of its own yet).
+  const supportContent = await getPageData('/account/retail');
+  const supportBlocks = await Promise.all(
+    supportContent?.flexibleContent?.blocks?.map(renderBlock) || [],
   );
 
   return (
@@ -53,7 +54,7 @@ export default async function RetailPage() {
             {
               content: (
                 <Fragment>
-                  {contentBlocks[0]}
+                  {supportBlocks[0]}
                   <div className={styles.warrantyBlock}>
                     <h3 className={styles.sectionTitle}>Warranty Procedures</h3>
                     <p>

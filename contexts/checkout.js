@@ -151,7 +151,16 @@ export const CheckoutProvider = ({ children }) => {
         }
       `;
 
-      const res = await fetchAPI(query);
+      // createDealerQuote identifies the dealer from the auth token, so it
+      // must be sent (otherwise the backend returns "Only dealers can create
+      // quotes"). Fall back to localStorage if the context token is missing.
+      const authToken =
+        user?.token ||
+        (typeof window !== 'undefined'
+          ? localStorage.getItem('authToken')
+          : null);
+
+      const res = await fetchAPI(query, { authToken });
       return res?.createDealerQuote?.quote ?? null;
     } catch (err) {
       console.error('Error creating dealer quote:', err);
