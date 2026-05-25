@@ -1,14 +1,12 @@
 import { Fragment } from 'react';
 
-import { getPageData } from '@lib/api/get-page-data';
-import { renderBlock } from '@lib/block';
-
 import AccountDetails from '@components/account/account-details/account-details';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
 import Quotes from '@components/account/quotes/quotes';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
+import GravityFormWrapper from '@components/gravity-forms/gravity-form-wrapper';
 import Layout from '@components/layout/layout';
 import Tabs from '@components/tabs/tabs';
 
@@ -17,14 +15,10 @@ import PdfIcon from '@assets/icons/pdf-icon.svg';
 
 import styles from './b2b.module.scss';
 
-export default async function RetailPage() {
-  // The dealer Support tab reuses the same "Contact Us" support form the retail
-  // account renders (the b2b WP page has no form block of its own yet).
-  const supportContent = await getPageData('/account/retail');
-  const supportBlocks = await Promise.all(
-    supportContent?.flexibleContent?.blocks?.map(renderBlock) || [],
-  );
+// Gravity Form id for the "Contact Us" support form.
+const SUPPORT_FORM_ID = 7;
 
+export default async function RetailPage() {
   return (
     <Layout title="Retail Account">
       <Container>
@@ -54,7 +48,16 @@ export default async function RetailPage() {
             {
               content: (
                 <Fragment>
-                  {supportBlocks[0]}
+                  <div className={styles.supportContact}>
+                    <h3 className={styles.sectionTitle}>
+                      Need Support? Contact Us
+                    </h3>
+                    <p>
+                      Fill out the form below and one of our team members will
+                      get back to you ASAP!
+                    </p>
+                    <GravityFormWrapper attributes={{ id: SUPPORT_FORM_ID }} />
+                  </div>
                   <div className={styles.warrantyBlock}>
                     <h3 className={styles.sectionTitle}>Warranty Procedures</h3>
                     <p>
