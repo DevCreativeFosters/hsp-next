@@ -79,6 +79,15 @@
   object-fit: cover;
 }
 
+// The Next <Image fill> is absolutely positioned and escapes its <a>, leaving
+// it 0x0 and unclickable. Give the link a real full-size box over the slide.
+.bannerLink {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: var(--z-index-hero-bg);
+}
+
 .content {
   position: relative;
   z-index: var(--z-index-component);
@@ -178,6 +187,15 @@
     align-items: center;
     height: 100%;
     margin: 0 auto;
+
+    // The full-size container would otherwise capture every banner click on
+    // desktop (it's display:none on mobile, which is why the link worked
+    // there). Let clicks pass through to the banner link; keep arrows active.
+    pointer-events: none;
+
+    button {
+      pointer-events: auto;
+    }
   }
 }
 
