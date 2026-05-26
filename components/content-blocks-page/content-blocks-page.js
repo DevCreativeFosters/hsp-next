@@ -1,3 +1,4 @@
+import CarouselContentBlock from '@components/carousel-content-block/carousel-content-block';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 import Wysiwyg from '@components/wysiwyg/wysiwyg';
@@ -6,6 +7,7 @@ import styles from '../../app/[...segments]/_product-category-or-dynamic-page/pa
 
 export default async function ContentBlocksPage({
   blocks,
+  carousel,
   pageContent,
   title,
 }) {
@@ -18,6 +20,7 @@ export default async function ContentBlocksPage({
         </Container>
       )}
       {blocks && blocks?.map(block => block)}
+      <CarouselContentBlock block={carousel} />
     </Layout>
   );
 }
