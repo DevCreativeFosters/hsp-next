@@ -154,7 +154,12 @@ export default function Hero({ slides, transition = 'fade' }) {
             >
               {hasAsset ? (
                 linkUrl ? (
-                  <Link href={makeRelativeUrl(linkUrl)}>{slideImage}</Link>
+                  <Link
+                    className={styles.bannerLink}
+                    href={makeRelativeUrl(linkUrl)}
+                  >
+                    {slideImage}
+                  </Link>
                 ) : (
                   slideImage
                 )
