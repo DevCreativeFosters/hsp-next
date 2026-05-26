@@ -5,18 +5,13 @@ import Container from '@components/container/container';
 
 import styles from './carousel-content-block.module.scss';
 
-// Renders the WP `carouselFlexibleContentBlock` field: a Title + Description +
-// an image slider ("See It For Real"). The field is a flexible-content list of
-// layouts (Title / Description / ImageCarousel), distinguished by __typename.
-export default function CarouselContentBlock({ block }) {
-  if (!Array.isArray(block) || block.length === 0) return null;
-
-  const find = suffix => block.find(b => b?.__typename?.endsWith(suffix));
-
-  const title = find('TitleLayout')?.description;
-  const description = find('DescriptionLayout')?.description;
-  const images = find('ImageCarouselLayout')?.image?.nodes || [];
-
+// Renders the "Carousel Flexible Content Block" page-builder layout:
+// a Title + WYSIWYG Description + an image slider ("See It For Real").
+export default function CarouselContentBlock({
+  description,
+  images = [],
+  title,
+}) {
   if (!title && !description && images.length === 0) return null;
 
   const slides = images.map((img, index) => (
