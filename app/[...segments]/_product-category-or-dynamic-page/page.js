@@ -46,7 +46,6 @@ export default async function DynamicPage({ params }) {
         {prepareSchemas(content?.schemaProSchemas)}
         <ContentBlocksPage
           blocks={contentBlocks}
-          carousel={content?.carouselFlexibleContentBlock?.block}
           pageContent={pageContent}
           title={title}
         />
