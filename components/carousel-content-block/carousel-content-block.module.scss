@@ -1,5 +1,5 @@
 .block {
-  background: #181616;
+  background: #000;
   padding: 48px 0;
   color: #fff;
 
@@ -9,11 +9,22 @@
 }
 
 .header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 24px;
 
+  @media (width <=767px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .title {
+    flex-shrink: 0;
     font-size: clamp(24px, 2vw, 34px);
-    margin: 0 0 8px;
+    margin: 0;
     color: #fff;
   }
 
@@ -21,8 +32,14 @@
     font-size: clamp(14px, 1.04vw, 16px);
     color: rgb(255 255 255 / 80%);
     margin: 0;
-    max-width: 640px;
+    max-width: 420px;
     line-height: 1.4;
+    text-align: right;
+
+    @media (width <=767px) {
+      max-width: none;
+      text-align: left;
+    }
   }
 }
 
@@ -30,7 +47,7 @@
   .slide {
     border-radius: 8px;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     background: #2a2a2a;
 
     img {

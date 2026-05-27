@@ -45,7 +45,7 @@ export default function CarouselContentBlock({
               slidesPerView: 1.2,
               spaceBetween: 16,
             }}
-            showNavigation
+            showNavigation={images.length > 4}
             slides={slides}
           />
         )}
