@@ -53,14 +53,17 @@ export default function ProductMakeGrid({
   );
 
   const priorityOrder = [
-    'electric-roller-cover',
-    'roll-up-tonneau-cover',
-    'load-rack-pro', // if exists
-    'load-rack-jnr', // if exists
-    'nz-load-slide',
-    'ute-sports-bar',
-    'tailgate-lock',
-    'tailgate-assist',
+    'electric-roller-cover', // Electric Roll Cover
+    'roll-up-tonneau-cover', // Roll Mate
+    'load-rack-pro', // Load Rack Pro (future slug)
+    'load-bar', // current equivalent until renamed
+    'load-rack-jnr', // Load Rack JNR (future slug)
+    'ladder-rack', // current equivalent until renamed
+    'nz-load-slide', // Load Slide (NZ)
+    'ute-tray-slide', // Load Slide (AU - currently "Tray Sliders")
+    'ute-sports-bar', // Armour Bar
+    'tailgate-lock', // Tailgate Lock
+    'tailgate-assist', // Tailgate Assist
   ];
 
   const isMobile = useIsMobile();
