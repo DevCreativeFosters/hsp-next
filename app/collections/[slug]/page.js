@@ -1,3 +1,7 @@
+import { Fragment } from 'react';
+
+import { getMakeAndModelBlocks } from '@lib/api/get-make-and-model-blocks';
+import { renderBlock } from '@lib/block';
 import { fetchAPI } from '@lib/fetch-api';
 import { makeRelativeUrl } from '@lib/helpers';
 
@@ -62,6 +66,11 @@ async function VehicleSelector({ params }) {
   const data = await getData(slug);
   const model = data.model;
 
+  const flexibleBlocks = await getMakeAndModelBlocks(slug);
+  const contentBlocks = await Promise.all(
+    flexibleBlocks?.map(block => renderBlock(block)) || [],
+  );
+
   return (
     <Layout title="Vehicle Selector | HSP">
       <Container>
@@ -107,6 +116,9 @@ async function VehicleSelector({ params }) {
         titleTag={['h2']}
         titleTagStyle={['h2']}
       />
+      {contentBlocks?.map((contentBlock, index) => (
+        <Fragment key={index}>{contentBlock}</Fragment>
+      ))}
     </Layout>
   );
 }
