@@ -83,6 +83,7 @@ function CheckoutForm() {
     selectedStoreAddress: '',
     state: '',
     termsAndConditions: false,
+    vehicleIdentifier: '',
   });
 
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
@@ -374,6 +375,7 @@ function CheckoutForm() {
       'termsAndConditions',
       'payment_method',
       'orderType',
+      ...(role === 'b2b' ? ['purchaseOrderNumber', 'vehicleIdentifier'] : []),
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -535,44 +537,76 @@ function CheckoutForm() {
                     </div>
                   </div>
                   {role === 'b2b' ? (
-                    <div
-                      className={clsx(styles.colFull, styles.dealershipTerms)}
-                    >
-                      <div className={styles.selectOption}>
-                        <label>
+                    <>
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
+                          <label>
+                            Purchase Order Number
+                            <span className={styles.reqStar}>*</span>
+                          </label>
                           <input
-                            checked={formData.termsAndConditions}
-                            name="termsAndConditions"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I accept the Privacy Policy and Terms & Conditions
-                            <Link
-                              href="/privacy-terms-and-conditions"
-                              target="_blank"
-                            >
-                              Read our T&Cs{' '}
-                              <span className={styles.reqStar}>*</span>
-                            </Link>
-                          </span>
-                        </label>
+                            name="purchaseOrderNumber"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.purchaseOrderNumber}
+                          />
+                        </div>
                       </div>
-                      <div className={styles.selectOption}>
-                        <label>
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
+                          <label>
+                            VIN
+                            <span className={styles.reqStar}>*</span>
+                          </label>
                           <input
-                            checked={formData.marketing}
-                            name="marketing"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I agree to receiving Marketing and Promotional
-                            emails from HSP
-                          </span>
-                        </label>
+                            name="vehicleIdentifier"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.vehicleIdentifier}
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div
+                        className={clsx(styles.colFull, styles.dealershipTerms)}
+                      >
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                              <Link
+                                href="/privacy-terms-and-conditions"
+                                target="_blank"
+                              >
+                                Read our T&Cs{' '}
+                                <span className={styles.reqStar}>*</span>
+                              </Link>
+                            </span>
+                          </label>
+                        </div>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <div className={clsx(styles.colFull, styles.submitBtn)}>
                       <Button
