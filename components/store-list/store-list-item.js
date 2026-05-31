@@ -20,6 +20,8 @@ export default function StoreListItem({
   showIndex = true,
   wideLayout = false,
 }) {
+  if (!item) return null;
+
   const { address, color, displays, label, location, name, storeIcon, tel } =
     item;
   const telNormalized = tel?.toString()?.replaceAll(/([^0-9+])/gi, '');
