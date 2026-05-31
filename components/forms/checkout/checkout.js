@@ -22,7 +22,6 @@ import SelectLocation from '@components/checkout-drawers/select-location';
 import Container from '@components/container/container';
 import Loading from '@components/loading/loading';
 
-import DropShipping from '@assets/icons/drop-shipping.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
 import OnSiteFittingIcon from '@assets/icons/onsite-fitting-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
@@ -224,36 +223,6 @@ function CheckoutForm() {
         title: 'Pickup From HSP',
       },
       title: 'Pickup From HSP',
-    },
-    {
-      allowDelivery: true,
-      askCutomerInfo: true,
-      description:
-        'Get your products sent directly to your customers COMMERCIAL address',
-      icon: DropShipping,
-      id: 'drop-ship-to-customer',
-      noteContent: (
-        <>
-          <p>
-            <strong>Please Note:</strong> Freight times will vary depending on
-            location
-          </p>
-        </>
-      ),
-      role: 'b2b',
-      selectedAddress: {
-        btnTitle: 'Edit Delivery Details',
-        title: 'Drop Ship to Customer',
-      },
-      selectedMenu: {
-        content: (
-          <>
-            <p>Get your products sent directly to a customers address</p>
-          </>
-        ),
-        title: 'Drop Ship to Customer',
-      },
-      title: 'Drop Ship to Customer',
     },
     {
       allowDelivery: false,
