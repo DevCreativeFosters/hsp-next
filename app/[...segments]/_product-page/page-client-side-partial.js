@@ -335,7 +335,7 @@ export default function PageClientSidePartial({
             specificationContent={specification}
             specificationDescription={specificationDescription}
           />
-          {comboDeals && comboDeals?.length > 0 && (
+          {comboDeals && comboDeals?.length > 0 && user?.role !== 'b2b' && (
             <ProductComboDeals
               comboDeals={comboDeals}
               dealName={dealName}
