@@ -1,16 +1,21 @@
 .container {
-  margin-block: 24px;
-  padding-block: 24px;
+  display: flex;
+  justify-content: center;
+}
 
-  @include bp(large) {
-    margin-block: 48px;
-    padding-block: 48px;
-  }
+.link {
+  display: block;
+  max-width: 600px;
+  width: 100%;
 }
 
 .desktopImage {
   width: 100%;
   height: auto;
+  max-width: 600px;
+  border-radius: var(--border-radius-md);
+  margin-inline: auto;
+  display: block;
 }
 
 .hideOnMobile {
@@ -25,6 +30,9 @@
   display: block;
   width: 100%;
   height: auto;
+  max-width: 600px;
+  border-radius: var(--border-radius-md);
+  margin-inline: auto;
 
   @include bp(medium) {
     display: none;

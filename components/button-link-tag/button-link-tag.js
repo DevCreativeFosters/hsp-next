@@ -11,15 +11,14 @@ export default function ButtonLinkTag({ buttonLink, buttonText }) {
 
   if (!label || !href) return null;
 
+  const isExternal = /^https?:\/\//.test(href);
+  const target = buttonLink?.target || (isExternal ? '_blank' : null);
+
   return (
     <section className={styles.block}>
-      <Container>
+      <Container flexibleBlockPadding>
         <div className={styles.inner}>
-          <Button
-            href={href}
-            target={buttonLink?.target || null}
-            variant="primary"
-          >
+          <Button href={href} target={target} variant="primary">
             {label}
           </Button>
         </div>

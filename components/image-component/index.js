@@ -40,14 +40,19 @@ export default function ImageComponent({ desktopImage, link, mobileImage }) {
   );
 
   const linkUrl = link?.url ? makeRelativeUrl(link.url) : null;
+  const isExternal = linkUrl && /^https?:\/\//.test(linkUrl);
+  const linkTarget = link?.target || (isExternal ? '_blank' : undefined);
+  const linkRel = isExternal ? 'noopener noreferrer' : undefined;
 
   return (
-    <Container className={styles.container}>
+    <Container className={styles.container} flexibleBlockPadding>
       {linkUrl ? (
         <Link
           aria-label={link?.title || undefined}
+          className={styles.link}
           href={linkUrl}
-          target={link?.target || undefined}
+          rel={linkRel}
+          target={linkTarget}
         >
           {images}
         </Link>
