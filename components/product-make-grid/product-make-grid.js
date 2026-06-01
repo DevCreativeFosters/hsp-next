@@ -44,6 +44,11 @@ export default function ProductMakeGrid({
   titleTag,
   titleTagStyle,
 }) {
+  // Treat undefined as "on" so missing CMS data (e.g. testing WP not yet
+  // exposing the show_filters ACF field) still renders the sidebar.
+  // An explicit `false` from the editor still hides it.
+  const filtersOn = showFilters !== false;
+
   const availableBrands = products.map(
     item => new URL(item.link.url, 'http://_').pathname.split('/')[2],
   );
@@ -193,7 +198,7 @@ export default function ProductMakeGrid({
   }, [selectedBrands, selectedSortOption]);
 
   return (
-    <Container collapseTopPadding={showFilters} flexibleBlockPadding>
+    <Container collapseTopPadding={filtersOn} flexibleBlockPadding>
       {title && (
         <DynamicTitle
           className={clsx(styles.title, styles[alignment] || styles.left)}
@@ -216,7 +221,7 @@ export default function ProductMakeGrid({
         </div>
       )}
       <div className={styles.productMain}>
-        {showFilters && (
+        {filtersOn && (
           <div className={styles.leftPart}>
             <div className={styles.mobileTitle}>Sort By:</div>
             <div className={styles.leftwrap}>
@@ -393,8 +398,8 @@ export default function ProductMakeGrid({
         )}
         <div
           className={clsx({
-            [styles.noFilters]: !showFilters,
-            [styles.rightPart]: showFilters,
+            [styles.noFilters]: !filtersOn,
+            [styles.rightPart]: filtersOn,
           })}
         >
           {bodyText && (
@@ -414,7 +419,7 @@ export default function ProductMakeGrid({
             <div className={styles.grid}>
               {currentProducts.map((product, index) => (
                 <ProductCard
-                  hasFilters={showFilters}
+                  hasFilters={filtersOn}
                   imageUrl={product.productImage?.node?.mediaItemUrl}
                   key={`product-${index}-${product.title?.replace(/\s+/g, '-').toLowerCase()}`}
                   name={product.title}
