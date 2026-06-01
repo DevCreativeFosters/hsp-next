@@ -18,7 +18,7 @@ export default function ButtonLinkTag({ buttonLink, buttonText }) {
     <section className={styles.block}>
       <Container flexibleBlockPadding>
         <div className={styles.inner}>
-          <Button href={href} target={target} variant="primary">
+          <Button href={href} size="large" target={target} variant="primary">
             {label}
           </Button>
         </div>
