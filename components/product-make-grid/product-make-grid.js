@@ -44,10 +44,10 @@ export default function ProductMakeGrid({
   titleTag,
   titleTagStyle,
 }) {
-  // Treat undefined as "on" so missing CMS data (e.g. testing WP not yet
-  // exposing the show_filters ACF field) still renders the sidebar.
-  // An explicit `false` from the editor still hides it.
-  const filtersOn = showFilters !== false;
+  // Truthy-only: filters show when the editor explicitly opts in via the ACF
+  // showFilters toggle. Required so the homepage (where showFilters is unset)
+  // doesn't render a filter sidebar.
+  const filtersOn = !!showFilters;
 
   const availableBrands = products.map(
     item => new URL(item.link.url, 'http://_').pathname.split('/')[2],
