@@ -93,10 +93,6 @@
 
     .grid {
       gap: 30px;
-
-      @include bp(large) {
-        grid-template-columns: repeat(3, 1fr);
-      }
     }
 
     @media (width<=991px) {
