@@ -49,11 +49,13 @@ export default function ProductMakeGrid({
   // doesn't render a filter sidebar.
   const filtersOn = !!showFilters;
 
-  const availableBrands = products.map(
+  const productsWithLinks = (products || []).filter(item => item?.link?.url);
+
+  const availableBrands = productsWithLinks.map(
     item => new URL(item.link.url, 'http://_').pathname.split('/')[2],
   );
 
-  const availableCategories = products.map(
+  const availableCategories = productsWithLinks.map(
     item => new URL(item.link.url, 'http://_').pathname.split('/')[1],
   );
 
