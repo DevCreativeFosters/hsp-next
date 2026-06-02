@@ -39,7 +39,9 @@ export default async function DynamicPage({ params }) {
 
   if (pageContent || flexibleContentBlocks) {
     const contentBlocks = await Promise.all(
-      flexibleContentBlocks?.map(renderBlock) || [],
+      flexibleContentBlocks?.map(block =>
+        renderBlock(block, undefined, undefined, undefined, null, true),
+      ) || [],
     );
     return (
       <>

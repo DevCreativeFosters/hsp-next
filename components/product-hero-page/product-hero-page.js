@@ -47,7 +47,7 @@ export default async function ProductHeroPage({
   const blocks = await getMainProductCategoryBlocks(slug);
   const contentBlocks = await Promise.all(
     blocks?.flexibleContent?.blocks?.map(block =>
-      renderBlock(block, makes, [], params),
+      renderBlock(block, makes, [], params, null, true),
     ) || [],
   );
 
