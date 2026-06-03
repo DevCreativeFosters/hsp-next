@@ -48,6 +48,50 @@ const fileToBase64 = file =>
     reader.readAsDataURL(file);
   });
 
+const MAX_IMAGE_DIMENSION = 1600;
+const JPEG_QUALITY = 0.85;
+
+const compressImage = file =>
+  new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      resolve(file);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const { height: h, width: w } = img;
+      const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(w, h));
+      const targetW = Math.round(w * scale);
+      const targetH = Math.round(h * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      canvas.getContext('2d').drawImage(img, 0, 0, targetW, targetH);
+      canvas.toBlob(
+        blob => {
+          if (!blob) {
+            reject(new Error('Image compression failed'));
+            return;
+          }
+          resolve(
+            new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {
+              type: 'image/jpeg',
+            }),
+          );
+        },
+        'image/jpeg',
+        JPEG_QUALITY,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Image load failed'));
+    };
+    img.src = url;
+  });
+
 export default function ReviewsContent({ productId, productName, reviews }) {
   const [selectedReview, setSelectedReview] = useState(null);
 
@@ -128,7 +172,8 @@ export default function ReviewsContent({ productId, productName, reviews }) {
       let images = [];
 
       if (files.length) {
-        images = await Promise.all(files.map(fileToBase64));
+        const compressed = await Promise.all(files.map(compressImage));
+        images = await Promise.all(compressed.map(fileToBase64));
       }
 
       const variables = {
