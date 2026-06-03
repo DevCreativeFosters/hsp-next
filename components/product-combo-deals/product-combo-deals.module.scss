@@ -142,6 +142,11 @@
   flex-direction: column;
   align-items: center;
 
+  @include bp(medium) {
+    flex: 1;
+    width: 100%;
+  }
+
   @include bp-below(medium) {
     width: calc(100% - 85px);
     align-items: flex-start;
@@ -291,6 +296,10 @@
   position: relative;
   width: 100%;
   text-align: center;
+
+  @include bp(medium) {
+    margin-top: auto;
+  }
 
   @include bp-below(medium) {
     text-align: left;
