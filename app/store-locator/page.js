@@ -1,10 +1,11 @@
-import { Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
 import { getPageData } from '@lib/api/get-page-data';
 import { getSeoByUri } from '@lib/api/get-seo-by-uri';
 import { getStores } from '@lib/api/get-stores';
+import { renderBlock } from '@lib/block';
 import { removeLeadingSlash } from '@lib/helpers';
 import { prepareSchemas } from '@lib/prepare-schemas';
 import routes from '@lib/routes';
@@ -36,6 +37,11 @@ export default async function StoreLocatorPage() {
   const allStores = await getStores();
   const content = await getPageData('store-locator');
 
+  const flexibleBlocks = content?.flexibleContent?.blocks || [];
+  const renderedBlocks = await Promise.all(
+    flexibleBlocks.map(block => renderBlock(block)),
+  );
+
   return (
     <Layout
       preventHeaderCollapse
@@ -44,6 +50,9 @@ export default async function StoreLocatorPage() {
       withMap
     >
       {prepareSchemas(content?.schemaProSchemas)}
+      {renderedBlocks.map((block, index) => (
+        <Fragment key={index}>{block}</Fragment>
+      ))}
       <Suspense fallback={null}>
         <StoreLocatorProvider>
           <StoreLocatorResultsAndMap
