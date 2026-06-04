@@ -6,6 +6,26 @@
   }
 }
 
+.description {
+  margin: 0 0 16px;
+  color: var(--color-white-80);
+  font-size: 14px;
+  line-height: 1.5;
+
+  p {
+    margin: 0 0 8px;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+}
+
 .container {
   min-height: inherit;
   display: flex;

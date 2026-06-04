@@ -21,6 +21,7 @@ import styles from './store-locator-results-and-map.module.scss';
 
 export default function StoreLocatorResultsAndMap({
   allLocations,
+  description,
   hideOnMobile,
   label,
   noPadding,
@@ -151,6 +152,12 @@ export default function StoreLocatorResultsAndMap({
             ref={resultsRef}
           >
             {label && <h1 className={styles.label}>{label}</h1>}
+            {description && (
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )}
             {showStoreLocatorSearch && (
               <StoreLocatorSearch
                 addClass={'insideResultsAndMap'}

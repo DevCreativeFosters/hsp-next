@@ -48,8 +48,9 @@ export default async function StoreLocatorPage() {
         <StoreLocatorProvider>
           <StoreLocatorResultsAndMap
             allLocations={allStores}
+            description={content?.content}
             hideOnMobile={false}
-            label="Locate your store"
+            label={content?.title || 'Locate your store'}
             minHeightLarge
             showFilters
             showStoreLocatorSearch
