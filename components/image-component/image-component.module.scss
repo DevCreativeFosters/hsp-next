@@ -5,16 +5,12 @@
 
 .link {
   display: block;
-  max-width: 600px;
   width: 100%;
 }
 
 .desktopImage {
   width: 100%;
   height: auto;
-  max-width: 600px;
-  border-radius: var(--border-radius-md);
-  margin-inline: auto;
   display: block;
 }
 
@@ -30,9 +26,6 @@
   display: block;
   width: 100%;
   height: auto;
-  max-width: 600px;
-  border-radius: var(--border-radius-md);
-  margin-inline: auto;
 
   @include bp(medium) {
     display: none;
