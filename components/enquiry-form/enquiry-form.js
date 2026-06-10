@@ -31,6 +31,7 @@ export default function EnquiryForm({
   mainCategory,
   onVariantChange: onVariantChangeCallback = slug => {},
   productData,
+  productPricing,
   showStoreSearchcontrols,
   variantSlug,
 }) {
@@ -117,6 +118,20 @@ export default function EnquiryForm({
     : selectedVariant?.parentInherit
       ? productInstallationPrice
       : null;
+
+  const tierVariant = productPricing?.variantPricing?.find(
+    v => v.sku === selectedVariantSku,
+  );
+  const hasTierPrice =
+    role === 'b2b' &&
+    tierVariant &&
+    tierVariant.tierPrice != null &&
+    tierVariant.tierPrice < tierVariant.price;
+  const displayedPrice = hasTierPrice ? tierVariant.tierPrice : variantPrice;
+  const displayedCompareAtPrice = hasTierPrice
+    ? tierVariant.price
+    : variantCompareAtPrice;
+  const pricingBadgeLabel = hasTierPrice ? productPricing?.pricingBadge : null;
 
   const isProductInCart = cartItems.some(
     item =>
@@ -225,19 +240,19 @@ export default function EnquiryForm({
           />
 
           <div className={styles.price}>
-            {variantPrice > 0 && (
+            {displayedPrice > 0 && (
               <span
                 className={clsx(
                   styles.productPrices,
                   styles.productsPrice,
                   'h3',
-                  { red: variantCompareAtPrice > 0 },
+                  { red: displayedCompareAtPrice > 0 },
                 )}
               >
-                {formatPrice(variantPrice)}
+                {formatPrice(displayedPrice)}
               </span>
             )}
-            {variantCompareAtPrice > 0 && (
+            {displayedCompareAtPrice > 0 && (
               <span
                 className={clsx(
                   styles.productPrices,
@@ -245,8 +260,11 @@ export default function EnquiryForm({
                   'h3',
                 )}
               >
-                {formatPrice(variantCompareAtPrice)}
+                {formatPrice(displayedCompareAtPrice)}
               </span>
+            )}
+            {pricingBadgeLabel && (
+              <span className={styles.pricingBadge}>{pricingBadgeLabel}</span>
             )}
             {variantInstallationPrice > 0 && (
               <span
@@ -493,7 +511,7 @@ export default function EnquiryForm({
             freight={freight}
             installationCost={variantInstallationPrice}
             onClose={handleCloseModal}
-            productPrice={variantPrice ?? productPrice}
+            productPrice={displayedPrice ?? productPrice}
             selectedProducts={
               selectedVariant
                 ? [selectedVariant]
