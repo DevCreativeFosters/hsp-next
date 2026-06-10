@@ -11,6 +11,7 @@ import { useUserContext } from '@contexts/user';
 
 import useMobileVh from '@hooks/useMobileVh';
 
+import { getProductPricing } from '@lib/api/get-product-pricing';
 import { formatPrice, getProductImage } from '@lib/helpers';
 import normalizeStores from '@lib/normalize-stores';
 import { trimSlash } from '@lib/trim-slash';
@@ -31,7 +32,6 @@ export default function EnquiryForm({
   mainCategory,
   onVariantChange: onVariantChangeCallback = slug => {},
   productData,
-  productPricing,
   showStoreSearchcontrols,
   variantSlug,
 }) {
@@ -118,6 +118,26 @@ export default function EnquiryForm({
     : selectedVariant?.parentInherit
       ? productInstallationPrice
       : null;
+
+  const [productPricing, setProductPricing] = useState(null);
+
+  useEffect(() => {
+    if (role !== 'b2b' || !productData?.databaseId) {
+      setProductPricing(null);
+      return;
+    }
+    let cancelled = false;
+    getProductPricing(productData.databaseId)
+      .then(pricing => {
+        if (!cancelled) setProductPricing(pricing);
+      })
+      .catch(() => {
+        if (!cancelled) setProductPricing(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [productData?.databaseId, role]);
 
   const tierVariant = productPricing?.variantPricing?.find(
     v => v.sku === selectedVariantSku,
