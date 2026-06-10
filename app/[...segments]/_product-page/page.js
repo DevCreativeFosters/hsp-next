@@ -12,6 +12,7 @@ import { getMakeModelSeo } from '@lib/api/get-make-model-seo';
 import getProductCategoriesToExclude from '@lib/api/get-pdp-categories-to-exclude';
 import { resolvePreview } from '@lib/api/get-post-type-preview';
 import { getProductPreview } from '@lib/api/get-product-preview';
+import { getProductPricing } from '@lib/api/get-product-pricing';
 import { getProductSeo } from '@lib/api/get-product-seo';
 import { getProductsByCategoriesSlugs } from '@lib/api/get-products-by-categories-slugs';
 import { getStores } from '@lib/api/get-stores';
@@ -127,6 +128,10 @@ export default async function Product({ params, searchParams }) {
   const mainCategoryBlocks = await getMainProductCategoryBlocks(slug);
   const mainCategoryContentBlocks = mainCategoryBlocks?.flexibleContent?.blocks;
 
+  const productPricing = firstMatchedProduct?.databaseId
+    ? await getProductPricing(firstMatchedProduct.databaseId)
+    : null;
+
   const contentBlocks = await Promise.all(
     firstMatchedProduct?.flexibleContent?.blocks?.map(block =>
       renderBlock(
@@ -218,6 +223,7 @@ export default async function Product({ params, searchParams }) {
           modelName={modelName}
           pageParams={params}
           productHeroData={productHeroData}
+          productPricing={productPricing}
           variantSlug={variantSlug}
         />
       </Container>

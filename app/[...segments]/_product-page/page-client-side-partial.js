@@ -53,6 +53,7 @@ export default function PageClientSidePartial({
   make,
   modelName,
   pageParams,
+  productPricing,
   variantSlug,
 }) {
   const productVariants = firstMatchedProduct?.productFields.variants || [];
@@ -285,6 +286,7 @@ export default function PageClientSidePartial({
                     mainCategory={mainCategory}
                     onVariantChange={onVariantChange}
                     productData={firstMatchedProduct}
+                    productPricing={productPricing}
                     showStoreSearchcontrols={true}
                     variantSlug={variantSlug}
                   />
