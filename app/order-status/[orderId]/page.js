@@ -25,6 +25,7 @@ const ORDER_STATUS_MUTATION = `
         order_total
         order_type
         payment
+        payment_term_name
         items {
           name
           quantity
@@ -65,6 +66,14 @@ async function page({ params }) {
               <p>
                 {orderTypes[data?.checkOrderStatusData?.orderData?.order_type]}
               </p>
+              {data?.checkOrderStatusData?.orderData?.payment_term_name && (
+                <p className={styles.paymentTerm}>
+                  Payment Terms:{' '}
+                  <strong>
+                    {data.checkOrderStatusData.orderData.payment_term_name}
+                  </strong>
+                </p>
+              )}
               <div className={styles.btns}>
                 <DownloadInvoiceButton orderId={orderId} />
               </div>

@@ -191,6 +191,17 @@
         }
       }
 
+      .paymentTerm {
+        margin-top: 12px;
+        font-size: clamp(15px, 1vw, 18px);
+        color: #5d5d5d;
+
+        strong {
+          color: #000;
+          font-weight: 700;
+        }
+      }
+
       .btns {
         display: flex;
         gap: 16px;
