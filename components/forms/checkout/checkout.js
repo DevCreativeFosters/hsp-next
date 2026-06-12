@@ -38,7 +38,6 @@ const GET_ACCOUNT_TERMS_QUERY = `
       storeDetails {
         credit_limit
         payment_terms
-        payment_term_name
       }
     }
   }
@@ -423,8 +422,8 @@ function CheckoutForm() {
       }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
       ...(formData.payment_method === 'account-terms' &&
-        accountTerms?.paymentTermName && {
-          payment_term_name: accountTerms.paymentTermName,
+        accountTerms?.paymentTerms && {
+          payment_term_name: accountTerms.paymentTerms,
         }),
     };
 
