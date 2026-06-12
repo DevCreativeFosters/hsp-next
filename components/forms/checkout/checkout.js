@@ -38,6 +38,7 @@ const GET_ACCOUNT_TERMS_QUERY = `
       storeDetails {
         credit_limit
         payment_terms
+        payment_term_name
       }
     }
   }
@@ -307,6 +308,7 @@ function CheckoutForm() {
         if (details?.credit_limit || details?.payment_terms) {
           setAccountTerms({
             creditLimit: details.credit_limit,
+            paymentTermName: details.payment_term_name,
             paymentTerms: details.payment_terms,
           });
         } else {
@@ -420,6 +422,10 @@ function CheckoutForm() {
         selectedStoreID: (selectedStore?.id).toString(),
       }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
+      ...(formData.payment_method === 'account-terms' &&
+        accountTerms?.paymentTermName && {
+          payment_term_name: accountTerms.paymentTermName,
+        }),
     };
 
     const result = await checkoutOrder(payload);
