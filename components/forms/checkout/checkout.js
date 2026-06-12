@@ -13,6 +13,7 @@ import { useUserContext } from '@contexts/user';
 
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
+import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
 import normalizeStores from '@lib/normalize-stores';
 
@@ -30,6 +31,17 @@ import PaymentIcons from '@assets/images/payment-icon.png';
 import PaypalIcon from '@assets/images/paypal.png';
 
 import styles from './checkout.module.scss';
+
+const GET_ACCOUNT_TERMS_QUERY = `
+  mutation GetStoreByUserId($userId: ID!) {
+    getStoreByUserId(input: { userId: $userId }) {
+      storeDetails {
+        credit_limit
+        payment_terms
+      }
+    }
+  }
+`;
 
 function CheckoutForm() {
   const router = useRouter();
@@ -283,6 +295,35 @@ function CheckoutForm() {
     }
     fetchData();
   }, []);
+
+  const [accountTerms, setAccountTerms] = useState(null);
+
+  useEffect(() => {
+    if (user?.role !== 'b2b' || !user?.id) {
+      setAccountTerms(null);
+      return;
+    }
+    let cancelled = false;
+    fetchAPI(GET_ACCOUNT_TERMS_QUERY, { variables: { userId: user.id } })
+      .then(res => {
+        if (cancelled) return;
+        const details = res?.getStoreByUserId?.storeDetails?.[0];
+        if (details?.credit_limit || details?.payment_terms) {
+          setAccountTerms({
+            creditLimit: details.credit_limit,
+            paymentTerms: details.payment_terms,
+          });
+        } else {
+          setAccountTerms(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setAccountTerms(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, user?.role]);
 
   async function getStoreDeliveryOptions(userId) {
     try {
@@ -852,6 +893,32 @@ function CheckoutForm() {
                 )}
 
                 <div className={styles.paymenSelection}>
+                  {role === 'b2b' && accountTerms && (
+                    <div
+                      className={clsx(styles.payBox, styles.accountTermsBox)}
+                    >
+                      <input
+                        checked={formData.payment_method === 'account-terms'}
+                        name="payment_method"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="account-terms"
+                      />
+                      <span>Account Terms*</span>
+                      <div className={styles.accountTermsInfo}>
+                        {accountTerms.creditLimit && (
+                          <div className={styles.accountTermsLimit}>
+                            {formatPrice(accountTerms.creditLimit)}
+                          </div>
+                        )}
+                        {accountTerms.paymentTerms && (
+                          <div className={styles.accountTermsLabel}>
+                            {accountTerms.paymentTerms}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <div className={styles.payBox}>
                     <input
                       checked={formData.payment_method === 'credit-card'}

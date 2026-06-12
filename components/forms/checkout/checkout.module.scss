@@ -615,6 +615,31 @@
         }
 
         .paymenSelection {
+          .accountTermsBox {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+
+            .accountTermsInfo {
+              margin-left: auto;
+              text-align: right;
+              line-height: 1.2;
+
+              .accountTermsLimit {
+                color: #000;
+                font-weight: 700;
+                font-size: 16px;
+              }
+
+              .accountTermsLabel {
+                color: #4e4344;
+                font-size: 13px;
+                margin-top: 2px;
+              }
+            }
+          }
+
           .payBox {
             padding: 20px;
             border: solid 1px #000;
