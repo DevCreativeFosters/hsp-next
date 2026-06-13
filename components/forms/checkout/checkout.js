@@ -38,8 +38,6 @@ const GET_ACCOUNT_TERMS_QUERY = `
       storeDetails {
         credit_limit
         payment_terms
-        payment_term_name
-        payment_term_id
       }
     }
   }
