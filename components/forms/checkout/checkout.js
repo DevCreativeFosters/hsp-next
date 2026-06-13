@@ -38,6 +38,8 @@ const GET_ACCOUNT_TERMS_QUERY = `
       storeDetails {
         credit_limit
         payment_terms
+        payment_term_name
+        payment_term_id
       }
     }
   }
@@ -308,9 +310,14 @@ function CheckoutForm() {
       .then(res => {
         if (cancelled) return;
         const details = res?.getStoreByUserId?.storeDetails?.[0];
-        if (details?.credit_limit || details?.payment_terms) {
+        if (
+          details?.credit_limit ||
+          details?.payment_terms ||
+          details?.payment_term_name
+        ) {
           setAccountTerms({
             creditLimit: details.credit_limit,
+            paymentTermId: details.payment_term_id,
             paymentTermName: details.payment_term_name,
             paymentTerms: details.payment_terms,
           });
@@ -433,8 +440,9 @@ function CheckoutForm() {
       }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
       ...(formData.payment_method === 'account-terms' &&
-        accountTerms?.paymentTerms && {
-          payment_term_name: accountTerms.paymentTerms,
+        (accountTerms?.paymentTermName || accountTerms?.paymentTerms) && {
+          payment_term_name:
+            accountTerms.paymentTermName || accountTerms.paymentTerms,
         }),
     };
 
@@ -916,9 +924,11 @@ function CheckoutForm() {
                             {formatPrice(accountTerms.creditLimit)}
                           </div>
                         )}
-                        {accountTerms.paymentTerms && (
+                        {(accountTerms.paymentTermName ||
+                          accountTerms.paymentTerms) && (
                           <div className={styles.accountTermsLabel}>
-                            {accountTerms.paymentTerms}
+                            {accountTerms.paymentTermName ||
+                              accountTerms.paymentTerms}
                           </div>
                         )}
                       </div>
