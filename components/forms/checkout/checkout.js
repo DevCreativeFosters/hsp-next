@@ -33,11 +33,11 @@ import PaypalIcon from '@assets/images/paypal.png';
 import styles from './checkout.module.scss';
 
 const GET_ACCOUNT_TERMS_QUERY = `
-  mutation GetStoreByUserId($userId: ID!) {
-    getStoreByUserId(input: { userId: $userId }) {
-      storeDetails {
-        credit_limit
-        payment_terms
+  query GetStoreAccountTerms($userId: Int!) {
+    stores(where: { assignedB2bUser: $userId }, first: 1) {
+      nodes {
+        odooCreditLimit
+        odooPaymentTermName
       }
     }
   }
@@ -304,20 +304,16 @@ function CheckoutForm() {
       return;
     }
     let cancelled = false;
-    fetchAPI(GET_ACCOUNT_TERMS_QUERY, { variables: { userId: user.id } })
+    fetchAPI(GET_ACCOUNT_TERMS_QUERY, {
+      variables: { userId: Number(user.id) },
+    })
       .then(res => {
         if (cancelled) return;
-        const details = res?.getStoreByUserId?.storeDetails?.[0];
-        if (
-          details?.credit_limit ||
-          details?.payment_terms ||
-          details?.payment_term_name
-        ) {
+        const node = res?.stores?.nodes?.[0];
+        if (node?.odooCreditLimit || node?.odooPaymentTermName) {
           setAccountTerms({
-            creditLimit: details.credit_limit,
-            paymentTermId: details.payment_term_id,
-            paymentTermName: details.payment_term_name,
-            paymentTerms: details.payment_terms,
+            creditLimit: node.odooCreditLimit,
+            paymentTermName: node.odooPaymentTermName,
           });
         } else {
           setAccountTerms(null);
@@ -438,9 +434,8 @@ function CheckoutForm() {
       }),
       ...(appliedCoupons[0]?.code && { coupon: appliedCoupons[0]?.code || '' }),
       ...(formData.payment_method === 'account-terms' &&
-        (accountTerms?.paymentTermName || accountTerms?.paymentTerms) && {
-          payment_term_name:
-            accountTerms.paymentTermName || accountTerms.paymentTerms,
+        accountTerms?.paymentTermName && {
+          payment_term_name: accountTerms.paymentTermName,
         }),
     };
 
@@ -922,11 +917,9 @@ function CheckoutForm() {
                             {formatPrice(accountTerms.creditLimit)}
                           </div>
                         )}
-                        {(accountTerms.paymentTermName ||
-                          accountTerms.paymentTerms) && (
+                        {accountTerms.paymentTermName && (
                           <div className={styles.accountTermsLabel}>
-                            {accountTerms.paymentTermName ||
-                              accountTerms.paymentTerms}
+                            {accountTerms.paymentTermName}
                           </div>
                         )}
                       </div>
