@@ -22,6 +22,8 @@ query GetStoreById($id: ID!) {
   store(id: $id, idType: DATABASE_ID)  {
     id
     title
+    odooCreditLimit
+    odooPaymentTermName
     storesCustomFields {
       priceList {
         node {
@@ -299,22 +301,35 @@ function AccountDetails() {
               </div>
             </div>
 
-            {(storeDetails?.credit_limit || storeDetails?.payment_terms) && (
+            {(storeDetails?.odooCreditLimit ||
+              storeDetails?.odooPaymentTermName ||
+              storeDetails?.credit_limit ||
+              storeDetails?.payment_terms) && (
               <div className={styles.tableInfo}>
                 <h5>Account Terms</h5>
                 <div className={styles.tableWrapper}>
                   <table>
                     <tbody>
-                      {storeDetails?.credit_limit && (
+                      {(storeDetails?.odooCreditLimit ||
+                        storeDetails?.credit_limit) && (
                         <tr>
                           <td>Credit Limit:</td>
-                          <td>{formatPrice(storeDetails?.credit_limit)}</td>
+                          <td>
+                            {formatPrice(
+                              storeDetails?.odooCreditLimit ??
+                                storeDetails?.credit_limit,
+                            )}
+                          </td>
                         </tr>
                       )}
-                      {storeDetails?.payment_terms && (
+                      {(storeDetails?.odooPaymentTermName ||
+                        storeDetails?.payment_terms) && (
                         <tr>
                           <td>Payment Terms:</td>
-                          <td>{storeDetails?.payment_terms}</td>
+                          <td>
+                            {storeDetails?.odooPaymentTermName ||
+                              storeDetails?.payment_terms}
+                          </td>
                         </tr>
                       )}
                     </tbody>
