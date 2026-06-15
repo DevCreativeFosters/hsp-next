@@ -38,6 +38,7 @@ const GET_ACCOUNT_TERMS_QUERY = `
       nodes {
         odooCreditLimit
         odooPaymentTermName
+        odooCompanyName
       }
     }
   }
@@ -317,6 +318,11 @@ function CheckoutForm() {
           });
         } else {
           setAccountTerms(null);
+        }
+        if (node?.odooCompanyName) {
+          setFormData(prev =>
+            prev.company ? prev : { ...prev, company: node.odooCompanyName },
+          );
         }
       })
       .catch(() => {
