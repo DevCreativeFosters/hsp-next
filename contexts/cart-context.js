@@ -396,6 +396,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -433,6 +465,150 @@ import { useVehicleContext } from './vehicle';
 //   return context;
 // };
 
+// ---------------------------------------------------------------------------
+// localStorage shadow cart.
+//
+// WP's `getCartItems` resolver reads from `WC()->cart`, which is keyed by the
+// WooCommerce session cookie. That cookie is unreliable across the Vercel ↔
+// Cloudways origin pair, so for authenticated users the read returns empty
+// even when `addToCart` succeeded server-side. To keep the cart usable we
+// shadow every mutation into localStorage (per-user key) and treat it as the
+// source of truth for authed users. Guests still hit WP (their session
+// cookie is same-origin enough to work).
+// ---------------------------------------------------------------------------
+
+const LOCAL_CART_KEY_PREFIX = 'hsp_local_cart_';
+
+const readUserIdFromStorage = () => {
+  if (typeof window === 'undefined') return null;
+  const id = parseInt(localStorage.getItem('userId'), 10);
+  return Number.isNaN(id) ? null : id;
+};
+
+const localCartKey = userId => {
+  const id = userId ?? readUserIdFromStorage();
+  return id ? `${LOCAL_CART_KEY_PREFIX}${id}` : null;
+};
+
+const readLocalCart = userId => {
+  const key = localCartKey(userId);
+  if (!key || typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && Array.isArray(parsed.items) ? parsed : null;
+  } catch (err) {
+    console.error('Local cart read failed:', err);
+    return null;
+  }
+};
+
+const writeLocalCart = (userId, state) => {
+  const key = localCartKey(userId);
+  if (!key || typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch (err) {
+    console.error('Local cart write failed:', err);
+  }
+};
+
+const toNum = v => {
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
+const computeCartTotals = items => {
+  const list = Array.isArray(items) ? items : [];
+  return {
+    cartCount: list.reduce(
+      (acc, it) => acc + (parseInt(it.quantity, 10) || 0),
+      0,
+    ),
+    cartSubTotal: list.reduce((acc, it) => acc + toNum(it.subtotal), 0),
+    cartTotal: list.reduce((acc, it) => acc + toNum(it.total), 0),
+  };
+};
+
+// Map an addToCart-style response (snake_case variant_*) onto the
+// getCartItems item shape (camelCase variantName/variantSlug/variantSku) that
+// every cart consumer expects. Gift-card metadata is mirrored from the input
+// payload because addToCart does not return those fields.
+const buildShadowItem = (response, input = {}) => {
+  if (!response) return null;
+  const quantity = parseInt(response.quantity, 10) || 0;
+  const price = toNum(response.price);
+  return {
+    cart_item_key: response.cart_item_key,
+    compareAtPrice: response.compareAtPrice ?? null,
+    installation_cost: toNum(response.installation_cost),
+    price,
+    freight: toNum(response.freight),
+    price_total: price * quantity,
+    largeItem: response.largeItem ?? input.largeItem ?? false,
+    product_id: response.product_id,
+    product_image: response.product_image ?? input.product_image ?? null,
+    quantity,
+    customAmount: input.customAmount ?? null,
+    subtotal: toNum(response.subtotal) || price * quantity,
+    product_name: response.product_name ?? input.product_name ?? '',
+    total: toNum(response.total) || price * quantity,
+    message: response.message ?? input.message ?? null,
+    variantName: response.variant_name ?? input.variant_name ?? null,
+    product_slug: response.product_slug ?? null,
+    variantSku: response.variant_sku ?? input.variant_sku ?? null,
+    recipientEmail: input.recipientEmail ?? null,
+    variant_price: toNum(response.variant_price),
+    recipientName: input.recipientName ?? null,
+    variantSlug: response.variant_slug ?? input.variant_slug ?? null,
+    sendDate: input.sendDate ?? null,
+    sendType: input.sendType ?? null,
+    senderName: input.senderName ?? null,
+  };
+};
+
+const upsertLocalCartItem = (userId, item) => {
+  if (!item) return null;
+  const state = readLocalCart(userId) || { items: [] };
+  const idx = state.items.findIndex(
+    it => it.cart_item_key === item.cart_item_key,
+  );
+  if (idx >= 0) {
+    state.items[idx] = { ...state.items[idx], ...item };
+  } else {
+    state.items.push(item);
+  }
+  writeLocalCart(userId, state);
+  return state;
+};
+
+const removeLocalCartItem = (userId, cartItemKey) => {
+  const state = readLocalCart(userId);
+  if (!state) return null;
+  state.items = state.items.filter(it => it.cart_item_key !== cartItemKey);
+  writeLocalCart(userId, state);
+  return state;
+};
+
+const patchLocalCartItem = (userId, cartItemKey, patch) => {
+  const state = readLocalCart(userId);
+  if (!state) return null;
+  const idx = state.items.findIndex(it => it.cart_item_key === cartItemKey);
+  if (idx < 0) return state;
+  const merged = { ...state.items[idx], ...patch };
+  const qty = parseInt(merged.quantity, 10) || 0;
+  const unitPrice = toNum(merged.price);
+  const install = toNum(merged.installation_cost);
+  const freight = toNum(merged.freight);
+  merged.subtotal = unitPrice * qty;
+  merged.total = unitPrice * qty + install + freight;
+  merged.price_total = unitPrice * qty;
+  state.items[idx] = merged;
+  writeLocalCart(userId, state);
+  return state;
+};
+
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
@@ -463,9 +639,24 @@ export function CartProvider({ children }) {
   };
 
   // 🔹 Fetch Cart
+  // Authenticated users → read from the localStorage shadow (WP's
+  // session-scoped read is unreliable cross-origin). Guests → read from WP.
   const getCartItems = useCallback(async () => {
     setLoading(true);
     try {
+      const userId = currentUserId();
+
+      if (userId) {
+        const local = readLocalCart(userId);
+        const items = local?.items ?? [];
+        const totals = computeCartTotals(items);
+        setCartItems(items);
+        setCartCount(totals.cartCount);
+        setCartSubTotal(totals.cartSubTotal);
+        setCartTotal(totals.cartTotal);
+        return;
+      }
+
       const query = `
         query GetCartItems {
           getCartItems {
@@ -493,7 +684,7 @@ export function CartProvider({ children }) {
               product_name
               product_slug
               product_image
-              
+
               customAmount
               recipientName
               senderName
@@ -533,10 +724,21 @@ export function CartProvider({ children }) {
             cart_item_key
             product_id
             quantity
-            product_name
-            product_image
-            cartCount
+            price
+            compareAtPrice
+            subtotal
             total
+            product_name
+            product_slug
+            product_image
+            variant_name
+            variant_slug
+            variant_sku
+            variant_price
+            freight
+            installation_cost
+            largeItem
+            cartCount
             message
           }
         }
@@ -548,12 +750,21 @@ export function CartProvider({ children }) {
         ...authConfig(),
       });
 
+      const response = data?.addToCart;
+
+      // Mirror the authoritative WP response into localStorage so the cart
+      // survives the unreliable getCartItems read path for authed users.
+      if (userId && response?.cart_item_key) {
+        const shadow = buildShadowItem(response, item);
+        upsertLocalCartItem(userId, shadow);
+      }
+
       if (!compatibleWillBeAdded) {
         await getCartItems();
         openCart();
       }
 
-      return data?.addToCart;
+      return response;
     },
     [getCartItems],
   );
@@ -570,16 +781,26 @@ export function CartProvider({ children }) {
               cart_item_key
               product_id
               product_name
+              product_slug
+              product_image
               quantity
+              price
+              compareAtPrice
+              subtotal
               total
               variant_name
               variant_slug
               variant_sku
+              variant_price
+              freight
+              installation_cost
+              largeItem
             }
           }
         }
       `;
 
+      const userId = currentUserId();
       const data = await fetchAPI(query, {
         variables: {
           input: {
@@ -589,11 +810,20 @@ export function CartProvider({ children }) {
         ...authConfig(),
       });
 
+      const response = data?.addMultipleToCart;
+      if (userId && Array.isArray(response?.items)) {
+        response.items.forEach((it, idx) => {
+          const inputForItem = items?.[idx] || {};
+          const shadow = buildShadowItem(it, inputForItem);
+          if (shadow) upsertLocalCartItem(userId, shadow);
+        });
+      }
+
       await getCartItems();
 
       openCart();
 
-      return data?.addMultipleToCart;
+      return response;
     },
     [getCartItems],
   );
@@ -610,16 +840,26 @@ export function CartProvider({ children }) {
               cart_item_key
               product_id
               product_name
+              product_slug
+              product_image
               quantity
+              price
+              compareAtPrice
+              subtotal
               total
               variant_name
               variant_slug
               variant_sku
+              variant_price
+              freight
+              installation_cost
+              largeItem
             }
           }
         }
       `;
 
+      const userId = currentUserId();
       const data = await fetchAPI(query, {
         variables: {
           input: {
@@ -629,11 +869,20 @@ export function CartProvider({ children }) {
         ...authConfig(),
       });
 
+      const response = data?.addBundleToCart;
+      if (userId && Array.isArray(response?.items)) {
+        response.items.forEach((it, idx) => {
+          const inputForItem = items?.[idx] || {};
+          const shadow = buildShadowItem(it, inputForItem);
+          if (shadow) upsertLocalCartItem(userId, shadow);
+        });
+      }
+
       await getCartItems();
 
       openCart();
 
-      return data?.addBundleToCart;
+      return response;
     },
     [getCartItems],
   );
@@ -652,7 +901,14 @@ export function CartProvider({ children }) {
         }
       `;
 
+      const userId = currentUserId();
       await fetchAPI(query, { variables: { input: item }, ...authConfig() });
+
+      if (userId && item?.cartItemKey != null && item?.quantity != null) {
+        patchLocalCartItem(userId, item.cartItemKey, {
+          quantity: parseInt(item.quantity, 10) || 0,
+        });
+      }
 
       await getCartItems();
     },
@@ -674,7 +930,10 @@ export function CartProvider({ children }) {
 
       const variables = { input: { cartItemKey } };
 
+      const userId = currentUserId();
       await fetchAPI(query, { variables, ...authConfig() });
+
+      if (userId) removeLocalCartItem(userId, cartItemKey);
 
       await getCartItems();
     },
@@ -698,7 +957,14 @@ export function CartProvider({ children }) {
     getCartItems();
     const onAuthChange = () => getCartItems();
     const onStorage = e => {
-      if (!e.key || e.key === 'authToken' || e.key === 'userId') getCartItems();
+      if (
+        !e.key ||
+        e.key === 'authToken' ||
+        e.key === 'userId' ||
+        e.key.startsWith(LOCAL_CART_KEY_PREFIX)
+      ) {
+        getCartItems();
+      }
     };
     window.addEventListener('authchange', onAuthChange);
     window.addEventListener('storage', onStorage);
