@@ -54,8 +54,17 @@ function CheckoutForm() {
     cartItems,
     cartSubTotal,
     cartTotal,
+    getCartItems,
     loading: cartLoading,
   } = useCart();
+
+  // Force a fresh cart fetch when the checkout form mounts. Page navigations
+  // to /checkout remount the per-page CartProvider, and the provider's own
+  // mount-time fetch can race with auth-token hydration — pulling again here
+  // makes sure the form always reflects the user's actual cart.
+  useEffect(() => {
+    getCartItems();
+  }, [getCartItems]);
 
   const {
     appliedCoupons,
