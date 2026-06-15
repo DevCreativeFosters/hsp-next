@@ -24,6 +24,7 @@ query GetStoreById($id: ID!) {
     title
     odooCreditLimit
     odooPaymentTermName
+    odooCompanyName
     storesCustomFields {
       priceList {
         node {
@@ -204,7 +205,9 @@ function AccountDetails() {
         <Loading color="white" size="large" />
       ) : (
         <div className={styles.accountDetails}>
-          <h2 className={styles.sectionTitle}>{storeDetails?.title}</h2>
+          <h2 className={styles.sectionTitle}>
+            {storeDetails?.odooCompanyName || storeDetails?.title}
+          </h2>
 
           {(storeDetails?.storeCategories?.nodes?.length > 0 ||
             storeDetails?.priceList) && (
