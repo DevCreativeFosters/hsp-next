@@ -87,6 +87,9 @@ function LoginForm() {
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
         localStorage.setItem('userRole', loginResponse.role);
+        // Notify same-tab listeners (eg. CartProvider) that auth just changed
+        // so they can re-fetch user-scoped data without a full reload.
+        window.dispatchEvent(new Event('authchange'));
 
         setUser({
           id: loginResponse.userId,

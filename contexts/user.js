@@ -108,6 +108,8 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole');
     localStorage.removeItem(SESSION_STORAGE_USER_DATA);
+    // Notify same-tab listeners (eg. CartProvider) that auth just changed.
+    window.dispatchEvent(new Event('authchange'));
     router.push('/login');
   }, []);
 
