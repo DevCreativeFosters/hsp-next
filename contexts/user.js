@@ -104,6 +104,11 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const handleLogout = useCallback(() => {
+    // Read userId BEFORE removing it so we can scrub their shadow cart.
+    const oldUserId = localStorage.getItem('userId');
+    if (oldUserId) {
+      localStorage.removeItem(`hsp_local_cart_${oldUserId}`);
+    }
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole');

@@ -588,6 +588,70 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -878,7 +942,9 @@ export function CartProvider({ children }) {
       const data = res?.getCartItems;
 
       if (data) {
-        if (data.items >= 0) setIsCartOpen(false);
+        if (Array.isArray(data.items) && data.items.length === 0) {
+          setIsCartOpen(false);
+        }
         setCartItems(data.items || []);
         setCartCount(data.cartCount || 0);
         setCartTotal(data.cartTotal || 0);
@@ -1153,6 +1219,20 @@ export function CartProvider({ children }) {
     setIsCartOpen(false);
   }, []);
 
+  // 🔹 Clear cart — wipes the shadow + in-memory state. Call after a
+  // successful order so the dealer doesn't accidentally re-order items.
+  const clearCart = useCallback(() => {
+    const userId = currentUserId();
+    if (userId && typeof window !== 'undefined') {
+      const key = localCartKey(userId);
+      if (key) localStorage.removeItem(key);
+    }
+    setCartItems([]);
+    setCartCount(0);
+    setCartSubTotal(0);
+    setCartTotal(0);
+  }, []);
+
   // 🔹 Auto-fetch cart on first load + whenever the auth token changes (login
   // in another tab dispatches a storage event; same-tab logins should
   // dispatch a manual `authchange` event so this listener fires too).
@@ -1188,6 +1268,7 @@ export function CartProvider({ children }) {
         cartItems,
         cartSubTotal,
         cartTotal,
+        clearCart,
         closeCart,
         getCartItems,
         isCartOpen,

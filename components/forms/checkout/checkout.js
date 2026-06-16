@@ -51,12 +51,13 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
 
   const {
-    cartItems,
-    cartSubTotal,
-    cartTotal,
+    cartItems = [],
+    cartSubTotal = 0,
+    cartTotal = 0,
+    clearCart,
     getCartItems,
     loading: cartLoading,
-  } = useCart();
+  } = useCart() || {};
 
   // Force a fresh cart fetch when the checkout form mounts. Page navigations
   // to /checkout remount the per-page CartProvider, and the provider's own
@@ -428,6 +429,7 @@ function CheckoutForm() {
     const isMissing = requiredFields.some(field => !formData[field]);
     if (isMissing) {
       alert('⚠️ Please fill all required fields.');
+      setLoading(false);
       return;
     }
 
@@ -445,6 +447,8 @@ function CheckoutForm() {
 
     const result = await checkoutOrder(payload);
     if (result?.order_id) {
+      // Wipe the shadow cart so the dealer doesn't accidentally re-order.
+      if (typeof clearCart === 'function') clearCart();
       setLoading(false);
       router.push(`/order-status/${result.order_id}`);
     } else {
@@ -694,15 +698,15 @@ function CheckoutForm() {
                                 'click-collect',
                                 'pickup-from-hsp',
                               ].some(id => id === deliveryOption.id) &&
+                                selectedStore?.location &&
                                 (() => {
                                   const {
-                                    address,
-                                    city,
-                                    country,
-                                    postalCode,
-                                    stateAbbr,
-                                    street,
-                                  } = selectedStore.location;
+                                    city = '',
+                                    country = '',
+                                    postalCode = '',
+                                    stateAbbr = '',
+                                    street = '',
+                                  } = selectedStore.location || {};
 
                                   return (
                                     <div className={styles.deliveryAddressBox}>
