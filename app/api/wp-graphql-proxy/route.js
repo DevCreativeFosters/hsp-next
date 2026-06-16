@@ -1,11 +1,21 @@
 import { WORDPRESS_API_URL } from '@lib/config';
 
-// Same-origin proxy for browser GraphQL calls. Forwards to WordPress, relays
-// the WC session cookie both ways (rewriting Set-Cookie so the browser scopes
-// it to OUR origin rather than the Cloudways one — otherwise cross-site
-// cookie rules drop it in incognito/Safari/Firefox-strict and the WC session
-// dies between requests, which kills addToCart→checkoutOrder flow). Also
-// logs cart ops so we can see what each request returned.
+// Same-origin proxy for browser GraphQL calls. Forwards to WordPress and
+// handles WooCommerce session continuity two ways:
+//
+// 1. Rewrites WP's Set-Cookie so the browser scopes the WC session cookie to
+//    OUR origin rather than the Cloudways one — otherwise cross-site cookie
+//    rules drop it in incognito/Safari/Firefox-strict and the WC session
+//    dies between requests.
+//
+// 2. Threads the WooGraphQL `woocommerce-session` JWT through. WooGraphQL's
+//    QL_Session_Handler issues a JWT in the `woocommerce-session` RESPONSE
+//    header on every cart-touching GraphQL call, and PREFERS that header
+//    over the cookie on GraphQL requests (Issue #285). Without echoing it
+//    back, every request lands in a fresh empty session and the cart
+//    vanishes between addToCart and checkoutOrder. We persist the JWT into
+//    a first-party `wc_session_jwt` cookie and inject it as the
+//    `woocommerce-session` request header on the next call.
 function rewriteCookieForSameOrigin(cookie) {
   return cookie
     .replace(/;\s*Domain=[^;]+/gi, '')
@@ -13,10 +23,17 @@ function rewriteCookieForSameOrigin(cookie) {
     .replace(/;\s*SameSite=None/gi, '; SameSite=Lax');
 }
 
+function readWcSessionJwtFromCookie(cookieHeader) {
+  if (!cookieHeader) return null;
+  const match = cookieHeader.match(/(?:^|;\s*)wc_session_jwt=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 export async function POST(request) {
   const body = await request.text();
   const authHeader = request.headers.get('authorization');
   const cookie = request.headers.get('cookie');
+  const wcSessionJwt = readWcSessionJwtFromCookie(cookie);
 
   const op = body.includes('createDealerQuote')
     ? 'createDealerQuote'
@@ -46,6 +63,9 @@ export async function POST(request) {
       'Content-Type': 'application/json',
       ...(authHeader && { Authorization: authHeader }),
       ...(cookie && { Cookie: cookie }),
+      ...(wcSessionJwt && {
+        'woocommerce-session': `Session ${wcSessionJwt}`,
+      }),
     },
     method: 'POST',
     redirect: 'manual',
@@ -80,6 +100,18 @@ export async function POST(request) {
       : [];
   for (const c of setCookies) {
     responseHeaders.append('Set-Cookie', rewriteCookieForSameOrigin(c));
+  }
+
+  // Capture WooGraphQL's session JWT from the response and persist it as a
+  // first-party HttpOnly cookie. Next request will read it back and echo it
+  // as `woocommerce-session: Session <jwt>` to keep WC's session sticky.
+  const wcSessionResponse = res.headers.get('woocommerce-session');
+  if (wcSessionResponse) {
+    const token = wcSessionResponse.replace(/^Session\s+/i, '');
+    responseHeaders.append(
+      'Set-Cookie',
+      `wc_session_jwt=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=172800`,
+    );
   }
 
   return new Response(text, {
