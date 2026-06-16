@@ -87,10 +87,17 @@ export const CheckoutProvider = ({ children }) => {
   };
 
   // 🛒 Submit Checkout Order
+  //
+  // Retail orders work via `checkoutOrder`. The custom `dealerCheckoutOrder`
+  // resolver throws "Your cart is empty" because it reads from a different
+  // WC cart store than `addToCart` writes to (cross-origin session quirks).
+  // Lokesh's `CheckoutOrderInput` already accepts dealer fields
+  // (payment_term_name, payment_term_id, credit_limit) per his own schema,
+  // so route B2B through the same mutation as retail. Same payload shape.
   const checkoutOrder = async input => {
     setLoading(true);
     try {
-      let query = `
+      const query = `
         mutation CheckoutOrder($input: CheckoutOrderInput!) {
           checkoutOrder(input: $input) {
             status
@@ -102,24 +109,10 @@ export const CheckoutProvider = ({ children }) => {
         }
       `;
 
-      if (user.role === 'b2b') {
-        query = `
-          mutation DealerCheckoutOrder($input: DealerCheckoutOrderInput!) {
-            dealerCheckoutOrder(input: $input) {
-              status
-              message
-              order_id
-              order_total
-              payment_term_name
-            }
-          }
-        `;
-      }
-
       const variables = { input };
 
       const res = await fetchAPI(query, { variables });
-      const data = res?.checkoutOrder ?? res?.dealerCheckoutOrder;
+      const data = res?.checkoutOrder;
 
       setOrderResponse(data);
       return data;
@@ -138,7 +131,7 @@ export const CheckoutProvider = ({ children }) => {
       const query = `
         mutation CreateDealerQuote {
           createDealerQuote(input: {
-            user_id: ${parseInt(user.id)},
+            user_id: ${parseInt(user?.id ?? '0', 10)},
             amount: "${amount}",
             notes: ${JSON.stringify(notes)}
           }) {
