@@ -428,6 +428,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -542,29 +574,29 @@ const buildShadowItem = (response, input = {}) => {
   return {
     cart_item_key: response.cart_item_key,
     compareAtPrice: response.compareAtPrice ?? null,
-    installation_cost: toNum(response.installation_cost),
-    price,
+    customAmount: input.customAmount ?? null,
     freight: toNum(response.freight),
-    price_total: price * quantity,
+    installation_cost: toNum(response.installation_cost),
     largeItem: response.largeItem ?? input.largeItem ?? false,
+    message: response.message ?? input.message ?? null,
+    price,
+    price_total: price * quantity,
     product_id: response.product_id,
     product_image: response.product_image ?? input.product_image ?? null,
-    quantity,
-    customAmount: input.customAmount ?? null,
-    subtotal: toNum(response.subtotal) || price * quantity,
     product_name: response.product_name ?? input.product_name ?? '',
-    total: toNum(response.total) || price * quantity,
-    message: response.message ?? input.message ?? null,
-    variantName: response.variant_name ?? input.variant_name ?? null,
     product_slug: response.product_slug ?? null,
-    variantSku: response.variant_sku ?? input.variant_sku ?? null,
+    quantity,
     recipientEmail: input.recipientEmail ?? null,
-    variant_price: toNum(response.variant_price),
     recipientName: input.recipientName ?? null,
-    variantSlug: response.variant_slug ?? input.variant_slug ?? null,
     sendDate: input.sendDate ?? null,
     sendType: input.sendType ?? null,
     senderName: input.senderName ?? null,
+    subtotal: toNum(response.subtotal) || price * quantity,
+    total: toNum(response.total) || price * quantity,
+    variantName: response.variant_name ?? input.variant_name ?? null,
+    variantSku: response.variant_sku ?? input.variant_sku ?? null,
+    variantSlug: response.variant_slug ?? input.variant_slug ?? null,
+    variant_price: toNum(response.variant_price),
   };
 };
 
@@ -737,7 +769,6 @@ export function CartProvider({ children }) {
             variant_price
             freight
             installation_cost
-            largeItem
             cartCount
             message
           }
@@ -794,7 +825,6 @@ export function CartProvider({ children }) {
               variant_price
               freight
               installation_cost
-              largeItem
             }
           }
         }
@@ -853,7 +883,6 @@ export function CartProvider({ children }) {
               variant_price
               freight
               installation_cost
-              largeItem
             }
           }
         }
