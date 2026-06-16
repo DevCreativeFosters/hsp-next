@@ -995,7 +995,16 @@ export function CartProvider({ children }) {
         ...wpInput
       } = item;
       const data = await fetchAPI(query, {
-        variables: { input: { ...wpInput, ...(userId && { userId }) } },
+        // NOTE: deliberately NOT sending userId in the WP input. When the
+        // dealer's userId is present, Lokesh's resolver takes a B2B branch
+        // that writes to _woocommerce_persistent_cart_<userId> user_meta
+        // and skips populating WC()->cart in the session. Then checkoutOrder
+        // reads WC()->cart and throws "Your cart is empty". Without userId,
+        // the resolver follows the retail code path (which works) and writes
+        // to the WC session cart. The dealer is still identified by the
+        // Bearer token in authConfig() for pricing/auth — only the input arg
+        // is stripped.
+        variables: { input: wpInput },
         ...authConfig(),
       });
 
