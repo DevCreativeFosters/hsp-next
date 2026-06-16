@@ -556,6 +556,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -903,10 +935,22 @@ export function CartProvider({ children }) {
 
       const response = data?.addToCart;
 
-      // Mirror the authoritative WP response into localStorage so the cart
-      // survives the unreliable getCartItems read path for authed users.
+      // Mirror into localStorage but DO NOT trust WP's response.quantity:
+      // WP's persistent cart may carry stale state we can't clear from the
+      // frontend (RemoveFromCart and UpdateCart don't accept userId yet, so
+      // they only touch the WC session cart). Compute the shadow quantity
+      // locally instead — existing local qty + this click's delta.
       if (userId && response?.cart_item_key) {
-        const shadow = buildShadowItem(response, item);
+        const delta = parseInt(item.quantity, 10) || 1;
+        const existingItems = readLocalCart(userId)?.items || [];
+        const existing = existingItems.find(
+          it => it.cart_item_key === response.cart_item_key,
+        );
+        const localQty = (parseInt(existing?.quantity, 10) || 0) + delta;
+        const shadow = buildShadowItem(
+          { ...response, quantity: localQty },
+          item,
+        );
         upsertLocalCartItem(userId, shadow);
       }
 
@@ -1051,12 +1095,12 @@ export function CartProvider({ children }) {
       `;
 
       const userId = currentUserId();
-      // Pass userId so WP scopes the update to the user's persistent cart
-      // rather than the unreliable WC session cart.
-      await fetchAPI(query, {
-        variables: { input: { ...item, ...(userId && { userId }) } },
-        ...authConfig(),
-      });
+      // NOTE: UpdateCartInput on WP does not yet accept `userId`. The
+      // resolver therefore scopes to the (unreliable) WC session cart, so
+      // quantity changes don't persist for authed dealers server-side until
+      // Lokesh updates the resolver to hydrate from
+      // _woocommerce_persistent_cart_<userId> via the Bearer token.
+      await fetchAPI(query, { variables: { input: item }, ...authConfig() });
 
       if (userId && item?.cartItemKey != null && item?.quantity != null) {
         patchLocalCartItem(userId, item.cartItemKey, {
@@ -1082,14 +1126,15 @@ export function CartProvider({ children }) {
         }
       `;
 
-      const userId = currentUserId();
-      // Pass userId so WP scopes the remove to the user's persistent cart.
-      // Without it, addToCart writes to user_meta but removeFromCart only
-      // touches the session cart, leaving stale qty server-side.
-      const variables = {
-        input: { cartItemKey, ...(userId && { userId }) },
-      };
+      // NOTE: RemoveFromCartInput on WP does not yet accept `userId`. The
+      // resolver therefore scopes to the WC session cart, so removing only
+      // clears the local shadow — the dealer's persistent cart on WP still
+      // holds the stale quantity. Lokesh needs to update the resolver to
+      // hydrate from _woocommerce_persistent_cart_<userId> via the Bearer
+      // token, same pattern as addToCart.
+      const variables = { input: { cartItemKey } };
 
+      const userId = currentUserId();
       await fetchAPI(query, { variables, ...authConfig() });
 
       if (userId) removeLocalCartItem(userId, cartItemKey);
