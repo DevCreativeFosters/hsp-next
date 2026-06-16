@@ -524,6 +524,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1019,7 +1051,12 @@ export function CartProvider({ children }) {
       `;
 
       const userId = currentUserId();
-      await fetchAPI(query, { variables: { input: item }, ...authConfig() });
+      // Pass userId so WP scopes the update to the user's persistent cart
+      // rather than the unreliable WC session cart.
+      await fetchAPI(query, {
+        variables: { input: { ...item, ...(userId && { userId }) } },
+        ...authConfig(),
+      });
 
       if (userId && item?.cartItemKey != null && item?.quantity != null) {
         patchLocalCartItem(userId, item.cartItemKey, {
@@ -1045,9 +1082,14 @@ export function CartProvider({ children }) {
         }
       `;
 
-      const variables = { input: { cartItemKey } };
-
       const userId = currentUserId();
+      // Pass userId so WP scopes the remove to the user's persistent cart.
+      // Without it, addToCart writes to user_meta but removeFromCart only
+      // touches the session cart, leaving stale qty server-side.
+      const variables = {
+        input: { cartItemKey, ...(userId && { userId }) },
+      };
+
       await fetchAPI(query, { variables, ...authConfig() });
 
       if (userId) removeLocalCartItem(userId, cartItemKey);
