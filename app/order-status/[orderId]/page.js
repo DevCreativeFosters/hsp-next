@@ -39,9 +39,24 @@ const ORDER_STATUS_MUTATION = `
 
 async function page({ params }) {
   const { orderId } = params;
-  const data = await fetchAPI(ORDER_STATUS_MUTATION, {
-    variables: { orderId: parseInt(orderId) },
-  });
+
+  // checkOrderStatusData on WP can throw immediately after order creation
+  // (race with WP indexing or a debug-display HTML preamble polluting the
+  // GraphQL JSON). If we let fetchAPI throw, the entire page becomes a
+  // client-side exception and the dealer thinks the order failed even
+  // though it succeeded. Render a fallback confirmation instead.
+  let data = null;
+  try {
+    data = await fetchAPI(ORDER_STATUS_MUTATION, {
+      variables: { orderId: parseInt(orderId) },
+    });
+  } catch (err) {
+    console.error(
+      'Order-status fetch failed for orderId',
+      orderId,
+      err?.message,
+    );
+  }
 
   const orderTypes = {
     'click-collect': `Thanks, We'll let you know when your order is ready to collect.`,
@@ -64,7 +79,10 @@ async function page({ params }) {
             <div className={styles.desc}>
               <h2>Order Confirmed</h2>
               <p>
-                {orderTypes[data?.checkOrderStatusData?.orderData?.order_type]}
+                {orderTypes[
+                  data?.checkOrderStatusData?.orderData?.order_type
+                ] ||
+                  `Thanks! Your order #${orderId} has been received. We'll be in touch shortly with the next steps.`}
               </p>
               {data?.checkOrderStatusData?.orderData?.payment_term_name && (
                 <p className={styles.paymentTerm}>
