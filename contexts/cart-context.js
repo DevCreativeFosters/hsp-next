@@ -460,6 +460,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -570,17 +602,33 @@ const computeCartTotals = items => {
 const buildShadowItem = (response, input = {}) => {
   if (!response) return null;
   const quantity = parseInt(response.quantity, 10) || 0;
-  const price = toNum(response.price);
+  // If the caller passed an explicit price (B2B tier pricing from PDP), use
+  // it — WP's addToCart resolver returns the public sale price and ignores
+  // the dealer's tier, so we have to thread it through ourselves.
+  const overridePrice = input.price != null ? toNum(input.price) : null;
+  const price = overridePrice != null ? overridePrice : toNum(response.price);
+  const install = toNum(response.installation_cost);
+  const freight = toNum(response.freight);
+  const computedSubtotal = price * quantity;
+  const computedTotal = computedSubtotal + install + freight;
+  const subtotal =
+    overridePrice != null
+      ? computedSubtotal
+      : toNum(response.subtotal) || computedSubtotal;
+  const total =
+    overridePrice != null
+      ? computedTotal
+      : toNum(response.total) || computedTotal;
   return {
     cart_item_key: response.cart_item_key,
-    compareAtPrice: response.compareAtPrice ?? null,
+    compareAtPrice: input.compareAtPrice ?? response.compareAtPrice ?? null,
     customAmount: input.customAmount ?? null,
-    freight: toNum(response.freight),
-    installation_cost: toNum(response.installation_cost),
+    freight,
+    installation_cost: install,
     largeItem: response.largeItem ?? input.largeItem ?? false,
     message: response.message ?? input.message ?? null,
     price,
-    price_total: price * quantity,
+    price_total: computedSubtotal,
     product_id: response.product_id,
     product_image: response.product_image ?? input.product_image ?? null,
     product_name: response.product_name ?? input.product_name ?? '',
@@ -591,8 +639,8 @@ const buildShadowItem = (response, input = {}) => {
     sendDate: input.sendDate ?? null,
     sendType: input.sendType ?? null,
     senderName: input.senderName ?? null,
-    subtotal: toNum(response.subtotal) || price * quantity,
-    total: toNum(response.total) || price * quantity,
+    subtotal,
+    total,
     variantName: response.variant_name ?? input.variant_name ?? null,
     variantSku: response.variant_sku ?? input.variant_sku ?? null,
     variantSlug: response.variant_slug ?? input.variant_slug ?? null,

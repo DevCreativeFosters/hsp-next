@@ -373,6 +373,10 @@ export default function EnquiryForm({
                         variant_name: selectedVariant?.variantName,
                         variant_sku: selectedVariant?.sku,
                         variant_slug: selectedVariant?.variantSlug,
+                        ...(hasTierPrice && {
+                          compareAtPrice: tierVariant.price,
+                          price: tierVariant.tierPrice,
+                        }),
                       })
                     }
                     size="large"
