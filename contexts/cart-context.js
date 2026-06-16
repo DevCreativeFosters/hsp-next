@@ -769,7 +769,6 @@ export function CartProvider({ children }) {
             variant_price
             freight
             installation_cost
-            largeItem
             cartCount
             message
           }
@@ -826,7 +825,6 @@ export function CartProvider({ children }) {
               variant_price
               freight
               installation_cost
-              largeItem
             }
           }
         }
@@ -885,7 +883,6 @@ export function CartProvider({ children }) {
               variant_price
               freight
               installation_cost
-              largeItem
             }
           }
         }
