@@ -118,7 +118,16 @@ export const CheckoutProvider = ({ children }) => {
       return data;
     } catch (err) {
       console.error('Error creating checkout order:', err);
-      return null;
+      // Surface the error in a shape handleSubmit can show. Without this
+      // the form alerts "Order failed" and the dealer has no clue why —
+      // the actual reason (e.g. "Field X not defined by type Y") gets
+      // swallowed in the console.
+      const message = err?.message?.includes('API returned errors')
+        ? err.message
+            .replace(/^.*API returned errors:\s*/, '')
+            .replace(/\s*\(query:.*$/, '')
+        : err?.message || 'Order failed';
+      return { message, order_id: null };
     } finally {
       setLoading(false);
     }

@@ -444,8 +444,13 @@ function CheckoutForm() {
       return;
     }
 
+    // WP's CheckoutOrderInput doesn't accept `vehicleIdentifier`. Strip it
+    // before sending — we still surface the field in the form for the
+    // dealer's records and to drive validation, but it can't go to WP as a
+    // top-level input or the mutation rejects the entire request.
+    const { vehicleIdentifier, ...formDataForWP } = formData;
     const payload = {
-      ...formData,
+      ...formDataForWP,
       ...(selectedStore?.id && {
         selectedStoreID: (selectedStore?.id).toString(),
       }),
