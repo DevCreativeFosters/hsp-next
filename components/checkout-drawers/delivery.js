@@ -103,344 +103,334 @@ function DeliveryAddressForm({
 
   return (
     <div className={styles.deliveryForm}>
-      {cartItems.some(item => item.largeItem) && !allowDelivery ? (
-        <div className={styles.redBoxContent}>
-          <h5>Commercial Address Required for Delivery</h5>
-          <p>
-            Some products — including the Electric Roll Cover, Armour Bar and
-            Load Slides — can only be delivered to commercial or business
-            addresses due to their size and handling requirements. Please update
-            your delivery address to continue.
-          </p>
-        </div>
-      ) : (
-        <>
-          {allowDelivery && cartItems.some(item => item.largeItem) && (
-            <div className={clsx(styles.redBoxContent, styles.warning)}>
-              <h5>Commercial Address Required for Delivery</h5>
-              <p>
-                Some products — including the Electric Roll Cover, Armour Bar
-                and Load Slides — can only be delivered to commercial or
-                business addresses due to their size and handling requirements.
-                Please update your delivery address to continue.
-              </p>
-            </div>
-          )}
-
-          {askCutomerInfo && (
-            <>
-              <p className={styles.heading}>
-                <strong>Customer Info:</strong>
-              </p>
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="additionalCustomerInfo.customer_first_name"
-                    onChange={handleChange}
-                    placeholder="First Name"
-                    value={formData.additionalCustomerInfo?.customer_first_name}
-                  />
-                </div>
-                <div className={styles.formCol}>
-                  <input
-                    name="additionalCustomerInfo.customer_last_name"
-                    onChange={handleChange}
-                    placeholder="Last Name"
-                    value={formData.additionalCustomerInfo?.customer_last_name}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="additionalCustomerInfo.customer_email"
-                    onChange={handleChange}
-                    placeholder="Customer Email"
-                    value={formData.additionalCustomerInfo?.customer_email}
-                  />
-                </div>
-              </div>
-              <p className={styles.heading}>
-                <strong>Shipping Info:</strong>
-              </p>
-            </>
-          )}
-
-          {/* Country */}
-          <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <div className={styles.lblSelect}>
-                <span>Country/Region</span>
-                <select
-                  name="country"
-                  onChange={handleChange}
-                  value={formData.country}
-                >
-                  {/* {Country.getAllCountries().map((c) => (
-                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
-                  ))} */}
-                  <option value="AU">Australia</option>
-                </select>
-              </div>
-            </div>
+      <>
+        {hasLargeItem && (
+          // Warning banner shown for ANY heavy-item delivery flow — replaces
+          // the previous hard-block branch. The customer can still enter
+          // their address; the commercial-address tickbox below the form
+          // gates the Confirm Address button so they have to acknowledge
+          // the requirement before proceeding.
+          <div className={clsx(styles.redBoxContent, styles.warning)}>
+            <h5>Commercial Address Required for Delivery</h5>
+            <p>
+              Some products — including the Electric Roll Cover, Armour Bar and
+              Load Slides — can only be delivered to commercial or business
+              addresses due to their size and handling requirements. Enter your
+              delivery address below and confirm it&rsquo;s a commercial
+              address.
+            </p>
           </div>
+        )}
 
-          {!askCutomerInfo && (
+        {askCutomerInfo && (
+          <>
+            <p className={styles.heading}>
+              <strong>Customer Info:</strong>
+            </p>
             <div className={styles.formRow}>
               <div className={styles.formCol}>
                 <input
-                  name="deliveryCompanyName"
+                  name="additionalCustomerInfo.customer_first_name"
                   onChange={handleChange}
-                  placeholder="Company Name (Optional)"
-                  value={formData.deliveryCompanyName}
+                  placeholder="First Name"
+                  value={formData.additionalCustomerInfo?.customer_first_name}
                 />
               </div>
-            </div>
-          )}
-
-          {/* Address Autocomplete */}
-          <Autocomplete
-            onLoad={autocomplete => {
-              autocompleteRef.current = autocomplete;
-              autocomplete.setComponentRestrictions({
-                country: formData.country.toLowerCase(),
-              });
-
-              // 👇 Move the dropdown inside your component for styling
-              setTimeout(() => {
-                const pacContainer = document.querySelector('.pac-container');
-                pacContainer.classList.add('pacContainer');
-
-                const formWrapper = document.querySelector(
-                  `.${styles.autocomplete}`,
-                );
-                if (pacContainer && formWrapper) {
-                  formWrapper.parentNode.insertBefore(
-                    pacContainer,
-                    formWrapper,
-                  );
-                }
-              }, 500);
-            }}
-            onPlaceChanged={handlePlaceChanged}
-          >
-            <div className={styles.formRow}>
-              <div className={clsx(styles.formCol, styles.autocomplete)}>
+              <div className={styles.formCol}>
                 <input
-                  // name="address"
-                  // onChange={handleChange}
-                  placeholder="Address"
-                  // value={formData.address}
-                />
-                <button className={styles.searchBtn} type="button">
-                  <SearchIcon />
-                </button>
-              </div>
-            </div>
-          </Autocomplete>
-
-          {/* Apartment */}
-          <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <input
-                name="address"
-                onChange={handleChange}
-                placeholder="Apartment, suite, etc."
-                value={formData.address}
-              />
-            </div>
-          </div>
-
-          {/* City, State, postcode */}
-          <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <input
-                name="city"
-                onChange={handleChange}
-                placeholder="City"
-                value={formData.city}
-              />
-            </div>
-            <div className={styles.formCol}>
-              <div className={styles.lblSelect}>
-                <span>State/territory</span>
-                <select
-                  name="state"
+                  name="additionalCustomerInfo.customer_last_name"
                   onChange={handleChange}
-                  value={formData.state}
-                >
-                  {State.getStatesOfCountry(formData.country).map(s => (
-                    <option key={s.isoCode} value={s.name}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Last Name"
+                  value={formData.additionalCustomerInfo?.customer_last_name}
+                />
               </div>
             </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="additionalCustomerInfo.customer_email"
+                  onChange={handleChange}
+                  placeholder="Customer Email"
+                  value={formData.additionalCustomerInfo?.customer_email}
+                />
+              </div>
+            </div>
+            <p className={styles.heading}>
+              <strong>Shipping Info:</strong>
+            </p>
+          </>
+        )}
+
+        {/* Country */}
+        <div className={styles.formRow}>
+          <div className={styles.formCol}>
+            <div className={styles.lblSelect}>
+              <span>Country/Region</span>
+              <select
+                name="country"
+                onChange={handleChange}
+                value={formData.country}
+              >
+                {/* {Country.getAllCountries().map((c) => (
+                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
+                  ))} */}
+                <option value="AU">Australia</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {!askCutomerInfo && (
+          <div className={styles.formRow}>
             <div className={styles.formCol}>
               <input
-                name="postcode"
+                name="deliveryCompanyName"
                 onChange={handleChange}
-                placeholder="Postcode"
-                value={formData.postcode}
+                placeholder="Company Name (Optional)"
+                value={formData.deliveryCompanyName}
               />
             </div>
           </div>
-          {showCommercialConfirmation && (
-            <div className={styles.formRow}>
-              <div className={styles.inputFullCol}>
-                <div className={styles.acceptCheckbox}>
-                  <label>
-                    <input
-                      checked={acceptDeliveryTerms}
-                      name="acceptDeliveryTerms"
-                      onChange={e => setAcceptDeliveryTerms(e.target.checked)}
-                      type="checkbox"
-                    />
-                    <span>
-                      I confirm that my delivery address is a commercial
-                      address, and I understand that any additional fees arising
-                      from providing a residential address will be my
-                      responsibility.
-                    </span>
-                  </label>
-                </div>
+        )}
+
+        {/* Address Autocomplete */}
+        <Autocomplete
+          onLoad={autocomplete => {
+            autocompleteRef.current = autocomplete;
+            autocomplete.setComponentRestrictions({
+              country: formData.country.toLowerCase(),
+            });
+
+            // 👇 Move the dropdown inside your component for styling
+            setTimeout(() => {
+              const pacContainer = document.querySelector('.pac-container');
+              pacContainer.classList.add('pacContainer');
+
+              const formWrapper = document.querySelector(
+                `.${styles.autocomplete}`,
+              );
+              if (pacContainer && formWrapper) {
+                formWrapper.parentNode.insertBefore(pacContainer, formWrapper);
+              }
+            }, 500);
+          }}
+          onPlaceChanged={handlePlaceChanged}
+        >
+          <div className={styles.formRow}>
+            <div className={clsx(styles.formCol, styles.autocomplete)}>
+              <input
+                // name="address"
+                // onChange={handleChange}
+                placeholder="Address"
+                // value={formData.address}
+              />
+              <button className={styles.searchBtn} type="button">
+                <SearchIcon />
+              </button>
+            </div>
+          </div>
+        </Autocomplete>
+
+        {/* Apartment */}
+        <div className={styles.formRow}>
+          <div className={styles.formCol}>
+            <input
+              name="address"
+              onChange={handleChange}
+              placeholder="Apartment, suite, etc."
+              value={formData.address}
+            />
+          </div>
+        </div>
+
+        {/* City, State, postcode */}
+        <div className={styles.formRow}>
+          <div className={styles.formCol}>
+            <input
+              name="city"
+              onChange={handleChange}
+              placeholder="City"
+              value={formData.city}
+            />
+          </div>
+          <div className={styles.formCol}>
+            <div className={styles.lblSelect}>
+              <span>State/territory</span>
+              <select
+                name="state"
+                onChange={handleChange}
+                value={formData.state}
+              >
+                {State.getStatesOfCountry(formData.country).map(s => (
+                  <option key={s.isoCode} value={s.name}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className={styles.formCol}>
+            <input
+              name="postcode"
+              onChange={handleChange}
+              placeholder="Postcode"
+              value={formData.postcode}
+            />
+          </div>
+        </div>
+        {showCommercialConfirmation && (
+          <div className={styles.formRow}>
+            <div className={styles.inputFullCol}>
+              <div className={styles.acceptCheckbox}>
+                <label>
+                  <input
+                    checked={acceptDeliveryTerms}
+                    name="acceptDeliveryTerms"
+                    onChange={e => setAcceptDeliveryTerms(e.target.checked)}
+                    type="checkbox"
+                  />
+                  <span>
+                    I confirm that my delivery address is a commercial address,
+                    and I understand that any additional fees arising from
+                    providing a residential address will be my responsibility.
+                  </span>
+                </label>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          <Button
-            className={styles.submitBtn}
-            disabled={
-              !formData.country ||
-              !formData.address ||
-              !formData.city ||
-              !formData.state ||
-              !formData.postcode ||
-              !acceptDeliveryTerms
-            }
-            onClick={() => setIsFormFilled(true)}
-            size="large"
-          >
-            Confirm Address
-          </Button>
+        <Button
+          className={styles.submitBtn}
+          disabled={
+            !formData.country ||
+            !formData.address ||
+            !formData.city ||
+            !formData.state ||
+            !formData.postcode ||
+            !acceptDeliveryTerms
+          }
+          onClick={() => setIsFormFilled(true)}
+          size="large"
+        >
+          Confirm Address
+        </Button>
 
-          {/* Billing-same-as-shipping toggle (Figma node 5443:36028).
+        {/* Billing-same-as-shipping toggle (Figma node 5443:36028).
               When unchecked we reveal a parallel billing address form;
               otherwise WP's checkoutOrder treats shipping as billing. */}
-          <div className={styles.billingSameRow}>
-            <label>
-              <input
-                checked={formData.billing_same_as_shipping !== false}
-                name="billing_same_as_shipping"
-                onChange={e =>
-                  setFormData(prev => ({
-                    ...prev,
-                    billing_same_as_shipping: e.target.checked,
-                  }))
-                }
-                type="checkbox"
-              />
-              <span>
-                The billing address is the same as the address listed above.
-              </span>
-            </label>
-          </div>
+        <div className={styles.billingSameRow}>
+          <label>
+            <input
+              checked={formData.billing_same_as_shipping !== false}
+              name="billing_same_as_shipping"
+              onChange={e =>
+                setFormData(prev => ({
+                  ...prev,
+                  billing_same_as_shipping: e.target.checked,
+                }))
+              }
+              type="checkbox"
+            />
+            <span>
+              The billing address is the same as the address listed above.
+            </span>
+          </label>
+        </div>
 
-          {formData.billing_same_as_shipping === false && (
-            <div className={styles.billingPanel}>
-              <h3>Billing Address</h3>
+        {formData.billing_same_as_shipping === false && (
+          <div className={styles.billingPanel}>
+            <h3>Billing Address</h3>
 
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <div className={styles.lblSelect}>
-                    <span>Country/Region</span>
-                    <select
-                      name="billing_country"
-                      onChange={handleChange}
-                      value={formData.billing_country || 'AU'}
-                    >
-                      <option value="AU">Australia</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="billing_company"
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <div className={styles.lblSelect}>
+                  <span>Country/Region</span>
+                  <select
+                    name="billing_country"
                     onChange={handleChange}
-                    placeholder="Company Name (Optional)"
-                    value={formData.billing_company || ''}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="billing_address"
-                    onChange={handleChange}
-                    placeholder="Address (We do not ship to PO Boxes)"
-                    value={formData.billing_address || ''}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="billing_address_2"
-                    onChange={handleChange}
-                    placeholder="Apartment, suite, etc. (Optional)"
-                    value={formData.billing_address_2 || ''}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name="billing_city"
-                    onChange={handleChange}
-                    placeholder="City"
-                    value={formData.billing_city || ''}
-                  />
-                </div>
-                <div className={styles.formCol}>
-                  <input
-                    name="billing_postcode"
-                    onChange={handleChange}
-                    placeholder="Postcode"
-                    value={formData.billing_postcode || ''}
-                  />
-                </div>
-                <div className={styles.formCol}>
-                  <div className={styles.lblSelect}>
-                    <span>State/territory</span>
-                    <select
-                      name="billing_state"
-                      onChange={handleChange}
-                      value={formData.billing_state || ''}
-                    >
-                      <option value="">Select state</option>
-                      {State.getStatesOfCountry(
-                        formData.billing_country || 'AU',
-                      ).map(s => (
-                        <option key={s.isoCode} value={s.name}>
-                          {s.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                    value={formData.billing_country || 'AU'}
+                  >
+                    <option value="AU">Australia</option>
+                  </select>
                 </div>
               </div>
             </div>
-          )}
-        </>
-      )}
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="billing_company"
+                  onChange={handleChange}
+                  placeholder="Company Name (Optional)"
+                  value={formData.billing_company || ''}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="billing_address"
+                  onChange={handleChange}
+                  placeholder="Address (We do not ship to PO Boxes)"
+                  value={formData.billing_address || ''}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="billing_address_2"
+                  onChange={handleChange}
+                  placeholder="Apartment, suite, etc. (Optional)"
+                  value={formData.billing_address_2 || ''}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <input
+                  name="billing_city"
+                  onChange={handleChange}
+                  placeholder="City"
+                  value={formData.billing_city || ''}
+                />
+              </div>
+              <div className={styles.formCol}>
+                <input
+                  name="billing_postcode"
+                  onChange={handleChange}
+                  placeholder="Postcode"
+                  value={formData.billing_postcode || ''}
+                />
+              </div>
+              <div className={styles.formCol}>
+                <div className={styles.lblSelect}>
+                  <span>State/territory</span>
+                  <select
+                    name="billing_state"
+                    onChange={handleChange}
+                    value={formData.billing_state || ''}
+                  >
+                    <option value="">Select state</option>
+                    {State.getStatesOfCountry(
+                      formData.billing_country || 'AU',
+                    ).map(s => (
+                      <option key={s.isoCode} value={s.name}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     </div>
   );
 }
