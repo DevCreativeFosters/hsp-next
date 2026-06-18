@@ -302,7 +302,7 @@ function CheckoutForm() {
   useEffect(() => {
     async function fetchData() {
       const stores = await getStores();
-      setAllStores(stores);
+      setAllStores(Array.isArray(stores) ? stores : []);
     }
     fetchData();
   }, []);
@@ -852,13 +852,18 @@ function CheckoutForm() {
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
                                       'local-installation' ||
-                                    deliveryOption.id ===
-                                      'on-site-fitting') && (
-                                    <SelectLocation
-                                      allStores={allStores}
-                                      onSelect={onSelect}
-                                    />
-                                  )}
+                                    deliveryOption.id === 'on-site-fitting') &&
+                                    (Array.isArray(allStores) &&
+                                    allStores.length > 0 ? (
+                                      <SelectLocation
+                                        allStores={allStores}
+                                        onSelect={onSelect}
+                                      />
+                                    ) : (
+                                      <p style={{ padding: '1rem' }}>
+                                        Loading stores…
+                                      </p>
+                                    ))}
                                   {(deliveryOption.id === 'deliver-door' ||
                                     deliveryOption.id === 'deliver-to-store' ||
                                     deliveryOption.id ===
