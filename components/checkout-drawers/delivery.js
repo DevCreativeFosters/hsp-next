@@ -314,6 +314,120 @@ function DeliveryAddressForm({
           >
             Confirm Address
           </Button>
+
+          {/* Billing-same-as-shipping toggle (Figma node 5443:36028).
+              When unchecked we reveal a parallel billing address form;
+              otherwise WP's checkoutOrder treats shipping as billing. */}
+          <div className={styles.billingSameRow}>
+            <label>
+              <input
+                checked={formData.billing_same_as_shipping !== false}
+                name="billing_same_as_shipping"
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    billing_same_as_shipping: e.target.checked,
+                  }))
+                }
+                type="checkbox"
+              />
+              <span>
+                The billing address is the same as the address listed above.
+              </span>
+            </label>
+          </div>
+
+          {formData.billing_same_as_shipping === false && (
+            <div className={styles.billingPanel}>
+              <h3>Billing Address</h3>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <div className={styles.lblSelect}>
+                    <span>Country/Region</span>
+                    <select
+                      name="billing_country"
+                      onChange={handleChange}
+                      value={formData.billing_country || 'AU'}
+                    >
+                      <option value="AU">Australia</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="billing_company"
+                    onChange={handleChange}
+                    placeholder="Company Name (Optional)"
+                    value={formData.billing_company || ''}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="billing_address"
+                    onChange={handleChange}
+                    placeholder="Address (We do not ship to PO Boxes)"
+                    value={formData.billing_address || ''}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="billing_address_2"
+                    onChange={handleChange}
+                    placeholder="Apartment, suite, etc. (Optional)"
+                    value={formData.billing_address_2 || ''}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name="billing_city"
+                    onChange={handleChange}
+                    placeholder="City"
+                    value={formData.billing_city || ''}
+                  />
+                </div>
+                <div className={styles.formCol}>
+                  <input
+                    name="billing_postcode"
+                    onChange={handleChange}
+                    placeholder="Postcode"
+                    value={formData.billing_postcode || ''}
+                  />
+                </div>
+                <div className={styles.formCol}>
+                  <div className={styles.lblSelect}>
+                    <span>State/territory</span>
+                    <select
+                      name="billing_state"
+                      onChange={handleChange}
+                      value={formData.billing_state || ''}
+                    >
+                      <option value="">Select state</option>
+                      {State.getStatesOfCountry(
+                        formData.billing_country || 'AU',
+                      ).map(s => (
+                        <option key={s.isoCode} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
