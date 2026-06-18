@@ -23,25 +23,32 @@ export default function StoreTile({ item, onSelect = () => {}, selected }) {
     geolocation,
     label,
     learnMoreButton,
-    location: { city, country, postalCode, stateAbbr, street },
+    location,
     name,
     slug,
     storeIcon,
     tel,
-  } = item;
+  } = item || {};
+  const { city, country, postalCode, stateAbbr, street } = location || {};
 
   let storeTypeLabel = label;
 
   const geoHash = getGeoHash(geolocation);
-  const telNormalized = tel?.toString().replaceAll(/([^0-9+])/gi, '');
+  const telNormalized =
+    typeof tel === 'string' || typeof tel === 'number'
+      ? String(tel).replaceAll(/([^0-9+])/gi, '')
+      : '';
 
-  const { lat, lng } = geolocation;
-  let addressString = address;
+  const { lat, lng } = geolocation || {};
+  let addressString = typeof address === 'string' ? address : '';
   if (street && city && stateAbbr && postalCode && country) {
     addressString = `${street}<br />${city}, ${stateAbbr} ${postalCode}, ${country}`;
   }
 
-  const addressStringPure = addressString.replaceAll('<br />', ', ');
+  const addressStringPure =
+    typeof addressString === 'string'
+      ? addressString.replaceAll('<br />', ', ')
+      : '';
 
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
