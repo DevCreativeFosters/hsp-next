@@ -26,11 +26,24 @@ function DeliveryAddressForm({
 }) {
   const { cartItems } = useCart();
   const { user } = useUserContext();
+  // The commercial-address confirmation is only relevant when the cart
+  // contains a freight-large item (Roll Cover, Armour Bar, Load Slides) —
+  // those products can't go to residential addresses. For carts without
+  // any large items the checkbox would be confusing noise, so we hide it
+  // entirely and auto-accept so the validation still passes.
+  const hasLargeItem = cartItems.some(item => item.largeItem);
+  const showCommercialConfirmation = user?.role !== 'b2b' && hasLargeItem;
   const [acceptDeliveryTerms, setAcceptDeliveryTerms] = useState(false);
 
   useEffect(() => {
-    if (user?.role === 'b2b') setAcceptDeliveryTerms(true);
-  }, [user?.role]);
+    // Auto-accept when (a) the user is B2B, or (b) there's no large item
+    // in the cart and therefore no confirmation to ask for.
+    if (user?.role === 'b2b' || !hasLargeItem) {
+      setAcceptDeliveryTerms(true);
+    } else {
+      setAcceptDeliveryTerms(false);
+    }
+  }, [hasLargeItem, user?.role]);
 
   const autocompleteRef = useRef(null);
 
@@ -274,7 +287,7 @@ function DeliveryAddressForm({
               />
             </div>
           </div>
-          {user?.role !== 'b2b' && (
+          {showCommercialConfirmation && (
             <div className={styles.formRow}>
               <div className={styles.inputFullCol}>
                 <div className={styles.acceptCheckbox}>
