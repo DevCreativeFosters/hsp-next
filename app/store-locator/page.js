@@ -16,6 +16,13 @@ import StoreLocatorResultsAndMap from '@components/store-locator-results-and-map
 
 import './page.scss';
 
+// Render on-demand instead of at build time. /store-locator depends on
+// WP-provided store data that can include null fields per environment;
+// prerendering it makes the whole Vercel build fail when any store has
+// bad data. On-demand SSR keeps the page working and isolates the error
+// to a request rather than the entire deployment.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata() {
   const tags = [`page:${removeLeadingSlash(routes.storeLocator)}`, 'store'];
   const data = await getSeoByUri(routes.storeLocator, tags);
