@@ -23,8 +23,8 @@ import SelectLocation from '@components/checkout-drawers/select-location';
 import Container from '@components/container/container';
 import Loading from '@components/loading/loading';
 
-import DropShipping from '@assets/icons/drop-shipping.svg';
 import LocationIcon from '@assets/icons/location-icon.svg';
+import OnSiteFittingIcon from '@assets/icons/onsite-fitting-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
 import PaymentIcons from '@assets/images/payment-icon.png';
@@ -71,10 +71,16 @@ function CheckoutForm() {
     appliedCoupons,
     applyCoupon,
     checkoutOrder,
+    createQuote,
     loading: checkoutLoading,
     totalDiscount,
   } = useCheckout();
   const [couponCode, setCouponCode] = useState('');
+
+  // Dealer quote form (amount + notes) shown via "Get A Quote Instead"
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [quoteAmount, setQuoteAmount] = useState('');
+  const [quoteNotes, setQuoteNotes] = useState('');
 
   const [isFormFilled, setIsFormFilled] = useState(false);
   const [formData, setFormData] = useState({
@@ -100,6 +106,7 @@ function CheckoutForm() {
     selectedStoreAddress: '',
     state: '',
     termsAndConditions: false,
+    vehicleIdentifier: '',
   });
 
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
@@ -178,7 +185,8 @@ function CheckoutForm() {
     {
       allowDelivery: false,
       askCutomerInfo: false,
-      description: 'Get your order delivered to your Store',
+      description:
+        'Appropriate delivery costs will be added to the final order summary',
       icon: TruckIcon,
       id: 'deliver-to-store',
       noteContent: (
@@ -192,7 +200,7 @@ function CheckoutForm() {
       role: 'b2b',
       selectedAddress: {
         btnTitle: 'Edit Address',
-        title: 'Deliver to Store',
+        title: 'Deliver to Door',
       },
       selectedMenu: {
         content: (
@@ -207,14 +215,14 @@ function CheckoutForm() {
             </p>
           </>
         ),
-        title: 'Deliver to Store',
+        title: 'Deliver to Door',
       },
-      title: 'Deliver to Store',
+      title: 'Deliver to Door',
     },
     {
       allowDelivery: false,
       askCutomerInfo: false,
-      description: 'Pickup from HSP HQ in Noble Park North VIC 3977',
+      description: 'Arrange your own freight pickup from HSP HQ',
       icon: LocationIcon,
       id: 'pickup-from-hsp',
       noteContent: (
@@ -241,34 +249,30 @@ function CheckoutForm() {
       title: 'Pickup From HSP',
     },
     {
-      allowDelivery: true,
-      askCutomerInfo: true,
+      allowDelivery: false,
+      askCutomerInfo: false,
       description:
-        'Get your products sent directly to your customers COMMERCIAL address',
-      icon: DropShipping,
-      id: 'drop-ship-to-customer',
-      noteContent: (
-        <>
-          <p>
-            <strong>Please Note:</strong> Freight times will vary depending on
-            location
-          </p>
-        </>
-      ),
+        'Get your products fitted on-site at your dealership from our local HSP specialists.',
+      icon: OnSiteFittingIcon,
+      id: 'on-site-fitting',
+      noteContent: <></>,
       role: 'b2b',
       selectedAddress: {
-        btnTitle: 'Edit Delivery Details',
-        title: 'Drop Ship to Customer',
+        btnTitle: 'Change Store',
+        title: 'On-Site Fitting',
       },
       selectedMenu: {
         content: (
           <>
-            <p>Get your products sent directly to a customers address</p>
+            <p>
+              Get your products fitted on-site at your dealership from our local
+              HSP specialists.
+            </p>
           </>
         ),
-        title: 'Drop Ship to Customer',
+        title: 'On-Site Fitting',
       },
-      title: 'Drop Ship to Customer',
+      title: 'On-Site Fitting',
     },
   ];
 
@@ -298,7 +302,7 @@ function CheckoutForm() {
   useEffect(() => {
     async function fetchData() {
       const stores = await getStores();
-      setAllStores(stores);
+      setAllStores(Array.isArray(stores) ? stores : []);
     }
     fetchData();
   }, []);
@@ -359,9 +363,15 @@ function CheckoutForm() {
 
         if (user?.id && user?.role === 'b2b') {
           const options = await getStoreDeliveryOptions(user.id);
-          filteredOptions = filteredOptions.filter(opt =>
-            options.includes(opt.id),
-          );
+          // Only restrict to the store's configured options when it actually
+          // has some. If the dealer's store has none set (or no store linked),
+          // fall back to showing all default b2b options instead of a blank
+          // section.
+          if (options && options.length > 0) {
+            filteredOptions = filteredOptions.filter(opt =>
+              options.includes(opt.id),
+            );
+          }
         }
 
         setDeliveryOptions(filteredOptions);
@@ -424,6 +434,7 @@ function CheckoutForm() {
       'termsAndConditions',
       'payment_method',
       'orderType',
+      ...(role === 'b2b' ? ['purchaseOrderNumber', 'vehicleIdentifier'] : []),
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -458,6 +469,30 @@ function CheckoutForm() {
     setLoading(false);
   };
 
+  const openQuoteForm = () => {
+    setQuoteAmount(String(cartTotal - totalDiscount));
+    setQuoteNotes(
+      formData.purchaseOrderNumber ? `PO: ${formData.purchaseOrderNumber}` : '',
+    );
+    setShowQuoteForm(true);
+  };
+
+  const handleSubmitQuote = async () => {
+    if (!quoteAmount) return;
+    setLoading(true);
+    const quote = await createQuote({
+      amount: quoteAmount,
+      notes: quoteNotes,
+    });
+    setLoading(false);
+
+    if (quote?.id) {
+      router.push(`/quote-status/${quote.id}`);
+    } else {
+      alert('❌ Could not create quote. Please try again.');
+    }
+  };
+
   return (
     <Container className={styles.checkoutContainer}>
       <section className={clsx(styles.checkoutMain, 'checkoutMain')}>
@@ -465,7 +500,7 @@ function CheckoutForm() {
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
             {/* Contact Details */}
-            {submitContactDetails ? (
+            {submitContactDetails && role !== 'b2b' ? (
               <div
                 className={clsx(styles.contactDetails, styles.editDetailMain)}
               >
@@ -491,7 +526,9 @@ function CheckoutForm() {
             ) : (
               <div className={styles.contactDetails}>
                 <div className={styles.heading}>
-                  <h2>Contact Details</h2>
+                  <h2>
+                    {role === 'b2b' ? 'Dealership Details' : 'Contact Details'}
+                  </h2>
                   <p>How Can We Reach You About Your Order?</p>
                 </div>
                 <div className={styles.formRow}>
@@ -565,24 +602,96 @@ function CheckoutForm() {
                       />
                     </div>
                   </div>
-                  <div className={clsx(styles.colFull, styles.submitBtn)}>
-                    <Button
-                      disabled={
-                        !formData.first_name ||
-                        !formData.last_name ||
-                        !formData.email ||
-                        !formData.phone ||
-                        (role === 'b2b' && !formData.company) ||
-                        loading ||
-                        cartItems.length === 0
-                      }
-                      onClick={handleSubmitContactDetails}
-                      size="large"
-                      variant="primary"
-                    >
-                      Submit Details
-                    </Button>
-                  </div>
+                  {role === 'b2b' ? (
+                    <>
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
+                          <label>
+                            Purchase Order Number
+                            <span className={styles.reqStar}>*</span>
+                          </label>
+                          <input
+                            name="purchaseOrderNumber"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.purchaseOrderNumber}
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
+                          <label>
+                            VIN
+                            <span className={styles.reqStar}>*</span>
+                          </label>
+                          <input
+                            name="vehicleIdentifier"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.vehicleIdentifier}
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className={clsx(styles.colFull, styles.dealershipTerms)}
+                      >
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                              <Link
+                                href="/privacy-terms-and-conditions"
+                                target="_blank"
+                              >
+                                Read our T&Cs{' '}
+                                <span className={styles.reqStar}>*</span>
+                              </Link>
+                            </span>
+                          </label>
+                        </div>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className={clsx(styles.colFull, styles.submitBtn)}>
+                      <Button
+                        disabled={
+                          !formData.first_name ||
+                          !formData.last_name ||
+                          !formData.email ||
+                          !formData.phone ||
+                          loading ||
+                          cartItems.length === 0
+                        }
+                        onClick={handleSubmitContactDetails}
+                        size="large"
+                        variant="primary"
+                      >
+                        Submit Details
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -592,7 +701,11 @@ function CheckoutForm() {
                 <h2>How would you like to Receive your Order?</h2>
                 <p>Choose a Delivery or Install Method</p>
               </div>
-              <div className={styles.blackBoxes}>
+              <div
+                className={clsx(styles.blackBoxes, {
+                  [styles.blackBoxesFull]: role === 'b2b',
+                })}
+              >
                 {cartLoading ? (
                   <div className={styles.loading}>
                     <Loading size="large" />
@@ -697,6 +810,7 @@ function CheckoutForm() {
                                 'local-installation',
                                 'click-collect',
                                 'pickup-from-hsp',
+                                'on-site-fitting',
                               ].some(id => id === deliveryOption.id) &&
                                 selectedStore?.location &&
                                 (() => {
@@ -737,12 +851,19 @@ function CheckoutForm() {
                                 <div className={styles.drawer}>
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
-                                      'local-installation') && (
-                                    <SelectLocation
-                                      allStores={allStores}
-                                      onSelect={onSelect}
-                                    />
-                                  )}
+                                      'local-installation' ||
+                                    deliveryOption.id === 'on-site-fitting') &&
+                                    (Array.isArray(allStores) &&
+                                    allStores.length > 0 ? (
+                                      <SelectLocation
+                                        allStores={allStores}
+                                        onSelect={onSelect}
+                                      />
+                                    ) : (
+                                      <p style={{ padding: '1rem' }}>
+                                        Loading stores…
+                                      </p>
+                                    ))}
                                   {(deliveryOption.id === 'deliver-door' ||
                                     deliveryOption.id === 'deliver-to-store' ||
                                     deliveryOption.id ===
@@ -872,50 +993,52 @@ function CheckoutForm() {
                   </div>
                 </div>
 
-                <div className={styles.groupTerms}>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.termsAndConditions}
-                            name="termsAndConditions"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I accept the Privacy Policy and Terms & Conditions
-                            <Link
-                              href="/privacy-terms-and-conditions"
-                              target="_blank"
-                            >
-                              Read our T&Cs{' '}
-                              <span className={styles.reqStar}>*</span>
-                            </Link>
-                          </span>
-                        </label>
+                {role !== 'b2b' && (
+                  <div className={styles.groupTerms}>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                              <Link
+                                href="/privacy-terms-and-conditions"
+                                target="_blank"
+                              >
+                                Read our T&Cs{' '}
+                                <span className={styles.reqStar}>*</span>
+                              </Link>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.marketing}
-                            name="marketing"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I agree to receiving Marketing and Promotional
-                            emails from HSP
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                )}
 
                 <Button
                   className={styles.placeOrderBtn}
@@ -1088,6 +1211,55 @@ function CheckoutForm() {
                   </div>
                 )}
               </div>
+              {role === 'b2b' &&
+                (showQuoteForm ? (
+                  <div className={styles.quoteForm}>
+                    <div className={styles.inputGroup}>
+                      <label>Quote Amount (AUD)</label>
+                      <input
+                        min="0"
+                        onChange={e => setQuoteAmount(e.target.value)}
+                        step="0.01"
+                        type="number"
+                        value={quoteAmount}
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label>Notes</label>
+                      <textarea
+                        onChange={e => setQuoteNotes(e.target.value)}
+                        placeholder="Add any notes for this quote (optional)"
+                        rows={3}
+                        value={quoteNotes}
+                      />
+                    </div>
+                    <Button
+                      className={styles.getQuoteBtn}
+                      disabled={loading || !quoteAmount}
+                      onClick={handleSubmitQuote}
+                      type="button"
+                    >
+                      Submit Quote
+                    </Button>
+                    <button
+                      className={styles.quoteCancel}
+                      onClick={() => setShowQuoteForm(false)}
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <Button
+                    className={styles.getQuoteBtn}
+                    disabled={loading || cartItems.length === 0}
+                    onClick={openQuoteForm}
+                    type="button"
+                    variant="ghost"
+                  >
+                    Get A Quote Instead
+                  </Button>
+                ))}
             </div>
           </div>
         </form>
