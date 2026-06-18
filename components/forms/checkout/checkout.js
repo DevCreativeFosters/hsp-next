@@ -90,6 +90,14 @@ function CheckoutForm() {
       customer_last_name: '',
     },
     address: '',
+    billing_address: '',
+    billing_address_2: '',
+    billing_city: '',
+    billing_company: '',
+    billing_country: 'AU',
+    billing_postcode: '',
+    billing_same_as_shipping: true,
+    billing_state: '',
     city: '',
     company: '',
     country: 'AU',
@@ -444,11 +452,37 @@ function CheckoutForm() {
       return;
     }
 
-    // WP's CheckoutOrderInput doesn't accept `vehicleIdentifier`. Strip it
-    // before sending — we still surface the field in the form for the
-    // dealer's records and to drive validation, but it can't go to WP as a
-    // top-level input or the mutation rejects the entire request.
-    const { vehicleIdentifier, ...formDataForWP } = formData;
+    // WP's CheckoutOrderInput doesn't accept `vehicleIdentifier` or the
+    // local-only `billing_same_as_shipping` toggle. Strip them before
+    // sending. If billing IS the same as shipping, also strip the
+    // billing_* fields entirely (they would just duplicate the shipping
+    // address with empty strings). If billing differs, the billing_*
+    // fields will pass through and either be accepted by WP or rejected
+    // with a clear schema error message we can use to wire them later.
+    const {
+      billing_address,
+      billing_address_2,
+      billing_city,
+      billing_company,
+      billing_country,
+      billing_postcode,
+      billing_same_as_shipping,
+      billing_state,
+      vehicleIdentifier,
+      ...baseFormData
+    } = formData;
+    const formDataForWP = billing_same_as_shipping
+      ? baseFormData
+      : {
+          ...baseFormData,
+          billing_address,
+          billing_address_2,
+          billing_city,
+          billing_company,
+          billing_country,
+          billing_postcode,
+          billing_state,
+        };
     const payload = {
       ...formDataForWP,
       ...(selectedStore?.id && {
