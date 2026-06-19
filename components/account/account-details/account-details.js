@@ -152,7 +152,10 @@ function AccountDetails() {
         const data = res?.getStoreByUserId;
 
         if (data) {
-          let store = { ...data?.storeDetails[0] };
+          // data.storeDetails can come back as null when WP doesn't have a
+          // store linked to this dealer. Optional chaining on the array
+          // access prevents null[0] from crashing the page.
+          let store = { ...(data?.storeDetails?.[0] ?? {}) };
 
           // now get the store details
           const storeId = store?.store_id;
@@ -163,12 +166,13 @@ function AccountDetails() {
 
           const storeDetails = storeData?.store;
 
-          const priceList = storeDetails.storesCustomFields.priceList?.node;
+          const priceList =
+            storeDetails?.storesCustomFields?.priceList?.node ?? null;
 
           store = {
             ...store,
-            ...storeDetails,
-            ...storeDetails.storesCustomFields,
+            ...(storeDetails ?? {}),
+            ...(storeDetails?.storesCustomFields ?? {}),
             priceList,
           };
 
@@ -265,7 +269,7 @@ function AccountDetails() {
                       <td>
                         {storeDetails?.addressFields?.streetAddress},{' '}
                         {storeDetails?.addressFields?.city}{' '}
-                        {storeDetails?.addressFields?.state[0]}{' '}
+                        {storeDetails?.addressFields?.state?.[0]}{' '}
                         {storeDetails?.addressFields?.postalCode}
                       </td>
                     </tr>
