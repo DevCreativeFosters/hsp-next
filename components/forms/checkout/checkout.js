@@ -603,6 +603,19 @@ function CheckoutForm() {
                   <p>How Can We Reach You About Your Order?</p>
                 </div>
                 <div className={styles.formRow}>
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <label>
+                        Email Address<span className={styles.reqStar}>*</span>
+                      </label>
+                      <input
+                        name="email"
+                        onChange={handleChange}
+                        type="email"
+                        value={formData.email}
+                      />
+                    </div>
+                  </div>
                   <div className={styles.colHalf}>
                     <div className={styles.inputGroup}>
                       <label>
@@ -626,19 +639,6 @@ function CheckoutForm() {
                         onChange={handleChange}
                         type="text"
                         value={formData.last_name}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <label>
-                        Email Address<span className={styles.reqStar}>*</span>
-                      </label>
-                      <input
-                        name="email"
-                        onChange={handleChange}
-                        type="email"
-                        value={formData.email}
                       />
                     </div>
                   </div>

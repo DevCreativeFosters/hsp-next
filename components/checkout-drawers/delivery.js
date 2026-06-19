@@ -334,7 +334,7 @@ function DeliveryAddressForm({
               type="checkbox"
             />
             <span>
-              The billing address is the same as the address listed above.
+              The delivery address is the same as the address listed above.
             </span>
           </label>
         </div>
