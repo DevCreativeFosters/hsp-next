@@ -20,11 +20,21 @@ import PdfIcon from '@assets/icons/pdf-icon.svg';
 import styles from './b2b.module.scss';
 
 export default async function RetailPage() {
-  const content = await getPageData('/account/b2b');
+  // WP can fail or return null/undefined for this page when the editor hasn't
+  // populated the Flexible Content block. Don't let that crash the route.
+  let content = null;
+  try {
+    content = await getPageData('/account/b2b');
+  } catch (err) {
+    console.error('Failed to load /account/b2b page data:', err?.message);
+  }
 
-  const contentBlocks = await Promise.all(
-    content?.flexibleContent?.blocks?.map(renderBlock) || [],
-  );
+  const blocks = Array.isArray(content?.flexibleContent?.blocks)
+    ? content.flexibleContent.blocks
+    : [];
+  const contentBlocks = blocks.length
+    ? await Promise.all(blocks.map(renderBlock))
+    : [];
 
   return (
     <Layout title="Retail Account">
@@ -65,7 +75,7 @@ export default async function RetailPage() {
             {
               content: (
                 <Fragment>
-                  {contentBlocks[0]}
+                  {contentBlocks?.[0] ?? null}
                   <div className={styles.warrantyBlock}>
                     <h3 className={styles.sectionTitle}>Warranty Procedures</h3>
                     <p>
