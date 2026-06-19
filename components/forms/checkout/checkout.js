@@ -392,9 +392,41 @@ function CheckoutForm() {
 
   const handleSelectOption = id => {
     if (id === 'pickup-from-hsp') {
+      // Find the HSP HQ store record (hard-coded to databaseId 2513 in prod).
+      // If allStores hasn't loaded yet OR the WP environment doesn't have
+      // that exact row (staging may have different IDs), normalizeStores
+      // crashes on undefined input — bail out gracefully and let the user
+      // still select the option with a placeholder address.
       const findItem = allStores.find(store => store.databaseId == 2513);
-      const item = normalizeStores([findItem])[0];
-      setSelectedStore(item);
+      let item = null;
+      if (findItem) {
+        try {
+          item = normalizeStores([findItem])[0] ?? null;
+        } catch (err) {
+          console.error('normalizeStores failed for pickup-from-hsp:', err);
+          item = null;
+        }
+      } else if (typeof window !== 'undefined') {
+        console.warn(
+          'Pickup from HSP: store with databaseId 2513 not found in allStores',
+          { allStoresCount: allStores.length },
+        );
+      }
+      setSelectedStore(
+        item || {
+          // Minimal shape so downstream consumers (the address card display
+          // in particular) don't crash on null when the lookup misses.
+          id: 'pickup-from-hsp',
+          location: {
+            city: 'Noble Park North',
+            country: 'AU',
+            postalCode: '3977',
+            stateAbbr: 'VIC',
+            street: 'HSP HQ',
+          },
+          name: 'HSP HQ',
+        },
+      );
       setFormData({ ...formData, orderType: id });
       setOpenDrawer('pickup-from-hsp');
       setIsFormFilled(true);
