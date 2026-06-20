@@ -139,6 +139,85 @@
   }
 }
 
+// Email helper text under the Email Address field.
+.emailHelper {
+  color: #666;
+  font-size: 12px;
+  margin: 4px 0 0;
+}
+
+// "Looks like you already have an account" inline login prompt that drops
+// in below the Email Address field on checkout when a guest types a known
+// email. The user can log in inline to autofill the rest, or skip.
+.inlineLoginPrompt {
+  margin: 8px 0 16px;
+  padding: 16px;
+  background: #f6f6f6;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.inlineLoginLead {
+  margin: 0 0 12px;
+  color: #000;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.inlineLoginRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+
+  input {
+    flex: 1;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid #c5c5c5;
+    border-radius: 6px;
+    background: #fff;
+    outline: none;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 0 18px;
+    background: #000;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.inlineLoginError {
+  margin: 8px 0 0;
+  color: #c00;
+  font-size: 13px;
+}
+
+.inlineLoginSkip {
+  margin-top: 10px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #555;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
+
 .checkoutMain {
   margin-top: 60px;
   margin-bottom: 60px;
