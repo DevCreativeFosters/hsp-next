@@ -11,6 +11,7 @@ import { useCart } from '@contexts/cart-context';
 import { useCheckout } from '@contexts/checkout';
 import { useUserContext } from '@contexts/user';
 
+import { getCustomerByEmail } from '@lib/api/get-customer-by-email';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
 import { fetchAPI } from '@lib/fetch-api';
@@ -116,6 +117,91 @@ function CheckoutForm() {
     termsAndConditions: false,
     vehicleIdentifier: '',
   });
+
+  // Existing-customer email lookup. When the guest enters an email that's
+  // already registered, we surface an inline "log in to autofill" prompt
+  // below the email field so they don't have to retype everything.
+  const [customerLookup, setCustomerLookup] = useState(null);
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginInProgress, setLoginInProgress] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [emailLookupInFlight, setEmailLookupInFlight] = useState(false);
+  const [continueAsGuest, setContinueAsGuest] = useState(false);
+
+  const checkEmailExists = async emailToCheck => {
+    if (!emailToCheck || !emailToCheck.includes('@')) {
+      setCustomerLookup(null);
+      return;
+    }
+    setEmailLookupInFlight(true);
+    const result = await getCustomerByEmail(emailToCheck);
+    setEmailLookupInFlight(false);
+    setCustomerLookup(result);
+  };
+
+  const handleInlineLogin = async () => {
+    if (!formData.email || !loginPassword) return;
+    setLoginInProgress(true);
+    setLoginError('');
+    try {
+      const loginRes = await fetchAPI(
+        `
+          mutation UserLogin($username: String!, $password: String!) {
+            userLogin(input: { username: $username, password: $password }) {
+              token
+              userId
+              role
+              error
+              message
+            }
+          }
+        `,
+        { variables: { password: loginPassword, username: formData.email } },
+      );
+      const login = loginRes?.userLogin;
+      if (!login?.token) {
+        setLoginError(login?.error || login?.message || 'Login failed');
+        setLoginInProgress(false);
+        return;
+      }
+      // Persist auth the same way login-form.js does so the rest of the
+      // app picks up the session.
+      const dealerRoles = ['b2b', 'dealer', 'dealership'];
+      const normalizedRole = dealerRoles.includes(login.role)
+        ? 'b2b'
+        : login.role;
+      localStorage.setItem('authToken', login.token);
+      localStorage.setItem('userId', String(login.userId));
+      localStorage.setItem('userRole', normalizedRole);
+      window.dispatchEvent(new Event('authchange'));
+
+      // Re-query with the new auth token so the resolver returns the full
+      // profile (firstName/lastName/phone/company), then prefill.
+      const profile = await getCustomerByEmail(formData.email, {
+        authToken: login.token,
+      });
+      if (profile) {
+        setFormData(prev => ({
+          ...prev,
+          company: profile.company || prev.company,
+          first_name: profile.firstName || prev.first_name,
+          last_name: profile.lastName || prev.last_name,
+          phone: profile.phone || prev.phone,
+        }));
+        setCustomerLookup({ ...profile, isLoggedIn: true });
+      }
+      setLoginPassword('');
+    } catch (err) {
+      setLoginError(err?.message || 'Login failed');
+    } finally {
+      setLoginInProgress(false);
+    }
+  };
+
+  const showInlineLoginPrompt =
+    customerLookup?.exists &&
+    customerLookup?.isLoggedIn === false &&
+    !continueAsGuest;
 
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
 
@@ -610,11 +696,59 @@ function CheckoutForm() {
                       </label>
                       <input
                         name="email"
+                        onBlur={e => checkEmailExists(e.target.value)}
                         onChange={handleChange}
                         type="email"
                         value={formData.email}
                       />
+                      {emailLookupInFlight && (
+                        <p className={styles.emailHelper}>Checking…</p>
+                      )}
                     </div>
+
+                    {showInlineLoginPrompt && (
+                      <div className={styles.inlineLoginPrompt}>
+                        <p className={styles.inlineLoginLead}>
+                          Looks like you already have an account. Log in to
+                          autofill your details.
+                        </p>
+                        <div className={styles.inlineLoginRow}>
+                          <input
+                            autoComplete="current-password"
+                            disabled={loginInProgress}
+                            onChange={e => setLoginPassword(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleInlineLogin();
+                              }
+                            }}
+                            placeholder="Password"
+                            type="password"
+                            value={loginPassword}
+                          />
+                          <button
+                            disabled={loginInProgress || !loginPassword}
+                            onClick={handleInlineLogin}
+                            type="button"
+                          >
+                            {loginInProgress ? 'Logging in…' : 'Log in'}
+                          </button>
+                        </div>
+                        {loginError && (
+                          <p className={styles.inlineLoginError}>
+                            ❌ {loginError}
+                          </p>
+                        )}
+                        <button
+                          className={styles.inlineLoginSkip}
+                          onClick={() => setContinueAsGuest(true)}
+                          type="button"
+                        >
+                          Continue as guest
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <div className={styles.colHalf}>
                     <div className={styles.inputGroup}>
