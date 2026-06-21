@@ -298,3 +298,53 @@
     font-size: 18px;
   }
 }
+
+// $20 freight fee disclosure — shown at the top of the Deliver-to-Door
+// drawer regardless of whether the customer ships to the primary address
+// or a separate delivery address.
+.freightNotice {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+
+  strong {
+    color: #fff;
+  }
+}
+
+// Summary card shown when the customer leaves "delivery same as the address
+// above" ticked. Just echoes the primary address so they can verify before
+// confirming the order type.
+.addressSummaryCard {
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  background: rgb(255 255 255 / 6%);
+  border: 1px dashed rgb(255 255 255 / 30%);
+  border-radius: 6px;
+  color: #fff;
+
+  h4 {
+    margin: 0 0 8px;
+    font-family: var(--font-primary);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgb(255 255 255 / 70%);
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+}
+
+.addressSummaryMissing {
+  color: #ed2935;
+  font-style: italic;
+}

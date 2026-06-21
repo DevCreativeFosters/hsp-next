@@ -52,6 +52,18 @@ function DeliveryAddressForm({
     libraries,
   });
 
+  // When the Address Details card at the top of the checkout collects the
+  // primary address AND the customer leaves "delivery same as above"
+  // ticked, the Deliver-to-Door drawer just shows a summary. When they
+  // untick it, this drawer collects a SEPARATE delivery address into the
+  // delivery_* formData fields. For drop-ship-to-customer (askCutomerInfo
+  // === true) we always collect the customer's address into the primary
+  // formData fields — that flow doesn't pair with the toggle.
+  const deliverySameAsBilling = formData.delivery_same_as_billing !== false;
+  const useAltAddress = !askCutomerInfo && !deliverySameAsBilling;
+  const fieldPrefix = useAltAddress ? 'delivery_' : '';
+  const f = key => `${fieldPrefix}${key}`;
+
   const handlePlaceChanged = () => {
     const place = autocompleteRef.current?.getPlace?.();
     if (!place || !place.address_components) return;
@@ -71,10 +83,10 @@ function DeliveryAddressForm({
 
     setFormData(prev => ({
       ...prev,
-      address,
-      city,
-      postcode,
-      state,
+      [f('address')]: address,
+      [f('city')]: city,
+      [f('postcode')]: postcode,
+      [f('state')]: state,
     }));
   };
 
@@ -101,15 +113,27 @@ function DeliveryAddressForm({
 
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
+  // Showing the alternate-delivery form (or any address form for drop-ship)
+  // means we need to validate the user filled the field set we're actually
+  // collecting into. When it's just a summary card (toggle ticked, not a
+  // drop-ship) we trust the primary address that was confirmed upstream on
+  // the Address Details card.
+  const country = formData[f('country')] ?? (useAltAddress ? 'AU' : 'AU');
+  const company = formData[f('company')] ?? '';
+  const street = formData[f('address')] ?? '';
+  const apt = formData[f('address_2')] ?? '';
+  const city = formData[f('city')] ?? '';
+  const state = formData[f('state')] ?? '';
+  const postcode = formData[f('postcode')] ?? '';
+
+  const formIncomplete =
+    !country || !street || !city || !state || !postcode || !acceptDeliveryTerms;
+
   return (
     <div className={styles.deliveryForm}>
       <>
         {hasLargeItem && (
-          // Warning banner shown for ANY heavy-item delivery flow — replaces
-          // the previous hard-block branch. The customer can still enter
-          // their address; the commercial-address tickbox below the form
-          // gates the Confirm Address button so they have to acknowledge
-          // the requirement before proceeding.
+          // Warning banner shown for ANY heavy-item delivery flow.
           <div className={clsx(styles.redBoxContent, styles.warning)}>
             <h5>Commercial Address Required for Delivery</h5>
             <p>
@@ -122,26 +146,155 @@ function DeliveryAddressForm({
           </div>
         )}
 
-        {askCutomerInfo && (
-          <>
-            <p className={styles.heading}>
-              <strong>Customer Info:</strong>
+        {/* $20 freight fee disclosure — applies to Deliver-to-Door orders. */}
+        <div className={styles.freightNotice}>
+          A <strong>$20 freight fee</strong> applies to Deliver-to-Door orders.
+        </div>
+
+        {!askCutomerInfo && deliverySameAsBilling ? (
+          // Summary card — toggle is ticked, so we ship to the primary
+          // address already entered on the Address Details card above.
+          <div className={styles.addressSummaryCard}>
+            <h4>Delivery Address</h4>
+            <p>
+              {formData.address || (
+                <span className={styles.addressSummaryMissing}>
+                  Please enter your address in the Address Details section
+                  above.
+                </span>
+              )}
+              {formData.address_2 ? `, ${formData.address_2}` : ''}
+              {formData.address && (
+                <>
+                  <br />
+                  {formData.city}
+                  {formData.city && (formData.state || formData.postcode)
+                    ? ', '
+                    : ''}
+                  {formData.state} {formData.postcode}
+                  {(formData.state || formData.postcode) && formData.country
+                    ? ', '
+                    : ''}
+                  {formData.country}
+                </>
+              )}
             </p>
+          </div>
+        ) : (
+          <>
+            {askCutomerInfo && (
+              <>
+                <p className={styles.heading}>
+                  <strong>Customer Info:</strong>
+                </p>
+                <div className={styles.formRow}>
+                  <div className={styles.formCol}>
+                    <input
+                      name="additionalCustomerInfo.customer_first_name"
+                      onChange={handleChange}
+                      placeholder="First Name"
+                      value={
+                        formData.additionalCustomerInfo?.customer_first_name
+                      }
+                    />
+                  </div>
+                  <div className={styles.formCol}>
+                    <input
+                      name="additionalCustomerInfo.customer_last_name"
+                      onChange={handleChange}
+                      placeholder="Last Name"
+                      value={
+                        formData.additionalCustomerInfo?.customer_last_name
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formRow}>
+                  <div className={styles.formCol}>
+                    <input
+                      name="additionalCustomerInfo.customer_email"
+                      onChange={handleChange}
+                      placeholder="Customer Email"
+                      value={formData.additionalCustomerInfo?.customer_email}
+                    />
+                  </div>
+                </div>
+                <p className={styles.heading}>
+                  <strong>Shipping Info:</strong>
+                </p>
+              </>
+            )}
+
+            <div className={styles.formRow}>
+              <div className={styles.formCol}>
+                <div className={styles.lblSelect}>
+                  <span>Country/Region</span>
+                  <select
+                    name={f('country')}
+                    onChange={handleChange}
+                    value={country}
+                  >
+                    <option value="AU">Australia</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {!askCutomerInfo && (
+              <div className={styles.formRow}>
+                <div className={styles.formCol}>
+                  <input
+                    name={f('company')}
+                    onChange={handleChange}
+                    placeholder="Company Name (Optional)"
+                    value={company}
+                  />
+                </div>
+              </div>
+            )}
+
+            <Autocomplete
+              onLoad={autocomplete => {
+                autocompleteRef.current = autocomplete;
+                autocomplete.setComponentRestrictions({
+                  country: (country || 'AU').toLowerCase(),
+                });
+
+                setTimeout(() => {
+                  const pacContainer = document.querySelector('.pac-container');
+                  if (pacContainer) pacContainer.classList.add('pacContainer');
+
+                  const formWrapper = document.querySelector(
+                    `.${styles.autocomplete}`,
+                  );
+                  if (pacContainer && formWrapper) {
+                    formWrapper.parentNode.insertBefore(
+                      pacContainer,
+                      formWrapper,
+                    );
+                  }
+                }, 500);
+              }}
+              onPlaceChanged={handlePlaceChanged}
+            >
+              <div className={styles.formRow}>
+                <div className={clsx(styles.formCol, styles.autocomplete)}>
+                  <input placeholder="Address (We do not ship to PO Boxes)" />
+                  <button className={styles.searchBtn} type="button">
+                    <SearchIcon />
+                  </button>
+                </div>
+              </div>
+            </Autocomplete>
+
             <div className={styles.formRow}>
               <div className={styles.formCol}>
                 <input
-                  name="additionalCustomerInfo.customer_first_name"
+                  name={f('address_2')}
                   onChange={handleChange}
-                  placeholder="First Name"
-                  value={formData.additionalCustomerInfo?.customer_first_name}
-                />
-              </div>
-              <div className={styles.formCol}>
-                <input
-                  name="additionalCustomerInfo.customer_last_name"
-                  onChange={handleChange}
-                  placeholder="Last Name"
-                  value={formData.additionalCustomerInfo?.customer_last_name}
+                  placeholder="Apartment, suite, etc. (optional)"
+                  value={apt}
                 />
               </div>
             </div>
@@ -149,136 +302,41 @@ function DeliveryAddressForm({
             <div className={styles.formRow}>
               <div className={styles.formCol}>
                 <input
-                  name="additionalCustomerInfo.customer_email"
+                  name={f('city')}
                   onChange={handleChange}
-                  placeholder="Customer Email"
-                  value={formData.additionalCustomerInfo?.customer_email}
+                  placeholder="City"
+                  value={city}
+                />
+              </div>
+              <div className={styles.formCol}>
+                <div className={styles.lblSelect}>
+                  <span>State/territory</span>
+                  <select
+                    name={f('state')}
+                    onChange={handleChange}
+                    value={state}
+                  >
+                    <option value="">Select state</option>
+                    {State.getStatesOfCountry(country || 'AU').map(s => (
+                      <option key={s.isoCode} value={s.name}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={styles.formCol}>
+                <input
+                  name={f('postcode')}
+                  onChange={handleChange}
+                  placeholder="Postcode"
+                  value={postcode}
                 />
               </div>
             </div>
-            <p className={styles.heading}>
-              <strong>Shipping Info:</strong>
-            </p>
           </>
         )}
 
-        {/* Country */}
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <div className={styles.lblSelect}>
-              <span>Country/Region</span>
-              <select
-                name="country"
-                onChange={handleChange}
-                value={formData.country}
-              >
-                {/* {Country.getAllCountries().map((c) => (
-                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
-                  ))} */}
-                <option value="AU">Australia</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {!askCutomerInfo && (
-          <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <input
-                name="deliveryCompanyName"
-                onChange={handleChange}
-                placeholder="Company Name (Optional)"
-                value={formData.deliveryCompanyName}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Address Autocomplete */}
-        <Autocomplete
-          onLoad={autocomplete => {
-            autocompleteRef.current = autocomplete;
-            autocomplete.setComponentRestrictions({
-              country: formData.country.toLowerCase(),
-            });
-
-            // 👇 Move the dropdown inside your component for styling
-            setTimeout(() => {
-              const pacContainer = document.querySelector('.pac-container');
-              pacContainer.classList.add('pacContainer');
-
-              const formWrapper = document.querySelector(
-                `.${styles.autocomplete}`,
-              );
-              if (pacContainer && formWrapper) {
-                formWrapper.parentNode.insertBefore(pacContainer, formWrapper);
-              }
-            }, 500);
-          }}
-          onPlaceChanged={handlePlaceChanged}
-        >
-          <div className={styles.formRow}>
-            <div className={clsx(styles.formCol, styles.autocomplete)}>
-              <input
-                // name="address"
-                // onChange={handleChange}
-                placeholder="Address"
-                // value={formData.address}
-              />
-              <button className={styles.searchBtn} type="button">
-                <SearchIcon />
-              </button>
-            </div>
-          </div>
-        </Autocomplete>
-
-        {/* Apartment */}
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <input
-              name="address"
-              onChange={handleChange}
-              placeholder="Apartment, suite, etc."
-              value={formData.address}
-            />
-          </div>
-        </div>
-
-        {/* City, State, postcode */}
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <input
-              name="city"
-              onChange={handleChange}
-              placeholder="City"
-              value={formData.city}
-            />
-          </div>
-          <div className={styles.formCol}>
-            <div className={styles.lblSelect}>
-              <span>State/territory</span>
-              <select
-                name="state"
-                onChange={handleChange}
-                value={formData.state}
-              >
-                {State.getStatesOfCountry(formData.country).map(s => (
-                  <option key={s.isoCode} value={s.name}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className={styles.formCol}>
-            <input
-              name="postcode"
-              onChange={handleChange}
-              placeholder="Postcode"
-              value={formData.postcode}
-            />
-          </div>
-        </div>
         {showCommercialConfirmation && (
           <div className={styles.formRow}>
             <div className={styles.inputFullCol}>
@@ -304,132 +362,17 @@ function DeliveryAddressForm({
         <Button
           className={styles.submitBtn}
           disabled={
-            !formData.country ||
-            !formData.address ||
-            !formData.city ||
-            !formData.state ||
-            !formData.postcode ||
-            !acceptDeliveryTerms
+            // Summary mode: only need the commercial-confirmation when
+            // applicable; the primary address itself was confirmed upstream.
+            !askCutomerInfo && deliverySameAsBilling
+              ? !acceptDeliveryTerms || !formData.address
+              : formIncomplete
           }
           onClick={() => setIsFormFilled(true)}
           size="large"
         >
           Confirm Address
         </Button>
-
-        {/* Billing-same-as-shipping toggle (Figma node 5443:36028).
-              When unchecked we reveal a parallel billing address form;
-              otherwise WP's checkoutOrder treats shipping as billing. */}
-        <div className={styles.billingSameRow}>
-          <label>
-            <input
-              checked={formData.billing_same_as_shipping !== false}
-              name="billing_same_as_shipping"
-              onChange={e =>
-                setFormData(prev => ({
-                  ...prev,
-                  billing_same_as_shipping: e.target.checked,
-                }))
-              }
-              type="checkbox"
-            />
-            <span>
-              The delivery address is the same as the address listed above.
-            </span>
-          </label>
-        </div>
-
-        {formData.billing_same_as_shipping === false && (
-          <div className={styles.billingPanel}>
-            <h3>Billing Address</h3>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <div className={styles.lblSelect}>
-                  <span>Country/Region</span>
-                  <select
-                    name="billing_country"
-                    onChange={handleChange}
-                    value={formData.billing_country || 'AU'}
-                  >
-                    <option value="AU">Australia</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name="billing_company"
-                  onChange={handleChange}
-                  placeholder="Company Name (Optional)"
-                  value={formData.billing_company || ''}
-                />
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name="billing_address"
-                  onChange={handleChange}
-                  placeholder="Address (We do not ship to PO Boxes)"
-                  value={formData.billing_address || ''}
-                />
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name="billing_address_2"
-                  onChange={handleChange}
-                  placeholder="Apartment, suite, etc. (Optional)"
-                  value={formData.billing_address_2 || ''}
-                />
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name="billing_city"
-                  onChange={handleChange}
-                  placeholder="City"
-                  value={formData.billing_city || ''}
-                />
-              </div>
-              <div className={styles.formCol}>
-                <input
-                  name="billing_postcode"
-                  onChange={handleChange}
-                  placeholder="Postcode"
-                  value={formData.billing_postcode || ''}
-                />
-              </div>
-              <div className={styles.formCol}>
-                <div className={styles.lblSelect}>
-                  <span>State/territory</span>
-                  <select
-                    name="billing_state"
-                    onChange={handleChange}
-                    value={formData.billing_state || ''}
-                  >
-                    <option value="">Select state</option>
-                    {State.getStatesOfCountry(
-                      formData.billing_country || 'AU',
-                    ).map(s => (
-                      <option key={s.isoCode} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </>
     </div>
   );
