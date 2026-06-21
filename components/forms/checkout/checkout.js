@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
+import { State } from 'country-state-city';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -91,18 +92,35 @@ function CheckoutForm() {
       customer_last_name: '',
     },
     address: '',
-    billing_address: '',
-    billing_address_2: '',
-    billing_city: '',
-    billing_company: '',
-    billing_country: 'AU',
-    billing_postcode: '',
-    billing_same_as_shipping: true,
-    billing_state: '',
+    address_2: '',
     city: '',
+    
+    
+    
+    
     company: '',
-    country: 'AU',
-    deliveryCompanyName: '',
+    
+
+
+
+country: 'AU',
+    
+
+
+
+deliveryCompanyName: '',
+    // Optional alternate delivery address — only used when the customer
+// unticks "delivery address is the same as the address listed above"
+// on the Address Details card. When ticked (default), the order ships
+// to the primary address (formData.address, .city, .state, etc.).
+delivery_address: '',
+    delivery_address_2: '',
+    delivery_city: '',
+    delivery_company: '',
+    delivery_country: 'AU',
+    delivery_postcode: '',
+    delivery_same_as_billing: true,
+    delivery_state: '',
     email: '',
     first_name: '',
     last_name: '',
@@ -571,35 +589,36 @@ function CheckoutForm() {
     }
 
     // WP's CheckoutOrderInput doesn't accept `vehicleIdentifier` or the
-    // local-only `billing_same_as_shipping` toggle. Strip them before
-    // sending. If billing IS the same as shipping, also strip the
-    // billing_* fields entirely (they would just duplicate the shipping
-    // address with empty strings). If billing differs, the billing_*
-    // fields will pass through and either be accepted by WP or rejected
-    // with a clear schema error message we can use to wire them later.
+    // local-only `delivery_same_as_billing` toggle. Strip them before
+    // sending. If delivery IS the same as the billing/primary address,
+    // also strip the delivery_* fields entirely (they would just
+    // duplicate the primary address with empty strings). If delivery
+    // differs, the delivery_* fields will pass through and either be
+    // accepted by WP or rejected with a clear schema error message we
+    // can use to wire them later.
     const {
-      billing_address,
-      billing_address_2,
-      billing_city,
-      billing_company,
-      billing_country,
-      billing_postcode,
-      billing_same_as_shipping,
-      billing_state,
+      delivery_address,
+      delivery_address_2,
+      delivery_city,
+      delivery_company,
+      delivery_country,
+      delivery_postcode,
+      delivery_same_as_billing,
+      delivery_state,
       vehicleIdentifier,
       ...baseFormData
     } = formData;
-    const formDataForWP = billing_same_as_shipping
+    const formDataForWP = delivery_same_as_billing
       ? baseFormData
       : {
           ...baseFormData,
-          billing_address,
-          billing_address_2,
-          billing_city,
-          billing_company,
-          billing_country,
-          billing_postcode,
-          billing_state,
+          delivery_address,
+          delivery_address_2,
+          delivery_city,
+          delivery_company,
+          delivery_country,
+          delivery_postcode,
+          delivery_state,
         };
     const payload = {
       ...formDataForWP,
@@ -900,6 +919,136 @@ function CheckoutForm() {
                 </div>
               </div>
             )}
+            {/* Address Details — primary/billing address. The toggle
+                below decides whether the order ships here too (default)
+                or to a separate delivery address asked for inside the
+                Deliver-to-Door drawer. */}
+            <div className={styles.addressDetails}>
+              <h2 className={styles.addressDetailsHeading}>Address Details</h2>
+              <div className={styles.addressFormRow}>
+                <div className={styles.addressFormCol}>
+                  <div className={styles.addressLblSelect}>
+                    <span>Country/Region</span>
+                    <select
+                      name="country"
+                      onChange={handleChange}
+                      value={formData.country}
+                    >
+                      <option value="AU">Australia</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.addressFormRow}>
+                <div className={styles.addressFormCol}>
+                  <input
+                    name="company"
+                    onChange={handleChange}
+                    placeholder="Company Name (Optional)"
+                    type="text"
+                    value={formData.company}
+                  />
+                </div>
+              </div>
+              <div className={styles.addressFormRow}>
+                <div className={styles.addressFormCol}>
+                  <input
+                    name="address"
+                    onChange={handleChange}
+                    placeholder="Address (We do not ship to PO Boxes)"
+                    type="text"
+                    value={formData.address}
+                  />
+                </div>
+              </div>
+              <div className={styles.addressFormRow}>
+                <div className={styles.addressFormCol}>
+                  <input
+                    name="address_2"
+                    onChange={handleChange}
+                    placeholder="Apartment, suite, etc. (optional)"
+                    type="text"
+                    value={formData.address_2 || ''}
+                  />
+                </div>
+              </div>
+              <div className={styles.addressFormRow}>
+                <div className={styles.addressFormCol}>
+                  <input
+                    name="city"
+                    onChange={handleChange}
+                    placeholder="City"
+                    type="text"
+                    value={formData.city}
+                  />
+                </div>
+                <div className={styles.addressFormCol}>
+                  <input
+                    name="postcode"
+                    onChange={handleChange}
+                    placeholder="Postcode"
+                    type="text"
+                    value={formData.postcode}
+                  />
+                </div>
+                <div className={styles.addressFormCol}>
+                  <div className={styles.addressLblSelect}>
+                    <span>State/territory</span>
+                    <select
+                      name="state"
+                      onChange={handleChange}
+                      value={formData.state}
+                    >
+                      <option value="">Select state</option>
+                      {State.getStatesOfCountry(formData.country || 'AU').map(
+                        s => (
+                          <option key={s.isoCode} value={s.name}>
+                            {s.name}
+                          </option>
+                        ),
+                      )}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <Button
+                className={styles.addressConfirmBtn}
+                disabled={
+                  !formData.country ||
+                  !formData.address ||
+                  !formData.city ||
+                  !formData.state ||
+                  !formData.postcode
+                }
+                onClick={() => {
+                  /* Visual confirm — fields are already bound to state */
+                }}
+                size="large"
+                variant="primary"
+              >
+                Confirm Address
+              </Button>
+            </div>
+            {/* "Delivery same as the address above?" toggle — sits in its
+                own small black bar directly below Address Details. */}
+            <div className={styles.deliverySameBar}>
+              <label>
+                <input
+                  checked={formData.delivery_same_as_billing !== false}
+                  name="delivery_same_as_billing"
+                  onChange={e =>
+                    setFormData(prev => ({
+                      ...prev,
+                      delivery_same_as_billing: e.target.checked,
+                    }))
+                  }
+                  type="checkbox"
+                />
+                <span>
+                  The delivery address is the same as the address listed above.
+                </span>
+              </label>
+            </div>
             {/* Receive Details */}{' '}
             <div className={styles.checkOutInfo}>
               <div className={styles.heading}>
