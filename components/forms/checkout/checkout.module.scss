@@ -139,16 +139,16 @@
   }
 }
 
-// Address Details — black card that sits between Contact Details and the
-// "Receive your Order" delivery options. Collects the primary/billing
-// address; a toggle below decides whether the order ships here too or to
-// a separate delivery address asked for inside Deliver-to-Door.
+// Address Details — black card nested inside the white Contact Details
+// card (Figma node 5443:36032). Collects the primary/billing address; a
+// toggle below decides whether the order ships here too or to a separate
+// delivery address asked for inside Deliver-to-Door.
 .addressDetails {
   background: #000;
   color: #fff;
   border-radius: 6px;
-  padding: 32px 28px;
-  margin-top: 20px;
+  padding: 28px 24px;
+  margin: 20px 0 0;
 
   @media (width <= 1199px) {
     padding: var(--content-padding-sm);
