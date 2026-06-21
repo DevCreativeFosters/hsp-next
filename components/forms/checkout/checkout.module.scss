@@ -142,27 +142,33 @@
 // Address Details — black card nested inside the white Contact Details
 // card (Figma node 5443:36032). Collects the primary/billing address; a
 // toggle below decides whether the order ships here too or to a separate
-// delivery address asked for inside Deliver-to-Door.
+// delivery address asked for inside Deliver-to-Door. The wrapping
+// colFull element supplies the formRow gutter padding; this element just
+// renders the black panel.
 .addressDetails {
+  width: 100%;
   background: #000;
   color: #fff;
-  border-radius: 6px;
-  padding: 28px 24px;
-  margin: 20px 0 0;
+  border-radius: 8px;
+  padding: 24px 22px;
+  margin: 14px 0 0;
+  box-sizing: border-box;
 
-  @media (width <= 1199px) {
-    padding: var(--content-padding-sm);
+  @media (width <= 767px) {
+    padding: 18px 16px;
   }
 }
 
 .addressDetailsHeading {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   font-family: var(--font-primary);
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 700;
   color: #fff;
+  line-height: 1.2;
 
   @media (width <= 767px) {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -221,12 +227,16 @@
 }
 
 // Small black bar carrying the "delivery same as the address above" toggle,
-// sits flush below the Address Details card.
+// sits flush below the Address Details card (also rendered inside an outer
+// .colFull wrapper so it aligns with the inputs above instead of bleeding
+// into the formRow gutter).
 .deliverySameBar {
+  width: 100%;
   background: #000;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 14px 20px;
-  margin-top: 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
 
   label {
     color: #fff;
