@@ -48,7 +48,7 @@ const GET_ACCOUNT_TERMS_QUERY = `
 
 function CheckoutForm() {
   const router = useRouter();
-  const { user } = useUserContext();
+  const { setUser, user } = useUserContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -182,6 +182,15 @@ function CheckoutForm() {
       localStorage.setItem('authToken', login.token);
       localStorage.setItem('userId', String(login.userId));
       localStorage.setItem('userRole', normalizedRole);
+      // Push the new user into UserContext so the header's Login/Sign Up
+      // button immediately flips to "Account" / "Dealer Account". Without
+      // this the header doesn't notice the inline login until a hard
+      // refresh because UserContext only reads from storage on mount.
+      setUser({
+        id: login.userId,
+        role: normalizedRole,
+        token: login.token,
+      });
       window.dispatchEvent(new Event('authchange'));
 
       // Re-query with the new auth token so the resolver returns the full
@@ -199,6 +208,11 @@ function CheckoutForm() {
         }));
         setCustomerLookup({ ...profile, isLoggedIn: true });
       }
+      // Collapse Contact Details into the read-only summary card so the
+      // user lands in the "John Smith / johnsmith@gmail.com / 0400…" state
+      // instead of being asked to re-fill the same fields they just
+      // authenticated for. They can hit Edit Details to reopen.
+      setSubmitContactDetails(true);
       setLoginPassword('');
     } catch (err) {
       setLoginError(err?.message || 'Login failed');
@@ -667,7 +681,7 @@ function CheckoutForm() {
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
             {/* Contact Details */}
-            {submitContactDetails && role !== 'b2b' ? (
+            {submitContactDetails ? (
               <div
                 className={clsx(styles.contactDetails, styles.editDetailMain)}
               >
@@ -687,7 +701,7 @@ function CheckoutForm() {
                   </p>
                   <p>{formData.email}</p>
                   <p>{formData.phone}</p>
-                  {role === 'b2b' && <p>{formData.company}</p>}
+                  {formData.company && <p>{formData.company}</p>}
                 </div>
               </div>
             ) : (
