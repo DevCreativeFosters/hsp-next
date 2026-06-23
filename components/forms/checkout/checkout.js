@@ -1514,19 +1514,28 @@ function CheckoutForm() {
                     {formatPrice(cartSubTotal)}.00
                   </div>
                 </div>
-                <div className={styles.subTotal}>
-                  <div className={styles.subTotaltitle}>Installation Cost</div>
-                  <div className={styles.subTotalPrice}>
-                    {formatPrice(
-                      cartItems.reduce(
-                        (total, item) =>
-                          total + item.installation_cost * item.quantity,
-                        0,
-                      ),
-                    )}
-                    .00
+                {/* Installation cost is suppressed for B2B accounts. B2B
+                    customers resell rather than install themselves, so
+                    showing (and charging) per-item installation cost on the
+                    order summary is wrong. Dealer accounts keep it because
+                    on-site-fitting is one of their delivery options. */}
+                {role !== 'b2b' && (
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>
+                      Installation Cost
+                    </div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(
+                        cartItems.reduce(
+                          (total, item) =>
+                            total + item.installation_cost * item.quantity,
+                          0,
+                        ),
+                      )}
+                      .00
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className={styles.subTotal}>
                   <div className={styles.subTotaltitle}>Freight</div>
                   <div className={styles.subTotalPrice}>
@@ -1561,7 +1570,19 @@ function CheckoutForm() {
                 <div className={styles.finalTotal}>
                   <div className={styles.finalTotaltitle}>TOTAL</div>
                   <div className={styles.finalTotalPrice}>
-                    {formatPrice(cartTotal - totalDiscount, 'AUD ')}.00
+                    {formatPrice(
+                      cartTotal -
+                        totalDiscount -
+                        (role === 'b2b'
+                          ? cartItems.reduce(
+                              (total, item) =>
+                                total + item.installation_cost * item.quantity,
+                              0,
+                            )
+                          : 0),
+                      'AUD ',
+                    )}
+                    .00
                     <span>(incl. 10% GST)</span>
                   </div>
                 </div>
