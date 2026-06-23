@@ -62,7 +62,7 @@ async function page({ params }) {
     'click-collect': `Thanks, We'll let you know when your order is ready to collect.`,
     'deliver-door': `Thanks, You'll get an order confirmation email and a tracking number once your order is ready.`,
     'deliver-to-store': `Thanks for your order. We'll be in touch shortly to book a fitting time.`,
-    'drop-ship-to-customer': `We'll send the items directly to your customer and update you once the shipment has been sent.`,
+    'drop-shipping-to-customer': `We'll send the items directly to your customer and update you once the shipment has been sent.`,
     'local-installation': `Thanks, We'll get in touch with you to book a fitting time.`,
     'pickup-from-hsp': `The HSP team will contact you when your order is ready for collection from HSP HQ.`,
   };

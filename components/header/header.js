@@ -362,9 +362,11 @@ export default function Header({
                     variant="primary"
                   >
                     {user?.id
-                      ? user?.role === 'retail'
-                        ? 'Account'
-                        : 'Dealer Account'
+                      ? user?.role === 'b2b'
+                        ? 'B2B Account'
+                        : user?.role === 'dealer'
+                          ? 'Dealer Account'
+                          : 'Account'
                       : 'Login / Sign Up'}
                   </Button>
                 </li>

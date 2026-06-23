@@ -174,10 +174,12 @@ function CheckoutForm() {
         return;
       }
       // Persist auth the same way login-form.js does so the rest of the
-      // app picks up the session.
-      const dealerRoles = ['b2b', 'dealer', 'dealership'];
-      const normalizedRole = dealerRoles.includes(login.role)
-        ? 'b2b'
+      // app picks up the session. Three frontend roles: retail / b2b /
+      // dealer — collapse the backend's `dealer` and `dealership` variants
+      // to `dealer`, leave everything else as-is.
+      const dealerVariants = ['dealer', 'dealership'];
+      const normalizedRole = dealerVariants.includes(login.role)
+        ? 'dealer'
         : login.role;
       localStorage.setItem('authToken', login.token);
       localStorage.setItem('userId', String(login.userId));
@@ -228,52 +230,13 @@ function CheckoutForm() {
 
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
 
+  // Delivery options follow the per-role slug spec:
+  //   Retail  → click-collect, local-installation, pickup-from-hsp
+  //   B2B     → deliver-to-store, pickup-from-hsp, drop-shipping-to-customer
+  //   Dealer  → deliver-to-store, pickup-from-hsp, on-site-fitting
+  // pickup-from-hsp is shared across all three, deliver-to-store across
+  // b2b and dealer. `roles` is an array; filtering uses .includes(role).
   const allDeliveryOptions = [
-    {
-      allowDelivery: false,
-      askCutomerInfo: false,
-      description:
-        'Choose a local HSP fitter to get your accessories installed',
-      icon: SettingIcon,
-      id: 'local-installation',
-      noteContent: <></>,
-      role: 'retail',
-      selectedAddress: {
-        btnTitle: 'Change Store',
-        title: 'Local Installation',
-      },
-      selectedMenu: {
-        content: (
-          <>
-            <p>Choose a local HSP fitter to get your accessories installed</p>
-          </>
-        ),
-        title: 'Local Installation',
-      },
-      title: 'Local Installation',
-    },
-    {
-      allowDelivery: false,
-      askCutomerInfo: false,
-      description: 'Sent within 1-3 business days',
-      icon: TruckIcon,
-      id: 'deliver-door',
-      noteContent: <></>,
-      role: 'retail',
-      selectedAddress: {
-        btnTitle: 'Edit Address',
-        title: 'Deliver to Door',
-      },
-      selectedMenu: {
-        content: (
-          <>
-            <p>Sent within 1-3 business days</p>
-          </>
-        ),
-        title: 'Deliver to Door',
-      },
-      title: 'Deliver to Door',
-    },
     {
       allowDelivery: false,
       askCutomerInfo: false,
@@ -281,7 +244,7 @@ function CheckoutForm() {
       icon: LocationIcon,
       id: 'click-collect',
       noteContent: <></>,
-      role: 'retail',
+      roles: ['retail'],
       selectedAddress: {
         btnTitle: 'Change Store',
         title: 'Click & Collect',
@@ -303,6 +266,29 @@ function CheckoutForm() {
       allowDelivery: false,
       askCutomerInfo: false,
       description:
+        'Choose a local HSP fitter to get your accessories installed',
+      icon: SettingIcon,
+      id: 'local-installation',
+      noteContent: <></>,
+      roles: ['retail'],
+      selectedAddress: {
+        btnTitle: 'Change Store',
+        title: 'Local Installation',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>Choose a local HSP fitter to get your accessories installed</p>
+          </>
+        ),
+        title: 'Local Installation',
+      },
+      title: 'Local Installation',
+    },
+    {
+      allowDelivery: false,
+      askCutomerInfo: false,
+      description:
         'Appropriate delivery costs will be added to the final order summary',
       icon: TruckIcon,
       id: 'deliver-to-store',
@@ -314,10 +300,10 @@ function CheckoutForm() {
           </p>
         </>
       ),
-      role: 'b2b',
+      roles: ['b2b', 'dealer'],
       selectedAddress: {
         btnTitle: 'Edit Address',
-        title: 'Deliver to Door',
+        title: 'Deliver to Store',
       },
       selectedMenu: {
         content: (
@@ -332,9 +318,9 @@ function CheckoutForm() {
             </p>
           </>
         ),
-        title: 'Deliver to Door',
+        title: 'Deliver to Store',
       },
-      title: 'Deliver to Door',
+      title: 'Deliver to Store',
     },
     {
       allowDelivery: false,
@@ -350,7 +336,7 @@ function CheckoutForm() {
           </p>
         </>
       ),
-      role: 'b2b',
+      roles: ['retail', 'b2b', 'dealer'],
       selectedAddress: {
         btnTitle: '',
         title: 'Pickup From HSP',
@@ -366,6 +352,36 @@ function CheckoutForm() {
       title: 'Pickup From HSP',
     },
     {
+      allowDelivery: true,
+      askCutomerInfo: true,
+      description:
+        'Get your products sent directly to your customers COMMERCIAL address',
+      icon: TruckIcon,
+      id: 'drop-shipping-to-customer',
+      noteContent: (
+        <>
+          <p>
+            <strong>Please Note:</strong> Freight times will vary depending on
+            location
+          </p>
+        </>
+      ),
+      roles: ['b2b'],
+      selectedAddress: {
+        btnTitle: 'Edit Delivery Details',
+        title: 'Drop Shipping to Customer',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>Get your products sent directly to a customers address</p>
+          </>
+        ),
+        title: 'Drop Shipping to Customer',
+      },
+      title: 'Drop Shipping to Customer',
+    },
+    {
       allowDelivery: false,
       askCutomerInfo: false,
       description:
@@ -373,7 +389,7 @@ function CheckoutForm() {
       icon: OnSiteFittingIcon,
       id: 'on-site-fitting',
       noteContent: <></>,
-      role: 'b2b',
+      roles: ['dealer'],
       selectedAddress: {
         btnTitle: 'Change Store',
         title: 'On-Site Fitting',
@@ -394,6 +410,12 @@ function CheckoutForm() {
   ];
 
   const role = user?.role ?? 'retail';
+  // True for any "dealer-like" account — b2b OR dealer. Both share the
+  // dealer-style checkout (PO Number, VIN, Dealership Details heading,
+  // Account Terms, etc.) and only the delivery options differ between
+  // them. Use this instead of repeating `role === 'b2b'` everywhere so
+  // the dealer role doesn't accidentally get the retail form.
+  const isDealerLike = role === 'b2b' || role === 'dealer';
 
   const [submitContactDetails, setSubmitContactDetails] = useState(false);
 
@@ -474,11 +496,11 @@ function CheckoutForm() {
     const run = async () => {
       setLoading(true);
       if (user) {
-        let filteredOptions = allDeliveryOptions.filter(
-          opt => opt.role === role,
+        let filteredOptions = allDeliveryOptions.filter(opt =>
+          opt.roles?.includes(role),
         );
 
-        if (user?.id && user?.role === 'b2b') {
+        if (user?.id && isDealerLike) {
           const options = await getStoreDeliveryOptions(user.id);
           // Only restrict to the store's configured options when it actually
           // has some. If the dealer's store has none set (or no store linked),
@@ -583,7 +605,7 @@ function CheckoutForm() {
       'termsAndConditions',
       'payment_method',
       'orderType',
-      ...(role === 'b2b' ? ['purchaseOrderNumber', 'vehicleIdentifier'] : []),
+      ...(isDealerLike ? ['purchaseOrderNumber', 'vehicleIdentifier'] : []),
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -708,7 +730,7 @@ function CheckoutForm() {
               <div className={styles.contactDetails}>
                 <div className={styles.heading}>
                   <h2>
-                    {role === 'b2b' ? 'Dealership Details' : 'Contact Details'}
+                    {isDealerLike ? 'Dealership Details' : 'Contact Details'}
                   </h2>
                   <p>How Can We Reach You About Your Order?</p>
                 </div>
@@ -817,7 +839,7 @@ function CheckoutForm() {
                     <div className={styles.inputGroup}>
                       <label>
                         Company Name
-                        {role === 'b2b' ? (
+                        {isDealerLike ? (
                           <span className={styles.reqStar}>*</span>
                         ) : (
                           ' (Optional)'
@@ -976,7 +998,7 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {role === 'b2b' ? (
+                  {isDealerLike ? (
                     <>
                       <div className={styles.colFull}>
                         <div className={styles.inputGroup}>
@@ -1077,7 +1099,7 @@ function CheckoutForm() {
               </div>
               <div
                 className={clsx(styles.blackBoxes, {
-                  [styles.blackBoxesFull]: role === 'b2b',
+                  [styles.blackBoxesFull]: isDealerLike,
                 })}
               >
                 {cartLoading ? (
@@ -1121,9 +1143,8 @@ function CheckoutForm() {
                           deliveryOption.id === formData.orderType ? (
                             <div className={styles.editSelection}>
                               {[
-                                'deliver-door',
                                 'deliver-to-store',
-                                'drop-ship-to-customer',
+                                'drop-shipping-to-customer',
                               ].some(id => id === deliveryOption.id) && (
                                 <>
                                   <div
@@ -1238,10 +1259,9 @@ function CheckoutForm() {
                                         Loading stores…
                                       </p>
                                     ))}
-                                  {(deliveryOption.id === 'deliver-door' ||
-                                    deliveryOption.id === 'deliver-to-store' ||
+                                  {(deliveryOption.id === 'deliver-to-store' ||
                                     deliveryOption.id ===
-                                      'drop-ship-to-customer') && (
+                                      'drop-shipping-to-customer') && (
                                     <Delivery
                                       allowDelivery={
                                         deliveryOption.allowDelivery
@@ -1283,7 +1303,7 @@ function CheckoutForm() {
                   </div>
                 )}
 
-                {role === 'b2b' && (
+                {isDealerLike && (
                   <div className={clsx(styles.couponBox, styles.orderNoBox)}>
                     <input
                       maxLength={15}
@@ -1297,7 +1317,7 @@ function CheckoutForm() {
                 )}
 
                 <div className={styles.paymenSelection}>
-                  {role === 'b2b' && accountTerms && (
+                  {isDealerLike && accountTerms && (
                     <div
                       className={clsx(styles.payBox, styles.accountTermsBox)}
                     >
@@ -1423,8 +1443,8 @@ function CheckoutForm() {
                     !formData.phone ||
                     !formData.termsAndConditions ||
                     !formData.payment_method ||
-                    (role === 'b2b' && !formData.company) ||
-                    (role === 'b2b' && !formData.purchaseOrderNumber) ||
+                    (isDealerLike && !formData.company) ||
+                    (isDealerLike && !formData.purchaseOrderNumber) ||
                     loading ||
                     cartItems.length === 0
                   }
@@ -1585,7 +1605,7 @@ function CheckoutForm() {
                   </div>
                 )}
               </div>
-              {role === 'b2b' &&
+              {isDealerLike &&
                 (showQuoteForm ? (
                   <div className={styles.quoteForm}>
                     <div className={styles.inputGroup}>

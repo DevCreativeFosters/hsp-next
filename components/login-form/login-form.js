@@ -84,16 +84,27 @@ function LoginForm() {
       const loginResponse = data?.userLogin;
 
       if (loginResponse?.token) {
+        // The checkout flow distinguishes three roles — retail, b2b, and
+        // dealer — each with a different set of delivery options. The
+        // backend exposes both `dealer` and `dealership` as dealer roles
+        // and `b2b` as a separate role; collapse the two dealer variants
+        // to `dealer` and leave `b2b` untouched. Anything else falls
+        // back to whatever the backend returned (typically `retail`).
+        const dealerVariants = ['dealer', 'dealership'];
+        const normalizedRole = dealerVariants.includes(loginResponse.role)
+          ? 'dealer'
+          : loginResponse.role;
+
         localStorage.setItem('authToken', loginResponse.token);
         localStorage.setItem('userId', loginResponse.userId);
-        localStorage.setItem('userRole', loginResponse.role);
+        localStorage.setItem('userRole', normalizedRole);
         // Notify same-tab listeners (eg. CartProvider) that auth just changed
         // so they can re-fetch user-scoped data without a full reload.
         window.dispatchEvent(new Event('authchange'));
 
         setUser({
           id: loginResponse.userId,
-          role: loginResponse.role,
+          role: normalizedRole,
           token: loginResponse.token,
         });
 
@@ -101,7 +112,7 @@ function LoginForm() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push(`/account/${loginResponse.role}`);
+        router.push(`/account/${normalizedRole}`);
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }
