@@ -286,7 +286,12 @@ export default function EnquiryForm({
             {pricingBadgeLabel && (
               <span className={styles.pricingBadge}>{pricingBadgeLabel}</span>
             )}
-            {variantInstallationPrice > 0 && (
+            {variantInstallationPrice > 0 && role !== 'b2b' && (
+              // B2B accounts resell rather than install themselves, so the
+              // "+ $XXX for installation" badge below the price is hidden
+              // for them — matches the checkout summary suppression. Retail
+              // and dealer still see it (both have fitting flows that
+              // actually incur the cost).
               <span
                 className={clsx(
                   styles.productPrices,
