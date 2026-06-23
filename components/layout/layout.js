@@ -46,8 +46,15 @@ async function getLayoutData() {
   const allStores = await getStores();
 
   const excludeTree = getExcludeTree(globalOptions);
-  const excludeChildren = [globalOptions?.noCoverCategory?.nodes[0].databaseId];
-  const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes[0].id];
+  // Guard the chain through to .databaseId / .id — if globalOptions itself
+  // is null (WP returned 500 and getGlobalOptions caught it) the `.nodes`
+  // bit short-circuits to undefined, but `[0].databaseId` would still
+  // throw without the bracket optional-chain. We end up with [undefined]
+  // entries which the downstream getMainProductCategories filters out.
+  const excludeChildren = [
+    globalOptions?.noCoverCategory?.nodes?.[0]?.databaseId,
+  ];
+  const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes?.[0]?.id];
   const mainProductCategories = await getMainProductCategories(
     excludeTree,
     excludeChildren,
