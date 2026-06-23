@@ -146,7 +146,7 @@ function Order({ item, received = false, returnRequest = false }) {
     'click-collect': 'Click & Collect',
     'deliver-door': 'Deliver to Door',
     'deliver-to-store': 'Deliver to Store',
-    'drop-ship-to-customer': 'Drop Ship to Customer',
+    'drop-shipping-to-customer': 'Drop Shipping to Customer',
     'local-installation': 'Local Installation',
     'pickup-from-hsp': `Pickup From ${item?.store_name}`,
   };

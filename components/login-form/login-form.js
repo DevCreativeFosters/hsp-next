@@ -85,12 +85,15 @@ function LoginForm() {
       const loginResponse = data?.userLogin;
 
       if (loginResponse?.token) {
-        // The dealer module returns role slugs like `dealer` / `dealership`,
-        // but the app's portal + checkout are built around `b2b`. Normalise
-        // all dealer-type roles to `b2b` so a real `b2b` stays unchanged.
-        const dealerRoles = ['b2b', 'dealer', 'dealership'];
-        const normalizedRole = dealerRoles.includes(loginResponse.role)
-          ? 'b2b'
+        // The checkout flow distinguishes three roles — retail, b2b, and
+        // dealer — each with a different set of delivery options. The
+        // backend exposes both `dealer` and `dealership` as dealer roles
+        // and `b2b` as a separate role; collapse the two dealer variants
+        // to `dealer` and leave `b2b` untouched. Anything else falls
+        // back to whatever the backend returned (typically `retail`).
+        const dealerVariants = ['dealer', 'dealership'];
+        const normalizedRole = dealerVariants.includes(loginResponse.role)
+          ? 'dealer'
           : loginResponse.role;
 
         localStorage.setItem('authToken', loginResponse.token);
