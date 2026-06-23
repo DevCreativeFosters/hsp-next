@@ -35,15 +35,44 @@ const GOOGLE_RECAPTCHA_SITEKEY =
 
 async function getLayoutData() {
   // TODO: reduce number of requests
+  //
+  // Every fetch here runs at build time during page-data collection and
+  // is awaited by the root layout. If ANY one of them throws (Cloudways
+  // hiccup, ACF/WPGraphQL plugin crash, DB hiccup) the entire next build
+  // fails — we've already lost deploys to flaky globalOptions and menus
+  // resolvers. Wrap each one through `safe()` so a single dead resolver
+  // degrades the layout to a sensible default (empty menus, no makes,
+  // etc.) instead of killing the deploy. The page renders without that
+  // piece of global chrome; everything else still works.
+  const safe = async (fetcher, fallback, label) => {
+    try {
+      return await fetcher();
+    } catch (err) {
+      console.error(`${label} failed — using fallback:`, err?.message);
+      return fallback;
+    }
+  };
 
-  const globalOptions = await getGlobalOptions();
-  const footerMenus = await getFooterMenus();
-  const mainMenu = await getMenu('main-menu');
-  const mobileMenu = await getMenu('mobile-navigation');
-  const productCategories = await getProductCategories();
-  const products = await getMenuDropdownProducts();
-  const makes = await getAllMakes();
-  const allStores = await getStores();
+  const globalOptions = await safe(getGlobalOptions, null, 'getGlobalOptions');
+  const footerMenus = await safe(getFooterMenus, [], 'getFooterMenus');
+  const mainMenu = await safe(() => getMenu('main-menu'), [], 'getMenu(main)');
+  const mobileMenu = await safe(
+    () => getMenu('mobile-navigation'),
+    [],
+    'getMenu(mobile)',
+  );
+  const productCategories = await safe(
+    getProductCategories,
+    [],
+    'getProductCategories',
+  );
+  const products = await safe(
+    getMenuDropdownProducts,
+    [],
+    'getMenuDropdownProducts',
+  );
+  const makes = await safe(getAllMakes, [], 'getAllMakes');
+  const allStores = await safe(getStores, [], 'getStores');
 
   const excludeTree = getExcludeTree(globalOptions);
   // Guard the chain through to .databaseId / .id — if globalOptions itself
@@ -55,9 +84,10 @@ async function getLayoutData() {
     globalOptions?.noCoverCategory?.nodes?.[0]?.databaseId,
   ];
   const excludeChildrenId = [globalOptions?.noCoverCategory?.nodes?.[0]?.id];
-  const mainProductCategories = await getMainProductCategories(
-    excludeTree,
-    excludeChildren,
+  const mainProductCategories = await safe(
+    () => getMainProductCategories(excludeTree, excludeChildren),
+    [],
+    'getMainProductCategories',
   );
 
   return {
