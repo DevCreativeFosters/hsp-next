@@ -709,13 +709,21 @@ function CheckoutForm() {
               >
                 <div className={styles.heading}>
                   <h2>Contact Details</h2>
-                  <Button
-                    onClick={handleEditContactDetails}
-                    size="large"
-                    variant="ghost"
-                  >
-                    Edit Details
-                  </Button>
+                  {/* Edit Details is retail-only. B2B and Dealer accounts
+                      already have their profile populated server-side
+                      (loaded from their dealer record), so the checkout
+                      flow doesn't let them rewrite name/email/phone/
+                      company inline — those changes go through Contact
+                      Us per the portal Address tab's existing pattern. */}
+                  {role === 'retail' && (
+                    <Button
+                      onClick={handleEditContactDetails}
+                      size="large"
+                      variant="ghost"
+                    >
+                      Edit Details
+                    </Button>
+                  )}
                 </div>
                 <div className={styles.submittedInfo}>
                   <p>
@@ -730,7 +738,11 @@ function CheckoutForm() {
               <div className={styles.contactDetails}>
                 <div className={styles.heading}>
                   <h2>
-                    {isDealerLike ? 'Dealership Details' : 'Contact Details'}
+                    {role === 'dealer'
+                      ? 'Dealership Details'
+                      : role === 'b2b'
+                        ? 'B2B Details'
+                        : 'Contact Details'}
                   </h2>
                   <p>How Can We Reach You About Your Order?</p>
                 </div>
