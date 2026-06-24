@@ -171,30 +171,52 @@ function Address() {
     // don't know the storeId from the auth token alone — the user →
     // store mapping lives in the WP store post's assignedB2bUser field,
     // so getStoreByUserId is the bridge.
+    //
+    // Verbose logging here on purpose: when the Address tab renders
+    // empty in production, the user / Lokesh needs the network
+    // breakdown to know whether the failure is
+    //   (a) no store assigned to this WP user,
+    //   (b) the store has no storeId custom field set, or
+    //   (c) the storeById resolver isn't returning addresses.
+    // Each step logs what it found.
     async function getStoreDetails() {
       try {
+        console.log('[Address] resolving store for userId:', userId);
         const store = await getStoreByUserId(userId);
-        const storeId = store?.storeId;
+        console.log('[Address] getStoreByUserId →', store);
 
+        const storeId = store?.storeId;
         if (storeId) {
+          console.log('[Address] calling storeById with storeId:', storeId);
           const storeData = await getStoreById(storeId);
-          if (storeData) {
+          console.log('[Address] getStoreById →', storeData);
+          if (storeData?.billingAddress || storeData?.deliveryAddress) {
             setBilling(storeData.billingAddress);
             setShipping(storeData.deliveryAddress);
             return;
           }
+        } else {
+          console.warn(
+            '[Address] no storeId on assigned store — falling back to fragment addresses',
+          );
         }
 
-        // Fallback path: storeById didn't return (resolver missing or
-        // store has no storeId set yet). Use the addresses embedded in
-        // the StoreFragment that getStoreByUserId already pulled, so
-        // the portal still renders SOMETHING instead of an empty card.
-        if (store) {
+        // Fallback path: storeById didn't return usable addresses (the
+        // resolver isn't deployed yet, the store has no storeId custom
+        // field set, or the addresses on the new resolver are empty).
+        // Use the addresses embedded in the StoreFragment that
+        // getStoreByUserId already pulled so the portal still renders
+        // SOMETHING instead of an empty card.
+        if (store?.billingAddress || store?.deliveryAddress) {
           setBilling(store.billingAddress);
           setShipping(store.deliveryAddress);
+        } else {
+          console.warn(
+            '[Address] no addresses found anywhere — this user likely has no store assigned in WP (assignedB2bUser field on the Store post)',
+          );
         }
       } catch (e) {
-        console.error('Error fetching store address:', e);
+        console.error('[Address] fetch error:', e);
       } finally {
         setLoading(false);
       }
