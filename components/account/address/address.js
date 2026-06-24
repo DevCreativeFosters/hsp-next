@@ -212,16 +212,28 @@ function Address() {
         // (resolver isn't deployed yet, no storeId set, or its
         // addresses are empty). Try the dedicated billingAddress /
         // deliveryAddress ACF groups that the StoreFragment pulled.
-        const hasBillingOrDelivery =
-          (store?.billingAddress &&
-            Object.values(store.billingAddress).some(
-              v => v != null && v !== '',
-            )) ||
-          (store?.deliveryAddress &&
-            Object.values(store.deliveryAddress).some(
-              v => v != null && v !== '',
-            ));
-        if (hasBillingOrDelivery) {
+        //
+        // Has to look for MEANINGFUL fields, not just "any non-null
+        // value". WP defaults the `country` field on these groups to
+        // `["AU"]` on every store post even when the admin hasn't
+        // touched the rest. A naive `.some(v => v != null)` check
+        // therefore treats every store as "populated" and renders an
+        // address card with nothing but Country = AU — exactly the
+        // empty-looking card the b2b portal was showing. Require at
+        // least one of the user-meaningful identifier fields
+        // (addressName / streetAddress / city / postalCode) to actually
+        // be set before using this path.
+        const isPopulatedAddress = addr =>
+          Boolean(
+            addr?.addressName ||
+              addr?.streetAddress ||
+              addr?.city ||
+              addr?.postalCode,
+          );
+        if (
+          isPopulatedAddress(store?.billingAddress) ||
+          isPopulatedAddress(store?.deliveryAddress)
+        ) {
           setBilling(store.billingAddress);
           setShipping(store.deliveryAddress);
           return;
