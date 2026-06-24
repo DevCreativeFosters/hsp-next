@@ -201,20 +201,53 @@ function Address() {
           );
         }
 
-        // Fallback path: storeById didn't return usable addresses (the
-        // resolver isn't deployed yet, the store has no storeId custom
-        // field set, or the addresses on the new resolver are empty).
-        // Use the addresses embedded in the StoreFragment that
-        // getStoreByUserId already pulled so the portal still renders
-        // SOMETHING instead of an empty card.
-        if (store?.billingAddress || store?.deliveryAddress) {
+        // Fallback path 1: storeById didn't return usable addresses
+        // (resolver isn't deployed yet, no storeId set, or its
+        // addresses are empty). Try the dedicated billingAddress /
+        // deliveryAddress ACF groups that the StoreFragment pulled.
+        const hasBillingOrDelivery =
+          (store?.billingAddress &&
+            Object.values(store.billingAddress).some(
+              v => v != null && v !== '',
+            )) ||
+          (store?.deliveryAddress &&
+            Object.values(store.deliveryAddress).some(
+              v => v != null && v !== '',
+            ));
+        if (hasBillingOrDelivery) {
           setBilling(store.billingAddress);
           setShipping(store.deliveryAddress);
-        } else {
-          console.warn(
-            '[Address] no addresses found anywhere — this user likely has no store assigned in WP (assignedB2bUser field on the Store post)',
-          );
+          return;
         }
+
+        // Fallback path 2: the dealer's billingAddress / deliveryAddress
+        // ACF groups haven't been filled in on the WP Store post yet,
+        // but the generic `addressFields` (the same data Account
+        // Details shows under "Business Address") usually IS populated.
+        // Reuse it for both tabs so the dealer sees their store
+        // address rather than an empty card. Once WP admin fills in
+        // the dedicated billing/delivery groups, those take over.
+        if (store?.location) {
+          const generic = {
+            addressName: store.name || store.title || null,
+            aptunit: null,
+            city: store.location.city,
+            country: store.location.country,
+            postalCode: store.location.postalCode,
+            state: store.location.stateAbbr,
+            streetAddress: store.location.street,
+          };
+          console.warn(
+            '[Address] billingAddress/deliveryAddress empty in WP — showing generic addressFields as fallback',
+          );
+          setBilling(generic);
+          setShipping(generic);
+          return;
+        }
+
+        console.warn(
+          '[Address] no addresses found anywhere — this user likely has no store assigned in WP (assignedB2bUser field on the Store post)',
+        );
       } catch (e) {
         console.error('[Address] fetch error:', e);
       } finally {
