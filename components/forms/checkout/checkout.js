@@ -228,6 +228,59 @@ function CheckoutForm() {
     customerLookup?.isLoggedIn === false &&
     !continueAsGuest;
 
+  // When the user lands on /checkout already logged in (session from a
+  // previous /login or from clicking "Buy" while authenticated), the
+  // inline-email-blur autofill never fires because they haven't typed
+  // anything. Pull their saved profile up front so they don't have to
+  // re-enter name / email / phone / company. userAddress(userId) gives
+  // us the email + name + phone; a follow-on customerByEmail gives us
+  // the company. After autofill, collapse the card into summary state
+  // so the dealer doesn't see an empty edit form between logging in
+  // and selecting a delivery method.
+  useEffect(() => {
+    if (!user?.id || formData.email) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const addrRes = await fetchAPI(
+          `query($userId: Int!) {
+            userAddress(userId: $userId) {
+              success
+              billing { first_name last_name email phone }
+            }
+          }`,
+          { variables: { userId: user.id } },
+        );
+        if (cancelled) return;
+        const billing = addrRes?.userAddress?.billing;
+        if (!billing?.email) return;
+
+        // customerByEmail with the auth token returns company etc. that
+        // userAddress doesn't carry. Run it after we have the email.
+        const profile = await getCustomerByEmail(billing.email, {
+          authToken: user.token,
+        });
+        if (cancelled) return;
+
+        setFormData(prev => ({
+          ...prev,
+          company: profile?.company || prev.company,
+          email: billing.email || prev.email,
+          first_name:
+            profile?.firstName || billing.first_name || prev.first_name,
+          last_name: profile?.lastName || billing.last_name || prev.last_name,
+          phone: profile?.phone || billing.phone || prev.phone,
+        }));
+        setSubmitContactDetails(true);
+      } catch (err) {
+        console.error('[Checkout] autofill failed:', err?.message);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, user?.token]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
 
   // Delivery options follow the per-role slug spec:
@@ -485,7 +538,19 @@ function CheckoutForm() {
   async function getStoreDeliveryOptions(userId) {
     try {
       const store = await getStoreByUserId(userId);
-      return store?.availableDeliveryOptions || [];
+      const opts = store?.availableDeliveryOptions || [];
+      // Surfaces in the build log + browser console when a B2B / dealer
+      // user lands on /checkout and only sees a subset of their role's
+      // delivery options. The filter step later drops any option whose
+      // id isn't in this array (when it has at least one entry), so
+      // this is the only place to see exactly which option IDs the
+      // assigned Store post enables. When this prints `[]`, no filter
+      // is applied and all role-default options should render.
+      console.log(
+        '[Checkout] availableDeliveryOptions from assigned store:',
+        opts,
+      );
+      return opts;
     } catch (e) {
       console.error('Error getting orders:', e);
       return [];
@@ -605,7 +670,9 @@ function CheckoutForm() {
       'termsAndConditions',
       'payment_method',
       'orderType',
-      ...(isDealerLike ? ['purchaseOrderNumber', 'vehicleIdentifier'] : []),
+      ...(role === 'dealer'
+        ? ['purchaseOrderNumber', 'vehicleIdentifier']
+        : []),
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -1010,7 +1077,13 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {isDealerLike ? (
+                  {/* Purchase Order Number and VIN are DEALER-only —
+                      B2B accounts don't fill out these fields. Was
+                      previously gated on isDealerLike (both b2b and
+                      dealer), which leaked dealer-specific fields into
+                      the B2B checkout. Now gated on role === 'dealer'
+                      only. */}
+                  {role === 'dealer' ? (
                     <>
                       <div className={styles.colFull}>
                         <div className={styles.inputGroup}>
@@ -1315,7 +1388,7 @@ function CheckoutForm() {
                   </div>
                 )}
 
-                {isDealerLike && (
+                {role === 'dealer' && (
                   <div className={clsx(styles.couponBox, styles.orderNoBox)}>
                     <input
                       maxLength={15}
@@ -1456,7 +1529,7 @@ function CheckoutForm() {
                     !formData.termsAndConditions ||
                     !formData.payment_method ||
                     (isDealerLike && !formData.company) ||
-                    (isDealerLike && !formData.purchaseOrderNumber) ||
+                    (role === 'dealer' && !formData.purchaseOrderNumber) ||
                     loading ||
                     cartItems.length === 0
                   }
