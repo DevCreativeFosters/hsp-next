@@ -227,18 +227,26 @@ function Address() {
         // Reuse it for both tabs so the dealer sees their store
         // address rather than an empty card. Once WP admin fills in
         // the dedicated billing/delivery groups, those take over.
+        //
+        // WP's ACF returns multi-select fields (country, state) as
+        // arrays — e.g. `["Australia"]`, `["Victoria (AU)"]`. React
+        // renders single-element arrays of strings OK, but flatten to
+        // strings here so the value is consistent for downstream
+        // logic and for direct display.
+        const firstOf = v => (Array.isArray(v) ? v[0] : v);
         if (store?.location) {
           const generic = {
             addressName: store.name || store.title || null,
             aptunit: null,
-            city: store.location.city,
-            country: store.location.country,
+            city: firstOf(store.location.city),
+            country: firstOf(store.location.country),
             postalCode: store.location.postalCode,
-            state: store.location.stateAbbr,
-            streetAddress: store.location.street,
+            state: firstOf(store.location.stateAbbr),
+            streetAddress: firstOf(store.location.street),
           };
           console.warn(
             '[Address] billingAddress/deliveryAddress empty in WP — showing generic addressFields as fallback',
+            generic,
           );
           setBilling(generic);
           setShipping(generic);
