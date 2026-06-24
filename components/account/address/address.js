@@ -185,7 +185,14 @@ function Address() {
         const store = await getStoreByUserId(userId);
         console.log('[Address] getStoreByUserId →', store);
 
-        const storeId = store?.storeId;
+        // Prefer the storeId set on the assigned Store post in WP. When
+        // the field is empty (most existing stores haven't been
+        // backfilled yet) fall back to the canonical "hsp" storeId for
+        // B2B accounts so Lokesh's storeById resolver can still return
+        // the HSP head-office address pair. Dealer accounts have to
+        // resolve from their own store post — there's no equivalent
+        // shared fallback for them.
+        const storeId = store?.storeId || (user?.role === 'b2b' ? 'hsp' : null);
         if (storeId) {
           console.log('[Address] calling storeById with storeId:', storeId);
           const storeData = await getStoreById(storeId);
@@ -197,7 +204,7 @@ function Address() {
           }
         } else {
           console.warn(
-            '[Address] no storeId on assigned store — falling back to fragment addresses',
+            '[Address] no storeId on assigned store + no role-level fallback — trying fragment addresses',
           );
         }
 
