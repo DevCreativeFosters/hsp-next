@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
+import { getStoreById } from '@lib/api/get-store-by-id';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { fetchAPI } from '@lib/fetch-api';
 
@@ -76,7 +77,9 @@ function AddressForm({ data }) {
             <div className={styles.dRow}>
               <div className={styles.dTitle}>Apt/Unit</div>
               <div className={styles.dDesc}>
-                <strong>{data?.address_2 ?? data?.aptunit}</strong>
+                <strong>
+                  {data?.address_2 ?? data?.aptUnit ?? data?.aptunit}
+                </strong>
               </div>
             </div>
           </div>
@@ -117,7 +120,7 @@ function AddressForm({ data }) {
       {user?.role === 'retail' && (
         <Button size="large">Edit Saved Address</Button>
       )}
-      {user?.role === 'b2b' && (
+      {(user?.role === 'b2b' || user?.role === 'dealer') && (
         <div className={styles.bottomText}>
           <p>
             To Edit Any Business Information, Please{' '}
@@ -161,26 +164,48 @@ function Address() {
       }
     }
 
+    // For B2B + dealer accounts: resolve the user → their assigned store
+    // via getStoreByUserId, then hit Lokesh's storeById($storeId: ID!)
+    // resolver for the clean delivery/billing address pair the portal
+    // wants to render. We can't go straight to storeById because we
+    // don't know the storeId from the auth token alone — the user →
+    // store mapping lives in the WP store post's assignedB2bUser field,
+    // so getStoreByUserId is the bridge.
     async function getStoreDetails() {
       try {
         const store = await getStoreByUserId(userId);
-        console.log(store?.billingAddress, store?.deliveryAddress);
+        const storeId = store?.storeId;
 
+        if (storeId) {
+          const storeData = await getStoreById(storeId);
+          if (storeData) {
+            setBilling(storeData.billingAddress);
+            setShipping(storeData.deliveryAddress);
+            return;
+          }
+        }
+
+        // Fallback path: storeById didn't return (resolver missing or
+        // store has no storeId set yet). Use the addresses embedded in
+        // the StoreFragment that getStoreByUserId already pulled, so
+        // the portal still renders SOMETHING instead of an empty card.
         if (store) {
-          setBilling(store?.billingAddress);
-          setShipping(store?.deliveryAddress);
+          setBilling(store.billingAddress);
+          setShipping(store.deliveryAddress);
         }
       } catch (e) {
-        console.error('Error getting orders:', e);
+        console.error('Error fetching store address:', e);
       } finally {
         setLoading(false);
       }
     }
 
-    if (user?.role === 'b2b') {
+    if (user?.role === 'b2b' || user?.role === 'dealer') {
       getStoreDetails();
     } else if (user?.role === 'retail') {
       loadAddress();
+    } else {
+      setLoading(false);
     }
   }, [user?.id, user?.role]);
 
