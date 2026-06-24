@@ -13,6 +13,7 @@ import { useCheckout } from '@contexts/checkout';
 import { useUserContext } from '@contexts/user';
 
 import { getCustomerByEmail } from '@lib/api/get-customer-by-email';
+import { getStoreById } from '@lib/api/get-store-by-id';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
 import { fetchAPI } from '@lib/fetch-api';
@@ -136,6 +137,14 @@ function CheckoutForm() {
   const [loginError, setLoginError] = useState('');
   const [emailLookupInFlight, setEmailLookupInFlight] = useState(false);
   const [continueAsGuest, setContinueAsGuest] = useState(false);
+
+  // Dealer/B2B saved address (for the Contact Details summary card).
+  // Same data the portal Address tab shows — same fetch chain too:
+  // storeById($storeId) → fall back to the StoreFragment's
+  // billingAddress / deliveryAddress → fall back to addressFields
+  // (generic store address). Stored as a single flat string for
+  // display in the summary block.
+  const [dealerAddressLine, setDealerAddressLine] = useState('');
 
   const checkEmailExists = async emailToCheck => {
     if (!emailToCheck || !emailToCheck.includes('@')) {
@@ -272,6 +281,68 @@ function CheckoutForm() {
           phone: profile?.phone || billing.phone || prev.phone,
         }));
         setSubmitContactDetails(true);
+
+        // Also fetch the dealer's saved address for display in the
+        // Contact Details summary card. Same fetch chain as the
+        // portal Address tab — storeById first (using the canonical
+        // "hsp" key for B2B accounts), then the StoreFragment-
+        // embedded billingAddress / deliveryAddress, then the
+        // generic addressFields. Whatever resolves first wins;
+        // flattened into a single human-readable line.
+        if (user?.role === 'b2b' || user?.role === 'dealer') {
+          const firstOf = v => (Array.isArray(v) ? v[0] : v);
+          const flatten = addr => {
+            if (!addr) return '';
+            const parts = [
+              firstOf(addr.streetAddress),
+              firstOf(addr.aptUnit || addr.aptunit),
+              firstOf(addr.city || addr.cityTw),
+              firstOf(addr.state || addr.stateMy || addr.stateNz),
+              firstOf(addr.postalCode),
+              firstOf(addr.country),
+            ]
+              .filter(p => p != null && p !== '' && p !== 0)
+              .map(String);
+            return parts.join(', ');
+          };
+
+          const store = await getStoreByUserId(user.id).catch(() => null);
+          if (cancelled) return;
+          const storeId =
+            store?.storeId || (user.role === 'b2b' ? 'hsp' : null);
+          let line = '';
+          if (storeId) {
+            const storeData = await getStoreById(storeId).catch(() => null);
+            if (cancelled) return;
+            line = flatten(
+              storeData?.billingAddress || storeData?.deliveryAddress,
+            );
+          }
+          // billingAddress / deliveryAddress on the StoreFragment
+          // default to {country:["AU"]} on every Store post — guard
+          // against that empty-but-truthy shape using the same
+          // isPopulated check used in the portal Address tab.
+          if (!line && store) {
+            const isPopulated = a =>
+              Boolean(
+                a?.addressName || a?.streetAddress || a?.city || a?.postalCode,
+              );
+            if (isPopulated(store.billingAddress)) {
+              line = flatten(store.billingAddress);
+            } else if (isPopulated(store.deliveryAddress)) {
+              line = flatten(store.deliveryAddress);
+            } else if (store.location) {
+              line = flatten({
+                city: store.location.city,
+                country: store.location.country,
+                postalCode: store.location.postalCode,
+                state: store.location.stateAbbr,
+                streetAddress: store.location.street,
+              });
+            }
+          }
+          if (!cancelled && line) setDealerAddressLine(line);
+        }
       } catch (err) {
         console.error('[Checkout] autofill failed:', err?.message);
       }
@@ -279,7 +350,7 @@ function CheckoutForm() {
     return () => {
       cancelled = true;
     };
-  }, [user?.id, user?.token]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id, user?.role, user?.token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
 
@@ -799,6 +870,7 @@ function CheckoutForm() {
                   <p>{formData.email}</p>
                   <p>{formData.phone}</p>
                   {formData.company && <p>{formData.company}</p>}
+                  {dealerAddressLine && <p>{dealerAddressLine}</p>}
                 </div>
               </div>
             ) : (
@@ -1077,13 +1149,17 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {/* Purchase Order Number and VIN are DEALER-only —
-                      B2B accounts don't fill out these fields. Was
-                      previously gated on isDealerLike (both b2b and
-                      dealer), which leaked dealer-specific fields into
-                      the B2B checkout. Now gated on role === 'dealer'
-                      only. */}
-                  {role === 'dealer' ? (
+                  {/* Per-role splits for the dealer-style block:
+                      - Purchase Order Number → B2B + Dealer (both
+                        order on PO terms, so both need the field).
+                      - VIN → Dealer ONLY (B2B accounts resell rather
+                        than fitting to a specific vehicle).
+                      - T&Cs + Marketing checkboxes → B2B + Dealer
+                        (retail uses the Submit Details button path
+                        below, which renders its own T&Cs elsewhere).
+                      Retail sees only the Submit Details button.
+                  */}
+                  {isDealerLike ? (
                     <>
                       <div className={styles.colFull}>
                         <div className={styles.inputGroup}>
@@ -1100,21 +1176,23 @@ function CheckoutForm() {
                           />
                         </div>
                       </div>
-                      <div className={styles.colFull}>
-                        <div className={styles.inputGroup}>
-                          <label>
-                            VIN
-                            <span className={styles.reqStar}>*</span>
-                          </label>
-                          <input
-                            name="vehicleIdentifier"
-                            onChange={handleChange}
-                            required
-                            type="text"
-                            value={formData.vehicleIdentifier}
-                          />
+                      {role === 'dealer' && (
+                        <div className={styles.colFull}>
+                          <div className={styles.inputGroup}>
+                            <label>
+                              VIN
+                              <span className={styles.reqStar}>*</span>
+                            </label>
+                            <input
+                              name="vehicleIdentifier"
+                              onChange={handleChange}
+                              required
+                              type="text"
+                              value={formData.vehicleIdentifier}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                       <div
                         className={clsx(styles.colFull, styles.dealershipTerms)}
                       >
