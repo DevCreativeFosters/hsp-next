@@ -49,7 +49,7 @@ const GET_ACCOUNT_TERMS_QUERY = `
 
 function CheckoutForm() {
   const router = useRouter();
-  const { setUser, user } = useUserContext();
+  const { loading: userLoading, setUser, user } = useUserContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -648,6 +648,17 @@ function CheckoutForm() {
             );
           }
         }
+
+        // Diagnostic — when only 2 of the 3 B2B options render, we
+        // need to know whether the missing one was filtered out by
+        // the assigned-store availableDeliveryOptions check OR isn't
+        // in the role-default set at all. Print the final list of
+        // ids so a quick console.log answers it without source-mapping
+        // through chunks.
+        console.log(
+          `[Checkout] final deliveryOptions for role=${role}:`,
+          filteredOptions.map(o => o.id),
+        );
 
         setDeliveryOptions(filteredOptions);
       }
@@ -1265,7 +1276,15 @@ function CheckoutForm() {
                   [styles.blackBoxesFull]: isDealerLike,
                 })}
               >
-                {cartLoading ? (
+                {cartLoading || userLoading ? (
+                  // Don't flash the retail-default options while
+                  // UserContext is still reading localStorage. Without
+                  // this gate, a B2B / dealer landing on /checkout
+                  // briefly sees Click&Collect / Local Installation /
+                  // Pickup From HSP (the retail role's options that
+                  // `role = user?.role ?? 'retail'` falls through to)
+                  // before the user hydrates and the right list takes
+                  // over.
                   <div className={styles.loading}>
                     <Loading size="large" />
                   </div>
