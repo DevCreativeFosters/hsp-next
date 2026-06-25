@@ -716,6 +716,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1361,20 +1393,20 @@ export function CartProvider({ children }) {
       );
       // Sequential — WP's addToCart returns a cumulative quantity per
       // product, so racing breaks totals.
+      //
+      // AddToCartInput is strict: passing UI-only fields like
+      // `product_image`, `product_name`, `largeItem`, `variantSku`
+      // (camelCase) gets rejected with `Field "X" is not defined by
+      // type "AddToCartInput"`. We only forward the schema-valid
+      // fields here. The shadow cart entries the original guest's
+      // addToCart wrote them with may have UI fields mixed in —
+      // strip them before replay.
       for (const item of guestItems) {
         try {
           await addToCart({
-            compareAtPrice: item.compareAtPrice,
-            largeItem: item.largeItem,
-            price: item.price,
             productId: item.product_id,
-            product_image: item.product_image,
-            product_name: item.product_name,
             quantity: item.quantity,
-            variantSku: item.variantSku,
-            variantSlug: item.variantSlug,
             variant_name: item.variantName,
-            variant_price: item.variant_price,
             variant_sku: item.variantSku,
             variant_slug: item.variantSlug,
           });
