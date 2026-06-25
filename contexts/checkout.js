@@ -199,7 +199,25 @@ export const CheckoutProvider = ({ children }) => {
 
       const variables = { input };
 
-      const res = await fetchAPI(query, { variables });
+      // Thread the auth token. Without it WP resolves checkoutOrder
+      // against an anonymous WC()->cart (empty for authenticated
+      // dealers whose addToCart writes went to user_meta) and throws
+      // "Your cart is empty" — even when getCartItems with the same
+      // token returns the populated cart, because checkoutOrder
+      // doesn't accept a `userId` field in its input
+      // (CheckoutOrderInput schema rejected the attempt with
+      // `Field "userId" is not defined by type "CheckoutOrderInput"`).
+      // The Bearer header is the only way to tell the resolver which
+      // dealer's cart to read.
+      const authToken =
+        user?.token ||
+        (typeof window !== 'undefined'
+          ? localStorage.getItem('authToken')
+          : null);
+      const res = await fetchAPI(query, {
+        variables,
+        ...(authToken && { authToken }),
+      });
       const data = res?.checkoutOrder;
 
       setOrderResponse(data);
