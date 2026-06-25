@@ -146,39 +146,46 @@ function DeliveryAddressForm({
           </div>
         )}
 
-        {/* $20 freight fee disclosure — applies to Deliver-to-Door orders. */}
-        <div className={styles.freightNotice}>
-          A <strong>$20 freight fee</strong> applies to Deliver-to-Door orders.
-        </div>
+        {/* $20 freight fee disclosure — drop-shipping only. Deliver-to-
+            Store ships to the dealer's store address (no per-order freight
+            charge for that path), and pickup-from-HSP has no freight. */}
+        {askCutomerInfo && (
+          <div className={styles.freightNotice}>
+            A <strong>$20 freight fee</strong> applies to drop-shipping orders.
+          </div>
+        )}
 
         {!askCutomerInfo && deliverySameAsBilling ? (
-          // Summary card — toggle is ticked, so we ship to the primary
-          // address already entered on the Address Details card above.
+          // Summary card. For B2B/dealer Deliver-to-Store the destination
+          // IS the dealer's own store address (rendered on the Contact
+          // Details card above as the dealerAddressLine). They aren't
+          // expected to re-type it on an Address Details form — the old
+          // "Please enter your address in the Address Details section
+          // above" copy was wrong for this flow. Show a clear
+          // confirmation instead.
           <div className={styles.addressSummaryCard}>
             <h4>Delivery Address</h4>
-            <p>
-              {formData.address || (
-                <span className={styles.addressSummaryMissing}>
-                  Please enter your address in the Address Details section
-                  above.
-                </span>
-              )}
-              {formData.address_2 ? `, ${formData.address_2}` : ''}
-              {formData.address && (
-                <>
-                  <br />
-                  {formData.city}
-                  {formData.city && (formData.state || formData.postcode)
-                    ? ', '
-                    : ''}
-                  {formData.state} {formData.postcode}
-                  {(formData.state || formData.postcode) && formData.country
-                    ? ', '
-                    : ''}
-                  {formData.country}
-                </>
-              )}
-            </p>
+            {formData.address ? (
+              <p>
+                {formData.address}
+                {formData.address_2 ? `, ${formData.address_2}` : ''}
+                <br />
+                {formData.city}
+                {formData.city && (formData.state || formData.postcode)
+                  ? ', '
+                  : ''}
+                {formData.state} {formData.postcode}
+                {(formData.state || formData.postcode) && formData.country
+                  ? ', '
+                  : ''}
+                {formData.country}
+              </p>
+            ) : (
+              <p>
+                Your order will be shipped to your store address shown in
+                Contact Details above.
+              </p>
+            )}
           </div>
         ) : (
           <>
