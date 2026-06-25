@@ -45,6 +45,19 @@ function DeliveryAddressForm({
     }
   }, [hasLargeItem, user?.role]);
 
+  // Deliver-to-Store + "delivery same as billing" + no commercial
+  // confirmation needed = there's literally nothing to fill in on this
+  // drawer. The destination is the dealer's store address from Contact
+  // Details, and the selection itself IS the user's confirmation that
+  // they want this option. Auto-advance straight to the payment section
+  // so the dealer doesn't have to click a Confirm button that does
+  // nothing functional.
+  const autoAdvance =
+    !askCutomerInfo && deliverySameAsBilling && !showCommercialConfirmation;
+  useEffect(() => {
+    if (autoAdvance) setIsFormFilled(true);
+  }, [autoAdvance, setIsFormFilled]);
+
   const autocompleteRef = useRef(null);
 
   const { isLoaded } = useLoadScript({
@@ -366,20 +379,28 @@ function DeliveryAddressForm({
           </div>
         )}
 
-        <Button
-          className={styles.submitBtn}
-          disabled={
-            // Summary mode: only need the commercial-confirmation when
-            // applicable; the primary address itself was confirmed upstream.
-            !askCutomerInfo && deliverySameAsBilling
-              ? !acceptDeliveryTerms || !formData.address
-              : formIncomplete
-          }
-          onClick={() => setIsFormFilled(true)}
-          size="large"
-        >
-          Confirm Address
-        </Button>
+        {/* Hide the Confirm Address button for the Deliver-to-Store
+            flow in summary mode. There's literally nothing to confirm
+            — the destination is the dealer's store address from
+            Contact Details and there's no per-flow input on this
+            drawer. The selection itself IS the confirmation; we
+            auto-advance via the useEffect below. The button stays
+            for the drop-shipping flow (askCutomerInfo) where the
+            dealer fills in customer details. */}
+        {(askCutomerInfo || !deliverySameAsBilling) && (
+          <Button
+            className={styles.submitBtn}
+            disabled={
+              !askCutomerInfo && deliverySameAsBilling
+                ? !acceptDeliveryTerms || !formData.address
+                : formIncomplete
+            }
+            onClick={() => setIsFormFilled(true)}
+            size="large"
+          >
+            Confirm Address
+          </Button>
+        )}
       </>
     </div>
   );

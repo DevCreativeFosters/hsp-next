@@ -684,6 +684,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -734,6 +766,12 @@ import { useVehicleContext } from './vehicle';
 // ---------------------------------------------------------------------------
 
 const LOCAL_CART_KEY_PREFIX = 'hsp_local_cart_';
+// Guests don't have a user id, but their shadow cart still needs a stable
+// localStorage key so it can be migrated into the dealer's user_meta cart
+// after login. Without this, items added as a guest are only visible to
+// WP's anonymous WC()->cart session and become unreachable as soon as the
+// authenticated dealer's getCartItems returns its empty user_meta cart.
+const GUEST_CART_KEY = `${LOCAL_CART_KEY_PREFIX}guest`;
 
 const readUserIdFromStorage = () => {
   if (typeof window === 'undefined') return null;
@@ -743,7 +781,7 @@ const readUserIdFromStorage = () => {
 
 const localCartKey = userId => {
   const id = userId ?? readUserIdFromStorage();
-  return id ? `${LOCAL_CART_KEY_PREFIX}${id}` : null;
+  return id ? `${LOCAL_CART_KEY_PREFIX}${id}` : GUEST_CART_KEY;
 };
 
 const readLocalCart = userId => {
@@ -1282,10 +1320,92 @@ export function CartProvider({ children }) {
   // 🔹 Auto-fetch cart on first load + whenever the auth token changes (login
   // in another tab dispatches a storage event; same-tab logins should
   // dispatch a manual `authchange` event so this listener fires too).
+  //
+  // Auth-change also triggers a guest→dealer cart MIGRATION. When a guest
+  // adds items, their shadow cart lives at `hsp_local_cart_guest` and the
+  // WP write goes into the anonymous WC()->cart session. After login, the
+  // dealer's authenticated getCartItems reads from their (empty)
+  // user_meta cart — so the guest items vanish from the UI even though
+  // the dealer just intended to buy those exact products. To recover
+  // them we replay each guest item through addToCart (which now sends
+  // userId and writes to user_meta), then clear the guest shadow.
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
-    getCartItems();
-    const onAuthChange = () => getCartItems();
+
+    const migrateGuestCart = async () => {
+      const userId = readUserIdFromStorage();
+      if (!userId) return; // still a guest, nothing to migrate
+      let guestRaw;
+      try {
+        guestRaw = localStorage.getItem(GUEST_CART_KEY);
+      } catch (_err) {
+        return;
+      }
+      if (!guestRaw) return;
+      let guestParsed;
+      try {
+        guestParsed = JSON.parse(guestRaw);
+      } catch (_err) {
+        localStorage.removeItem(GUEST_CART_KEY);
+        return;
+      }
+      const guestItems = guestParsed?.items || [];
+      if (guestItems.length === 0) {
+        localStorage.removeItem(GUEST_CART_KEY);
+        return;
+      }
+      console.log(
+        '[Cart] migrating',
+        guestItems.length,
+        'guest item(s) into dealer cart',
+      );
+      // Sequential — WP's addToCart returns a cumulative quantity per
+      // product, so racing breaks totals.
+      for (const item of guestItems) {
+        try {
+          await addToCart({
+            compareAtPrice: item.compareAtPrice,
+            largeItem: item.largeItem,
+            price: item.price,
+            productId: item.product_id,
+            product_image: item.product_image,
+            product_name: item.product_name,
+            quantity: item.quantity,
+            variantSku: item.variantSku,
+            variantSlug: item.variantSlug,
+            variant_name: item.variantName,
+            variant_price: item.variant_price,
+            variant_sku: item.variantSku,
+            variant_slug: item.variantSlug,
+          });
+        } catch (err) {
+          console.error(
+            '[Cart] guest item migration failed for',
+            item.product_name,
+            err?.message,
+          );
+        }
+      }
+      // Successfully replayed — wipe the guest shadow so we don't
+      // double-migrate on a later auth event.
+      localStorage.removeItem(GUEST_CART_KEY);
+    };
+
+    // First run: migrate any leftover guest items (covers users who land
+    // on a logged-in page directly without ever firing authchange in
+    // this tab — e.g. cookie-session restore on a fresh page load) and
+    // then fetch the cart. migrate calls addToCart internally; after it
+    // resolves cart state is already up to date, so getCartItems is
+    // mostly a sanity refresh.
+    (async () => {
+      await migrateGuestCart();
+      getCartItems();
+    })();
+
+    const onAuthChange = async () => {
+      await migrateGuestCart();
+      getCartItems();
+    };
     const onStorage = e => {
       if (
         !e.key ||
@@ -1302,7 +1422,7 @@ export function CartProvider({ children }) {
       window.removeEventListener('authchange', onAuthChange);
       window.removeEventListener('storage', onStorage);
     };
-  }, [getCartItems]);
+  }, [addToCart, getCartItems]);
 
   return (
     <CartContext.Provider
