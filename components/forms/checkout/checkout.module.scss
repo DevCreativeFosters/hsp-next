@@ -368,6 +368,37 @@
   }
 }
 
+// Wraps the "Forgot password?" link and the "Continue as guest" button
+// side-by-side under the password row. Both render as small underlined
+// links so the visual weight matches.
+.inlineLoginLinks {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+
+  // The skip button's own margin-top would compound — zero it out here so
+  // the row alignment stays clean.
+  .inlineLoginSkip {
+    margin-top: 0;
+  }
+}
+
+.inlineLoginForgot {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #ed2935;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: #b51d28;
+  }
+}
+
 .checkoutMain {
   margin-top: 60px;
   margin-bottom: 60px;

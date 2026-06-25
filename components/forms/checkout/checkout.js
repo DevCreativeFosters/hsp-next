@@ -139,6 +139,14 @@ function CheckoutForm() {
   const [loginError, setLoginError] = useState('');
   const [emailLookupInFlight, setEmailLookupInFlight] = useState(false);
   const [continueAsGuest, setContinueAsGuest] = useState(false);
+  // Inline "Forgot password?" handler state. The login-form's full
+  // forgotPassword flow lives at /login (toggle on that page) — but a
+  // user mid-checkout shouldn't have to navigate away. Fire the same
+  // forgotPassword mutation here and show the response inline below
+  // the password row.
+  const [forgotPasswordInProgress, setForgotPasswordInProgress] =
+    useState(false);
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState('');
 
   // Dealer/B2B saved address (for the Contact Details summary card).
   // Same data the portal Address tab shows — same fetch chain too:
@@ -147,6 +155,40 @@ function CheckoutForm() {
   // (generic store address). Stored as a single flat string for
   // display in the summary block.
   const [dealerAddressLine, setDealerAddressLine] = useState('');
+
+  const handleForgotPassword = async () => {
+    if (!formData.email || !formData.email.includes('@')) {
+      setForgotPasswordMessage('❌ Enter a valid email first');
+      return;
+    }
+    setForgotPasswordInProgress(true);
+    setForgotPasswordMessage('');
+    try {
+      const data = await fetchAPI(
+        `mutation ForgotPassword($email: String!) {
+          forgotPassword(input: { email: $email }) {
+            success
+            message
+          }
+        }`,
+        { variables: { email: formData.email } },
+      );
+      const res = data?.forgotPassword;
+      if (res?.success) {
+        setForgotPasswordMessage(
+          `✅ ${res.message || 'Check your email for a reset link'}`,
+        );
+      } else {
+        setForgotPasswordMessage(
+          `❌ ${res?.message || 'Something went wrong'}`,
+        );
+      }
+    } catch (err) {
+      setForgotPasswordMessage(`❌ ${err?.message || 'Something went wrong'}`);
+    } finally {
+      setForgotPasswordInProgress(false);
+    }
+  };
 
   const checkEmailExists = async emailToCheck => {
     if (!emailToCheck || !emailToCheck.includes('@')) {
@@ -1014,13 +1056,35 @@ function CheckoutForm() {
                             ❌ {loginError}
                           </p>
                         )}
-                        <button
-                          className={styles.inlineLoginSkip}
-                          onClick={() => setContinueAsGuest(true)}
-                          type="button"
-                        >
-                          Continue as guest
-                        </button>
+                        <div className={styles.inlineLoginLinks}>
+                          {/* Inline forgot-password — fires the same
+                              forgotPassword mutation /login uses, but
+                              without navigating away from /checkout.
+                              The email is whatever the user already
+                              typed into the Email Address field. */}
+                          <button
+                            className={styles.inlineLoginForgot}
+                            disabled={forgotPasswordInProgress}
+                            onClick={handleForgotPassword}
+                            type="button"
+                          >
+                            {forgotPasswordInProgress
+                              ? 'Sending…'
+                              : 'Forgot password?'}
+                          </button>
+                          <button
+                            className={styles.inlineLoginSkip}
+                            onClick={() => setContinueAsGuest(true)}
+                            type="button"
+                          >
+                            Continue as guest
+                          </button>
+                        </div>
+                        {forgotPasswordMessage && (
+                          <p className={styles.inlineLoginError}>
+                            {forgotPasswordMessage}
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
