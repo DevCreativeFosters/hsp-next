@@ -813,6 +813,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1187,7 +1219,15 @@ export function CartProvider({ children }) {
       // frontend (RemoveFromCart and UpdateCart don't accept userId yet, so
       // they only touch the WC session cart). Compute the shadow quantity
       // locally instead — existing local qty + this click's delta.
-      if (userId && response?.cart_item_key) {
+      //
+      // Writes happen for GUESTS too — readLocalCart/writeLocalCart route to
+      // the `hsp_local_cart_guest` key when userId is null (see
+      // localCartKey). This is what lets the cart-context authchange
+      // listener migrate the guest's items into the dealer's user_meta
+      // cart after login. Previously this branch was gated on
+      // `userId && ...` so guest carts were never persisted — every
+      // page reload or login attempt wiped them.
+      if (response?.cart_item_key) {
         const delta = parseInt(item.quantity, 10) || 1;
         const existingItems = readLocalCart(userId)?.items || [];
         const existing = existingItems.find(
