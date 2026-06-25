@@ -652,6 +652,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -994,17 +1026,22 @@ export function CartProvider({ children }) {
         price: _shadowPrice,
         ...wpInput
       } = item;
+      // Include userId in the WP input for authenticated users. An earlier
+      // version of this code stripped userId to dodge a resolver branch that
+      // wrote items to _woocommerce_persistent_cart_<userId> user_meta
+      // (which getCartItems / checkoutOrder couldn't read back). That bug
+      // has since been fixed on the WP side — confirmed by Postman: logging
+      // in as a dealer, calling addToCart with `{userId: 82, ...}`, then
+      // calling getCartItems with the same auth token returns the items.
+      // With userId stripped, addToCart was writing to the anonymous WC()
+      // ->cart session (visible only to unauthenticated requests) and the
+      // authenticated dealer's getCartItems / checkoutOrder calls saw an
+      // empty cart — Place Order then threw "Your cart is empty" for every
+      // dealer. Sending userId fixes both reads and writes to hit the same
+      // user_meta cart.
+      const inputWithUser = userId != null ? { ...wpInput, userId } : wpInput;
       const data = await fetchAPI(query, {
-        // NOTE: deliberately NOT sending userId in the WP input. When the
-        // dealer's userId is present, Lokesh's resolver takes a B2B branch
-        // that writes to _woocommerce_persistent_cart_<userId> user_meta
-        // and skips populating WC()->cart in the session. Then checkoutOrder
-        // reads WC()->cart and throws "Your cart is empty". Without userId,
-        // the resolver follows the retail code path (which works) and writes
-        // to the WC session cart. The dealer is still identified by the
-        // Bearer token in authConfig() for pricing/auth — only the input arg
-        // is stripped.
-        variables: { input: wpInput },
+        variables: { input: inputWithUser },
         ...authConfig(),
       });
 
