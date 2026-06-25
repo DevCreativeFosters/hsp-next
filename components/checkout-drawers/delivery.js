@@ -45,19 +45,6 @@ function DeliveryAddressForm({
     }
   }, [hasLargeItem, user?.role]);
 
-  // Deliver-to-Store + "delivery same as billing" + no commercial
-  // confirmation needed = there's literally nothing to fill in on this
-  // drawer. The destination is the dealer's store address from Contact
-  // Details, and the selection itself IS the user's confirmation that
-  // they want this option. Auto-advance straight to the payment section
-  // so the dealer doesn't have to click a Confirm button that does
-  // nothing functional.
-  const autoAdvance =
-    !askCutomerInfo && deliverySameAsBilling && !showCommercialConfirmation;
-  useEffect(() => {
-    if (autoAdvance) setIsFormFilled(true);
-  }, [autoAdvance, setIsFormFilled]);
-
   const autocompleteRef = useRef(null);
 
   const { isLoaded } = useLoadScript({
@@ -76,6 +63,20 @@ function DeliveryAddressForm({
   const useAltAddress = !askCutomerInfo && !deliverySameAsBilling;
   const fieldPrefix = useAltAddress ? 'delivery_' : '';
   const f = key => `${fieldPrefix}${key}`;
+
+  // Deliver-to-Store + "delivery same as billing" + no commercial
+  // confirmation needed = there's literally nothing to fill in on this
+  // drawer. The destination is the dealer's store address from Contact
+  // Details, and the selection itself IS the user's confirmation that
+  // they want this option. Auto-advance straight to the payment section
+  // so the dealer doesn't have to click a Confirm button that does
+  // nothing functional. Must live BELOW deliverySameAsBilling/
+  // showCommercialConfirmation so we don't TDZ-reference them.
+  const autoAdvance =
+    !askCutomerInfo && deliverySameAsBilling && !showCommercialConfirmation;
+  useEffect(() => {
+    if (autoAdvance) setIsFormFilled(true);
+  }, [autoAdvance, setIsFormFilled]);
 
   const handlePlaceChanged = () => {
     const place = autocompleteRef.current?.getPlace?.();

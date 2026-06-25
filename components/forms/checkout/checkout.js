@@ -173,18 +173,15 @@ function CheckoutForm() {
       // products out. Snapshot the items now, login, then replay each
       // through addToCart so they end up in the user_meta cart attached
       // to this dealer.
+      //
+      // Schema-valid AddToCartInput fields ONLY — UI fields like
+      // `product_image`, `largeItem`, `variantSku` (camelCase) get
+      // rejected by WP with `Field "X" is not defined by type
+      // "AddToCartInput"`. Mirror the snake_case spec exactly.
       const guestCartSnapshot = (cartItems || []).map(it => ({
-        compareAtPrice: it.compareAtPrice,
-        largeItem: it.largeItem,
-        price: it.price,
         productId: it.product_id,
-        product_image: it.product_image,
-        product_name: it.product_name,
         quantity: it.quantity,
-        variantSku: it.variantSku,
-        variantSlug: it.variantSlug,
         variant_name: it.variantName,
-        variant_price: it.variant_price,
         variant_sku: it.variantSku,
         variant_slug: it.variantSlug,
       }));
