@@ -39,9 +39,42 @@ import {
   useState,
 } from 'react';
 
+import { getProductPricing } from '@lib/api/get-product-pricing';
 import { fetchAPI } from '@lib/fetch-api';
 
 import { useVehicleContext } from './vehicle';
+
+// 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
 
 // 'use client';
 // import { createContext, useContext, useState } from 'react';
@@ -1426,26 +1459,52 @@ export function CartProvider({ children }) {
       // Sequential — WP's addToCart returns a cumulative quantity per
       // product, so racing breaks totals.
       //
-      // AddToCartInput is strict: UI-only fields like `product_image`,
-      // `product_name`, `largeItem`, `variantSku` (camelCase) get
-      // rejected by WP with `Field "X" is not defined by type
-      // "AddToCartInput"`. Forward only schema-valid keys for the
-      // server side BUT keep `price` + `compareAtPrice` on the input
-      // object — addToCart strips them before sending to WP, then
-      // buildShadowItem reads them back as the dealer-tier override
-      // for the shadow cart. Dropping these here was the regression
-      // that turned every B2B item into WP's public sale price after
-      // a login migration.
+      // For each guest item: query the now-authenticated dealer's
+      // tier pricing for that productId, find the variant by SKU,
+      // and pass tierPrice / variantPrice on the addToCart input.
+      // addToCart strips them before sending to WP (the schema only
+      // accepts productId / quantity / variant_* / userId), then
+      // buildShadowItem reads them as the dealer-tier override on
+      // the shadow cart entry. Without this lookup the dealer sees
+      // WP's public sale price for items they added as a guest.
       for (const item of guestItems) {
         try {
+          let tierPrice;
+          let tierCompareAt;
+          try {
+            const pricing = await getProductPricing(item.product_id);
+            const variant = pricing?.variantPricing?.find(
+              v => v.sku === item.variantSku,
+            );
+            if (
+              variant &&
+              variant.tierPrice != null &&
+              variant.tierPrice < variant.price
+            ) {
+              tierPrice = variant.tierPrice;
+              tierCompareAt = variant.price;
+            }
+          } catch (priceErr) {
+            console.warn(
+              '[Cart] tier price lookup failed for',
+              item.product_name,
+              priceErr?.message,
+            );
+          }
           await addToCart({
-            // Dealer tier pricing — stripped before WP, used by
-            // buildShadowItem to override response.price/compareAt.
-            ...(item.price != null && { price: item.price }),
-            ...(item.compareAtPrice != null && {
-              compareAtPrice: item.compareAtPrice,
-            }),
-            // WP-side fields:
+            // Tier override — stripped before WP, used by
+            // buildShadowItem to set the shadow's price/compareAt.
+            // Falls back to the guest's price/compareAt if the dealer
+            // doesn't have a tier on this variant (e.g. retail-only
+            // SKU) so we at least preserve what the guest paid.
+            ...(tierPrice != null
+              ? { compareAtPrice: tierCompareAt, price: tierPrice }
+              : {
+                  ...(item.price != null && { price: item.price }),
+                  ...(item.compareAtPrice != null && {
+                    compareAtPrice: item.compareAtPrice,
+                  }),
+                }),
             productId: item.product_id,
             quantity: item.quantity,
             variant_name: item.variantName,
