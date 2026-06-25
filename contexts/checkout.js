@@ -63,44 +63,82 @@ export const CheckoutProvider = ({ children }) => {
   };
 
   // 🧾 Apply Coupon
+  //
+  // The input field is a "Coupon Code" but the original mutation here
+  // was `applyGiftCard` — gift cards and WC coupons are different
+  // resolvers in this WP install. So a real coupon like "B2B10" got
+  // silently rejected by applyGiftCard (success:false, empty message)
+  // because it isn't a gift card, and the user thought the whole flow
+  // was broken.
+  //
+  // Try the standard WC `applyCoupon` mutation first; if it doesn't
+  // exist on this WP install OR rejects the code, fall back to
+  // applyGiftCard (which is what we were doing all along). Whichever
+  // resolves first with success wins. This way:
+  //   - Real coupon codes (B2B10, SAVE20, etc.) hit the right resolver
+  //   - Real gift-card codes still work
+  //   - The user sees a meaningful error from whichever resolver was
+  //     "closer" to recognising the input
   const applyCoupon = async code => {
     setLoading(true);
     setCouponMessage('');
+
+    // Helper: run a mutation, return {success, message}, never throw.
+    const runMutation = async (mutationName, queryStr) => {
+      try {
+        // No authToken — same workaround as cart-context's addToCart.
+        // See the comment above getAllAppliedCoupons for why.
+        const res = await fetchAPI(queryStr, { variables: { code } });
+        return res?.[mutationName] || null;
+      } catch (err) {
+        console.error(`[Checkout] ${mutationName} threw:`, err?.message);
+        return null;
+      }
+    };
+
     try {
-      const query = `
-        mutation ApplyGiftCard($code: String!) {
+      // 1. Try the canonical WC coupon mutation first.
+      const couponRes = await runMutation(
+        'applyCoupon',
+        `mutation ApplyCoupon($code: String!) {
+          applyCoupon(input: { code: $code }) {
+            cart { contents { itemCount } }
+          }
+        }`,
+      );
+
+      // `applyCoupon` (WPGraphQL for WooCommerce) returns the cart on
+      // success and throws GraphQL errors on failure. Our fetchAPI
+      // wraps those into a thrown Error which runMutation catches and
+      // converts to null. So: non-null = success, null = couldn't
+      // apply (or mutation doesn't exist on this WP install).
+      if (couponRes?.cart) {
+        setCouponMessage(`✅ Coupon "${code}" applied`);
+        await getAllAppliedCoupons();
+        return true;
+      }
+
+      // 2. Fall back to applyGiftCard for legacy gift-card codes.
+      const giftRes = await runMutation(
+        'applyGiftCard',
+        `mutation ApplyGiftCard($code: String!) {
           applyGiftCard(input: { code: $code }) {
             success
             message
           }
-        }
-      `;
-      const variables = { code };
-
-      // No authToken — same workaround as cart-context's addToCart.
-      // See the comment above getAllAppliedCoupons for why.
-      const res = await fetchAPI(query, { variables });
-      const data = res?.applyGiftCard;
-
-      // Trim then fall back to a generic message — WP's applyGiftCard
-      // resolver replies with success:false + an EMPTY message string
-      // for unrecognised codes (e.g. "test"). A plain
-      // `|| 'Invalid coupon'` only catches null/undefined, so the user
-      // previously saw just the ❌ icon with nothing after it and
-      // thought the click did nothing.
-      const trimmed = data?.message?.trim();
-      if (data?.success) {
-        setCouponMessage(`✅ ${trimmed || 'Coupon applied'}`);
-      } else {
-        setCouponMessage(`❌ ${trimmed || 'Invalid or expired coupon code'}`);
+        }`,
+      );
+      const trimmed = giftRes?.message?.trim();
+      if (giftRes?.success) {
+        setCouponMessage(`✅ ${trimmed || 'Gift card applied'}`);
+        await getAllAppliedCoupons();
+        return true;
       }
 
-      await getAllAppliedCoupons();
-
-      return data?.success || false;
-    } catch (err) {
-      console.error('Error applying coupon:', err);
-      setCouponMessage('⚠️ Something went wrong');
+      // Neither resolver accepted the code — surface the gift-card
+      // resolver's message if it had one, else a generic message.
+      console.log('[Checkout] applyCoupon failed:', { couponRes, giftRes });
+      setCouponMessage(`❌ ${trimmed || 'Invalid or expired coupon code'}`);
       return false;
     } finally {
       setLoading(false);
