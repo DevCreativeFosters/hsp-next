@@ -329,17 +329,25 @@ function CheckoutForm() {
         });
         if (cancelled) return;
 
-        // For B2B / Dealer accounts, override company / email / phone
-        // with the STORE's business contact info — same data the
-        // /account/b2b page shows under Business Details. The order
-        // is placed on behalf of the store, so the contact info needs
-        // to match the dealer record (e.g. "Canopies WA",
-        // orders@canopieswa.com.au, 08 9248 2685) rather than the
-        // logged-in user's personal email/phone. First + last name
-        // stay as the user's (who's placing the order).
+        // For B2B / Dealer accounts, override the contact details with
+        // the STORE's business record — same data /account/b2b shows.
+        // The order is placed on behalf of the store, so:
+        //   - first_name ← postName from getAssignedStoreAddress
+        //     (per-request from the user; this is the store post slug
+        //     e.g. "canopies-wa"). last_name is cleared so the summary
+        //     line renders as just the post name.
+        //   - company    ← odooCompanyName / store.title
+        //   - email      ← storeDetails.communication_email
+        //   - phone      ← storesCustomFields.phoneNumber
         let storeContact = null;
         if (user?.role === 'b2b' || user?.role === 'dealer') {
           try {
+            // Fetch the new resolver first for storeName + postName.
+            const assigned = await getAssignedStoreAddress(user.id, {
+              authToken: user.token,
+            });
+            if (cancelled) return;
+
             const storeRes = await fetchAPI(
               `mutation GetStoreContact($userId: ID!) {
                 getStoreByUserId(input: { userId: $userId }) {
@@ -356,10 +364,10 @@ function CheckoutForm() {
             );
             if (cancelled) return;
             const storeDetails = storeRes?.getStoreByUserId?.storeDetails?.[0];
+            let storeFull = null;
             if (storeDetails?.store_id) {
-              // Fetch the full Store post to grab title + phone +
-              // odooCompanyName. Same shape AccountDetails uses on the
-              // portal page.
+              // Fetch the full Store post for title + odooCompanyName +
+              // phone. Same shape AccountDetails uses on the portal.
               const fullRes = await fetchAPI(
                 `query GetStoreFull($id: ID!) {
                   store(id: $id, idType: DATABASE_ID) {
@@ -371,15 +379,18 @@ function CheckoutForm() {
                 { variables: { id: storeDetails.store_id } },
               );
               if (cancelled) return;
-              storeContact = {
-                company:
-                  fullRes?.store?.odooCompanyName ||
-                  fullRes?.store?.title ||
-                  null,
-                email: storeDetails.communication_email || null,
-                phone: fullRes?.store?.storesCustomFields?.phoneNumber || null,
-              };
+              storeFull = fullRes?.store;
             }
+            storeContact = {
+              company:
+                storeFull?.odooCompanyName ||
+                storeFull?.title ||
+                assigned?.storeName ||
+                null,
+              email: storeDetails?.communication_email || null,
+              phone: storeFull?.storesCustomFields?.phoneNumber || null,
+              postName: assigned?.postName || null,
+            };
           } catch (err) {
             console.error(
               '[Checkout] store contact lookup failed:',
@@ -393,8 +404,13 @@ function CheckoutForm() {
           company: storeContact?.company || profile?.company || prev.company,
           email: storeContact?.email || billing.email || prev.email,
           first_name:
-            profile?.firstName || billing.first_name || prev.first_name,
-          last_name: profile?.lastName || billing.last_name || prev.last_name,
+            storeContact?.postName ||
+            profile?.firstName ||
+            billing.first_name ||
+            prev.first_name,
+          last_name: storeContact?.postName
+            ? ''
+            : profile?.lastName || billing.last_name || prev.last_name,
           phone:
             storeContact?.phone ||
             profile?.phone ||
