@@ -329,14 +329,77 @@ function CheckoutForm() {
         });
         if (cancelled) return;
 
+        // For B2B / Dealer accounts, override company / email / phone
+        // with the STORE's business contact info — same data the
+        // /account/b2b page shows under Business Details. The order
+        // is placed on behalf of the store, so the contact info needs
+        // to match the dealer record (e.g. "Canopies WA",
+        // orders@canopieswa.com.au, 08 9248 2685) rather than the
+        // logged-in user's personal email/phone. First + last name
+        // stay as the user's (who's placing the order).
+        let storeContact = null;
+        if (user?.role === 'b2b' || user?.role === 'dealer') {
+          try {
+            const storeRes = await fetchAPI(
+              `mutation GetStoreContact($userId: ID!) {
+                getStoreByUserId(input: { userId: $userId }) {
+                  storeDetails {
+                    store_id
+                    communication_email
+                  }
+                }
+              }`,
+              {
+                variables: { userId: String(user.id) },
+                ...(user.token && { authToken: user.token }),
+              },
+            );
+            if (cancelled) return;
+            const storeDetails = storeRes?.getStoreByUserId?.storeDetails?.[0];
+            if (storeDetails?.store_id) {
+              // Fetch the full Store post to grab title + phone +
+              // odooCompanyName. Same shape AccountDetails uses on the
+              // portal page.
+              const fullRes = await fetchAPI(
+                `query GetStoreFull($id: ID!) {
+                  store(id: $id, idType: DATABASE_ID) {
+                    title
+                    odooCompanyName
+                    storesCustomFields { phoneNumber }
+                  }
+                }`,
+                { variables: { id: storeDetails.store_id } },
+              );
+              if (cancelled) return;
+              storeContact = {
+                company:
+                  fullRes?.store?.odooCompanyName ||
+                  fullRes?.store?.title ||
+                  null,
+                email: storeDetails.communication_email || null,
+                phone: fullRes?.store?.storesCustomFields?.phoneNumber || null,
+              };
+            }
+          } catch (err) {
+            console.error(
+              '[Checkout] store contact lookup failed:',
+              err?.message,
+            );
+          }
+        }
+
         setFormData(prev => ({
           ...prev,
-          company: profile?.company || prev.company,
-          email: billing.email || prev.email,
+          company: storeContact?.company || profile?.company || prev.company,
+          email: storeContact?.email || billing.email || prev.email,
           first_name:
             profile?.firstName || billing.first_name || prev.first_name,
           last_name: profile?.lastName || billing.last_name || prev.last_name,
-          phone: profile?.phone || billing.phone || prev.phone,
+          phone:
+            storeContact?.phone ||
+            profile?.phone ||
+            billing.phone ||
+            prev.phone,
         }));
         setSubmitContactDetails(true);
 
