@@ -82,10 +82,17 @@ export const CheckoutProvider = ({ children }) => {
       const res = await fetchAPI(query, { variables });
       const data = res?.applyGiftCard;
 
+      // Trim then fall back to a generic message — WP's applyGiftCard
+      // resolver replies with success:false + an EMPTY message string
+      // for unrecognised codes (e.g. "test"). A plain
+      // `|| 'Invalid coupon'` only catches null/undefined, so the user
+      // previously saw just the ❌ icon with nothing after it and
+      // thought the click did nothing.
+      const trimmed = data?.message?.trim();
       if (data?.success) {
-        setCouponMessage(`✅ ${data.message}`);
+        setCouponMessage(`✅ ${trimmed || 'Coupon applied'}`);
       } else {
-        setCouponMessage(`❌ ${data?.message || 'Invalid coupon'}`);
+        setCouponMessage(`❌ ${trimmed || 'Invalid or expired coupon code'}`);
       }
 
       await getAllAppliedCoupons();
