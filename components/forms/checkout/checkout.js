@@ -74,6 +74,7 @@ function CheckoutForm() {
     appliedCoupons,
     applyCoupon,
     checkoutOrder,
+    couponMessage,
     createQuote,
     loading: checkoutLoading,
     totalDiscount,
@@ -1661,14 +1662,29 @@ function CheckoutForm() {
                 <button
                   className={styles.couponBtn}
                   disabled={checkoutLoading || !couponCode}
-                  onClick={() => {
-                    if (applyCoupon(couponCode)) setCouponCode('');
+                  onClick={async () => {
+                    // Bug fix: the old `if (applyCoupon(couponCode))`
+                    // treated the returned Promise as truthy and
+                    // cleared the field immediately, before the
+                    // resolver returned — so the user never saw their
+                    // typed code stick. Await it, and only clear on
+                    // success so a failed/invalid code stays in the
+                    // field for the user to correct.
+                    const ok = await applyCoupon(couponCode);
+                    if (ok) setCouponCode('');
                   }}
                   type="button"
                 >
                   {checkoutLoading ? 'Applying...' : 'Apply'}
                 </button>
               </div>
+              {/* Coupon result feedback — context sets couponMessage to
+                  a ✅ / ❌ / ⚠️ string after applyCoupon resolves;
+                  without this <p> nothing rendered it and the user
+                  thought the click did nothing. */}
+              {couponMessage && (
+                <p className={styles.couponMessage}>{couponMessage}</p>
+              )}
               <div className={styles.checkoutSummary}>
                 <h3>Summary</h3>
                 <div className={styles.subTotal}>
