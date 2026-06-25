@@ -16,6 +16,18 @@ export const CheckoutProvider = ({ children }) => {
   const [appliedCoupons, setAppliedCoupons] = useState([]);
   const [totalDiscount, setTotalDiscount] = useState(0);
 
+  // Resolves whichever auth token is current — context first (set by
+  // useUserContext during login), falling back to localStorage in case
+  // the provider hasn't hydrated yet when a coupon button is clicked.
+  // WP needs this token to associate the cart-state mutations
+  // (applyGiftCard / getAppliedCoupons / checkoutOrder) with the
+  // logged-in user's WooCommerce session — without it the resolver
+  // sees an anonymous session, can't find the user's cart, and throws
+  // "Your cart is empty".
+  const getAuthToken = () =>
+    user?.token ||
+    (typeof window !== 'undefined' ? localStorage.getItem('authToken') : null);
+
   // Get All Applied Coupons
   const getAllAppliedCoupons = async () => {
     setLoading(true);
@@ -33,7 +45,10 @@ export const CheckoutProvider = ({ children }) => {
         }
       `;
 
-      const data = await fetchAPI(query);
+      const authToken = getAuthToken();
+      const data = await fetchAPI(query, {
+        ...(authToken && { authToken }),
+      });
       if (data?.getAppliedCoupons?.coupons?.length > 0) {
         setTotalDiscount(
           data?.getAppliedCoupons?.coupons?.reduce(
@@ -65,7 +80,11 @@ export const CheckoutProvider = ({ children }) => {
       `;
       const variables = { code };
 
-      const res = await fetchAPI(query, { variables });
+      const authToken = getAuthToken();
+      const res = await fetchAPI(query, {
+        variables,
+        ...(authToken && { authToken }),
+      });
       const data = res?.applyGiftCard;
 
       if (data?.success) {
