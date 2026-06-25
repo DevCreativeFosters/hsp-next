@@ -54,6 +54,7 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
 
   const {
+    addToCart,
     cartItems = [],
     cartSubTotal = 0,
     cartTotal = 0,
@@ -163,6 +164,31 @@ function CheckoutForm() {
     setLoginInProgress(true);
     setLoginError('');
     try {
+      // Capture the guest's cart items BEFORE login. WP's authenticated
+      // resolvers read from the dealer's user_meta cart (empty on first
+      // login), while the items just added as a guest live in the
+      // anonymous WC()->cart session. authchange re-fetches and would
+      // show an empty cart — the items effectively vanish from the UI
+      // even though the dealer just intended to check those exact
+      // products out. Snapshot the items now, login, then replay each
+      // through addToCart so they end up in the user_meta cart attached
+      // to this dealer.
+      const guestCartSnapshot = (cartItems || []).map(it => ({
+        compareAtPrice: it.compareAtPrice,
+        largeItem: it.largeItem,
+        price: it.price,
+        productId: it.product_id,
+        product_image: it.product_image,
+        product_name: it.product_name,
+        quantity: it.quantity,
+        variantSku: it.variantSku,
+        variantSlug: it.variantSlug,
+        variant_name: it.variantName,
+        variant_price: it.variant_price,
+        variant_sku: it.variantSku,
+        variant_slug: it.variantSlug,
+      }));
+
       const loginRes = await fetchAPI(
         `
           mutation UserLogin($username: String!, $password: String!) {
@@ -204,6 +230,29 @@ function CheckoutForm() {
         token: login.token,
       });
       window.dispatchEvent(new Event('authchange'));
+
+      // Replay the guest cart into the now-authenticated dealer's
+      // user_meta cart. addToCart reads userId + authToken from
+      // localStorage (we just set both above) and writes to the
+      // correct store. Without this the items show up in the cart
+      // panel briefly, then disappear after authchange's getCartItems
+      // returns the empty user_meta cart — which is what the user
+      // just hit in production. Sequential await on purpose: WP's
+      // addToCart returns a CUMULATIVE quantity for a given product,
+      // so racing them can produce a wrong total.
+      if (typeof addToCart === 'function' && guestCartSnapshot.length > 0) {
+        for (const item of guestCartSnapshot) {
+          try {
+            await addToCart(item);
+          } catch (err) {
+            console.error(
+              '[Checkout] failed to migrate guest cart item to dealer cart:',
+              item.product_name,
+              err?.message,
+            );
+          }
+        }
+      }
 
       // Re-query with the new auth token so the resolver returns the full
       // profile (firstName/lastName/phone/company), then prefill.
@@ -1434,12 +1483,46 @@ function CheckoutForm() {
                   </div>
                 )}
 
-                {/* Removed: the dealer-only standalone PO input that
-                    used to live here in the order summary box. PO
-                    Number now renders in the groupTerms section near
-                    Place Order for both B2B and Dealer, alongside VIN
-                    (dealer) and T&Cs. Single source of truth, no risk
-                    of two inputs binding to the same formData key. */}
+                {/* Per Figma 188:8623, B2B Payment block opens with PO
+                    Number BEFORE the payment method radios. Dealer VIN
+                    follows the same pattern. T&Cs + Marketing stay in
+                    the groupTerms section below the payment options. */}
+                {isDealerLike && (
+                  <div className={styles.paymentOrderFields}>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <label>
+                          Purchase Order Number
+                          <span className={styles.reqStar}>*</span>
+                        </label>
+                        <input
+                          name="purchaseOrderNumber"
+                          onChange={handleChange}
+                          required
+                          type="text"
+                          value={formData.purchaseOrderNumber}
+                        />
+                      </div>
+                    </div>
+                    {role === 'dealer' && (
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
+                          <label>
+                            VIN
+                            <span className={styles.reqStar}>*</span>
+                          </label>
+                          <input
+                            name="vehicleIdentifier"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.vehicleIdentifier}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className={styles.paymenSelection}>
                   {isDealerLike && accountTerms && (
                     <div
@@ -1518,46 +1601,10 @@ function CheckoutForm() {
                     card. Now there's one canonical T&Cs section here
                     near Place Order, visible to every role. */}
                 <div className={styles.groupTerms}>
-                  {isDealerLike && (
-                    /* Dealer/B2B-only order info: PO Number always,
-                       VIN dealer-only. Placed alongside the T&Cs so
-                       all the order-level fields the dealer needs to
-                       fill in are co-located right above Place Order. */
-                    <>
-                      <div className={styles.colFull}>
-                        <div className={styles.inputGroup}>
-                          <label>
-                            Purchase Order Number
-                            <span className={styles.reqStar}>*</span>
-                          </label>
-                          <input
-                            name="purchaseOrderNumber"
-                            onChange={handleChange}
-                            required
-                            type="text"
-                            value={formData.purchaseOrderNumber}
-                          />
-                        </div>
-                      </div>
-                      {role === 'dealer' && (
-                        <div className={styles.colFull}>
-                          <div className={styles.inputGroup}>
-                            <label>
-                              VIN
-                              <span className={styles.reqStar}>*</span>
-                            </label>
-                            <input
-                              name="vehicleIdentifier"
-                              onChange={handleChange}
-                              required
-                              type="text"
-                              value={formData.vehicleIdentifier}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
+                  {/* PO Number + VIN now render at the top of the
+                      Payment section above (per Figma). Only the T&Cs
+                      and Marketing checkboxes live here, near Place
+                      Order. */}
                   <div className={styles.colFull}>
                     <div className={styles.inputGroup}>
                       <div className={styles.selectOption}>
