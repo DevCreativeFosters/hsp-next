@@ -583,7 +583,11 @@ function CheckoutForm() {
       ),
       roles: ['b2b', 'dealer'],
       selectedAddress: {
-        btnTitle: 'Edit Address',
+        // No Edit Address button — the destination is the dealer's
+        // store address from Contact Details above, which can't be
+        // edited per-order on this card. (The button trigger renders
+        // when btnTitle is truthy; empty string skips it.)
+        btnTitle: '',
         title: 'Deliver to Store',
       },
       selectedMenu: {
@@ -1451,10 +1455,19 @@ function CheckoutForm() {
                           {isFormFilled &&
                           deliveryOption.id === formData.orderType ? (
                             <div className={styles.editSelection}>
-                              {[
-                                'deliver-to-store',
-                                'drop-shipping-to-customer',
-                              ].some(id => id === deliveryOption.id) && (
+                              {/* Deliver-to-Store ships to the dealer's
+                                  store address from Contact Details
+                                  above — there's no per-order address
+                                  to summarise or edit on this card,
+                                  and rendering an empty
+                                  formData.address produces a useless
+                                  ", , , AU" strip. Only the drop-
+                                  shipping flow needs the post-fill
+                                  address summary (the dealer entered
+                                  the customer's address there). */}
+                              {['drop-shipping-to-customer'].some(
+                                id => id === deliveryOption.id,
+                              ) && (
                                 <>
                                   <div
                                     className={clsx(
