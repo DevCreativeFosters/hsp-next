@@ -216,11 +216,17 @@ function CheckoutForm() {
       // through addToCart so they end up in the user_meta cart attached
       // to this dealer.
       //
-      // Schema-valid AddToCartInput fields ONLY — UI fields like
+      // AddToCartInput is strict on the WP side — UI-only fields like
       // `product_image`, `largeItem`, `variantSku` (camelCase) get
-      // rejected by WP with `Field "X" is not defined by type
-      // "AddToCartInput"`. Mirror the snake_case spec exactly.
+      // rejected. BUT we deliberately KEEP `price` and `compareAtPrice`
+      // on the snapshot: addToCart strips them before the WP call,
+      // then buildShadowItem reads them back as the dealer tier-pricing
+      // override (e.g. a Platinum dealer's $2,362.50 instead of WP's
+      // public sale price of $3,150). Dropping them lost the tier
+      // discount across the login replay.
       const guestCartSnapshot = (cartItems || []).map(it => ({
+        ...(it.price != null && { price: it.price }),
+        ...(it.compareAtPrice != null && { compareAtPrice: it.compareAtPrice }),
         productId: it.product_id,
         quantity: it.quantity,
         variant_name: it.variantName,
