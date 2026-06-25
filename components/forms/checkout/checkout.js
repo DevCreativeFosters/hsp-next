@@ -1174,90 +1174,19 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {/* Per-role splits for the dealer-style block:
-                      - Purchase Order Number → B2B + Dealer (both
-                        order on PO terms, so both need the field).
-                      - VIN → Dealer ONLY (B2B accounts resell rather
-                        than fitting to a specific vehicle).
-                      - T&Cs + Marketing checkboxes → B2B + Dealer
-                        (retail uses the Submit Details button path
-                        below, which renders its own T&Cs elsewhere).
-                      Retail sees only the Submit Details button.
-                  */}
-                  {isDealerLike ? (
-                    <>
-                      <div className={styles.colFull}>
-                        <div className={styles.inputGroup}>
-                          <label>
-                            Purchase Order Number
-                            <span className={styles.reqStar}>*</span>
-                          </label>
-                          <input
-                            name="purchaseOrderNumber"
-                            onChange={handleChange}
-                            required
-                            type="text"
-                            value={formData.purchaseOrderNumber}
-                          />
-                        </div>
-                      </div>
-                      {role === 'dealer' && (
-                        <div className={styles.colFull}>
-                          <div className={styles.inputGroup}>
-                            <label>
-                              VIN
-                              <span className={styles.reqStar}>*</span>
-                            </label>
-                            <input
-                              name="vehicleIdentifier"
-                              onChange={handleChange}
-                              required
-                              type="text"
-                              value={formData.vehicleIdentifier}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div
-                        className={clsx(styles.colFull, styles.dealershipTerms)}
-                      >
-                        <div className={styles.selectOption}>
-                          <label>
-                            <input
-                              checked={formData.termsAndConditions}
-                              name="termsAndConditions"
-                              onChange={handleCheckboxChange}
-                              type="checkbox"
-                            />{' '}
-                            <span>
-                              I accept the Privacy Policy and Terms & Conditions
-                              <Link
-                                href="/privacy-terms-and-conditions"
-                                target="_blank"
-                              >
-                                Read our T&Cs{' '}
-                                <span className={styles.reqStar}>*</span>
-                              </Link>
-                            </span>
-                          </label>
-                        </div>
-                        <div className={styles.selectOption}>
-                          <label>
-                            <input
-                              checked={formData.marketing}
-                              name="marketing"
-                              onChange={handleCheckboxChange}
-                              type="checkbox"
-                            />{' '}
-                            <span>
-                              I agree to receiving Marketing and Promotional
-                              emails from HSP
-                            </span>
-                          </label>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
+                  {/* Retail flow needs a manual Submit Details to
+                      collapse the edit form into the summary card.
+                      B2B and dealer accounts auto-collapse via the
+                      autofill effect, so they don't need this button.
+                      Purchase Order Number, VIN, T&Cs and Marketing
+                      used to live inside this conditional — but
+                      having them here meant they vanished after the
+                      auto-collapse and Place Order stayed disabled
+                      forever (couldn't tick T&Cs, couldn't enter PO).
+                      They're now rendered in a dedicated always-
+                      visible section below the delivery options
+                      (search for `isDealerLike && (<...orderInfo>`). */}
+                  {!isDealerLike && (
                     <div className={clsx(styles.colFull, styles.submitBtn)}>
                       <Button
                         disabled={
@@ -1499,19 +1428,12 @@ function CheckoutForm() {
                   </div>
                 )}
 
-                {role === 'dealer' && (
-                  <div className={clsx(styles.couponBox, styles.orderNoBox)}>
-                    <input
-                      maxLength={15}
-                      name="purchaseOrderNumber"
-                      onChange={handleChange}
-                      placeholder="Purchase Order Number *"
-                      type="text"
-                      value={formData.purchaseOrderNumber}
-                    />
-                  </div>
-                )}
-
+                {/* Removed: the dealer-only standalone PO input that
+                    used to live here in the order summary box. PO
+                    Number now renders in the groupTerms section near
+                    Place Order for both B2B and Dealer, alongside VIN
+                    (dealer) and T&Cs. Single source of truth, no risk
+                    of two inputs binding to the same formData key. */}
                 <div className={styles.paymenSelection}>
                   {isDealerLike && accountTerms && (
                     <div
@@ -1583,52 +1505,96 @@ function CheckoutForm() {
                   </div>
                 </div>
 
-                {role !== 'b2b' && (
-                  <div className={styles.groupTerms}>
-                    <div className={styles.colFull}>
-                      <div className={styles.inputGroup}>
-                        <div className={styles.selectOption}>
+                {/* T&Cs + Marketing — visible for ALL roles. Used to
+                    gate this on `role !== 'b2b'` because B2B had its
+                    own T&Cs inside the contact-details edit form, but
+                    those vanished when the autofill collapsed the
+                    card. Now there's one canonical T&Cs section here
+                    near Place Order, visible to every role. */}
+                <div className={styles.groupTerms}>
+                  {isDealerLike && (
+                    /* Dealer/B2B-only order info: PO Number always,
+                       VIN dealer-only. Placed alongside the T&Cs so
+                       all the order-level fields the dealer needs to
+                       fill in are co-located right above Place Order. */
+                    <>
+                      <div className={styles.colFull}>
+                        <div className={styles.inputGroup}>
                           <label>
-                            <input
-                              checked={formData.termsAndConditions}
-                              name="termsAndConditions"
-                              onChange={handleCheckboxChange}
-                              type="checkbox"
-                            />{' '}
-                            <span>
-                              I accept the Privacy Policy and Terms & Conditions
-                              <Link
-                                href="/privacy-terms-and-conditions"
-                                target="_blank"
-                              >
-                                Read our T&Cs{' '}
-                                <span className={styles.reqStar}>*</span>
-                              </Link>
-                            </span>
+                            Purchase Order Number
+                            <span className={styles.reqStar}>*</span>
                           </label>
+                          <input
+                            name="purchaseOrderNumber"
+                            onChange={handleChange}
+                            required
+                            type="text"
+                            value={formData.purchaseOrderNumber}
+                          />
                         </div>
                       </div>
-                    </div>
-                    <div className={styles.colFull}>
-                      <div className={styles.inputGroup}>
-                        <div className={styles.selectOption}>
-                          <label>
+                      {role === 'dealer' && (
+                        <div className={styles.colFull}>
+                          <div className={styles.inputGroup}>
+                            <label>
+                              VIN
+                              <span className={styles.reqStar}>*</span>
+                            </label>
                             <input
-                              checked={formData.marketing}
-                              name="marketing"
-                              onChange={handleCheckboxChange}
-                              type="checkbox"
-                            />{' '}
-                            <span>
-                              I agree to receiving Marketing and Promotional
-                              emails from HSP
-                            </span>
-                          </label>
+                              name="vehicleIdentifier"
+                              onChange={handleChange}
+                              required
+                              type="text"
+                              value={formData.vehicleIdentifier}
+                            />
+                          </div>
                         </div>
+                      )}
+                    </>
+                  )}
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.termsAndConditions}
+                            name="termsAndConditions"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I accept the Privacy Policy and Terms & Conditions
+                            <Link
+                              href="/privacy-terms-and-conditions"
+                              target="_blank"
+                            >
+                              Read our T&Cs{' '}
+                              <span className={styles.reqStar}>*</span>
+                            </Link>
+                          </span>
+                        </label>
                       </div>
                     </div>
                   </div>
-                )}
+                  <div className={styles.colFull}>
+                    <div className={styles.inputGroup}>
+                      <div className={styles.selectOption}>
+                        <label>
+                          <input
+                            checked={formData.marketing}
+                            name="marketing"
+                            onChange={handleCheckboxChange}
+                            type="checkbox"
+                          />{' '}
+                          <span>
+                            I agree to receiving Marketing and Promotional
+                            emails from HSP
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <Button
                   className={styles.placeOrderBtn}
@@ -1640,7 +1606,8 @@ function CheckoutForm() {
                     !formData.termsAndConditions ||
                     !formData.payment_method ||
                     (isDealerLike && !formData.company) ||
-                    (role === 'dealer' && !formData.purchaseOrderNumber) ||
+                    (isDealerLike && !formData.purchaseOrderNumber) ||
+                    (role === 'dealer' && !formData.vehicleIdentifier) ||
                     loading ||
                     cartItems.length === 0
                   }
