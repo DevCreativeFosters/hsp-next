@@ -54,7 +54,6 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
 
   const {
-    addToCart,
     cartItems = [],
     cartSubTotal = 0,
     cartTotal = 0,
@@ -206,33 +205,15 @@ function CheckoutForm() {
     setLoginInProgress(true);
     setLoginError('');
     try {
-      // Capture the guest's cart items BEFORE login. WP's authenticated
-      // resolvers read from the dealer's user_meta cart (empty on first
-      // login), while the items just added as a guest live in the
-      // anonymous WC()->cart session. authchange re-fetches and would
-      // show an empty cart — the items effectively vanish from the UI
-      // even though the dealer just intended to check those exact
-      // products out. Snapshot the items now, login, then replay each
-      // through addToCart so they end up in the user_meta cart attached
-      // to this dealer.
-      //
-      // AddToCartInput is strict on the WP side — UI-only fields like
-      // `product_image`, `largeItem`, `variantSku` (camelCase) get
-      // rejected. BUT we deliberately KEEP `price` and `compareAtPrice`
-      // on the snapshot: addToCart strips them before the WP call,
-      // then buildShadowItem reads them back as the dealer tier-pricing
-      // override (e.g. a Platinum dealer's $2,362.50 instead of WP's
-      // public sale price of $3,150). Dropping them lost the tier
-      // discount across the login replay.
-      const guestCartSnapshot = (cartItems || []).map(it => ({
-        ...(it.price != null && { price: it.price }),
-        ...(it.compareAtPrice != null && { compareAtPrice: it.compareAtPrice }),
-        productId: it.product_id,
-        quantity: it.quantity,
-        variant_name: it.variantName,
-        variant_sku: it.variantSku,
-        variant_slug: it.variantSlug,
-      }));
+      // Guest cart migration is now handled centrally by
+      // contexts/cart-context.js's authchange listener — it reads the
+      // `hsp_local_cart_guest` localStorage key, looks up the
+      // dealer's tier pricing for each item, replays via addToCart,
+      // and clears the guest shadow. We used to also snapshot+replay
+      // here but it caused double-migration (cart-context's listener
+      // fires on the same authchange event we dispatch below). Drop
+      // the local snapshot so the cart-context migrate is the single
+      // source of truth.
 
       const loginRes = await fetchAPI(
         `
@@ -276,28 +257,9 @@ function CheckoutForm() {
       });
       window.dispatchEvent(new Event('authchange'));
 
-      // Replay the guest cart into the now-authenticated dealer's
-      // user_meta cart. addToCart reads userId + authToken from
-      // localStorage (we just set both above) and writes to the
-      // correct store. Without this the items show up in the cart
-      // panel briefly, then disappear after authchange's getCartItems
-      // returns the empty user_meta cart — which is what the user
-      // just hit in production. Sequential await on purpose: WP's
-      // addToCart returns a CUMULATIVE quantity for a given product,
-      // so racing them can produce a wrong total.
-      if (typeof addToCart === 'function' && guestCartSnapshot.length > 0) {
-        for (const item of guestCartSnapshot) {
-          try {
-            await addToCart(item);
-          } catch (err) {
-            console.error(
-              '[Checkout] failed to migrate guest cart item to dealer cart:',
-              item.product_name,
-              err?.message,
-            );
-          }
-        }
-      }
+      // (Guest cart replay removed — see comment above the userLogin
+      // mutation. cart-context's authchange listener runs the
+      // migration with tier-price lookups for each item.)
 
       // Re-query with the new auth token so the resolver returns the full
       // profile (firstName/lastName/phone/company), then prefill.
