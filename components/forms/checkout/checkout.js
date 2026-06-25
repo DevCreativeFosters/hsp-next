@@ -813,6 +813,19 @@ function CheckoutForm() {
         };
     const payload = {
       ...formDataForWP,
+      // Include userId for authenticated users. Same root cause +
+      // fix as the addToCart change in cart-context.js: WP's
+      // checkoutOrder resolver routes to the dealer's user_meta cart
+      // when userId is present in the input. Without it the resolver
+      // reads the anonymous WC()->cart (empty for authenticated users
+      // whose cart writes went to user_meta) and throws
+      // "Your cart is empty" — even though getCartItems with the
+      // same auth token returns the populated cart. Verified live:
+      // getCartItems returned cartCount:13 right before a Place Order
+      // attempt that threw the cart-empty alert. Passing userId fixes
+      // the read-side mismatch on checkout the same way it fixed it
+      // on addToCart.
+      ...(user?.id && { userId: parseInt(user.id, 10) }),
       ...(selectedStore?.id && {
         selectedStoreID: (selectedStore?.id).toString(),
       }),
