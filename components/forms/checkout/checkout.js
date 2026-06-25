@@ -12,6 +12,7 @@ import { useCart } from '@contexts/cart-context';
 import { useCheckout } from '@contexts/checkout';
 import { useUserContext } from '@contexts/user';
 
+import { getAssignedStoreAddress } from '@lib/api/get-assigned-store-address';
 import { getCustomerByEmail } from '@lib/api/get-customer-by-email';
 import { getStoreById } from '@lib/api/get-store-by-id';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
@@ -339,13 +340,15 @@ function CheckoutForm() {
         }));
         setSubmitContactDetails(true);
 
-        // Also fetch the dealer's saved address for display in the
-        // Contact Details summary card. Same fetch chain as the
-        // portal Address tab — storeById first (using the canonical
-        // "hsp" key for B2B accounts), then the StoreFragment-
-        // embedded billingAddress / deliveryAddress, then the
-        // generic addressFields. Whatever resolves first wins;
-        // flattened into a single human-readable line.
+        // Fetch the dealer's saved store address for the Contact
+        // Details summary card. Lokesh's `getAssignedStoreAddress`
+        // mutation does the user→store lookup server-side and
+        // returns delivery + billing in one call, replacing the older
+        // getStoreByUserId → storeById → addressFields chain. We
+        // still keep the legacy chain as a fallback so this keeps
+        // rendering on environments where the new resolver isn't
+        // deployed yet, and so we degrade gracefully if it returns
+        // null (no assigned store, error, etc).
         if (user?.role === 'b2b' || user?.role === 'dealer') {
           const firstOf = v => (Array.isArray(v) ? v[0] : v);
           const flatten = addr => {
@@ -363,39 +366,57 @@ function CheckoutForm() {
             return parts.join(', ');
           };
 
-          const store = await getStoreByUserId(user.id).catch(() => null);
-          if (cancelled) return;
-          const storeId =
-            store?.storeId || (user.role === 'b2b' ? 'hsp' : null);
           let line = '';
-          if (storeId) {
-            const storeData = await getStoreById(storeId).catch(() => null);
-            if (cancelled) return;
-            line = flatten(
-              storeData?.billingAddress || storeData?.deliveryAddress,
-            );
+
+          // Preferred: Lokesh's new resolver.
+          const assigned = await getAssignedStoreAddress(user.id, {
+            authToken: user.token,
+          }).catch(() => null);
+          if (cancelled) return;
+          if (assigned) {
+            line = flatten(assigned.deliveryAddress || assigned.billingAddress);
           }
-          // billingAddress / deliveryAddress on the StoreFragment
-          // default to {country:["AU"]} on every Store post — guard
-          // against that empty-but-truthy shape using the same
-          // isPopulated check used in the portal Address tab.
-          if (!line && store) {
-            const isPopulated = a =>
-              Boolean(
-                a?.addressName || a?.streetAddress || a?.city || a?.postalCode,
+
+          // Fallback: legacy storeById chain. Runs if the new
+          // resolver isn't available or returned an empty address
+          // pair for some reason.
+          if (!line) {
+            const store = await getStoreByUserId(user.id).catch(() => null);
+            if (cancelled) return;
+            const storeId =
+              store?.storeId || (user.role === 'b2b' ? 'hsp' : null);
+            if (storeId) {
+              const storeData = await getStoreById(storeId).catch(() => null);
+              if (cancelled) return;
+              line = flatten(
+                storeData?.billingAddress || storeData?.deliveryAddress,
               );
-            if (isPopulated(store.billingAddress)) {
-              line = flatten(store.billingAddress);
-            } else if (isPopulated(store.deliveryAddress)) {
-              line = flatten(store.deliveryAddress);
-            } else if (store.location) {
-              line = flatten({
-                city: store.location.city,
-                country: store.location.country,
-                postalCode: store.location.postalCode,
-                state: store.location.stateAbbr,
-                streetAddress: store.location.street,
-              });
+            }
+            // billingAddress / deliveryAddress on the StoreFragment
+            // default to {country:["AU"]} on every Store post —
+            // guard against that empty-but-truthy shape using the
+            // same isPopulated check used in the portal Address tab.
+            if (!line && store) {
+              const isPopulated = a =>
+                Boolean(
+                  a?.addressName ||
+                    a?.streetAddress ||
+                    a?.city ||
+                    a?.postalCode,
+                );
+              if (isPopulated(store.billingAddress)) {
+                line = flatten(store.billingAddress);
+              } else if (isPopulated(store.deliveryAddress)) {
+                line = flatten(store.deliveryAddress);
+              } else if (store.location) {
+                line = flatten({
+                  city: store.location.city,
+                  country: store.location.country,
+                  postalCode: store.location.postalCode,
+                  state: store.location.stateAbbr,
+                  streetAddress: store.location.street,
+                });
+              }
             }
           }
           if (!cancelled && line) setDealerAddressLine(line);
