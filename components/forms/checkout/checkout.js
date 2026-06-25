@@ -643,8 +643,22 @@ function CheckoutForm() {
           // fall back to showing all default b2b options instead of a blank
           // section.
           if (options && options.length > 0) {
+            // Slug aliasing for backwards-compatibility. We renamed
+            // `drop-ship-to-customer` → `drop-shipping-to-customer` in
+            // the frontend to match the WP/Odoo bridge spec, but
+            // existing Store posts in WP still have the legacy slug
+            // in their availableDeliveryOptions ACF. Without this,
+            // the intersection drops Drop Shipping for every dealer
+            // until WP admin migrates every store record.
+            // Normalize WP's values to the frontend canonical slugs
+            // before intersecting — once WP is migrated this map is a
+            // no-op and can be deleted.
+            const SLUG_ALIASES = {
+              'drop-ship-to-customer': 'drop-shipping-to-customer',
+            };
+            const normalizedAllowed = options.map(o => SLUG_ALIASES[o] || o);
             filteredOptions = filteredOptions.filter(opt =>
-              options.includes(opt.id),
+              normalizedAllowed.includes(opt.id),
             );
           }
         }
