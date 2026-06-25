@@ -16,17 +16,17 @@ export const CheckoutProvider = ({ children }) => {
   const [appliedCoupons, setAppliedCoupons] = useState([]);
   const [totalDiscount, setTotalDiscount] = useState(0);
 
-  // Resolves whichever auth token is current — context first (set by
-  // useUserContext during login), falling back to localStorage in case
-  // the provider hasn't hydrated yet when a coupon button is clicked.
-  // WP needs this token to associate the cart-state mutations
-  // (applyGiftCard / getAppliedCoupons / checkoutOrder) with the
-  // logged-in user's WooCommerce session — without it the resolver
-  // sees an anonymous session, can't find the user's cart, and throws
-  // "Your cart is empty".
-  const getAuthToken = () =>
-    user?.token ||
-    (typeof window !== 'undefined' ? localStorage.getItem('authToken') : null);
+  // Deliberately NOT threading the auth token through applyGiftCard /
+  // getAppliedCoupons — same trick cart-context's addToCart uses for
+  // the same underlying WP bug. When the Bearer token is present,
+  // Lokesh's resolvers take a B2B code path that reads from the
+  // \_woocommerce\_persistent\_cart\_<userId> user_meta store, while
+  // addToCart deliberately writes to the WC()->cart session store (it
+  // also strips userId to dodge the same branch). Threading the
+  // token here makes the coupon resolver look in the wrong store and
+  // throw "Your cart is empty" even when the cart panel is full.
+  // Same-origin proxy passes the session cookie so logged-in retail
+  // and the dealer's WC session still get associated correctly.
 
   // Get All Applied Coupons
   const getAllAppliedCoupons = async () => {
@@ -45,10 +45,7 @@ export const CheckoutProvider = ({ children }) => {
         }
       `;
 
-      const authToken = getAuthToken();
-      const data = await fetchAPI(query, {
-        ...(authToken && { authToken }),
-      });
+      const data = await fetchAPI(query);
       if (data?.getAppliedCoupons?.coupons?.length > 0) {
         setTotalDiscount(
           data?.getAppliedCoupons?.coupons?.reduce(
@@ -80,11 +77,9 @@ export const CheckoutProvider = ({ children }) => {
       `;
       const variables = { code };
 
-      const authToken = getAuthToken();
-      const res = await fetchAPI(query, {
-        variables,
-        ...(authToken && { authToken }),
-      });
+      // No authToken — same workaround as cart-context's addToCart.
+      // See the comment above getAllAppliedCoupons for why.
+      const res = await fetchAPI(query, { variables });
       const data = res?.applyGiftCard;
 
       if (data?.success) {
