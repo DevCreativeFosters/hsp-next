@@ -8,6 +8,7 @@ import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
+import { getDealerCustomerDetails } from '@lib/api/get-dealer-customer-details';
 import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
 
@@ -145,6 +146,65 @@ function AccountDetails() {
       }
 
       try {
+        // Dealers don't have an assigned Store post, so the legacy
+        // getStoreByUserId chain returns null and the Business
+        // Details card renders empty. Lokesh's getDealerCustomerDetails
+        // mutation carries the dealer's contact + address in a
+        // wholly different shape — map it back into the same
+        // storeDetails fields the JSX below already reads, so we
+        // don't have to fork the rendering.
+        if (user?.role === 'dealer') {
+          const details = await getDealerCustomerDetails(userId, {
+            authToken: user?.token,
+          });
+          const addr =
+            // Same trick as /checkout — pick whichever address
+            // object actually has data. The resolver returns both
+            // shipping + billing as objects even when one is
+            // empty, so a naive `shipping || billing` can land on
+            // the empty side.
+            [
+              details?.customerShippingAddress,
+              details?.customerBillingAddress,
+            ].find(
+              a =>
+                a &&
+                Object.values(a).some(v => v != null && v !== '' && v !== 0),
+            ) || null;
+
+          if (addr) {
+            setStoreDetails({
+              
+              // Business Address card pulls from addressFields.* —
+// map the dealer payload into the same shape.
+addressFields: {
+                city: addr.city || '',
+                postalCode: addr.postcode || '',
+                state: addr.state ? [addr.state] : null,
+                streetAddress: [addr.address1, addr.address2]
+                  .filter(Boolean)
+                  .join(' '),
+              },
+              
+
+
+communication_email: addr.email || null,
+              
+              
+              
+odooCompanyName: addr.company || null,
+              
+phoneNumber: addr.phone || null,
+              // Header: dealer's company name (or full name fallback)
+title:
+                addr.company ||
+                [addr.firstName, addr.lastName].filter(Boolean).join(' ') ||
+                null,
+            });
+          }
+          return;
+        }
+
         const res = await fetchAPI(GET_STORE_BY_USER_ID, {
           variables: { userId },
         });
@@ -186,7 +246,9 @@ function AccountDetails() {
     }
 
     getStoreDetails();
-  }, []);
+    // role/token now drive which resolver fires — re-run when they
+    // hydrate (was previously a one-shot mount-only fetch).
+  }, [user?.role, user?.token]);
 
   const [showThanks, setShowThanks] = useState(false);
 
