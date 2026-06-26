@@ -42,6 +42,15 @@ export default async function ContactUs() {
     content?.flexibleContent?.blocks?.map(renderBlock) || [],
   );
 
+  // When WP returns null (which happens regularly during build when
+  // the staging server hiccups) the JSX below dereferences
+  // content.content / content.title and prerender crashes the whole
+  // page out of the export. Bail early to an empty Layout shell —
+  // the deploy survives; the page just renders blank for that build.
+  if (!content) {
+    return <Layout title="Contact Us" />;
+  }
+
   return (
     <Layout title="Contact Us">
       {prepareSchemas(content?.schemaProSchemas)}
@@ -62,7 +71,7 @@ export default async function ContactUs() {
               )}
               {servicesBox.length > 0 && (
                 <ContentBox>
-                  <h3 className='h3'>Services</h3>
+                  <h3 className="h3">Services</h3>
                   <div>
                     {servicesBox.map((serviceLink, index) => {
                       const link = serviceLink.link;

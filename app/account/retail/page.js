@@ -15,11 +15,24 @@ import Tabs from '@components/tabs/tabs';
 export default async function RetailPage() {
   const content = await getPageData('/account/retail');
 
-  const contentBlocks = await Promise.all(
-    content?.flexibleContent?.blocks?.map(renderBlock) || [],
-  );
-
-  const faqBlock = contentBlocks[1].props.children.props.children.props;
+  // When the staging WP backend is flaky, content comes back null
+  // and renderBlock can emit half-formed React elements whose props
+  // chain throws when dereferenced six levels deep. Guard the
+  // whole flexible-content path — if anything fails we ship the
+  // page with empty tabs so the static export still succeeds.
+  let contentBlocks = [];
+  let faqBlock = {};
+  try {
+    contentBlocks = await Promise.all(
+      content?.flexibleContent?.blocks?.map(renderBlock) || [],
+    );
+    faqBlock = contentBlocks[1]?.props?.children?.props?.children?.props || {};
+  } catch (err) {
+    console.error(
+      '[/account/retail] flexible content render failed:',
+      err?.message,
+    );
+  }
 
   return (
     <Layout title="Retail Account">
