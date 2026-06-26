@@ -14,7 +14,7 @@ import { useUserContext } from '@contexts/user';
 
 import { getAssignedStoreAddress } from '@lib/api/get-assigned-store-address';
 import { getCustomerByEmail } from '@lib/api/get-customer-by-email';
-import { getStoreById } from '@lib/api/get-store-by-id';
+import { getDealerCustomerDetails } from '@lib/api/get-dealer-customer-details';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
 import { fetchAPI } from '@lib/fetch-api';
@@ -329,175 +329,78 @@ function CheckoutForm() {
         });
         if (cancelled) return;
 
-        // For B2B / Dealer accounts, override the contact details with
-        // the STORE's business record — same data /account/b2b shows.
-        // The order is placed on behalf of the store, so:
-        //   - first_name ← postName from getAssignedStoreAddress
-        //     (per-request from the user; this is the store post slug
-        //     e.g. "canopies-wa"). last_name is cleared so the summary
-        //     line renders as just the post name.
-        //   - company    ← odooCompanyName / store.title
-        //   - email      ← storeDetails.communication_email
-        //   - phone      ← storesCustomFields.phoneNumber
-        let storeContact = null;
-        if (user?.role === 'b2b' || user?.role === 'dealer') {
-          try {
-            // Fetch the new resolver first for storeName + postName.
-            const assigned = await getAssignedStoreAddress(user.id, {
-              authToken: user.token,
-            });
-            if (cancelled) return;
-
-            const storeRes = await fetchAPI(
-              `mutation GetStoreContact($userId: ID!) {
-                getStoreByUserId(input: { userId: $userId }) {
-                  storeDetails {
-                    store_id
-                    communication_email
-                  }
-                }
-              }`,
-              {
-                variables: { userId: String(user.id) },
-                ...(user.token && { authToken: user.token }),
-              },
-            );
-            if (cancelled) return;
-            const storeDetails = storeRes?.getStoreByUserId?.storeDetails?.[0];
-            let storeFull = null;
-            if (storeDetails?.store_id) {
-              // Fetch the full Store post for title + odooCompanyName +
-              // phone. Same shape AccountDetails uses on the portal.
-              const fullRes = await fetchAPI(
-                `query GetStoreFull($id: ID!) {
-                  store(id: $id, idType: DATABASE_ID) {
-                    title
-                    odooCompanyName
-                    storesCustomFields { phoneNumber }
-                  }
-                }`,
-                { variables: { id: storeDetails.store_id } },
-              );
-              if (cancelled) return;
-              storeFull = fullRes?.store;
-            }
-            storeContact = {
-              company:
-                storeFull?.odooCompanyName ||
-                storeFull?.title ||
-                assigned?.storeName ||
-                null,
-              email: storeDetails?.communication_email || null,
-              phone: storeFull?.storesCustomFields?.phoneNumber || null,
-              postName: assigned?.postName || null,
-            };
-          } catch (err) {
-            console.error(
-              '[Checkout] store contact lookup failed:',
-              err?.message,
-            );
-          }
+        // For B2B / Dealer accounts, populate Contact Details from
+        // the single all-in-one resolver Lokesh ships for each role:
+        //
+        //   B2B    → getAssignedStoreAddress.deliveryAddress
+        //   Dealer → getDealerCustomerDetails.customerShippingAddress
+        //
+        // Both resolvers return the same field shape (firstName,
+        // lastName, company, address1/2, city, state, postcode,
+        // country, phone, email), so once we've selected the right
+        // address payload the autofill is uniform. This replaces the
+        // old multi-fetch chain (getAssignedStoreAddress thin shape
+        // + getStoreByUserId + store(databaseId) + addressFields
+        // fallback) — one call, everything we need.
+        let shipping = null;
+        let postNameFallback = null;
+        if (user?.role === 'b2b') {
+          const assigned = await getAssignedStoreAddress(user.id, {
+            authToken: user.token,
+          });
+          if (cancelled) return;
+          shipping = assigned?.deliveryAddress || assigned?.billingAddress;
+          // Keep postName as a name-line fallback in case the
+          // resolver returns blank firstName/lastName for a store.
+          postNameFallback = assigned?.postName || null;
+        } else if (user?.role === 'dealer') {
+          const details = await getDealerCustomerDetails(user.id, {
+            authToken: user.token,
+          });
+          if (cancelled) return;
+          shipping =
+            details?.customerShippingAddress || details?.customerBillingAddress;
         }
 
         setFormData(prev => ({
           ...prev,
-          company: storeContact?.company || profile?.company || prev.company,
-          email: storeContact?.email || billing.email || prev.email,
+          company: shipping?.company || profile?.company || prev.company,
+          email: shipping?.email || billing.email || prev.email,
           first_name:
-            storeContact?.postName ||
+            shipping?.firstName ||
+            postNameFallback ||
             profile?.firstName ||
             billing.first_name ||
             prev.first_name,
-          last_name: storeContact?.postName
-            ? ''
-            : profile?.lastName || billing.last_name || prev.last_name,
+          last_name:
+            shipping?.lastName ||
+            // If we fell back to the post-name slug (B2B, blank
+            // firstName from the resolver), null out last_name so
+            // the summary line renders as just "canopies-wa" rather
+            // than appending a stale personal last name.
+            (postNameFallback && !shipping?.firstName
+              ? ''
+              : profile?.lastName || billing.last_name || prev.last_name),
           phone:
-            storeContact?.phone ||
-            profile?.phone ||
-            billing.phone ||
-            prev.phone,
+            shipping?.phone || profile?.phone || billing.phone || prev.phone,
         }));
         setSubmitContactDetails(true);
 
-        // Fetch the dealer's saved store address for the Contact
-        // Details summary card. Lokesh's `getAssignedStoreAddress`
-        // mutation does the user→store lookup server-side and
-        // returns delivery + billing in one call, replacing the older
-        // getStoreByUserId → storeById → addressFields chain. We
-        // still keep the legacy chain as a fallback so this keeps
-        // rendering on environments where the new resolver isn't
-        // deployed yet, and so we degrade gracefully if it returns
-        // null (no assigned store, error, etc).
-        if (user?.role === 'b2b' || user?.role === 'dealer') {
-          const firstOf = v => (Array.isArray(v) ? v[0] : v);
-          const flatten = addr => {
-            if (!addr) return '';
-            const parts = [
-              firstOf(addr.streetAddress),
-              firstOf(addr.aptUnit || addr.aptunit),
-              firstOf(addr.city || addr.cityTw),
-              firstOf(addr.state || addr.stateMy || addr.stateNz),
-              firstOf(addr.postalCode),
-              firstOf(addr.country),
-            ]
-              .filter(p => p != null && p !== '' && p !== 0)
-              .map(String);
-            return parts.join(', ');
-          };
-
-          let line = '';
-
-          // Preferred: Lokesh's new resolver.
-          const assigned = await getAssignedStoreAddress(user.id, {
-            authToken: user.token,
-          }).catch(() => null);
-          if (cancelled) return;
-          if (assigned) {
-            line = flatten(assigned.deliveryAddress || assigned.billingAddress);
-          }
-
-          // Fallback: legacy storeById chain. Runs if the new
-          // resolver isn't available or returned an empty address
-          // pair for some reason.
-          if (!line) {
-            const store = await getStoreByUserId(user.id).catch(() => null);
-            if (cancelled) return;
-            const storeId =
-              store?.storeId || (user.role === 'b2b' ? 'hsp' : null);
-            if (storeId) {
-              const storeData = await getStoreById(storeId).catch(() => null);
-              if (cancelled) return;
-              line = flatten(
-                storeData?.billingAddress || storeData?.deliveryAddress,
-              );
-            }
-            // billingAddress / deliveryAddress on the StoreFragment
-            // default to {country:["AU"]} on every Store post —
-            // guard against that empty-but-truthy shape using the
-            // same isPopulated check used in the portal Address tab.
-            if (!line && store) {
-              const isPopulated = a =>
-                Boolean(
-                  a?.addressName ||
-                    a?.streetAddress ||
-                    a?.city ||
-                    a?.postalCode,
-                );
-              if (isPopulated(store.billingAddress)) {
-                line = flatten(store.billingAddress);
-              } else if (isPopulated(store.deliveryAddress)) {
-                line = flatten(store.deliveryAddress);
-              } else if (store.location) {
-                line = flatten({
-                  city: store.location.city,
-                  country: store.location.country,
-                  postalCode: store.location.postalCode,
-                  state: store.location.stateAbbr,
-                  streetAddress: store.location.street,
-                });
-              }
-            }
-          }
+        // Same payload drives the address line under Contact Details
+        // (the small grey one with the street address). No fallback
+        // chain needed — the new resolvers carry the full address.
+        if (shipping) {
+          const line = [
+            shipping.address1,
+            shipping.address2,
+            shipping.city,
+            shipping.state,
+            shipping.postcode,
+            shipping.country,
+          ]
+            .filter(p => p != null && p !== '' && p !== 0)
+            .map(String)
+            .join(', ');
           if (!cancelled && line) setDealerAddressLine(line);
         }
       } catch (err) {
