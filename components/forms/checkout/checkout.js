@@ -921,15 +921,19 @@ function CheckoutForm() {
 
     const requiredFields = [
       'first_name',
-      'last_name',
+      // last_name is only required for retail. For B2B/dealer we
+      // autofill first_name with the store's postName slug (e.g.
+      // "canopies-wa") and intentionally leave last_name empty so
+      // the summary card renders just the post name rather than
+      // "canopies-wa <stale-personal-name>".
+      ...(isDealerLike ? [] : ['last_name']),
       'email',
       'phone',
       'termsAndConditions',
       'payment_method',
       'orderType',
-      ...(role === 'dealer'
-        ? ['purchaseOrderNumber', 'vehicleIdentifier']
-        : []),
+      ...(isDealerLike ? ['purchaseOrderNumber'] : []),
+      ...(role === 'dealer' ? ['vehicleIdentifier'] : []),
     ];
 
     const isMissing = requiredFields.some(field => !formData[field]);
@@ -1795,7 +1799,10 @@ function CheckoutForm() {
                   className={styles.placeOrderBtn}
                   disabled={
                     !formData.first_name ||
-                    !formData.last_name ||
+                    // last_name is empty by design for B2B/dealer — see
+                    // the comment on the requiredFields list in
+                    // handleSubmit. Only block on it for retail.
+                    (!isDealerLike && !formData.last_name) ||
                     !formData.email ||
                     !formData.phone ||
                     !formData.termsAndConditions ||
