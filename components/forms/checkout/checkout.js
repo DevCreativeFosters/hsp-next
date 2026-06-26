@@ -342,6 +342,18 @@ function CheckoutForm() {
         // old multi-fetch chain (getAssignedStoreAddress thin shape
         // + getStoreByUserId + store(databaseId) + addressFields
         // fallback) — one call, everything we need.
+        // Both resolvers return both delivery + billing as OBJECTS,
+        // even when WP only has one of them populated. `{firstName:
+        // "", address1: "", ...}` is truthy in JS, so a naive
+        // `delivery || billing` short-circuits to the empty
+        // delivery side and we lose the real billing data. Pick
+        // whichever object has at least one populated field.
+        const pickPopulated = (...addrs) =>
+          addrs.find(
+            a =>
+              a && Object.values(a).some(v => v != null && v !== '' && v !== 0),
+          ) || null;
+
         let shipping = null;
         let postNameFallback = null;
         if (user?.role === 'b2b') {
@@ -349,7 +361,10 @@ function CheckoutForm() {
             authToken: user.token,
           });
           if (cancelled) return;
-          shipping = assigned?.deliveryAddress || assigned?.billingAddress;
+          shipping = pickPopulated(
+            assigned?.deliveryAddress,
+            assigned?.billingAddress,
+          );
           // Keep postName as a name-line fallback in case the
           // resolver returns blank firstName/lastName for a store.
           postNameFallback = assigned?.postName || null;
@@ -358,8 +373,10 @@ function CheckoutForm() {
             authToken: user.token,
           });
           if (cancelled) return;
-          shipping =
-            details?.customerShippingAddress || details?.customerBillingAddress;
+          shipping = pickPopulated(
+            details?.customerShippingAddress,
+            details?.customerBillingAddress,
+          );
         }
 
         setFormData(prev => ({
@@ -1794,7 +1811,7 @@ function CheckoutForm() {
                 <div className={styles.subTotal}>
                   <div className={styles.subTotaltitle}>Subtotal</div>
                   <div className={styles.subTotalPrice}>
-                    {formatPrice(cartSubTotal)}.00
+                    {formatPrice(cartSubTotal)}
                   </div>
                 </div>
                 {/* Installation cost is suppressed for B2B accounts. B2B
@@ -1815,7 +1832,6 @@ function CheckoutForm() {
                           0,
                         ),
                       )}
-                      .00
                     </div>
                   </div>
                 )}
@@ -1828,7 +1844,6 @@ function CheckoutForm() {
                         0,
                       ),
                     )}
-                    .00
                   </div>
                 </div>
                 {appliedCoupons.length > 0 &&
@@ -1845,7 +1860,6 @@ function CheckoutForm() {
                         {coupon.discount_type === 'percent'
                           ? `${coupon.amount}%`
                           : formatPrice(coupon.amount)}
-                        .00
                       </div>
                     </div>
                   ))}
@@ -1865,7 +1879,6 @@ function CheckoutForm() {
                           : 0),
                       'AUD ',
                     )}
-                    .00
                     <span>(incl. 10% GST)</span>
                   </div>
                 </div>
@@ -1885,7 +1898,6 @@ function CheckoutForm() {
                             totalDiscount,
                           'AUD ',
                         )}
-                        .00
                       </div>
                     </div>
                     <div className={styles.instruction}>
@@ -1903,7 +1915,6 @@ function CheckoutForm() {
                             0,
                           ),
                         )}
-                        .00
                       </div>
                     </div>
                   </div>
