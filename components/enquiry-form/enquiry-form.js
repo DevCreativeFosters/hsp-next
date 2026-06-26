@@ -120,19 +120,32 @@ export default function EnquiryForm({
       : null;
 
   const [productPricing, setProductPricing] = useState(null);
+  // Separate "loading" flag because `productPricing === null` was
+  // overloaded — it meant BOTH "not fetched yet" AND "fetched with no
+  // tier on this dealer". The Add to Cart button needs to distinguish
+  // them: stay disabled while still loading (otherwise a B2B click
+  // races the fetch and seeds the cart shadow with WP's public price
+  // permanently), but enable normally once we know there's no tier.
+  const [pricingLoading, setPricingLoading] = useState(false);
 
   useEffect(() => {
     if (role !== 'b2b' || !productData?.databaseId) {
       setProductPricing(null);
+      setPricingLoading(false);
       return;
     }
     let cancelled = false;
+    setPricingLoading(true);
     getProductPricing(productData.databaseId)
       .then(pricing => {
-        if (!cancelled) setProductPricing(pricing);
+        if (cancelled) return;
+        setProductPricing(pricing);
+        setPricingLoading(false);
       })
       .catch(() => {
-        if (!cancelled) setProductPricing(null);
+        if (cancelled) return;
+        setProductPricing(null);
+        setPricingLoading(false);
       });
     return () => {
       cancelled = true;
@@ -370,7 +383,15 @@ export default function EnquiryForm({
                 ) : (
                   <Button
                     className={styles.submitButton}
-                    disabled={isOutOfStock || loading} // Disable button while adding to cart
+                    // Disable while WP cart op is in flight, while
+                    // tier-pricing is still resolving for B2B, and on
+                    // OOS. The pricingLoading gate is the important
+                    // one — a click before getProductPricing resolves
+                    // would seed the cart shadow with WP's public
+                    // price (because hasTierPrice would still be
+                    // false), and that price stays in the shadow
+                    // forever after.
+                    disabled={isOutOfStock || loading || pricingLoading}
                     onClick={() =>
                       addToCart({
                         productId: productData.databaseId,
@@ -387,7 +408,9 @@ export default function EnquiryForm({
                     size="large"
                   >
                     Add to Cart{' '}
-                    {loading && <Loading color="white" size="small" />}
+                    {(loading || pricingLoading) && (
+                      <Loading color="white" size="small" />
+                    )}
                   </Button>
                 )}
                 <Button
