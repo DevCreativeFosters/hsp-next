@@ -159,25 +159,22 @@ function AccountDetails() {
           });
           const addr =
             // Same trick as /checkout — pick whichever address
-            // object actually has data. The resolver returns both
-            // shipping + billing as objects even when one is
-            // empty, so a naive `shipping || billing` can land on
-            // the empty side.
+            // object actually has the street fields. Generic
+            // "anything populated" doesn't work because the
+            // dealer's shipping side often carries auto-filled
+            // firstName/lastName from the user record with no
+            // address attached, and that's truthy enough to fool
+            // an Object.values().some() check.
             [
               details?.customerShippingAddress,
               details?.customerBillingAddress,
-            ].find(
-              a =>
-                a &&
-                Object.values(a).some(v => v != null && v !== '' && v !== 0),
-            ) || null;
+            ].find(a => a && (a.address1 || a.city || a.postcode)) || null;
 
           if (addr) {
             setStoreDetails({
-              
               // Business Address card pulls from addressFields.* —
-// map the dealer payload into the same shape.
-addressFields: {
+              // map the dealer payload into the same shape.
+              addressFields: {
                 city: addr.city || '',
                 postalCode: addr.postcode || '',
                 state: addr.state ? [addr.state] : null,
@@ -185,18 +182,14 @@ addressFields: {
                   .filter(Boolean)
                   .join(' '),
               },
-              
 
+              communication_email: addr.email || null,
 
-communication_email: addr.email || null,
-              
-              
-              
-odooCompanyName: addr.company || null,
-              
-phoneNumber: addr.phone || null,
+              odooCompanyName: addr.company || null,
+
+              phoneNumber: addr.phone || null,
               // Header: dealer's company name (or full name fallback)
-title:
+              title:
                 addr.company ||
                 [addr.firstName, addr.lastName].filter(Boolean).join(' ') ||
                 null,
