@@ -348,11 +348,14 @@ function CheckoutForm() {
         // `delivery || billing` short-circuits to the empty
         // delivery side and we lose the real billing data. Pick
         // whichever object has at least one populated field.
+        // Stricter than "any non-empty field" — check for street-
+        // address fields specifically. For dealer accounts the
+        // resolver auto-fills firstName/lastName on the shipping
+        // side from the user record, so a generic "anything
+        // populated" check picks the address-less shipping object
+        // and we lose the real billing address.
         const pickPopulated = (...addrs) =>
-          addrs.find(
-            a =>
-              a && Object.values(a).some(v => v != null && v !== '' && v !== 0),
-          ) || null;
+          addrs.find(a => a && (a.address1 || a.city || a.postcode)) || null;
 
         let shipping = null;
         let postNameFallback = null;
