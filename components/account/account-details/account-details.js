@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
-import { getDealerCustomerDetails } from '@lib/api/get-dealer-customer-details';
+import { getDealerStoreAddress } from '@lib/api/get-dealer-store-address';
 import { fetchAPI } from '@lib/fetch-api';
 import { formatPrice } from '@lib/helpers';
 
@@ -148,51 +148,44 @@ function AccountDetails() {
       try {
         // Dealers don't have an assigned Store post, so the legacy
         // getStoreByUserId chain returns null and the Business
-        // Details card renders empty. Lokesh's getDealerCustomerDetails
-        // mutation carries the dealer's contact + address in a
-        // wholly different shape — map it back into the same
-        // storeDetails fields the JSX below already reads, so we
-        // don't have to fork the rendering.
+        // Details card renders empty. Lokesh's dealerStoreAddress
+        // query carries the dealer's store address pair (delivery +
+        // billing) in the same legacy shape the StoreFragment uses
+        // (addressName, streetAddress, aptUnit, city, state,
+        // country, postalCode, phoneNo) — map it into the same
+        // storeDetails fields the JSX below reads, so the existing
+        // table rendering works unchanged. Communications email is
+        // not in this resolver; just leave it null.
         if (user?.role === 'dealer') {
-          const details = await getDealerCustomerDetails(userId, {
+          const storeAddr = await getDealerStoreAddress(userId, {
             authToken: user?.token,
           });
-          const addr =
-            // Same trick as /checkout — pick whichever address
-            // object actually has the street fields. Generic
-            // "anything populated" doesn't work because the
-            // dealer's shipping side often carries auto-filled
-            // firstName/lastName from the user record with no
-            // address attached, and that's truthy enough to fool
-            // an Object.values().some() check.
-            [
-              details?.customerShippingAddress,
-              details?.customerBillingAddress,
-            ].find(a => a && (a.address1 || a.city || a.postcode)) || null;
+          const a =
+            // Pick whichever address has the street fields.
+            // Resolver returns both delivery + billing even when
+            // only one is populated.
+            [storeAddr?.deliveryAddress, storeAddr?.billingAddress].find(
+              addr =>
+                addr && (addr.streetAddress || addr.city || addr.postalCode),
+            ) || null;
 
-          if (addr) {
+          if (a) {
             setStoreDetails({
               // Business Address card pulls from addressFields.* —
               // map the dealer payload into the same shape.
               addressFields: {
-                city: addr.city || '',
-                postalCode: addr.postcode || '',
-                state: addr.state ? [addr.state] : null,
-                streetAddress: [addr.address1, addr.address2]
+                city: a.city || '',
+                postalCode: a.postalCode || '',
+                state: a.state ? [a.state] : null,
+                streetAddress: [a.streetAddress, a.aptUnit]
                   .filter(Boolean)
                   .join(' '),
               },
-
-              communication_email: addr.email || null,
-
-              odooCompanyName: addr.company || null,
-
-              phoneNumber: addr.phone || null,
-              // Header: dealer's company name (or full name fallback)
-              title:
-                addr.company ||
-                [addr.firstName, addr.lastName].filter(Boolean).join(' ') ||
-                null,
+              odooCompanyName: a.addressName || null,
+              phoneNumber: a.phoneNo || null,
+              // Header: store name (addressName is what the resolver
+              // uses for the dealer's store label).
+              title: a.addressName || null,
             });
           }
           return;

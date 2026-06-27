@@ -14,7 +14,7 @@ import { useUserContext } from '@contexts/user';
 
 import { getAssignedStoreAddress } from '@lib/api/get-assigned-store-address';
 import { getCustomerByEmail } from '@lib/api/get-customer-by-email';
-import { getDealerCustomerDetails } from '@lib/api/get-dealer-customer-details';
+import { getDealerStoreAddress } from '@lib/api/get-dealer-store-address';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { getStores } from '@lib/api/get-stores';
 import { fetchAPI } from '@lib/fetch-api';
@@ -333,7 +333,7 @@ function CheckoutForm() {
         // the single all-in-one resolver Lokesh ships for each role:
         //
         //   B2B    → getAssignedStoreAddress.deliveryAddress
-        //   Dealer → getDealerCustomerDetails.customerShippingAddress
+        //   Dealer → dealerStoreAddress.deliveryAddress
         //
         // Both resolvers return the same field shape (firstName,
         // lastName, company, address1/2, city, state, postcode,
@@ -372,14 +372,33 @@ function CheckoutForm() {
           // resolver returns blank firstName/lastName for a store.
           postNameFallback = assigned?.postName || null;
         } else if (user?.role === 'dealer') {
-          const details = await getDealerCustomerDetails(user.id, {
+          const storeAddr = await getDealerStoreAddress(user.id, {
             authToken: user.token,
           });
           if (cancelled) return;
-          shipping = pickPopulated(
-            details?.customerShippingAddress,
-            details?.customerBillingAddress,
-          );
+          // dealerStoreAddress is the address-only resolver (no
+          // firstName/lastName/email/company in this shape). Map
+          // its legacy fields (streetAddress, aptUnit, postalCode,
+          // phoneNo, addressName) into the same `shipping` keys
+          // the autofill below reads. Names + email fall through
+          // to the user profile / billing chain.
+          const a =
+            [storeAddr?.deliveryAddress, storeAddr?.billingAddress].find(
+              addr =>
+                addr && (addr.streetAddress || addr.city || addr.postalCode),
+            ) || null;
+          if (a) {
+            shipping = {
+              address1: a.streetAddress || '',
+              address2: a.aptUnit || '',
+              city: a.city || '',
+              company: a.addressName || '',
+              country: a.country || '',
+              phone: a.phoneNo || '',
+              postcode: a.postalCode || '',
+              state: a.state || '',
+            };
+          }
         }
 
         setFormData(prev => ({
