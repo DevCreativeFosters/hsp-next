@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { useUserContext } from '@contexts/user';
 
+import { getDealerStoreAddress } from '@lib/api/get-dealer-store-address';
 import { getStoreById } from '@lib/api/get-store-by-id';
 import { getStoreByUserId } from '@lib/api/get-store-by-user-id';
 import { fetchAPI } from '@lib/fetch-api';
@@ -282,14 +283,42 @@ function Address() {
       }
     }
 
-    if (user?.role === 'b2b' || user?.role === 'dealer') {
+    // Dealer-specific path. Lokesh's dealerStoreAddress resolver
+    // returns the dealer's store address pair in the exact shape
+    // AddressForm reads (addressName / streetAddress / aptUnit /
+    // city / state / country / postalCode / phoneNo) — no mapping
+    // needed. The b2b path still uses the legacy storeByUserId →
+    // storeById chain because that resolver is B2B-specific.
+    async function loadDealerStoreAddress() {
+      try {
+        const data = await getDealerStoreAddress(userId, {
+          authToken: user?.token,
+        });
+        if (data?.deliveryAddress || data?.billingAddress) {
+          setShipping(data.deliveryAddress);
+          setBilling(data.billingAddress);
+        } else {
+          console.warn(
+            '[Address] dealerStoreAddress returned no addresses for this dealer',
+          );
+        }
+      } catch (e) {
+        console.error('[Address] dealerStoreAddress fetch error:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user?.role === 'dealer') {
+      loadDealerStoreAddress();
+    } else if (user?.role === 'b2b') {
       getStoreDetails();
     } else if (user?.role === 'retail') {
       loadAddress();
     } else {
       setLoading(false);
     }
-  }, [user?.id, user?.role]);
+  }, [user?.id, user?.role, user?.token]);
 
   if (loading) return <Loading color="white" size="large" />;
   return (
