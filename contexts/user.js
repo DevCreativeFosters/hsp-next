@@ -12,6 +12,10 @@ import { USER_EXAMPLE } from '@mockup/user';
 import { useRouter } from 'next/navigation';
 
 import { fetchAPI } from '@lib/fetch-api';
+import {
+  clearCheckoutContactCache,
+  prefetchCheckoutContact,
+} from '@lib/prefetch-checkout-contact';
 import { SESSION_STORAGE_USER_DATA } from '@lib/session-storage';
 
 const UserContext = createContext();
@@ -104,10 +108,12 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    // Read userId BEFORE removing it so we can scrub their shadow cart.
+    // Read userId BEFORE removing it so we can scrub their shadow cart
+    // and any pre-cached /checkout contact-details snapshot.
     const oldUserId = localStorage.getItem('userId');
     if (oldUserId) {
       localStorage.removeItem(`hsp_local_cart_${oldUserId}`);
+      clearCheckoutContactCache(oldUserId);
     }
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
@@ -130,6 +136,22 @@ export const UserProvider = ({ children }) => {
   // TODO: replace with actual authentication
   useEffect(handleSave, [user]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(getUserFromStorage, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Prime the /checkout Contact Details cache as soon as we know
+  // who the user is. Without this, the FIRST visit to /checkout
+  // after login paints with an empty card while the autofill effect
+  // round-trips to WP. Running it here (in the global UserProvider
+  // that mounts on every route) means by the time the user
+  // navigates to /checkout, the snapshot is already in
+  // localStorage and the card paints populated on first render.
+  // Subsequent visits are also faster because checkout's autofill
+  // effect updates the same cache. Best-effort — errors are
+  // swallowed inside the helper.
+  useEffect(() => {
+    if (loading) return;
+    if (!user?.id || !user?.role) return;
+    prefetchCheckoutContact(user);
+  }, [loading, user?.id, user?.role, user?.token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <UserContext.Provider
