@@ -646,6 +646,22 @@ function CheckoutForm() {
 
   const [submitContactDetails, setSubmitContactDetails] = useState(false);
 
+  // For logged-in B2B/dealer users, jump straight to the summary
+  // view as soon as the user context resolves. Without this they
+  // see the empty "B2B Details / First Name / Last Name / Email
+  // / Mobile / Company" form for a beat before the autofill effect
+  // populates it and the summary collapses over the top. The
+  // summary block itself reads from formData, so it just renders
+  // blank until autofill completes — but the user sees a stable
+  // "Contact Details" heading instead of a form they shouldn't be
+  // filling in.
+  useEffect(() => {
+    if (userLoading) return;
+    if (user?.role === 'b2b' || user?.role === 'dealer') {
+      setSubmitContactDetails(true);
+    }
+  }, [user?.role, userLoading]);
+
   const handleSubmitContactDetails = () => {
     setSubmitContactDetails(true);
   };
