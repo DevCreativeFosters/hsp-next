@@ -333,17 +333,48 @@ function CheckoutForm() {
     let cancelled = false;
     (async () => {
       try {
+        // Pull the full billing address — not just name/email/phone.
+        // Prior to this, the retail Contact Details summary showed
+        // name + email + phone but no street/city/state — so when a
+        // retail user saved their address in /account/address (which
+        // does request the full shape) and then went to /checkout,
+        // the address was silently dropped. Same userAddress
+        // resolver, just asking for everything Lokesh's resolver
+        // already returns.
         const addrRes = await fetchAPI(
           `query($userId: Int!) {
             userAddress(userId: $userId) {
               success
-              billing { first_name last_name email phone }
+              billing {
+                first_name
+                last_name
+                email
+                phone
+                address_1
+                address_2
+                city
+                state
+                postcode
+                country
+              }
+              shipping {
+                first_name
+                last_name
+                phone
+                address_1
+                address_2
+                city
+                state
+                postcode
+                country
+              }
             }
           }`,
           { variables: { userId: user.id } },
         );
         if (cancelled) return;
         const billing = addrRes?.userAddress?.billing;
+        const shippingAddr = addrRes?.userAddress?.shipping;
         if (!billing?.email) return;
 
         // customerByEmail with the auth token returns company etc. that
@@ -425,6 +456,29 @@ function CheckoutForm() {
           }
         }
 
+        // Retail fallback: B2B + Dealer branches above didn't run, so
+        // `shipping` is still null. Build it from the userAddress
+        // response (preferring shipping; falling back to billing).
+        // userAddress uses snake_case keys (address_1, postcode);
+        // map them to the camelCase shape the autofill below
+        // reads, so retail flows through the same code path B2B
+        // and Dealer use.
+        if (!shipping) {
+          const src = shippingAddr?.address_1 ? shippingAddr : billing;
+          if (src?.address_1 || src?.city || src?.postcode) {
+            shipping = {
+              address1: src.address_1 || '',
+              address2: src.address_2 || '',
+              city: src.city || '',
+              company: '',
+              country: src.country || 'AU',
+              phone: src.phone || '',
+              postcode: src.postcode || '',
+              state: src.state || '',
+            };
+          }
+        }
+
         const resolvedFirstName =
           shipping?.firstName ||
           postNameFallback ||
@@ -443,7 +497,13 @@ function CheckoutForm() {
 
         setFormData(prev => ({
           ...prev,
+          // Address fields (now populated for retail too, not just
+          // B2B/Dealer). Empty `shipping` leaves them untouched.
+          address: shipping?.address1 || prev.address,
+          address_2: shipping?.address2 || prev.address_2,
+          city: shipping?.city || prev.city,
           company: resolvedCompany || prev.company,
+          country: shipping?.country || prev.country,
           email: resolvedEmail || prev.email,
           first_name: resolvedFirstName || prev.first_name,
           last_name:
@@ -456,6 +516,8 @@ function CheckoutForm() {
               ? ''
               : resolvedLastName || prev.last_name),
           phone: resolvedPhone || prev.phone,
+          postcode: shipping?.postcode || prev.postcode,
+          state: shipping?.state || prev.state,
         }));
         setSubmitContactDetails(true);
 
