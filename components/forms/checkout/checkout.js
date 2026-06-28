@@ -291,15 +291,72 @@ function CheckoutForm() {
       const profile = await getCustomerByEmail(formData.email, {
         authToken: login.token,
       });
+      // Also pull the saved address from userAddress so the Address
+      // Details form and the Contact Details summary line both
+      // populate post-login (was missing — only profile fields were
+      // fetched here, which is why retail users who saved an
+      // address in /account/address still saw a blank address on
+      // /checkout immediately after inline-login).
+      let addrSrc = null;
+      if (profile?.userId) {
+        try {
+          const addrRes = await fetchAPI(
+            `query($userId: Int!) {
+              userAddress(userId: $userId) {
+                success
+                billing {
+                  address_1 address_2 city state postcode country
+                }
+                shipping {
+                  address_1 address_2 city state postcode country
+                }
+              }
+            }`,
+            {
+              authToken: login.token,
+              variables: { userId: Number(profile.userId) },
+            },
+          );
+          const b = addrRes?.userAddress?.billing;
+          const s = addrRes?.userAddress?.shipping;
+          addrSrc = s?.address_1 ? s : b;
+        } catch (err) {
+          console.warn(
+            '[Checkout] post-login address fetch failed:',
+            err?.message,
+          );
+        }
+      }
       if (profile) {
         setFormData(prev => ({
           ...prev,
+          address: addrSrc?.address_1 || prev.address,
+          address_2: addrSrc?.address_2 || prev.address_2,
+          city: addrSrc?.city || prev.city,
           company: profile.company || prev.company,
+          country: addrSrc?.country || prev.country,
           first_name: profile.firstName || prev.first_name,
           last_name: profile.lastName || prev.last_name,
           phone: profile.phone || prev.phone,
+          postcode: addrSrc?.postcode || prev.postcode,
+          state: addrSrc?.state || prev.state,
         }));
         setCustomerLookup({ ...profile, isLoggedIn: true });
+        // Populate the summary address line too. Same shape the
+        // logged-in autofill effect uses.
+        if (addrSrc) {
+          const line = [
+            addrSrc.address_1,
+            addrSrc.address_2,
+            addrSrc.city,
+            addrSrc.state,
+            addrSrc.postcode,
+            addrSrc.country,
+          ]
+            .filter(Boolean)
+            .join(', ');
+          if (line) setDealerAddressLine(line);
+        }
       }
       // Collapse Contact Details into the read-only summary card so the
       // user lands in the "John Smith / johnsmith@gmail.com / 0400…" state
@@ -1148,7 +1205,31 @@ function CheckoutForm() {
                   <p>{formData.email}</p>
                   <p>{formData.phone}</p>
                   {formData.company && <p>{formData.company}</p>}
-                  {dealerAddressLine && <p>{dealerAddressLine}</p>}
+                  {(() => {
+                    // Address line. Prefer the server-resolved
+                    // dealerAddressLine (set by the autofill effect
+                    // for B2B/Dealer + logged-in retail). Otherwise
+                    // derive from formData so the line appears for
+                    // guests who typed an address into the Address
+                    // Details section below.
+                    if (dealerAddressLine) {
+                      return <p>{dealerAddressLine}</p>;
+                    }
+                    const hasAddress =
+                      formData.address || formData.city || formData.postcode;
+                    if (!hasAddress) return null;
+                    const line = [
+                      formData.address,
+                      formData.address_2,
+                      formData.city,
+                      formData.state,
+                      formData.postcode,
+                      formData.country,
+                    ]
+                      .filter(Boolean)
+                      .join(', ');
+                    return <p>{line}</p>;
+                  })()}
                 </div>
               </div>
             ) : (
