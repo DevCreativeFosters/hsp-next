@@ -88,19 +88,41 @@ function CheckoutForm() {
   const [quoteNotes, setQuoteNotes] = useState('');
 
   const [isFormFilled, setIsFormFilled] = useState(false);
+
+  // Read the cached contact-details snapshot from localStorage on
+  // initial render so logged-in B2B/dealer users see their populated
+  // card the moment /checkout mounts, not after the autofill effect
+  // round-trips. The cache is keyed by userId so different accounts
+  // never see each other's data. The autofill effect still runs and
+  // refreshes from the live resolver — this only solves the
+  // first-paint flash.
+  const readCachedContactDetails = () => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const uid = localStorage.getItem('userId');
+      if (!uid) return null;
+      const raw = localStorage.getItem(`hsp_checkout_contact_${uid}`);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const cachedContact = readCachedContactDetails();
+
   const [formData, setFormData] = useState({
     additionalCustomerInfo: {
       customer_email: '',
       customer_first_name: '',
       customer_last_name: '',
     },
-    address: '',
-    address_2: '',
-    city: '',
+    address: cachedContact?.address || '',
+    address_2: cachedContact?.address_2 || '',
+    city: cachedContact?.city || '',
 
-    company: '',
+    company: cachedContact?.company || '',
 
-    country: 'AU',
+    country: cachedContact?.country || 'AU',
 
     deliveryCompanyName: '',
     // Optional alternate delivery address — only used when the customer
@@ -115,17 +137,17 @@ function CheckoutForm() {
     delivery_postcode: '',
     delivery_same_as_billing: true,
     delivery_state: '',
-    email: '',
-    first_name: '',
-    last_name: '',
+    email: cachedContact?.email || '',
+    first_name: cachedContact?.first_name || '',
+    last_name: cachedContact?.last_name || '',
     marketing: false,
     orderType: '',
     payment_method: '',
-    phone: '',
-    postcode: '',
+    phone: cachedContact?.phone || '',
+    postcode: cachedContact?.postcode || '',
     purchaseOrderNumber: '',
     selectedStoreAddress: '',
-    state: '',
+    state: cachedContact?.state || '',
     termsAndConditions: false,
     vehicleIdentifier: '',
   });
@@ -154,7 +176,9 @@ function CheckoutForm() {
   // billingAddress / deliveryAddress → fall back to addressFields
   // (generic store address). Stored as a single flat string for
   // display in the summary block.
-  const [dealerAddressLine, setDealerAddressLine] = useState('');
+  const [dealerAddressLine, setDealerAddressLine] = useState(
+    cachedContact?.dealerAddressLine || '',
+  );
 
   const handleForgotPassword = async () => {
     if (!formData.email || !formData.email.includes('@')) {
@@ -401,16 +425,27 @@ function CheckoutForm() {
           }
         }
 
+        const resolvedFirstName =
+          shipping?.firstName ||
+          postNameFallback ||
+          profile?.firstName ||
+          billing.first_name ||
+          '';
+        const resolvedLastName =
+          shipping?.lastName ||
+          (postNameFallback && !shipping?.firstName
+            ? ''
+            : profile?.lastName || billing.last_name || '');
+        const resolvedCompany = shipping?.company || profile?.company || '';
+        const resolvedEmail = shipping?.email || billing.email || '';
+        const resolvedPhone =
+          shipping?.phone || profile?.phone || billing.phone || '';
+
         setFormData(prev => ({
           ...prev,
-          company: shipping?.company || profile?.company || prev.company,
-          email: shipping?.email || billing.email || prev.email,
-          first_name:
-            shipping?.firstName ||
-            postNameFallback ||
-            profile?.firstName ||
-            billing.first_name ||
-            prev.first_name,
+          company: resolvedCompany || prev.company,
+          email: resolvedEmail || prev.email,
+          first_name: resolvedFirstName || prev.first_name,
           last_name:
             shipping?.lastName ||
             // If we fell back to the post-name slug (B2B, blank
@@ -419,17 +454,17 @@ function CheckoutForm() {
             // than appending a stale personal last name.
             (postNameFallback && !shipping?.firstName
               ? ''
-              : profile?.lastName || billing.last_name || prev.last_name),
-          phone:
-            shipping?.phone || profile?.phone || billing.phone || prev.phone,
+              : resolvedLastName || prev.last_name),
+          phone: resolvedPhone || prev.phone,
         }));
         setSubmitContactDetails(true);
 
         // Same payload drives the address line under Contact Details
         // (the small grey one with the street address). No fallback
         // chain needed — the new resolvers carry the full address.
+        let line = '';
         if (shipping) {
-          const line = [
+          line = [
             shipping.address1,
             shipping.address2,
             shipping.city,
@@ -441,6 +476,34 @@ function CheckoutForm() {
             .map(String)
             .join(', ');
           if (!cancelled && line) setDealerAddressLine(line);
+        }
+
+        // Cache the resolved contact snapshot so the NEXT /checkout
+        // mount paints with this data instantly instead of waiting
+        // for the autofill round-trip again. Keyed by userId so
+        // signing out / signing in as someone else doesn't leak.
+        try {
+          if (typeof window !== 'undefined' && user?.id) {
+            localStorage.setItem(
+              `hsp_checkout_contact_${user.id}`,
+              JSON.stringify({
+                address: shipping?.address1 || '',
+                address_2: shipping?.address2 || '',
+                city: shipping?.city || '',
+                company: resolvedCompany,
+                country: shipping?.country || 'AU',
+                dealerAddressLine: line,
+                email: resolvedEmail,
+                first_name: resolvedFirstName,
+                last_name: resolvedLastName,
+                phone: resolvedPhone,
+                postcode: shipping?.postcode || '',
+                state: shipping?.state || '',
+              }),
+            );
+          }
+        } catch {
+          /* localStorage write failed (quota / disabled) — skip cache. */
         }
       } catch (err) {
         console.error('[Checkout] autofill failed:', err?.message);
