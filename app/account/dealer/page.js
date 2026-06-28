@@ -7,8 +7,6 @@ import AccountDetails from '@components/account/account-details/account-details'
 import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
-import Referrals from '@components/account/referrals/referrals';
-import StoreResources from '@components/account/store-resources/store-resources';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -62,20 +60,14 @@ export default async function DealerPage() {
               slug: 'orderdashboard',
               title: 'Orders',
             },
-            {
-              content: <Referrals />,
-              slug: 'referrals',
-              title: 'Referrals',
-            },
+            // Referrals + Resources intentionally omitted from the
+            // dealer portal — those tabs are B2B-only. (Resources is
+            // store in-store-displays; Referrals is the B2B referral
+            // bonus program. Neither applies to dealer accounts.)
             {
               content: <WishlistItems />,
               slug: 'wishlist',
               title: 'Wishlist',
-            },
-            {
-              content: <StoreResources />,
-              slug: 'resources',
-              title: 'Resources',
             },
             {
               content: (
