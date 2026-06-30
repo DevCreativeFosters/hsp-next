@@ -2058,46 +2058,59 @@ function CheckoutForm() {
                     {formatPrice(cartSubTotal)}
                   </div>
                 </div>
-                {/* Installation cost is suppressed for B2B accounts. B2B
-                    customers resell rather than install themselves, so
-                    showing (and charging) per-item installation cost on the
-                    order summary is wrong. Dealer accounts keep it because
-                    on-site-fitting is one of their delivery options. */}
-                {role !== 'b2b' && (
-                  <div className={styles.subTotal}>
-                    <div className={styles.subTotaltitle}>
-                      Installation Cost
+                {/* Installation + Freight visibility per the per-role
+                    delivery-option spec (Darshan, 2026-07-01):
+
+                      Retail
+                        click-collect       → no install,  no freight
+                        local-installation  → install,     freight
+                        pickup-from-hsp     → no install,  no freight
+                      B2B
+                        all options         → no install (B2B resells)
+                        pickup-from-hsp     → no freight
+                        else                → freight
+                      Dealer
+                        on-site-fitting     → install,     freight
+                        pickup-from-hsp     → no install,  no freight
+                        deliver-to-store    → install,     freight
+
+                    Computed once at the top of the Summary block so
+                    the row visibility and the TOTAL math can't drift
+                    apart. Both apply to the (still-rendered) Subtotal
+                    + Discount rows independently. */}
+                {role !== 'b2b' &&
+                  formData.orderType !== 'click-collect' &&
+                  formData.orderType !== 'pickup-from-hsp' && (
+                    <div className={styles.subTotal}>
+                      <div className={styles.subTotaltitle}>
+                        Installation Cost
+                      </div>
+                      <div className={styles.subTotalPrice}>
+                        {formatPrice(
+                          cartItems.reduce(
+                            (total, item) =>
+                              total + item.installation_cost * item.quantity,
+                            0,
+                          ),
+                        )}
+                      </div>
                     </div>
-                    <div className={styles.subTotalPrice}>
-                      {formatPrice(
-                        cartItems.reduce(
-                          (total, item) =>
-                            total + item.installation_cost * item.quantity,
-                          0,
-                        ),
-                      )}
+                  )}
+                {formData.orderType !== 'click-collect' &&
+                  formData.orderType !== 'pickup-from-hsp' && (
+                    <div className={styles.subTotal}>
+                      <div className={styles.subTotaltitle}>Freight</div>
+                      <div className={styles.subTotalPrice}>
+                        {formatPrice(
+                          cartItems.reduce(
+                            (total, item) =>
+                              total + item.freight * item.quantity,
+                            0,
+                          ),
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {/* Freight is suppressed when the customer chose
-                    "Pickup From HSP" — they collect from the warehouse
-                    so no freight applies. Applies to every role
-                    (retail / B2B / dealer). The TOTAL calculation
-                    below subtracts the freight back out so it doesn't
-                    silently linger in the AUD total either. */}
-                {formData.orderType !== 'pickup-from-hsp' && (
-                  <div className={styles.subTotal}>
-                    <div className={styles.subTotaltitle}>Freight</div>
-                    <div className={styles.subTotalPrice}>
-                      {formatPrice(
-                        cartItems.reduce(
-                          (total, item) => total + item.freight * item.quantity,
-                          0,
-                        ),
-                      )}
-                    </div>
-                  </div>
-                )}
+                  )}
                 {appliedCoupons.length > 0 &&
                   appliedCoupons.map((coupon, index) => (
                     <div
@@ -2122,18 +2135,26 @@ function CheckoutForm() {
                     {formatPrice(
                       cartTotal -
                         totalDiscount -
-                        (role === 'b2b'
+                        // Subtract installation back out when the row
+                        // above is hidden (B2B always; retail/dealer
+                        // when picked Click & Collect or Pickup From
+                        // HSP — customer collects, no installer
+                        // involved).
+                        (role === 'b2b' ||
+                        formData.orderType === 'click-collect' ||
+                        formData.orderType === 'pickup-from-hsp'
                           ? cartItems.reduce(
                               (total, item) =>
                                 total + item.installation_cost * item.quantity,
                               0,
                             )
                           : 0) -
-                        // Subtract freight back out for "Pickup From
-                        // HSP" — cartTotal includes freight, but the
-                        // customer isn't paying it when they collect
-                        // themselves.
-                        (formData.orderType === 'pickup-from-hsp'
+                        // Subtract freight back out when the row above
+                        // is hidden (Click & Collect or Pickup From
+                        // HSP — customer collects from HSP themselves,
+                        // no shipping cost applies).
+                        (formData.orderType === 'click-collect' ||
+                        formData.orderType === 'pickup-from-hsp'
                           ? cartItems.reduce(
                               (total, item) =>
                                 total + item.freight * item.quantity,
