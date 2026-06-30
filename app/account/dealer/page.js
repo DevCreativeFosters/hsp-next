@@ -7,6 +7,7 @@ import AccountDetails from '@components/account/account-details/account-details'
 import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
+import Quotes from '@components/account/quotes/quotes';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
@@ -59,6 +60,14 @@ export default async function DealerPage() {
               content: <Orders />,
               slug: 'orderdashboard',
               title: 'Orders',
+            },
+            // Quotes uses the existing dealerQuotes(user_id) resolver
+            // — the Quotes component already implements the listing,
+            // accept/cancel actions, and download links. Dealer-only.
+            {
+              content: <Quotes />,
+              slug: 'quotes',
+              title: 'Quotes',
             },
             // Referrals + Resources intentionally omitted from the
             // dealer portal — those tabs are B2B-only. (Resources is
