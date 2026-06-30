@@ -2079,17 +2079,25 @@ function CheckoutForm() {
                     </div>
                   </div>
                 )}
-                <div className={styles.subTotal}>
-                  <div className={styles.subTotaltitle}>Freight</div>
-                  <div className={styles.subTotalPrice}>
-                    {formatPrice(
-                      cartItems.reduce(
-                        (total, item) => total + item.freight * item.quantity,
-                        0,
-                      ),
-                    )}
+                {/* Freight is suppressed when the customer chose
+                    "Pickup From HSP" — they collect from the warehouse
+                    so no freight applies. Applies to every role
+                    (retail / B2B / dealer). The TOTAL calculation
+                    below subtracts the freight back out so it doesn't
+                    silently linger in the AUD total either. */}
+                {formData.orderType !== 'pickup-from-hsp' && (
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>Freight</div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(
+                        cartItems.reduce(
+                          (total, item) => total + item.freight * item.quantity,
+                          0,
+                        ),
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
                 {appliedCoupons.length > 0 &&
                   appliedCoupons.map((coupon, index) => (
                     <div
@@ -2118,6 +2126,17 @@ function CheckoutForm() {
                           ? cartItems.reduce(
                               (total, item) =>
                                 total + item.installation_cost * item.quantity,
+                              0,
+                            )
+                          : 0) -
+                        // Subtract freight back out for "Pickup From
+                        // HSP" — cartTotal includes freight, but the
+                        // customer isn't paying it when they collect
+                        // themselves.
+                        (formData.orderType === 'pickup-from-hsp'
+                          ? cartItems.reduce(
+                              (total, item) =>
+                                total + item.freight * item.quantity,
                               0,
                             )
                           : 0),
