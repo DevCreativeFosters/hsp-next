@@ -826,6 +826,43 @@ function CheckoutForm() {
   // the dealer role doesn't accidentally get the retail form.
   const isDealerLike = role === 'b2b' || role === 'dealer';
 
+  // Per-option install / freight / fitting-charge visibility, per
+  // Darshan's spec (2026-07-01):
+  //
+  //   Retail
+  //     click-collect       → no install,  no freight
+  //     local-installation  → install,     freight
+  //     pickup-from-hsp     → no install,  no freight
+  //   B2B (no install, ever — they resell, never install)
+  //     deliver-to-store    → freight
+  //     pickup-from-hsp     → no freight
+  //     drop-shipping-to-customer → freight
+  //   Dealer
+  //     deliver-to-store    → no install,  freight
+  //     pickup-from-hsp     → no install,  no freight
+  //     on-site-fitting     → install,     freight,  + $175 fitting
+  //
+  // Used by the Summary block to render rows AND in the TOTAL math
+  // (must stay in lockstep so the breakdown matches the AUD figure).
+  const ONSITE_FITTING_CHARGE = 175;
+  const installSum = cartItems.reduce(
+    (t, i) => t + (i.installation_cost || 0) * i.quantity,
+    0,
+  );
+  const freightSum = cartItems.reduce(
+    (t, i) => t + (i.freight || 0) * i.quantity,
+    0,
+  );
+  const showInstallation =
+    (role === 'retail' && formData.orderType === 'local-installation') ||
+    (role === 'dealer' && formData.orderType === 'on-site-fitting');
+  const showFreight =
+    formData.orderType !== '' &&
+    formData.orderType !== 'pickup-from-hsp' &&
+    formData.orderType !== 'click-collect';
+  const showFittingCharge =
+    role === 'dealer' && formData.orderType === 'on-site-fitting';
+
   const [submitContactDetails, setSubmitContactDetails] = useState(false);
 
   // For logged-in B2B/dealer users, jump straight to the summary
@@ -2058,59 +2095,36 @@ function CheckoutForm() {
                     {formatPrice(cartSubTotal)}
                   </div>
                 </div>
-                {/* Installation + Freight visibility per the per-role
-                    delivery-option spec (Darshan, 2026-07-01):
-
-                      Retail
-                        click-collect       → no install,  no freight
-                        local-installation  → install,     freight
-                        pickup-from-hsp     → no install,  no freight
-                      B2B
-                        all options         → no install (B2B resells)
-                        pickup-from-hsp     → no freight
-                        else                → freight
-                      Dealer
-                        on-site-fitting     → install,     freight
-                        pickup-from-hsp     → no install,  no freight
-                        deliver-to-store    → install,     freight
-
-                    Computed once at the top of the Summary block so
-                    the row visibility and the TOTAL math can't drift
-                    apart. Both apply to the (still-rendered) Subtotal
-                    + Discount rows independently. */}
-                {role !== 'b2b' &&
-                  formData.orderType !== 'click-collect' &&
-                  formData.orderType !== 'pickup-from-hsp' && (
-                    <div className={styles.subTotal}>
-                      <div className={styles.subTotaltitle}>
-                        Installation Cost
-                      </div>
-                      <div className={styles.subTotalPrice}>
-                        {formatPrice(
-                          cartItems.reduce(
-                            (total, item) =>
-                              total + item.installation_cost * item.quantity,
-                            0,
-                          ),
-                        )}
-                      </div>
+                {/* Row visibility driven by showInstallation /
+                    showFreight / showFittingCharge constants at the
+                    top of the component — see the per-role spec
+                    comment there for the full table. */}
+                {showInstallation && (
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>
+                      Installation Cost
                     </div>
-                  )}
-                {formData.orderType !== 'click-collect' &&
-                  formData.orderType !== 'pickup-from-hsp' && (
-                    <div className={styles.subTotal}>
-                      <div className={styles.subTotaltitle}>Freight</div>
-                      <div className={styles.subTotalPrice}>
-                        {formatPrice(
-                          cartItems.reduce(
-                            (total, item) =>
-                              total + item.freight * item.quantity,
-                            0,
-                          ),
-                        )}
-                      </div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(installSum)}
                     </div>
-                  )}
+                  </div>
+                )}
+                {showFittingCharge && (
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>Fitting Charge</div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(ONSITE_FITTING_CHARGE)}
+                    </div>
+                  </div>
+                )}
+                {showFreight && (
+                  <div className={styles.subTotal}>
+                    <div className={styles.subTotaltitle}>Freight</div>
+                    <div className={styles.subTotalPrice}>
+                      {formatPrice(freightSum)}
+                    </div>
+                  </div>
+                )}
                 {appliedCoupons.length > 0 &&
                   appliedCoupons.map((coupon, index) => (
                     <div
@@ -2133,34 +2147,16 @@ function CheckoutForm() {
                   <div className={styles.finalTotaltitle}>TOTAL</div>
                   <div className={styles.finalTotalPrice}>
                     {formatPrice(
+                      // Start from cartTotal (includes install +
+                      // freight) and back out anything not visible in
+                      // the breakdown above, then add the fitting
+                      // charge if it's visible. Keeps the AUD figure
+                      // in lockstep with the rendered rows.
                       cartTotal -
                         totalDiscount -
-                        // Subtract installation back out when the row
-                        // above is hidden (B2B always; retail/dealer
-                        // when picked Click & Collect or Pickup From
-                        // HSP — customer collects, no installer
-                        // involved).
-                        (role === 'b2b' ||
-                        formData.orderType === 'click-collect' ||
-                        formData.orderType === 'pickup-from-hsp'
-                          ? cartItems.reduce(
-                              (total, item) =>
-                                total + item.installation_cost * item.quantity,
-                              0,
-                            )
-                          : 0) -
-                        // Subtract freight back out when the row above
-                        // is hidden (Click & Collect or Pickup From
-                        // HSP — customer collects from HSP themselves,
-                        // no shipping cost applies).
-                        (formData.orderType === 'click-collect' ||
-                        formData.orderType === 'pickup-from-hsp'
-                          ? cartItems.reduce(
-                              (total, item) =>
-                                total + item.freight * item.quantity,
-                              0,
-                            )
-                          : 0),
+                        (showInstallation ? 0 : installSum) -
+                        (showFreight ? 0 : freightSum) +
+                        (showFittingCharge ? ONSITE_FITTING_CHARGE : 0),
                       'AUD ',
                     )}
                     <span>(incl. 10% GST)</span>
@@ -2173,13 +2169,7 @@ function CheckoutForm() {
                       <div className={styles.finalTotaltitle}>Due Now</div>
                       <div className={styles.finalTotalPrice}>
                         {formatPrice(
-                          cartTotal -
-                            cartItems.reduce(
-                              (total, item) =>
-                                total + item.installation_cost * item.quantity,
-                              0,
-                            ) -
-                            totalDiscount,
+                          cartTotal - installSum - totalDiscount,
                           'AUD ',
                         )}
                       </div>
@@ -2192,13 +2182,7 @@ function CheckoutForm() {
                         </p>
                       </div>
                       <div className={styles.right}>
-                        {formatPrice(
-                          cartItems.reduce(
-                            (total, item) =>
-                              total + item.installation_cost * item.quantity,
-                            0,
-                          ),
-                        )}
+                        {formatPrice(installSum)}
                       </div>
                     </div>
                   </div>
