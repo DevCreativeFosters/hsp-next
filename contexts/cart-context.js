@@ -845,6 +845,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -970,14 +1002,20 @@ const buildShadowItem = (response, input = {}) => {
   const freight = toNum(response.freight);
   const computedSubtotal = price * quantity;
   const computedTotal = computedSubtotal + install + freight;
-  const subtotal =
-    overridePrice != null
-      ? computedSubtotal
-      : toNum(response.subtotal) || computedSubtotal;
-  const total =
-    overridePrice != null
-      ? computedTotal
-      : toNum(response.total) || computedTotal;
+  // Always use the computed values — WP's response.subtotal /
+  // response.total for addToCart line items have been observed
+  // to be wrong for retail (returning `price + installation_cost`
+  // for a single item regardless of quantity — e.g. price=3150,
+  // qty=2, install=450 → response.subtotal=3600 instead of 6300).
+  // B2B / dealer already skipped trusting WP because their
+  // tier-price override forced computedSubtotal — extending that
+  // to all roles keeps the shadow's subtotal / total math
+  // internally consistent (price × qty, plus install + freight
+  // for total). Line subtotals should always be price × qty
+  // regardless — no discount / promotion logic on our side needs
+  // WP's aggregate.
+  const subtotal = computedSubtotal;
+  const total = computedTotal;
   return {
     cart_item_key: response.cart_item_key,
     compareAtPrice: input.compareAtPrice ?? response.compareAtPrice ?? null,
