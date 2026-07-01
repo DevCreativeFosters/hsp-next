@@ -877,6 +877,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1001,7 +1033,16 @@ const buildShadowItem = (response, input = {}) => {
   const install = toNum(response.installation_cost);
   const freight = toNum(response.freight);
   const computedSubtotal = price * quantity;
-  const computedTotal = computedSubtotal + install + freight;
+  // install + freight are per-item values (a $450 install per unit,
+  // a $20 freight per unit) — multiply by qty for the line total,
+  // same convention the checkout Summary uses when it reduces
+  // cartItems into installSum / freightSum. Prior to this the
+  // add-side used the raw per-item values and the subtract-side
+  // multiplied by qty, so a qty:2 line "lost" the extra install +
+  // freight portion in the AUD total (subtotal 6300 → total 5830
+  // instead of 6300 when both are hidden).
+  const computedTotal =
+    computedSubtotal + install * quantity + freight * quantity;
   // Always use the computed values — WP's response.subtotal /
   // response.total for addToCart line items have been observed
   // to be wrong for retail (returning `price + installation_cost`
