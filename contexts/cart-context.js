@@ -909,6 +909,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1008,13 +1040,33 @@ const toNum = v => {
 
 const computeCartTotals = items => {
   const list = Array.isArray(items) ? items : [];
+  // Compute totals fresh from price/qty/install/freight instead of
+  // trusting item.subtotal / item.total. WP's response fields were
+  // observed to be wrong (subtotal = price + install for 1 item,
+  // ignoring qty), and stored `total` values on existing shadow
+  // items reflect whatever formula buildShadowItem was using at
+  // add-time — so a formula change (e.g. now multiplying install +
+  // freight by qty) doesn't take effect until the item is re-added.
+  // Recomputing on the aggregate side means EVERY cart re-renders
+  // with the current formula, no cart clear + re-add required.
   return {
     cartCount: list.reduce(
       (acc, it) => acc + (parseInt(it.quantity, 10) || 0),
       0,
     ),
-    cartSubTotal: list.reduce((acc, it) => acc + toNum(it.subtotal), 0),
-    cartTotal: list.reduce((acc, it) => acc + toNum(it.total), 0),
+    cartSubTotal: list.reduce(
+      (acc, it) => acc + toNum(it.price) * (parseInt(it.quantity, 10) || 0),
+      0,
+    ),
+    cartTotal: list.reduce((acc, it) => {
+      const qty = parseInt(it.quantity, 10) || 0;
+      return (
+        acc +
+        toNum(it.price) * qty +
+        toNum(it.installation_cost) * qty +
+        toNum(it.freight) * qty
+      );
+    }, 0),
   };
 };
 
