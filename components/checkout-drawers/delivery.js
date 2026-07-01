@@ -72,8 +72,16 @@ function DeliveryAddressForm({
   // so the dealer doesn't have to click a Confirm button that does
   // nothing functional. Must live BELOW deliverySameAsBilling/
   // showCommercialConfirmation so we don't TDZ-reference them.
+  //
+  // `allowDelivery` means the option requires the customer to enter a
+  // delivery address (deliver-to-door, drop-shipping-to-customer) — for
+  // those we always render the form + confirm-address button, never
+  // the auto-advance summary card.
   const autoAdvance =
-    !askCutomerInfo && deliverySameAsBilling && !showCommercialConfirmation;
+    !askCutomerInfo &&
+    !allowDelivery &&
+    deliverySameAsBilling &&
+    !showCommercialConfirmation;
   useEffect(() => {
     if (autoAdvance) setIsFormFilled(true);
   }, [autoAdvance, setIsFormFilled]);
@@ -169,7 +177,7 @@ function DeliveryAddressForm({
           </div>
         )}
 
-        {!askCutomerInfo && deliverySameAsBilling ? (
+        {!askCutomerInfo && !allowDelivery && deliverySameAsBilling ? (
           // Summary card. For B2B/dealer Deliver-to-Store the destination
           // IS the dealer's own store address (rendered on the Contact
           // Details card above as the dealerAddressLine). They aren't
@@ -177,6 +185,11 @@ function DeliveryAddressForm({
           // "Please enter your address in the Address Details section
           // above" copy was wrong for this flow. Show a clear
           // confirmation instead.
+          //
+          // Options with allowDelivery=true (deliver-to-door,
+          // drop-shipping-to-customer) skip this branch and always
+          // render the address form below — the customer needs to
+          // enter a destination.
           <div className={styles.addressSummaryCard}>
             <h4>Delivery Address</h4>
             {formData.address ? (
@@ -388,13 +401,14 @@ function DeliveryAddressForm({
             auto-advance via the useEffect below. The button stays
             for the drop-shipping flow (askCutomerInfo) where the
             dealer fills in customer details. */}
-        {(askCutomerInfo || !deliverySameAsBilling) && (
+        {(askCutomerInfo || allowDelivery || !deliverySameAsBilling) && (
           <Button
             className={styles.submitBtn}
             disabled={
-              !askCutomerInfo && deliverySameAsBilling
+              (!askCutomerInfo && !allowDelivery && deliverySameAsBilling
                 ? !acceptDeliveryTerms || !formData.address
-                : formIncomplete
+                : formIncomplete) ||
+              (showCommercialConfirmation && !acceptDeliveryTerms)
             }
             onClick={() => setIsFormFilled(true)}
             size="large"
