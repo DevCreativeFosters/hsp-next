@@ -771,32 +771,17 @@ function CheckoutForm() {
       // briefly by Pickup From HSP.
       allowDelivery: true,
       askCutomerInfo: false,
-      description: 'Get your products delivered directly to your door',
+      description: 'Sent within 1-3 business days',
       icon: TruckIcon,
       id: 'deliver-to-door',
-      noteContent: (
-        <>
-          <p>
-            <strong>Please Note:</strong> Freight times will vary depending on
-            location
-          </p>
-        </>
-      ),
+      noteContent: <p>Sent within 1-3 business days</p>,
       roles: ['retail'],
       selectedAddress: {
         btnTitle: 'Edit Delivery Details',
         title: 'Deliver to Door',
       },
       selectedMenu: {
-        content: (
-          <>
-            <p>Get your products delivered directly to your door</p>
-            <p>
-              <strong>Please Note:</strong> Freight times will vary depending on
-              location
-            </p>
-          </>
-        ),
+        content: <p>Sent within 1-3 business days</p>,
         title: 'Deliver to Door',
       },
       title: 'Deliver to Door',
