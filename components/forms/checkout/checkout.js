@@ -636,7 +636,7 @@ function CheckoutForm() {
   const noGiftCard = cartItems.every(item => item.recipientEmail == null);
 
   // Delivery options follow the per-role slug spec:
-  //   Retail  → click-collect, local-installation, pickup-from-hsp
+  //   Retail  → click-collect, local-installation, deliver-to-door
   //   B2B     → deliver-to-store, pickup-from-hsp, drop-shipping-to-customer
   //   Dealer  → deliver-to-store, pickup-from-hsp, on-site-fitting
   // pickup-from-hsp is shared across all three, deliver-to-store across
@@ -745,7 +745,11 @@ function CheckoutForm() {
           </p>
         </>
       ),
-      roles: ['retail', 'b2b', 'dealer'],
+      // Retail was removed from this list (2026-07-01) — retail
+      // customers use "Deliver to Door" instead. Pickup From HSP
+      // is now B2B/Dealer-only (they collect commercial orders
+      // from the HSP warehouse).
+      roles: ['b2b', 'dealer'],
       selectedAddress: {
         btnTitle: '',
         title: 'Pickup From HSP',
@@ -759,6 +763,43 @@ function CheckoutForm() {
         title: 'Pickup From HSP',
       },
       title: 'Pickup From HSP',
+    },
+    {
+      // Retail door-to-door delivery. Freight applies; no install
+      // (the customer receives at their door — installation, if
+      // any, is on them). Restored 2026-07-01 after being replaced
+      // briefly by Pickup From HSP.
+      allowDelivery: true,
+      askCutomerInfo: false,
+      description: 'Get your products delivered directly to your door',
+      icon: TruckIcon,
+      id: 'deliver-to-door',
+      noteContent: (
+        <>
+          <p>
+            <strong>Please Note:</strong> Freight times will vary depending on
+            location
+          </p>
+        </>
+      ),
+      roles: ['retail'],
+      selectedAddress: {
+        btnTitle: 'Edit Delivery Details',
+        title: 'Deliver to Door',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>Get your products delivered directly to your door</p>
+            <p>
+              <strong>Please Note:</strong> Freight times will vary depending on
+              location
+            </p>
+          </>
+        ),
+        title: 'Deliver to Door',
+      },
+      title: 'Deliver to Door',
     },
     {
       allowDelivery: true,
@@ -832,7 +873,7 @@ function CheckoutForm() {
   //   Retail
   //     click-collect       → no install,  no freight
   //     local-installation  → install,     freight
-  //     pickup-from-hsp     → no install,  no freight
+  //     deliver-to-door     → no install,  freight
   //   B2B (no install, ever — they resell, never install)
   //     deliver-to-store    → freight
   //     pickup-from-hsp     → no freight
