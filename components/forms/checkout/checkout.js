@@ -1322,7 +1322,7 @@ function CheckoutForm() {
                     if (!billingLine) return null;
                     return (
                       <div className={styles.addressSummaryCard}>
-                        <h4>Billing Address</h4>
+                        <h4>Invoice Address</h4>
                         <p>{billingLine}</p>
                       </div>
                     );
@@ -1624,7 +1624,7 @@ function CheckoutForm() {
                           type="checkbox"
                         />
                         <span>
-                          The billing address is the same as the address listed
+                          The invoice address is the same as the address listed
                           above.
                         </span>
                       </label>
