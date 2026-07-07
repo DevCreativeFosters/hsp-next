@@ -1345,6 +1345,20 @@ function CheckoutForm() {
                     as "Billing Address" per the Figma copy. */}
                 {formData.delivery_same_as_billing === false &&
                   (() => {
+                    // Only render when the user has entered
+                    // ACTUAL invoice address data. Previously the
+                    // guard just checked whether ANY delivery_*
+                    // field was truthy — but delivery_country
+                    // defaults to 'AU' from initial state, so the
+                    // card rendered as "Invoice Address: AU" the
+                    // instant the checkbox was unticked (before
+                    // the user typed anything). Require at least
+                    // one of the meaningful street fields.
+                    const hasInvoiceAddress =
+                      formData.delivery_address ||
+                      formData.delivery_city ||
+                      formData.delivery_postcode;
+                    if (!hasInvoiceAddress) return null;
                     const billingLine = [
                       formData.delivery_address,
                       formData.delivery_address_2,
@@ -1355,7 +1369,6 @@ function CheckoutForm() {
                     ]
                       .filter(Boolean)
                       .join(', ');
-                    if (!billingLine) return null;
                     return (
                       <div className={styles.addressSummaryCard}>
                         <h4>Invoice Address</h4>
@@ -1666,6 +1679,111 @@ function CheckoutForm() {
                       </label>
                     </div>
                   </div>
+
+                  {/* Invoice Address form. Renders when the user
+                      unticks "The invoice address is the same as
+                      the address listed above". Same field layout
+                      as the Address Details box above but wired to
+                      the delivery_* keys — kept for CheckoutOrder
+                      payload compatibility. Users fill this in and
+                      then click Confirm Address on the main form to
+                      collapse everything into the summary view (both
+                      Address Details AND Invoice Address cards). */}
+                  {formData.delivery_same_as_billing === false && (
+                    <div className={styles.colFull}>
+                      <div className={styles.addressDetails}>
+                        <h2 className={styles.addressDetailsHeading}>
+                          Invoice Address
+                        </h2>
+                        <div className={styles.addressFormRow}>
+                          <div className={styles.addressFormCol}>
+                            <div className={styles.addressLblSelect}>
+                              <span>Country/Region</span>
+                              <select
+                                name="delivery_country"
+                                onChange={handleChange}
+                                value={formData.delivery_country || 'AU'}
+                              >
+                                <option value="AU">Australia</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.addressFormRow}>
+                          <div className={styles.addressFormCol}>
+                            <input
+                              name="delivery_company"
+                              onChange={handleChange}
+                              placeholder="Company Name (Optional)"
+                              type="text"
+                              value={formData.delivery_company || ''}
+                            />
+                          </div>
+                        </div>
+                        <div className={styles.addressFormRow}>
+                          <div className={styles.addressFormCol}>
+                            <input
+                              name="delivery_address"
+                              onChange={handleChange}
+                              placeholder="Address (We do not ship to PO Boxes)"
+                              type="text"
+                              value={formData.delivery_address || ''}
+                            />
+                          </div>
+                        </div>
+                        <div className={styles.addressFormRow}>
+                          <div className={styles.addressFormCol}>
+                            <input
+                              name="delivery_address_2"
+                              onChange={handleChange}
+                              placeholder="Apartment, suite, etc. (optional)"
+                              type="text"
+                              value={formData.delivery_address_2 || ''}
+                            />
+                          </div>
+                        </div>
+                        <div className={styles.addressFormRow}>
+                          <div className={styles.addressFormCol}>
+                            <input
+                              name="delivery_city"
+                              onChange={handleChange}
+                              placeholder="City"
+                              type="text"
+                              value={formData.delivery_city || ''}
+                            />
+                          </div>
+                          <div className={styles.addressFormCol}>
+                            <input
+                              name="delivery_postcode"
+                              onChange={handleChange}
+                              placeholder="Postcode"
+                              type="text"
+                              value={formData.delivery_postcode || ''}
+                            />
+                          </div>
+                          <div className={styles.addressFormCol}>
+                            <div className={styles.addressLblSelect}>
+                              <span>State/territory</span>
+                              <select
+                                name="delivery_state"
+                                onChange={handleChange}
+                                value={formData.delivery_state || ''}
+                              >
+                                <option value="">Select state</option>
+                                {State.getStatesOfCountry(
+                                  formData.delivery_country || 'AU',
+                                ).map(s => (
+                                  <option key={s.isoCode} value={s.name}>
+                                    {s.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Retail flow needs a manual Submit Details to
                       collapse the edit form into the summary card.
