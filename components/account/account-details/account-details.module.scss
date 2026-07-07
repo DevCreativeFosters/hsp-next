@@ -107,7 +107,6 @@
       .tableWrapper {
         border: solid 1px #919191;
         border-radius: 16px;
-        overflow: auto;
 
         table {
           padding: 14px 30px;
@@ -123,11 +122,27 @@
 
           td {
             padding: 10px;
-            white-space: nowrap;
+
+            // Values wrap to the next line instead of forcing a
+            // horizontal scrollbar (that's the fix for long
+            // Business Addresses that used to blow the table
+            // wider than its container). Labels stay on one line
+            // via the first-child override below.
+            word-break: break-word;
 
             &:first-child {
               font-family: var(--font-secondary);
-              width: 40%;
+
+              // Was width: 40% — that reserved half the row for
+              // the label column, so short values like
+              // "$20,000.00" and "30 Days" ended up with a big
+              // empty gap after them. width: 1% + nowrap makes
+              // the label column shrink to its own content and
+              // hug the value tightly; padding-right keeps a
+              // small consistent gap.
+              width: 1%;
+              white-space: nowrap;
+              padding-right: 24px;
               font-weight: 600;
             }
           }
