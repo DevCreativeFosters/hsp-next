@@ -618,6 +618,40 @@
             }
           }
 
+          // Confirmed-address strip that replaces the Address Details
+          // or Invoice Address FORM inline once the user clicks that
+          // block's Confirm Address button. Distinct from
+          // .addressSummaryCard (which appears in the collapsed
+          // Contact Details view) — this one sits inside the
+          // still-editable Contact Details form and has an Edit
+          // button to reopen just this block.
+          .addressSummaryStrip {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #000;
+            border-radius: 8px;
+            color: #fff;
+            margin: 0 0 16px;
+
+            h4 {
+              margin: 0 0 4px;
+              font-family: var(--font-secondary);
+              font-size: 15px;
+              font-weight: 600;
+              color: #fff;
+            }
+
+            p {
+              margin: 0;
+              font-size: 14px;
+              line-height: 1.5;
+              color: rgb(255 255 255 / 85%);
+            }
+          }
+
           // Address Details as a distinct summary card below the
           // contact info in the collapsed Contact Details view.
           // Dark background per Figma node 5446:38251 — sits inside
