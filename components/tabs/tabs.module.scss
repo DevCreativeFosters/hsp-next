@@ -75,7 +75,16 @@
         background: #2e2e2e;
         width: auto;
         margin: 0 0 20px;
-        flex-wrap: wrap;
+
+        // Keep tabs on a single row — previous flex-wrap: wrap
+        // pushed the Completed tab to a second line once the two
+        // Outstanding tabs picked up their notification bubbles.
+        // On narrow viewports we allow the row to overflow the
+        // parent horizontally rather than showing a scrollbar
+        // (the tab labels are compact enough that this rarely
+        // happens; if it becomes an issue we can shrink the pad
+        // + font size at the breakpoint instead of wrapping).
+        flex-wrap: nowrap;
 
         @media (width <=767px) {
           margin: 0 0 8px;

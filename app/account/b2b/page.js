@@ -7,6 +7,7 @@ import AccountDetails from '@components/account/account-details/account-details'
 import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
+import OrdersSidebarBadge from '@components/account/orders/orders-sidebar-badge';
 import Referrals from '@components/account/referrals/referrals';
 import StoreResources from '@components/account/store-resources/store-resources';
 import WishlistItems from '@components/account/wishlist-items/wishlist-items';
@@ -55,7 +56,12 @@ export default async function RetailPage() {
             {
               content: <Orders />,
               slug: 'orderdashboard',
-              title: 'Orders',
+              title: (
+                <>
+                  Orders
+                  <OrdersSidebarBadge />
+                </>
+              ),
             },
             {
               content: <Referrals />,

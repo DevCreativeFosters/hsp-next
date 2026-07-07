@@ -595,12 +595,84 @@ function Orders() {
   const receivedCount = outOrders.filter(o => o.status !== 'completed').length;
   const placedCount = currentOrders.length;
 
-  const tabTitle = (label, count) => (
-    <>
-      {label}
-      {count > 0 && <span className={styles.tabBadge}>{count}</span>}
-    </>
-  );
+  // Publish the latest outstanding-tab counts to localStorage so
+  // the sidebar Orders tab (which lives above this component in
+  // the page tree and can't share React state easily) can render
+  // its own unseen-count bubble. Written every render — cheap
+  // string writes, no debounce needed.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(
+        'hsp_orders_tab_counts',
+        JSON.stringify({
+          outstandingordersplaced: placedCount,
+          outstandingordersreceived: receivedCount,
+        }),
+      );
+      // Nudge same-tab listeners — the standard `storage` event
+      // only fires cross-tab, so the sidebar badge component
+      // subscribes to this custom event too.
+      window.dispatchEvent(new Event('hsp_orders_tab_counts'));
+    } catch {
+      /* localStorage disabled / quota-exceeded — silently skip */
+    }
+  }, [placedCount, receivedCount]);
+
+  // Track the last count the user "acknowledged" for each tab (by
+  // viewing it). Persisted in localStorage so the badge stays
+  // hidden across page reloads until MORE outstanding orders come
+  // in — same UX pattern as an unread-count in an inbox.
+  //
+  //   badgeVisible ⇔ currentCount > lastSeenCount
+  //
+  // Seed lastSeen from localStorage on mount; on hashchange, if
+  // the new hash matches a tab, mark that tab's current count as
+  // seen and write it back.
+  const [tabSeenCounts, setTabSeenCounts] = useState(() => {
+    if (typeof window === 'undefined') return {};
+    try {
+      const raw = localStorage.getItem('hsp_orders_tab_seen');
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    const tabCounts = {
+      outstandingordersplaced: placedCount,
+      outstandingordersreceived: receivedCount,
+    };
+    const acknowledge = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (!(hash in tabCounts)) return;
+      setTabSeenCounts(prev => {
+        if (prev[hash] === tabCounts[hash]) return prev;
+        const next = { ...prev, [hash]: tabCounts[hash] };
+        try {
+          localStorage.setItem('hsp_orders_tab_seen', JSON.stringify(next));
+        } catch {
+          /* localStorage disabled / quota-exceeded — silently skip */
+        }
+        return next;
+      });
+    };
+    acknowledge();
+    window.addEventListener('hashchange', acknowledge);
+    return () => window.removeEventListener('hashchange', acknowledge);
+  }, [placedCount, receivedCount]);
+
+  const tabTitle = (label, count, slug) => {
+    const seen = tabSeenCounts[slug] ?? 0;
+    const showBadge = count > 0 && count > seen;
+    return (
+      <>
+        {label}
+        {showBadge && <span className={styles.tabBadge}>{count}</span>}
+      </>
+    );
+  };
 
   const b2bTabs = [
     {
@@ -610,7 +682,11 @@ function Orders() {
         </CheckNoOrders>
       ),
       slug: 'outstandingordersreceived',
-      title: tabTitle('Outstanding Orders Received', receivedCount),
+      title: tabTitle(
+        'Outstanding Orders Received',
+        receivedCount,
+        'outstandingordersreceived',
+      ),
     },
     {
       content: (
@@ -622,7 +698,11 @@ function Orders() {
         </CheckNoOrders>
       ),
       slug: 'outstandingordersplaced',
-      title: tabTitle('Outstanding Orders Placed', placedCount),
+      title: tabTitle(
+        'Outstanding Orders Placed',
+        placedCount,
+        'outstandingordersplaced',
+      ),
     },
     {
       // Completed orders — WP moves an order from 'processing' to
