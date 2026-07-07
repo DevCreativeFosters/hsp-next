@@ -609,6 +609,19 @@ function Orders() {
       slug: 'outstandingordersplaced',
       title: 'Outstanding Orders Placed',
     },
+    {
+      // Completed orders — WP moves an order from 'processing' to
+      // 'completed' once fulfillment is done. completedOrders is
+      // filtered at the top of this function (o.status ===
+      // 'completed'). Empty-state copy matches the other B2B tabs.
+      content: (
+        <CheckNoOrders orders={completedOrders}>
+          <h3>No completed orders yet</h3>
+        </CheckNoOrders>
+      ),
+      slug: 'completed',
+      title: 'Completed',
+    },
   ];
 
   let content;
