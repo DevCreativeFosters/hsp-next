@@ -1,0 +1,31 @@
+// Black CTA that sits below the Download Invoice button on
+// /order-status/[orderId] when the buyer checked out as a guest.
+// Same size + typography as the primary red button so the two
+// stack cleanly.
+.createAccountBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-secondary);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: 1px solid #000;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  @media (width <= 767px) {
+    font-size: 18px;
+    min-height: 48px;
+  }
+}
