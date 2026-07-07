@@ -606,3 +606,24 @@
     border-radius: 8px !important;
   }
 }
+
+// Small red count bubble sitting next to a tab title (e.g.
+// "Outstanding Orders Placed  [1]"). Matches Figma B2B account
+// tabs (node 714:21090) — solid red circle, white text. Sized
+// to sit inline with the tab label without pushing the height.
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 8px;
+  background: #ed2935;
+  border-radius: 999px;
+  color: #fff;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}

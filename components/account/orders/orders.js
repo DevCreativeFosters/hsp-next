@@ -587,6 +587,21 @@ function Orders() {
     },
   ];
 
+  // Red-bubble notification counts on the inner Orders tabs — per
+  // Figma B2B account view (node 714:21090). Outstanding tabs
+  // count only orders that still need action (status !==
+  // 'completed'). The Completed tab is intentionally silent — no
+  // badge — because that state is a passive archive, not a to-do.
+  const receivedCount = outOrders.filter(o => o.status !== 'completed').length;
+  const placedCount = currentOrders.length;
+
+  const tabTitle = (label, count) => (
+    <>
+      {label}
+      {count > 0 && <span className={styles.tabBadge}>{count}</span>}
+    </>
+  );
+
   const b2bTabs = [
     {
       content: (
@@ -595,7 +610,7 @@ function Orders() {
         </CheckNoOrders>
       ),
       slug: 'outstandingordersreceived',
-      title: 'Outstanding Orders Received',
+      title: tabTitle('Outstanding Orders Received', receivedCount),
     },
     {
       content: (
@@ -607,7 +622,7 @@ function Orders() {
         </CheckNoOrders>
       ),
       slug: 'outstandingordersplaced',
-      title: 'Outstanding Orders Placed',
+      title: tabTitle('Outstanding Orders Placed', placedCount),
     },
     {
       // Completed orders — WP moves an order from 'processing' to
