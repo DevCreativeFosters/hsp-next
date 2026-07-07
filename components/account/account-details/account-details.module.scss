@@ -130,6 +130,17 @@
             // via the first-child override below.
             word-break: break-word;
 
+            // Top-align so the label sits on the SAME line as
+            // the first line of a wrapped value. Without this
+            // the default `vertical-align: middle` centres a
+            // single-line label against a multi-line value and
+            // the label floats down mid-block.
+            vertical-align: top;
+
+            // Extra line-height on wrapped values so the second
+            // line of an address doesn't collide with the first.
+            line-height: 1.6;
+
             &:first-child {
               font-family: var(--font-secondary);
 
@@ -138,11 +149,14 @@
               // "$20,000.00" and "30 Days" ended up with a big
               // empty gap after them. width: 1% + nowrap makes
               // the label column shrink to its own content and
-              // hug the value tightly; padding-right keeps a
-              // small consistent gap.
+              // hug the value tightly; padding-right sets the
+              // small consistent gap (wider than 24px so
+              // Account Terms doesn't feel cramped, tighter
+              // than the old 40% column so short values still
+              // hug the label).
               width: 1%;
               white-space: nowrap;
-              padding-right: 24px;
+              padding-right: 40px;
               font-weight: 600;
             }
           }
