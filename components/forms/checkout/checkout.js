@@ -1386,7 +1386,7 @@ function CheckoutForm() {
                       .join(', ');
                     return (
                       <div className={styles.addressSummaryCard}>
-                        <h4>Invoice Address</h4>
+                        <h4>Billing Address</h4>
                         <p>{billingLine}</p>
                       </div>
                     );
@@ -1703,7 +1703,7 @@ function CheckoutForm() {
                           type="checkbox"
                         />
                         <span>
-                          The invoice address is the same as the address listed
+                          The billing address is the same as the address listed
                           above.
                         </span>
                       </label>
@@ -1720,7 +1720,7 @@ function CheckoutForm() {
                     (invoiceAddressConfirmed ? (
                       <div className={styles.colFull}>
                         <div className={styles.addressSummaryStrip}>
-                          <h4>Invoice Address</h4>
+                          <h4>Billing Address</h4>
                           <p>
                             {[
                               formData.delivery_address,
@@ -1739,7 +1739,7 @@ function CheckoutForm() {
                       <div className={styles.colFull}>
                         <div className={styles.addressDetails}>
                           <h2 className={styles.addressDetailsHeading}>
-                            Invoice Address
+                            Billing Address
                           </h2>
                           <div className={styles.addressFormRow}>
                             <div className={styles.addressFormCol}>
