@@ -1556,28 +1556,19 @@ function CheckoutForm() {
                   {addressConfirmed ? (
                     <div className={styles.colFull}>
                       <div className={styles.addressSummaryStrip}>
-                        <div>
-                          <h4>Address Details</h4>
-                          <p>
-                            {[
-                              formData.address,
-                              formData.address_2,
-                              formData.city,
-                              formData.state,
-                              formData.postcode,
-                              formData.country,
-                            ]
-                              .filter(Boolean)
-                              .join(', ')}
-                          </p>
-                        </div>
-                        <Button
-                          onClick={() => setAddressConfirmed(false)}
-                          size="small"
-                          variant="ghost"
-                        >
-                          Edit
-                        </Button>
+                        <h4>Address Details</h4>
+                        <p>
+                          {[
+                            formData.address,
+                            formData.address_2,
+                            formData.city,
+                            formData.state,
+                            formData.postcode,
+                            formData.country,
+                          ]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </p>
                       </div>
                     </div>
                   ) : (
@@ -1729,28 +1720,19 @@ function CheckoutForm() {
                     (invoiceAddressConfirmed ? (
                       <div className={styles.colFull}>
                         <div className={styles.addressSummaryStrip}>
-                          <div>
-                            <h4>Invoice Address</h4>
-                            <p>
-                              {[
-                                formData.delivery_address,
-                                formData.delivery_address_2,
-                                formData.delivery_city,
-                                formData.delivery_state,
-                                formData.delivery_postcode,
-                                formData.delivery_country,
-                              ]
-                                .filter(Boolean)
-                                .join(', ')}
-                            </p>
-                          </div>
-                          <Button
-                            onClick={() => setInvoiceAddressConfirmed(false)}
-                            size="small"
-                            variant="ghost"
-                          >
-                            Edit
-                          </Button>
+                          <h4>Invoice Address</h4>
+                          <p>
+                            {[
+                              formData.delivery_address,
+                              formData.delivery_address_2,
+                              formData.delivery_city,
+                              formData.delivery_state,
+                              formData.delivery_postcode,
+                              formData.delivery_country,
+                            ]
+                              .filter(Boolean)
+                              .join(', ')}
+                          </p>
                         </div>
                       </div>
                     ) : (

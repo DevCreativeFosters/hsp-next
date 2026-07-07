@@ -625,30 +625,31 @@
           // Contact Details view) — this one sits inside the
           // still-editable Contact Details form and has an Edit
           // button to reopen just this block.
+          // Confirmed-address card matching the Figma B2B summary
+          // (node 5445:37496). Solid black card with a bold title
+          // and the joined address on a second line — no Edit
+          // button next to it (the outer "Edit Details" on the
+          // Contact Details card is the single reset affordance).
           .addressSummaryStrip {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 16px 20px;
+            padding: 20px 24px;
             background: #000;
             border-radius: 8px;
             color: #fff;
             margin: 0 0 16px;
 
             h4 {
-              margin: 0 0 4px;
+              margin: 0 0 8px;
               font-family: var(--font-secondary);
-              font-size: 15px;
-              font-weight: 600;
+              font-size: 22px;
+              font-weight: 700;
               color: #fff;
             }
 
             p {
               margin: 0;
-              font-size: 14px;
+              font-size: 15px;
               line-height: 1.5;
-              color: rgb(255 255 255 / 85%);
+              color: #fff;
             }
           }
 
