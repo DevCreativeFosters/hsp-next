@@ -1559,9 +1559,14 @@ function CheckoutForm() {
                           !formData.state ||
                           !formData.postcode
                         }
-                        onClick={() => {
-                          /* Visual confirm — fields already live in state */
-                        }}
+                        // Confirm Address collapses the whole Contact
+                        // Details card (contact + address) into the
+                        // read-only summary view — matches the B2B
+                        // Figma flow where clicking Confirm Address
+                        // is the user's signal that the details are
+                        // complete and they're ready to move on to
+                        // choosing a delivery method.
+                        onClick={handleSubmitContactDetails}
                         size="large"
                         variant="primary"
                       >
@@ -1586,7 +1591,7 @@ function CheckoutForm() {
                           type="checkbox"
                         />
                         <span>
-                          The delivery address is the same as the address listed
+                          The billing address is the same as the address listed
                           above.
                         </span>
                       </label>
