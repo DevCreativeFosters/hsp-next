@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { StoreLocatorProvider } from '@contexts/store-locator';
 
+import MoreAccessories from '@components/cart/more-accessories';
 import Container from '@components/container/container';
 import Layout from '@components/layout/layout';
 
@@ -29,6 +30,10 @@ function page() {
             <Image alt="Checkout Process" src={processImage} />
           </div>
         </section>
+        {/* Upsell carousel — Figma cart flow node 658:12937. Fetches
+            4 accessories client-side and pops a variant-select
+            modal when the user clicks +. */}
+        <MoreAccessories />
       </Container>
     </Layout>
   );
