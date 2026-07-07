@@ -909,13 +909,33 @@ function CheckoutForm() {
 
   // Per-section confirm state — clicking Confirm Address in the
   // Address Details box collapses only that box; clicking Confirm
-  // Address in the Invoice Address box collapses only that. Both
+  // Address in the Billing Address box collapses only that. Both
   // reset when the user hits "Edit Details" on the Contact Details
   // summary block. Distinct from submitContactDetails, which
   // collapses the whole Contact Details card into the read-only
   // summary view.
   const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [invoiceAddressConfirmed, setInvoiceAddressConfirmed] = useState(false);
+
+  // Chain the per-section confirms into the whole-card collapse
+  // per Figma B2B flow (node 5445:37496): once the user has
+  // confirmed Address Details AND either ticked "billing same as
+  // above" OR confirmed the separate Billing Address, drop the
+  // whole Contact Details card into its read-only summary view
+  // (name/email/phone + Edit Details button + the two dark
+  // address cards). The user doesn't have to click a third
+  // "Submit Details" button to finish the section.
+  useEffect(() => {
+    if (!addressConfirmed) return;
+    const billingSameAsAddress = formData.delivery_same_as_billing !== false;
+    if (billingSameAsAddress || invoiceAddressConfirmed) {
+      setSubmitContactDetails(true);
+    }
+  }, [
+    addressConfirmed,
+    formData.delivery_same_as_billing,
+    invoiceAddressConfirmed,
+  ]);
 
   const handleSubmitContactDetails = () => {
     setSubmitContactDetails(true);
