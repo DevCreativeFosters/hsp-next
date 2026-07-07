@@ -532,6 +532,33 @@
               }
             }
           }
+
+          // Address Details as a distinct summary card below the
+          // contact info in the collapsed Contact Details view.
+          // Dark background per Figma node 5446:38251 — sits inside
+          // the white Contact Details card like a nested block.
+          .addressSummaryCard {
+            margin: 16px 0 0;
+            padding: 18px 20px;
+            background: #000;
+            border-radius: 8px;
+            color: #fff;
+
+            h4 {
+              margin: 0 0 6px;
+              font-family: var(--font-secondary);
+              font-size: 18px;
+              font-weight: 600;
+              color: #fff;
+            }
+
+            p {
+              margin: 0;
+              font-size: 15px;
+              line-height: 1.5;
+              color: #fff;
+            }
+          }
         }
       }
 
