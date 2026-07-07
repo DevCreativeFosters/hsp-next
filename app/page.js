@@ -26,13 +26,6 @@ export default async function HomePage() {
 
   return (
     <Layout>
-      {/* Scoped body background override for the home route only.
-          The site-wide default (styles/globals/_defaults.scss) is
-          #181616; home wants #0C0C0C. Inline <style> tags unmount
-          on route change, so navigating away from / reverts to
-          the site default automatically — no route-listener or
-          body class management needed. */}
-      <style>{`body { background: #0C0C0C; }`}</style>
       {prepareSchemas(content?.schemaProSchemas)}
       {contentBlocks?.map((contentBlock, index) => (
         <Fragment key={index}>{contentBlock}</Fragment>
