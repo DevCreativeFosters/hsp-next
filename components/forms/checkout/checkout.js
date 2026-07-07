@@ -1238,8 +1238,44 @@ function CheckoutForm() {
         <form onSubmit={handleSubmit}>
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
+            {/* "Let's Get Started" guest gate — Figma node
+                5475:36507. Shown at the top of /checkout when
+                the visitor is a guest AND hasn't picked
+                "Continue As Guest" yet. Login / Sign Up route
+                to the auth pages with a redirect back to
+                /checkout; Continue As Guest sets state so the
+                gate never re-appears this session. Logged-in
+                users (any role) never see this. */}
+            {!userLoading && !user?.id && !continueAsGuest ? (
+              <div className={styles.guestGate}>
+                <h2>Let&rsquo;s Get Started</h2>
+                <div className={styles.guestGateActions}>
+                  <Link
+                    className={styles.guestGateLogin}
+                    href="/login?redirect=/checkout"
+                  >
+                    Login <span aria-hidden>→</span>
+                  </Link>
+                  <Link
+                    className={styles.guestGateSignup}
+                    href="/register?redirect=/checkout"
+                  >
+                    Sign Up <span aria-hidden>→</span>
+                  </Link>
+                </div>
+                <button
+                  className={styles.guestGateContinue}
+                  onClick={() => setContinueAsGuest(true)}
+                  type="button"
+                >
+                  Continue As Guest
+                </button>
+              </div>
+            ) : null}
             {/* Contact Details */}
-            {submitContactDetails ? (
+            {!userLoading &&
+            !user?.id &&
+            !continueAsGuest ? null : submitContactDetails ? (
               <div
                 className={clsx(styles.contactDetails, styles.editDetailMain)}
               >

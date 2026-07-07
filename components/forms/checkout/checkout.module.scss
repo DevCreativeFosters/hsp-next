@@ -420,6 +420,91 @@
         margin: 0;
       }
 
+      // "Let's Get Started" guest gate — Figma node 5475:36507.
+      // White card with two big action buttons (Login red, Sign Up
+      // black) side-by-side, and a "Continue As Guest" text link
+      // underneath. Only rendered when the visitor is a guest and
+      // hasn't opted in to guest checkout.
+      .guestGate {
+        background: #fff;
+        border-radius: 6px;
+        padding: 32px 40px;
+        margin-bottom: 20px;
+
+        @media (width <=767px) {
+          padding: 24px 20px;
+        }
+
+        h2 {
+          color: #000;
+          font-family: var(--font-primary);
+          font-size: 26px;
+          margin: 0 0 20px;
+
+          @media (width <=767px) {
+            font-size: 21px;
+          }
+        }
+      }
+
+      .guestGateActions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+
+        @media (width <=767px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .guestGateLogin,
+      .guestGateSignup {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-radius: 8px;
+        color: #fff;
+        font-family: var(--font-primary);
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: opacity 0.15s ease;
+
+        span {
+          margin-left: 12px;
+          font-size: 18px;
+        }
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+
+      .guestGateLogin {
+        background: #ed2935;
+      }
+
+      .guestGateSignup {
+        background: #000;
+      }
+
+      .guestGateContinue {
+        background: transparent;
+        border: 0;
+        color: #000;
+        font-family: var(--font-primary);
+        font-size: 14px;
+        text-decoration: underline;
+        padding: 0;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+
       .contactDetails {
         background: #fff;
         padding: 40px;
