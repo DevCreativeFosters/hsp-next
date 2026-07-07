@@ -1981,6 +1981,13 @@ function CheckoutForm() {
                   <div className={styles.colFull}>
                     <div className={styles.inputGroup}>
                       <div className={styles.selectOption}>
+                        {/* Link lives OUTSIDE the label. Previously it
+                            was nested inside <label><span>…<Link/></span>
+                            </label>, and clicking anywhere on the
+                            label (including the checkbox itself)
+                            bubbled up into the Link's click handler
+                            and navigated the whole tab to the T&Cs
+                            page instead of just toggling the tick. */}
                         <label>
                           <input
                             checked={formData.termsAndConditions}
@@ -1990,15 +1997,16 @@ function CheckoutForm() {
                           />{' '}
                           <span>
                             I accept the Privacy Policy and Terms & Conditions
-                            <Link
-                              href="/privacy-terms-and-conditions"
-                              target="_blank"
-                            >
-                              Read our T&Cs{' '}
-                              <span className={styles.reqStar}>*</span>
-                            </Link>
                           </span>
-                        </label>
+                        </label>{' '}
+                        <Link
+                          href="/privacy-terms-and-conditions"
+                          onClick={e => e.stopPropagation()}
+                          target="_blank"
+                        >
+                          Read our T&Cs{' '}
+                          <span className={styles.reqStar}>*</span>
+                        </Link>
                       </div>
                     </div>
                   </div>
