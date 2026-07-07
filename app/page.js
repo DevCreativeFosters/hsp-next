@@ -25,7 +25,7 @@ export default async function HomePage() {
   );
 
   return (
-    <Layout withMap>
+    <Layout>
       {/* Scoped body background override for the home route only.
           The site-wide default (styles/globals/_defaults.scss) is
           #181616; home wants #0C0C0C. Inline <style> tags unmount
