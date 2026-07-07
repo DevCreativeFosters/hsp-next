@@ -103,9 +103,26 @@
 
 .inputGroup {
   margin-bottom: 19px;
+  position: relative;
 
   @media (width<=767px) {
     margin-bottom: 16px;
+  }
+
+  // Red required-field asterisk overlay. Every input on the
+  // sign-up form is required, so paint a small red * in the
+  // top-right of the input's inner padding zone. Positioned
+  // absolutely off the .inputGroup wrapper so it lines up with
+  // the input regardless of label wrapping.
+  &:has(input[required])::after {
+    content: '*';
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    color: #ed2935;
+    font-size: 16px;
+    font-weight: 700;
+    pointer-events: none;
   }
 }
 
