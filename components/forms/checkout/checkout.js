@@ -1296,6 +1296,37 @@ function CheckoutForm() {
                     </div>
                   );
                 })()}
+                {/* Billing Address summary card — only renders when
+                    the user has unticked "billing same as above"
+                    and entered a separate billing address. Matches
+                    Figma B2B flow (node 5445:37496) where both
+                    Address Details and Billing Address show as
+                    stacked dark cards inside the collapsed Contact
+                    Details block. Note: the internal state name is
+                    still `delivery_same_as_billing` and the fields
+                    are `delivery_*` (kept for checkoutOrder payload
+                    compatibility), but the label + heading here read
+                    as "Billing Address" per the Figma copy. */}
+                {formData.delivery_same_as_billing === false &&
+                  (() => {
+                    const billingLine = [
+                      formData.delivery_address,
+                      formData.delivery_address_2,
+                      formData.delivery_city,
+                      formData.delivery_state,
+                      formData.delivery_postcode,
+                      formData.delivery_country,
+                    ]
+                      .filter(Boolean)
+                      .join(', ');
+                    if (!billingLine) return null;
+                    return (
+                      <div className={styles.addressSummaryCard}>
+                        <h4>Billing Address</h4>
+                        <p>{billingLine}</p>
+                      </div>
+                    );
+                  })()}
               </div>
             ) : (
               <div className={styles.contactDetails}>
