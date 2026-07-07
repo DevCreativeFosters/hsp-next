@@ -1781,6 +1781,21 @@ function CheckoutForm() {
                             </div>
                           </div>
                         </div>
+                        <Button
+                          className={styles.addressConfirmBtn}
+                          disabled={
+                            !formData.delivery_country ||
+                            !formData.delivery_address ||
+                            !formData.delivery_city ||
+                            !formData.delivery_state ||
+                            !formData.delivery_postcode
+                          }
+                          onClick={handleSubmitContactDetails}
+                          size="large"
+                          variant="primary"
+                        >
+                          Confirm Address
+                        </Button>
                       </div>
                     </div>
                   )}
