@@ -57,12 +57,22 @@ export default function AccessoryVariantModal({ onClose, product }) {
     if (!selectedVariant || adding) return;
     setAdding(true);
     try {
+      // Pass price + compareAtPrice through so buildShadowItem
+      // has a reliable override — previously we left them off
+      // and WP's addToCart response occasionally came back with
+      // price:0 (or the wrong variant's price), which showed as
+      // $0.00 in the cart summary. Same override pattern PDP's
+      // enquiry form uses for tier pricing, minus the tier flag.
       await addToCart?.({
         productId: product.databaseId,
         quantity,
         variant_name: selectedVariant.variantName,
         variant_sku: selectedVariant.sku,
         variant_slug: selectedVariant.variantSlug,
+        ...(variantPrice != null && { price: variantPrice }),
+        ...(selectedVariant?.variantDetails?.compareAtPrice != null && {
+          compareAtPrice: selectedVariant.variantDetails.compareAtPrice,
+        }),
       });
       onClose?.();
     } catch (err) {

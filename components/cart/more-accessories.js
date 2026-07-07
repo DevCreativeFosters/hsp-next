@@ -19,9 +19,15 @@ export default function MoreAccessories() {
 
   useEffect(() => {
     let cancelled = false;
-    getCartAccessories(8).then(list => {
+    // Over-fetch (12) then filter to only products that have a
+    // featuredImage — otherwise cards render as blank white
+    // boxes when a product has no image set in WP. Slice back
+    // down to 8 so the carousel scroll still has some length
+    // without being unbounded.
+    getCartAccessories(12).then(list => {
       if (cancelled) return;
-      setProducts(list);
+      const withImages = list.filter(p => p?.featuredImage?.node?.sourceUrl);
+      setProducts(withImages.slice(0, 8));
       setLoading(false);
     });
     return () => {

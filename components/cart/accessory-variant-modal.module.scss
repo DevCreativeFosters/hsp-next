@@ -133,8 +133,12 @@
   outline: none;
   cursor: pointer;
 
+  // Options render on a black background when the dropdown is
+  // opened; keep the text white so it's readable (previous
+  // color: #000 made them invisible black-on-black).
   option {
-    color: #000;
+    color: #fff;
+    background: #000;
   }
 }
 
