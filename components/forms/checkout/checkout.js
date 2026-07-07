@@ -1245,21 +1245,22 @@ function CheckoutForm() {
               >
                 <div className={styles.heading}>
                   <h2>Contact Details</h2>
-                  {/* Edit Details is retail-only. B2B and Dealer accounts
-                      already have their profile populated server-side
-                      (loaded from their dealer record), so the checkout
-                      flow doesn't let them rewrite name/email/phone/
-                      company inline — those changes go through Contact
-                      Us per the portal Address tab's existing pattern. */}
-                  {role === 'retail' && (
-                    <Button
-                      onClick={handleEditContactDetails}
-                      size="large"
-                      variant="ghost"
-                    >
-                      Edit Details
-                    </Button>
-                  )}
+                  {/* Edit Details now visible for every role. Figma
+                      B2B flow (node 5446:38251) shows it in the
+                      collapsed state so the user can still make
+                      corrections to the address / company after
+                      clicking Confirm Address. Previously gated to
+                      retail only because B2B/dealer contact fields
+                      came from the store record — but Confirm
+                      Address now also collapses this card, and the
+                      user needs a way back. */}
+                  <Button
+                    onClick={handleEditContactDetails}
+                    size="large"
+                    variant="ghost"
+                  >
+                    Edit Details
+                  </Button>
                 </div>
                 <div className={styles.submittedInfo}>
                   <p>
@@ -1268,20 +1269,16 @@ function CheckoutForm() {
                   <p>{formData.email}</p>
                   <p>{formData.phone}</p>
                   {formData.company && <p>{formData.company}</p>}
-                  {(() => {
-                    // Address line. Prefer the server-resolved
-                    // dealerAddressLine (set by the autofill effect
-                    // for B2B/Dealer + logged-in retail). Otherwise
-                    // derive from formData so the line appears for
-                    // guests who typed an address into the Address
-                    // Details section below.
-                    if (dealerAddressLine) {
-                      return <p>{dealerAddressLine}</p>;
-                    }
-                    const hasAddress =
-                      formData.address || formData.city || formData.postcode;
-                    if (!hasAddress) return null;
-                    const line = [
+                </div>
+                {/* Address Details as a distinct summary card below
+                    the contact info — per Figma B2B collapsed state
+                    (node 5446:38251). Dark inner card with the full
+                    address line on a single row, mimicking the way
+                    the delivery drawer's summary already renders. */}
+                {(() => {
+                  const line =
+                    dealerAddressLine ||
+                    [
                       formData.address,
                       formData.address_2,
                       formData.city,
@@ -1291,9 +1288,14 @@ function CheckoutForm() {
                     ]
                       .filter(Boolean)
                       .join(', ');
-                    return <p>{line}</p>;
-                  })()}
-                </div>
+                  if (!line) return null;
+                  return (
+                    <div className={styles.addressSummaryCard}>
+                      <h4>Address Details</h4>
+                      <p>{line}</p>
+                    </div>
+                  );
+                })()}
               </div>
             ) : (
               <div className={styles.contactDetails}>
