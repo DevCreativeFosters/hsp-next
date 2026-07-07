@@ -13,7 +13,13 @@ body {
   font-size: 16px;
   color: var(--color-text);
   background: var(--color-dark-gray-100);
-  background: #181616;
+
+  // Site-wide background — was #181616, changed 2026-07-07 to
+  // match the homepage's #0C0C0C so every route shares the same
+  // background color (per user request). The var() line above
+  // stays as a fallback for anywhere --color-dark-gray-100 is
+  // referenced separately.
+  background: #0c0c0c;
   overflow: hidden auto;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
