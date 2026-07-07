@@ -155,6 +155,16 @@
               // than the old 40% column so short values still
               // hug the label).
               width: 1%;
+
+              // min-width keeps the value columns aligned
+              // between Business Details and Account Terms —
+              // each table sizes its label column to its own
+              // longest label, so without a floor Account Terms
+              // (shorter labels) would push its values further
+              // left than Business Details. Sized to fit the
+              // widest label across the two cards
+              // ("Communications Email:") plus the gap.
+              min-width: 230px;
               white-space: nowrap;
               padding-right: 40px;
               font-weight: 600;
