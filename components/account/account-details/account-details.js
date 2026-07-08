@@ -14,7 +14,6 @@ import { formatPrice } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
-import StoreDisplays from '@components/store-displays/store-displays';
 
 import styles from './account-details.module.scss';
 
@@ -416,29 +415,8 @@ function AccountDetails() {
           </div>
 
           <div className={styles.borderBox}>
-            <div className={styles.logosList}>
-              {storeDetails?.inStoreDisplays ? (
-                <StoreDisplays
-                  alwaysOpen
-                  displays={storeDetails?.inStoreDisplays}
-                  flexStoresList
-                  hideSeparator
-                  showNumberOfProducts={false}
-                />
-              ) : (
-                <div className={styles.noDisplays}>
-                  <h4>In-Store Displays</h4>
-                  <p>
-                    Currently, there are no in-store displays at your location —
-                    take advantage of this opportunity to drive more attention
-                    and increase sales by ordering one today!
-                  </p>
-                  <p>
-                    Already have a display? Let us know so we can update our
-                    records. <Link href="/contact-us">Contact Us</Link>
-                  </p>
-                </div>
-              )}
+            <div className={styles.demoVehicleStock}>
+              <h4>Demo Vehicle Stock</h4>
               <div className={styles.btns}>
                 <Button
                   className={styles.requestbutton}
@@ -446,18 +424,15 @@ function AccountDetails() {
                   size="large"
                   variant="secondary"
                 >
-                  Request Display Pricing
+                  Request display demo vehicle stock
                 </Button>
               </div>
               {showThanks && (
                 <div className={styles.thankYouMsg}>
-                  <h4>
-                    {/* <ThanksIcon /> */}
-                    Your Pricing Request Has Been Sent
-                  </h4>
+                  <h4>Your Request Has Been Sent</h4>
                   <p>
                     Thank you for your enquiry. A member of our team will be in
-                    touch shortly for pricing info on in-store displays.
+                    touch shortly about demo vehicle stock.
                   </p>
                 </div>
               )}

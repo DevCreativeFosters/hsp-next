@@ -287,6 +287,35 @@
         }
       }
     }
+
+    .demoVehicleStock {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      h4 {
+        font-family: var(--font-secondary);
+        font-weight: 600;
+        font-size: clamp(20px, 1.35vw, 26px);
+        line-height: 1.2;
+        margin: 0;
+        color: #fff;
+      }
+
+      .thankYouMsg {
+        padding: 4px 0 0;
+        line-height: 1.5;
+
+        h4 {
+          font-size: clamp(16px, 1vw, 18px);
+          margin: 0 0 8px;
+        }
+
+        p {
+          margin: 0;
+        }
+      }
+    }
   }
 
   .currentStatus {
