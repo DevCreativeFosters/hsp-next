@@ -171,6 +171,13 @@ function AccountDetails() {
 
           if (a) {
             setStoreDetails({
+              // Communications + Accounts emails come from the top
+              // level of dealerStoreAddress (Lokesh added them
+              // 2026-07-07). The Business Details table already
+              // reads communication_email / account_email — reuse
+              // those exact keys so the JSX renders them the same
+              // way it does for B2B accounts.
+              account_email: storeAddr?.accountEmail || null,
               // Business Address card pulls from addressFields.* —
               // map the dealer payload into the same shape.
               addressFields: {
@@ -181,7 +188,14 @@ function AccountDetails() {
                   .filter(Boolean)
                   .join(' '),
               },
+              communication_email: storeAddr?.communicationEmail || null,
+              // Account Terms card guards on odooCreditLimit/
+              // odooPaymentTermName OR credit_limit/payment_terms
+              // — pipe the dealer fields into the second pair so the
+              // card renders without a JSX change.
+              credit_limit: storeAddr?.creditLimit ?? null,
               odooCompanyName: a.addressName || null,
+              payment_terms: storeAddr?.paymentTerm || null,
               phoneNumber: a.phoneNo || null,
               // Header: store name (addressName is what the resolver
               // uses for the dealer's store label).
