@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+import { useCart } from '@contexts/cart-context';
 
 import { fetchAPI } from '@lib/fetch-api';
 
@@ -10,6 +13,12 @@ import Loading from '@components/loading/loading';
 
 import styles from './quotes.module.scss';
 
+// items{ ... } was added 2026-07-08 so Accept Quote can dump the
+// quoted line items straight into the WC cart. If Lokesh's
+// resolver doesn't expose them yet the query will return items
+// as null / an empty array, and the accept flow just falls
+// through to the redirect (the mutation may still populate the
+// cart server-side).
 const GET_QUOTES = `
   query DealerQuotes($userId: Int!) {
     dealerQuotes(user_id: $userId) {
@@ -24,6 +33,14 @@ const GET_QUOTES = `
       valid_days
       download_url
       created_at
+      items {
+        product_id
+        variant_name
+        variant_sku
+        variant_slug
+        quantity
+        price
+      }
     }
   }
 `;
@@ -68,7 +85,7 @@ const isClosed = quote => {
   );
 };
 
-function Quote({ onChanged, quote }) {
+function Quote({ onAccepted, onChanged, quote }) {
   const [busy, setBusy] = useState(false);
   const closed = isClosed(quote);
 
@@ -81,7 +98,10 @@ function Quote({ onChanged, quote }) {
   const handleAction = async (mutation, field, value) => {
     setBusy(true);
     try {
-      await runQuoteAction(mutation, quote.id, field, value);
+      const res = await runQuoteAction(mutation, quote.id, field, value);
+      if (mutation === 'acceptDealerQuote') {
+        await onAccepted?.(quote, res);
+      }
       await onChanged();
     } catch (err) {
       console.error(`Error running ${mutation}:`, err);
@@ -174,6 +194,8 @@ function Quote({ onChanged, quote }) {
 export default function Quotes() {
   const [loading, setLoading] = useState(true);
   const [quotes, setQuotes] = useState([]);
+  const router = useRouter();
+  const { addToCart } = useCart() || {};
 
   const getQuotes = useCallback(async () => {
     const userId = parseInt(localStorage.getItem('userId'));
@@ -193,6 +215,39 @@ export default function Quotes() {
       setLoading(false);
     }
   }, []);
+
+  // Fires after acceptDealerQuote resolves. Iterates the
+  // quote's line items and pushes each into the WC cart via
+  // the cart context, then routes to /cart. Sequential (not
+  // Promise.all) so buildShadowItem and getCartItems don't
+  // clobber each other. If the resolver hasn't returned items
+  // yet, this is a no-op and the redirect still runs.
+  const handleAccepted = useCallback(
+    async quote => {
+      const items = Array.isArray(quote?.items) ? quote.items : [];
+      if (addToCart && items.length) {
+        for (const item of items) {
+          const productId = parseInt(item.product_id);
+          const quantity = parseInt(item.quantity) || 1;
+          if (!productId) continue;
+          try {
+            await addToCart({
+              productId,
+              quantity,
+              ...(item.variant_name && { variant_name: item.variant_name }),
+              ...(item.variant_sku && { variant_sku: item.variant_sku }),
+              ...(item.variant_slug && { variant_slug: item.variant_slug }),
+              ...(item.price != null && { price: Number(item.price) }),
+            });
+          } catch (err) {
+            console.error('Failed adding quote item to cart:', err);
+          }
+        }
+      }
+      router.push('/cart');
+    },
+    [addToCart, router],
+  );
 
   useEffect(() => {
     getQuotes();
@@ -217,7 +272,12 @@ export default function Quotes() {
         </div>
       ) : (
         quotes.map(quote => (
-          <Quote key={quote.id} onChanged={getQuotes} quote={quote} />
+          <Quote
+            key={quote.id}
+            onAccepted={handleAccepted}
+            onChanged={getQuotes}
+            quote={quote}
+          />
         ))
       )}
       <Link className={styles.exploreBtn} href="/shop-by-ute-make">
