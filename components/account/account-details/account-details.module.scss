@@ -1,3 +1,90 @@
+// Full-page confirmation shown after the dealer clicks
+// "Request display demo vehicle stock". Replaces the entire
+// AccountDetails view until the user clicks "Return to
+// Account Details" (which flips showThanks back off). Matches
+// Figma node 772:24963 — dark page bg, hero photo on top,
+// white panel underneath with centred heading + red CTA.
+.demoConfirmation {
+  width: 100%;
+  background: #181616;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+
+  @media (width <= 767px) {
+    padding: 24px 0;
+  }
+}
+
+.demoConfirmationInner {
+  width: 100%;
+  max-width: 1133px;
+  display: flex;
+  flex-direction: column;
+}
+
+.demoConfirmationHero {
+  position: relative;
+  aspect-ratio: 1133 / 278;
+  width: 100%;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.demoConfirmationPanel {
+  background: #fff;
+  padding: 77px 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 40px;
+
+  @media (width <= 991px) {
+    padding: 60px 40px;
+    gap: 32px;
+  }
+
+  @media (width <= 767px) {
+    padding: 40px 20px;
+    gap: 24px;
+  }
+
+  h2 {
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: clamp(32px, 3.3vw, 50px);
+    line-height: 0.92;
+    color: #000;
+    margin: 0 0 24px;
+  }
+
+  p {
+    font-family: var(--font-primary);
+    font-size: clamp(16px, 1.04vw, 20px);
+    line-height: 1.3;
+    color: rgb(93 93 93 / 80%);
+    margin: 0;
+    max-width: 640px;
+  }
+}
+
+.demoConfirmationBtn {
+  min-width: 349px;
+
+  @media (width <= 767px) {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 .accountDetails {
   width: 100%;
 

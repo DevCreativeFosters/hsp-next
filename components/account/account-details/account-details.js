@@ -15,6 +15,8 @@ import { formatPrice } from '@lib/helpers';
 import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
 
+import wideShotHero from '@assets/images/WideSHotExt1.png';
+
 import styles from './account-details.module.scss';
 
 const GET_STORE_BY_ID = `
@@ -260,9 +262,38 @@ function AccountDetails() {
     if (res?.requestDisplayPricing?.success) {
       setLoading(false);
       setShowThanks(true);
-      setTimeout(() => setShowThanks(false), 5000);
+      // No auto-dismiss timer — the new Figma confirmation is a full-page
+      // takeover with a "Return to Account Details" CTA that clears the
+      // showThanks flag, so the user drives the return.
     }
   };
+
+  if (!loading && showThanks) {
+    return (
+      <div className={styles.demoConfirmation}>
+        <div className={styles.demoConfirmationInner}>
+          <div className={styles.demoConfirmationHero}>
+            <Image alt="" placeholder="blur" priority src={wideShotHero} />
+          </div>
+          <div className={styles.demoConfirmationPanel}>
+            <h2>Your Request Has Been Sent</h2>
+            <p>
+              Thank you for your enquiry. A member of our team will be in touch
+              shortly for info on display demo vehicle stock.
+            </p>
+            <Button
+              className={styles.demoConfirmationBtn}
+              onClick={() => setShowThanks(false)}
+              size="large"
+              variant="primary"
+            >
+              Return to Account Details
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -427,15 +458,6 @@ function AccountDetails() {
                   Request display demo vehicle stock
                 </Button>
               </div>
-              {showThanks && (
-                <div className={styles.thankYouMsg}>
-                  <h4>Your Request Has Been Sent</h4>
-                  <p>
-                    Thank you for your enquiry. A member of our team will be in
-                    touch shortly about demo vehicle stock.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
 
