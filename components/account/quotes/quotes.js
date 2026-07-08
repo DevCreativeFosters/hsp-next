@@ -13,12 +13,6 @@ import Loading from '@components/loading/loading';
 
 import styles from './quotes.module.scss';
 
-// items{ ... } was added 2026-07-08 so Accept Quote can dump the
-// quoted line items straight into the WC cart. If Lokesh's
-// resolver doesn't expose them yet the query will return items
-// as null / an empty array, and the accept flow just falls
-// through to the redirect (the mutation may still populate the
-// cart server-side).
 const GET_QUOTES = `
   query DealerQuotes($userId: Int!) {
     dealerQuotes(user_id: $userId) {
@@ -33,14 +27,6 @@ const GET_QUOTES = `
       valid_days
       download_url
       created_at
-      items {
-        product_id
-        variant_name
-        variant_sku
-        variant_slug
-        quantity
-        price
-      }
     }
   }
 `;
@@ -218,10 +204,19 @@ export default function Quotes() {
 
   // Fires after acceptDealerQuote resolves. Iterates the
   // quote's line items and pushes each into the WC cart via
-  // the cart context, then routes to /cart. Sequential (not
-  // Promise.all) so buildShadowItem and getCartItems don't
-  // clobber each other. If the resolver hasn't returned items
-  // yet, this is a no-op and the redirect still runs.
+  // cart-context addToCart, then routes to /cart. Sequential
+  // (not Promise.all) so buildShadowItem/getCartItems don't
+  // clobber each other.
+  //
+  // NOTE (2026-07-08): the current dealerQuotes resolver does
+  // NOT return an items[] field — a first attempt to add
+  // items{...} to the query broke the whole list (empty page).
+  // Until Lokesh exposes the fields, this loop is a no-op and
+  // we just redirect. If the mutation pushes items to the WC
+  // cart server-side, they'll show up on /cart after the cart
+  // context's getCartItems refetch. Once items[] is on the
+  // resolver, re-add them to GET_QUOTES with the field names
+  // Lokesh provides and this loop lights up automatically.
   const handleAccepted = useCallback(
     async quote => {
       const items = Array.isArray(quote?.items) ? quote.items : [];
