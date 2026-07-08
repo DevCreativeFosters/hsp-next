@@ -69,11 +69,19 @@
   &.horizontal {
     .tabsMain {
       .tabsNav {
-        display: inline-flex;
+        // width:100% (was width:auto) — the horizontal pill
+        // strip used to shrink to fit the tabs, which left the
+        // order cards below sticking out past the strip's right
+        // edge. Making the dark bar span the full tabsContent
+        // width aligns its right edge with the order cards.
+        // Pills stay clustered on the left via
+        // justify-content: flex-start (set on the standalone
+        // .horizontal .tabsNav rule further down).
+        display: flex;
         padding: 5px;
         border-radius: 5px;
         background: #2e2e2e;
-        width: auto;
+        width: 100%;
         margin: 0 0 20px;
 
         // Keep tabs on a single row — previous flex-wrap: wrap
