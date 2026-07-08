@@ -82,8 +82,23 @@ export default function AccessoryVariantModal({ onClose, product }) {
     }
   };
 
-  const image = product?.featuredImage?.node;
-  const category = product?.slug?.split('/')[0] || '';
+  // Prefer the selected variant's first image when it has one —
+  // that's how the PDP swaps images when the shopper flips the
+  // variant dropdown. Fall back to the parent's featuredImage if
+  // the variant has no images attached (some SKUs don't).
+  const variantImageNode =
+    selectedVariant?.variantDetails?.images?.nodes?.[0] || null;
+  const image = variantImageNode
+    ? {
+        altText: variantImageNode.altText,
+        sourceUrl: variantImageNode.mediaItemUrl,
+      }
+    : product?.featuredImage?.node;
+  // Real product category (WP taxonomy), not the slug-derived
+  // string we were showing before — the fallback rendered
+  // "nissan-navara-d27-2026-4" as a category badge because these
+  // products have flat slugs without a "/" prefix.
+  const category = product?.productCategories?.nodes?.[0]?.name || '';
 
   return createPortal(
     <div
