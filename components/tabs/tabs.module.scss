@@ -69,19 +69,11 @@
   &.horizontal {
     .tabsMain {
       .tabsNav {
-        // width:100% (was width:auto) — the horizontal pill
-        // strip used to shrink to fit the tabs, which left the
-        // order cards below sticking out past the strip's right
-        // edge. Making the dark bar span the full tabsContent
-        // width aligns its right edge with the order cards.
-        // Pills stay clustered on the left via
-        // justify-content: flex-start (set on the standalone
-        // .horizontal .tabsNav rule further down).
-        display: flex;
+        display: inline-flex;
         padding: 5px;
         border-radius: 5px;
         background: #2e2e2e;
-        width: 100%;
+        width: auto;
         margin: 0 0 20px;
 
         // Keep tabs on a single row — previous flex-wrap: wrap
@@ -517,7 +509,13 @@
 
   .tabsMain {
     flex-direction: column;
-    width: 100% !important;
+
+    // width: fit-content (was 100%) — shrinks the flex column
+    // to the widest child, which is the pill strip on top.
+    // The order cards below (width: 100% inside .tabsContent)
+    // then match that width, so both share the same right edge
+    // (aligned to where the "Completed" pill ends).
+    width: fit-content !important;
     padding: 0 !important;
   }
 
