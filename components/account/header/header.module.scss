@@ -1,8 +1,12 @@
 .accountHeader {
+  width: 100%;
+
   .headerWrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
     margin-bottom: 70px;
     border-bottom: 1px solid #747474a3;
     padding: 40px 0 20px;
