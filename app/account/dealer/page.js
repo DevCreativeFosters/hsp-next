@@ -4,7 +4,6 @@ import { getPageData } from '@lib/api/get-page-data';
 import { renderBlock } from '@lib/block';
 
 import AccountDetails from '@components/account/account-details/account-details';
-import Address from '@components/account/address/address';
 import AccountHeader from '@components/account/header/header';
 import Orders from '@components/account/orders/orders';
 import OrdersSidebarBadge from '@components/account/orders/orders-sidebar-badge';
@@ -52,21 +51,12 @@ export default async function DealerPage() {
               slug: 'accountdetails',
               title: 'Account Details',
             },
-            {
-              content: <Address />,
-              slug: 'address',
-              title: 'Address',
-            },
-            {
-              content: <Orders />,
-              slug: 'orderdashboard',
-              title: (
-                <>
-                  Orders
-                  <OrdersSidebarBadge />
-                </>
-              ),
-            },
+            // Address tab intentionally removed on the dealer
+            // portal — the store address renders inside Account
+            // Details' Business Address card, and the dealer's
+            // customer-shipping address surfaces during checkout.
+            // No separate Address page needed.
+            //
             // Quotes uses the existing dealerQuotes(user_id) resolver
             // — the Quotes component already implements the listing,
             // accept/cancel actions, and download links. Dealer-only.
@@ -74,6 +64,16 @@ export default async function DealerPage() {
               content: <Quotes />,
               slug: 'quotes',
               title: 'Quotes',
+            },
+            {
+              content: <Orders />,
+              slug: 'orderdashboard',
+              title: (
+                <>
+                  Order Dashboard
+                  <OrdersSidebarBadge />
+                </>
+              ),
             },
             // Referrals + Resources intentionally omitted from the
             // dealer portal — those tabs are B2B-only. (Resources is
