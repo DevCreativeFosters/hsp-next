@@ -102,7 +102,7 @@ export default function MoreAccessories() {
                     onClick={() => setActiveProduct(product)}
                     type="button"
                   >
-                    +
+                    <span>+</span>
                   </button>
                 </div>
               </div>
