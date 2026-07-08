@@ -7,7 +7,7 @@
 // underneath with centred heading + red CTA.
 .demoConfirmation {
   position: fixed;
-  inset: 0;
+  inset: var(--header-height) 0 0 0;
   z-index: 9999;
   background: #181616;
   display: flex;
