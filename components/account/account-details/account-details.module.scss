@@ -1,18 +1,23 @@
 // Full-page confirmation shown after the dealer clicks
-// "Request display demo vehicle stock". Replaces the entire
-// AccountDetails view until the user clicks "Return to
-// Account Details" (which flips showThanks back off). Matches
-// Figma node 772:24963 — dark page bg, hero photo on top,
-// white panel underneath with centred heading + red CTA.
+// "Request display demo vehicle stock". Portalled to
+// document.body so it escapes the vertical-tabs container and
+// takes over the whole viewport, then flips back off when the
+// user clicks "Return to Account Details". Matches Figma node
+// 772:24963 — dark page bg, hero photo on top, white panel
+// underneath with centred heading + red CTA.
 .demoConfirmation {
-  width: 100%;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   background: #181616;
   display: flex;
   justify-content: center;
-  padding: 40px 0;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 40px;
 
   @media (width <= 767px) {
-    padding: 24px 0;
+    padding: 24px 16px;
   }
 }
 

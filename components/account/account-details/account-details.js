@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { createPortal } from 'react-dom';
+
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -137,6 +139,11 @@ function AccountDetails() {
 
   const [loading, setLoading] = useState(true);
   const [storeDetails, setStoreDetails] = useState({});
+  // Guards createPortal against SSR — document isn't available
+  // during Next's server render pass, so we wait for the client
+  // mount effect to flip this before touching document.body.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     async function getStoreDetails() {
@@ -268,8 +275,14 @@ function AccountDetails() {
     }
   };
 
-  if (!loading && showThanks) {
-    return (
+  // Full-page confirmation takeover. Portalled to document.body
+  // so it escapes the vertical-tabs container (which is only ~55%
+  // of the viewport wide) — otherwise the confirmation renders
+  // inside the tab panel and the heading wraps 5 lines. See
+  // Figma node 772:24963 — the confirmation is a full-viewport
+  // takeover, not a card next to the sidebar.
+  if (!loading && showThanks && mounted) {
+    return createPortal(
       <div className={styles.demoConfirmation}>
         <div className={styles.demoConfirmationInner}>
           <div className={styles.demoConfirmationHero}>
@@ -291,7 +304,8 @@ function AccountDetails() {
             </Button>
           </div>
         </div>
-      </div>
+      </div>,
+      document.body,
     );
   }
 
