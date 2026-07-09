@@ -539,67 +539,14 @@
             }
           }
 
-          // Confirmed-address strip that replaces the Address Details
-          // or Invoice Address FORM inline once the user clicks that
-          // block's Confirm Address button. Distinct from
-          // .addressSummaryCard (which appears in the collapsed
-          // Contact Details view) — this one sits inside the
-          // still-editable Contact Details form and has an Edit
-          // button to reopen just this block.
-          // Confirmed-address card matching the Figma B2B summary
-          // (node 5445:37496). Solid black card with a bold title
-          // and the joined address on a second line — no Edit
-          // button next to it (the outer "Edit Details" on the
-          // Contact Details card is the single reset affordance).
-          .addressSummaryStrip {
-            padding: 20px 24px;
-            background: #000;
-            border-radius: 8px;
-            color: #fff;
-            margin: 0 0 16px;
-
-            h4 {
-              margin: 0 0 8px;
-              font-family: var(--font-secondary);
-              font-size: 22px;
-              font-weight: 700;
-              color: #fff;
-            }
-
-            p {
-              margin: 0;
-              font-size: 15px;
-              line-height: 1.5;
-              color: #fff;
-            }
-          }
-
-          // Address Details as a distinct summary card below the
-          // contact info in the collapsed Contact Details view.
-          // Dark background per Figma node 5446:38251 — sits inside
-          // the white Contact Details card like a nested block.
-          .addressSummaryCard {
-            margin: 16px 0 0;
-            padding: 18px 20px;
-            background: #000;
-            border-radius: 8px;
-            color: #fff;
-
-            h4 {
-              margin: 0 0 6px;
-              font-family: var(--font-secondary);
-              font-size: 18px;
-              font-weight: 600;
-              color: #fff;
-            }
-
-            p {
-              margin: 0;
-              font-size: 15px;
-              line-height: 1.5;
-              color: #fff;
-            }
-          }
+          // .addressSummaryStrip / .addressSummaryCard styles moved
+          // to top-level (below .checkoutMain) so they apply in
+          // BOTH the still-editable Contact Details form (when
+          // just one address is confirmed) and the fully-
+          // collapsed .editDetailMain view. They used to be gated
+          // behind &.editDetailMain, so confirming only the
+          // delivery address rendered an unstyled div — the
+          // summary looked like it had "disappeared".
         }
       }
 
@@ -1365,5 +1312,64 @@
 
   &:hover {
     opacity: 0.7;
+  }
+}
+
+// Confirmed-address strip that replaces the Address Details or
+// Billing Address FORM inline the moment the user hits that
+// block's Confirm Address button — even before the OTHER block
+// has been confirmed. Solid black card matching Figma B2B
+// summary (node 5445:37496). Sits inside the still-editable
+// Contact Details card. Was previously scoped to
+// .contactDetails.editDetailMain so it only styled after BOTH
+// addresses were confirmed — now top-level so the first
+// confirmation immediately renders as a card.
+.addressSummaryStrip {
+  padding: 20px 24px;
+  background: #000;
+  border-radius: 8px;
+  color: #fff;
+  margin: 0 0 16px;
+
+  h4 {
+    margin: 0 0 8px;
+    font-family: var(--font-secondary);
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #fff;
+  }
+}
+
+// Standalone summary card used in the fully-collapsed Contact
+// Details view (once both addresses are confirmed). Same dark
+// look, slightly tighter padding — sits stacked below the
+// contact info block inside the outer white card.
+.addressSummaryCard {
+  margin: 16px 0 0;
+  padding: 18px 20px;
+  background: #000;
+  border-radius: 8px;
+  color: #fff;
+
+  h4 {
+    margin: 0 0 6px;
+    font-family: var(--font-secondary);
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #fff;
   }
 }
