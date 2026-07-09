@@ -127,6 +127,33 @@
   }
 }
 
+// "From $900" line when the product has a discount — same size
+// as .cardPrice but faded so it reads as the crossed-out
+// original price. Kept as regular text (no strikethrough) to
+// match Figma; the muted colour is the discount signal.
+.cardPriceWas {
+  margin: 0;
+  font-size: 16px;
+  color: rgb(255 255 255 / 60%);
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+// "Now $800" line — red bold, sits directly below the muted
+// "From" line. Slightly larger so it draws the eye as the
+// active price.
+.cardPriceNow {
+  margin: 2px 0 0;
+  font-size: 17px;
+  color: #ed2935;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
 .addBtn {
   flex: 0 0 auto;
   position: relative;

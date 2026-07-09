@@ -49,15 +49,43 @@ export default function MoreAccessories() {
   if (loading) return null;
   if (!products.length) return null;
 
-  const getFromPrice = product => {
+  // Returns { fromPrice, nowPrice }.
+  // - No discount: fromPrice = lowest variant price, nowPrice = null.
+  // - Discount:    fromPrice = lowest compareAtPrice of discounted
+  //                variants (the "was" price), nowPrice = lowest
+  //                current price (the "now" price the card highlights
+  //                in red).
+  //
+  // A variant counts as discounted only when its compareAtPrice is
+  // strictly greater than its price — WP sometimes stores 0 or the
+  // same value in compareAtPrice for non-discounted rows.
+  const getPricing = product => {
     const variants = product?.productFields?.variants || [];
-    const prices = variants
-      .map(v => Number(v?.variantDetails?.price))
-      .filter(p => Number.isFinite(p) && p > 0);
-    if (!prices.length) {
-      return Number(product?.productFields?.price) || 0;
+    const rows = variants
+      .map(v => ({
+        compareAt: Number(v?.variantDetails?.compareAtPrice) || 0,
+        price: Number(v?.variantDetails?.price) || 0,
+      }))
+      .filter(r => r.price > 0);
+
+    if (!rows.length) {
+      return {
+        fromPrice: Number(product?.productFields?.price) || 0,
+        nowPrice: null,
+      };
     }
-    return Math.min(...prices);
+
+    const discounted = rows.filter(r => r.compareAt > r.price);
+    const minPrice = Math.min(...rows.map(r => r.price));
+
+    if (discounted.length) {
+      return {
+        fromPrice: Math.min(...discounted.map(r => r.compareAt)),
+        nowPrice: minPrice,
+      };
+    }
+
+    return { fromPrice: minPrice, nowPrice: null };
   };
 
   return (
@@ -75,7 +103,8 @@ export default function MoreAccessories() {
         <div className={styles.track} ref={trackRef}>
           {products.map(product => {
             const image = product?.featuredImage?.node;
-            const fromPrice = getFromPrice(product);
+            const { fromPrice, nowPrice } = getPricing(product);
+            const discounted = nowPrice != null;
             return (
               <div className={styles.card} key={product.databaseId}>
                 <div className={styles.cardImage}>
@@ -91,8 +120,17 @@ export default function MoreAccessories() {
                   <div className={styles.cardMeta}>
                     <h3 className={styles.cardTitle}>{product.title}</h3>
                     {fromPrice > 0 && (
-                      <p className={styles.cardPrice}>
+                      <p
+                        className={
+                          discounted ? styles.cardPriceWas : styles.cardPrice
+                        }
+                      >
                         From <strong>${fromPrice}</strong>
+                      </p>
+                    )}
+                    {discounted && (
+                      <p className={styles.cardPriceNow}>
+                        Now <strong>${nowPrice}</strong>
                       </p>
                     )}
                   </div>
