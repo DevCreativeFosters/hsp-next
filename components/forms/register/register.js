@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -27,6 +27,33 @@ export default function RegisterForm() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+
+  // Guest-checkout autofill — if the visitor just placed a
+  // guest order and clicked "Create an account" on the
+  // order-status page, checkout stashed their details in
+  // sessionStorage under `hsp_guest_prefill`. Hydrate the
+  // form with them so they don't have to re-type email /
+  // name / phone. Password stays blank (never persisted).
+  // The key is deleted after read so a fresh sign-up from
+  // the same tab starts empty.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = sessionStorage.getItem('hsp_guest_prefill');
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      setFormData(prev => ({
+        ...prev,
+        email: saved.email || prev.email,
+        firstName: saved.firstName || prev.firstName,
+        lastName: saved.lastName || prev.lastName,
+        phone: saved.phone || prev.phone,
+      }));
+      sessionStorage.removeItem('hsp_guest_prefill');
+    } catch {
+      /* sessionStorage disabled / bad JSON — leave form empty */
+    }
+  }, []);
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

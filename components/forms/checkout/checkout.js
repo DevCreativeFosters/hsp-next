@@ -1241,6 +1241,27 @@ function CheckoutForm() {
     if (result?.order_id) {
       // Wipe the shadow cart so the dealer doesn't accidentally re-order.
       if (typeof clearCart === 'function') clearCart();
+      // Guests who just placed an order see a "Create an account"
+      // CTA on the order-status page — stash the details they
+      // just typed into checkout so the register form can pre-fill.
+      // Only for guests; a logged-in user obviously doesn't need
+      // this. sessionStorage (not localStorage) so it evaporates
+      // when the tab closes.
+      if (!user?.id && typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem(
+            'hsp_guest_prefill',
+            JSON.stringify({
+              email: formData.email || '',
+              firstName: formData.first_name || '',
+              lastName: formData.last_name || '',
+              phone: formData.phone || '',
+            }),
+          );
+        } catch {
+          /* sessionStorage disabled / quota-exceeded — skip prefill */
+        }
+      }
       setLoading(false);
       router.push(`/order-status/${result.order_id}`);
     } else {
