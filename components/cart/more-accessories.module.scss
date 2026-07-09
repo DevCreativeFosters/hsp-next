@@ -129,35 +129,45 @@
 
 .addBtn {
   flex: 0 0 auto;
+  position: relative;
   width: 44px;
   height: 44px;
   border-radius: 50%;
   background: #ed2935;
-  color: #fff;
   border: 0;
-
-  // Proper crosshair "+" — two 2px bars intersecting. The bare
-  // text "+" reads thin/rounded because it's rendered by the
-  // brand font; overriding with a system font at 500 weight
-  // gives it a cleaner, chunkier look that matches the size of
-  // the red button.
-  font-family: 'Segoe UI Symbol', system-ui, sans-serif;
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
+  cursor: pointer;
   transition: opacity 0.15s ease;
 
-  span {
-    // Optical centering — the "+" glyph sits slightly below its
-    // baseline; nudge up 1px so the bar intersection lands in
-    // the middle of the circle.
-    display: block;
-    transform: translateY(-1px);
+  // Hide the text "+" inside the button — we render the plus as
+  // two CSS bars instead so it's pixel-perfect centered. Text
+  // glyphs drift a bit down/right based on the font's baseline
+  // metadata; two absolutely-centered rectangles don't.
+  color: transparent;
+  font-size: 0;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #fff;
+    border-radius: 1px;
+  }
+
+  // Horizontal bar
+  &::before {
+    width: 16px;
+    height: 3px;
+    transform: translate(-50%, -50%);
+  }
+
+  // Vertical bar
+  &::after {
+    width: 3px;
+    height: 16px;
+    transform: translate(-50%, -50%);
   }
 
   &:hover {
