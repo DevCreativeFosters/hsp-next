@@ -645,8 +645,15 @@ function Orders() {
       outstandingordersreceived: receivedCount,
     };
     const acknowledge = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (!(hash in tabCounts)) return;
+      let hash = window.location.hash.replace('#', '');
+      // If the hash isn't set (fresh page load) or points at the
+      // outer account tab (e.g. #orderdashboard), the inner Tabs
+      // component defaults to the FIRST b2bTab —
+      // 'outstandingordersreceived'. Without this fallback the
+      // default tab's badge would never clear until the user
+      // clicked another tab and came back, because hashchange
+      // never fires on initial mount.
+      if (!(hash in tabCounts)) hash = 'outstandingordersreceived';
       setTabSeenCounts(prev => {
         if (prev[hash] === tabCounts[hash]) return prev;
         const next = { ...prev, [hash]: tabCounts[hash] };
