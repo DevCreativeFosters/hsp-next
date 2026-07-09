@@ -12,15 +12,21 @@
 .modal {
   position: relative;
   width: 100%;
-  max-width: 1080px;
-  background: #000;
-  border: 2px solid #ed2935;
+  max-width: 1112px;
+
+  // Red frame effect — 11px solid #ed2935 border acts as the
+  // outer red "matting" around the dark inner card per Figma
+  // node 161:4925. Was a 2px border, which read as an outline,
+  // not the framed look the design uses.
+  background: #181616;
+  border: 11px solid #ed2935;
   border-radius: 16px;
-  padding: 40px;
+  padding: 32px 40px 40px;
   color: #fff;
 
   @media (width <= 767px) {
     padding: 24px;
+    border-width: 6px;
   }
 }
 
@@ -50,8 +56,18 @@
 
 .body {
   display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr 1fr;
+
+  // Image column narrower than 50/50 so the product image
+  // doesn't swallow the modal. Figma allots 516px image +
+  // 72px gap + 444px info panel — same ~1.16:1 ratio here so
+  // the info side has enough room for title + variant + CTA.
+  gap: 40px;
+  grid-template-columns: 516fr 444fr;
+
+  @media (width <= 991px) {
+    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+  }
 
   @media (width <= 767px) {
     grid-template-columns: 1fr;
@@ -61,12 +77,16 @@
 
 .imageWrap {
   background: #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 4 / 3;
+
+  // Square container per Figma (was 4/3). Product images are
+  // typically shot square, so 1:1 keeps them centred without
+  // odd letterboxing.
+  aspect-ratio: 1 / 1;
 
   img {
     max-width: 100%;
@@ -82,28 +102,28 @@
 }
 
 .category {
-  font-family: var(--font-primary);
-  font-size: 20px;
+  font-family: var(--font-secondary);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  line-height: 1.2;
   color: #fff;
   margin: 0;
 }
 
 .title {
   font-family: var(--font-secondary);
-  font-size: 32px;
-  font-weight: 700;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
   color: #ed2935;
   margin: 0 0 4px;
-  line-height: 1.1;
-
-  @media (width <= 767px) {
-    font-size: 24px;
-  }
+  line-height: 1.2;
 }
 
 .partNo {
   margin: 0;
-  font-size: 14px;
+  font-family: var(--font-secondary);
+  font-size: 18px;
+  font-weight: 600;
   color: #fff;
 
   span {
@@ -117,58 +137,70 @@
   color: #fc3;
 
   span {
-    color: #fff;
+    color: #bfbfbf;
     margin-left: 6px;
   }
 }
 
 .variantSelect {
-  background: #000;
-  border: 1px solid rgb(255 255 255 / 40%);
+  // Transparent bg with a 2px white/20% border per Figma
+  // (was #000 bg with a thin white/40 border, which read
+  // as an inset field rather than the airy outline the
+  // design uses).
+  background: transparent;
+  border: 2px solid rgb(255 255 255 / 20%);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 10px 16px;
   color: #fff;
-  font-size: 15px;
+  font-family: var(--font-primary);
+  font-size: 20px;
   width: 100%;
   outline: none;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 8' fill='none'><path d='M1 1l5.5 5.5L12 1' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 13px 8px;
+  padding-right: 40px;
 
-  // Options render on a black background when the dropdown is
-  // opened; keep the text white so it's readable (previous
-  // color: #000 made them invisible black-on-black).
+  // Options render on the browser's native dropdown, which
+  // draws its own bg. Keep text white on dark so it stays
+  // readable when the dropdown opens over the modal.
   option {
     color: #fff;
-    background: #000;
+    background: #181616;
   }
 }
 
 .priceRow {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 8px;
   margin-top: 4px;
 }
 
 .price {
   color: #ed2935;
   font-family: var(--font-secondary);
-  font-size: 32px;
-  font-weight: 700;
-
-  @media (width <= 767px) {
-    font-size: 24px;
-  }
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .install {
-  color: #fff;
-  font-size: 15px;
+  color: #ed2935;
+  font-family: var(--font-secondary);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .stock {
-  color: #38ff38;
+  color: #27ae60;
+  font-family: var(--font-secondary);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .addRow {
@@ -213,6 +245,16 @@
 }
 
 .addBtn {
+  // 48px explicit height + capped max-width — the base
+  // Button size="large" was minting a huge red block that
+  // dwarfed the quantity stepper next to it. Figma keeps
+  // it as a compact 48px pill sized to fit the remaining
+  // width in the row.
   flex: 1;
-  min-width: 180px;
+  min-width: 160px;
+  max-width: 260px;
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 0 24px !important;
+  font-size: 20px !important;
 }
