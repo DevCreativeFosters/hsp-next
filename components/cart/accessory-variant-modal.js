@@ -163,21 +163,21 @@ export default function AccessoryVariantModal({ onClose, product }) {
             <div className={styles.stock}>● In Stock</div>
             <div className={styles.addRow}>
               <div className={styles.qtyStepper}>
-                <button
-                  aria-label="Decrease"
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  type="button"
-                >
-                  −
-                </button>
-                <span>{quantity}</span>
-                <button
-                  aria-label="Increase"
-                  onClick={() => setQuantity(q => q + 1)}
-                  type="button"
-                >
-                  +
-                </button>
+                <span className={styles.qtyValue}>{quantity}</span>
+                <div className={styles.qtyArrows}>
+                  <button
+                    aria-label="Increase"
+                    className={styles.qtyUp}
+                    onClick={() => setQuantity(q => q + 1)}
+                    type="button"
+                  />
+                  <button
+                    aria-label="Decrease"
+                    className={styles.qtyDown}
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    type="button"
+                  />
+                </div>
               </div>
               <Button
                 className={styles.addBtn}
