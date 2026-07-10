@@ -991,16 +991,26 @@
       // delivery section and the payment card, once Confirm
       // Selection has been clicked but Continue to Payment
       // hasn't. Two same-size buttons: black "Get a Quote" and
-      // red "Continue to Payment". Payment card only appears
-      // after the red one is clicked (paymentContinued flips).
+      // red "Continue to Payment", both sitting inside a white
+      // card to match the rest of the checkout column's block
+      // rhythm. Payment card only appears after the red button
+      // is clicked (paymentContinued flips).
       .fittingCtaRow {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 16px;
         margin-top: 20px;
+        padding: 24px 32px;
+        background: #fff;
+        border-radius: 6px;
+
+        @media (width <=1199px) {
+          padding: var(--content-padding-sm);
+        }
 
         @media (width <=767px) {
           grid-template-columns: 1fr;
+          padding: 20px;
         }
       }
 
