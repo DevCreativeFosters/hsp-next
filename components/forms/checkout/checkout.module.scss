@@ -681,6 +681,40 @@
                       margin-bottom: 0;
                     }
                   }
+
+                  // On-Site Fitting: date-picker block that appears
+                  // below SelectLocation once the dealer has chosen a
+                  // fitter store. isFormFilled stays false until they
+                  // enter a date, gating the payment card.
+                  .fittingDateBlock {
+                    padding: 20px 0 8px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                  }
+
+                  .fittingDateLabel {
+                    color: #000;
+                    font-family: var(--font-primary);
+                    font-size: 15px;
+                    font-weight: 600;
+                  }
+
+                  .fittingDateInput {
+                    height: 48px;
+                    padding: 0 16px;
+                    border: 1px solid #cfcfcf;
+                    border-radius: 8px;
+                    font-family: var(--font-primary);
+                    font-size: 16px;
+                    color: #000;
+                    background: #fff;
+                    outline: none;
+
+                    &:focus {
+                      border-color: #ed2935;
+                    }
+                  }
                 }
               }
             }

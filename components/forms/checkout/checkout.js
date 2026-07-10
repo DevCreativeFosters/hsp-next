@@ -141,6 +141,12 @@ function CheckoutForm() {
     delivery_state: '',
     email: cachedContact?.email || '',
     first_name: cachedContact?.first_name || '',
+    // Dealer-only: chosen availability date for an On-Site
+    // Fitting order. After the dealer picks a fitter store, a
+    // date input appears in the drawer — this field holds their
+    // ISO yyyy-mm-dd selection and is forwarded to WP so the
+    // fitter can be scheduled.
+    fittingDate: '',
     last_name: cachedContact?.last_name || '',
     marketing: false,
     orderType: '',
@@ -965,6 +971,13 @@ function CheckoutForm() {
 
   const onSelect = item => {
     setSelectedStore(item);
+    // On-Site Fitting has an extra step after store selection:
+    // the dealer picks a fitting availability date before the
+    // payment card can appear. All other delivery flows
+    // (Click & Collect, Local Installation, Pickup From HSP,
+    // Delivery drop-ship / to-store) unlock the payment card
+    // the moment their sub-form is complete.
+    if (formData.orderType === 'on-site-fitting') return;
     setIsFormFilled(true);
   };
 
@@ -1205,6 +1218,7 @@ function CheckoutForm() {
       delivery_postcode,
       delivery_same_as_billing,
       delivery_state,
+      fittingDate,
       vehicleIdentifier,
       ...baseFormData
     } = formData;
@@ -1235,6 +1249,11 @@ function CheckoutForm() {
         accountTerms?.paymentTermName && {
           payment_term_name: accountTerms.paymentTermName,
         }),
+      // On-Site Fitting only — the availability date the dealer
+      // picked after choosing a fitter store. Sent as fitting_date
+      // (snake_case) to match WP's checkoutOrder input convention.
+      ...(formData.orderType === 'on-site-fitting' &&
+        fittingDate && { fitting_date: fittingDate }),
     };
 
     const result = await checkoutOrder(payload);
@@ -2121,6 +2140,51 @@ function CheckoutForm() {
                                         Loading stores…
                                       </p>
                                     ))}
+                                  {/* On-Site Fitting: after the dealer
+                                      picks a fitter store, prompt them
+                                      for an availability date. Only
+                                      when the date is set does
+                                      isFormFilled flip true → payment
+                                      card unlocks. */}
+                                  {deliveryOption.id === 'on-site-fitting' &&
+                                    selectedStore?.name && (
+                                      <div className={styles.fittingDateBlock}>
+                                        <label
+                                          className={styles.fittingDateLabel}
+                                          htmlFor="fittingDate"
+                                        >
+                                          Fitting Availability Date
+                                          <span className={styles.reqStar}>
+                                            *
+                                          </span>
+                                        </label>
+                                        <input
+                                          className={styles.fittingDateInput}
+                                          id="fittingDate"
+                                          min={
+                                            new Date()
+                                              .toISOString()
+                                              .split('T')[0]
+                                          }
+                                          name="fittingDate"
+                                          onChange={e => {
+                                            const val = e.target.value;
+                                            setFormData(prev => ({
+                                              ...prev,
+                                              fittingDate: val,
+                                            }));
+                                            // Unlock the payment card
+                                            // only once a real date is
+                                            // entered; clearing the
+                                            // field puts the payment
+                                            // card back behind the gate.
+                                            setIsFormFilled(!!val);
+                                          }}
+                                          type="date"
+                                          value={formData.fittingDate}
+                                        />
+                                      </div>
+                                    )}
                                   {(deliveryOption.id === 'deliver-to-store' ||
                                     deliveryOption.id ===
                                       'drop-shipping-to-customer') && (
