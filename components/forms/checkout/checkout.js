@@ -2125,10 +2125,17 @@ function CheckoutForm() {
                             <div className={styles.storeLocate}>
                               {openDrawer === deliveryOption.id && (
                                 <div className={styles.drawer}>
+                                  {/* On-Site Fitting: swap the store
+                                      picker for the "When Can We Fit
+                                      Your Vehicle?" panel once a store
+                                      is chosen. Click & Collect and
+                                      Local Installation still show the
+                                      picker straight through. */}
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
                                       'local-installation' ||
-                                    deliveryOption.id === 'on-site-fitting') &&
+                                    (deliveryOption.id === 'on-site-fitting' &&
+                                      !selectedStore?.name)) &&
                                     (Array.isArray(allStores) &&
                                     allStores.length > 0 ? (
                                       <SelectLocation
@@ -2140,70 +2147,126 @@ function CheckoutForm() {
                                         Loading stores…
                                       </p>
                                     ))}
-                                  {/* On-Site Fitting: after the dealer
-                                      picks a fitter store, show the
-                                      selected store summary + date
-                                      input + explicit Confirm button.
-                                      Payment card stays gated until
-                                      Confirm is clicked. Was flipping
-                                      isFormFilled onChange of the date
-                                      input, which felt abrupt — the
-                                      drawer closed the moment a date
-                                      was picked. */}
                                   {deliveryOption.id === 'on-site-fitting' &&
-                                    selectedStore?.name && (
-                                      <div className={styles.fittingDateBlock}>
+                                    selectedStore?.name &&
+                                    (() => {
+                                      const loc = selectedStore.location || {};
+                                      const addressLine = [
+                                        loc.street,
+                                        loc.city,
+                                        loc.stateAbbr || loc.state,
+                                      ]
+                                        .filter(Boolean)
+                                        .join(', ');
+                                      return (
                                         <div
-                                          className={
-                                            styles.fittingSelectedStore
-                                          }
+                                          className={styles.fittingDateBlock}
                                         >
-                                          <span
+                                          <div
                                             className={
-                                              styles.fittingSelectedStoreLabel
+                                              styles.fittingSelectedStore
                                             }
                                           >
-                                            Selected Store
-                                          </span>
-                                          <strong>{selectedStore.name}</strong>
+                                            <div
+                                              className={
+                                                styles.fittingSelectedStoreLeft
+                                              }
+                                            >
+                                              <span
+                                                className={
+                                                  styles.fittingSelectedStoreLabel
+                                                }
+                                              >
+                                                Selected Store:
+                                              </span>
+                                              <strong>
+                                                {selectedStore.name}
+                                              </strong>
+                                            </div>
+                                            {addressLine && (
+                                              <div
+                                                className={
+                                                  styles.fittingSelectedStoreAddr
+                                                }
+                                              >
+                                                {addressLine}
+                                              </div>
+                                            )}
+                                          </div>
+                                          <button
+                                            className={
+                                              styles.fittingChangeStore
+                                            }
+                                            onClick={() => {
+                                              setSelectedStore({});
+                                              setFormData(prev => ({
+                                                ...prev,
+                                                fittingDate: '',
+                                              }));
+                                              setIsFormFilled(false);
+                                            }}
+                                            type="button"
+                                          >
+                                            Change Store
+                                          </button>
+                                          <div
+                                            className={styles.fittingPromptHead}
+                                          >
+                                            <h3>
+                                              When Can We Fit Your Vehicle?
+                                            </h3>
+                                            <p>
+                                              Our local HSP specialists can fit
+                                              your products on-site at your
+                                              dealership. Please let us know the
+                                              date your vehicle will be
+                                              available from.
+                                            </p>
+                                          </div>
+                                          <div
+                                            className={styles.fittingDateField}
+                                          >
+                                            <span
+                                              className={
+                                                styles.fittingDateFloatLabel
+                                              }
+                                            >
+                                              Date
+                                            </span>
+                                            <input
+                                              className={
+                                                styles.fittingDateInput
+                                              }
+                                              id="fittingDate"
+                                              min={
+                                                new Date()
+                                                  .toISOString()
+                                                  .split('T')[0]
+                                              }
+                                              name="fittingDate"
+                                              onChange={e =>
+                                                setFormData(prev => ({
+                                                  ...prev,
+                                                  fittingDate: e.target.value,
+                                                }))
+                                              }
+                                              type="date"
+                                              value={formData.fittingDate}
+                                            />
+                                          </div>
+                                          <button
+                                            className={styles.fittingConfirmBtn}
+                                            disabled={!formData.fittingDate}
+                                            onClick={() =>
+                                              setIsFormFilled(true)
+                                            }
+                                            type="button"
+                                          >
+                                            Confirm Selection
+                                          </button>
                                         </div>
-                                        <label
-                                          className={styles.fittingDateLabel}
-                                          htmlFor="fittingDate"
-                                        >
-                                          Fitting Availability Date
-                                          <span className={styles.reqStar}>
-                                            *
-                                          </span>
-                                        </label>
-                                        <input
-                                          className={styles.fittingDateInput}
-                                          id="fittingDate"
-                                          min={
-                                            new Date()
-                                              .toISOString()
-                                              .split('T')[0]
-                                          }
-                                          name="fittingDate"
-                                          onChange={e =>
-                                            setFormData(prev => ({
-                                              ...prev,
-                                              fittingDate: e.target.value,
-                                            }))
-                                          }
-                                          type="date"
-                                          value={formData.fittingDate}
-                                        />
-                                        <button
-                                          className={styles.fittingConfirmBtn}
-                                          disabled={!formData.fittingDate}
-                                          onClick={() => setIsFormFilled(true)}
-                                          type="button"
-                                        >
-                                          Confirm
-                                        </button>
-                                      </div>
-                                    )}
+                                      );
+                                    })()}
                                   {(deliveryOption.id === 'deliver-to-store' ||
                                     deliveryOption.id ===
                                       'drop-shipping-to-customer') && (
