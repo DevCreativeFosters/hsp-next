@@ -2141,14 +2141,32 @@ function CheckoutForm() {
                                       </p>
                                     ))}
                                   {/* On-Site Fitting: after the dealer
-                                      picks a fitter store, prompt them
-                                      for an availability date. Only
-                                      when the date is set does
-                                      isFormFilled flip true → payment
-                                      card unlocks. */}
+                                      picks a fitter store, show the
+                                      selected store summary + date
+                                      input + explicit Confirm button.
+                                      Payment card stays gated until
+                                      Confirm is clicked. Was flipping
+                                      isFormFilled onChange of the date
+                                      input, which felt abrupt — the
+                                      drawer closed the moment a date
+                                      was picked. */}
                                   {deliveryOption.id === 'on-site-fitting' &&
                                     selectedStore?.name && (
                                       <div className={styles.fittingDateBlock}>
+                                        <div
+                                          className={
+                                            styles.fittingSelectedStore
+                                          }
+                                        >
+                                          <span
+                                            className={
+                                              styles.fittingSelectedStoreLabel
+                                            }
+                                          >
+                                            Selected Store
+                                          </span>
+                                          <strong>{selectedStore.name}</strong>
+                                        </div>
                                         <label
                                           className={styles.fittingDateLabel}
                                           htmlFor="fittingDate"
@@ -2167,22 +2185,23 @@ function CheckoutForm() {
                                               .split('T')[0]
                                           }
                                           name="fittingDate"
-                                          onChange={e => {
-                                            const val = e.target.value;
+                                          onChange={e =>
                                             setFormData(prev => ({
                                               ...prev,
-                                              fittingDate: val,
-                                            }));
-                                            // Unlock the payment card
-                                            // only once a real date is
-                                            // entered; clearing the
-                                            // field puts the payment
-                                            // card back behind the gate.
-                                            setIsFormFilled(!!val);
-                                          }}
+                                              fittingDate: e.target.value,
+                                            }))
+                                          }
                                           type="date"
                                           value={formData.fittingDate}
                                         />
+                                        <button
+                                          className={styles.fittingConfirmBtn}
+                                          disabled={!formData.fittingDate}
+                                          onClick={() => setIsFormFilled(true)}
+                                          type="button"
+                                        >
+                                          Confirm
+                                        </button>
                                       </div>
                                     )}
                                   {(deliveryOption.id === 'deliver-to-store' ||

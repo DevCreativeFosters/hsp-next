@@ -682,19 +682,49 @@
                     }
                   }
 
-                  // On-Site Fitting: date-picker block that appears
-                  // below SelectLocation once the dealer has chosen a
-                  // fitter store. isFormFilled stays false until they
-                  // enter a date, gating the payment card.
+                  // On-Site Fitting: shows once the dealer has picked
+                  // a fitter store. Renders a summary of the chosen
+                  // store, a date input for Fitting Availability, and
+                  // a Confirm button that finalizes and unlocks the
+                  // payment card. Label was previously invisible
+                  // (color: #000 on the dark drawer bg) and there was
+                  // no confirm affordance — the payment card just
+                  // popped in the moment the date was typed.
                   .fittingDateBlock {
                     padding: 20px 0 8px;
                     display: flex;
                     flex-direction: column;
-                    gap: 8px;
+                    gap: 12px;
+                  }
+
+                  .fittingSelectedStore {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    padding: 14px 16px;
+                    background: rgb(255 255 255 / 6%);
+                    border: 1px solid rgb(255 255 255 / 15%);
+                    border-radius: 8px;
+                    color: #fff;
+                    font-family: var(--font-primary);
+                    font-size: 15px;
+
+                    strong {
+                      font-family: var(--font-secondary);
+                      font-size: 18px;
+                      font-weight: 700;
+                    }
+                  }
+
+                  .fittingSelectedStoreLabel {
+                    font-size: 13px;
+                    color: rgb(255 255 255 / 60%);
+                    text-transform: uppercase;
+                    letter-spacing: 0.04em;
                   }
 
                   .fittingDateLabel {
-                    color: #000;
+                    color: #fff;
                     font-family: var(--font-primary);
                     font-size: 15px;
                     font-weight: 600;
@@ -703,16 +733,41 @@
                   .fittingDateInput {
                     height: 48px;
                     padding: 0 16px;
-                    border: 1px solid #cfcfcf;
+                    border: 1px solid rgb(255 255 255 / 20%);
                     border-radius: 8px;
                     font-family: var(--font-primary);
                     font-size: 16px;
-                    color: #000;
-                    background: #fff;
+                    color: #fff;
+                    background: rgb(255 255 255 / 6%);
                     outline: none;
+                    color-scheme: dark;
 
                     &:focus {
                       border-color: #ed2935;
+                    }
+                  }
+
+                  .fittingConfirmBtn {
+                    height: 48px;
+                    margin-top: 4px;
+                    padding: 0 24px;
+                    background: #ed2935;
+                    color: #fff;
+                    border: 0;
+                    border-radius: 8px;
+                    font-family: var(--font-secondary);
+                    font-size: 18px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: opacity 0.15s ease;
+
+                    &:hover {
+                      opacity: 0.9;
+                    }
+
+                    &:disabled {
+                      opacity: 0.45;
+                      cursor: not-allowed;
                     }
                   }
                 }
