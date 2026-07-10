@@ -96,15 +96,22 @@
         }
 
         .tabButton {
+          // flex: 1 (was width: auto) — each pill takes an equal
+          // share of the strip so Outstanding / All Orders /
+          // Invoices spread out evenly instead of clustering on
+          // the left. text-align centres the label inside its
+          // pill.
+          flex: 1;
           background: transparent;
           padding: 10px 20px;
           white-space: nowrap;
           color: #fff;
           border: 0;
+          border-radius: 4px;
           font-family: var(--font-hind);
           font-size: 20px;
           font-weight: 400;
-          width: auto;
+          text-align: center;
 
           &::after {
             display: none;
