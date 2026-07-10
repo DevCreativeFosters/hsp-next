@@ -387,6 +387,18 @@ function Order({ item, received = false, returnRequest = false }) {
                 <div className={styles.desc}>{item.selected_store}</div>
               </div>
             )}
+            {/* "Vehicle Available From" — dealer-specific date
+                per Figma 764:23638. Rendered only when WP has
+                a value on the order payload; on B2B / retail
+                orders that field is empty and the row hides. */}
+            {(item.vehicle_available_from || item.pickup_date) && (
+              <div className={styles.orderRow}>
+                <div className={styles.title}>Vehicle Available From:</div>
+                <div className={styles.desc}>
+                  {item.vehicle_available_from || item.pickup_date}
+                </div>
+              </div>
+            )}
           </div>
           <div className={styles.orderBottom}>
             <button className={styles.button} onClick={handleDownloadInvoice}>
@@ -681,6 +693,44 @@ function Orders() {
     );
   };
 
+  // Dealer-specific tab set per Figma node 764:23638 — three
+  // pills (Outstanding | All Orders | Invoices) instead of the
+  // B2B Received/Placed/Completed split. Dealers don't receive
+  // customer orders (that's a store thing), so "Outstanding"
+  // just means their own not-yet-completed orders. "Invoices"
+  // reuses the completed pool for now — those are the orders
+  // that have been invoiced. If Lokesh exposes a dedicated
+  // invoices resolver later we can swap the data source.
+  const dealerTabs = [
+    {
+      content: (
+        <CheckNoOrders orders={currentOrders}>
+          <h3>Looks like didn&apos;t receive an order yet</h3>
+        </CheckNoOrders>
+      ),
+      slug: 'outstanding',
+      title: 'Outstanding',
+    },
+    {
+      content: (
+        <CheckNoOrders orders={allorders}>
+          <h3>Looks like you haven&apos;t placed an order yet</h3>
+        </CheckNoOrders>
+      ),
+      slug: 'allorders',
+      title: 'All Orders',
+    },
+    {
+      content: (
+        <CheckNoOrders orders={completedOrders}>
+          <h3>No invoices yet</h3>
+        </CheckNoOrders>
+      ),
+      slug: 'invoices',
+      title: 'Invoices',
+    },
+  ];
+
   const b2bTabs = [
     {
       content: (
@@ -731,9 +781,13 @@ function Orders() {
   if (loading) {
     content = <Loading color="white" size="large" />;
   } else {
-    content = (
-      <Tabs tabs={role === 'retail' ? retailTabs : b2bTabs} type="horizontal" />
-    );
+    // Role-based tab set:
+    //   retail  → Current / Completed / All Orders / Returns
+    //   dealer  → Outstanding / All Orders / Invoices  (Figma 764:23638)
+    //   b2b     → Outstanding Received / Placed / Completed
+    const tabsForRole =
+      role === 'retail' ? retailTabs : role === 'dealer' ? dealerTabs : b2bTabs;
+    content = <Tabs tabs={tabsForRole} type="horizontal" />;
   }
 
   return <div className={styles.orders}>{content}</div>;
