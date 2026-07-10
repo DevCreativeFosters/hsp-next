@@ -90,6 +90,16 @@ function CheckoutForm() {
   const [quoteNotes, setQuoteNotes] = useState('');
 
   const [isFormFilled, setIsFormFilled] = useState(false);
+  // On-Site Fitting only: after the dealer clicks Confirm
+  // Selection (store + date), the drawer collapses to a
+  // "Fitting Time Availability" summary and two CTAs appear
+  // below the delivery section — Get a Quote and Continue to
+  // Payment. The payment card stays gated behind
+  // paymentContinued so it only appears once the dealer
+  // explicitly opts into the payment step. Other delivery
+  // methods ignore this flag (payment card unlocks with
+  // isFormFilled directly).
+  const [paymentContinued, setPaymentContinued] = useState(false);
 
   // Read the cached contact-details snapshot from localStorage on
   // initial render so logged-in B2B/dealer users see their populated
@@ -2158,10 +2168,27 @@ function CheckoutForm() {
                                       ]
                                         .filter(Boolean)
                                         .join(', ');
-                                      return (
-                                        <div
-                                          className={styles.fittingDateBlock}
-                                        >
+                                      // Format the fitting date as
+                                      // "Weekday DD/MM" for the summary
+                                      // pill — e.g. "Wednesday 29/10".
+                                      const formatFittingDate = iso => {
+                                        if (!iso) return '';
+                                        const [y, m, d] = iso.split('-');
+                                        const dt = new Date(
+                                          Number(y),
+                                          Number(m) - 1,
+                                          Number(d),
+                                        );
+                                        if (Number.isNaN(dt.getTime()))
+                                          return iso;
+                                        const weekday = dt.toLocaleDateString(
+                                          'en-AU',
+                                          { weekday: 'long' },
+                                        );
+                                        return `${weekday} ${d}/${m}`;
+                                      };
+                                      const storeHeader = (
+                                        <>
                                           <div
                                             className={
                                               styles.fittingSelectedStore
@@ -2204,11 +2231,69 @@ function CheckoutForm() {
                                                 fittingDate: '',
                                               }));
                                               setIsFormFilled(false);
+                                              setPaymentContinued(false);
                                             }}
                                             type="button"
                                           >
                                             Change Store
                                           </button>
+                                        </>
+                                      );
+
+                                      if (isFormFilled) {
+                                        // Confirmed state — summary
+                                        // panel with the date shown as
+                                        // a red pill and an Edit
+                                        // Selection link that drops the
+                                        // dealer back into the date
+                                        // input.
+                                        return (
+                                          <div
+                                            className={styles.fittingDateBlock}
+                                          >
+                                            {storeHeader}
+                                            <div
+                                              className={
+                                                styles.fittingPromptHead
+                                              }
+                                            >
+                                              <h3>Fitting Time Availability</h3>
+                                              <p>
+                                                Our team will get in touch to
+                                                confirm a fitting time. You have
+                                                indicated availability from the
+                                                following date:
+                                              </p>
+                                            </div>
+                                            <div
+                                              className={styles.fittingDatePill}
+                                            >
+                                              {formatFittingDate(
+                                                formData.fittingDate,
+                                              )}
+                                            </div>
+                                            <button
+                                              className={
+                                                styles.fittingEditSelection
+                                              }
+                                              onClick={() => {
+                                                setIsFormFilled(false);
+                                                setPaymentContinued(false);
+                                              }}
+                                              type="button"
+                                            >
+                                              Edit Selection
+                                            </button>
+                                          </div>
+                                        );
+                                      }
+
+                                      // Date-entry state (pre-confirm).
+                                      return (
+                                        <div
+                                          className={styles.fittingDateBlock}
+                                        >
+                                          {storeHeader}
                                           <div
                                             className={styles.fittingPromptHead}
                                           >
@@ -2294,221 +2379,249 @@ function CheckoutForm() {
                 )}
               </div>
             </div>
-            {/* After Filling the form this will be appeared */}
-            {isFormFilled && (
-              <div className={styles.checkOutPayment}>
-                <div className={styles.heading}>
-                  <h2>Payment</h2>
-                  <p>All transactions are secure and encrypted</p>
+            {/* On-Site Fitting only: after Confirm Selection, show
+                a Get a Quote / Continue to Payment CTA row instead of
+                jumping straight into the payment card. Continue to
+                Payment flips paymentContinued so the payment card
+                appears below. All other delivery flows skip this row
+                entirely and go straight to the payment card. */}
+            {isFormFilled &&
+              formData.orderType === 'on-site-fitting' &&
+              !paymentContinued && (
+                <div className={styles.fittingCtaRow}>
+                  <button
+                    className={styles.fittingCtaQuote}
+                    onClick={openQuoteForm}
+                    type="button"
+                  >
+                    Get a Quote
+                  </button>
+                  <button
+                    className={styles.fittingCtaPay}
+                    onClick={() => setPaymentContinued(true)}
+                    type="button"
+                  >
+                    Continue to Payment
+                  </button>
                 </div>
-
-                {role === 'retail' && noGiftCard && (
-                  <div className={styles.couponBox}>
-                    <input placeholder="Gift Card Number" type="text" />
-                    <button disabled type="button">
-                      Apply
-                    </button>
+              )}
+            {/* After Filling the form this will be appeared */}
+            {isFormFilled &&
+              (formData.orderType !== 'on-site-fitting' ||
+                paymentContinued) && (
+                <div className={styles.checkOutPayment}>
+                  <div className={styles.heading}>
+                    <h2>Payment</h2>
+                    <p>All transactions are secure and encrypted</p>
                   </div>
-                )}
 
-                {/* Per Figma 188:8623, B2B Payment block opens with PO
+                  {role === 'retail' && noGiftCard && (
+                    <div className={styles.couponBox}>
+                      <input placeholder="Gift Card Number" type="text" />
+                      <button disabled type="button">
+                        Apply
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Per Figma 188:8623, B2B Payment block opens with PO
                     Number BEFORE the payment method radios. Dealer VIN
                     follows the same pattern. T&Cs + Marketing stay in
                     the groupTerms section below the payment options. */}
-                {isDealerLike && (
-                  <div className={styles.paymentOrderFields}>
-                    <div className={styles.colFull}>
-                      <div className={styles.inputGroup}>
-                        <label>
-                          Purchase Order Number
-                          <span className={styles.reqStar}>*</span>
-                        </label>
-                        <input
-                          name="purchaseOrderNumber"
-                          onChange={handleChange}
-                          required
-                          type="text"
-                          value={formData.purchaseOrderNumber}
-                        />
-                      </div>
-                    </div>
-                    {role === 'dealer' && (
+                  {isDealerLike && (
+                    <div className={styles.paymentOrderFields}>
                       <div className={styles.colFull}>
                         <div className={styles.inputGroup}>
                           <label>
-                            VIN
+                            Purchase Order Number
                             <span className={styles.reqStar}>*</span>
                           </label>
                           <input
-                            name="vehicleIdentifier"
+                            name="purchaseOrderNumber"
                             onChange={handleChange}
                             required
                             type="text"
-                            value={formData.vehicleIdentifier}
+                            value={formData.purchaseOrderNumber}
                           />
                         </div>
                       </div>
+                      {role === 'dealer' && (
+                        <div className={styles.colFull}>
+                          <div className={styles.inputGroup}>
+                            <label>
+                              VIN
+                              <span className={styles.reqStar}>*</span>
+                            </label>
+                            <input
+                              name="vehicleIdentifier"
+                              onChange={handleChange}
+                              required
+                              type="text"
+                              value={formData.vehicleIdentifier}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className={styles.paymenSelection}>
+                    {isDealerLike && accountTerms && (
+                      <div
+                        className={clsx(styles.payBox, styles.accountTermsBox)}
+                      >
+                        <input
+                          checked={formData.payment_method === 'account-terms'}
+                          name="payment_method"
+                          onChange={handleRadioChange}
+                          type="radio"
+                          value="account-terms"
+                        />
+                        <span>Account Terms*</span>
+                        <div className={styles.accountTermsInfo}>
+                          {accountTerms.creditLimit && (
+                            <div className={styles.accountTermsLimit}>
+                              {formatPrice(accountTerms.creditLimit)}
+                            </div>
+                          )}
+                          {accountTerms.paymentTermName && (
+                            <div className={styles.accountTermsLabel}>
+                              {accountTerms.paymentTermName}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     )}
-                  </div>
-                )}
-                <div className={styles.paymenSelection}>
-                  {isDealerLike && accountTerms && (
-                    <div
-                      className={clsx(styles.payBox, styles.accountTermsBox)}
-                    >
+                    <div className={styles.payBox}>
                       <input
-                        checked={formData.payment_method === 'account-terms'}
+                        checked={formData.payment_method === 'credit-card'}
                         name="payment_method"
                         onChange={handleRadioChange}
                         type="radio"
-                        value="account-terms"
+                        value="credit-card"
                       />
-                      <span>Account Terms*</span>
-                      <div className={styles.accountTermsInfo}>
-                        {accountTerms.creditLimit && (
-                          <div className={styles.accountTermsLimit}>
-                            {formatPrice(accountTerms.creditLimit)}
-                          </div>
-                        )}
-                        {accountTerms.paymentTermName && (
-                          <div className={styles.accountTermsLabel}>
-                            {accountTerms.paymentTermName}
-                          </div>
-                        )}
-                      </div>
+                      <span>Credit Card</span>
+                      <Image
+                        alt={'Cards'}
+                        height={43}
+                        src={PaymentIcons}
+                        width={154}
+                      />
                     </div>
-                  )}
-                  <div className={styles.payBox}>
-                    <input
-                      checked={formData.payment_method === 'credit-card'}
-                      name="payment_method"
-                      onChange={handleRadioChange}
-                      type="radio"
-                      value="credit-card"
-                    />
-                    <span>Credit Card</span>
-                    <Image
-                      alt={'Cards'}
-                      height={43}
-                      src={PaymentIcons}
-                      width={154}
-                    />
+                    <div className={styles.payBox}>
+                      <input
+                        checked={formData.payment_method === 'paypal'}
+                        name="payment_method"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="paypal"
+                      />
+                      <span>PayPal</span>
+                      <Image
+                        alt={'Cards'}
+                        height={49}
+                        src={PaypalIcon}
+                        width={112}
+                      />
+                    </div>
+                    <div className={styles.payBox}>
+                      <input
+                        checked={formData.payment_method === 'cod'}
+                        name="payment_method"
+                        onChange={handleRadioChange}
+                        type="radio"
+                        value="cod"
+                      />
+                      <span>COD (Cash on Delivery)</span>
+                    </div>
                   </div>
-                  <div className={styles.payBox}>
-                    <input
-                      checked={formData.payment_method === 'paypal'}
-                      name="payment_method"
-                      onChange={handleRadioChange}
-                      type="radio"
-                      value="paypal"
-                    />
-                    <span>PayPal</span>
-                    <Image
-                      alt={'Cards'}
-                      height={49}
-                      src={PaypalIcon}
-                      width={112}
-                    />
-                  </div>
-                  <div className={styles.payBox}>
-                    <input
-                      checked={formData.payment_method === 'cod'}
-                      name="payment_method"
-                      onChange={handleRadioChange}
-                      type="radio"
-                      value="cod"
-                    />
-                    <span>COD (Cash on Delivery)</span>
-                  </div>
-                </div>
 
-                {/* T&Cs + Marketing — visible for ALL roles. Used to
+                  {/* T&Cs + Marketing — visible for ALL roles. Used to
                     gate this on `role !== 'b2b'` because B2B had its
                     own T&Cs inside the contact-details edit form, but
                     those vanished when the autofill collapsed the
                     card. Now there's one canonical T&Cs section here
                     near Place Order, visible to every role. */}
-                <div className={styles.groupTerms}>
-                  {/* PO Number + VIN now render at the top of the
+                  <div className={styles.groupTerms}>
+                    {/* PO Number + VIN now render at the top of the
                       Payment section above (per Figma). Only the T&Cs
                       and Marketing checkboxes live here, near Place
                       Order. */}
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        {/* Link lives OUTSIDE the label. Previously it
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          {/* Link lives OUTSIDE the label. Previously it
                             was nested inside <label><span>…<Link/></span>
                             </label>, and clicking anywhere on the
                             label (including the checkbox itself)
                             bubbled up into the Link's click handler
                             and navigated the whole tab to the T&Cs
                             page instead of just toggling the tick. */}
-                        <label>
-                          <input
-                            checked={formData.termsAndConditions}
-                            name="termsAndConditions"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I accept the Privacy Policy and Terms & Conditions
-                          </span>
-                        </label>{' '}
-                        <Link
-                          href="/privacy-terms-and-conditions"
-                          onClick={e => e.stopPropagation()}
-                          target="_blank"
-                        >
-                          Read our T&Cs{' '}
-                          <span className={styles.reqStar}>*</span>
-                        </Link>
+                          <label>
+                            <input
+                              checked={formData.termsAndConditions}
+                              name="termsAndConditions"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I accept the Privacy Policy and Terms & Conditions
+                            </span>
+                          </label>{' '}
+                          <Link
+                            href="/privacy-terms-and-conditions"
+                            onClick={e => e.stopPropagation()}
+                            target="_blank"
+                          >
+                            Read our T&Cs{' '}
+                            <span className={styles.reqStar}>*</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.colFull}>
+                      <div className={styles.inputGroup}>
+                        <div className={styles.selectOption}>
+                          <label>
+                            <input
+                              checked={formData.marketing}
+                              name="marketing"
+                              onChange={handleCheckboxChange}
+                              type="checkbox"
+                            />{' '}
+                            <span>
+                              I agree to receiving Marketing and Promotional
+                              emails from HSP
+                            </span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className={styles.colFull}>
-                    <div className={styles.inputGroup}>
-                      <div className={styles.selectOption}>
-                        <label>
-                          <input
-                            checked={formData.marketing}
-                            name="marketing"
-                            onChange={handleCheckboxChange}
-                            type="checkbox"
-                          />{' '}
-                          <span>
-                            I agree to receiving Marketing and Promotional
-                            emails from HSP
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <Button
-                  className={styles.placeOrderBtn}
-                  disabled={
-                    !formData.first_name ||
-                    // last_name is empty by design for B2B/dealer — see
-                    // the comment on the requiredFields list in
-                    // handleSubmit. Only block on it for retail.
-                    (!isDealerLike && !formData.last_name) ||
-                    !formData.email ||
-                    !formData.phone ||
-                    !formData.termsAndConditions ||
-                    !formData.payment_method ||
-                    (isDealerLike && !formData.company) ||
-                    (isDealerLike && !formData.purchaseOrderNumber) ||
-                    (role === 'dealer' && !formData.vehicleIdentifier) ||
-                    loading ||
-                    cartItems.length === 0
-                  }
-                  type="submit"
-                >
-                  Place Order
-                </Button>
-              </div>
-            )}
+                  <Button
+                    className={styles.placeOrderBtn}
+                    disabled={
+                      !formData.first_name ||
+                      // last_name is empty by design for B2B/dealer — see
+                      // the comment on the requiredFields list in
+                      // handleSubmit. Only block on it for retail.
+                      (!isDealerLike && !formData.last_name) ||
+                      !formData.email ||
+                      !formData.phone ||
+                      !formData.termsAndConditions ||
+                      !formData.payment_method ||
+                      (isDealerLike && !formData.company) ||
+                      (isDealerLike && !formData.purchaseOrderNumber) ||
+                      (role === 'dealer' && !formData.vehicleIdentifier) ||
+                      loading ||
+                      cartItems.length === 0
+                    }
+                    type="submit"
+                  >
+                    Place Order
+                  </Button>
+                </div>
+              )}
           </div>
 
           {/* Checkout Right */}

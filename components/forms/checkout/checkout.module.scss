@@ -838,6 +838,37 @@
                       cursor: not-allowed;
                     }
                   }
+
+                  // Confirmed-state date pill — shows the formatted
+                  // fitting date after Confirm Selection is clicked.
+                  // Full-width red bar with white bold text.
+                  .fittingDatePill {
+                    padding: 14px 20px;
+                    background: #ed2935;
+                    border-radius: 8px;
+                    color: #fff;
+                    font-family: var(--font-secondary);
+                    font-size: 20px;
+                    font-weight: 700;
+                  }
+
+                  // "Edit Selection" link in the confirmed state —
+                  // drops the dealer back into the date entry form.
+                  .fittingEditSelection {
+                    align-self: flex-start;
+                    background: transparent;
+                    border: 0;
+                    padding: 0;
+                    color: #fff;
+                    font-family: var(--font-primary);
+                    font-size: 15px;
+                    text-decoration: underline;
+                    cursor: pointer;
+
+                    &:hover {
+                      opacity: 0.85;
+                    }
+                  }
                 }
               }
             }
@@ -954,6 +985,48 @@
             margin-bottom: 0;
           }
         }
+      }
+
+      // On-Site Fitting CTA row that appears between the
+      // delivery section and the payment card, once Confirm
+      // Selection has been clicked but Continue to Payment
+      // hasn't. Two same-size buttons: black "Get a Quote" and
+      // red "Continue to Payment". Payment card only appears
+      // after the red one is clicked (paymentContinued flips).
+      .fittingCtaRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 20px;
+
+        @media (width <=767px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .fittingCtaQuote,
+      .fittingCtaPay {
+        height: 56px;
+        border: 0;
+        border-radius: 10px;
+        font-family: var(--font-secondary);
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+
+      .fittingCtaQuote {
+        background: #000;
+      }
+
+      .fittingCtaPay {
+        background: #ed2935;
       }
 
       .checkOutPayment {
