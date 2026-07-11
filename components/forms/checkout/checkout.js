@@ -2022,7 +2022,8 @@ function CheckoutForm() {
                             )}
                           </div>
                           {isFormFilled &&
-                          deliveryOption.id === formData.orderType ? (
+                          deliveryOption.id === formData.orderType &&
+                          deliveryOption.id !== 'on-site-fitting' ? (
                             <div className={styles.editSelection}>
                               {/* Deliver-to-Store ships to the dealer's
                                   store address from Contact Details
