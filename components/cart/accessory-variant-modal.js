@@ -8,6 +8,8 @@ import { useCart } from '@contexts/cart-context';
 
 import Button from '@components/button/button';
 
+import HeartIcon from '@assets/icons/heart.svg';
+
 import styles from './accessory-variant-modal.module.scss';
 
 // Variant-select popup for the "More Accessories to Add" carousel
@@ -131,32 +133,52 @@ export default function AccessoryVariantModal({ onClose, product }) {
             <h2 className={styles.title}>{product.title}</h2>
             {selectedVariant?.sku && (
               <p className={styles.partNo}>
-                Part No. <span>{selectedVariant.sku}</span>
+                PART NO. <span>{selectedVariant.sku}</span>
               </p>
             )}
-            <div aria-hidden className={styles.rating}>
-              ★★★★★ <span>(reviews)</span>
+            {/* Reviews stars on the left + Wishlist icon on the
+                right, matching the PDP layout. Purely visual for
+                now — no wishlist wiring here since the modal is an
+                upsell entry point, not the PDP. */}
+            <div className={styles.ratingRow}>
+              <div aria-hidden className={styles.rating}>
+                ★★★★★ <span>(reviews)</span>
+              </div>
+              <div aria-hidden className={styles.wishlistBadge}>
+                <HeartIcon />
+                <span>Wishlist</span>
+              </div>
             </div>
             {variants.length > 1 && (
-              <select
-                className={styles.variantSelect}
-                onChange={e => setSelectedSlug(e.target.value)}
-                value={selectedSlug}
-              >
-                {variants.map(v => (
-                  <option key={v.variantSlug} value={v.variantSlug}>
-                    {v.variantName}
-                  </option>
-                ))}
-              </select>
+              <div className={styles.variantField}>
+                <span className={styles.variantFieldLabel}>Variant</span>
+                <select
+                  className={styles.variantSelect}
+                  onChange={e => setSelectedSlug(e.target.value)}
+                  value={selectedSlug}
+                >
+                  {variants.map(v => (
+                    <option key={v.variantSlug} value={v.variantSlug}>
+                      {v.variantName}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
             <div className={styles.priceRow}>
               {variantPrice != null && (
                 <span className={styles.price}>${variantPrice}</span>
               )}
+              {selectedVariant?.variantDetails?.compareAtPrice != null &&
+                selectedVariant.variantDetails.compareAtPrice >
+                  variantPrice && (
+                  <span className={styles.priceCompare}>
+                    ${selectedVariant.variantDetails.compareAtPrice}
+                  </span>
+                )}
               {variantInstall > 0 && (
                 <span className={styles.install}>
-                  + {variantInstall} Installation
+                  + ${variantInstall} for installation
                 </span>
               )}
             </div>

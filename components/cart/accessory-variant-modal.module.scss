@@ -123,13 +123,23 @@
   margin: 0;
   font-family: var(--font-secondary);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: #fff;
 
   span {
     color: #ed2935;
-    font-weight: 600;
+    font-weight: 700;
   }
+}
+
+// Row that holds the review stars on the left and the
+// Wishlist badge on the right, matching the PDP layout.
+.ratingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .rating {
@@ -142,27 +152,57 @@
   }
 }
 
-.variantSelect {
-  // Transparent bg with a 2px white/20% border per Figma
-  // (was #000 bg with a thin white/40 border, which read
-  // as an inset field rather than the airy outline the
-  // design uses).
-  background: transparent;
+.wishlistBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-family: var(--font-primary);
+  font-size: 15px;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentcolor;
+  }
+}
+
+// Bordered field that wraps the variant dropdown with a
+// small "Variant" label above the value, matching the PDP.
+.variantField {
+  position: relative;
   border: 2px solid rgb(255 255 255 / 20%);
   border-radius: 8px;
-  padding: 10px 16px;
+  padding: 8px 16px;
+  background: transparent;
+}
+
+.variantFieldLabel {
+  display: block;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  color: rgb(255 255 255 / 70%);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.variantSelect {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0 24px 0 0;
   color: #fff;
   font-family: var(--font-primary);
   font-size: 20px;
-  width: 100%;
   outline: none;
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 8' fill='none'><path d='M1 1l5.5 5.5L12 1' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 16px center;
+  background-position: right 4px center;
   background-size: 13px 8px;
-  padding-right: 40px;
 
   // Options render on the browser's native dropdown, which
   // draws its own bg. Keep text white on dark so it stays
@@ -188,12 +228,25 @@
   line-height: 1.2;
 }
 
-.install {
-  color: #ed2935;
+// Struck-through original price shown when the variant has a
+// compareAtPrice greater than its current price. Sits next to
+// the red current price so the discount reads at a glance.
+.priceCompare {
+  color: #fff;
   font-family: var(--font-secondary);
-  font-size: clamp(18px, 1.8vw, 24px);
+  font-size: clamp(22px, 2.4vw, 32px);
   font-weight: 600;
   line-height: 1.2;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.install {
+  color: #fff;
+  font-family: var(--font-primary);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.4;
+  align-self: center;
 }
 
 .stock {
