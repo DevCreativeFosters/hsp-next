@@ -2353,7 +2353,17 @@ function CheckoutForm() {
                                         </div>
                                       );
                                     })()}
+                                  {/* Delivery sub-form — collects the
+                                      shipping address, then flips
+                                      isFormFilled so the payment card
+                                      unlocks. deliver-to-door is
+                                      retail's shipping option and was
+                                      missing from this list, so the
+                                      drawer opened empty and the
+                                      shopper had no address form or
+                                      Confirm button. */}
                                   {(deliveryOption.id === 'deliver-to-store' ||
+                                    deliveryOption.id === 'deliver-to-door' ||
                                     deliveryOption.id ===
                                       'drop-shipping-to-customer') && (
                                     <Delivery
