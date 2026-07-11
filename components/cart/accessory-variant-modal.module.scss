@@ -187,29 +187,93 @@
   margin-bottom: 4px;
 }
 
-.variantSelect {
-  display: block;
+// Custom dropdown trigger button — replaces the native
+// <select>. Native <select>'s option list drew with OS
+// styling that overflowed the modal and highlighted rows
+// blue on hover; the custom panel below stays inside the
+// bordered box and uses PDP-matching dark styling.
+.variantTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
   background: transparent;
   border: 0;
-  padding: 0 24px 0 0;
+  padding: 0;
   color: #fff;
   font-family: var(--font-primary);
   font-size: 20px;
   outline: none;
   cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 8' fill='none'><path d='M1 1l5.5 5.5L12 1' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 4px center;
-  background-size: 13px 8px;
+  text-align: left;
+}
 
-  // Options render on the browser's native dropdown, which
-  // draws its own bg. Keep text white on dark so it stays
-  // readable when the dropdown opens over the modal.
-  option {
-    color: #fff;
-    background: #181616;
+.variantTriggerValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Caret drawn from CSS borders so it flips on open without
+// needing an extra SVG. Matches the ˅ / ˄ toggle on the PDP.
+.variantTriggerCaret {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+  margin-top: -4px;
+  flex-shrink: 0;
+
+  &.open {
+    transform: rotate(-135deg);
+    margin-top: 4px;
+  }
+}
+
+// Custom option list — positioned absolutely inside the
+// bordered .variantField wrapper so it aligns edge-to-edge
+// with the field and never overflows the modal.
+.variantList {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #2a2626;
+  border: 2px solid rgb(255 255 255 / 20%);
+  border-radius: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 5;
+  box-shadow: 0 12px 24px rgb(0 0 0 / 40%);
+}
+
+.variantOption {
+  padding: 12px 16px;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--font-primary);
+  font-size: 18px;
+  line-height: 1.3;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 8%);
+  }
+
+  &.selected {
+    background: rgb(255 255 255 / 10%);
+    font-weight: 600;
   }
 }
 

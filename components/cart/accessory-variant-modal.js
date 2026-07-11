@@ -24,6 +24,12 @@ export default function AccessoryVariantModal({ onClose, product }) {
   const [selectedSlug, setSelectedSlug] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
+  // Custom dropdown open state — the native <select> was
+  // showing the OS-styled option list which overflowed the
+  // modal on the right and highlighted the hovered row blue.
+  // A controlled panel keeps the list inside the bordered box
+  // and lets us style it dark to match the PDP.
+  const [variantOpen, setVariantOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -34,7 +40,29 @@ export default function AccessoryVariantModal({ onClose, product }) {
     const variants = product?.productFields?.variants || [];
     setSelectedSlug(variants[0]?.variantSlug || '');
     setQuantity(1);
+    setVariantOpen(false);
   }, [product]);
+
+  // Close the custom dropdown on outside click / Escape so it
+  // doesn't strand open when the shopper clicks elsewhere in
+  // the modal.
+  useEffect(() => {
+    if (!variantOpen) return;
+    const onDocClick = e => {
+      if (!e.target.closest?.(`.${styles.variantField}`)) {
+        setVariantOpen(false);
+      }
+    };
+    const onKey = e => {
+      if (e.key === 'Escape') setVariantOpen(false);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [variantOpen]);
 
   if (!mounted || !product) return null;
 
@@ -152,17 +180,47 @@ export default function AccessoryVariantModal({ onClose, product }) {
             {variants.length > 1 && (
               <div className={styles.variantField}>
                 <span className={styles.variantFieldLabel}>Variant</span>
-                <select
-                  className={styles.variantSelect}
-                  onChange={e => setSelectedSlug(e.target.value)}
-                  value={selectedSlug}
+                <button
+                  aria-expanded={variantOpen}
+                  aria-haspopup="listbox"
+                  className={styles.variantTrigger}
+                  onClick={() => setVariantOpen(v => !v)}
+                  type="button"
                 >
-                  {variants.map(v => (
-                    <option key={v.variantSlug} value={v.variantSlug}>
-                      {v.variantName}
-                    </option>
-                  ))}
-                </select>
+                  <span className={styles.variantTriggerValue}>
+                    {selectedVariant?.variantName || 'Select variant'}
+                  </span>
+                  <span
+                    aria-hidden
+                    className={
+                      variantOpen
+                        ? `${styles.variantTriggerCaret} ${styles.open}`
+                        : styles.variantTriggerCaret
+                    }
+                  />
+                </button>
+                {variantOpen && (
+                  <ul className={styles.variantList} role="listbox">
+                    {variants.map(v => (
+                      <li
+                        aria-selected={v.variantSlug === selectedSlug}
+                        className={
+                          v.variantSlug === selectedSlug
+                            ? `${styles.variantOption} ${styles.selected}`
+                            : styles.variantOption
+                        }
+                        key={v.variantSlug}
+                        onClick={() => {
+                          setSelectedSlug(v.variantSlug);
+                          setVariantOpen(false);
+                        }}
+                        role="option"
+                      >
+                        {v.variantName}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
             <div className={styles.priceRow}>
