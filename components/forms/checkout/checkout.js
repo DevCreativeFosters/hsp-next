@@ -2766,7 +2766,20 @@ function CheckoutForm() {
                   </div>
                 </div>
 
-                {formData.orderType === 'local-installation' && (
+                {/* Due Now split card — fires for both retail
+                    Local Installation and dealer On-Site Fitting.
+                    Both flows collect the fitting portion at the
+                    store on the day of the appointment; the online
+                    payment is Total minus that portion. Dealer
+                    on-site fitting also carries the $175 on-site
+                    fitting charge — since the summary Total adds
+                    +ONSITE_FITTING_CHARGE and Due Now subtracts it,
+                    they cancel out and the Due Now formula
+                    collapses to the same shape as local-installation
+                    (cartTotal - installSum - discount). The deferred
+                    "Fitting cost" line then shows install + charge. */}
+                {(formData.orderType === 'local-installation' ||
+                  formData.orderType === 'on-site-fitting') && (
                   <div className={styles.noInstallationCost}>
                     <div className={styles.finalTotal}>
                       <div className={styles.finalTotaltitle}>Due Now</div>
@@ -2785,7 +2798,12 @@ function CheckoutForm() {
                         </p>
                       </div>
                       <div className={styles.right}>
-                        {formatPrice(installSum)}
+                        {formatPrice(
+                          installSum +
+                            (formData.orderType === 'on-site-fitting'
+                              ? ONSITE_FITTING_CHARGE
+                              : 0),
+                        )}
                       </div>
                     </div>
                   </div>
