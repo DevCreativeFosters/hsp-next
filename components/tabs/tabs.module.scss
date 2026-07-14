@@ -121,7 +121,15 @@
           min-width: 0;
           box-sizing: border-box;
           background: transparent;
-          padding: 10px 20px;
+
+          // Tighter horizontal padding + smaller font so the
+          // three labels ("Outstanding Orders Received / Placed /
+          // Completed") fit inside the strip without overlapping
+          // each other. text-overflow:ellipsis is the final
+          // guard on narrow viewports.
+          padding: 10px 12px;
+          overflow: hidden;
+          text-overflow: ellipsis;
           white-space: nowrap;
           color: #fff;
           border: 0;
@@ -132,7 +140,7 @@
           // soft container.
           border-radius: 10px;
           font-family: var(--font-hind);
-          font-size: 20px;
+          font-size: 17px;
           font-weight: 400;
           text-align: center;
 
@@ -163,7 +171,13 @@
       background: #fff;
       padding: 10px 40px 40px;
       border-radius: 10px;
-      width: 31%;
+
+      // Sidebar shrunk 31% → 26% so the right column (tab strip
+      // + order cards) has room to fit the three horizontal
+      // pill labels ("Outstanding Orders Received / Placed /
+      // Completed") without their text overlapping. .tabsContent
+      // widens to 74% + shorter left padding below to match.
+      width: 26%;
 
       @media (width <=767px) {
         width: 100%;
@@ -250,8 +264,12 @@
     }
 
     .tabsContent {
-      width: 69%;
-      padding: 0 0 0 50px;
+      // Widened 69% → 74% + left padding 50px → 24px so the
+      // horizontal pill strip inside (Outstanding Orders Received
+      // / Placed / Completed) has enough room for its three
+      // labels without them running into each other.
+      width: 74%;
+      padding: 0 0 0 24px;
       flex-wrap: wrap;
 
       & > div {
