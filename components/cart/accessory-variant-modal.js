@@ -30,6 +30,10 @@ export default function AccessoryVariantModal({ onClose, product }) {
   // A controlled panel keeps the list inside the bordered box
   // and lets us style it dark to match the PDP.
   const [variantOpen, setVariantOpen] = useState(false);
+  // Thumbnail carousel — matches the PDP gallery. currentImgIdx
+  // tracks which image is shown in the main panel; the thumbs
+  // below click through them.
+  const [currentImgIdx, setCurrentImgIdx] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -41,7 +45,15 @@ export default function AccessoryVariantModal({ onClose, product }) {
     setSelectedSlug(variants[0]?.variantSlug || '');
     setQuantity(1);
     setVariantOpen(false);
+    setCurrentImgIdx(0);
   }, [product]);
+
+  // Reset the gallery index whenever the variant changes so we
+  // don't try to show, say, the 3rd image of the previous
+  // variant that doesn't exist on the new one.
+  useEffect(() => {
+    setCurrentImgIdx(0);
+  }, [selectedSlug]);
 
   // Close the custom dropdown on outside click / Escape so it
   // doesn't strand open when the shopper clicks elsewhere in
@@ -112,18 +124,32 @@ export default function AccessoryVariantModal({ onClose, product }) {
     }
   };
 
-  // Prefer the selected variant's first image when it has one —
-  // that's how the PDP swaps images when the shopper flips the
-  // variant dropdown. Fall back to the parent's featuredImage if
-  // the variant has no images attached (some SKUs don't).
-  const variantImageNode =
-    selectedVariant?.variantDetails?.images?.nodes?.[0] || null;
-  const image = variantImageNode
-    ? {
-        altText: variantImageNode.altText,
-        sourceUrl: variantImageNode.mediaItemUrl,
-      }
-    : product?.featuredImage?.node;
+  // Build the gallery image list, matching the PDP behaviour:
+  //   1. selected variant's images (if any)
+  //   2. product-level productFields.images (fallback)
+  //   3. featuredImage (final fallback so we always have one)
+  //
+  // Normalised to { sourceUrl, altText } so the JSX doesn't
+  // have to branch on which shape the node came from.
+  const galleryImages = (() => {
+    const variantImgs = selectedVariant?.variantDetails?.images?.nodes || [];
+    if (variantImgs.length) {
+      return variantImgs.map(n => ({
+        altText: n.altText,
+        sourceUrl: n.mediaItemUrl,
+      }));
+    }
+    const productImgs = product?.productFields?.images?.nodes || [];
+    if (productImgs.length) {
+      return productImgs.map(n => ({
+        altText: n.altText,
+        sourceUrl: n.mediaItemUrl,
+      }));
+    }
+    const fi = product?.featuredImage?.node;
+    return fi ? [{ altText: fi.altText, sourceUrl: fi.sourceUrl }] : [];
+  })();
+  const activeImage = galleryImages[currentImgIdx] || galleryImages[0] || null;
   // Real product category (WP taxonomy), not the slug-derived
   // string we were showing before — the fallback rendered
   // "nissan-navara-d27-2026-4" as a category badge because these
@@ -147,13 +173,39 @@ export default function AccessoryVariantModal({ onClose, product }) {
           ×
         </button>
         <div className={styles.body}>
-          <div className={styles.imageWrap}>
-            {image?.sourceUrl && (
-              <img
-                alt={image.altText || product.title}
-                loading="lazy"
-                src={image.sourceUrl}
-              />
+          {/* Image column — main image on top, thumbnail row
+              below matching the PDP gallery. Thumbs click
+              through the gallery images. */}
+          <div className={styles.imageCol}>
+            <div className={styles.imageWrap}>
+              {activeImage?.sourceUrl && (
+                <img
+                  alt={activeImage.altText || product.title}
+                  loading="lazy"
+                  src={activeImage.sourceUrl}
+                />
+              )}
+            </div>
+            {galleryImages.length > 1 && (
+              <ul className={styles.thumbRow}>
+                {galleryImages.map((img, i) => (
+                  <li
+                    className={
+                      i === currentImgIdx
+                        ? `${styles.thumb} ${styles.thumbActive}`
+                        : styles.thumb
+                    }
+                    key={`${img.sourceUrl}-${i}`}
+                    onClick={() => setCurrentImgIdx(i)}
+                  >
+                    <img
+                      alt={img.altText || `${product.title} thumbnail ${i + 1}`}
+                      loading="lazy"
+                      src={img.sourceUrl}
+                    />
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
           <div className={styles.info}>
@@ -177,97 +229,113 @@ export default function AccessoryVariantModal({ onClose, product }) {
                 <span>Wishlist</span>
               </div>
             </div>
-            {variants.length > 1 && (
-              <div className={styles.variantField}>
-                <span className={styles.variantFieldLabel}>Variant</span>
-                <button
-                  aria-expanded={variantOpen}
-                  aria-haspopup="listbox"
-                  className={styles.variantTrigger}
-                  onClick={() => setVariantOpen(v => !v)}
-                  type="button"
-                >
-                  <span className={styles.variantTriggerValue}>
-                    {selectedVariant?.variantName || 'Select variant'}
-                  </span>
-                  <span
-                    aria-hidden
-                    className={
-                      variantOpen
-                        ? `${styles.variantTriggerCaret} ${styles.open}`
-                        : styles.variantTriggerCaret
-                    }
-                  />
-                </button>
-                {variantOpen && (
-                  <ul className={styles.variantList} role="listbox">
-                    {variants.map(v => (
-                      <li
-                        aria-selected={v.variantSlug === selectedSlug}
-                        className={
-                          v.variantSlug === selectedSlug
-                            ? `${styles.variantOption} ${styles.selected}`
-                            : styles.variantOption
-                        }
-                        key={v.variantSlug}
-                        onClick={() => {
-                          setSelectedSlug(v.variantSlug);
-                          setVariantOpen(false);
-                        }}
-                        role="option"
-                      >
-                        {v.variantName}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
-            <div className={styles.priceRow}>
-              {variantPrice != null && (
-                <span className={styles.price}>${variantPrice}</span>
-              )}
-              {selectedVariant?.variantDetails?.compareAtPrice != null &&
-                selectedVariant.variantDetails.compareAtPrice >
-                  variantPrice && (
-                  <span className={styles.priceCompare}>
-                    ${selectedVariant.variantDetails.compareAtPrice}
-                  </span>
-                )}
-              {variantInstall > 0 && (
-                <span className={styles.install}>
-                  + ${variantInstall} for installation
-                </span>
-              )}
-            </div>
-            <div className={styles.stock}>● In Stock</div>
-            <div className={styles.addRow}>
-              <div className={styles.qtyStepper}>
-                <span className={styles.qtyValue}>{quantity}</span>
-                <div className={styles.qtyArrows}>
+            {/* Info card — variant / price / stock / qty / CTAs
+                all wrapped in one bordered box per PDP. */}
+            <div className={styles.infoCard}>
+              {variants.length > 1 && (
+                <div className={styles.variantField}>
+                  <span className={styles.variantFieldLabel}>Variant</span>
                   <button
-                    aria-label="Increase"
-                    className={styles.qtyUp}
-                    onClick={() => setQuantity(q => q + 1)}
+                    aria-expanded={variantOpen}
+                    aria-haspopup="listbox"
+                    className={styles.variantTrigger}
+                    onClick={() => setVariantOpen(v => !v)}
                     type="button"
-                  />
-                  <button
-                    aria-label="Decrease"
-                    className={styles.qtyDown}
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    type="button"
-                  />
+                  >
+                    <span className={styles.variantTriggerValue}>
+                      {selectedVariant?.variantName || 'Select variant'}
+                    </span>
+                    <span
+                      aria-hidden
+                      className={
+                        variantOpen
+                          ? `${styles.variantTriggerCaret} ${styles.open}`
+                          : styles.variantTriggerCaret
+                      }
+                    />
+                  </button>
+                  {variantOpen && (
+                    <ul className={styles.variantList} role="listbox">
+                      {variants.map(v => (
+                        <li
+                          aria-selected={v.variantSlug === selectedSlug}
+                          className={
+                            v.variantSlug === selectedSlug
+                              ? `${styles.variantOption} ${styles.selected}`
+                              : styles.variantOption
+                          }
+                          key={v.variantSlug}
+                          onClick={() => {
+                            setSelectedSlug(v.variantSlug);
+                            setVariantOpen(false);
+                          }}
+                          role="option"
+                        >
+                          {v.variantName}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
+              )}
+              <div className={styles.priceRow}>
+                {variantPrice != null && (
+                  <span className={styles.price}>${variantPrice}</span>
+                )}
+                {selectedVariant?.variantDetails?.compareAtPrice != null &&
+                  selectedVariant.variantDetails.compareAtPrice >
+                    variantPrice && (
+                    <span className={styles.priceCompare}>
+                      ${selectedVariant.variantDetails.compareAtPrice}
+                    </span>
+                  )}
+                {variantInstall > 0 && (
+                  <span className={styles.install}>
+                    + ${variantInstall} for installation
+                  </span>
+                )}
               </div>
-              <Button
-                className={styles.addBtn}
-                disabled={adding || !selectedVariant}
-                onClick={handleAdd}
-                size="large"
-                variant="primary"
-              >
-                {adding ? 'Adding…' : 'Add to Cart'}
-              </Button>
+              <div className={styles.stock}>● In Stock</div>
+              <div className={styles.addRow}>
+                <div className={styles.qtyStepper}>
+                  <span className={styles.qtyValue}>{quantity}</span>
+                  <div className={styles.qtyArrows}>
+                    <button
+                      aria-label="Increase"
+                      className={styles.qtyUp}
+                      onClick={() => setQuantity(q => q + 1)}
+                      type="button"
+                    />
+                    <button
+                      aria-label="Decrease"
+                      className={styles.qtyDown}
+                      onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                      type="button"
+                    />
+                  </div>
+                </div>
+                <Button
+                  className={styles.addBtn}
+                  disabled={adding || !selectedVariant}
+                  onClick={handleAdd}
+                  size="large"
+                  variant="primary"
+                >
+                  {adding ? 'Adding…' : 'Add to Cart'}
+                </Button>
+                {/* Make Enquiry — matches the PDP secondary CTA.
+                    Just closes the modal for now; wire to the
+                    real enquiry flow when we bring the form
+                    over from the PDP. */}
+                <Button
+                  className={styles.enquiryBtn}
+                  onClick={onClose}
+                  size="large"
+                  variant="primary"
+                >
+                  Make Enquiry
+                </Button>
+              </div>
             </div>
           </div>
         </div>
