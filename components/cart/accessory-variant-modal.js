@@ -52,6 +52,14 @@ export default function AccessoryVariantModal({ onClose, product }) {
     setSelectedSlug(variants[0]?.variantSlug || '');
     setQuantity(1);
     setVariantOpen(false);
+    // Debug: expose the current product so we can inspect
+    // variantDetails.images.nodes per variant from the browser
+    // console. Remove once we've confirmed whether variants
+    // carry per-variant image sets or all fall back to the
+    // product-level images.
+    if (typeof window !== 'undefined') {
+      window.__hsp_debug_product = product;
+    }
   }, [product]);
 
   // Close the custom dropdown on outside click / Escape so it
