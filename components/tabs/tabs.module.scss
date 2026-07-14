@@ -69,20 +69,27 @@
   &.horizontal {
     .tabsMain {
       .tabsNav {
-        // Full-width strip. padding bumped 5px → 12px + 4px gap
-        // between pills so the active pill (e.g. "Completed" on
-        // the right) sits inside the strip with visible dark
-        // padding on all sides instead of kissing the container
-        // edge. Border-radius bumped 5px → 16px to match the
-        // order card corners below so the strip and cards read
-        // as a matched pair down the right column.
+        // Full-width strip. padding 12px + 4px gap between pills
+        // so the active pill (e.g. "Completed" on the right)
+        // sits inside the strip with visible dark padding on all
+        // sides instead of kissing the container edge. Border-
+        // radius 16px matches the order card corners below.
+        // box-sizing:border-box is explicit — without it,
+        // width:100% + padding was pushing the LAST pill's right
+        // edge past the strip's visible edge (Completed pill
+        // spilling out of the dark bar). overflow:hidden is
+        // belt-and-braces so any sub-pixel rounding on flex
+        // widths can never bleed the active pill's white bg
+        // past the strip's rounded corners either.
         display: flex;
         gap: 4px;
+        box-sizing: border-box;
         padding: 12px;
         border-radius: 16px;
         background: #2e2e2e;
         width: 100%;
         margin: 0 0 20px;
+        overflow: hidden;
 
         // Keep tabs on a single row — previous flex-wrap: wrap
         // pushed the Completed tab to a second line once the two
@@ -105,6 +112,14 @@
           // the left. text-align centres the label inside its
           // pill.
           flex: 1;
+
+          // min-width:0 lets the pill shrink below its intrinsic
+          // content width — Completed is wider than the other
+          // labels because of the count bubble on Placed etc.,
+          // and without this the pill would refuse to compress
+          // and would push past the strip's right padding.
+          min-width: 0;
+          box-sizing: border-box;
           background: transparent;
           padding: 10px 20px;
           white-space: nowrap;
