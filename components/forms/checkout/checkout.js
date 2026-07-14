@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { createPortal } from 'react-dom';
-
 import clsx from 'clsx';
 import { State } from 'country-state-city';
 import Image from 'next/image';
@@ -179,11 +177,6 @@ function CheckoutForm() {
   const [loginError, setLoginError] = useState('');
   const [emailLookupInFlight, setEmailLookupInFlight] = useState(false);
   const [continueAsGuest, setContinueAsGuest] = useState(false);
-  // Portal-mount guard for the guest-gate overlay — createPortal
-  // needs document.body which doesn't exist during SSR, so we
-  // wait for the client mount effect before flipping this true.
-  const [guestGateMounted, setGuestGateMounted] = useState(false);
-  useEffect(() => setGuestGateMounted(true), []);
   // Inline "Forgot password?" handler state. The login-form's full
   // forgotPassword flow lives at /login (toggle on that page) — but a
   // user mid-checkout shouldn't have to navigate away. Fire the same
@@ -1331,47 +1324,39 @@ function CheckoutForm() {
           {/* Checkout Left */}
           <div className={styles.checkOutLeft}>
             {/* "Let's Get Started" guest gate — Figma node
-                5475:36507. Portalled to document.body as a
-                full-viewport overlay so it dims the checkout
-                behind it instead of stacking inline at the top
-                of the form. Shown when the visitor is a guest
-                AND hasn't picked "Continue As Guest" yet.
-                Login / Sign Up route to the auth pages with a
-                redirect back to /checkout; Continue As Guest
-                sets state so the gate never re-appears this
-                session. Logged-in users (any role) never see
-                this. */}
-            {guestGateMounted && !userLoading && !user?.id && !continueAsGuest
-              ? createPortal(
-                  <div className={styles.guestGateBackdrop}>
-                    <div className={styles.guestGate}>
-                      <h2>Let&rsquo;s Get Started</h2>
-                      <div className={styles.guestGateActions}>
-                        <Link
-                          className={styles.guestGateLogin}
-                          href="/login?redirect=/checkout"
-                        >
-                          Login <span aria-hidden>→</span>
-                        </Link>
-                        <Link
-                          className={styles.guestGateSignup}
-                          href="/register?redirect=/checkout"
-                        >
-                          Sign Up <span aria-hidden>→</span>
-                        </Link>
-                      </div>
-                      <button
-                        className={styles.guestGateContinue}
-                        onClick={() => setContinueAsGuest(true)}
-                        type="button"
-                      >
-                        Continue As Guest
-                      </button>
-                    </div>
-                  </div>,
-                  document.body,
-                )
-              : null}
+                5475:36507. Renders inline at the top of the
+                checkout form when the visitor is a guest AND
+                hasn't picked "Continue As Guest" yet. Login /
+                Sign Up route to the auth pages with a redirect
+                back to /checkout; Continue As Guest sets state
+                so the gate never re-appears this session.
+                Logged-in users (any role) never see this. */}
+            {!userLoading && !user?.id && !continueAsGuest ? (
+              <div className={styles.guestGate}>
+                <h2>Let&rsquo;s Get Started</h2>
+                <div className={styles.guestGateActions}>
+                  <Link
+                    className={styles.guestGateLogin}
+                    href="/login?redirect=/checkout"
+                  >
+                    Login <span aria-hidden>→</span>
+                  </Link>
+                  <Link
+                    className={styles.guestGateSignup}
+                    href="/register?redirect=/checkout"
+                  >
+                    Sign Up <span aria-hidden>→</span>
+                  </Link>
+                </div>
+                <button
+                  className={styles.guestGateContinue}
+                  onClick={() => setContinueAsGuest(true)}
+                  type="button"
+                >
+                  Continue As Guest
+                </button>
+              </div>
+            ) : null}
             {/* Contact Details */}
             {!userLoading &&
             !user?.id &&
