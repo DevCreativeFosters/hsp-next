@@ -1419,7 +1419,9 @@ function CheckoutForm() {
                           </div>
                         </div>
                       ) : (
-                        <RegisterForm />
+                        <div className={styles.authOverlayRegister}>
+                          <RegisterForm />
+                        </div>
                       )}
                     </div>
                   </div>,

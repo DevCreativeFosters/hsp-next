@@ -1673,6 +1673,22 @@
   }
 }
 
+// Sign-up variant wrapper — RegisterForm renders its own banner
+// and centred form container internally, but the CTA sits flush
+// against the last edge because the modal card has overflow:
+// hidden. Add bottom padding here so "Create My Account" isn't
+// kissing the modal's bottom edge. Also allow scrolling inside
+// the card for taller viewports.
+.authOverlayRegister {
+  padding-bottom: 32px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+
+  @media (width <=767px) {
+    padding-bottom: 20px;
+  }
+}
+
 .authOverlayLoginForm {
   padding: 40px 32px;
   display: flex;
