@@ -196,14 +196,18 @@
 
 // Wishlist button — matches the PDP. Renders AddWishlist
 // (outline heart) when the product isn't in the wishlist,
-// RemoveWishlist (filled heart) when it is. NO fill/stroke
-// overrides on the SVG here — those were what made the icon
-// look "cut" earlier. The PDP lets each SVG render with the
-// fill its author baked in, so we do the same.
+// RemoveWishlist (filled heart) when it is.
+// heart.svg viewBox is 0 0 29 26 with stroke-width:2, so the
+// stroke extends outside the viewBox on the left edge and
+// gets clipped by the SVG's default overflow. Two-part fix:
+// 1) let the SVG render at its natural size (no width/height
+// override) — same as the PDP does, and
+// 2) overflow:visible so any stroke that leaks past the
+// viewBox still paints instead of being cut.
 .wishlistBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
   padding: 0;
   border: 0;
@@ -219,8 +223,7 @@
   }
 
   svg {
-    width: 22px;
-    height: 22px;
+    overflow: visible;
   }
 }
 
