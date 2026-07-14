@@ -215,9 +215,18 @@ export default function AccessoryVariantModal({ onClose, product }) {
               the PDP renders so the thumbnails, active state,
               nav arrows, and main-image swap all match. Feeding
               it the same shape (alt / mainImage / sourceUrl)
-              PDP uses. */}
+              PDP uses.
+              key={selectedSlug} forces a remount when the shopper
+              switches variant. Without it the carousel's internal
+              selectedImage state stays pinned to the first image
+              of the OLD variant (the component only reads
+              images[0] on initial useState) even after we hand it
+              new images — so the main picture wouldn't update and
+              the container would resize as thumbs changed
+              underneath. On the PDP this doesn't matter because
+              variant switching triggers a full route.push. */}
           <div className={styles.imageCol}>
-            <ProductImageCarousel images={galleryImages} />
+            <ProductImageCarousel images={galleryImages} key={selectedSlug} />
           </div>
           <div className={styles.info}>
             {category && <div className={styles.category}>{category}</div>}
