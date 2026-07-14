@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 
+import { useRouter } from 'next/navigation';
+
 import { useCart } from '@contexts/cart-context';
+import { useUserContext } from '@contexts/user';
+import { useWishlist } from '@contexts/wishlist';
 
 import Button from '@components/button/button';
+import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import StarRating from '@components/reviews/star-rating';
 
-import HeartIcon from '@assets/icons/heart.svg';
+import RemoveWishlist from '@assets/icons/filled-heart.svg';
+import AddWishlist from '@assets/icons/heart.svg';
 
 import styles from './accessory-variant-modal.module.scss';
 
@@ -22,6 +28,10 @@ import styles from './accessory-variant-modal.module.scss';
 export default function AccessoryVariantModal({ onClose, product }) {
   const [mounted, setMounted] = useState(false);
   const { addToCart } = useCart() || {};
+  const { user } = useUserContext() || {};
+  const { addToWishlist, isInWishlist, removeFromWishlist } =
+    useWishlist() || {};
+  const router = useRouter();
   const [selectedSlug, setSelectedSlug] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
@@ -31,10 +41,6 @@ export default function AccessoryVariantModal({ onClose, product }) {
   // A controlled panel keeps the list inside the bordered box
   // and lets us style it dark to match the PDP.
   const [variantOpen, setVariantOpen] = useState(false);
-  // Thumbnail carousel — matches the PDP gallery. currentImgIdx
-  // tracks which image is shown in the main panel; the thumbs
-  // below click through them.
-  const [currentImgIdx, setCurrentImgIdx] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -46,15 +52,7 @@ export default function AccessoryVariantModal({ onClose, product }) {
     setSelectedSlug(variants[0]?.variantSlug || '');
     setQuantity(1);
     setVariantOpen(false);
-    setCurrentImgIdx(0);
   }, [product]);
-
-  // Reset the gallery index whenever the variant changes so we
-  // don't try to show, say, the 3rd image of the previous
-  // variant that doesn't exist on the new one.
-  useEffect(() => {
-    setCurrentImgIdx(0);
-  }, [selectedSlug]);
 
   // Close the custom dropdown on outside click / Escape so it
   // doesn't strand open when the shopper clicks elsewhere in
@@ -125,32 +123,58 @@ export default function AccessoryVariantModal({ onClose, product }) {
     }
   };
 
-  // Build the gallery image list, matching the PDP behaviour:
-  //   1. selected variant's images (if any)
-  //   2. product-level productFields.images (fallback)
-  //   3. featuredImage (final fallback so we always have one)
-  //
-  // Normalised to { sourceUrl, altText } so the JSX doesn't
-  // have to branch on which shape the node came from.
+  // Build the gallery image list in the exact shape
+  // ProductImageCarousel expects (alt / mainImage / sourceUrl),
+  // matching the PDP fallback order — variant images →
+  // product-level images → featuredImage.
   const galleryImages = (() => {
     const variantImgs = selectedVariant?.variantDetails?.images?.nodes || [];
     if (variantImgs.length) {
-      return variantImgs.map(n => ({
-        altText: n.altText,
+      return variantImgs.map((n, i) => ({
+        alt: n?.altText || 'Product variant image',
+        mainImage: i === 0,
         sourceUrl: n.mediaItemUrl,
       }));
     }
     const productImgs = product?.productFields?.images?.nodes || [];
     if (productImgs.length) {
-      return productImgs.map(n => ({
-        altText: n.altText,
+      return productImgs.map((n, i) => ({
+        alt: n?.altText || 'Main product image',
+        mainImage: i === 0,
         sourceUrl: n.mediaItemUrl,
       }));
     }
     const fi = product?.featuredImage?.node;
-    return fi ? [{ altText: fi.altText, sourceUrl: fi.sourceUrl }] : [];
+    return fi
+      ? [
+          {
+            alt: fi.altText || product?.title || 'Product image',
+            mainImage: true,
+            sourceUrl: fi.sourceUrl,
+          },
+        ]
+      : [];
   })();
-  const activeImage = galleryImages[currentImgIdx] || galleryImages[0] || null;
+
+  // Wishlist toggle — mirrors the PDP handler exactly. Guests
+  // get bounced to /login; signed-in users flip the state and
+  // the heart icon swaps filled ↔ outline.
+  const inWishlist =
+    typeof isInWishlist === 'function'
+      ? isInWishlist(product?.databaseId)
+      : false;
+  const handleWishlistToggle = () => {
+    if (!product?.databaseId) return;
+    if (!user?.id) {
+      router.push('/login');
+      return;
+    }
+    if (inWishlist) {
+      removeFromWishlist?.(product.databaseId);
+    } else {
+      addToWishlist?.(product.databaseId);
+    }
+  };
   // Real product category (WP taxonomy), not the slug-derived
   // string we were showing before — the fallback rendered
   // "nissan-navara-d27-2026-4" as a category badge because these
@@ -187,40 +211,13 @@ export default function AccessoryVariantModal({ onClose, product }) {
           ×
         </button>
         <div className={styles.body}>
-          {/* Image column — main image on top, thumbnail row
-              below matching the PDP gallery. Thumbs click
-              through the gallery images. */}
+          {/* Image column — reuses the exact ProductImageCarousel
+              the PDP renders so the thumbnails, active state,
+              nav arrows, and main-image swap all match. Feeding
+              it the same shape (alt / mainImage / sourceUrl)
+              PDP uses. */}
           <div className={styles.imageCol}>
-            <div className={styles.imageWrap}>
-              {activeImage?.sourceUrl && (
-                <img
-                  alt={activeImage.altText || product.title}
-                  loading="lazy"
-                  src={activeImage.sourceUrl}
-                />
-              )}
-            </div>
-            {galleryImages.length > 1 && (
-              <ul className={styles.thumbRow}>
-                {galleryImages.map((img, i) => (
-                  <li
-                    className={
-                      i === currentImgIdx
-                        ? `${styles.thumb} ${styles.thumbActive}`
-                        : styles.thumb
-                    }
-                    key={`${img.sourceUrl}-${i}`}
-                    onClick={() => setCurrentImgIdx(i)}
-                  >
-                    <img
-                      alt={img.altText || `${product.title} thumbnail ${i + 1}`}
-                      loading="lazy"
-                      src={img.sourceUrl}
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ProductImageCarousel images={galleryImages} />
           </div>
           <div className={styles.info}>
             {category && <div className={styles.category}>{category}</div>}
@@ -242,10 +239,26 @@ export default function AccessoryVariantModal({ onClose, product }) {
                   ({reviewCount} review{reviewCount === 1 ? '' : 's'})
                 </span>
               </div>
-              <div aria-hidden className={styles.wishlistBadge}>
-                <HeartIcon />
-                <span>Wishlist</span>
-              </div>
+              {/* Wishlist button — real PDP behaviour. Signed-in
+                  users see filled heart + "Added to Wishlist"
+                  when the product is in their list, outline heart
+                  + "Wishlist" when it isn't. Guests get bounced
+                  to /login on click. */}
+              <button
+                className={styles.wishlistBadge}
+                onClick={handleWishlistToggle}
+                type="button"
+              >
+                {inWishlist ? (
+                  <>
+                    <RemoveWishlist /> Added to Wishlist
+                  </>
+                ) : (
+                  <>
+                    <AddWishlist /> Wishlist
+                  </>
+                )}
+              </button>
             </div>
             {/* Info card — variant / price / stock / qty / CTAs
                 all wrapped in one bordered box per PDP. */}
