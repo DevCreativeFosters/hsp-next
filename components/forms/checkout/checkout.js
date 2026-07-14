@@ -35,6 +35,7 @@ import LocationIcon from '@assets/icons/location-icon.svg';
 import OnSiteFittingIcon from '@assets/icons/onsite-fitting-icon.svg';
 import SettingIcon from '@assets/icons/setting-icon.svg';
 import TruckIcon from '@assets/icons/truck-icon.svg';
+import loginBanner from '@assets/images/loginbanner.jpg';
 import PaymentIcons from '@assets/images/payment-icon.png';
 import PaypalIcon from '@assets/images/paypal.png';
 
@@ -1402,9 +1403,21 @@ function CheckoutForm() {
                         ×
                       </button>
                       {authOverlay === 'login' ? (
-                        <LoginForm
-                          onLoginSuccess={() => setAuthOverlay(null)}
-                        />
+                        <div className={styles.authOverlayLoginSplit}>
+                          <div className={styles.authOverlayBanner}>
+                            <Image
+                              alt="Login banner"
+                              fill
+                              src={loginBanner}
+                              style={{ objectFit: 'cover' }}
+                            />
+                          </div>
+                          <div className={styles.authOverlayLoginForm}>
+                            <LoginForm
+                              onLoginSuccess={() => setAuthOverlay(null)}
+                            />
+                          </div>
+                        </div>
                       ) : (
                         <RegisterForm />
                       )}
