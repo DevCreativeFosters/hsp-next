@@ -43,12 +43,28 @@ export default function ProductMakeGrid({
   titleTag,
   titleTagStyle,
 }) {
+  // Parse the pathname safely — new URL() throws
+  // TypeError: Invalid URL when item.link.url is empty or
+  // malformed, and until we guarded it a single bad product
+  // was crashing the whole PDP for Toyota Hilux (SR / SR5).
+  // The map result may contain undefined for those rows,
+  // which downstream filters/priorityOrder handle fine (they
+  // were already tolerating misses).
+  const pathnameOf = url => {
+    if (!url) return '';
+    try {
+      return new URL(url).pathname;
+    } catch {
+      return '';
+    }
+  };
+
   const availableBrands = products.map(
-    item => new URL(item.link.url).pathname.split('/')[2],
+    item => pathnameOf(item?.link?.url).split('/')[2],
   );
 
   const availableCategories = products.map(
-    item => new URL(item.link.url).pathname.split('/')[1],
+    item => pathnameOf(item?.link?.url).split('/')[1],
   );
 
   const priorityOrder = [
