@@ -121,7 +121,25 @@ export async function redirectsMiddleware(request: NextRequest) {
   const entry = cache.find(entry => entry.match_url === pathname);
 
   if (entry) {
-    const newUrl = new URL(entry.action_data, request.url);
+    // A malformed redirect entry (empty or non-URL-parseable
+    // action_data) was crashing the middleware with
+    // `TypeError: Invalid URL` on every request to the matched
+    // path — taking down the PDP for those slugs. Wrap the URL
+    // construction so a bad entry logs to Sentry and falls
+    // through to normal routing instead of 500-ing the page.
+    let newUrl: URL;
+    try {
+      newUrl = new URL(entry.action_data, request.url);
+    } catch (e) {
+      Sentry.captureException(e, {
+        extra: {
+          action_code: entry.action_code,
+          action_data: entry.action_data,
+          match_url: entry.match_url,
+        },
+      });
+      return;
+    }
     request.nextUrl.searchParams.forEach((value, key) => {
       newUrl.searchParams.append(key, value);
     });
