@@ -69,14 +69,17 @@
   &.horizontal {
     .tabsMain {
       .tabsNav {
-        // Full-width so the dark pill-strip background reaches
-        // the same right edge as the order cards below. Pills
-        // themselves stay clustered on the left via the
-        // justify-content: flex-start on the standalone
-        // .horizontal .tabsNav rule further down.
+        // Full-width strip. padding bumped 5px → 12px + 4px gap
+        // between pills so the active pill (e.g. "Completed" on
+        // the right) sits inside the strip with visible dark
+        // padding on all sides instead of kissing the container
+        // edge. Border-radius bumped 5px → 16px to match the
+        // order card corners below so the strip and cards read
+        // as a matched pair down the right column.
         display: flex;
-        padding: 5px;
-        border-radius: 5px;
+        gap: 4px;
+        padding: 12px;
+        border-radius: 16px;
         background: #2e2e2e;
         width: 100%;
         margin: 0 0 20px;
@@ -107,7 +110,12 @@
           white-space: nowrap;
           color: #fff;
           border: 0;
-          border-radius: 4px;
+
+          // border-radius bumped 4px → 10px so the active pill's
+          // rounded corners echo the strip's new 16px radius
+          // rather than looking like a sharp rectangle inside a
+          // soft container.
+          border-radius: 10px;
           font-family: var(--font-hind);
           font-size: 20px;
           font-weight: 400;
