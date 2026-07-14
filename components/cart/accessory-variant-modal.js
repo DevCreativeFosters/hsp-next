@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import { useCart } from '@contexts/cart-context';
 
 import Button from '@components/button/button';
+import StarRating from '@components/reviews/star-rating';
 
 import HeartIcon from '@assets/icons/heart.svg';
 
@@ -156,6 +157,19 @@ export default function AccessoryVariantModal({ onClose, product }) {
   // products have flat slugs without a "/" prefix.
   const category = product?.productCategories?.nodes?.[0]?.name || '';
 
+  // Review count + averageRating for the star row — matches the
+  // PDP calculation exactly (comments.nodes reduce → total/count).
+  // commentCount from the query is the display number after the
+  // stars. Falls back to 0/0 gracefully when a product has no
+  // reviews and hides the "(N reviews)" text in that case.
+  const reviewNodes = product?.comments?.nodes || [];
+  const reviewCount = product?.commentCount ?? reviewNodes.length;
+  const averageRating = (() => {
+    if (!reviewNodes.length) return 0;
+    const total = reviewNodes.reduce((sum, n) => sum + (n?.rating || 0), 0);
+    return total / reviewNodes.length;
+  })();
+
   return createPortal(
     <div
       aria-modal="true"
@@ -217,12 +231,16 @@ export default function AccessoryVariantModal({ onClose, product }) {
               </p>
             )}
             {/* Reviews stars on the left + Wishlist icon on the
-                right, matching the PDP layout. Purely visual for
-                now — no wishlist wiring here since the modal is an
-                upsell entry point, not the PDP. */}
+                right — real StarRating component and real
+                commentCount from the product query so the row
+                matches the PDP exactly. Wishlist is visual only
+                (this is an upsell modal, not the PDP). */}
             <div className={styles.ratingRow}>
-              <div aria-hidden className={styles.rating}>
-                ★★★★★ <span>(reviews)</span>
+              <div className={styles.rating}>
+                <StarRating color="yellow" score={averageRating} />
+                <span>
+                  ({reviewCount} review{reviewCount === 1 ? '' : 's'})
+                </span>
               </div>
               <div aria-hidden className={styles.wishlistBadge}>
                 <HeartIcon />
