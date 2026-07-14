@@ -1613,3 +1613,58 @@
     color: #fff;
   }
 }
+
+// Login / Sign Up overlay popup for the checkout guest gate.
+// Portalled to document.body so it dims the checkout behind it
+// and centres the form card. Click-outside on the backdrop or
+// the X button in the top-right closes.
+.authOverlayBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgb(0 0 0 / 65%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.authOverlayCard {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 24px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+
+  @media (width <=767px) {
+    padding: 24px 16px;
+  }
+}
+
+.authOverlayClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 0;
+  background: #000;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 1;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}

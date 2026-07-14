@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { createPortal } from 'react-dom';
+
 import clsx from 'clsx';
 import { State } from 'country-state-city';
 import Image from 'next/image';
@@ -25,7 +27,9 @@ import Button from '@components/button/button';
 import Delivery from '@components/checkout-drawers/delivery';
 import SelectLocation from '@components/checkout-drawers/select-location';
 import Container from '@components/container/container';
+import RegisterForm from '@components/forms/register/register';
 import Loading from '@components/loading/loading';
+import LoginForm from '@components/login-form/login-form';
 
 import LocationIcon from '@assets/icons/location-icon.svg';
 import OnSiteFittingIcon from '@assets/icons/onsite-fitting-icon.svg';
@@ -177,6 +181,15 @@ function CheckoutForm() {
   const [loginError, setLoginError] = useState('');
   const [emailLookupInFlight, setEmailLookupInFlight] = useState(false);
   const [continueAsGuest, setContinueAsGuest] = useState(false);
+  // Auth overlay for the guest gate — null = closed, 'login' or
+  // 'signup' = which form to show in the popup. Clicking Login /
+  // Sign Up on the gate opens this instead of navigating away.
+  const [authOverlay, setAuthOverlay] = useState(null);
+  // Portal-mount guard for the auth overlay — createPortal needs
+  // document.body which doesn't exist on the SSR pass; flip true
+  // after mount.
+  const [authOverlayMounted, setAuthOverlayMounted] = useState(false);
+  useEffect(() => setAuthOverlayMounted(true), []);
   // Inline "Forgot password?" handler state. The login-form's full
   // forgotPassword flow lives at /login (toggle on that page) — but a
   // user mid-checkout shouldn't have to navigate away. Fire the same
@@ -1335,18 +1348,24 @@ function CheckoutForm() {
               <div className={styles.guestGate}>
                 <h2>Let&rsquo;s Get Started</h2>
                 <div className={styles.guestGateActions}>
-                  <Link
+                  {/* Login / Sign Up now open the form as a
+                      full-viewport overlay instead of routing to
+                      /login or /register. Keeps the shopper on
+                      /checkout the whole time. */}
+                  <button
                     className={styles.guestGateLogin}
-                    href="/login?redirect=/checkout"
+                    onClick={() => setAuthOverlay('login')}
+                    type="button"
                   >
                     Login <span aria-hidden>→</span>
-                  </Link>
-                  <Link
+                  </button>
+                  <button
                     className={styles.guestGateSignup}
-                    href="/register?redirect=/checkout"
+                    onClick={() => setAuthOverlay('signup')}
+                    type="button"
                   >
                     Sign Up <span aria-hidden>→</span>
-                  </Link>
+                  </button>
                 </div>
                 <button
                   className={styles.guestGateContinue}
@@ -1357,6 +1376,43 @@ function CheckoutForm() {
                 </button>
               </div>
             ) : null}
+            {/* Login / Sign Up popup overlay — portalled to
+                document.body so it covers the whole viewport.
+                LoginForm accepts an onLoginSuccess callback so
+                it stays on /checkout instead of routing to
+                /account after a successful login; the overlay
+                then closes and the checkout re-renders with the
+                newly-authed user. */}
+            {authOverlayMounted && authOverlay
+              ? createPortal(
+                  <div
+                    className={styles.authOverlayBackdrop}
+                    onClick={() => setAuthOverlay(null)}
+                  >
+                    <div
+                      className={styles.authOverlayCard}
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <button
+                        aria-label="Close"
+                        className={styles.authOverlayClose}
+                        onClick={() => setAuthOverlay(null)}
+                        type="button"
+                      >
+                        ×
+                      </button>
+                      {authOverlay === 'login' ? (
+                        <LoginForm
+                          onLoginSuccess={() => setAuthOverlay(null)}
+                        />
+                      ) : (
+                        <RegisterForm />
+                      )}
+                    </div>
+                  </div>,
+                  document.body,
+                )
+              : null}
             {/* Contact Details */}
             {!userLoading &&
             !user?.id &&

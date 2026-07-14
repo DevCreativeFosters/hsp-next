@@ -37,7 +37,12 @@ const LOGIN_MUTATION = `
   }
 `;
 
-function LoginForm() {
+// onLoginSuccess is an optional callback fired after a successful
+// login instead of the default router.push('/account/...') redirect.
+// Used by the checkout guest-gate overlay so a login mid-checkout
+// keeps the shopper on /checkout instead of bouncing them to their
+// account page.
+function LoginForm({ onLoginSuccess } = {}) {
   const { setUser } = useUserContext();
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [formData, setFormData] = useState({ password: '', username: '' });
@@ -112,7 +117,18 @@ function LoginForm() {
 
         setLoginMessage(`✅ ${loginResponse.message || 'Login successful!'}`);
 
-        router.push(`/account/${normalizedRole}`);
+        if (typeof onLoginSuccess === 'function') {
+          // Overlay caller (e.g. checkout guest-gate popup) — stay
+          // on the current route, close the overlay, let the page
+          // re-render with the newly-authed user.
+          onLoginSuccess({
+            role: normalizedRole,
+            token: loginResponse.token,
+            userId: loginResponse.userId,
+          });
+        } else {
+          router.push(`/account/${normalizedRole}`);
+        }
       } else {
         setLoginMessage(`❌ ${loginResponse?.error || 'Invalid credentials'}`);
       }
