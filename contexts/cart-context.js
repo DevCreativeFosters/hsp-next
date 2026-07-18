@@ -941,6 +941,38 @@ import { useVehicleContext } from './vehicle';
 // };
 
 // 'use client';
+// import { createContext, useContext, useState } from 'react';
+// const CartContext = createContext();
+// export function CartProvider({ children }) {
+//   const [isCartOpen, setIsCartOpen] = useState(false);
+//   const [cartItems, setCartItems] = useState([]);
+//   const openCart = () => setIsCartOpen(true);
+//   const closeCart = () => setIsCartOpen(false);
+//   const toggleCart = () => setIsCartOpen(!isCartOpen);
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cartItems,
+//         closeCart,
+//         isCartOpen,
+//         openCart,
+//         setCartItems,
+//         toggleCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// }
+// export const useCart = () => {
+//   const context = useContext(CartContext);
+//   if (!context) {
+//     throw new Error('useCart must be used within a CartProvider');
+//   }
+//   return context;
+// };
+
+// 'use client';
 
 // import { createContext, useContext, useState } from 'react';
 
@@ -1317,11 +1349,15 @@ export function CartProvider({ children }) {
 
       const userId = currentUserId();
       // price/compareAtPrice are frontend-only overrides (B2B tier from PDP)
-      // — WP's AddToCartInput schema rejects them. Strip before sending,
-      // but keep them on `item` so buildShadowItem can still use them.
+      // — WP's AddToCartInput schema rejects them. product_image is the
+      // same: a frontend-supplied thumbnail for add-ons/variants that WP's
+      // addToCart response comes back without (blank image in cart). All
+      // three get stripped before sending, but stay on `item` so
+      // buildShadowItem can still use them (see product_image at 1123).
       const {
         compareAtPrice: _shadowCmp,
         price: _shadowPrice,
+        product_image: _shadowImage,
         ...wpInput
       } = item;
       // Include userId in the WP input for authenticated users. An earlier
