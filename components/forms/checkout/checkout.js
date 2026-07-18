@@ -55,7 +55,7 @@ const GET_ACCOUNT_TERMS_QUERY = `
 
 function CheckoutForm() {
   const router = useRouter();
-  const { loading: userLoading, setUser, user } = useUserContext();
+  const { getUserById, loading: userLoading, setUser, user } = useUserContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -462,13 +462,29 @@ function CheckoutForm() {
         if (cancelled) return;
         const billing = addrRes?.userAddress?.billing;
         const shippingAddr = addrRes?.userAddress?.shipping;
-        if (!billing?.email) return;
 
-        // customerByEmail with the auth token returns company etc. that
-        // userAddress doesn't carry. Run it after we have the email.
-        const profile = await getCustomerByEmail(billing.email, {
-          authToken: user.token,
-        });
+        // Retail customers who signed up via onboarding have NO
+        // WooCommerce billing record yet, so billing.email is empty.
+        // Previously we bailed here (`if (!billing?.email) return`) and
+        // the entire Contact Details card stayed blank — the QA bug.
+        // Fall back to vendorProfile(userId): the same name/email/phone
+        // source the /account "My Details" page uses. b2b/dealer are
+        // unaffected — their billing.email is present, so lookupEmail
+        // still resolves to it below and the store-address branches run
+        // exactly as before.
+        const vProfile = (await getUserById(user.id)) || {};
+        if (cancelled) return;
+
+        // customerByEmail (with the auth token) returns company etc.
+        // that userAddress / vendorProfile don't carry. Only run it
+        // when we actually have an email to look up (billing first,
+        // then the vendorProfile email for onboarding-only retail).
+        const lookupEmail = billing?.email || vProfile?.email || '';
+        const profile = lookupEmail
+          ? await getCustomerByEmail(lookupEmail, {
+              authToken: user.token,
+            })
+          : null;
         if (cancelled) return;
 
         // For B2B / Dealer accounts, populate Contact Details from
@@ -566,21 +582,33 @@ function CheckoutForm() {
           }
         }
 
+        // billing may be null now (onboarding retail with no WC billing
+        // record), so every billing.* read is optional-chained and
+        // vProfile is the trailing fallback for name/email/phone.
         const resolvedFirstName =
           shipping?.firstName ||
           postNameFallback ||
           profile?.firstName ||
-          billing.first_name ||
+          billing?.first_name ||
+          vProfile?.firstName ||
           '';
         const resolvedLastName =
           shipping?.lastName ||
           (postNameFallback && !shipping?.firstName
             ? ''
-            : profile?.lastName || billing.last_name || '');
+            : profile?.lastName ||
+              billing?.last_name ||
+              vProfile?.lastName ||
+              '');
         const resolvedCompany = shipping?.company || profile?.company || '';
-        const resolvedEmail = shipping?.email || billing.email || '';
+        const resolvedEmail =
+          shipping?.email || billing?.email || vProfile?.email || '';
         const resolvedPhone =
-          shipping?.phone || profile?.phone || billing.phone || '';
+          shipping?.phone ||
+          profile?.phone ||
+          billing?.phone ||
+          vProfile?.phone ||
+          '';
 
         setFormData(prev => ({
           ...prev,
