@@ -176,16 +176,45 @@ export const CheckoutProvider = ({ children }) => {
 
   // 🛒 Submit Checkout Order
   //
-  // Retail orders work via `checkoutOrder`. The custom `dealerCheckoutOrder`
-  // resolver throws "Your cart is empty" because it reads from a different
-  // WC cart store than `addToCart` writes to (cross-origin session quirks).
-  // Lokesh's `CheckoutOrderInput` already accepts dealer fields
-  // (payment_term_name, payment_term_id, credit_limit) per his own schema,
-  // so route B2B through the same mutation as retail. Same payload shape.
+  // Retail + dealer orders go via `checkoutOrder`. (The old custom
+  // `dealerCheckoutOrder` resolver was abandoned — it threw "Your cart
+  // is empty" because it read from a different WC cart store than
+  // `addToCart` writes to; `CheckoutOrderInput` accepts the dealer
+  // fields anyway.) B2B now uses the newer `b2bCheckoutOrder` resolver
+  // — same payload shape, identified by the Bearer token exactly like
+  // the legacy mutation.
   const checkoutOrder = async input => {
     setLoading(true);
     try {
-      const query = `
+      // B2B now goes through the dedicated b2bCheckoutOrder resolver.
+      // Its B2bCheckoutOrderInput is CheckoutOrderInput minus
+      // credit_limit / payment_term_id (confirmed via introspection),
+      // and our handleSubmit payload sends neither, so the same
+      // payload shape coerces cleanly into both. Retail + dealer stay
+      // on the legacy checkoutOrder — dealer needs fields the b2b
+      // input dropped, and retail has no reason to move.
+      // Role from context, with the same localStorage fallback the
+      // token uses below (context can lag on a hard refresh).
+      const role =
+        user?.role ||
+        (typeof window !== 'undefined'
+          ? localStorage.getItem('userRole')
+          : null);
+      const isB2b = role === 'b2b';
+
+      const query = isB2b
+        ? `
+        mutation B2bCheckoutOrder($input: B2bCheckoutOrderInput!) {
+          b2bCheckoutOrder(input: $input) {
+            status
+            message
+            order_id
+            order_total
+            payment_term_name
+          }
+        }
+      `
+        : `
         mutation CheckoutOrder($input: CheckoutOrderInput!) {
           checkoutOrder(input: $input) {
             status
@@ -218,7 +247,7 @@ export const CheckoutProvider = ({ children }) => {
         variables,
         ...(authToken && { authToken }),
       });
-      const data = res?.checkoutOrder;
+      const data = isB2b ? res?.b2bCheckoutOrder : res?.checkoutOrder;
 
       setOrderResponse(data);
       return data;
