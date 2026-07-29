@@ -236,6 +236,10 @@
   border-radius: 8px;
   padding: 14px 20px;
   margin-top: 10px;
+
+  // Breathing room between the "billing same as above" tickbox and the
+  // Billing Address section that opens beneath it (QA: needs spacing).
+  margin-bottom: 16px;
   box-sizing: border-box;
 
   label {
@@ -1727,5 +1731,15 @@
 
   &:hover {
     opacity: 0.85;
+  }
+}
+
+.termsInlineLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--color-primary-100);
   }
 }

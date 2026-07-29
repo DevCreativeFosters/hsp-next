@@ -975,15 +975,14 @@ function CheckoutForm() {
   const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [invoiceAddressConfirmed, setInvoiceAddressConfirmed] = useState(false);
 
-  // Chain the per-section confirms into the whole-card collapse
-  // per Figma B2B flow (node 5445:37496): once the user has
-  // confirmed Address Details AND either ticked "billing same as
-  // above" OR confirmed the separate Billing Address, drop the
-  // whole Contact Details card into its read-only summary view
-  // (name/email/phone + Edit Details button + the two dark
-  // address cards). The user doesn't have to click a third
-  // "Submit Details" button to finish the section.
+  // Chain the per-section confirms into the whole-card collapse —
+  // but ONLY for b2b/dealer (Figma B2B flow node 5445:37496), who
+  // have no Submit Details button after editing. For retail, QA
+  // explicitly wants the opposite (Trello 306): Confirm Address
+  // collapses just that box, and the whole Contact Details card
+  // only collapses when the user clicks "Submit Details".
   useEffect(() => {
+    if (!isDealerLike) return;
     if (!addressConfirmed) return;
     const billingSameAsAddress = formData.delivery_same_as_billing !== false;
     if (billingSameAsAddress || invoiceAddressConfirmed) {
@@ -993,6 +992,7 @@ function CheckoutForm() {
     addressConfirmed,
     formData.delivery_same_as_billing,
     invoiceAddressConfirmed,
+    isDealerLike,
   ]);
 
   const handleSubmitContactDetails = () => {
@@ -1814,7 +1814,7 @@ function CheckoutForm() {
                           </div>
                           <div className={styles.addressFormCol}>
                             <div className={styles.addressLblSelect}>
-                              <span>State/territory</span>
+                              <span>State/Territory</span>
                               <select
                                 name="state"
                                 onChange={handleChange}
@@ -1978,7 +1978,7 @@ function CheckoutForm() {
                             </div>
                             <div className={styles.addressFormCol}>
                               <div className={styles.addressLblSelect}>
-                                <span>State/territory</span>
+                                <span>State/Territory</span>
                                 <select
                                   name="delivery_state"
                                   onChange={handleChange}
@@ -2658,18 +2658,26 @@ function CheckoutForm() {
                               onChange={handleCheckboxChange}
                               type="checkbox"
                             />{' '}
-                            <span>
-                              I accept the Privacy Policy and Terms & Conditions
-                            </span>
+                            <span>I accept the</span>
                           </label>{' '}
                           <Link
+                            className={styles.termsInlineLink}
                             href="/privacy-terms-and-conditions"
                             onClick={e => e.stopPropagation()}
                             target="_blank"
                           >
-                            Read our T&Cs{' '}
-                            <span className={styles.reqStar}>*</span>
+                            Privacy Policy
+                          </Link>{' '}
+                          and{' '}
+                          <Link
+                            className={styles.termsInlineLink}
+                            href="/privacy-terms-and-conditions"
+                            onClick={e => e.stopPropagation()}
+                            target="_blank"
+                          >
+                            Terms & Conditions
                           </Link>
+                          <span className={styles.reqStar}>*</span>
                         </div>
                       </div>
                     </div>
