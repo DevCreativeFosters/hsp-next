@@ -509,11 +509,25 @@ export default function EnquiryForm({
                                         selectedCompatibleVariant?.variantSlug,
                                     });
 
-                                  if (!isProductInCart) {
-                                    addMainProduct().then(addCompatibleProduct);
-                                  } else {
-                                    addCompatibleProduct();
-                                  }
+                                  // Surface failures — this chain used
+                                  // to fail silently (e.g. when WP
+                                  // returned corrupted JSON), leaving
+                                  // the main product added but never
+                                  // the accessory, with no feedback.
+                                  (isProductInCart
+                                    ? addCompatibleProduct()
+                                    : addMainProduct().then(
+                                        addCompatibleProduct,
+                                      )
+                                  ).catch(err => {
+                                    console.error(
+                                      '[PDP] compatible add failed:',
+                                      err?.message,
+                                    );
+                                    alert(
+                                      '⚠️ Could not add the accessory to your cart. Please try again.',
+                                    );
+                                  });
                                 }}
                               />
                             )}
