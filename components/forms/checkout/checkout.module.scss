@@ -1734,8 +1734,21 @@
   }
 }
 
+// Wraps the linked "Privacy Policy and Terms & Conditions" phrase that
+// sits OUTSIDE the checkbox <label> (links inside the label made ticking
+// the box navigate). Colors must be explicit here — inherited color on
+// the white payment card is white, which made the row invisible until
+// hover.
+.termsLinkRow {
+  color: #000;
+
+  .reqStar {
+    color: var(--color-primary-100);
+  }
+}
+
 .termsInlineLink {
-  color: inherit;
+  color: #000;
   text-decoration: underline;
   text-underline-offset: 2px;
 

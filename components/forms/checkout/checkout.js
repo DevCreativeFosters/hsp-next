@@ -2660,24 +2660,30 @@ function CheckoutForm() {
                             />{' '}
                             <span>I accept the</span>
                           </label>{' '}
-                          <Link
-                            className={styles.termsInlineLink}
-                            href="/privacy-terms-and-conditions"
-                            onClick={e => e.stopPropagation()}
-                            target="_blank"
-                          >
-                            Privacy Policy
-                          </Link>{' '}
-                          and{' '}
-                          <Link
-                            className={styles.termsInlineLink}
-                            href="/privacy-terms-and-conditions"
-                            onClick={e => e.stopPropagation()}
-                            target="_blank"
-                          >
-                            Terms & Conditions
-                          </Link>
-                          <span className={styles.reqStar}>*</span>
+                          {/* Outside the label, color no longer comes
+                              from `.inputGroup label` — without an
+                              explicit color these render white on the
+                              white payment card. */}
+                          <span className={styles.termsLinkRow}>
+                            <Link
+                              className={styles.termsInlineLink}
+                              href="/privacy-terms-and-conditions"
+                              onClick={e => e.stopPropagation()}
+                              target="_blank"
+                            >
+                              Privacy Policy
+                            </Link>{' '}
+                            and{' '}
+                            <Link
+                              className={styles.termsInlineLink}
+                              href="/privacy-terms-and-conditions"
+                              onClick={e => e.stopPropagation()}
+                              target="_blank"
+                            >
+                              Terms & Conditions
+                            </Link>
+                            <span className={styles.reqStar}>*</span>
+                          </span>
                         </div>
                       </div>
                     </div>
