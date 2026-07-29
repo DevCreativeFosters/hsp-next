@@ -32,11 +32,14 @@ export default function EnquiryProduct({
       )}
       {price !== null && price !== undefined && (
         <div className={styles.price}>
-          {formatPrice(price)}{' '}
-          {price !== 0 && (
+          {formatPrice(price)}
+          {/* Only render the install line when there's a real number —
+              a missing/NaN installationCost previously printed "$NaN",
+              and the bare "+ $550.00" read like a struck-through
+              compare-at price (QA card 304). Match the PDP wording. */}
+          {price !== 0 && Number(installationCost) > 0 && (
             <span className={styles.installationCost}>
-              {' '}
-              + {formatPrice(installationCost)}
+              + {formatPrice(installationCost)} for installation
             </span>
           )}
         </div>

@@ -240,7 +240,7 @@ export default function ClientSideCartItems() {
                 <p>
                   GST Included.
                   <br />
-                  Fitting or Shipping confirmed in the checkout.
+                  Fitment and delivery costs will be confirmed in the checkout
                 </p>
                 <div className={styles.agreeCheckbox}>
                   <label>

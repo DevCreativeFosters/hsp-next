@@ -430,7 +430,7 @@ export default function EnquiryForm({
               role === 'retail' &&
               productData?.compatibleProduct?.selectProduct?.length > 0 && (
                 <div className={styles.cmpProduct}>
-                  <div className={styles.title}>Also Compatible with:</div>
+                  <div className={styles.title}>Also Compatible With:</div>
                   {productData.compatibleProduct.selectProduct.map(item => {
                     const img = item?.uploadProductImage?.node;
                     const product = item?.product?.nodes[0];
@@ -518,36 +518,44 @@ export default function EnquiryForm({
                               />
                             )}
                           </h5>
+                          {/* Guard every figure — compatible products
+                              with no variant pricing were rendering
+                              "$NaN" / "$NaN for install" here. Only
+                              print numbers that exist. */}
                           <div className={styles.price}>
-                            <div
-                              className={clsx({
-                                red: variantDetails?.compareAtPrice,
-                              })}
-                            >
-                              {formatPrice(variantDetails?.price)}
-                            </div>
-                            {variantDetails?.compareAtPrice && (
+                            {Number.isFinite(Number(variantDetails?.price)) && (
+                              <div
+                                className={clsx({
+                                  red: variantDetails?.compareAtPrice,
+                                })}
+                              >
+                                {formatPrice(variantDetails?.price)}
+                              </div>
+                            )}
+                            {Number(variantDetails?.compareAtPrice) > 0 && (
                               <div className={styles.two}>
                                 {formatPrice(variantDetails?.compareAtPrice)}
                               </div>
                             )}
-                            <div className={styles.three}>
-                              <svg
-                                className={clsx(styles.plusIcon)}
-                                fill="none"
-                                height="8"
-                                viewBox="0 0 18 18"
-                                width="8"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M15 7H11V3C11 2.45 10.55 2 10 2H8C7.45 2 7 2.45 7 3V7H3C2.45 7 2 7.45 2 8V10C2 10.55 2.45 11 3 11H7V15C7 15.55 7.45 16 8 16H10C10.55 16 11 15.55 11 15V11H15C15.55 11 16 10.55 16 10V8C16 7.45 15.55 7 15 7Z"
-                                  fill="currentColor"
-                                ></path>
-                              </svg>{' '}
-                              {formatPrice(variantDetails?.installationCost)}{' '}
-                              for install
-                            </div>
+                            {Number(variantDetails?.installationCost) > 0 && (
+                              <div className={styles.three}>
+                                <svg
+                                  className={clsx(styles.plusIcon)}
+                                  fill="none"
+                                  height="8"
+                                  viewBox="0 0 18 18"
+                                  width="8"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M15 7H11V3C11 2.45 10.55 2 10 2H8C7.45 2 7 2.45 7 3V7H3C2.45 7 2 7.45 2 8V10C2 10.55 2.45 11 3 11H7V15C7 15.55 7.45 16 8 16H10C10.55 16 11 15.55 11 15V11H15C15.55 11 16 10.55 16 10V8C16 7.45 15.55 7 15 7Z"
+                                    fill="currentColor"
+                                  ></path>
+                                </svg>{' '}
+                                {formatPrice(variantDetails?.installationCost)}{' '}
+                                for install
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

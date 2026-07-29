@@ -344,7 +344,7 @@ function DeliveryAddressForm({
               </div>
               <div className={styles.formCol}>
                 <div className={styles.lblSelect}>
-                  <span>State/territory</span>
+                  <span>State/Territory</span>
                   <select
                     name={f('state')}
                     onChange={handleChange}

@@ -51,7 +51,7 @@ function WishlistItems() {
           </div>
         ))
       ) : (
-        <p>No items in wishlist.</p>
+        <p>{"Looks like there's nothing in your Wishlist right now"}</p>
       )}
 
       <div className={styles.moreBtn}>
