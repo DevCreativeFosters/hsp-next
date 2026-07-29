@@ -12,45 +12,55 @@
 .modal {
   position: relative;
   width: 100%;
-  max-width: 1112px;
+  max-width: 1160px;
 
   // Red frame effect — 11px solid #ed2935 border acts as the
   // outer red "matting" around the dark inner card per Figma
   // node 161:4925. Was a 2px border, which read as an outline,
   // not the framed look the design uses.
   background: #181616;
-  border: 11px solid #ed2935;
+  outline: 11px solid #ed2935;
   border-radius: 16px;
-  padding: 32px 40px 40px;
+  padding: 52px 40px 40px;
   color: #fff;
 
-  @media (width <= 767px) {
-    padding: 24px;
+  @include bp-below(medium) {
+    padding: 60px 24px 24px;
     border-width: 6px;
+    overflow: auto;
+    max-height: 90vh;
   }
 }
 
 .closeBtn {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
+  top: 32px;
+  right: 32px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: 0;
   background: #fff;
   color: #000;
-  font-size: 24px;
+  font-size: 65px;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
   transition: opacity 0.15s ease;
+  padding: 6px 0 0 1px;
 
   &:hover {
     opacity: 0.85;
+  }
+
+  @include bp-below(medium) {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 50px;
   }
 }
 
@@ -61,17 +71,18 @@
   // doesn't swallow the modal. Figma allots 516px image +
   // 72px gap + 444px info panel — same ~1.16:1 ratio here so
   // the info side has enough room for title + variant + CTA.
-  gap: 40px;
-  grid-template-columns: 516fr 444fr;
+  gap: 72px;
+  grid-template-columns: 465fr 444fr;
+  align-items: center;
 
   @media (width <= 991px) {
     gap: 24px;
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (width <= 767px) {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  @include bp-below(medium) {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -83,14 +94,18 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+
+  @include bp-below(medium) {
+    max-width: 100%;
+  }
 }
 
 // Info card that wraps variant + price + stock + qty + CTAs
 // in one bordered block — same shape as the PDP.
 .infoCard {
-  border: 2px solid rgb(255 255 255 / 15%);
-  border-radius: 12px;
-  padding: 20px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -115,6 +130,10 @@
 .info {
   display: flex;
   flex-direction: column;
+
+  @include bp-below(medium) {
+    max-width: 100%;
+  }
 }
 
 .category {
@@ -140,11 +159,10 @@
 }
 
 .partNo {
-  margin: 0 0 12px;
+  margin: 0 0 15px;
   font-family: var(--font-secondary);
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.04em;
   color: #fff;
 
   span {
@@ -170,7 +188,7 @@
   // from the bordered info card below — matches the visual
   // rhythm on the PDP where the buy-block sits well below the
   // rating.
-  margin-bottom: 20px;
+  margin-bottom: 13px;
 }
 
 // Rating cluster — real StarRating SVGs need flex alignment
@@ -182,11 +200,6 @@
   gap: 8px;
   font-family: var(--font-primary);
   font-size: 14px;
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
 
   span {
     color: #bfbfbf;
@@ -233,17 +246,18 @@
   position: relative;
   border: 2px solid rgb(255 255 255 / 20%);
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 10px 16px;
   background: transparent;
+  margin-bottom: 26px;
 }
 
 .variantFieldLabel {
-  display: block;
   font-family: var(--font-primary);
   font-size: 12px;
   color: rgb(255 255 255 / 70%);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  display: block;
 }
 
 // Custom dropdown trigger button — replaces the native
@@ -338,9 +352,8 @@
 
 .priceRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
-  margin-top: 4px;
 }
 
 .price {
@@ -365,11 +378,15 @@
 }
 
 .install {
-  color: #fff;
-  font-family: var(--font-primary);
-  font-size: clamp(14px, 1.4vw, 18px);
-  line-height: 1.4;
+  color: var(--color-primary-100);
+  font-size: clamp(18px, 1.25vw, 24px);
   align-self: center;
+  font-weight: 600;
+}
+
+.install span {
+  font-family: var(--font-secondary);
+  padding-left: 4px;
 }
 
 .stock {
@@ -377,15 +394,34 @@
   font-family: var(--font-secondary);
   font-size: 14px;
   font-weight: 700;
+
+  &.forDesk {
+    @include bp-below(medium) {
+      display: none;
+    }
+  }
 }
 
 .addRow {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 4px;
 
-  @media (width <= 767px) {
+  &.forDesk {
+    @include bp-below(medium) {
+      .qtyStepper {
+        display: none;
+      }
+
+      .addBtn {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+
+  @include bp-below(medium) {
     flex-wrap: wrap;
   }
 }
@@ -402,6 +438,13 @@
   min-width: 64px;
   height: 48px;
   box-sizing: border-box;
+
+  @include bp-below(medium) {
+    position: relative;
+    height: 31px;
+    min-width: 94px;
+    justify-content: center;
+  }
 }
 
 .qtyValue {
@@ -412,12 +455,24 @@
   min-width: 20px;
   text-align: center;
   color: #000;
+
+  @include bp-below(medium) {
+    font-size: 16px;
+  }
 }
 
 .qtyArrows {
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  @include bp-below(medium) {
+    flex-direction: row-reverse;
+    position: absolute;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 8px;
+  }
 }
 
 .qtyUp,
@@ -470,9 +525,19 @@
   // width in the row.
   flex: 1;
   min-width: 160px;
-  max-width: 260px;
+  max-width: 172px;
   min-height: 48px !important;
   height: 48px !important;
   padding: 0 24px !important;
   font-size: 20px !important;
+}
+
+.mobInstall {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  @include bp(medium) {
+    display: none;
+  }
 }

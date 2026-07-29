@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 
+import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@contexts/cart-context';
@@ -14,8 +15,6 @@ import Button from '@components/button/button';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import StarRating from '@components/reviews/star-rating';
 
-import RemoveWishlist from '@assets/icons/filled-heart.svg';
-import AddWishlist from '@assets/icons/heart.svg';
 
 import styles from './accessory-variant-modal.module.scss';
 
@@ -237,7 +236,11 @@ export default function AccessoryVariantModal({ onClose, product }) {
               underneath. On the PDP this doesn't matter because
               variant switching triggers a full route.push. */}
           <div className={styles.imageCol}>
-            <ProductImageCarousel images={galleryImages} key={selectedSlug} />
+            <ProductImageCarousel
+              images={galleryImages}
+              key={selectedSlug}
+              showTileCarousel={false}
+            />
           </div>
           <div className={styles.info}>
             {category && <div className={styles.category}>{category}</div>}
@@ -259,33 +262,12 @@ export default function AccessoryVariantModal({ onClose, product }) {
                   ({reviewCount} review{reviewCount === 1 ? '' : 's'})
                 </span>
               </div>
-              {/* Wishlist button — real PDP behaviour. Signed-in
-                  users see filled heart + "Added to Wishlist"
-                  when the product is in their list, outline heart
-                  + "Wishlist" when it isn't. Guests get bounced
-                  to /login on click. */}
-              <button
-                className={styles.wishlistBadge}
-                onClick={handleWishlistToggle}
-                type="button"
-              >
-                {inWishlist ? (
-                  <>
-                    <RemoveWishlist /> Added to Wishlist
-                  </>
-                ) : (
-                  <>
-                    <AddWishlist /> Wishlist
-                  </>
-                )}
-              </button>
             </div>
             {/* Info card — variant / price / stock / qty / CTAs
                 all wrapped in one bordered box per PDP. */}
             <div className={styles.infoCard}>
               {variants.length > 1 && (
                 <div className={styles.variantField}>
-                  <span className={styles.variantFieldLabel}>Variant</span>
                   <button
                     aria-expanded={variantOpen}
                     aria-haspopup="listbox"
@@ -329,6 +311,28 @@ export default function AccessoryVariantModal({ onClose, product }) {
                   )}
                 </div>
               )}
+              <div className={styles.mobInstall}>
+                <div className={styles.addRow}>
+                  <div className={styles.qtyStepper}>
+                    <span className={styles.qtyValue}>{quantity}</span>
+                    <div className={styles.qtyArrows}>
+                      <button
+                        aria-label="Increase"
+                        className={styles.qtyUp}
+                        onClick={() => setQuantity(q => q + 1)}
+                        type="button"
+                      />
+                      <button
+                        aria-label="Decrease"
+                        className={styles.qtyDown}
+                        onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                        type="button"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.stock}>● In Stock</div>
+              </div>
               <div className={styles.priceRow}>
                 {variantPrice != null && (
                   <span className={styles.price}>${variantPrice}</span>
@@ -342,12 +346,14 @@ export default function AccessoryVariantModal({ onClose, product }) {
                   )}
                 {variantInstall > 0 && (
                   <span className={styles.install}>
-                    + ${variantInstall} for installation
+                    +<span>${variantInstall} for installation</span>
                   </span>
                 )}
               </div>
-              <div className={styles.stock}>● In Stock</div>
-              <div className={styles.addRow}>
+              <div className={clsx(styles.stock, styles.forDesk)}>
+                ● In Stock
+              </div>
+              <div className={clsx(styles.addRow, styles.forDesk)}>
                 <div className={styles.qtyStepper}>
                   <span className={styles.qtyValue}>{quantity}</span>
                   <div className={styles.qtyArrows}>
@@ -373,18 +379,6 @@ export default function AccessoryVariantModal({ onClose, product }) {
                   variant="primary"
                 >
                   {adding ? 'Adding…' : 'Add to Cart'}
-                </Button>
-                {/* Make Enquiry — matches the PDP secondary CTA.
-                    Just closes the modal for now; wire to the
-                    real enquiry flow when we bring the form
-                    over from the PDP. */}
-                <Button
-                  className={styles.enquiryBtn}
-                  onClick={onClose}
-                  size="large"
-                  variant="primary"
-                >
-                  Make Enquiry
                 </Button>
               </div>
             </div>

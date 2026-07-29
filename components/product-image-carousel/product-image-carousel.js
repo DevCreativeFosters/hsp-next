@@ -21,6 +21,7 @@ export default function ProductImageCarousel({
   modalService = false,
   onImageClick = () => {},
   showMainImage = true,
+  showTileCarousel = true,
 }) {
   const buttonPrevRef = useRef();
   const buttonNextRef = useRef();
@@ -132,48 +133,50 @@ export default function ProductImageCarousel({
           )}
         </div>
       )}
-      <TileCarousel
-        buttonNextRef={buttonNextRef}
-        buttonPrevRef={buttonPrevRef}
-        containerClassName={styles.thumbnailCarouselContainer}
-        id="product-gallery"
-        itemTemplate={itemTpl}
-        items={images}
-        name="Product image carousel"
-        nonOverflowWrapper
-        onImageClick={onImageClick}
-        resetStyle
-        xSmallGaps
-      >
-        {isNavigationVisible && images.length && (
-          <>
-            <Button
-              background="dark"
-              className={clsx(
-                'navigationButton',
-                styles.navigationButton,
-                styles.prevButton,
-              )}
-              onClick={changeSlide(-1)}
-              ref={buttonPrevRef}
-              rightIcon="arrow-previous"
-              variant="secondary"
-            />
-            <Button
-              background="dark"
-              className={clsx(
-                'navigationButton',
-                styles.navigationButton,
-                styles.nextButton,
-              )}
-              onClick={changeSlide(1)}
-              ref={buttonNextRef}
-              rightIcon="arrow-next"
-              variant="secondary"
-            />
-          </>
-        )}
-      </TileCarousel>
+      {showTileCarousel && (
+        <TileCarousel
+          buttonNextRef={buttonNextRef}
+          buttonPrevRef={buttonPrevRef}
+          containerClassName={styles.thumbnailCarouselContainer}
+          id="product-gallery"
+          itemTemplate={itemTpl}
+          items={images}
+          name="Product image carousel"
+          nonOverflowWrapper
+          onImageClick={onImageClick}
+          resetStyle
+          xSmallGaps
+        >
+          {isNavigationVisible && images.length && (
+            <>
+              <Button
+                background="dark"
+                className={clsx(
+                  'navigationButton',
+                  styles.navigationButton,
+                  styles.prevButton,
+                )}
+                onClick={changeSlide(-1)}
+                ref={buttonPrevRef}
+                rightIcon="arrow-previous"
+                variant="secondary"
+              />
+              <Button
+                background="dark"
+                className={clsx(
+                  'navigationButton',
+                  styles.navigationButton,
+                  styles.nextButton,
+                )}
+                onClick={changeSlide(1)}
+                ref={buttonNextRef}
+                rightIcon="arrow-next"
+                variant="secondary"
+              />
+            </>
+          )}
+        </TileCarousel>
+      )}
 
       {mounted &&
         createPortal(
