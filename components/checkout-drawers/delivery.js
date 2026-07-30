@@ -427,16 +427,70 @@ export default function Delivery({
   formData,
   setFormData,
   setIsFormFilled,
+  showUseBillingAsShipping,
 }) {
+  useEffect(() => {
+    if (showUseBillingAsShipping && formData.delivery_same_as_billing) {
+      setFormData(prev => ({
+        ...prev,
+        address: prev.delivery_address,
+        address_2: prev.delivery_address_2,
+        city: prev.delivery_city,
+        company: prev.deliveryCompanyName,
+        country: prev.delivery_country,
+        postcode: prev.delivery_postcode,
+        state: prev.delivery_state,
+      }));
+    }
+  }, [formData.delivery_same_as_billing, showUseBillingAsShipping]);
+
   return (
     <div className={styles.drawerContent}>
-      <DeliveryAddressForm
-        allowDelivery={allowDelivery}
-        askCutomerInfo={askCutomerInfo}
-        formData={formData}
-        setFormData={setFormData}
-        setIsFormFilled={setIsFormFilled}
-      />
+      {showUseBillingAsShipping && (
+        <div className={styles.colFull}>
+          <div className={styles.deliverySameBar}>
+            <label>
+              <input
+                checked={formData.delivery_same_as_billing !== false}
+                name="delivery_same_as_billing"
+                onChange={e => {
+                  console.log(e.target.checked);
+                  if (e.target.checked === false) {
+                    setFormData(prev => ({
+                      ...prev,
+                      address: '',
+                      address_2: '',
+                      city: '',
+                      company: '',
+                      country: '',
+                      postcode: '',
+                      state: '',
+                    }));
+                  }
+
+                  setFormData(prev => ({
+                    ...prev,
+                    delivery_same_as_billing: e.target.checked,
+                  }));
+                }}
+                type="checkbox"
+              />
+              <span>
+                The billing address and shipping address are the same.
+              </span>
+            </label>
+          </div>
+        </div>
+      )}
+      {!(formData.delivery_same_as_billing && showUseBillingAsShipping) && (
+        <DeliveryAddressForm
+          allowDelivery={allowDelivery}
+          askCutomerInfo={askCutomerInfo}
+          formData={formData}
+          setFormData={setFormData}
+          setIsFormFilled={setIsFormFilled}
+        />
+      )}
     </div>
   );
 }

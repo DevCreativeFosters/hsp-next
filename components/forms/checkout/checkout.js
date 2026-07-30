@@ -1715,169 +1715,175 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {/* Address Details — primary/billing address. Nested
+                  {role != 'retail' && (
+                    <>
+                      {/* Address Details — primary/billing address. Nested
                       inside the Contact Details card per Figma node
                       5443:36032. When the user clicks Confirm Address
                       the FORM collapses into a summary strip (dark
                       pill showing the joined address line + Edit
                       button); the Invoice Address form below remains
                       independently editable / confirmable. */}
-                  {addressConfirmed ? (
-                    <div className={styles.colFull}>
-                      <div className={styles.addressSummaryStrip}>
-                        <h4>Address Details</h4>
-                        <p>
-                          {[
-                            formData.address,
-                            formData.address_2,
-                            formData.city,
-                            formData.state,
-                            formData.postcode,
-                            formData.country,
-                          ]
-                            .filter(Boolean)
-                            .join(', ')}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={styles.colFull}>
-                      <div className={styles.addressDetails}>
-                        <h2 className={styles.addressDetailsHeading}>
-                          Address Details
-                        </h2>
-                        <div className={styles.addressFormRow}>
-                          <div className={styles.addressFormCol}>
-                            <div className={styles.addressLblSelect}>
-                              <span>Country/Region</span>
-                              <select
-                                name="country"
-                                onChange={handleChange}
-                                value={formData.country}
-                              >
-                                <option value="AU">Australia</option>
-                              </select>
+                      {addressConfirmed ? (
+                        <div className={styles.colFull}>
+                          <div className={styles.addressSummaryStrip}>
+                            <h4>Address Details</h4>
+                            <p>
+                              {[
+                                formData.address,
+                                formData.address_2,
+                                formData.city,
+                                formData.state,
+                                formData.postcode,
+                                formData.country,
+                              ]
+                                .filter(Boolean)
+                                .join(', ')}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={styles.colFull}>
+                          <div className={styles.addressDetails}>
+                            <h2 className={styles.addressDetailsHeading}>
+                              Address Details
+                            </h2>
+                            <div className={styles.addressFormRow}>
+                              <div className={styles.addressFormCol}>
+                                <div className={styles.addressLblSelect}>
+                                  <span>Country/Region</span>
+                                  <select
+                                    name="country"
+                                    onChange={handleChange}
+                                    value={formData.country}
+                                  >
+                                    <option value="AU">Australia</option>
+                                  </select>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className={styles.addressFormRow}>
-                          <div className={styles.addressFormCol}>
-                            <input
-                              name="company"
-                              onChange={handleChange}
-                              placeholder="Company Name (Optional)"
-                              type="text"
-                              value={formData.company}
-                            />
-                          </div>
-                        </div>
-                        <div className={styles.addressFormRow}>
-                          <div className={styles.addressFormCol}>
-                            <input
-                              name="address"
-                              onChange={handleChange}
-                              placeholder="Address (We do not ship to PO Boxes)"
-                              type="text"
-                              value={formData.address}
-                            />
-                          </div>
-                        </div>
-                        <div className={styles.addressFormRow}>
-                          <div className={styles.addressFormCol}>
-                            <input
-                              name="address_2"
-                              onChange={handleChange}
-                              placeholder="Apartment, suite, etc. (optional)"
-                              type="text"
-                              value={formData.address_2 || ''}
-                            />
-                          </div>
-                        </div>
-                        <div className={styles.addressFormRow}>
-                          <div className={styles.addressFormCol}>
-                            <input
-                              name="city"
-                              onChange={handleChange}
-                              placeholder="City"
-                              type="text"
-                              value={formData.city}
-                            />
-                          </div>
-                          <div className={styles.addressFormCol}>
-                            <input
-                              name="postcode"
-                              onChange={handleChange}
-                              placeholder="Postcode"
-                              type="text"
-                              value={formData.postcode}
-                            />
-                          </div>
-                          <div className={styles.addressFormCol}>
-                            <div className={styles.addressLblSelect}>
-                              <span>State/Territory</span>
-                              <select
-                                name="state"
-                                onChange={handleChange}
-                                value={formData.state}
-                              >
-                                <option value="">Select state</option>
-                                {State.getStatesOfCountry(
-                                  formData.country || 'AU',
-                                ).map(s => (
-                                  <option key={s.isoCode} value={s.name}>
-                                    {s.name}
-                                  </option>
-                                ))}
-                              </select>
+                            <div className={styles.addressFormRow}>
+                              <div className={styles.addressFormCol}>
+                                <input
+                                  name="company"
+                                  onChange={handleChange}
+                                  placeholder="Company Name (Optional)"
+                                  type="text"
+                                  value={formData.company}
+                                />
+                              </div>
                             </div>
+                            <div className={styles.addressFormRow}>
+                              <div className={styles.addressFormCol}>
+                                <input
+                                  name="address"
+                                  onChange={handleChange}
+                                  placeholder="Address (We do not ship to PO Boxes)"
+                                  type="text"
+                                  value={formData.address}
+                                />
+                              </div>
+                            </div>
+                            <div className={styles.addressFormRow}>
+                              <div className={styles.addressFormCol}>
+                                <input
+                                  name="address_2"
+                                  onChange={handleChange}
+                                  placeholder="Apartment, suite, etc. (optional)"
+                                  type="text"
+                                  value={formData.address_2 || ''}
+                                />
+                              </div>
+                            </div>
+                            <div className={styles.addressFormRow}>
+                              <div className={styles.addressFormCol}>
+                                <input
+                                  name="city"
+                                  onChange={handleChange}
+                                  placeholder="City"
+                                  type="text"
+                                  value={formData.city}
+                                />
+                              </div>
+                              <div className={styles.addressFormCol}>
+                                <input
+                                  name="postcode"
+                                  onChange={handleChange}
+                                  placeholder="Postcode"
+                                  type="text"
+                                  value={formData.postcode}
+                                />
+                              </div>
+                              <div className={styles.addressFormCol}>
+                                <div className={styles.addressLblSelect}>
+                                  <span>State/Territory</span>
+                                  <select
+                                    name="state"
+                                    onChange={handleChange}
+                                    value={formData.state}
+                                  >
+                                    <option value="">Select state</option>
+                                    {State.getStatesOfCountry(
+                                      formData.country || 'AU',
+                                    ).map(s => (
+                                      <option key={s.isoCode} value={s.name}>
+                                        {s.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              className={styles.addressConfirmBtn}
+                              disabled={
+                                !formData.country ||
+                                !formData.address ||
+                                !formData.city ||
+                                !formData.state ||
+                                !formData.postcode
+                              }
+                              // Confirm Address on the Address Details box
+                              // collapses THIS box only, not the whole
+                              // Contact Details card. Each address block
+                              // has its own Confirm Address / independent
+                              // collapse.
+                              onClick={() => setAddressConfirmed(true)}
+                              size="large"
+                              variant="primary"
+                            >
+                              Confirm Address
+                            </Button>
                           </div>
                         </div>
-                        <Button
-                          className={styles.addressConfirmBtn}
-                          disabled={
-                            !formData.country ||
-                            !formData.address ||
-                            !formData.city ||
-                            !formData.state ||
-                            !formData.postcode
-                          }
-                          // Confirm Address on the Address Details box
-                          // collapses THIS box only, not the whole
-                          // Contact Details card. Each address block
-                          // has its own Confirm Address / independent
-                          // collapse.
-                          onClick={() => setAddressConfirmed(true)}
-                          size="large"
-                          variant="primary"
-                        >
-                          Confirm Address
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+                      )}
 
-                  {/* "Delivery same as the address above?" toggle */}
-                  <div className={styles.colFull}>
-                    <div className={styles.deliverySameBar}>
-                      <label>
-                        <input
-                          checked={formData.delivery_same_as_billing !== false}
-                          name="delivery_same_as_billing"
-                          onChange={e =>
-                            setFormData(prev => ({
-                              ...prev,
-                              delivery_same_as_billing: e.target.checked,
-                            }))
-                          }
-                          type="checkbox"
-                        />
-                        <span>
-                          The billing address is the same as the address listed
-                          above.
-                        </span>
-                      </label>
-                    </div>
-                  </div>
+                      {/* "Delivery same as the address above?" toggle */}
+                      <div className={styles.colFull}>
+                        <div className={styles.deliverySameBar}>
+                          <label>
+                            <input
+                              checked={
+                                formData.delivery_same_as_billing !== false
+                              }
+                              name="delivery_same_as_billing"
+                              onChange={e =>
+                                setFormData(prev => ({
+                                  ...prev,
+                                  delivery_same_as_billing: e.target.checked,
+                                }))
+                              }
+                              type="checkbox"
+                            />
+                            <span>
+                              The billing address is the same as the address
+                              listed above.
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   {/* Invoice Address section. Renders as a form when
                       the user has unticked "invoice same as above"
@@ -1885,7 +1891,137 @@ function CheckoutForm() {
                       summary strip (with its own Edit button) once
                       they hit its Confirm Address. The Address
                       Details box above collapses independently. */}
+                  {role == 'retail' &&
+                    (invoiceAddressConfirmed ? (
+                      <div className={styles.colFull}>
+                        <div className={styles.addressSummaryStrip}>
+                          <h4>Billing Address</h4>
+                          <p>
+                            {[
+                              formData.delivery_address,
+                              formData.delivery_address_2,
+                              formData.delivery_city,
+                              formData.delivery_state,
+                              formData.delivery_postcode,
+                              formData.delivery_country,
+                            ]
+                              .filter(Boolean)
+                              .join(', ')}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={styles.colFull}>
+                        <div className={styles.addressDetails}>
+                          <h2 className={styles.addressDetailsHeading}>
+                            Billing Address
+                          </h2>
+                          <div className={styles.addressFormRow}>
+                            <div className={styles.addressFormCol}>
+                              <div className={styles.addressLblSelect}>
+                                <span>Country/Region</span>
+                                <select
+                                  name="delivery_country"
+                                  onChange={handleChange}
+                                  value={formData.delivery_country || 'AU'}
+                                >
+                                  <option value="AU">Australia</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={styles.addressFormRow}>
+                            <div className={styles.addressFormCol}>
+                              <input
+                                name="delivery_company"
+                                onChange={handleChange}
+                                placeholder="Company Name (Optional)"
+                                type="text"
+                                value={formData.delivery_company || ''}
+                              />
+                            </div>
+                          </div>
+                          <div className={styles.addressFormRow}>
+                            <div className={styles.addressFormCol}>
+                              <input
+                                name="delivery_address"
+                                onChange={handleChange}
+                                placeholder="Address (We do not ship to PO Boxes)"
+                                type="text"
+                                value={formData.delivery_address || ''}
+                              />
+                            </div>
+                          </div>
+                          <div className={styles.addressFormRow}>
+                            <div className={styles.addressFormCol}>
+                              <input
+                                name="delivery_address_2"
+                                onChange={handleChange}
+                                placeholder="Apartment, suite, etc. (optional)"
+                                type="text"
+                                value={formData.delivery_address_2 || ''}
+                              />
+                            </div>
+                          </div>
+                          <div className={styles.addressFormRow}>
+                            <div className={styles.addressFormCol}>
+                              <input
+                                name="delivery_city"
+                                onChange={handleChange}
+                                placeholder="City"
+                                type="text"
+                                value={formData.delivery_city || ''}
+                              />
+                            </div>
+                            <div className={styles.addressFormCol}>
+                              <input
+                                name="delivery_postcode"
+                                onChange={handleChange}
+                                placeholder="Postcode"
+                                type="text"
+                                value={formData.delivery_postcode || ''}
+                              />
+                            </div>
+                            <div className={styles.addressFormCol}>
+                              <div className={styles.addressLblSelect}>
+                                <span>State/Territory</span>
+                                <select
+                                  name="delivery_state"
+                                  onChange={handleChange}
+                                  value={formData.delivery_state || ''}
+                                >
+                                  <option value="">Select state</option>
+                                  {State.getStatesOfCountry(
+                                    formData.delivery_country || 'AU',
+                                  ).map(s => (
+                                    <option key={s.isoCode} value={s.name}>
+                                      {s.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <Button
+                            className={styles.addressConfirmBtn}
+                            disabled={
+                              !formData.delivery_country ||
+                              !formData.delivery_address ||
+                              !formData.delivery_city ||
+                              !formData.delivery_state ||
+                              !formData.delivery_postcode
+                            }
+                            onClick={() => setInvoiceAddressConfirmed(true)}
+                            size="large"
+                            variant="primary"
+                          >
+                            Confirm Address
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
                   {formData.delivery_same_as_billing === false &&
+                    role != 'retail' &&
                     (invoiceAddressConfirmed ? (
                       <div className={styles.colFull}>
                         <div className={styles.addressSummaryStrip}>
@@ -2119,9 +2255,10 @@ function CheckoutForm() {
                                   shipping flow needs the post-fill
                                   address summary (the dealer entered
                                   the customer's address there). */}
-                              {['drop-shipping-to-customer'].some(
-                                id => id === deliveryOption.id,
-                              ) && (
+                              {[
+                                'drop-shipping-to-customer',
+                                'deliver-to-door',
+                              ].some(id => id === deliveryOption.id) && (
                                 <>
                                   <div
                                     className={clsx(
@@ -2461,6 +2598,11 @@ function CheckoutForm() {
                                       isFormFilled={isFormFilled}
                                       setFormData={setFormData}
                                       setIsFormFilled={setIsFormFilled}
+                                      showUseBillingAsShipping={
+                                        deliveryOption.id === 'deliver-to-door'
+                                          ? true
+                                          : false
+                                      }
                                     />
                                   )}
                                 </div>

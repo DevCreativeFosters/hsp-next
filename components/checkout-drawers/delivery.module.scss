@@ -23,6 +23,73 @@
   }
 }
 
+.deliverySameBar {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px 12px;
+  margin-top: 10px;
+
+  // Breathing room between the "billing same as above" tickbox and the
+  // Billing Address section that opens beneath it (QA: needs spacing).
+  margin-bottom: 16px;
+  box-sizing: border-box;
+
+  label {
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    padding: 0 0 0 28px;
+    line-height: 1.3;
+    font-size: 14px;
+
+    span {
+      &::before {
+        height: 16px;
+        min-width: 16px;
+        border-radius: 4px;
+        background: #000;
+        content: '';
+        display: block;
+        left: 0;
+        top: 0;
+        position: absolute;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        height: 4px;
+        width: 9px;
+        border-left: solid 2px #fff;
+        border-bottom: solid 2px #fff;
+        left: 3px;
+        top: 5px;
+        transform: rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+
+      &:checked + span::after {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.colFull {
+  width: 100%;
+}
+
 .deliveryForm {
   padding: 0 0 30px;
 
