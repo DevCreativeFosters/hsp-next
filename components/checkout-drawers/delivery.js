@@ -61,7 +61,10 @@ function DeliveryAddressForm({
   // formData fields — that flow doesn't pair with the toggle.
   const deliverySameAsBilling = formData.delivery_same_as_billing !== false;
   const useAltAddress = !askCutomerInfo && !deliverySameAsBilling;
-  const fieldPrefix = useAltAddress ? 'delivery_' : '';
+  let fieldPrefix = useAltAddress ? 'delivery_' : '';
+  if (user?.role !== 'dealer') {
+    fieldPrefix = 'delivery_';
+  }
   const f = key => `${fieldPrefix}${key}`;
 
   // Deliver-to-Store + "delivery same as billing" + no commercial
@@ -441,7 +444,7 @@ export default function Delivery({
         delivery_address: prev.address,
         delivery_address_2: prev.address_2,
         delivery_city: prev.city,
-        delivery_company: prev.deliveryCompanyName,
+        delivery_company: prev.company,
         delivery_country: prev.country,
         delivery_postcode: prev.postcode,
         delivery_state: prev.state,
@@ -451,9 +454,9 @@ export default function Delivery({
     formData.address,
     formData.address_2,
     formData.city,
+    formData.company,
     formData.country,
     formData.delivery_same_as_billing,
-    formData.deliveryCompanyName,
     formData.postcode,
     formData.state,
     showUseBillingAsShipping,
@@ -477,7 +480,6 @@ export default function Delivery({
                       delivery_address_2: '',
                       delivery_city: '',
                       delivery_company: '',
-                      delivery_country: '',
                       delivery_postcode: '',
                       delivery_state: '',
                     }));
@@ -498,25 +500,15 @@ export default function Delivery({
         </div>
       )}
       {showUseBillingAsShipping && formData.delivery_same_as_billing && (
-        <Button
-          className={styles.submitBtn}
-          onClick={() => {
-            setFormData(prev => ({
-              ...prev,
-              delivery_address: prev.address,
-              delivery_address_2: prev.address_2,
-              delivery_city: prev.city,
-              delivery_company: prev.deliveryCompanyName,
-              delivery_country: prev.country,
-              delivery_postcode: prev.postcode,
-              delivery_state: prev.state,
-            }));
-            setIsFormFilled(true);
-          }}
-          size="large"
-        >
-          Confirm Address
-        </Button>
+        <div className={styles.deliveryForm}>
+          <Button
+            className={styles.submitBtn}
+            onClick={() => setIsFormFilled(true)}
+            size="large"
+          >
+            Confirm Address
+          </Button>
+        </div>
       )}
       {!(formData.delivery_same_as_billing && showUseBillingAsShipping) && (
         <DeliveryAddressForm

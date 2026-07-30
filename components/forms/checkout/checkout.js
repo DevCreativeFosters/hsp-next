@@ -139,7 +139,6 @@ function CheckoutForm() {
 
     country: cachedContact?.country || 'AU',
 
-    deliveryCompanyName: '',
     // Optional alternate delivery address — only used when the customer
     // unticks "delivery address is the same as the address listed above"
     // on the Address Details card. When ticked (default), the order ships
@@ -1508,10 +1507,14 @@ function CheckoutForm() {
                     ]
                       .filter(Boolean)
                       .join(', ');
-                  if (!line || role == 'retail') return null;
+                  if (!line) return null;
                   return (
                     <div className={styles.addressSummaryCard}>
-                      <h4>Address Details</h4>
+                      <h4>
+                        {role === 'dealer'
+                          ? 'Address Details'
+                          : 'Billling Address'}
+                      </h4>
                       <p>{line}</p>
                     </div>
                   );
@@ -1528,6 +1531,7 @@ function CheckoutForm() {
                     compatibility), but the label + heading here read
                     as "Billing Address" per the Figma copy. */}
                 {formData.delivery_same_as_billing === false &&
+                  role === 'dealer' &&
                   (() => {
                     // Only render when the user has entered
                     // ACTUAL invoice address data. Previously the
@@ -1715,7 +1719,7 @@ function CheckoutForm() {
                     </div>
                   </div>
 
-                  {role != 'retail' && (
+                  {role === 'dealer' && (
                     <>
                       {/* Address Details — primary/billing address. Nested
                       inside the Contact Details card per Figma node
@@ -1891,7 +1895,7 @@ function CheckoutForm() {
                       summary strip (with its own Edit button) once
                       they hit its Confirm Address. The Address
                       Details box above collapses independently. */}
-                  {role == 'retail' &&
+                  {role !== 'dealer' &&
                     (invoiceAddressConfirmed ? (
                       <div className={styles.colFull}>
                         <div className={styles.addressSummaryStrip}>
@@ -2021,7 +2025,7 @@ function CheckoutForm() {
                       </div>
                     ))}
                   {formData.delivery_same_as_billing === false &&
-                    role != 'retail' &&
+                    role === 'dealer' &&
                     (invoiceAddressConfirmed ? (
                       <div className={styles.colFull}>
                         <div className={styles.addressSummaryStrip}>
@@ -2304,14 +2308,14 @@ function CheckoutForm() {
                                         Delivery Address:{' '}
                                       </div>
                                       <div>
-                                        {role !== 'retail' && (
+                                        {role === 'dealer' && (
                                           <strong>
                                             {formData.address}, {formData.city},{' '}
                                             {formData.state} {formData.postcode}
                                             , {formData.country}
                                           </strong>
                                         )}
-                                        {role === 'retail' && (
+                                        {role !== 'dealer' && (
                                           <strong>
                                             {formData.delivery_address},{' '}
                                             {formData.delivery_city},{' '}
@@ -2610,7 +2614,10 @@ function CheckoutForm() {
                                       setFormData={setFormData}
                                       setIsFormFilled={setIsFormFilled}
                                       showUseBillingAsShipping={
-                                        deliveryOption.id === 'deliver-to-door'
+                                        deliveryOption.id ===
+                                          'deliver-to-door' ||
+                                        deliveryOption.id ===
+                                          'drop-shipping-to-customer'
                                           ? true
                                           : false
                                       }
