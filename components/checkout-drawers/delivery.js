@@ -433,13 +433,13 @@ export default function Delivery({
     if (showUseBillingAsShipping && formData.delivery_same_as_billing) {
       setFormData(prev => ({
         ...prev,
-        address: prev.delivery_address,
-        address_2: prev.delivery_address_2,
-        city: prev.delivery_city,
-        company: prev.deliveryCompanyName,
-        country: prev.delivery_country,
-        postcode: prev.delivery_postcode,
-        state: prev.delivery_state,
+        delivery_address: prev.address,
+        delivery_address_2: prev.address_2,
+        delivery_city: prev.city,
+        delivery_company: prev.deliveryCompanyName,
+        delivery_country: prev.country,
+        delivery_postcode: prev.postcode,
+        delivery_state: prev.state,
       }));
     }
   }, [formData.delivery_same_as_billing, showUseBillingAsShipping]);
@@ -458,13 +458,13 @@ export default function Delivery({
                   if (e.target.checked === false) {
                     setFormData(prev => ({
                       ...prev,
-                      address: '',
-                      address_2: '',
-                      city: '',
-                      company: '',
-                      country: '',
-                      postcode: '',
-                      state: '',
+                      delivery_address: '',
+                      delivery_address_2: '',
+                      delivery_city: '',
+                      delivery_company: '',
+                      delivery_country: '',
+                      delivery_postcode: '',
+                      delivery_state: '',
                     }));
                   }
 

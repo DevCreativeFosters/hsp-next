@@ -1508,7 +1508,7 @@ function CheckoutForm() {
                     ]
                       .filter(Boolean)
                       .join(', ');
-                  if (!line) return null;
+                  if (!line || role == 'retail') return null;
                   return (
                     <div className={styles.addressSummaryCard}>
                       <h4>Address Details</h4>
@@ -1898,12 +1898,12 @@ function CheckoutForm() {
                           <h4>Billing Address</h4>
                           <p>
                             {[
-                              formData.delivery_address,
-                              formData.delivery_address_2,
-                              formData.delivery_city,
-                              formData.delivery_state,
-                              formData.delivery_postcode,
-                              formData.delivery_country,
+                              formData.address,
+                              formData.address_2,
+                              formData.city,
+                              formData.state,
+                              formData.postcode,
+                              formData.country,
                             ]
                               .filter(Boolean)
                               .join(', ')}
@@ -1921,9 +1921,9 @@ function CheckoutForm() {
                               <div className={styles.addressLblSelect}>
                                 <span>Country/Region</span>
                                 <select
-                                  name="delivery_country"
+                                  name="country"
                                   onChange={handleChange}
-                                  value={formData.delivery_country || 'AU'}
+                                  value={formData.country || 'AU'}
                                 >
                                   <option value="AU">Australia</option>
                                 </select>
@@ -1933,66 +1933,66 @@ function CheckoutForm() {
                           <div className={styles.addressFormRow}>
                             <div className={styles.addressFormCol}>
                               <input
-                                name="delivery_company"
+                                name="company"
                                 onChange={handleChange}
                                 placeholder="Company Name (Optional)"
                                 type="text"
-                                value={formData.delivery_company || ''}
+                                value={formData.company || ''}
                               />
                             </div>
                           </div>
                           <div className={styles.addressFormRow}>
                             <div className={styles.addressFormCol}>
                               <input
-                                name="delivery_address"
+                                name="address"
                                 onChange={handleChange}
                                 placeholder="Address (We do not ship to PO Boxes)"
                                 type="text"
-                                value={formData.delivery_address || ''}
+                                value={formData.address || ''}
                               />
                             </div>
                           </div>
                           <div className={styles.addressFormRow}>
                             <div className={styles.addressFormCol}>
                               <input
-                                name="delivery_address_2"
+                                name="address_2"
                                 onChange={handleChange}
                                 placeholder="Apartment, suite, etc. (optional)"
                                 type="text"
-                                value={formData.delivery_address_2 || ''}
+                                value={formData.address_2 || ''}
                               />
                             </div>
                           </div>
                           <div className={styles.addressFormRow}>
                             <div className={styles.addressFormCol}>
                               <input
-                                name="delivery_city"
+                                name="city"
                                 onChange={handleChange}
                                 placeholder="City"
                                 type="text"
-                                value={formData.delivery_city || ''}
+                                value={formData.city || ''}
                               />
                             </div>
                             <div className={styles.addressFormCol}>
                               <input
-                                name="delivery_postcode"
+                                name="postcode"
                                 onChange={handleChange}
                                 placeholder="Postcode"
                                 type="text"
-                                value={formData.delivery_postcode || ''}
+                                value={formData.postcode || ''}
                               />
                             </div>
                             <div className={styles.addressFormCol}>
                               <div className={styles.addressLblSelect}>
                                 <span>State/Territory</span>
                                 <select
-                                  name="delivery_state"
+                                  name="state"
                                   onChange={handleChange}
-                                  value={formData.delivery_state || ''}
+                                  value={formData.state || ''}
                                 >
                                   <option value="">Select state</option>
                                   {State.getStatesOfCountry(
-                                    formData.delivery_country || 'AU',
+                                    formData.country || 'AU',
                                   ).map(s => (
                                     <option key={s.isoCode} value={s.name}>
                                       {s.name}
@@ -2005,11 +2005,11 @@ function CheckoutForm() {
                           <Button
                             className={styles.addressConfirmBtn}
                             disabled={
-                              !formData.delivery_country ||
-                              !formData.delivery_address ||
-                              !formData.delivery_city ||
-                              !formData.delivery_state ||
-                              !formData.delivery_postcode
+                              !formData.country ||
+                              !formData.address ||
+                              !formData.city ||
+                              !formData.state ||
+                              !formData.postcode
                             }
                             onClick={() => setInvoiceAddressConfirmed(true)}
                             size="large"
@@ -2304,11 +2304,22 @@ function CheckoutForm() {
                                         Delivery Address:{' '}
                                       </div>
                                       <div>
-                                        <strong>
-                                          {formData.address}, {formData.city},{' '}
-                                          {formData.state} {formData.postcode},{' '}
-                                          {formData.country}
-                                        </strong>
+                                        {role !== 'retail' && (
+                                          <strong>
+                                            {formData.address}, {formData.city},{' '}
+                                            {formData.state} {formData.postcode}
+                                            , {formData.country}
+                                          </strong>
+                                        )}
+                                        {role === 'retail' && (
+                                          <strong>
+                                            {formData.delivery_address},{' '}
+                                            {formData.delivery_city},{' '}
+                                            {formData.delivery_state}{' '}
+                                            {formData.delivery_postcode},{' '}
+                                            {formData.delivery_country}
+                                          </strong>
+                                        )}
                                       </div>
                                     </div>
                                   </div>
