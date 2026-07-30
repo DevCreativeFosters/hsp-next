@@ -149,7 +149,7 @@ function DeliveryAddressForm({
   const postcode = formData[f('postcode')] ?? '';
 
   const formIncomplete =
-    !country || !street || !city || !state || !postcode || !acceptDeliveryTerms;
+    !street || !city || !state || !postcode || !acceptDeliveryTerms;
 
   return (
     <div className={styles.deliveryForm}>
@@ -314,7 +314,12 @@ function DeliveryAddressForm({
             >
               <div className={styles.formRow}>
                 <div className={clsx(styles.formCol, styles.autocomplete)}>
-                  <input placeholder="Address (We do not ship to PO Boxes)" />
+                  <input
+                    name={f('address')}
+                    onChange={handleChange}
+                    placeholder="Address (We do not ship to PO Boxes)"
+                    value={street}
+                  />
                   <button className={styles.searchBtn} type="button">
                     <SearchIcon />
                   </button>
@@ -442,7 +447,17 @@ export default function Delivery({
         delivery_state: prev.state,
       }));
     }
-  }, [formData.delivery_same_as_billing, showUseBillingAsShipping]);
+  }, [
+    formData.address,
+    formData.address_2,
+    formData.city,
+    formData.country,
+    formData.delivery_same_as_billing,
+    formData.deliveryCompanyName,
+    formData.postcode,
+    formData.state,
+    showUseBillingAsShipping,
+  ]);
 
   return (
     <div className={styles.drawerContent}>
@@ -481,6 +496,27 @@ export default function Delivery({
             </label>
           </div>
         </div>
+      )}
+      {showUseBillingAsShipping && formData.delivery_same_as_billing && (
+        <Button
+          className={styles.submitBtn}
+          onClick={() => {
+            setFormData(prev => ({
+              ...prev,
+              delivery_address: prev.address,
+              delivery_address_2: prev.address_2,
+              delivery_city: prev.city,
+              delivery_company: prev.deliveryCompanyName,
+              delivery_country: prev.country,
+              delivery_postcode: prev.postcode,
+              delivery_state: prev.state,
+            }));
+            setIsFormFilled(true);
+          }}
+          size="large"
+        >
+          Confirm Address
+        </Button>
       )}
       {!(formData.delivery_same_as_billing && showUseBillingAsShipping) && (
         <DeliveryAddressForm
