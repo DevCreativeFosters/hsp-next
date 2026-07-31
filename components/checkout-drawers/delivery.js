@@ -62,10 +62,11 @@ function DeliveryAddressForm({
   // formData fields — that flow doesn't pair with the toggle.
   const deliverySameAsBilling = formData.delivery_same_as_billing !== false;
   const useAltAddress = !askCutomerInfo && !deliverySameAsBilling;
-  let fieldPrefix = useAltAddress ? 'delivery_' : '';
-  if (user?.role !== 'dealer') {
-    fieldPrefix = 'delivery_';
-  }
+  const fieldPrefix = 'delivery_';
+  // let fieldPrefix = useAltAddress ? 'delivery_' : '';
+  // if (user?.role !== 'dealer') {
+  //   fieldPrefix = 'delivery_';
+  // }
   const f = key => `${fieldPrefix}${key}`;
 
   // Deliver-to-Store + "delivery same as billing" + no commercial
