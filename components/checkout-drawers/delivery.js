@@ -23,6 +23,7 @@ function DeliveryAddressForm({
   formData,
   setFormData,
   setIsFormFilled,
+  showUseBillingAsShipping,
 }) {
   const { cartItems } = useCart();
   const { user } = useUserContext();
@@ -247,7 +248,10 @@ function DeliveryAddressForm({
                   </div>
                 </div>
 
-                <div className={styles.formRow}>
+                <div
+                  className={styles.formRow}
+                  style={{ marginBottom: '18px' }}
+                >
                   <div className={styles.formCol}>
                     <input
                       name="additionalCustomerInfo.customer_email"
@@ -257,125 +261,174 @@ function DeliveryAddressForm({
                     />
                   </div>
                 </div>
-                <p className={styles.heading}>
-                  <strong>Shipping Info:</strong>
-                </p>
               </>
             )}
 
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <div className={styles.lblSelect}>
-                  <span>Country/Region</span>
-                  <select
-                    name={f('country')}
-                    onChange={handleChange}
-                    value={country}
-                  >
-                    <option value="AU">Australia</option>
-                  </select>
-                </div>
+            <div className={styles.colFull}>
+              <div className={styles.deliverySameBar}>
+                <label>
+                  <input
+                    checked={formData.delivery_same_as_billing !== false}
+                    name="delivery_same_as_billing"
+                    onChange={e => {
+                      console.log(e.target.checked);
+                      if (e.target.checked === false) {
+                        setFormData(prev => ({
+                          ...prev,
+                          delivery_address: '',
+                          delivery_address_2: '',
+                          delivery_city: '',
+                          delivery_company: '',
+                          delivery_postcode: '',
+                          delivery_state: '',
+                        }));
+                      }
+
+                      setFormData(prev => ({
+                        ...prev,
+                        delivery_same_as_billing: e.target.checked,
+                      }));
+                    }}
+                    type="checkbox"
+                  />
+                  <span>
+                    The billing address and shipping address are the same.
+                  </span>
+                </label>
               </div>
             </div>
 
-            {!askCutomerInfo && (
-              <div className={styles.formRow}>
-                <div className={styles.formCol}>
-                  <input
-                    name={f('company')}
-                    onChange={handleChange}
-                    placeholder="Company Name (Optional)"
-                    value={company}
-                  />
+            {!(
+              showUseBillingAsShipping && formData.delivery_same_as_billing
+            ) && (
+              <>
+                {askCutomerInfo && (
+                  <p className={styles.heading} style={{ marginTop: '22px' }}>
+                    <strong>
+                      {showUseBillingAsShipping &&
+                      formData.delivery_same_as_billing
+                        ? ''
+                        : 'Shipping Info:'}
+                    </strong>
+                  </p>
+                )}
+                <div className={styles.formRow}>
+                  <div className={styles.formCol}>
+                    <div className={styles.lblSelect}>
+                      <span>Country/Region</span>
+                      <select
+                        name={f('country')}
+                        onChange={handleChange}
+                        value={country}
+                      >
+                        <option value="AU">Australia</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </div>
+
+                {!askCutomerInfo && (
+                  <div className={styles.formRow}>
+                    <div className={styles.formCol}>
+                      <input
+                        name={f('company')}
+                        onChange={handleChange}
+                        placeholder="Company Name (Optional)"
+                        value={company}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <Autocomplete
+                  onLoad={autocomplete => {
+                    autocompleteRef.current = autocomplete;
+                    autocomplete.setComponentRestrictions({
+                      country: (country || 'AU').toLowerCase(),
+                    });
+
+                    setTimeout(() => {
+                      const pacContainer =
+                        document.querySelector('.pac-container');
+                      if (pacContainer)
+                        pacContainer.classList.add('pacContainer');
+
+                      const formWrapper = document.querySelector(
+                        `.${styles.autocomplete}`,
+                      );
+                      if (pacContainer && formWrapper) {
+                        formWrapper.parentNode.insertBefore(
+                          pacContainer,
+                          formWrapper,
+                        );
+                      }
+                    }, 500);
+                  }}
+                  onPlaceChanged={handlePlaceChanged}
+                >
+                  <div className={styles.formRow}>
+                    <div className={clsx(styles.formCol, styles.autocomplete)}>
+                      <input
+                        name={f('address')}
+                        onChange={handleChange}
+                        placeholder="Address (We do not ship to PO Boxes)"
+                        value={street}
+                      />
+                      <button className={styles.searchBtn} type="button">
+                        <SearchIcon />
+                      </button>
+                    </div>
+                  </div>
+                </Autocomplete>
+
+                <div className={styles.formRow}>
+                  <div className={styles.formCol}>
+                    <input
+                      name={f('address_2')}
+                      onChange={handleChange}
+                      placeholder="Apartment, suite, etc. (optional)"
+                      value={apt}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formRow}>
+                  <div className={styles.formCol}>
+                    <input
+                      name={f('city')}
+                      onChange={handleChange}
+                      placeholder="City"
+                      value={city}
+                    />
+                  </div>
+                  <div className={styles.formCol}>
+                    <div className={styles.lblSelect}>
+                      <span>State/Territory</span>
+                      <select
+                        name={f('state')}
+                        onChange={handleChange}
+                        value={state}
+                      >
+                        <option value="">Select state</option>
+                        {State.getStatesOfCountry(country || 'AU').map(s => (
+                          <option key={s.isoCode} value={s.name}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className={styles.formCol}>
+                    <input
+                      name={f('postcode')}
+                      onChange={handleChange}
+                      placeholder="Postcode"
+                      value={postcode}
+                    />
+                  </div>
+                </div>
+              </>
             )}
-
-            <Autocomplete
-              onLoad={autocomplete => {
-                autocompleteRef.current = autocomplete;
-                autocomplete.setComponentRestrictions({
-                  country: (country || 'AU').toLowerCase(),
-                });
-
-                setTimeout(() => {
-                  const pacContainer = document.querySelector('.pac-container');
-                  if (pacContainer) pacContainer.classList.add('pacContainer');
-
-                  const formWrapper = document.querySelector(
-                    `.${styles.autocomplete}`,
-                  );
-                  if (pacContainer && formWrapper) {
-                    formWrapper.parentNode.insertBefore(
-                      pacContainer,
-                      formWrapper,
-                    );
-                  }
-                }, 500);
-              }}
-              onPlaceChanged={handlePlaceChanged}
-            >
-              <div className={styles.formRow}>
-                <div className={clsx(styles.formCol, styles.autocomplete)}>
-                  <input
-                    name={f('address')}
-                    onChange={handleChange}
-                    placeholder="Address (We do not ship to PO Boxes)"
-                    value={street}
-                  />
-                  <button className={styles.searchBtn} type="button">
-                    <SearchIcon />
-                  </button>
-                </div>
-              </div>
-            </Autocomplete>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name={f('address_2')}
-                  onChange={handleChange}
-                  placeholder="Apartment, suite, etc. (optional)"
-                  value={apt}
-                />
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formCol}>
-                <input
-                  name={f('city')}
-                  onChange={handleChange}
-                  placeholder="City"
-                  value={city}
-                />
-              </div>
-              <div className={styles.formCol}>
-                <div className={styles.lblSelect}>
-                  <span>State/Territory</span>
-                  <select
-                    name={f('state')}
-                    onChange={handleChange}
-                    value={state}
-                  >
-                    <option value="">Select state</option>
-                    {State.getStatesOfCountry(country || 'AU').map(s => (
-                      <option key={s.isoCode} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className={styles.formCol}>
-                <input
-                  name={f('postcode')}
-                  onChange={handleChange}
-                  placeholder="Postcode"
-                  value={postcode}
-                />
-              </div>
-            </div>
           </>
         )}
 
@@ -409,20 +462,30 @@ function DeliveryAddressForm({
             auto-advance via the useEffect below. The button stays
             for the drop-shipping flow (askCutomerInfo) where the
             dealer fills in customer details. */}
-        {(askCutomerInfo || allowDelivery || !deliverySameAsBilling) && (
+        {showUseBillingAsShipping && formData.delivery_same_as_billing ? (
           <Button
-            className={styles.submitBtn}
-            disabled={
-              (!askCutomerInfo && !allowDelivery && deliverySameAsBilling
-                ? !acceptDeliveryTerms || !formData.address
-                : formIncomplete) ||
-              (showCommercialConfirmation && !acceptDeliveryTerms)
-            }
+            className={clsx(styles.submitBtn, styles.showUseBillingAsShipping)}
             onClick={() => setIsFormFilled(true)}
             size="large"
           >
             Confirm Address
           </Button>
+        ) : (
+          (askCutomerInfo || allowDelivery || !deliverySameAsBilling) && (
+            <Button
+              className={styles.submitBtn}
+              disabled={
+                (!askCutomerInfo && !allowDelivery && deliverySameAsBilling
+                  ? !acceptDeliveryTerms || !formData.address
+                  : formIncomplete) ||
+                (showCommercialConfirmation && !acceptDeliveryTerms)
+              }
+              onClick={() => setIsFormFilled(true)}
+              size="large"
+            >
+              Confirm Address
+            </Button>
+          )
         )}
       </>
     </div>
@@ -464,61 +527,14 @@ export default function Delivery({
 
   return (
     <div className={styles.drawerContent}>
-      {showUseBillingAsShipping && (
-        <div className={styles.colFull}>
-          <div className={styles.deliverySameBar}>
-            <label>
-              <input
-                checked={formData.delivery_same_as_billing !== false}
-                name="delivery_same_as_billing"
-                onChange={e => {
-                  console.log(e.target.checked);
-                  if (e.target.checked === false) {
-                    setFormData(prev => ({
-                      ...prev,
-                      delivery_address: '',
-                      delivery_address_2: '',
-                      delivery_city: '',
-                      delivery_company: '',
-                      delivery_postcode: '',
-                      delivery_state: '',
-                    }));
-                  }
-
-                  setFormData(prev => ({
-                    ...prev,
-                    delivery_same_as_billing: e.target.checked,
-                  }));
-                }}
-                type="checkbox"
-              />
-              <span>
-                The billing address and shipping address are the same.
-              </span>
-            </label>
-          </div>
-        </div>
-      )}
-      {showUseBillingAsShipping && formData.delivery_same_as_billing && (
-        <div className={styles.deliveryForm}>
-          <Button
-            className={styles.submitBtn}
-            onClick={() => setIsFormFilled(true)}
-            size="large"
-          >
-            Confirm Address
-          </Button>
-        </div>
-      )}
-      {!(formData.delivery_same_as_billing && showUseBillingAsShipping) && (
-        <DeliveryAddressForm
-          allowDelivery={allowDelivery}
-          askCutomerInfo={askCutomerInfo}
-          formData={formData}
-          setFormData={setFormData}
-          setIsFormFilled={setIsFormFilled}
-        />
-      )}
+      <DeliveryAddressForm
+        allowDelivery={allowDelivery}
+        askCutomerInfo={askCutomerInfo}
+        formData={formData}
+        setFormData={setFormData}
+        setIsFormFilled={setIsFormFilled}
+        showUseBillingAsShipping={showUseBillingAsShipping}
+      />
     </div>
   );
 }

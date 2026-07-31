@@ -248,6 +248,10 @@
 
     @include bp(medium-large) {
       margin-top: 32px;
+
+      &.showUseBillingAsShipping {
+        margin-top: 10px;
+      }
     }
   }
 }

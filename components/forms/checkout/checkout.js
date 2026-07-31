@@ -139,15 +139,37 @@ function CheckoutForm() {
 
     country: cachedContact?.country || 'AU',
 
-    // Optional alternate delivery address — only used when the customer
-    // unticks "delivery address is the same as the address listed above"
-    // on the Address Details card. When ticked (default), the order ships
-    // to the primary address (formData.address, .city, .state, etc.).
+    
+    
+    
+    
     delivery_address: '',
-    delivery_address_2: '',
-    delivery_city: '',
-    delivery_company: '',
-    delivery_country: 'AU',
+    
+
+
+
+delivery_address_2: '',
+    
+
+
+
+delivery_city: '',
+    
+
+
+
+delivery_company: '',
+    
+
+
+
+delivery_country: 'AU',
+    // Optional alternate delivery address — only used when the customer
+// unticks "delivery address is the same as the address listed above"
+// on the Address Details card. When ticked (default), the order ships
+// to the primary address (formData.address, .city, .state, etc.).
+delivery_first_name: '',
+    delivery_last_name: '',
     delivery_postcode: '',
     delivery_same_as_billing: true,
     delivery_state: '',
@@ -1266,7 +1288,7 @@ function CheckoutForm() {
       vehicleIdentifier,
       ...baseFormData
     } = formData;
-    const formDataForWP = delivery_same_as_billing
+    let formDataForWP = delivery_same_as_billing
       ? baseFormData
       : {
           ...baseFormData,
@@ -1278,6 +1300,12 @@ function CheckoutForm() {
           delivery_postcode,
           delivery_state,
         };
+
+    formDataForWP = {
+      ...formDataForWP,
+      delivery_first_name: formData.additionalCustomerInfo.customer_first_name,
+      delivery_last_name: formData.additionalCustomerInfo.customer_last_name,
+    };
     // CheckoutOrderInput schema does NOT accept userId — an earlier
     // attempt to add it surfaced
     // `Field "userId" is not defined by type "CheckoutOrderInput"`.
@@ -2282,10 +2310,6 @@ function CheckoutForm() {
                                                 formData.additionalCustomerInfo
                                                   .customer_first_name
                                               }{' '}
-                                            </strong>
-                                          </div>
-                                          <div>
-                                            <strong>
                                               {
                                                 formData.additionalCustomerInfo
                                                   .customer_last_name
