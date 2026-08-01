@@ -200,21 +200,8 @@ export const CheckoutProvider = ({ children }) => {
         (typeof window !== 'undefined'
           ? localStorage.getItem('userRole')
           : null);
-      const isB2b = role === 'b2b';
 
-      const query = isB2b
-        ? `
-        mutation B2bCheckoutOrder($input: B2bCheckoutOrderInput!) {
-          b2bCheckoutOrder(input: $input) {
-            status
-            message
-            order_id
-            order_total
-            payment_term_name
-          }
-        }
-      `
-        : `
+      let query = `
         mutation CheckoutOrder($input: CheckoutOrderInput!) {
           checkoutOrder(input: $input) {
             status
@@ -223,8 +210,32 @@ export const CheckoutProvider = ({ children }) => {
             order_total
             payment_term_name
           }
-        }
-      `;
+        }`;
+
+      if (role === 'b2b') {
+        query = `
+          mutation B2bCheckoutOrder($input: B2bCheckoutOrderInput!) {
+            b2bCheckoutOrder(input: $input) {
+              status
+              message
+              order_id
+              order_total
+              payment_term_name
+            }
+          }`;
+      }
+
+      if (role === 'dealer') {
+        query = `
+          mutation dealerCheckoutOrder($input: DealerCheckoutOrderInput!) {
+            dealerCheckoutOrder(input: $input) {
+              status
+              message
+              order_id
+              order_total 
+            }
+          }`;
+      }
 
       const variables = { input };
 
@@ -247,7 +258,8 @@ export const CheckoutProvider = ({ children }) => {
         variables,
         ...(authToken && { authToken }),
       });
-      const data = isB2b ? res?.b2bCheckoutOrder : res?.checkoutOrder;
+      const data =
+        res?.checkoutOrder || res?.b2bCheckoutOrder || res?.dealerCheckoutOrder;
 
       setOrderResponse(data);
       return data;
