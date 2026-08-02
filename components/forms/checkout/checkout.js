@@ -1994,7 +1994,7 @@ function CheckoutForm() {
                                   return (
                                     <div className={styles.deliveryAddressBox}>
                                       <div className={styles.left}>
-                                        <b>HSP Vehicle Accessories</b>
+                                        <b>{selectedStore.name}</b>
                                       </div>
                                       <div className={styles.right}>
                                         {`${street}, ${city}, ${stateAbbr} ${postalCode}, ${country}`}
