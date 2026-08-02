@@ -541,3 +541,21 @@
     display: none;
   }
 }
+
+// B2B tier badge next to the price — same pill the PDP shows
+// (enquiry-form's .pricingBadge), rendered only when a tier price
+// actually applies to the selected variant.
+.tierBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-primary-100);
+  color: var(--color-white-100);
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 8px;
+  vertical-align: middle;
+}
