@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useUserContext } from '@contexts/user';
+
 import { getCartAccessories } from '@lib/api/get-cart-accessories';
+import { getProductPricing } from '@lib/api/get-product-pricing';
 
 import AccessoryVariantModal from './accessory-variant-modal';
 import styles from './more-accessories.module.scss';
@@ -15,7 +18,13 @@ export default function MoreAccessories() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeProduct, setActiveProduct] = useState(null);
+  // productId -> productPricing payload (currentTier, variantPricing
+  // with tierPrice per sku). Only populated for B2B users — the
+  // resolver derives the tier from the Bearer token.
+  const [pricingById, setPricingById] = useState({});
   const trackRef = useRef(null);
+  const { user } = useUserContext() || {};
+  const role = user?.role || 'retail';
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +43,29 @@ export default function MoreAccessories() {
       cancelled = true;
     };
   }, []);
+
+  // B2B: pull tier pricing for each card so dealers see their tier
+  // price here, not retail — same source the PDP uses
+  // (getProductPricing → variantPricing[].tierPrice). Runs after the
+  // products land and whenever the role hydrates to b2b.
+  useEffect(() => {
+    if (role !== 'b2b' || !products.length) return;
+    let cancelled = false;
+    Promise.all(
+      products.map(p =>
+        getProductPricing(p.databaseId).then(pricing => [
+          p.databaseId,
+          pricing,
+        ]),
+      ),
+    ).then(entries => {
+      if (cancelled) return;
+      setPricingById(Object.fromEntries(entries.filter(([, v]) => v)));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [products, role]);
 
   const scrollBy = direction => {
     const track = trackRef.current;
@@ -61,11 +93,26 @@ export default function MoreAccessories() {
   // same value in compareAtPrice for non-discounted rows.
   const getPricing = product => {
     const variants = product?.productFields?.variants || [];
+    // B2B tier overlay: when the logged-in dealer has a tier price for
+    // a variant (tierPrice < price, matched by sku), that becomes the
+    // variant's effective price and the public price becomes its
+    // "was" — mirroring the PDP's hasTierPrice rule. Retail/guest
+    // users have no pricing entry, so rows pass through unchanged.
+    const tierRows = pricingById[product?.databaseId]?.variantPricing || [];
+    const tierBySku = Object.fromEntries(tierRows.map(t => [t.sku, t]));
     const rows = variants
-      .map(v => ({
-        compareAt: Number(v?.variantDetails?.compareAtPrice) || 0,
-        price: Number(v?.variantDetails?.price) || 0,
-      }))
+      .map(v => {
+        const publicPrice = Number(v?.variantDetails?.price) || 0;
+        const compareAt = Number(v?.variantDetails?.compareAtPrice) || 0;
+        const tier = tierBySku[v?.sku];
+        const hasTier =
+          tier &&
+          tier.tierPrice != null &&
+          Number(tier.tierPrice) < Number(tier.price);
+        return hasTier
+          ? { compareAt: Number(tier.price), price: Number(tier.tierPrice) }
+          : { compareAt, price: publicPrice };
+      })
       .filter(r => r.price > 0);
 
     if (!rows.length) {

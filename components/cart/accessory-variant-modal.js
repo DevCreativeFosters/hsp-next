@@ -11,10 +11,11 @@ import { useCart } from '@contexts/cart-context';
 import { useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
 
+import { getProductPricing } from '@lib/api/get-product-pricing';
+
 import Button from '@components/button/button';
 import ProductImageCarousel from '@components/product-image-carousel/product-image-carousel';
 import StarRating from '@components/reviews/star-rating';
-
 
 import styles from './accessory-variant-modal.module.scss';
 
@@ -40,10 +41,40 @@ export default function AccessoryVariantModal({ onClose, product }) {
   // A controlled panel keeps the list inside the bordered box
   // and lets us style it dark to match the PDP.
   const [variantOpen, setVariantOpen] = useState(false);
+  // B2B tier pricing — same source + race guard as the PDP enquiry
+  // form: fetch on open, keep Add to Cart disabled until it resolves
+  // so a fast click can't seed the cart shadow with the public price.
+  const [pricing, setPricing] = useState(null);
+  const [pricingLoading, setPricingLoading] = useState(false);
+  const role = user?.role;
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (role !== 'b2b' || !product?.databaseId) {
+      setPricing(null);
+      setPricingLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setPricingLoading(true);
+    getProductPricing(product.databaseId)
+      .then(res => {
+        if (cancelled) return;
+        setPricing(res);
+        setPricingLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPricing(null);
+        setPricingLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.databaseId, role]);
 
   useEffect(() => {
     if (!product) return;
@@ -93,6 +124,24 @@ export default function AccessoryVariantModal({ onClose, product }) {
       ? baseInstall
       : null;
 
+  // Tier overlay — identical rule to the PDP: a tier applies only when
+  // the resolver returned a tierPrice strictly below the public price
+  // for this variant's sku. Displayed price becomes the tier price and
+  // the public price becomes the strike-through.
+  const tierVariant = pricing?.variantPricing?.find(
+    v => v.sku === selectedVariant?.sku,
+  );
+  const hasTierPrice =
+    role === 'b2b' &&
+    tierVariant &&
+    tierVariant.tierPrice != null &&
+    Number(tierVariant.tierPrice) < Number(tierVariant.price);
+  const displayedPrice = hasTierPrice ? tierVariant.tierPrice : variantPrice;
+  const displayedCompareAt = hasTierPrice
+    ? tierVariant.price
+    : selectedVariant?.variantDetails?.compareAtPrice;
+  const pricingBadgeLabel = hasTierPrice ? pricing?.pricingBadge : null;
+
   const handleAdd = async () => {
     if (!selectedVariant || adding) return;
     setAdding(true);
@@ -113,6 +162,8 @@ export default function AccessoryVariantModal({ onClose, product }) {
       // price:0 (or the wrong variant's price), which showed as
       // $0.00 in the cart summary. Same override pattern PDP's
       // enquiry form uses for tier pricing, minus the tier flag.
+      // Tier-priced B2B adds pin the tier price into the shadow cart
+      // (public price becomes the compare-at), exactly like the PDP.
       await addToCart?.({
         productId: product.databaseId,
         product_image: productImage,
@@ -120,10 +171,17 @@ export default function AccessoryVariantModal({ onClose, product }) {
         variant_name: selectedVariant.variantName,
         variant_sku: selectedVariant.sku,
         variant_slug: selectedVariant.variantSlug,
-        ...(variantPrice != null && { price: variantPrice }),
-        ...(selectedVariant?.variantDetails?.compareAtPrice != null && {
-          compareAtPrice: selectedVariant.variantDetails.compareAtPrice,
-        }),
+        ...(hasTierPrice
+          ? {
+              compareAtPrice: tierVariant.price,
+              price: tierVariant.tierPrice,
+            }
+          : {
+              ...(variantPrice != null && { price: variantPrice }),
+              ...(selectedVariant?.variantDetails?.compareAtPrice != null && {
+                compareAtPrice: selectedVariant.variantDetails.compareAtPrice,
+              }),
+            }),
       });
       onClose?.();
     } catch (err) {
@@ -334,16 +392,18 @@ export default function AccessoryVariantModal({ onClose, product }) {
                 <div className={styles.stock}>● In Stock</div>
               </div>
               <div className={styles.priceRow}>
-                {variantPrice != null && (
-                  <span className={styles.price}>${variantPrice}</span>
+                {displayedPrice != null && (
+                  <span className={styles.price}>${displayedPrice}</span>
                 )}
-                {selectedVariant?.variantDetails?.compareAtPrice != null &&
-                  selectedVariant.variantDetails.compareAtPrice >
-                    variantPrice && (
+                {displayedCompareAt != null &&
+                  displayedCompareAt > displayedPrice && (
                     <span className={styles.priceCompare}>
-                      ${selectedVariant.variantDetails.compareAtPrice}
+                      ${displayedCompareAt}
                     </span>
                   )}
+                {pricingBadgeLabel && (
+                  <span className={styles.tierBadge}>{pricingBadgeLabel}</span>
+                )}
                 {variantInstall > 0 && (
                   <span className={styles.install}>
                     +<span>${variantInstall} for installation</span>
@@ -373,7 +433,10 @@ export default function AccessoryVariantModal({ onClose, product }) {
                 </div>
                 <Button
                   className={styles.addBtn}
-                  disabled={adding || !selectedVariant}
+                  // pricingLoading gate: a B2B click before the tier
+                  // fetch resolves would seed the shadow cart with the
+                  // public price permanently (same race the PDP guards).
+                  disabled={adding || !selectedVariant || pricingLoading}
                   onClick={handleAdd}
                   size="large"
                   variant="primary"
