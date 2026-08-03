@@ -21,6 +21,7 @@ function DeliveryAddressForm({
   allowDelivery,
   askCutomerInfo,
   formData,
+  hideDeliverySameBar,
   setFormData,
   setIsFormFilled,
   showUseBillingAsShipping,
@@ -265,39 +266,41 @@ function DeliveryAddressForm({
               </>
             )}
 
-            <div className={styles.colFull}>
-              <div className={styles.deliverySameBar}>
-                <label>
-                  <input
-                    checked={formData.delivery_same_as_billing !== false}
-                    name="delivery_same_as_billing"
-                    onChange={e => {
-                      console.log(e.target.checked);
-                      if (e.target.checked === false) {
+            {!hideDeliverySameBar && (
+              <div className={styles.colFull}>
+                <div className={styles.deliverySameBar}>
+                  <label>
+                    <input
+                      checked={formData.delivery_same_as_billing !== false}
+                      name="delivery_same_as_billing"
+                      onChange={e => {
+                        console.log(e.target.checked);
+                        if (e.target.checked === false) {
+                          setFormData(prev => ({
+                            ...prev,
+                            delivery_address: '',
+                            delivery_address_2: '',
+                            delivery_city: '',
+                            delivery_company: '',
+                            delivery_postcode: '',
+                            delivery_state: '',
+                          }));
+                        }
+
                         setFormData(prev => ({
                           ...prev,
-                          delivery_address: '',
-                          delivery_address_2: '',
-                          delivery_city: '',
-                          delivery_company: '',
-                          delivery_postcode: '',
-                          delivery_state: '',
+                          delivery_same_as_billing: e.target.checked,
                         }));
-                      }
-
-                      setFormData(prev => ({
-                        ...prev,
-                        delivery_same_as_billing: e.target.checked,
-                      }));
-                    }}
-                    type="checkbox"
-                  />
-                  <span>
-                    The billing address and shipping address are the same.
-                  </span>
-                </label>
+                      }}
+                      type="checkbox"
+                    />
+                    <span>
+                      The billing address and shipping address are the same.
+                    </span>
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
 
             {!(
               showUseBillingAsShipping && formData.delivery_same_as_billing
@@ -497,6 +500,7 @@ export default function Delivery({
   allowDelivery,
   askCutomerInfo,
   formData,
+  hideDeliverySameBar,
   setFormData,
   setIsFormFilled,
   showUseBillingAsShipping,
@@ -526,12 +530,28 @@ export default function Delivery({
     showUseBillingAsShipping,
   ]);
 
+  useEffect(() => {
+    if (hideDeliverySameBar) {
+      setFormData(prev => ({
+        ...prev,
+        delivery_address: '',
+        delivery_address_2: '',
+        delivery_city: '',
+        delivery_company: '',
+        delivery_postcode: '',
+        delivery_same_as_billing: false,
+        delivery_state: '',
+      }));
+    }
+  }, [hideDeliverySameBar]);
+
   return (
     <div className={styles.drawerContent}>
       <DeliveryAddressForm
         allowDelivery={allowDelivery}
         askCutomerInfo={askCutomerInfo}
         formData={formData}
+        hideDeliverySameBar={hideDeliverySameBar}
         setFormData={setFormData}
         setIsFormFilled={setIsFormFilled}
         showUseBillingAsShipping={showUseBillingAsShipping}

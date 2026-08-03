@@ -2256,6 +2256,12 @@ function CheckoutForm() {
                                         deliveryOption.askCutomerInfo
                                       }
                                       formData={formData}
+                                      hideDeliverySameBar={
+                                        deliveryOption.id ===
+                                        'drop-shipping-to-customer'
+                                          ? true
+                                          : false
+                                      }
                                       isFormFilled={isFormFilled}
                                       setFormData={setFormData}
                                       setIsFormFilled={setIsFormFilled}
