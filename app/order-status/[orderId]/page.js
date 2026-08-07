@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { fetchAPI } from '@lib/fetch-api';
 
 import Container from '@components/container/container';
-import CreateAccountCta from '@components/download-invoice/create-account-cta';
 import DownloadInvoiceButton from '@components/download-invoice/download-invoice';
 import Layout from '@components/layout/layout';
 
@@ -98,7 +97,7 @@ async function page({ params }) {
                     on hydrate and only renders the black CTA when
                     the buyer isn't logged in. Prompts them to
                     register so future orders are easier to track. */}
-                <CreateAccountCta />
+                {/* <CreateAccountCta /> */}
               </div>
             </div>
           </div>
