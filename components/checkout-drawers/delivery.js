@@ -469,7 +469,37 @@ function DeliveryAddressForm({
         {showUseBillingAsShipping && formData.delivery_same_as_billing ? (
           <Button
             className={clsx(styles.submitBtn, styles.showUseBillingAsShipping)}
-            onClick={() => setIsFormFilled(true)}
+            onClick={() => {
+              if (formData.delivery_same_as_billing) {
+                if (
+                  formData.address &&
+                  formData.city &&
+                  formData.country &&
+                  formData.postcode &&
+                  formData.state
+                ) {
+                  setIsFormFilled(true);
+                } else {
+                  alert(
+                    'Please fill out your billing address before continuing.',
+                  );
+                }
+              } else {
+                if (
+                  formData.delivery_address &&
+                  formData.delivery_city &&
+                  formData.delivery_country &&
+                  formData.delivery_postcode &&
+                  formData.delivery_state
+                ) {
+                  setIsFormFilled(true);
+                } else {
+                  alert(
+                    'Please fill out your shipping address before continuing.',
+                  );
+                }
+              }
+            }}
             size="large"
           >
             Confirm Address
