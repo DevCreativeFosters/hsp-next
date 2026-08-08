@@ -941,10 +941,13 @@ function CheckoutForm() {
   const showInstallation =
     (role === 'retail' && formData.orderType === 'local-installation') ||
     (role === 'dealer' && formData.orderType === 'on-site-fitting');
+
   const showFreight =
-    formData.orderType !== '' &&
-    formData.orderType !== 'pickup-from-hsp' &&
-    formData.orderType !== 'click-collect';
+    (role === 'b2b' && formData.orderType === 'deliver-to-store') ||
+    (role === 'b2b' && formData.orderType === 'drop-shipping-to-customer') ||
+    (role === 'dealer' && formData.orderType === 'deliver-to-store') ||
+    (role === 'dealer' && formData.orderType === 'on-site-fitting');
+
   const showFittingCharge =
     role === 'dealer' && formData.orderType === 'on-site-fitting';
 
