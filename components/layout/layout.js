@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import Image from 'next/image';
 
 import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
 import { UserProvider } from '@contexts/user';
@@ -24,7 +23,6 @@ import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-colla
 import Header from '@components/header/header';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
 
-import BgContinent from '@assets/images/bg-continent.png';
 
 import styles from './layout.module.scss';
 
@@ -159,13 +157,13 @@ export default function Layout({
             <main className={styles.main}>
               {withMap && (
                 <div className={styles.background}>
-                  <Image
+                  {/* <Image
                     alt="Shape of the Australian continent"
                     className={styles.backgroundImage}
                     fill={true}
                     quality={80}
                     src={BgContinent}
-                  />
+                  /> */}
                 </div>
               )}
               <div
