@@ -100,7 +100,7 @@ $desktop-height: 1160px;
     justify-content: space-between;
     padding: 24px var(--padding-horizontal);
     margin-bottom: 0;
-    box-shadow: 0 1px 16px 0 rgb(0 0 0 / 25%);
+    box-shadow: 0 1px 16px 0 rgb(9 9 9 / 25%);
 
     @media screen and (height >= $desktop-height) {
       padding: 48px var(--padding-horizontal) 24px;
@@ -348,7 +348,7 @@ $desktop-height: 1160px;
     flex-direction: row;
     margin-top: 0;
     padding: 24px var(--padding-horizontal);
-    box-shadow: 0 -1px 16px 0 rgb(0 0 0 / 25%);
+    box-shadow: 0 -1px 16px 0 rgb(9 9 9 / 25%);
 
     @media screen and (height >= $desktop-height) {
       padding: 24px var(--padding-horizontal) 48px;
