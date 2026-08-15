@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 
@@ -24,6 +24,7 @@ import { formatPrice } from '@lib/helpers';
 import normalizeStores from '@lib/normalize-stores';
 
 import Button from '@components/button/button';
+import CardPayment from '@components/checkout-drawers/card-payment';
 import Delivery from '@components/checkout-drawers/delivery';
 import SelectLocation from '@components/checkout-drawers/select-location';
 import Container from '@components/container/container';
@@ -54,6 +55,8 @@ const GET_ACCOUNT_TERMS_QUERY = `
 `;
 
 function CheckoutForm() {
+  const cardPaymentRef = useRef(null);
+
   const router = useRouter();
   const { getUserById, loading: userLoading, setUser, user } = useUserContext();
 
@@ -1289,6 +1292,20 @@ function CheckoutForm() {
       delivery_first_name: formData.additionalCustomerInfo.customer_first_name,
       delivery_last_name: formData.additionalCustomerInfo.customer_last_name,
     };
+
+    let transientToken = null;
+    if (formData.payment_method === 'credit-card') {
+      try {
+        const { transientToken: token } =
+          await cardPaymentRef.current.tokenize();
+        transientToken = token;
+      } catch (err) {
+        alert(`❌ ${err.message}`);
+        setLoading(false);
+        return;
+      }
+    }
+
     // CheckoutOrderInput schema does NOT accept userId — an earlier
     // attempt to add it surfaced
     // `Field "userId" is not defined by type "CheckoutOrderInput"`.
@@ -1312,6 +1329,28 @@ function CheckoutForm() {
     };
 
     const result = await checkoutOrder(payload);
+
+    if (result?.order_id && formData.payment_method === 'credit-card') {
+      const payRes = await fetch(
+        `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json/nab-payment/v1/checkout/pay`,
+        {
+          body: JSON.stringify({
+            order_id: result.order_id,
+            order_key: result.order_key, // see note below
+            transient_token: transientToken,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      ).then(r => r.json());
+
+      if (!payRes?.success) {
+        alert(`❌ ${payRes?.message || 'Payment failed'}`);
+        setLoading(false);
+        return;
+      }
+    }
+
     if (result?.order_id) {
       // Wipe the shadow cart so the dealer doesn't accidentally re-order.
       if (typeof clearCart === 'function') clearCart();
@@ -2402,7 +2441,7 @@ function CheckoutForm() {
                         type="radio"
                         value="credit-card"
                       />
-                      <span>Credit Card</span>
+                      <span>Credit / Debit Card</span>
                       <Image
                         alt={'Cards'}
                         height={43}
@@ -2410,6 +2449,9 @@ function CheckoutForm() {
                         width={154}
                       />
                     </div>
+                    {formData.payment_method === 'credit-card' && (
+                      <CardPayment ref={cardPaymentRef} />
+                    )}
                     <div className={styles.payBox}>
                       <input
                         checked={formData.payment_method === 'paypal'}
