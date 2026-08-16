@@ -1336,7 +1336,7 @@ function CheckoutForm() {
         {
           body: JSON.stringify({
             order_id: result.order_id,
-            order_key: result.order_key, // see note below
+            order_key: result.order_key,
             transient_token: transientToken,
           }),
           headers: { 'Content-Type': 'application/json' },

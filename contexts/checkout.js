@@ -209,6 +209,7 @@ export const CheckoutProvider = ({ children }) => {
             order_id
             order_total
             payment_term_name
+            order_key
           }
         }`;
 
@@ -221,6 +222,7 @@ export const CheckoutProvider = ({ children }) => {
               order_id
               order_total
               payment_term_name
+              order_key
             }
           }`;
       }
@@ -233,6 +235,7 @@ export const CheckoutProvider = ({ children }) => {
               message
               order_id
               order_total 
+              order_key
             }
           }`;
       }
