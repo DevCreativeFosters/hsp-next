@@ -23,7 +23,6 @@ import FullscreenCollapse from '@components/fullscreen-collapse/fullscreen-colla
 import Header from '@components/header/header';
 import { MODAL_PORTAL_ID } from '@components/modal/modal';
 
-
 import styles from './layout.module.scss';
 
 const GOOGLE_RECAPTCHA_SITEKEY =
@@ -155,17 +154,17 @@ export default function Layout({
               secondaryMenu={topNavigationMenu}
             />
             <main className={styles.main}>
-              {withMap && (
-                <div className={styles.background}>
-                  {/* <Image
+              {/* {withMap && ( */}
+              <div className={styles.background}>
+                {/* <Image
                     alt="Shape of the Australian continent"
                     className={styles.backgroundImage}
                     fill={true}
                     quality={80}
                     src={BgContinent}
                   /> */}
-                </div>
-              )}
+              </div>
+              {/* )} */}
               <div
                 className={clsx(styles.content, {
                   [styles.reserveSpaceForVehicleSelection]:
