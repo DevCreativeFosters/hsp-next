@@ -1524,13 +1524,15 @@ function CheckoutForm() {
                       came from the store record — but Confirm
                       Address now also collapses this card, and the
                       user needs a way back. */}
-                  <Button
-                    onClick={handleEditContactDetails}
-                    size="large"
-                    variant="ghost"
-                  >
-                    Edit Details
-                  </Button>
+                  {(role === 'retail' || role === 'dealer') && (
+                    <Button
+                      onClick={handleEditContactDetails}
+                      size="large"
+                      variant="ghost"
+                    >
+                      Edit Details
+                    </Button>
+                  )}
                 </div>
                 <div className={styles.submittedInfo}>
                   <p>
