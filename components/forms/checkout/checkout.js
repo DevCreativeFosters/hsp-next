@@ -946,6 +946,7 @@ function CheckoutForm() {
     (role === 'dealer' && formData.orderType === 'on-site-fitting');
 
   const showFreight =
+    (role === 'retail' && formData.orderType === 'deliver-to-door') ||
     (role === 'b2b' && formData.orderType === 'deliver-to-store') ||
     (role === 'b2b' && formData.orderType === 'drop-shipping-to-customer') ||
     (role === 'dealer' && formData.orderType === 'deliver-to-store') ||
@@ -2742,10 +2743,7 @@ function CheckoutForm() {
                     <div className={styles.finalTotal}>
                       <div className={styles.finalTotaltitle}>Due Now</div>
                       <div className={styles.finalTotalPrice}>
-                        {formatPrice(
-                          cartTotal - installSum - totalDiscount,
-                          'AUD ',
-                        )}
+                        {formatPrice(cartSubTotal)}
                       </div>
                     </div>
                     <div className={styles.instruction}>
