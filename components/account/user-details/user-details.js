@@ -30,7 +30,7 @@ function UserDetails() {
       }
     };
     fetchUser();
-  }, []);
+  }, [user?.id]);
 
   const handleEdit = (field, currentVal) => {
     setEditingField(field);
