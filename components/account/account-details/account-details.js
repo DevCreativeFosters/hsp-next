@@ -16,6 +16,7 @@ import { formatPrice } from '@lib/helpers';
 
 import Button from '@components/button/button';
 import Loading from '@components/loading/loading';
+import StoreDisplays from '@components/store-displays/store-displays';
 
 import wideShotHero from '@assets/images/WideSHotExt1.png';
 
@@ -290,10 +291,18 @@ function AccountDetails() {
           </div>
           <div className={styles.demoConfirmationPanel}>
             <h2>Your Request Has Been Sent</h2>
-            <p>
-              Thank you for your enquiry. A member of our team will be in touch
-              shortly for info on display demo vehicle stock.
-            </p>
+            {user?.role === 'dealer' && (
+              <p>
+                Thank you for your enquiry. A member of our team will be in
+                touch shortly for info on display demo vehicle stock.
+              </p>
+            )}
+            {user?.role === 'b2b' && (
+              <p>
+                Thank you for your enquiry. A member of our team will be in
+                touch shortly for pricing info on in-store displays.
+              </p>
+            )}
             <Button
               className={styles.demoConfirmationBtn}
               onClick={() => setShowThanks(false)}
@@ -459,21 +468,73 @@ function AccountDetails() {
             </p>
           </div>
 
-          <div className={styles.borderBox}>
-            <div className={styles.demoVehicleStock}>
-              <h4>Demo Vehicle Stock</h4>
-              <div className={styles.btns}>
-                <Button
-                  className={styles.requestbutton}
-                  onClick={handleClick}
-                  size="large"
-                  variant="secondary"
-                >
-                  Request display demo vehicle stock
-                </Button>
+          {user?.role === 'dealer' && (
+            <div className={styles.borderBox}>
+              <div className={styles.demoVehicleStock}>
+                <h4>Demo Vehicle Stock</h4>
+                <div className={styles.btns}>
+                  <Button
+                    className={styles.requestbutton}
+                    onClick={handleClick}
+                    size="large"
+                    variant="secondary"
+                  >
+                    Request display demo vehicle stock
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
+          {user?.role === 'b2b' && (
+            <div className={styles.borderBox}>
+              <div className={styles.logosList}>
+                {storeDetails?.inStoreDisplays ? (
+                  <StoreDisplays
+                    alwaysOpen
+                    displays={storeDetails?.inStoreDisplays}
+                    flexStoresList
+                    hideSeparator
+                    showNumberOfProducts={false}
+                  />
+                ) : (
+                  <div className={styles.noDisplays}>
+                    <h4>In-Store Displays</h4>
+                    <p>
+                      Currently, there are no in-store displays at your location
+                      — take advantage of this opportunity to drive more
+                      attention and increase sales by ordering one today!
+                    </p>
+                    <p>
+                      Already have a display? Let us know so we can update our
+                      records. <Link href="/contact-us">Contact Us</Link>
+                    </p>
+                  </div>
+                )}
+                <div className={styles.btns}>
+                  <Button
+                    className={styles.requestbutton}
+                    onClick={handleClick}
+                    size="large"
+                    variant="secondary"
+                  >
+                    Request Display Pricing
+                  </Button>
+                </div>
+                {showThanks && (
+                  <div className={styles.thankYouMsg}>
+                    <h4>
+                      {/* <ThanksIcon /> */}
+                      Your Pricing Request Has Been Sent
+                    </h4>
+                    <p>
+                      Thank you for your enquiry. A member of our team will be
+                      in touch shortly for pricing info on in-store displays.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className={clsx(styles.bottomText, styles.forDesktop)}>
             <p>
