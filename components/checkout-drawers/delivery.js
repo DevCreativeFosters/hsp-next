@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 import { clsx } from 'clsx';
@@ -18,10 +18,12 @@ import styles from './delivery.module.scss';
 const libraries = ['places'];
 
 function DeliveryAddressForm({
+  acceptDeliveryTerms,
   allowDelivery,
   askCutomerInfo,
   formData,
   hideDeliverySameBar,
+  setAcceptDeliveryTerms,
   setFormData,
   setIsFormFilled,
   showUseBillingAsShipping,
@@ -34,16 +36,13 @@ function DeliveryAddressForm({
   // any large items the checkbox would be confusing noise, so we hide it
   // entirely and auto-accept so the validation still passes.
   const hasLargeItem = cartItems.some(item => item.largeItem);
-  const showCommercialConfirmation = user?.role !== 'b2b' && hasLargeItem;
-  const [acceptDeliveryTerms, setAcceptDeliveryTerms] = useState(false);
+  const showCommercialConfirmation = user?.role === 'retail' && hasLargeItem;
 
   useEffect(() => {
     // Auto-accept when (a) the user is B2B, or (b) there's no large item
     // in the cart and therefore no confirmation to ask for.
-    if (user?.role === 'b2b' || !hasLargeItem) {
+    if (user?.role !== 'retail' || !hasLargeItem) {
       setAcceptDeliveryTerms(true);
-    } else {
-      setAcceptDeliveryTerms(false);
     }
   }, [hasLargeItem, user?.role]);
 
@@ -274,7 +273,6 @@ function DeliveryAddressForm({
                       checked={formData.delivery_same_as_billing !== false}
                       name="delivery_same_as_billing"
                       onChange={e => {
-                        console.log(e.target.checked);
                         if (e.target.checked === false) {
                           setFormData(prev => ({
                             ...prev,
@@ -469,6 +467,7 @@ function DeliveryAddressForm({
         {showUseBillingAsShipping && formData.delivery_same_as_billing ? (
           <Button
             className={clsx(styles.submitBtn, styles.showUseBillingAsShipping)}
+            disabled={hasLargeItem && !acceptDeliveryTerms}
             onClick={() => {
               if (formData.delivery_same_as_billing) {
                 if (
@@ -527,10 +526,12 @@ function DeliveryAddressForm({
 }
 
 export default function Delivery({
+  acceptDeliveryTerms,
   allowDelivery,
   askCutomerInfo,
   formData,
   hideDeliverySameBar,
+  setAcceptDeliveryTerms,
   setFormData,
   setIsFormFilled,
   showUseBillingAsShipping,
@@ -578,10 +579,12 @@ export default function Delivery({
   return (
     <div className={styles.drawerContent}>
       <DeliveryAddressForm
+        acceptDeliveryTerms={acceptDeliveryTerms}
         allowDelivery={allowDelivery}
         askCutomerInfo={askCutomerInfo}
         formData={formData}
         hideDeliverySameBar={hideDeliverySameBar}
+        setAcceptDeliveryTerms={setAcceptDeliveryTerms}
         setFormData={setFormData}
         setIsFormFilled={setIsFormFilled}
         showUseBillingAsShipping={showUseBillingAsShipping}

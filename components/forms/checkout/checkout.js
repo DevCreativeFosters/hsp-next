@@ -61,6 +61,7 @@ function CheckoutForm() {
   const { getUserById, loading: userLoading, setUser, user } = useUserContext();
 
   const [loading, setLoading] = useState(false);
+  const [acceptDeliveryTerms, setAcceptDeliveryTerms] = useState(false);
 
   const {
     cartItems = [],
@@ -1409,6 +1410,13 @@ function CheckoutForm() {
     }
   };
 
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      delivery_same_as_billing: true,
+    }));
+  }, [formData?.orderType]);
+
   return (
     <Container className={styles.checkoutContainer}>
       <section className={clsx(styles.checkoutMain, 'checkoutMain')}>
@@ -2294,6 +2302,7 @@ function CheckoutForm() {
                                     deliveryOption.id ===
                                       'drop-shipping-to-customer') && (
                                     <Delivery
+                                      acceptDeliveryTerms={acceptDeliveryTerms}
                                       allowDelivery={
                                         deliveryOption.allowDelivery
                                       }
@@ -2308,6 +2317,9 @@ function CheckoutForm() {
                                           : false
                                       }
                                       isFormFilled={isFormFilled}
+                                      setAcceptDeliveryTerms={
+                                        setAcceptDeliveryTerms
+                                      }
                                       setFormData={setFormData}
                                       setIsFormFilled={setIsFormFilled}
                                       showUseBillingAsShipping={true}
