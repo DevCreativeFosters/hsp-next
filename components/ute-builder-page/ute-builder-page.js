@@ -28,7 +28,7 @@ export default function UteBuilderPage({
 
   useEffect(
     function saveUserSelection() {
-      const savedVehicle = localStorage.getItem(LOCAL_STORAGE_VEHICLE);
+      const savedVehicle = sessionStorage.getItem(LOCAL_STORAGE_VEHICLE);
 
       if (finalSelection) {
         if (savedVehicle) {

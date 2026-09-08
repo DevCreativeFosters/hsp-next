@@ -59,6 +59,10 @@ export const VehicleProvider = ({
   const slug = params.segments?.[0];
 
   useEffect(() => {
+    localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
+  }, []);
+
+  useEffect(() => {
     const { current: wrapper } = wrapperRef;
 
     function handleClickEvent(event) {
@@ -101,7 +105,7 @@ export const VehicleProvider = ({
   };
 
   const resetVehicleSelection = () => {
-    localStorage.removeItem(LOCAL_STORAGE_VEHICLE);
+    sessionStorage.removeItem(LOCAL_STORAGE_VEHICLE);
     deleteCookie(LOCAL_STORAGE_VEHICLE);
     setCompatibleFactoryOptions([]);
     setMaker(null);
@@ -148,7 +152,7 @@ export const VehicleProvider = ({
         selectedFactoryOption,
       });
 
-      localStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
+      sessionStorage.setItem(LOCAL_STORAGE_VEHICLE, vehicleString);
       setCookie(LOCAL_STORAGE_VEHICLE, vehicleString, 7);
       setSavedVehicleGlobal({ maker, model, selectedFactoryOption });
 

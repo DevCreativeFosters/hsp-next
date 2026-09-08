@@ -41,7 +41,7 @@ export default function BreadcrumbsProduct({
     let savedVehicleLocal = null;
 
     if (maker) {
-      savedVehicleLocal = localStorage.getItem(COOKIE_SAVED_VEHICLE);
+      savedVehicleLocal = sessionStorage.getItem(COOKIE_SAVED_VEHICLE);
     }
 
     setSavedVehicleLocal(savedVehicleLocal);
