@@ -2584,6 +2584,11 @@ function CheckoutForm() {
                       !formData.phone ||
                       !formData.termsAndConditions ||
                       !formData.payment_method ||
+                      !formData.address ||
+                      !formData.city ||
+                      !formData.state ||
+                      !formData.postcode ||
+                      !formData.country ||
                       (isDealerLike && !formData.company) ||
                       (isDealerLike && !formData.purchaseOrderNumber) ||
                       (role === 'dealer' && !formData.vehicleIdentifier) ||
