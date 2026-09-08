@@ -1722,9 +1722,14 @@ export function CartProvider({ children }) {
     const migrateGuestCart = async () => {
       const userId = readUserIdFromStorage();
       if (!userId) return; // still a guest, nothing to migrate
+      // Claim the guest cart synchronously — before any await — so a
+      // concurrent run (the authchange event plus the CartProvider remount
+      // that follows the post-login navigation) finds nothing and can't
+      // replay the same items a second time.
       let guestRaw;
       try {
         guestRaw = localStorage.getItem(GUEST_CART_KEY);
+        if (guestRaw) localStorage.removeItem(GUEST_CART_KEY);
       } catch (_err) {
         return;
       }
@@ -1733,14 +1738,10 @@ export function CartProvider({ children }) {
       try {
         guestParsed = JSON.parse(guestRaw);
       } catch (_err) {
-        localStorage.removeItem(GUEST_CART_KEY);
         return;
       }
       const guestItems = guestParsed?.items || [];
-      if (guestItems.length === 0) {
-        localStorage.removeItem(GUEST_CART_KEY);
-        return;
-      }
+      if (guestItems.length === 0) return;
       console.log(
         '[Cart] migrating',
         guestItems.length,
@@ -1809,9 +1810,6 @@ export function CartProvider({ children }) {
           );
         }
       }
-      // Successfully replayed — wipe the guest shadow so we don't
-      // double-migrate on a later auth event.
-      localStorage.removeItem(GUEST_CART_KEY);
     };
 
     // First run: migrate any leftover guest items (covers users who land
