@@ -1,34 +1,3 @@
-// 'use client';
-// import { createContext, useContext, useState } from 'react';
-// const CartContext = createContext();
-// export function CartProvider({ children }) {
-//   const [isCartOpen, setIsCartOpen] = useState(false);
-//   const [cartItems, setCartItems] = useState([]);
-//   const openCart = () => setIsCartOpen(true);
-//   const closeCart = () => setIsCartOpen(false);
-//   const toggleCart = () => setIsCartOpen(!isCartOpen);
-//   return (
-//     <CartContext.Provider
-//       value={{
-//         cartItems,
-//         closeCart,
-//         isCartOpen,
-//         openCart,
-//         setCartItems,
-//         toggleCart,
-//       }}
-//     >
-//       {children}
-//     </CartContext.Provider>
-//   );
-// }
-// export const useCart = () => {
-//   const context = useContext(CartContext);
-//   if (!context) {
-//     throw new Error('useCart must be used within a CartProvider');
-//   }
-//   return context;
-// };
 'use client';
 
 import {
@@ -36,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -1243,6 +1213,39 @@ const patchLocalCartItem = (userId, cartItemKey, patch) => {
   return state;
 };
 
+// Map of productId -> databaseIds listed under its "Also Compatible With"
+// (compatibleProduct.selectProduct). Products with no entries map to [].
+const fetchCompatibleIdsByProduct = async productIds => {
+  const query = `
+    query CompatibleProductIds($ids: [ID]) {
+      products(first: 100, where: { in: $ids }) {
+        nodes {
+          databaseId
+          compatibleProduct {
+            selectProduct {
+              product {
+                nodes {
+                  ... on Product {
+                    databaseId
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await fetchAPI(query, { variables: { ids: productIds } });
+  const map = {};
+  for (const node of data?.products?.nodes || []) {
+    map[node.databaseId] = (node.compatibleProduct?.selectProduct || [])
+      .map(entry => entry?.product?.nodes?.[0]?.databaseId)
+      .filter(Boolean);
+  }
+  return map;
+};
+
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
@@ -1255,6 +1258,11 @@ export function CartProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const cartItemsRef = useRef([]);
+  useEffect(() => {
+    cartItemsRef.current = cartItems;
+  }, [cartItems]);
 
   // When logged in, cart operations must be tied to the user's persistent
   // cart. Otherwise items are added to the guest session, and the first
@@ -1567,9 +1575,82 @@ export function CartProvider({ children }) {
     [getCartItems],
   );
 
+  // 🔹 Remove from Cart
+  // Removing a line also removes the accessories that were added from its
+  // "Also Compatible With" list — unless another line still in the cart
+  // lists the same accessory. Cart lines carry no parent link (and guests
+  // read straight from WP), so the relationship is resolved from product
+  // data at removal time.
+  const removeFromCart = useCallback(
+    async cartItemKey => {
+      const query = `
+        mutation RemoveFromCart($input: RemoveFromCartInput!) {
+          removeFromCart(input: $input) {
+            status
+            message
+            cartCount
+          }
+        }
+      `;
+
+      const items = cartItemsRef.current;
+      const removed = items.find(it => it.cart_item_key === cartItemKey);
+      const remaining = items.filter(it => it.cart_item_key !== cartItemKey);
+
+      let orphanKeys = [];
+      if (removed && remaining.length) {
+        try {
+          const productIds = [
+            ...new Set(
+              [removed, ...remaining].map(it => Number(it.product_id)),
+            ),
+          ];
+          const compat = await fetchCompatibleIdsByProduct(productIds);
+          const removedAccessories = new Set(compat[removed.product_id] || []);
+          const stillCovered = new Set(
+            remaining.flatMap(it => compat[it.product_id] || []),
+          );
+          orphanKeys = remaining
+            .filter(it => {
+              const id = Number(it.product_id);
+              return removedAccessories.has(id) && !stillCovered.has(id);
+            })
+            .map(it => it.cart_item_key);
+        } catch (err) {
+          console.error(
+            '[cart] compatible lookup failed, removing parent only:',
+            err?.message,
+          );
+        }
+      }
+
+      // NOTE: RemoveFromCartInput on WP does not yet accept `userId`. The
+      // resolver therefore scopes to the WC session cart, so removing only
+      // clears the local shadow — the dealer's persistent cart on WP still
+      // holds the stale quantity. Lokesh needs to update the resolver to
+      // hydrate from _woocommerce_persistent_cart_<userId> via the Bearer
+      // token, same pattern as addToCart.
+      const userId = currentUserId();
+      for (const key of [cartItemKey, ...orphanKeys]) {
+        await fetchAPI(query, {
+          variables: { input: { cartItemKey: key } },
+          ...authConfig(),
+        });
+        if (userId) removeLocalCartItem(userId, key);
+      }
+
+      await getCartItems();
+    },
+    [getCartItems],
+  );
+
   // 🔹 Update Cart
   const updateCart = useCallback(
     async item => {
+      if (item?.cartItemKey != null && parseInt(item.quantity, 10) <= 0) {
+        return removeFromCart(item.cartItemKey);
+      }
+
       const query = `
         mutation UpdateCart($input: UpdateCartInput!) {
           updateCart(input: $input) {
@@ -1597,38 +1678,7 @@ export function CartProvider({ children }) {
 
       await getCartItems();
     },
-    [getCartItems],
-  );
-
-  // 🔹 Remove from Cart
-  const removeFromCart = useCallback(
-    async cartItemKey => {
-      const query = `
-        mutation RemoveFromCart($input: RemoveFromCartInput!) {
-          removeFromCart(input: $input) {
-            status
-            message
-            cartCount
-          }
-        }
-      `;
-
-      // NOTE: RemoveFromCartInput on WP does not yet accept `userId`. The
-      // resolver therefore scopes to the WC session cart, so removing only
-      // clears the local shadow — the dealer's persistent cart on WP still
-      // holds the stale quantity. Lokesh needs to update the resolver to
-      // hydrate from _woocommerce_persistent_cart_<userId> via the Bearer
-      // token, same pattern as addToCart.
-      const variables = { input: { cartItemKey } };
-
-      const userId = currentUserId();
-      await fetchAPI(query, { variables, ...authConfig() });
-
-      if (userId) removeLocalCartItem(userId, cartItemKey);
-
-      await getCartItems();
-    },
-    [getCartItems],
+    [getCartItems, removeFromCart],
   );
 
   const openCart = useCallback(() => {
