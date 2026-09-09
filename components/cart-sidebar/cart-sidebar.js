@@ -50,7 +50,9 @@ export default function CartSidebar() {
         {cartItems.map((item, index) => (
           <div className={styles.cartItem} key={index}>
             <div className={styles.listImg}>
-              <img src={item.product_image} />
+              {item.product_image && (
+                <img alt={item.product_name} src={item.product_image} />
+              )}
             </div>
 
             <div className={styles.itemInfo}>

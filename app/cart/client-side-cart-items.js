@@ -129,12 +129,16 @@ export default function ClientSideCartItems() {
               cartItems.map((item, index) => (
                 <div className={styles.itemBox} key={index}>
                   <figure>
-                    <Image
-                      alt={item.product_name}
-                      height={100}
-                      src={item.product_image}
-                      width={100}
-                    />
+                    {/* next/image throws on a missing src; WP omits
+                        product_image when a variant has no gallery. */}
+                    {item.product_image && (
+                      <Image
+                        alt={item.product_name}
+                        height={100}
+                        src={item.product_image}
+                        width={100}
+                      />
+                    )}
                   </figure>
                   <div className={styles.wContent}>
                     <h4>{item.product_name}</h4>

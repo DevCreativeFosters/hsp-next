@@ -31,11 +31,17 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     const userString = localStorage.getItem(SESSION_STORAGE_USER_DATA);
     if (userString) {
-      try {
-        const userParsed = JSON.parse(userString);
-        setUser(userParsed);
-      } catch (err) {
-        console.error(err);
+      // A cached profile without an authToken can't make a single authed
+      // API call, so don't let the header claim a login the API won't honour.
+      if (!localStorage.getItem('authToken')) {
+        localStorage.removeItem(SESSION_STORAGE_USER_DATA);
+      } else {
+        try {
+          const userParsed = JSON.parse(userString);
+          setUser(userParsed);
+        } catch (err) {
+          console.error(err);
+        }
       }
     }
     setLoading(false);
