@@ -123,9 +123,9 @@ export default function EnquiryForm({
   // Separate "loading" flag because `productPricing === null` was
   // overloaded — it meant BOTH "not fetched yet" AND "fetched with no
   // tier on this dealer". The Add to Cart button needs to distinguish
-  // them: stay disabled while still loading (otherwise a B2B click
-  // races the fetch and seeds the cart shadow with WP's public price
-  // permanently), but enable normally once we know there's no tier.
+  // them: stay disabled while still loading (so a B2B user never adds
+  // before seeing their tier price), but enable normally once we know
+  // there's no tier.
   const [pricingLoading, setPricingLoading] = useState(false);
 
   useEffect(() => {
@@ -385,12 +385,7 @@ export default function EnquiryForm({
                     className={styles.submitButton}
                     // Disable while WP cart op is in flight, while
                     // tier-pricing is still resolving for B2B, and on
-                    // OOS. The pricingLoading gate is the important
-                    // one — a click before getProductPricing resolves
-                    // would seed the cart shadow with WP's public
-                    // price (because hasTierPrice would still be
-                    // false), and that price stays in the shadow
-                    // forever after.
+                    // OOS.
                     disabled={isOutOfStock || loading || pricingLoading}
                     onClick={() =>
                       addToCart({

@@ -43,7 +43,7 @@ export default function AccessoryVariantModal({ onClose, product }) {
   const [variantOpen, setVariantOpen] = useState(false);
   // B2B tier pricing — same source + race guard as the PDP enquiry
   // form: fetch on open, keep Add to Cart disabled until it resolves
-  // so a fast click can't seed the cart shadow with the public price.
+  // so the price shown matches what WP will charge.
   const [pricing, setPricing] = useState(null);
   const [pricingLoading, setPricingLoading] = useState(false);
   const role = user?.role;
@@ -156,14 +156,8 @@ export default function AccessoryVariantModal({ onClose, product }) {
       product?.featuredImage?.node?.sourceUrl ||
       null;
     try {
-      // Pass price + compareAtPrice through so buildShadowItem
-      // has a reliable override — previously we left them off
-      // and WP's addToCart response occasionally came back with
-      // price:0 (or the wrong variant's price), which showed as
-      // $0.00 in the cart summary. Same override pattern PDP's
-      // enquiry form uses for tier pricing, minus the tier flag.
-      // Tier-priced B2B adds pin the tier price into the shadow cart
-      // (public price becomes the compare-at), exactly like the PDP.
+      // price / compareAtPrice / product_image are stripped by addToCart
+      // before the WP call (the schema rejects them); WP prices the line.
       await addToCart?.({
         productId: product.databaseId,
         product_image: productImage,
@@ -433,9 +427,8 @@ export default function AccessoryVariantModal({ onClose, product }) {
                 </div>
                 <Button
                   className={styles.addBtn}
-                  // pricingLoading gate: a B2B click before the tier
-                  // fetch resolves would seed the shadow cart with the
-                  // public price permanently (same race the PDP guards).
+                  // pricingLoading gate: don't let a B2B user add before
+                  // the tier price they'll be shown has resolved.
                   disabled={adding || !selectedVariant || pricingLoading}
                   onClick={handleAdd}
                   size="large"

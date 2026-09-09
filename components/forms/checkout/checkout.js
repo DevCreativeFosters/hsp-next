@@ -265,16 +265,8 @@ function CheckoutForm() {
     setLoginInProgress(true);
     setLoginError('');
     try {
-      // Guest cart migration is now handled centrally by
-      // contexts/cart-context.js's authchange listener — it reads the
-      // `hsp_local_cart_guest` localStorage key, looks up the
-      // dealer's tier pricing for each item, replays via addToCart,
-      // and clears the guest shadow. We used to also snapshot+replay
-      // here but it caused double-migration (cart-context's listener
-      // fires on the same authchange event we dispatch below). Drop
-      // the local snapshot so the cart-context migrate is the single
-      // source of truth.
-
+      // The cart lives in WP; cart-context's authchange listener refetches
+      // it after the login below, so nothing cart-related happens here.
       const loginRes = await fetchAPI(
         `
           mutation UserLogin($username: String!, $password: String!) {
@@ -1354,7 +1346,7 @@ function CheckoutForm() {
     }
 
     if (result?.order_id) {
-      // Wipe the shadow cart so the dealer doesn't accidentally re-order.
+      // Reset the in-memory cart so the customer doesn't accidentally re-order.
       if (typeof clearCart === 'function') clearCart();
       // Guests who just placed an order see a "Create an account"
       // CTA on the order-status page — stash the details they

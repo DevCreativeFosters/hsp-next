@@ -205,7 +205,7 @@ export default function Quotes() {
   // Fires after acceptDealerQuote resolves. Iterates the
   // quote's line items and pushes each into the WC cart via
   // cart-context addToCart, then routes to /cart. Sequential
-  // (not Promise.all) so buildShadowItem/getCartItems don't
+  // (not Promise.all) so the getCartItems refetches don't
   // clobber each other.
   //
   // NOTE (2026-07-08): the current dealerQuotes resolver does

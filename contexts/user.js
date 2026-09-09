@@ -108,11 +108,10 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    // Read userId BEFORE removing it so we can scrub their shadow cart
-    // and any pre-cached /checkout contact-details snapshot.
+    // Read userId BEFORE removing it so we can scrub the pre-cached
+    // /checkout contact-details snapshot.
     const oldUserId = localStorage.getItem('userId');
     if (oldUserId) {
-      localStorage.removeItem(`hsp_local_cart_${oldUserId}`);
       clearCheckoutContactCache(oldUserId);
     }
     localStorage.removeItem('authToken');
