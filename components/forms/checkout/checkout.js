@@ -1471,6 +1471,10 @@ function CheckoutForm() {
                     <div
                       className={styles.authOverlayCard}
                       onClick={e => e.stopPropagation()}
+                      // Portals bubble React events through the component
+                      // tree: without this, the login/register form's submit
+                      // reaches the checkout <form> and trips its validation.
+                      onSubmit={e => e.stopPropagation()}
                     >
                       <button
                         aria-label="Close"
