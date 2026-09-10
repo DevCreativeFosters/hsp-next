@@ -10,6 +10,16 @@
   @media (width <= 767px) {
     padding: 0;
   }
+
+  // Inside the checkout auth overlay the card is the frame: drop the
+  // page-level padding so the form fits without scrolling.
+  &.compact {
+    padding: 0;
+
+    .formContent {
+      padding: 32px 0 8px;
+    }
+  }
 }
 
 /* registerMain */

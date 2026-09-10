@@ -1498,7 +1498,7 @@ function CheckoutForm() {
                         </div>
                       ) : (
                         <div className={styles.authOverlayRegister}>
-                          <RegisterForm />
+                          <RegisterForm compact />
                         </div>
                       )}
                     </div>

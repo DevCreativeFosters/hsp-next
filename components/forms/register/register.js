@@ -15,7 +15,7 @@ import banner from '@assets/images/banner.jpg';
 
 import styles from './register.module.scss';
 
-export default function RegisterForm() {
+export default function RegisterForm({ compact = false }) {
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -121,20 +121,23 @@ export default function RegisterForm() {
   };
 
   return (
-    <section className={styles.accountContent}>
+    <section className={clsx(styles.accountContent, compact && styles.compact)}>
       <div className={styles.registerMain}>
         <Container>
-          {/* Banner */}
-          <div className={styles.formBanner}>
-            <figure>
-              <Image
-                alt="Register banner"
-                fill
-                src={banner}
-                style={{ objectFit: 'cover' }}
-              />
-            </figure>
-          </div>
+          {/* Banner — omitted in the checkout overlay, where the card
+              itself is the frame and the banner only forces a scrollbar. */}
+          {!compact && (
+            <div className={styles.formBanner}>
+              <figure>
+                <Image
+                  alt="Register banner"
+                  fill
+                  src={banner}
+                  style={{ objectFit: 'cover' }}
+                />
+              </figure>
+            </div>
+          )}
 
           {/* Registration Form */}
           {(message === null || (message && message?.type === 'error')) && (

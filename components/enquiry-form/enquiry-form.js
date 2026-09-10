@@ -472,6 +472,12 @@ export default function EnquiryForm({
                               <PlusIcon
                                 className={styles.icon}
                                 onClick={() => {
+                                  if (isOutOfStock && !isProductInCart) {
+                                    alert(
+                                      "This product is out of stock, so its accessories can't be added yet.",
+                                    );
+                                    return;
+                                  }
                                   const addMainProduct = () =>
                                     addToCart(
                                       {
