@@ -1212,19 +1212,12 @@ export function CartProvider({ children }) {
               cart_item_key
               product_id
               product_name
-              product_slug
-              product_image
               quantity
               price
-              compareAtPrice
-              subtotal
               total
               variant_name
               variant_slug
               variant_sku
-              variant_price
-              freight
-              installation_cost
             }
           }
         }
@@ -1262,19 +1255,12 @@ export function CartProvider({ children }) {
               cart_item_key
               product_id
               product_name
-              product_slug
-              product_image
               quantity
               price
-              compareAtPrice
-              subtotal
               total
               variant_name
               variant_slug
               variant_sku
-              variant_price
-              freight
-              installation_cost
             }
           }
         }
