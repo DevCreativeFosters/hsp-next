@@ -2615,12 +2615,16 @@ function CheckoutForm() {
                 cartItems.map((item, index) => (
                   <div className={styles.checkOutItem} key={item.product_id}>
                     <div className={styles.itemImg}>
-                      <Image
-                        alt={item.product_name}
-                        height={100}
-                        src={item.product_image}
-                        width={100}
-                      />
+                      {/* next/image throws on a null src; WP omits
+                          product_image when a variant has no gallery. */}
+                      {item.product_image && (
+                        <Image
+                          alt={item.product_name}
+                          height={100}
+                          src={item.product_image}
+                          width={100}
+                        />
+                      )}
                     </div>
                     <div className={styles.itemInfo}>
                       <h6>{item.product_name}</h6>
