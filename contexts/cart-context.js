@@ -1390,6 +1390,107 @@ export function CartProvider({ children }) {
     setCartTotal(0);
   }, []);
 
+  // 🔹 Guest cart carry-over for login. WP's userLogin doesn't merge the
+  // anonymous session cart into the user's persistent cart, and the browser
+  // is moved to a fresh session on the first authenticated call — so the
+  // guest cart must be read BEFORE userLogin and replayed with the token
+  // AFTER. Remove both once the backend merges on login (R5).
+  const snapshotGuestCart = useCallback(async () => {
+    try {
+      const res = await fetchAPI(`
+        query GuestCartSnapshot {
+          getCartItems {
+            items {
+              product_id
+              quantity
+              variantName
+              variantSku
+              variantSlug
+            }
+          }
+        }
+      `);
+      return res?.getCartItems?.items ?? [];
+    } catch (err) {
+      console.error('[cart] guest cart snapshot failed:', err?.message);
+      return [];
+    }
+  }, []);
+
+  // WP does merge the session cart on login when the login request carries
+  // the guest session, but not reliably in every flow — so reconcile rather
+  // than replay: re-add only what the user's cart is still missing.
+  const replayGuestCart = useCallback(
+    async (items, { authToken, userId }) => {
+      if (!items?.length) return;
+      const lineKey = it => `${it.product_id}:${it.variantSku ?? ''}`;
+
+      let current = new Map();
+      try {
+        const res = await fetchAPI(
+          `
+            query UserCartAfterLogin {
+              getCartItems {
+                items {
+                  product_id
+                  quantity
+                  variantSku
+                }
+              }
+            }
+          `,
+          { authToken },
+        );
+        current = new Map(
+          (res?.getCartItems?.items ?? []).map(it => [
+            lineKey(it),
+            parseInt(it.quantity, 10) || 0,
+          ]),
+        );
+      } catch (err) {
+        console.error('[cart] post-login cart read failed:', err?.message);
+      }
+
+      const query = `
+        mutation ReplayGuestCartItem($input: AddToCartInput!) {
+          addToCart(input: $input) {
+            cart_item_key
+          }
+        }
+      `;
+      // Sequential — WP reports cumulative quantities per line, so
+      // parallel adds for the same line skew the count.
+      for (const it of items) {
+        const missing =
+          (parseInt(it.quantity, 10) || 1) - (current.get(lineKey(it)) ?? 0);
+        if (missing <= 0) continue;
+        try {
+          await fetchAPI(query, {
+            authToken,
+            variables: {
+              input: {
+                productId: it.product_id,
+                quantity: missing,
+                userId,
+                variant_name: it.variantName,
+                variant_sku: it.variantSku,
+                variant_slug: it.variantSlug,
+              },
+            },
+          });
+        } catch (err) {
+          console.error(
+            '[cart] guest item replay failed:',
+            it.variantSku,
+            err?.message,
+          );
+        }
+      }
+      await getCartItems();
+    },
+    [getCartItems],
+  );
+
   // 🔹 Auto-fetch cart on first load + whenever the auth token changes (login
   // in another tab dispatches a storage event; same-tab logins should
   // dispatch a manual `authchange` event so this listener fires too).
@@ -1431,7 +1532,9 @@ export function CartProvider({ children }) {
         loading,
         openCart,
         removeFromCart,
+        replayGuestCart,
         setIsCartOpen,
+        snapshotGuestCart,
         updateCart,
       }}
     >

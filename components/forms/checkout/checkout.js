@@ -70,6 +70,8 @@ function CheckoutForm() {
     clearCart,
     getCartItems,
     loading: cartLoading,
+    replayGuestCart,
+    snapshotGuestCart,
   } = useCart() || {};
 
   // Force a fresh cart fetch when the checkout form mounts. Page navigations
@@ -265,8 +267,9 @@ function CheckoutForm() {
     setLoginInProgress(true);
     setLoginError('');
     try {
-      // The cart lives in WP; cart-context's authchange listener refetches
-      // it after the login below, so nothing cart-related happens here.
+      // Guest cart must be read before userLogin — the session switches
+      // right after, and WP doesn't merge it for us.
+      const guestItems = (await snapshotGuestCart?.()) ?? [];
       const loginRes = await fetchAPI(
         `
           mutation UserLogin($username: String!, $password: String!) {
@@ -309,9 +312,10 @@ function CheckoutForm() {
       });
       window.dispatchEvent(new Event('authchange'));
 
-      // (Guest cart replay removed — see comment above the userLogin
-      // mutation. cart-context's authchange listener runs the
-      // migration with tier-price lookups for each item.)
+      await replayGuestCart?.(guestItems, {
+        authToken: login.token,
+        userId: login.userId,
+      });
 
       // Re-query with the new auth token so the resolver returns the full
       // profile (firstName/lastName/phone/company), then prefill.

@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { useCart } from '@contexts/cart-context';
 import { useUserContext } from '@contexts/user';
 import { useWishlist } from '@contexts/wishlist';
 
@@ -50,6 +51,7 @@ function LoginForm({ onLoginSuccess } = {}) {
   const [loginMessage, setLoginMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { getWishlistItems } = useWishlist();
+  const { replayGuestCart, snapshotGuestCart } = useCart() ?? {};
   const router = useRouter();
 
   const handleChange = e => {
@@ -85,6 +87,9 @@ function LoginForm({ onLoginSuccess } = {}) {
       }
 
       // ---- Login Flow ----
+      // Guest cart must be read before userLogin — the session switches
+      // right after, and WP doesn't merge it for us.
+      const guestItems = (await snapshotGuestCart?.()) ?? [];
       const data = await fetchAPI(LOGIN_MUTATION, { variables: formData });
       const loginResponse = data?.userLogin;
 
@@ -106,6 +111,11 @@ function LoginForm({ onLoginSuccess } = {}) {
         // Notify same-tab listeners (eg. CartProvider) that auth just changed
         // so they can re-fetch user-scoped data without a full reload.
         window.dispatchEvent(new Event('authchange'));
+
+        await replayGuestCart?.(guestItems, {
+          authToken: loginResponse.token,
+          userId: loginResponse.userId,
+        });
 
         setUser({
           id: loginResponse.userId,
