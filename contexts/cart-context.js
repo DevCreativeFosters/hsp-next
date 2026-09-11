@@ -1223,10 +1223,13 @@ export function CartProvider({ children }) {
         }
       `;
 
+      const userId = currentUserId();
+
       const data = await fetchAPI(query, {
         variables: {
           input: {
             items: items,
+            userId,
           },
         },
         ...authConfig(),
