@@ -44,6 +44,55 @@ export const STEP_TITLES = {
   },
 };
 
+// Re-price already-normalized builder data in place once tier prices land
+// (they arrive after the first render, and after any quick selection).
+// Every helper returns the same reference when nothing changed, so effects
+// that depend on these lists don't re-run needlessly.
+const repriceVariant = (variant, getTierPrice) => {
+  if (!variant || variant.publicPrice == null) return variant;
+  const tier = getTierPrice?.(variant.productId, variant.sku);
+  const hasTier =
+    tier != null && variant.publicPrice > 0 && tier < variant.publicPrice;
+  const price = hasTier ? tier : variant.publicPrice;
+  if (price === variant.price) return variant;
+  return {
+    ...variant,
+    price,
+    variantDetails: {
+      ...variant.variantDetails,
+      compareAtPrice: hasTier
+        ? variant.publicPrice
+        : variant.publicCompareAtPrice,
+      price,
+    },
+  };
+};
+
+const repriceList = (list, getTierPrice) => {
+  let changed = false;
+  const next = (list ?? []).map(item => {
+    const fresh = repriceVariant(item, getTierPrice);
+    if (fresh !== item) changed = true;
+    return fresh;
+  });
+  return changed ? next : list;
+};
+
+const repriceItems = (items, getTierPrice) => {
+  let changed = false;
+  const next = (items ?? []).map(item => {
+    const variants = repriceList(item.variants, getTierPrice);
+    if (variants === item.variants) return item;
+    changed = true;
+    return {
+      ...item,
+      minPrice: Math.min(...variants.map(variant => variant.price)),
+      variants,
+    };
+  });
+  return changed ? next : items;
+};
+
 export default function Builder({
   allLocations,
   globalOptions,
@@ -86,19 +135,20 @@ export default function Builder({
   } = useVehicleContext();
 
   const { ensurePricing, getTierPrice } = usePricing();
-  const [rawCovers, setRawCovers] = useState(null);
 
   // Tier prices for everything the builder can show; no-op for guests.
   useEffect(() => {
     ensurePricing((products ?? []).map(product => product.databaseId));
   }, [ensurePricing, products]);
 
-  // Covers are normalized from their raw form whenever pricing arrives,
-  // so tiles/selected list/subtotal pick the tier price up without a refetch.
+  // When tier prices land, re-price what's already on screen and selected —
+  // tiles, the selected cover, the setup list and therefore the subtotal.
   useEffect(() => {
-    if (!rawCovers) return;
-    setCovers(normalizeUteBuilderProducts(rawCovers, true, null, getTierPrice));
-  }, [getTierPrice, rawCovers, setCovers]);
+    setCovers(prev => repriceItems(prev, getTierPrice));
+    setStepProducts(prev => repriceItems(prev, getTierPrice));
+    setSelectedCover(prev => repriceVariant(prev, getTierPrice));
+    setSelectedProducts(prev => repriceList(prev, getTierPrice));
+  }, [getTierPrice, setCovers, setSelectedCover, setSelectedProducts]);
 
   const {
     isMapVisible,
@@ -288,7 +338,9 @@ export default function Builder({
       // Handle carousel scroll – scroll to opened group first slide (header)
       if (isOpeningGroup && productsCarouselRef.current) {
         setTimeout(() => {
-          const swiper = productsCarouselRef.current.swiper;
+          // The carousel can re-render during the delay (e.g. when tier
+          // prices land), leaving the ref null until it mounts again.
+          const swiper = productsCarouselRef.current?.swiper;
           if (!swiper) return;
 
           let firstSubitemIndex = null;
@@ -395,7 +447,14 @@ export default function Builder({
           }
 
           ensurePricing(relatedCovers.map(cover => cover.databaseId));
-          setRawCovers(relatedCovers);
+          setCovers(
+            normalizeUteBuilderProducts(
+              relatedCovers,
+              true,
+              null,
+              getTierPrice,
+            ),
+          );
           setIsFetchingCovers(false);
         })
         .catch(error => {
@@ -405,6 +464,8 @@ export default function Builder({
     },
     [
       covers,
+      ensurePricing,
+      getTierPrice,
       globalOptions,
       isFetchingCovers,
       make,
@@ -435,14 +496,13 @@ export default function Builder({
           selectedCover,
         );
 
-        setStepProducts(
-          normalizeUteBuilderProducts(
-            filteredOutProducts,
-            false,
-            lastProductSlug,
-            getTierPrice,
-          ),
+        const priced = normalizeUteBuilderProducts(
+          filteredOutProducts,
+          false,
+          lastProductSlug,
+          getTierPrice,
         );
+        setStepProducts(priced);
       }
     },
     [
