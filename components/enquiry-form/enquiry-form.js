@@ -51,7 +51,7 @@ export default function EnquiryForm({
   const { addToCart, cartItems, loading } = useCart();
 
   // Tier prices for the "Also Compatible With" rows (no-op for guests).
-  const { ensurePricing, getTierPrice } = usePricing();
+  const { ensurePricing, getDiscountPercent, getTierPrice } = usePricing();
   useEffect(() => {
     ensurePricing(
       (productData?.compatibleProduct?.selectProduct ?? [])
@@ -450,10 +450,23 @@ export default function EnquiryForm({
                     if (item?.variantPrice)
                       variantDetails.price = item?.variantPrice;
 
-                    const compatibleTier = getTierPrice(
+                    // WP prices a compatible add-on from its special price
+                    // when one is configured, then applies the tier % to
+                    // that — mirror it so the row matches the cart line.
+                    const discountPercent = getDiscountPercent(
                       product?.databaseId,
-                      selectedCompatibleVariant?.sku,
                     );
+                    const compatibleTier =
+                      item?.variantPrice && discountPercent != null
+                        ? Math.round(
+                            Number(item.variantPrice) *
+                              (1 - discountPercent / 100) *
+                              100,
+                          ) / 100
+                        : getTierPrice(
+                            product?.databaseId,
+                            selectedCompatibleVariant?.sku,
+                          );
                     const hasCompatibleTier =
                       compatibleTier != null &&
                       compatibleTier < Number(variantDetails?.price);
