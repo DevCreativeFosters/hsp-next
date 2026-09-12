@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 import { useCart } from '@contexts/cart-context';
+import { usePricing } from '@contexts/pricing';
 import StoreLocatorContext from '@contexts/store-locator';
 import { useUserContext } from '@contexts/user';
 
@@ -48,6 +49,16 @@ export default function EnquiryForm({
 
   // Assuming useCart provides isCartOpen
   const { addToCart, cartItems, loading } = useCart();
+
+  // Tier prices for the "Also Compatible With" rows (no-op for guests).
+  const { ensurePricing, getTierPrice } = usePricing();
+  useEffect(() => {
+    ensurePricing(
+      (productData?.compatibleProduct?.selectProduct ?? [])
+        .map(item => item?.product?.nodes?.[0]?.databaseId)
+        .filter(Boolean),
+    );
+  }, [ensurePricing, productData]);
 
   const highlightHandler = useRef(null);
   const wrapperOuterRef = useRef(null);
@@ -418,7 +429,6 @@ export default function EnquiryForm({
                 <Loading color="white" size="large" />
               </div>
             ) : (
-              role === 'retail' &&
               productData?.compatibleProduct?.selectProduct?.length > 0 && (
                 <div className={styles.cmpProduct}>
                   <div className={styles.title}>Also Compatible With:</div>
@@ -439,6 +449,20 @@ export default function EnquiryForm({
                       variantDetails.compareAtPrice = variantDetails?.price;
                     if (item?.variantPrice)
                       variantDetails.price = item?.variantPrice;
+
+                    const compatibleTier = getTierPrice(
+                      product?.databaseId,
+                      selectedCompatibleVariant?.sku,
+                    );
+                    const hasCompatibleTier =
+                      compatibleTier != null &&
+                      compatibleTier < Number(variantDetails?.price);
+                    const rowPrice = hasCompatibleTier
+                      ? compatibleTier
+                      : variantDetails?.price;
+                    const rowCompareAtPrice = hasCompatibleTier
+                      ? variantDetails?.price
+                      : variantDetails?.compareAtPrice;
 
                     return (
                       <div className={styles.cmpBox} key={product?.databaseId}>
@@ -528,18 +552,18 @@ export default function EnquiryForm({
                               "$NaN" / "$NaN for install" here. Only
                               print numbers that exist. */}
                           <div className={styles.price}>
-                            {Number.isFinite(Number(variantDetails?.price)) && (
+                            {Number.isFinite(Number(rowPrice)) && (
                               <div
                                 className={clsx({
-                                  red: variantDetails?.compareAtPrice,
+                                  red: rowCompareAtPrice,
                                 })}
                               >
-                                {formatPrice(variantDetails?.price)}
+                                {formatPrice(rowPrice)}
                               </div>
                             )}
-                            {Number(variantDetails?.compareAtPrice) > 0 && (
+                            {Number(rowCompareAtPrice) > 0 && (
                               <div className={styles.two}>
-                                {formatPrice(variantDetails?.compareAtPrice)}
+                                {formatPrice(rowCompareAtPrice)}
                               </div>
                             )}
                             {Number(variantDetails?.installationCost) > 0 && (
