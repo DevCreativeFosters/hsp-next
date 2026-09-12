@@ -184,6 +184,10 @@ function CheckoutForm() {
   // already registered, we surface an inline "log in to autofill" prompt
   // below the email field so they don't have to retype everything.
   const [customerLookup, setCustomerLookup] = useState(null);
+  // The prompt's own "Continue as guest" dismisses it. Deliberately separate
+  // from continueAsGuest: guests can only reach the email field by passing
+  // the guest gate, which sets that flag before they've typed anything.
+  const [inlinePromptDismissed, setInlinePromptDismissed] = useState(false);
   const [loginPassword, setLoginPassword] = useState('');
   const [loginInProgress, setLoginInProgress] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -405,7 +409,7 @@ function CheckoutForm() {
   const showInlineLoginPrompt =
     customerLookup?.exists &&
     customerLookup?.isLoggedIn === false &&
-    !continueAsGuest;
+    !inlinePromptDismissed;
 
   // When the user lands on /checkout already logged in (session from a
   // previous /login or from clicking "Buy" while authenticated), the
@@ -1659,7 +1663,10 @@ function CheckoutForm() {
                           </button>
                           <button
                             className={styles.inlineLoginSkip}
-                            onClick={() => setContinueAsGuest(true)}
+                            onClick={() => {
+                              setInlinePromptDismissed(true);
+                              setContinueAsGuest(true);
+                            }}
                             type="button"
                           >
                             Continue as guest
