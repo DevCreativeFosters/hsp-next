@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
 
+import { usePricing } from '@contexts/pricing';
 import StoreLocatorContext from '@contexts/store-locator';
 import { useVehicleContext } from '@contexts/vehicle';
 
@@ -83,6 +84,21 @@ export default function Builder({
     setStepTitle,
     stepNumber,
   } = useVehicleContext();
+
+  const { ensurePricing, getTierPrice } = usePricing();
+  const [rawCovers, setRawCovers] = useState(null);
+
+  // Tier prices for everything the builder can show; no-op for guests.
+  useEffect(() => {
+    ensurePricing((products ?? []).map(product => product.databaseId));
+  }, [ensurePricing, products]);
+
+  // Covers are normalized from their raw form whenever pricing arrives,
+  // so tiles/selected list/subtotal pick the tier price up without a refetch.
+  useEffect(() => {
+    if (!rawCovers) return;
+    setCovers(normalizeUteBuilderProducts(rawCovers, true, null, getTierPrice));
+  }, [getTierPrice, rawCovers, setCovers]);
 
   const {
     isMapVisible,
@@ -378,12 +394,8 @@ export default function Builder({
             return;
           }
 
-          const normalizedCovers = normalizeUteBuilderProducts(
-            relatedCovers,
-            true,
-          );
-
-          setCovers(normalizedCovers);
+          ensurePricing(relatedCovers.map(cover => cover.databaseId));
+          setRawCovers(relatedCovers);
           setIsFetchingCovers(false);
         })
         .catch(error => {
@@ -428,12 +440,14 @@ export default function Builder({
             filteredOutProducts,
             false,
             lastProductSlug,
+            getTierPrice,
           ),
         );
       }
     },
     [
       covers,
+      getTierPrice,
       lastProductSlug,
       products,
       selectedCover,

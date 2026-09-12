@@ -145,37 +145,14 @@ export default function AccessoryVariantModal({ onClose, product }) {
   const handleAdd = async () => {
     if (!selectedVariant || adding) return;
     setAdding(true);
-    // Resolve the same image the modal displays (variant → product →
-    // featured) and thread it into the cart line. WP's addToCart
-    // response carries no image for these variant add-ons, so without
-    // this the cart rendered a blank thumbnail. Mirrors the fallback
-    // chain in galleryImages below, using the raw source fields.
-    const productImage =
-      selectedVariant?.variantDetails?.images?.nodes?.[0]?.mediaItemUrl ||
-      product?.productFields?.images?.nodes?.[0]?.mediaItemUrl ||
-      product?.featuredImage?.node?.sourceUrl ||
-      null;
     try {
-      // price / compareAtPrice / product_image are stripped by addToCart
-      // before the WP call (the schema rejects them); WP prices the line.
+      // WP prices the line and picks the image; the frontend sends neither.
       await addToCart?.({
         productId: product.databaseId,
-        product_image: productImage,
         quantity,
         variant_name: selectedVariant.variantName,
         variant_sku: selectedVariant.sku,
         variant_slug: selectedVariant.variantSlug,
-        ...(hasTierPrice
-          ? {
-              compareAtPrice: tierVariant.price,
-              price: tierVariant.tierPrice,
-            }
-          : {
-              ...(variantPrice != null && { price: variantPrice }),
-              ...(selectedVariant?.variantDetails?.compareAtPrice != null && {
-                compareAtPrice: selectedVariant.variantDetails.compareAtPrice,
-              }),
-            }),
       });
       onClose?.();
     } catch (err) {

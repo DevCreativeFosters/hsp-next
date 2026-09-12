@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import { CartProvider } from '@contexts/cart-context';
 import { GravityFormsStaticDataProvider } from '@contexts/gravity-forms-static-data';
+import { PricingProvider } from '@contexts/pricing';
 import { UserProvider } from '@contexts/user';
 import { VehicleProvider } from '@contexts/vehicle';
 import { WishlistProvider } from '@contexts/wishlist';
@@ -185,67 +186,72 @@ export default function Layout({
       stores={data.allStores}
     >
       <UserProvider>
-        <VehicleProvider
-          isProductPageWithoutMakeAndModel={isProductPageWithoutMakeAndModel}
-        >
-          <CartProvider>
-            <WishlistProvider>
-              <div
-                className={
-                  withFooter && stickyFooter ? styles.fullHeightWrapper : ''
-                }
-              >
-                <Header
-                  mainMenu={normalizedMainMenu}
-                  mainProductCategories={normalizedMainProductCategories}
-                  makes={data.makes}
-                  mobileMenu={normalizedMobileMenu}
-                  preventHeaderCollapse={preventHeaderCollapse}
-                  products={normalizedProductData}
-                  promoBanner={promoBanner}
-                  secondaryMenu={topNavigationMenu}
-                />
-                <main className={styles.main}>
-                  {withMap && (
-                    <div className={styles.background}>
-                      <Image
-                        alt="Shape of the Australian continent"
-                        className={styles.backgroundImage}
-                        fill={true}
-                        quality={80}
-                        src={BgContinent}
-                      />
+        <PricingProvider>
+          <VehicleProvider
+            isProductPageWithoutMakeAndModel={isProductPageWithoutMakeAndModel}
+          >
+            <CartProvider>
+              <WishlistProvider>
+                <div
+                  className={
+                    withFooter && stickyFooter ? styles.fullHeightWrapper : ''
+                  }
+                >
+                  <Header
+                    mainMenu={normalizedMainMenu}
+                    mainProductCategories={normalizedMainProductCategories}
+                    makes={data.makes}
+                    mobileMenu={normalizedMobileMenu}
+                    preventHeaderCollapse={preventHeaderCollapse}
+                    products={normalizedProductData}
+                    promoBanner={promoBanner}
+                    secondaryMenu={topNavigationMenu}
+                  />
+                  <main className={styles.main}>
+                    {withMap && (
+                      <div className={styles.background}>
+                        <Image
+                          alt="Shape of the Australian continent"
+                          className={styles.backgroundImage}
+                          fill={true}
+                          quality={80}
+                          src={BgContinent}
+                        />
+                      </div>
+                    )}
+                    <div
+                      className={clsx(styles.content, {
+                        [styles.reserveSpaceForVehicleSelection]:
+                          reserveSpaceForVehicleSelection,
+                      })}
+                    >
+                      {children}
                     </div>
-                  )}
-                  <div
-                    className={clsx(styles.content, {
-                      [styles.reserveSpaceForVehicleSelection]:
-                        reserveSpaceForVehicleSelection,
-                    })}
-                  >
-                    {children}
-                  </div>
-                </main>
-                {withFooter && (
-                  <div className={styles.bottomSticky}>
-                    <FullscreenCollapse>
-                      {/* 
+                  </main>
+                  {withFooter && (
+                    <div className={styles.bottomSticky}>
+                      <FullscreenCollapse>
+                        {/* 
                         <Newsletter
                           description={newsletterDescription}
                           googleRecaptchaSitekey={GOOGLE_RECAPTCHA_SITEKEY}
                           title={newsletterTitle}
                         />
                       */}
-                      <Footer menus={normalizedFooterMenus} text={footerText} />
-                    </FullscreenCollapse>
-                  </div>
-                )}
-                <div id={MODAL_PORTAL_ID} />
-              </div>
-              <CartSidebar />
-            </WishlistProvider>
-          </CartProvider>
-        </VehicleProvider>
+                        <Footer
+                          menus={normalizedFooterMenus}
+                          text={footerText}
+                        />
+                      </FullscreenCollapse>
+                    </div>
+                  )}
+                  <div id={MODAL_PORTAL_ID} />
+                </div>
+                <CartSidebar />
+              </WishlistProvider>
+            </CartProvider>
+          </VehicleProvider>
+        </PricingProvider>
       </UserProvider>
     </GravityFormsStaticDataProvider>
   );

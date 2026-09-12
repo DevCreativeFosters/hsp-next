@@ -394,10 +394,6 @@ export default function EnquiryForm({
                         variant_name: selectedVariant?.variantName,
                         variant_sku: selectedVariant?.sku,
                         variant_slug: selectedVariant?.variantSlug,
-                        ...(hasTierPrice && {
-                          compareAtPrice: tierVariant.price,
-                          price: tierVariant.tierPrice,
-                        }),
                       })
                     }
                     size="large"
@@ -495,12 +491,6 @@ export default function EnquiryForm({
                                   const addCompatibleProduct = () =>
                                     addToCart({
                                       productId: product?.databaseId,
-                                      // Pass the accessory's own image (the one
-                                      // already shown in this row) through to the
-                                      // cart line — WP's addToCart response has no
-                                      // image for these compatible add-ons, so
-                                      // without it the cart rendered a blank box.
-                                      product_image: img?.sourceUrl,
                                       quantity: 1,
                                       variant_name:
                                         selectedCompatibleVariant?.variantName,
