@@ -25,7 +25,6 @@ const TIER_PRICING_QUERY = `
       nodes {
         databaseId
         currentTier
-        discountPercent
         pricingBadge
         variantPricing {
           sku
@@ -81,7 +80,6 @@ export function PricingProvider({ children }) {
               ]),
             ),
             currentTier: node.currentTier,
-            discountPercent: node.discountPercent,
             pricingBadge: node.pricingBadge,
           };
         }
@@ -104,20 +102,9 @@ export function PricingProvider({ children }) {
     [pricing],
   );
 
-  // The user's tier discount for a product as a percentage, or null. Used
-  // where WP applies the tier to a price that isn't the variant's own —
-  // e.g. a compatible-product special price.
-  const getDiscountPercent = useCallback(
-    productId => {
-      const pct = pricing[Number(productId)]?.discountPercent;
-      return pct != null && pct > 0 ? Number(pct) : null;
-    },
-    [pricing],
-  );
-
   const value = useMemo(
-    () => ({ ensurePricing, getDiscountPercent, getTierPrice, pricing }),
-    [ensurePricing, getDiscountPercent, getTierPrice, pricing],
+    () => ({ ensurePricing, getTierPrice, pricing }),
+    [ensurePricing, getTierPrice, pricing],
   );
 
   return (
@@ -127,7 +114,6 @@ export function PricingProvider({ children }) {
 
 const NO_PRICING = {
   ensurePricing: async () => {},
-  getDiscountPercent: () => null,
   getTierPrice: () => null,
   pricing: {},
 };
