@@ -21,6 +21,7 @@ import Select from '@components/form/select';
 import Loading from '@components/loading/loading';
 
 import CheckIcon from '@assets/icons/check-mark.svg';
+import DisableIcon from '@assets/icons/disable.svg';
 import PlusIcon from '@assets/icons/plus.svg';
 
 import styles from './enquiry-form.module.scss';
@@ -432,6 +433,10 @@ export default function EnquiryForm({
                         )
                       : product?.productFields?.variants[0];
 
+                    const acfVariant = product?.acfVariants?.find(
+                      variant => variant?.sku === item?.variantSku,
+                    );
+
                     const variantDetails =
                       selectedCompatibleVariant?.variantDetails;
 
@@ -464,16 +469,13 @@ export default function EnquiryForm({
                                   selectedCompatibleVariant?.variantName,
                             ) ? (
                               <CheckIcon className={styles.check} />
+                            ) : acfVariant?.stockStatus === 'outofstock' ||
+                              (isOutOfStock && !isProductInCart) ? (
+                              <DisableIcon />
                             ) : (
                               <PlusIcon
                                 className={styles.icon}
                                 onClick={() => {
-                                  if (isOutOfStock && !isProductInCart) {
-                                    alert(
-                                      "This product is out of stock, so its accessories can't be added yet.",
-                                    );
-                                    return;
-                                  }
                                   const addMainProduct = () =>
                                     addToCart(
                                       {
