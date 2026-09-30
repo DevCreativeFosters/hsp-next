@@ -1843,9 +1843,7 @@ function CheckoutForm() {
                                 value={formData.state || ''}
                               >
                                 <option value="">Select state</option>
-                                {State.getStatesOfCountry(
-                                  formData.country || 'AU',
-                                ).map(s => (
+                                {State.getStatesOfCountry('AU').map(s => (
                                   <option key={s.isoCode} value={s.name}>
                                     {s.name}
                                   </option>
