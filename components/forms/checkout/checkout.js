@@ -548,7 +548,12 @@ function CheckoutForm() {
           const a =
             [storeAddr?.deliveryAddress, storeAddr?.billingAddress].find(
               addr =>
-                addr && (addr.streetAddress || addr.city || addr.postalCode),
+                addr &&
+                addr.streetAddress &&
+                addr.city &&
+                addr.state &&
+                addr.country &&
+                addr.postalCode,
             ) || null;
           if (a) {
             shipping = {
@@ -1536,7 +1541,7 @@ function CheckoutForm() {
                       came from the store record — but Confirm
                       Address now also collapses this card, and the
                       user needs a way back. */}
-                  {(role === 'retail' || role === 'dealer') && (
+                  {role === 'retail' && (
                     <Button
                       onClick={handleEditContactDetails}
                       size="large"

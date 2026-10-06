@@ -76,6 +76,11 @@
     }
   }
 
+  .allCartItems {
+    max-height: 40vh;
+    overflow: auto;
+  }
+
   .cartItem {
     display: flex;
     margin-bottom: 30px;

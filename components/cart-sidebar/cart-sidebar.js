@@ -47,88 +47,90 @@ export default function CartSidebar() {
         onClick={e => e.stopPropagation()}
       >
         <h2>Shopping Cart:</h2>
-        {cartItems.map((item, index) => (
-          <div className={styles.cartItem} key={index}>
-            <div className={styles.listImg}>
-              {item.product_image && (
-                <img alt={item.product_name} src={item.product_image} />
-              )}
-            </div>
-
-            <div className={styles.itemInfo}>
-              <h6>{item.product_name}</h6>
-              <div
-                className={clsx(styles.itemPrice, {
-                  red: item?.compareAtPrice,
-                })}
-              >
-                {formatPrice(item.price)}{' '}
-                {!!item?.compareAtPrice && (
-                  <del>{formatPrice(item.compareAtPrice)}</del>
+        <div className={styles.allCartItems}>
+          {cartItems.map((item, index) => (
+            <div className={styles.cartItem} key={index}>
+              <div className={styles.listImg}>
+                {item.product_image && (
+                  <img alt={item.product_name} src={item.product_image} />
                 )}
               </div>
-              <div className={styles.itemBottom}>
-                <div className={styles.qtyBlock}>
-                  <button
-                    className={styles.minus}
-                    disabled={loading}
-                    onClick={() =>
-                      updateCart({
-                        cartItemKey: item.cart_item_key,
-                        productId: item.product_id,
-                        quantity: item.quantity - 1,
-                        variant_name: item.variantName,
-                        variant_sku: item.variantSku,
-                        variant_slug: item.variantSlug,
-                      })
-                    }
-                  >
-                    -
-                  </button>
-                  <input
-                    disabled={true}
-                    min="0"
-                    onChange={e =>
-                      updateCart({
-                        cartItemKey: item.cart_item_key,
-                        productId: item.product_id,
-                        quantity: e.target.value,
-                        variant_name: item.variantName,
-                        variant_sku: item.variantSku,
-                        variant_slug: item.variantSlug,
-                      })
-                    }
-                    type="number"
-                    value={item.quantity}
-                  />
-                  <button
-                    className={styles.plus}
-                    disabled={loading}
-                    onClick={() =>
-                      updateCart({
-                        cartItemKey: item.cart_item_key,
-                        productId: item.product_id,
-                        quantity: item.quantity + 1,
-                        variant_name: item.variantName,
-                        variant_sku: item.variantSku,
-                        variant_slug: item.variantSlug,
-                      })
-                    }
-                  >
-                    +
-                  </button>
-                </div>
-                <a
-                  className={styles.removeLink}
-                  href="#"
-                  onClick={() => removeFromCart(item.cart_item_key)}
+
+              <div className={styles.itemInfo}>
+                <h6>{item.product_name}</h6>
+                <div
+                  className={clsx(styles.itemPrice, {
+                    red: item?.compareAtPrice,
+                  })}
                 >
-                  Remove
-                </a>
+                  {formatPrice(item.price)}{' '}
+                  {!!item?.compareAtPrice && (
+                    <del>{formatPrice(item.compareAtPrice)}</del>
+                  )}
+                </div>
+                <div className={styles.itemBottom}>
+                  <div className={styles.qtyBlock}>
+                    <button
+                      className={styles.minus}
+                      disabled={loading}
+                      onClick={() =>
+                        updateCart({
+                          cartItemKey: item.cart_item_key,
+                          productId: item.product_id,
+                          quantity: item.quantity - 1,
+                          variant_name: item.variantName,
+                          variant_sku: item.variantSku,
+                          variant_slug: item.variantSlug,
+                        })
+                      }
+                    >
+                      -
+                    </button>
+                    <input
+                      disabled={true}
+                      min="0"
+                      onChange={e =>
+                        updateCart({
+                          cartItemKey: item.cart_item_key,
+                          productId: item.product_id,
+                          quantity: e.target.value,
+                          variant_name: item.variantName,
+                          variant_sku: item.variantSku,
+                          variant_slug: item.variantSlug,
+                        })
+                      }
+                      type="number"
+                      value={item.quantity}
+                    />
+                    <button
+                      className={styles.plus}
+                      disabled={loading}
+                      onClick={() =>
+                        updateCart({
+                          cartItemKey: item.cart_item_key,
+                          productId: item.product_id,
+                          quantity: item.quantity + 1,
+                          variant_name: item.variantName,
+                          variant_sku: item.variantSku,
+                          variant_slug: item.variantSlug,
+                        })
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                  <a
+                    className={styles.removeLink}
+                    href="#"
+                    onClick={() => removeFromCart(item.cart_item_key)}
+                  >
+                    Remove
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         <div className={styles.cartTotal}>Subtotal: ${cartSubTotal}</div>
 
