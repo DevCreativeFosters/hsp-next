@@ -935,10 +935,20 @@ function CheckoutForm() {
         'Get your products fitted on-site at your dealership from our local HSP specialists.',
       icon: OnSiteFittingIcon,
       id: 'on-site-fitting',
-      noteContent: <></>,
+      noteContent: (
+        <>
+          <p>
+            Want to deliver to a different address? Please{' '}
+            <Link href="/contact-us" style={{ textDecoration: 'underline' }}>
+              <strong>contact us</strong>
+            </Link>{' '}
+            and we&apos;ll be happy to help
+          </p>
+        </>
+      ),
       roles: ['dealer'],
       selectedAddress: {
-        btnTitle: 'Change Store',
+        btnTitle: '',
         title: 'On-Site Fitting',
       },
       selectedMenu: {
@@ -2122,7 +2132,6 @@ function CheckoutForm() {
                                 'local-installation',
                                 'click-collect',
                                 'pickup-from-hsp',
-                                'on-site-fitting',
                               ].some(id => id === deliveryOption.id) &&
                                 selectedStore?.location &&
                                 (() => {
@@ -2169,9 +2178,7 @@ function CheckoutForm() {
                                       picker straight through. */}
                                   {(deliveryOption.id === 'click-collect' ||
                                     deliveryOption.id ===
-                                      'local-installation' ||
-                                    (deliveryOption.id === 'on-site-fitting' &&
-                                      !selectedStore?.name)) &&
+                                      'local-installation') &&
                                     (Array.isArray(allStores) &&
                                     allStores.length > 0 ? (
                                       <SelectLocation
@@ -2184,16 +2191,7 @@ function CheckoutForm() {
                                       </p>
                                     ))}
                                   {deliveryOption.id === 'on-site-fitting' &&
-                                    selectedStore?.name &&
                                     (() => {
-                                      const loc = selectedStore.location || {};
-                                      const addressLine = [
-                                        loc.street,
-                                        loc.city,
-                                        loc.stateAbbr || loc.state,
-                                      ]
-                                        .filter(Boolean)
-                                        .join(', ');
                                       // Format the fitting date as
                                       // "Weekday DD/MM" for the summary
                                       // pill — e.g. "Wednesday 29/10".
@@ -2216,53 +2214,25 @@ function CheckoutForm() {
                                       const storeHeader = (
                                         <>
                                           <div
-                                            className={
-                                              styles.fittingSelectedStore
-                                            }
-                                          >
-                                            <div
-                                              className={
-                                                styles.fittingSelectedStoreLeft
-                                              }
-                                            >
-                                              <span
-                                                className={
-                                                  styles.fittingSelectedStoreLabel
-                                                }
-                                              >
-                                                Selected Store:
-                                              </span>
-                                              <strong>
-                                                {selectedStore.name}
-                                              </strong>
-                                            </div>
-                                            {addressLine && (
-                                              <div
-                                                className={
-                                                  styles.fittingSelectedStoreAddr
-                                                }
-                                              >
-                                                {addressLine}
-                                              </div>
+                                            className={clsx(
+                                              styles.deliveryAddressBox,
+                                              styles.storeDelivery,
                                             )}
-                                          </div>
-                                          <button
-                                            className={
-                                              styles.fittingChangeStore
-                                            }
-                                            onClick={() => {
-                                              setSelectedStore({});
-                                              setFormData(prev => ({
-                                                ...prev,
-                                                fittingDate: '',
-                                              }));
-                                              setIsFormFilled(false);
-                                              setPaymentContinued(false);
-                                            }}
-                                            type="button"
+                                            style={{ marginBottom: 0 }}
                                           >
-                                            Change Store
-                                          </button>
+                                            <div className={styles.left}>
+                                              <b>Fitting Address:</b>
+                                            </div>
+                                            <div className={styles.right}>
+                                              {formData.address},{' '}
+                                              {formData.city}, {formData.state}{' '}
+                                              {formData.postcode},{' '}
+                                              {formData.country}
+                                            </div>
+                                          </div>
+                                          <div style={{ marginBottom: '28px' }}>
+                                            {deliveryOption.noteContent}
+                                          </div>
                                         </>
                                       );
 
@@ -2275,7 +2245,10 @@ function CheckoutForm() {
                                         // input.
                                         return (
                                           <div
-                                            className={styles.fittingDateBlock}
+                                            className={clsx(
+                                              styles.fittingDateBlock,
+                                              styles.editSelection,
+                                            )}
                                           >
                                             {storeHeader}
                                             <div
@@ -2317,7 +2290,10 @@ function CheckoutForm() {
                                       // Date-entry state (pre-confirm).
                                       return (
                                         <div
-                                          className={styles.fittingDateBlock}
+                                          className={clsx(
+                                            styles.fittingDateBlock,
+                                            styles.editSelection,
+                                          )}
                                         >
                                           {storeHeader}
                                           <div
@@ -2368,9 +2344,18 @@ function CheckoutForm() {
                                           <button
                                             className={styles.fittingConfirmBtn}
                                             disabled={!formData.fittingDate}
-                                            onClick={() =>
-                                              setIsFormFilled(true)
-                                            }
+                                            onClick={() => {
+                                              setFormData(prev => ({
+                                                ...prev,
+                                                delivery_address: prev.address,
+                                                delivery_city: prev.city,
+                                                delivery_country: prev.country,
+                                                delivery_postcode:
+                                                  prev.postcode,
+                                                delivery_state: prev.state,
+                                              }));
+                                              setIsFormFilled(true);
+                                            }}
                                             type="button"
                                           >
                                             Confirm Selection

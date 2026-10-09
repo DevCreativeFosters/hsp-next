@@ -832,6 +832,7 @@
                     font-weight: 700;
                     cursor: pointer;
                     transition: opacity 0.15s ease;
+                    margin-bottom: 16px;
 
                     &:hover {
                       opacity: 0.9;
@@ -868,6 +869,7 @@
                     font-size: 15px;
                     text-decoration: underline;
                     cursor: pointer;
+                    margin-bottom: 16px;
 
                     &:hover {
                       opacity: 0.85;
