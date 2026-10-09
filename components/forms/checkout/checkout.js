@@ -768,12 +768,56 @@ function CheckoutForm() {
       noteContent: (
         <>
           <p>
+            Want to deliver to a different address? Please{' '}
+            <Link href="/contact-us" style={{ textDecoration: 'underline' }}>
+              <strong>contact our team</strong>
+            </Link>{' '}
+            to discuss your options.
+          </p>
+        </>
+      ),
+      roles: ['dealer'],
+      selectedAddress: {
+        // No Edit Address button — the destination is the dealer's
+        // store address from Contact Details above, which can't be
+        // edited per-order on this card. (The button trigger renders
+        // when btnTitle is truthy; empty string skips it.)
+        btnTitle: '',
+        title: 'Deliver to Store',
+      },
+      selectedMenu: {
+        content: (
+          <>
+            <p>
+              Appropriate delivery costs will be added to the final order
+              summary
+            </p>
+            <p>
+              <strong>Please Note:</strong> Freight times will vary depending on
+              location
+            </p>
+          </>
+        ),
+        title: 'Deliver to Store',
+      },
+      title: 'Deliver to Store',
+    },
+    {
+      allowDelivery: false,
+      askCutomerInfo: false,
+      description:
+        'Appropriate delivery costs will be added to the final order summary',
+      icon: TruckIcon,
+      id: 'deliver-to-store',
+      noteContent: (
+        <>
+          <p>
             <strong>Please Note:</strong> Freight times will vary depending on
             location
           </p>
         </>
       ),
-      roles: ['b2b', 'dealer'],
+      roles: ['b2b'],
       selectedAddress: {
         // No Edit Address button — the destination is the dealer's
         // store address from Contact Details above, which can't be
@@ -1963,6 +2007,14 @@ function CheckoutForm() {
                                   <deliveryOption.icon /> {deliveryOption.title}
                                 </h3>
                                 <p>{deliveryOption.description}</p>
+                                {isFormFilled &&
+                                  formData.orderType === 'deliver-to-store' &&
+                                  role === 'dealer' && (
+                                    <p>
+                                      <strong>Please Note:</strong> Freight
+                                      times will vary depending on location
+                                    </p>
+                                  )}
                               </>
                             )}
                           </div>
@@ -1984,60 +2036,88 @@ function CheckoutForm() {
                                 'drop-shipping-to-customer',
                                 'deliver-to-door',
                                 'deliver-to-store',
-                              ].some(id => id === deliveryOption.id) && (
-                                <>
-                                  <div
-                                    className={clsx(
-                                      styles.deliveryAddressBox,
-                                      styles.delivery,
-                                    )}
-                                  >
-                                    {deliveryOption.askCutomerInfo && (
-                                      <div className={styles.customerInfo}>
-                                        <div className={styles.smallTitle}>
-                                          Customer Info:{' '}
+                              ].some(id => id === deliveryOption.id) &&
+                                (() => {
+                                  if (
+                                    deliveryOption.id === 'deliver-to-store' &&
+                                    role === 'dealer'
+                                  ) {
+                                    return (
+                                      <div
+                                        className={clsx(
+                                          styles.deliveryAddressBox,
+                                          styles.storeDelivery,
+                                        )}
+                                      >
+                                        <div className={styles.left}>
+                                          <b>Delivery Address:</b>
                                         </div>
-                                        <p>
-                                          <div>
-                                            <strong>
-                                              {
-                                                formData.additionalCustomerInfo
-                                                  .customer_first_name
-                                              }{' '}
-                                              {
-                                                formData.additionalCustomerInfo
-                                                  .customer_last_name
-                                              }
-                                            </strong>
-                                          </div>
-                                        </p>
-                                        <p>
-                                          <strong>
-                                            {
-                                              formData.additionalCustomerInfo
-                                                .customer_email
-                                            }
-                                          </strong>
-                                        </p>
-                                      </div>
-                                    )}
-                                    <div className={styles.customerInfo}>
-                                      <div className={styles.smallTitle}>
-                                        Delivery Address:{' '}
-                                      </div>
-                                      <div>
-                                        <strong>
+                                        <div className={styles.right}>
                                           {formData.delivery_address},{' '}
                                           {formData.delivery_city},{' '}
                                           {formData.delivery_state}{' '}
                                           {formData.delivery_postcode},{' '}
                                           {formData.delivery_country}
-                                        </strong>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+
+                                  return (
+                                    <div
+                                      className={clsx(
+                                        styles.deliveryAddressBox,
+                                        styles.delivery,
+                                      )}
+                                    >
+                                      {deliveryOption.askCutomerInfo && (
+                                        <div className={styles.customerInfo}>
+                                          <div className={styles.smallTitle}>
+                                            Customer Info:{' '}
+                                          </div>
+                                          <p>
+                                            <div>
+                                              <strong>
+                                                {
+                                                  formData
+                                                    .additionalCustomerInfo
+                                                    .customer_first_name
+                                                }{' '}
+                                                {
+                                                  formData
+                                                    .additionalCustomerInfo
+                                                    .customer_last_name
+                                                }
+                                              </strong>
+                                            </div>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              {
+                                                formData.additionalCustomerInfo
+                                                  .customer_email
+                                              }
+                                            </strong>
+                                          </p>
+                                        </div>
+                                      )}
+                                      <div className={styles.customerInfo}>
+                                        <div className={styles.smallTitle}>
+                                          Delivery Address:{' '}
+                                        </div>
+                                        <div>
+                                          <strong>
+                                            {formData.delivery_address},{' '}
+                                            {formData.delivery_city},{' '}
+                                            {formData.delivery_state}{' '}
+                                            {formData.delivery_postcode},{' '}
+                                            {formData.delivery_country}
+                                          </strong>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </>
-                              )}
+                                  );
+                                })()}
                               {[
                                 'local-installation',
                                 'click-collect',

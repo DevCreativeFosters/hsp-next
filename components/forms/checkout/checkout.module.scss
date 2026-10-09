@@ -984,6 +984,18 @@
           }
         }
 
+        @media (width>767px) {
+          .storeDelivery {
+            > .left {
+              width: 25%;
+            }
+
+            > .right {
+              width: 75%;
+            }
+          }
+        }
+
         .note {
           p {
             margin-bottom: 0;
