@@ -56,7 +56,6 @@ export default function EnquiryModal({
           productPrice,
         )},FITTING${handleValue(
           installationCost,
-          installCost,
         )},FREIGHT${handleValue(freight, freightCost)}`,
     )
     .join('|');
