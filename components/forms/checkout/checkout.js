@@ -2863,55 +2863,57 @@ function CheckoutForm() {
                   </div>
                 )}
               </div>
-              {isDealerLike &&
-                (showQuoteForm ? (
-                  <div className={styles.quoteForm}>
-                    <div className={styles.inputGroup}>
-                      <label>Quote Amount (AUD)</label>
-                      <input
-                        min="0"
-                        onChange={e => setQuoteAmount(e.target.value)}
-                        step="0.01"
-                        type="number"
-                        value={quoteAmount}
-                      />
+              {/*
+                {isDealerLike &&
+                  (showQuoteForm ? (
+                    <div className={styles.quoteForm}>
+                      <div className={styles.inputGroup}>
+                        <label>Quote Amount (AUD)</label>
+                        <input
+                          min="0"
+                          onChange={e => setQuoteAmount(e.target.value)}
+                          step="0.01"
+                          type="number"
+                          value={quoteAmount}
+                        />
+                      </div>
+                      <div className={styles.inputGroup}>
+                        <label>Notes</label>
+                        <textarea
+                          onChange={e => setQuoteNotes(e.target.value)}
+                          placeholder="Add any notes for this quote (optional)"
+                          rows={3}
+                          value={quoteNotes}
+                        />
+                      </div>
+                      <Button
+                        className={styles.getQuoteBtn}
+                        disabled={loading || !quoteAmount}
+                        onClick={handleSubmitQuote}
+                        type="button"
+                      >
+                        Submit Quote
+                      </Button>
+                      <button
+                        className={styles.quoteCancel}
+                        onClick={() => setShowQuoteForm(false)}
+                        type="button"
+                      >
+                        Cancel
+                      </button>
                     </div>
-                    <div className={styles.inputGroup}>
-                      <label>Notes</label>
-                      <textarea
-                        onChange={e => setQuoteNotes(e.target.value)}
-                        placeholder="Add any notes for this quote (optional)"
-                        rows={3}
-                        value={quoteNotes}
-                      />
-                    </div>
+                  ) : (
                     <Button
                       className={styles.getQuoteBtn}
-                      disabled={loading || !quoteAmount}
-                      onClick={handleSubmitQuote}
+                      disabled={loading || cartItems.length === 0}
+                      onClick={openQuoteForm}
                       type="button"
+                      variant="ghost"
                     >
-                      Submit Quote
+                      Get A Quote Instead
                     </Button>
-                    <button
-                      className={styles.quoteCancel}
-                      onClick={() => setShowQuoteForm(false)}
-                      type="button"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <Button
-                    className={styles.getQuoteBtn}
-                    disabled={loading || cartItems.length === 0}
-                    onClick={openQuoteForm}
-                    type="button"
-                    variant="ghost"
-                  >
-                    Get A Quote Instead
-                  </Button>
-                ))}
+                  ))}
+              */}
             </div>
           </div>
         </form>
