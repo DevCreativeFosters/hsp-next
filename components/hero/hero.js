@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useIsMobile } from '@hooks/useIsMobile';
 
@@ -27,6 +28,7 @@ export default function Hero({ slides, transition = 'fade' }) {
   const [touchStartX, setTouchStartX] = useState(null);
   const [preloadedAssets, setPreloadedAssets] = useState(initialAssets);
   const isMobile = useIsMobile();
+  const router = useRouter();
 
   const currentSlide = slides[currentSlideIndex];
 
@@ -91,10 +93,20 @@ export default function Hero({ slides, transition = 'fade' }) {
         [styles.swipeTransition]: transition === 'swipe',
         [styles.fadeTransition]: transition === 'fade',
       })}
+      onClick={() => {
+        if (!(currentSlide.title && currentSlide.description)) {
+          router.push(currentSlide.buttonLink.url);
+        }
+      }}
       onTouchEnd={handleSwipeEnd}
       onTouchMove={handleSwipeMove}
       onTouchStart={handleSwipeStart}
       ref={heroRef}
+      style={{
+        cursor: !(currentSlide.title && currentSlide.description)
+          ? 'pointer'
+          : 'default',
+      }}
     >
       <div className={styles.track} data-index={currentSlideIndex}>
         {slides.map(
@@ -244,20 +256,34 @@ export default function Hero({ slides, transition = 'fade' }) {
         </Container>
       ) : (
         <>
-          <div className={styles.overlayImageContainer}>
-            <Image
-              alt=""
-              height="400"
-              src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2026/04/ChatGPT-Image-Apr-18-2026-04_31_54-PM.png"
-              title=""
-              width="500"
-            />
-          </div>
+          {/*
+            <div className={styles.overlayImageContainer}>
+              <Image
+                alt=""
+                height="400"
+                src="https://wordpress-1505184-5847603.cloudwaysapps.com/wp-content/uploads/2026/04/ChatGPT-Image-Apr-18-2026-04_31_54-PM.png"
+                title=""
+                width="500"
+              />
+            </div>
+          */}
           <div className={styles.navArrowsOnly}>
-            <button className={styles.prevButton} onClick={handlePrev}>
+            <button
+              className={styles.prevButton}
+              onClick={e => {
+                e.stopPropagation();
+                handlePrev();
+              }}
+            >
               <ArrowLeft />
             </button>
-            <button className={styles.nextButton} onClick={handleNext}>
+            <button
+              className={styles.nextButton}
+              onClick={e => {
+                e.stopPropagation();
+                handleNext();
+              }}
+            >
               <ArrowRight />
             </button>
           </div>
