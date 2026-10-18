@@ -57,7 +57,14 @@ export default function CartSidebar() {
               </div>
 
               <div className={styles.itemInfo}>
-                <h6>{item.product_name}</h6>
+                <h6
+                  onClick={() =>
+                    router.push(`${item.product_slug}${item.variantSlug}`)
+                  }
+                  style={{ cursor: 'pointer' }}
+                >
+                  {item.product_name}
+                </h6>
                 <div
                   className={clsx(styles.itemPrice, {
                     red: item?.compareAtPrice,

@@ -141,7 +141,14 @@ export default function ClientSideCartItems() {
                     )}
                   </figure>
                   <div className={styles.wContent}>
-                    <h4>{item.product_name}</h4>
+                    <h4
+                      onClick={() =>
+                        router.push(`${item.product_slug}${item.variantSlug}`)
+                      }
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {item.product_name}
+                    </h4>
                     {item.variantSlug && (
                       <p>
                         <strong>Part No.</strong> {item.variantSlug}
