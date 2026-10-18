@@ -174,7 +174,7 @@ export default function PageClientSidePartial({
   );
 
   const comboDeals = matchedVariant?.selectProducts;
-  const dealName = matchedVariant?.dealName;
+  const comboName = matchedVariant?.comboName;
 
   return (
     <>
@@ -335,7 +335,7 @@ export default function PageClientSidePartial({
             specificationDescription={specificationDescription}
           />
           {comboDeals && comboDeals?.length > 0 && (
-            <ProductComboDeals comboDeals={comboDeals} dealName={dealName} />
+            <ProductComboDeals comboDeals={comboDeals} comboName={comboName} />
           )}
         </>
       )}
