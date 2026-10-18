@@ -155,7 +155,12 @@ export default function ClientSideCartItems() {
                       </p>
                     )}
                     {item.variantName && (
-                      <p>
+                      <p
+                        onClick={() =>
+                          router.push(`${item.product_slug}${item.variantSlug}`)
+                        }
+                        style={{ cursor: 'pointer' }}
+                      >
                         <strong>Variant:</strong> {item.variantName}
                       </p>
                     )}
