@@ -374,7 +374,11 @@ export default function EnquiryForm({
                 {onBackOrder ? (
                   <Button
                     className={styles.submitButton}
-                    onClick={() => handleOpenModal(20)}
+                    onClick={() =>
+                      handleOpenModal(
+                        process.env.NEXT_PUBLIC_GF_ENQUIRY_FORM_ID,
+                      )
+                    }
                     size="large"
                     variant="secondary"
                   >
