@@ -18,32 +18,35 @@ function WishlistItems() {
     <div className={styles.wishlistBoxes}>
       {wishlistItems.length > 0 ? (
         wishlistItems.map(item => (
-          <div className={styles.wishlistBox} key={item.productId}>
+          <div className={styles.wishlistBox} key={item?.productId}>
             <figure>
               <Image
-                alt={item.productName}
+                alt={item?.productName}
                 height={100}
-                src={item.variantImage}
+                src={
+                  item?.variantImage ||
+                  'https://wordpress.testing.hsputelids.com/wp-content/uploads/woocommerce-placeholder.webp'
+                }
                 width={100}
               />
             </figure>
             <div className={styles.wContent}>
-              <h4>{item.productName}</h4>
+              <h4>{item?.productName}</h4>
               <p>
-                <strong>Part No.</strong> {item.variantSlug}
+                <strong>Part No.</strong> {item?.variantSlug}
               </p>
               <p>
-                <strong>Variant:</strong> {item.variantName}
+                <strong>Variant:</strong> {item?.variantName}
               </p>
-              <div className={styles.price}>{formatPrice(item.price)}</div>
+              <div className={styles.price}>{formatPrice(item?.price)}</div>
             </div>
             <div className={styles.wActions}>
-              <Link className={styles.button} href={item.productSlug}>
+              <Link className={styles.button} href={item?.productSlug}>
                 View
               </Link>
               <button
                 className={styles.link}
-                onClick={() => removeFromWishlist(item.productId)}
+                onClick={() => removeFromWishlist(item?.productId)}
               >
                 Remove
               </button>

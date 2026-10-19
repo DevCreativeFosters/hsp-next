@@ -38,7 +38,7 @@ export default async function RetailPage() {
     : [];
 
   return (
-    <Layout title="Retail Account">
+    <Layout title="B2B Account">
       <Container>
         <AccountHeader />
         <Tabs
