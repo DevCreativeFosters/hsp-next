@@ -87,8 +87,8 @@ export default function EnquiryForm({
   const selectedVariantSku = selectedVariant?.sku;
 
   const [inStock, setInStock] = useState(false);
-  const [isOutOfStock, setIsOutOfStock] = useState(true);
-  const [onBackOrder, setOnBackOrder] = useState(false);
+  const [isOutOfStock, setIsOutOfStock] = useState(false);
+  const [allowNotification, setAllowNotification] = useState(false);
 
   const [variableProduct, setVariableProduct] = useState({});
 
@@ -101,7 +101,7 @@ export default function EnquiryForm({
       setVariableProduct(product);
       setInStock(product?.stockStatus === 'instock');
       setIsOutOfStock(product?.stockStatus === 'outofstock');
-      setOnBackOrder(product?.backorderNote === 'Pre-Order');
+      setAllowNotification(product?.allowNotification);
     }
   }, [selectedVariantSku]);
 
@@ -371,7 +371,7 @@ export default function EnquiryForm({
                 className={styles.buttonWrapper}
                 onClick={handleButtonWrapperClick}
               >
-                {onBackOrder ? (
+                {allowNotification ? (
                   <Button
                     className={styles.submitButton}
                     onClick={() =>
