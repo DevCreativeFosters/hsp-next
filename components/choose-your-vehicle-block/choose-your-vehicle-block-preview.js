@@ -50,7 +50,10 @@ export default function ChooseYourVehicleBlockPreview({
           <ContentBox className={styles.productsPrice}>
             <span className={styles.price}>{formatPrice(price)}</span>
             <span className={styles.installationPrice}>
-              <span> + installation costs </span>
+              <span>
+                {' '}
+                <plusIcon /> installation costs{' '}
+              </span>
             </span>
           </ContentBox>
         )}

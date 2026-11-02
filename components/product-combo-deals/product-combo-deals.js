@@ -113,8 +113,9 @@ export default function ProductComboDeals({ comboDeals, comboName }) {
                             </div>
                           </div>
                           <div className={styles.prdinstallTxt}>
-                            + {formatPrice(variantDetails?.installationCost)}{' '}
-                            for Install
+                            <span>+</span>{' '}
+                            {formatPrice(variantDetails?.installationCost)} for
+                            Install
                           </div>
                         </div>
                       </div>
@@ -136,7 +137,7 @@ export default function ProductComboDeals({ comboDeals, comboName }) {
                 </div>
               </div>
               <div className={styles.prinstallTxt}>
-                + {formatPrice(totalInstallationCost)} for Install
+                <span>+</span> {formatPrice(totalInstallationCost)} for Install
               </div>
               <div className={styles.addToCart}>
                 <Button

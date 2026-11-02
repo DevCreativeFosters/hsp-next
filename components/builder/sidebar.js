@@ -207,7 +207,7 @@ export default function Sidebar({
                   {formatPrice(priceSummary.price)}
                 </div>
                 <div className={clsx(styles.summaryInstallation, 'p-small')}>
-                  +{' '}
+                  <span>+</span>{' '}
                   {priceSummary.installationCost === 0 ? (
                     <>installation cost</>
                   ) : (

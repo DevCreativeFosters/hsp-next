@@ -199,6 +199,14 @@
 
   button {
     background: transparent;
+
+    &:hover {
+      svg {
+        path {
+          fill: #fff;
+        }
+      }
+    }
   }
 
   @include bp(large) {

@@ -18,6 +18,7 @@
     overflow: auto;
     transition: 0.5s all;
     transform: translateX(100%);
+    max-width: 390px;
 
     @media (width <=767px) {
       border-width: 12px;
@@ -108,7 +109,7 @@
       max-width: 240px;
 
       h6 {
-        font-size: 11px;
+        font-size: 12px;
         font-family: var(--font-primary);
         font-weight: 400;
         margin-bottom: 6px;

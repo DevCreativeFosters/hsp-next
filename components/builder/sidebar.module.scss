@@ -421,7 +421,6 @@
   grid-template-columns: 1fr auto auto;
   grid-template-areas: '. . button' 'toggle price button' 'toggle installation button' '. . button';
   column-gap: var(--gap-global-xs);
-  margin-top: var(--gap-global-sm);
   width: 100%;
   height: auto;
   display: flex;
@@ -527,6 +526,13 @@
 
 .summaryInstallation {
   grid-area: installation;
+
+  span {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: sans-serif;
+    vertical-align: middle;
+  }
 
   @include bp(large) {
     .isDesktop {
